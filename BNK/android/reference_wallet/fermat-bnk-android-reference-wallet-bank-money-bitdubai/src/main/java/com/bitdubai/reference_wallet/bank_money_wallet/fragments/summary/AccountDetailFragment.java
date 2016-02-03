@@ -20,6 +20,7 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_bnk_api.all_definition.constants.BankWalletBroadcasterConstants;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
@@ -296,5 +297,11 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         return super.onOptionsItemSelected(item);
     }
 
-
+    @Override
+    public void onUpdateView(String code) {
+        switch (code){
+            case BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
+                onRefresh();
+        }
+    }
 }

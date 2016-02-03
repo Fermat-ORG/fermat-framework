@@ -3,8 +3,11 @@ package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.
 import com.bitdubai.fermat_api.AsyncTransactionAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
+import com.bitdubai.fermat_bnk_api.all_definition.constants.BankWalletBroadcasterConstants;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
@@ -21,6 +24,9 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWallet;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -36,11 +42,12 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     private final HoldManager holdManager;
     private final UnholdManager unholdManager;
     private PluginFileSystem pluginFileSystem;
+    private final Broadcaster broadcaster;
     private UUID pluginId;
 
     private String publicKey = "banking_wallet";
 
-    public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager, PluginFileSystem pluginFileSystem, UUID pluginId,Broadcaster broadcaster) {
         this.bankMoneyWalletManager = bankMoneyWalletManager;
         this.depositManager = depositManager;
         this.withdrawManager = withdrawManager;
@@ -48,6 +55,7 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
         this.unholdManager = unholdManager;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.broadcaster = broadcaster;
     }
 
     @Override
@@ -74,6 +82,18 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
             transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.UNHOLD, 100, 0, account));
             */
             //TODO: mostrar los hold y unhold???
+            Collections.sort(transactionRecords, new Comparator<BankMoneyTransactionRecord>() {
+                @Override
+                public int compare(BankMoneyTransactionRecord o1, BankMoneyTransactionRecord o2) {
+                    if(o1.getTimestamp()>o2.getTimestamp()){
+                        return -1;
+                    }
+                    if(o1.getTimestamp()<=o2.getTimestamp()){
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
         }catch (Exception e){
             System.out.println("module error cargando transacciones  "+e.getMessage() );
         }
@@ -142,7 +162,7 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
                 this.makeWithdraw(transaction);
 
             //TODO: Evento al GUI de actualizar la transaccion indicando que se realizo satisfactoriamente
-
+            //broadcaster.publish(BroadcasterType.UPDATE_VIEW, BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
         }catch(FermatException e){
             //TODO: Evento al GUI de actualizar el deposito indicando que hubo una falla y no se pudo realizar
         }
