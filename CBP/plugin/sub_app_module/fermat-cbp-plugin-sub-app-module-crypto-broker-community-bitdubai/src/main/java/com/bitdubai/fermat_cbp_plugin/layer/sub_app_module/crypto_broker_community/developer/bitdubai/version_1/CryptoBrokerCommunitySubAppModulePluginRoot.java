@@ -61,7 +61,7 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractPlugin 
     public void start() throws CantStartPluginException {
 
         try {
-
+            System.out.println("CBC pluginRoot start!!!!!");
             fermatManager = new CryptoBrokerCommunityManager(
                     cryptoBrokerIdentityManager,
                     cryptoBrokerActorConnectionManager,

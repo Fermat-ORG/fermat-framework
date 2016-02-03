@@ -1,4 +1,10 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background_activity"
@@ -11,13 +17,13 @@
         style="@style/ContactListView"/>
 
 
-   <!-- <TextView android:id="@id/android:empty"
+   <TextView android:id="@+id/text"
         android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/no_contacts"
         android:textColor="@android:color/black"
         android:fontFamily="sans-serif-light"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
--->
+
 </FrameLayout>
+</android.support.v4.widget.SwipeRefreshLayout>
