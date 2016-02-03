@@ -133,7 +133,6 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public CryptoBrokerCommunitySearch searchNewCryptoBroker(final CryptoBrokerCommunitySelectableIdentity selectedIdentity) {
-
         return new CryptoBrokerCommunitySubAppModuleCommunitySearch(cryptoBrokerActorNetworkServiceManager);
     }
 
@@ -461,7 +460,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
                 for(CryptoCustomerIdentity i : identitiesInDevice) {
                     if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                        selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage());
+                        selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, i.getAlias(), i.getProfileImage());
                 }
 
                 if(selectedIdentity == null)
@@ -478,7 +477,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                 {
                     CryptoBrokerCommunitySelectableIdentityImpl selectedIdentity
                             = new CryptoBrokerCommunitySelectableIdentityImpl(identitiesInDevice.get(0).getPublicKey(),
-                                                                              Actors.CBP_CRYPTO_BROKER,
+                                                                              Actors.CBP_CRYPTO_CUSTOMER,
                                                                               identitiesInDevice.get(0).getAlias(),
                                                                               identitiesInDevice.get(0).getProfileImage());
 
@@ -559,7 +558,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
 
-        System.out.println("CBC ASD createIdentity a....." + name);
+        //System.out.println("CBC ASD createIdentity a....." + name);
 
 
         //TODO: Por ahora se crea un John / Jane customers.. pues interesa en el flujo actual, en el futuro el dialogo deberia preguntar si la persona quiere es crear un
