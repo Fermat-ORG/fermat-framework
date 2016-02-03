@@ -28,8 +28,8 @@
     <string name="transaction_description" translatable="false">Concept: </string>
 
     <!--Dialog Help - Init-->
-    <string name="bnk_bank_money_wallet_account_subTitle">prueba subtitle.</string>
-    <string name="bnk_bank_money_wallet_account_body">prueba Body.</string>
+    <string name="bnk_bank_money_wallet_account_subTitle">This wallet is meant to help you keep track of your Bank accounts. \nWith it you can:</string>
+    <string name="bnk_bank_money_wallet_account_body">* Create bank accounts.\n* See your balances.\n*​ Deposit funds into the wallet.\n* Withdraw funds out of the wallet.\n* Browse your transaction history.</string>
     <string name="bnk_bank_money_wallet_account_footer">prueba footer.</string>
     <!--Dialog Help - End-->
 

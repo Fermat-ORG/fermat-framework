@@ -25,6 +25,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_onlin
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.interfaces.CustomerOfflinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_payment.interfaces.CustomerOnlinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
@@ -32,6 +33,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleCryptoCustomerWalletManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -107,6 +109,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
      */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
+    private SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager;
 
 
     @Override
@@ -176,8 +179,16 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     }
 
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
+    public SettingsManager<CryptoCustomerWalletPreferenceSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
@@ -187,7 +198,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        CryptoCustomerIdentity cryptoBrokerIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img);
     }
 
     @Override
