@@ -169,7 +169,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * add the events
              */
-            events = new BitcoinNetworkEvents(pluginDatabaseSystem, pluginId, this.walletFileName);
+            events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, pluginDatabaseSystem, pluginId, this.walletFileName);
             peerGroup.addEventListener(events);
             this.wallet.addEventListener(events);
             blockChain.addListener(events);

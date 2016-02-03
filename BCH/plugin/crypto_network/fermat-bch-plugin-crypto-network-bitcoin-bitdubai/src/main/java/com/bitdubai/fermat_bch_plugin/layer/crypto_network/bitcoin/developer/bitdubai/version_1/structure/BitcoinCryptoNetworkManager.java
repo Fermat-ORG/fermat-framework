@@ -469,7 +469,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         try {
             blockchainNetworkType = getDao().getBlockchainNetworkTypeFromBroadcast(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
         runningAgents.get(blockchainNetworkType).broadcastTransaction(txHash);
     }
@@ -563,7 +563,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         /**
          * I will get the list of stored transactions for the default network.
          */
-        List<Transaction> transactions = getBitcoinTransactions(BlockchainNetworkType.DEFAULT);
+        List<Transaction> transactions = getBitcoinTransactions(BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
         for (Transaction transaction : transactions) {
             /**
@@ -693,7 +693,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param transactionProtocolData
      */
     private void fixCryptoAmountInconsistency(TransactionProtocolData transactionProtocolData) {
-        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
     }
 
@@ -704,7 +704,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param transactionProtocolData
      */
     private void fixAddressToInconsistency(TransactionProtocolData transactionProtocolData) {
-        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
     }
 
@@ -714,7 +714,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param transactionProtocolData
      */
     private void fixAddressFromInconsistency(TransactionProtocolData transactionProtocolData) {
-        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
 
     }
@@ -760,7 +760,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         try {
             blockchainNetworkType = getDao().getBlockchainNetworkTypeFromBroadcast(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
 
 
@@ -882,7 +882,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          * will set default network if non provided.
          */
         if (blockchainNetworkType == null)
-            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         Transaction parentTransaction = null, childTransaction = null, genesisTransaction = null;
 
@@ -977,7 +977,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         /**
          * I will get all the stored transactions
          */
-        for (Transaction transaction : this.getBitcoinTransactions(BlockchainNetworkType.DEFAULT)){
+        for (Transaction transaction : this.getBitcoinTransactions(BlockchainNetworkType.getDefaultBlockchainNetworkType())){
             /**
              * for each transaction I will search in the input the outpoint that matches the passed transactionHash
              */

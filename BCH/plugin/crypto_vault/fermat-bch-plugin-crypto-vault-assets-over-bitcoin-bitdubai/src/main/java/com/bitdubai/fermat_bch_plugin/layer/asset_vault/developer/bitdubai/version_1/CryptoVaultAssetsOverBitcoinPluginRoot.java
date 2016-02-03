@@ -176,7 +176,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     private void generateAddress() {
         try{
             Thread.sleep(5000);
-            System.out.println("Asset vault address: " + this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.DEFAULT).getAddress());
+            System.out.println("Asset vault address: " + this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType()).getAddress());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (GetNewCryptoAddressException e) {
