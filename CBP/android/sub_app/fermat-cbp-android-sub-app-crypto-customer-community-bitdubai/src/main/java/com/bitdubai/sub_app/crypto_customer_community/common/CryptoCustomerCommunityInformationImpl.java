@@ -1,19 +1,19 @@
-package com.bitdubai.sub_app.crypto_broker_community.common;
+package com.bitdubai.sub_app.crypto_customer_community.common;
 
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 
 import java.util.List;
 
 /**
- * Created by Alejandro Bicelis on 26/1/2016.
+ * Created by Alejandro Bicelis on 2/2/2016.
  */
-public class CryptoBrokerCommunityInformationImpl implements CryptoBrokerCommunityInformation {
+public class CryptoCustomerCommunityInformationImpl implements CryptoCustomerCommunityInformation {
 
     String publicKey;
     String alias;
     byte[] image;
 
-    public CryptoBrokerCommunityInformationImpl(String publicKey, String alias, byte[] image){
+    public CryptoCustomerCommunityInformationImpl(String publicKey, String alias, byte[] image){
         this.publicKey = publicKey;
         this.alias = alias;
         this.image = image;

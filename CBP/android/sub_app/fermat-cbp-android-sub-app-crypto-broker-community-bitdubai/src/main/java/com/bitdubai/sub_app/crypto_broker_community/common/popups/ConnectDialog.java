@@ -127,12 +127,12 @@ public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessi
 
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
-                    Toast.makeText(getContext(), "Connection request send", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
                 } else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Oooops! recovering from system error - identity or information = null", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (CantRequestConnectionException | ActorConnectionAlreadyRequestedException | ActorTypeNotSupportedException e) {
@@ -145,6 +145,5 @@ public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessi
             dismiss();
         }
     }
-
 
 }
