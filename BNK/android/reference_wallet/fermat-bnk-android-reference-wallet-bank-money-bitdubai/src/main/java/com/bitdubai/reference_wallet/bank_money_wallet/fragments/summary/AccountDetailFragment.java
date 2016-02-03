@@ -141,9 +141,6 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         balanceText = (FermatTextView) layout.findViewById(R.id.balance_text);
         availableText = (FermatTextView) layout.findViewById(R.id.available_text);
         bookText = (FermatTextView) layout.findViewById(R.id.book_text);
-        balanceText.setText("Balance");
-        bookText.setText("Book");
-        availableText.setText("Available");
         updateBalance();
         showOrHideNoTransactionsView(transactionList.isEmpty());
     }
@@ -160,6 +157,14 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         aliasText.setText(bankAccountNumber.getAlias());
         availableTextView.setText(String.valueOf(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
         bookTextView.setText(String.valueOf(moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
+        balanceText.setTextColor(getResources().getColor(R.color.text_color_soft_blue));
+        if(availableTextView.getText().equals(bookTextView.getText())){
+            bookTextView.setVisibility(View.GONE);
+            bookText.setVisibility(View.GONE);
+        }else {
+            bookTextView.setVisibility(View.VISIBLE);
+            bookText.setVisibility(View.VISIBLE);
+        }
     }
 
     private void configureToolbar() {
