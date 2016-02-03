@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 
 import android.app.Activity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
@@ -64,7 +66,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
 
         this.walletManager = walletManager;
 
-        haveNote = false;
+        haveNote = true;
         this.data = data;
 
         haveNote = (data.getMemo() != null);
@@ -101,6 +103,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
                 return R.layout.cbw_amount_to_sell_item;
             case TYPE_FOOTER:
                 return R.layout.cbw_footer_item;
+
             default:
                 throw new NoSuchElementException("Incorrect type value");
         }
@@ -357,7 +360,24 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     }
 
 
+    private void AddNote(CardView noticeSubject) {
+///no terminado
+        //dataSet.add(noticeSubject);
+
+    }
 
 
+    private class CustomViewHolder extends RecyclerView.ViewHolder {
+// toda esta clase es una prueba, no pertenecera en la version final, no aqui.
+        private CardView noticeSubject;
 
+        public CustomViewHolder(View itemView) {
+            super(itemView);
+
+            noticeSubject = (CardView) itemView.findViewById(R.id.negotiation_note_layout);
+            AddNote(noticeSubject);
+        }
+
+
+    }
 }

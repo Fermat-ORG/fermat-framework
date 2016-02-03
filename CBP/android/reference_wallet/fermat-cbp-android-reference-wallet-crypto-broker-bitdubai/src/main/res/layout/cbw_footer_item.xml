@@ -6,6 +6,9 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <include layout="@layout/cbw_negotiation_note"/>
+
+
     <android.support.v7.widget.CardView
         android:id="@+id/add_a_note_card_view"
         android:layout_width="match_parent"
