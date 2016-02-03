@@ -133,6 +133,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
                     contractStatus,
                     contractDetailType);
             itemView.setBackgroundColor(getStatusBackgroundColor(backgroundContractStatus));
+            textButton.setText(contractStatus.getFriendlyName());
         } catch (CantGetListCustomerBrokerContractPurchaseException ex) {
             Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 

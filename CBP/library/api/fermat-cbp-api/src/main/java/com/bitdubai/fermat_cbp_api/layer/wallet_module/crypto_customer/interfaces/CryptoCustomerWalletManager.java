@@ -209,7 +209,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      * @param contractHash
      * @throws CantAckMerchandiseException
      */
-    void ackMerchandise(String contractHash) throws CantAckMerchandiseException;
+    ContractStatus ackMerchandise(String contractHash) throws CantAckMerchandiseException;
 
     /**
      * This method returns the ContractStatus by contractHash/Id
