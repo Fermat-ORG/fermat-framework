@@ -144,7 +144,8 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                         List<DigitalAssetMetadata> allUsedAssets = new ArrayList<>();
                         allUsedAssets.addAll(assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, BlockchainNetworkType.TEST_NET).getAllUnusedAssets());
                         allUsedAssets.addAll(assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, BlockchainNetworkType.PRODUCTION).getAllUnusedAssets());
-                        allUsedAssets.addAll(assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, BlockchainNetworkType.DEFAULT).getAllUnusedAssets());
+                        //TODO: I added this, getDefaultBlockchainNetworkType() only for make a build. Manuel
+                        allUsedAssets.addAll(assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, BlockchainNetworkType.getDefaultBlockchainNetworkType()).getAllUnusedAssets());
                         for (DigitalAssetMetadata digitalAssetMetadata : allUsedAssets) {
                             List<CryptoTransaction> allChildTx = bitcoinNetworkManager.getChildTransactionsFromParent(digitalAssetMetadata.getLastTransactionHash());
                             if (allChildTx.isEmpty()) {

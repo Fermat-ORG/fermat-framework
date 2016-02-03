@@ -135,7 +135,8 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
                     pluginId,
                     pluginFileSystem
             );
-            selectedNetwork = BlockchainNetworkType.DEFAULT;
+            //TODO: I added this, getDefaultBlockchainNetworkType() only for make a build. Manuel
+            selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
             //getTransactionsAssetAll("", "");
             System.out.println("******* Asset Issuer Wallet Module Init ******");
 

@@ -29,10 +29,12 @@ public final class WalletUtilities {
      */
     public static UUID constructWalletId(String walletPublicKey, BlockchainNetworkType networkType) {
         if (networkType == null) {
-            networkType = BlockchainNetworkType.DEFAULT;
+            //TODO: I added this only, getDefaultBlockchainNetworkType() for make a build. Manuel
+            networkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
         //It can be default without being null.
-        if (networkType == BlockchainNetworkType.DEFAULT) {
+        //TODO: I added this, getDefaultBlockchainNetworkType() only for make a build. Manuel
+        if (networkType == BlockchainNetworkType.getDefaultBlockchainNetworkType()) {
             networkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
         String finalString = networkType.getCode() + "-" + walletPublicKey;

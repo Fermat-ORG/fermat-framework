@@ -81,8 +81,8 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
                     pluginId,
                     pluginFileSystem
             );
-
-            selectedNetwork = BlockchainNetworkType.DEFAULT;
+            //TODO: I added this, getDefaultBlockchainNetworkType() only for make a build. Manuel
+            selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
             System.out.println("******* Asset Redeem Point Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
