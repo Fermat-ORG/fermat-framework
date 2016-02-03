@@ -86,7 +86,6 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                                         final PluginFileSystem                   pluginFileSystem                      ,
                                         final UUID                               pluginId                              ,
                                         final PluginVersionReference             pluginVersionReference                ) {
-        //System.out.println("CBC CryptoBrokerCommunityManager initttttt!!!!!");
 
         this.cryptoBrokerIdentityManager            = cryptoBrokerIdentityManager           ;
         this.cryptoBrokerActorConnectionManager     = cryptoBrokerActorConnectionManager    ;

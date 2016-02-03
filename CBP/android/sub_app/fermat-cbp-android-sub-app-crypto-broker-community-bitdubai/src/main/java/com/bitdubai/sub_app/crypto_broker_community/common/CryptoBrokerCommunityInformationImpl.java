@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_broker_community.common;
 
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -39,5 +40,14 @@ public class CryptoBrokerCommunityInformationImpl implements CryptoBrokerCommuni
     @Override
     public List listCryptoBrokerWallets() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "CryptoBrokerCommunityInformationImpl{" +
+                "publicKey='" + publicKey + '\'' +
+                ", alias='" + alias + '\'' +
+                ", image=" + (image != null) +
+                '}';
     }
 }
