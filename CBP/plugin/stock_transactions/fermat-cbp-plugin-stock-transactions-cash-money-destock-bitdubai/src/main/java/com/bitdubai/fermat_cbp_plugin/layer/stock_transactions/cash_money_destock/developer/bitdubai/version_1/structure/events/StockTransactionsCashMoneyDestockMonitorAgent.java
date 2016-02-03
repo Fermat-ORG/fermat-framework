@@ -47,6 +47,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CashUnholdTransactionManager cashUnholdTransactionManager;
     private final StockTransactionCashMoneyDestockFactory stockTransactionCashMoneyDestockFactory;
+    private UUID pluginId;
 
     public StockTransactionsCashMoneyDestockMonitorAgent(ErrorManager errorManager,
                                                          StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager,
@@ -60,6 +61,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.cashUnholdTransactionManager = cashUnholdTransactionManager;
         stockTransactionCashMoneyDestockFactory = new StockTransactionCashMoneyDestockFactory(pluginDatabaseSystem, pluginId);
+        this.pluginId = pluginId;
     }
 
     @Override
@@ -136,7 +138,21 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
-                        WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
+                        WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
+                                cashMoneyTransaction.getTransactionId(),
+                                cashMoneyTransaction.getFiatCurrency(),
+                                BalanceType.BOOK,
+                                TransactionType.DEBIT,
+                                CurrencyType.CASH_DELIVERY_MONEY,
+                                cashMoneyTransaction.getCbpWalletPublicKey(),
+                                cashMoneyTransaction.getActorPublicKey(),
+                                cashMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                cashMoneyTransaction.getConcept(),
+                                cashMoneyTransaction.getPriceReference(),
+                                cashMoneyTransaction.getOriginTransaction());
+
+                        WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
                                 cashMoneyTransaction.getTransactionId(),
                                 cashMoneyTransaction.getFiatCurrency(),
                                 BalanceType.AVAILABLE,
@@ -152,8 +168,8 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
 
                         //TODO:Solo para testear
                         cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordBook, BalanceType.BOOK);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
                         cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
 
@@ -169,9 +185,9 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
                                 cashMoneyTransaction.getCashWalletPublicKey(),
                                 cashMoneyTransaction.getActorPublicKey(),
                                 cashMoneyTransaction.getAmount(),
-                                cashMoneyTransaction.getCashReference(),
-                                cashMoneyTransaction.getMemo());
-                        //"pluginId");
+                                //cashMoneyTransaction.getCashReference(),
+                                cashMoneyTransaction.getMemo(),
+                                pluginId.toString());
                         cashUnholdTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
                         CashTransactionStatus castTransactionStatus = cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
                         if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {

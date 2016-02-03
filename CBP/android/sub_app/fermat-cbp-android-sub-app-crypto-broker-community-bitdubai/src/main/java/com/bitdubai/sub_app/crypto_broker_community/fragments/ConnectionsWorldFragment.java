@@ -70,7 +70,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     private int mNotificationsCount = 0;
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList;
 
-
     //Flags
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
@@ -82,8 +81,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     private GridLayoutManager layoutManager;
     private AppListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
-
-
 
 
     public static ConnectionsWorldFragment newInstance() {
@@ -184,6 +181,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                         .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
                         .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
                         .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
+                        .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
+                        .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -205,8 +204,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
                 onRefresh();
             }
-
-
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
