@@ -70,7 +70,7 @@ public class DatabaseTest {
     }
     @Test(expected = Exception.class)
     public void TestCreateDatabase_Should_Return_Exception() throws Exception{
-        customerOnlinePaymentBusinessTransactionDatabaseFactory = new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(mockPluginDatabaseSystem);
+        customerOnlinePaymentBusinessTransactionDatabaseFactory = new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(null);
         customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(null, null);
     }
 }
