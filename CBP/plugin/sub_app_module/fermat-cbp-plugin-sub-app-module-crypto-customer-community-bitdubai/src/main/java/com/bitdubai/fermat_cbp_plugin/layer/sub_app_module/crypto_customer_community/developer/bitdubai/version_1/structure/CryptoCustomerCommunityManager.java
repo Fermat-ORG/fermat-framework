@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interf
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -37,11 +38,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunityManager</code>
- * bla bla bla.
- * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/12/2015.
+ * Created by Alejandro Bicelis on 2/2/2016.
  */
+
 public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySubAppModuleManager {
 
     private final CryptoBrokerIdentityManager          cryptoBrokerIdentityManager              ;
@@ -82,7 +81,7 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
 
     @Override
     public CryptoCustomerCommunitySearch searchNewCryptoCustomer(CryptoCustomerCommunitySelectableIdentity cryptoCustomerCommunitySelectableIdentity) {
-        return null;
+        return new CryptoCustomerCommunitySubAppModuleCommunitySearch(cryptoCustomerActorNetworkServiceManager);
     }
 
     @Override
@@ -156,6 +155,12 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
         }catch (Exception e){appSettings = null;}
 
 
+        //Get all broker identities on local device
+        List<CryptoBrokerIdentity> identitiesInDevice = null;
+        try{
+            identitiesInDevice = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        } catch(CantListCryptoBrokerIdentitiesException e) { /*Do nothing*/ }
+
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property
         if(appSettings != null)
@@ -164,23 +169,50 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
 
             if (lastSelectedIdentityPublicKey != null){
 
-                //Get Broker identity from local device
-                CryptoBrokerIdentity bi = null;
-                try{
-                    bi = cryptoBrokerIdentityManager.getCryptoBrokerIdentity(lastSelectedIdentityPublicKey);
-                } catch(CantGetCryptoBrokerIdentityException | IdentityNotFoundException e) {
-                    return null;
+                CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity = null;
+
+                for(CryptoBrokerIdentity i : identitiesInDevice) {
+                    if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                        selectedIdentity = new CryptoCustomerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage());
                 }
 
-                if(bi == null)
+                if(selectedIdentity == null)
                     return null;
 
-                return new CryptoCustomerCommunitySelectableIdentityImpl(bi.getPublicKey(), Actors.CBP_CRYPTO_BROKER, bi.getAlias(), bi.getProfileImage());
+                //System.out.println("Good");
+                return selectedIdentity;
             }
+            //Check if at least one local broker identity has been created
+            else
+            {
+
+                if(identitiesInDevice.size() > 0)
+                {
+                    CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity
+                            = new CryptoCustomerCommunitySelectableIdentityImpl(identitiesInDevice.get(0).getPublicKey(),
+                                                                              Actors.CBP_CRYPTO_BROKER,
+                                                                              identitiesInDevice.get(0).getAlias(),
+                                                                              identitiesInDevice.get(0).getProfileImage());
+
+                    appSettings.setLastSelectedIdentityPublicKey(selectedIdentity.getPublicKey());
+
+                    try {
+                        this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                    }catch (CantPersistSettingsException e){
+                        this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    }
+
+                    //System.out.println("Good");
+                    return selectedIdentity;
+                }
+
+            }
+
         }
 
         //System.out.println("Nope.. ");
         return null;
+
     }
 
     @Override
