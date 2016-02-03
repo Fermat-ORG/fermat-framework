@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
@@ -19,12 +20,14 @@ public class BankTransactionRecordImpl implements BankMoneyTransactionRecord {
     private String memo;
     private long timestamp;
     private TransactionType transactionType;
+    private BankTransactionStatus bankTransactionStatus;
 
-    public BankTransactionRecordImpl(float amount, String memo, long timestamp,TransactionType transactionType) {
+    public BankTransactionRecordImpl(float amount, String memo, long timestamp,TransactionType transactionType,BankTransactionStatus bankTransactionStatus) {
         this.amount = amount;
         this.memo = memo;
         this.timestamp = timestamp;
         this.transactionType = transactionType;
+        this.bankTransactionStatus = bankTransactionStatus;
     }
 
     @Override
@@ -34,7 +37,7 @@ public class BankTransactionRecordImpl implements BankMoneyTransactionRecord {
 
     @Override
     public BankTransactionStatus getStatus() {
-        return null;
+        return bankTransactionStatus;
     }
 
     @Override
