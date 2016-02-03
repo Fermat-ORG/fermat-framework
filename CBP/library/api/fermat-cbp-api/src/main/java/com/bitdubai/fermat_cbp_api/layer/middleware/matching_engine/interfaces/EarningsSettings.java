@@ -24,7 +24,7 @@ public interface EarningsSettings {
      * Through the method <code>associatePair</code> you can associate an earnings pair to the wallet in which we're working.
      * Automatically will be generated an UUID to the earnings pair, with it, we can identify the same.
      *
-     * @param selectedCurrency  the currency which we decided to extract the earnings.
+     * @param earningCurrency   the currency which we decided to extract the earnings.
      * @param linkedCurrency    the currency that we're linking to the previous selected currency to conform the pair.
      * @param walletPublicKey   the public key of the wallet that we're associating and where we will deposit the earnings.
      *
@@ -35,8 +35,8 @@ public interface EarningsSettings {
      */
     EarningsPair associatePair(
 
-            Currency selectedCurrency,
-            Currency linkedCurrency  ,
+            Currency earningCurrency,
+            Currency linkedCurrency ,
             String   walletPublicKey
             // TODO ADD THE PARAMETERS FOR ALL THE NECESSARY WALLET INFORMATION
 
@@ -68,12 +68,5 @@ public interface EarningsSettings {
     List<EarningsPair> listEarningPairs(
 
     ) throws CantListEarningsPairsException;
-
-    /**
-     * Through the method <code>getSearch</code> you can get a search object with the search functionality encapsulated.
-     *
-     * @return an instance of earning search for the selected wallet.
-     */
-    EarningsSearch getSearch();
 
 }
