@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.b
 /**
  * Created by franklin on 08/09/15.
  */
-public class AssertFactoryMiddlewareDatabaseConstant {
+public class AssetFactoryMiddlewareDatabaseConstant {
     /**
      * Database name definition
      */

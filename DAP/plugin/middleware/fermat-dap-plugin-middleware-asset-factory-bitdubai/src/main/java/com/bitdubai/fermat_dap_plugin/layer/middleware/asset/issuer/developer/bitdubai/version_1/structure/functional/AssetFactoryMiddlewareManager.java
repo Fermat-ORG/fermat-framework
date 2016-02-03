@@ -31,8 +31,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interface
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.CantPublishAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
-import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssertFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
+import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
@@ -194,7 +194,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -238,7 +238,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -270,7 +270,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -313,7 +313,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN;
             }
 
             @Override
@@ -356,7 +356,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -399,7 +399,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -431,7 +431,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN;
             }
 
             @Override
@@ -473,7 +473,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -505,7 +505,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -547,7 +547,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
