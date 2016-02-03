@@ -162,7 +162,21 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent {
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
-                        WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
+                        WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
+                                cashMoneyTransaction.getTransactionId(),
+                                cashMoneyTransaction.getFiatCurrency(),
+                                BalanceType.BOOK,
+                                TransactionType.CREDIT,
+                                CurrencyType.CASH_DELIVERY_MONEY,
+                                cashMoneyTransaction.getCbpWalletPublicKey(),
+                                cashMoneyTransaction.getActorPublicKey(),
+                                cashMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                cashMoneyTransaction.getConcept(),
+                                cashMoneyTransaction.getPriceReference(),
+                                cashMoneyTransaction.getOriginTransaction());
+
+                        WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
                                 cashMoneyTransaction.getTransactionId(),
                                 cashMoneyTransaction.getFiatCurrency(),
                                 BalanceType.AVAILABLE,
@@ -178,8 +192,8 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent {
 
                         //TODO:Solo para testear
                         cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.BOOK);
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.AVAILABLE);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordBook, BalanceType.BOOK);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
                         cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                         stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
 
