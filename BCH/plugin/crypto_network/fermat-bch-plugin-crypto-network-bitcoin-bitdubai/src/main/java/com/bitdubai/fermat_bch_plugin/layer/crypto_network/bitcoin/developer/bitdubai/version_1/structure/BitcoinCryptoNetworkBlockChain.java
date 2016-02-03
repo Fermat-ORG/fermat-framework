@@ -86,6 +86,15 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
          */
         String fileName = BLOCKCHAIN_FILENAME + BLOCKCHAIN_NETWORK_TYPE.getCode();
         File blockChainFile = new File(fileName);
+
+        /**
+         * If this is the RegTest Network, I will delete any previous blockstore
+         * Since this blockchain will be very small, I will rebuild it each time.
+         */
+        if (BLOCKCHAIN_NETWORK_TYPE == BlockchainNetworkType.REG_TEST){
+            blockChainFile.delete();
+        }
+
         try {
             blockStore = new SPVBlockStore(networkParameters, blockChainFile);
         } catch (Exception e) {
