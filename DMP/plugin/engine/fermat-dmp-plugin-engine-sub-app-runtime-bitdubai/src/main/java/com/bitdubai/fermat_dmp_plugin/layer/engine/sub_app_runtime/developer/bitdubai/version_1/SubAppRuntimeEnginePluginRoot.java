@@ -33,8 +33,6 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.event_handlers.WalletResourcesInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppNavigationStructure;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantGetSubAppNavigationStructureException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -42,7 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * The App Runtime is the module in charge of the UI navigation structure. A user is always at a certain point in this
@@ -2165,6 +2162,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
     }
 
     private void createChatSubAppNavigationStructure() {
+
         RuntimeSubApp chtChat;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
@@ -2173,12 +2171,17 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 
+
+
         chtChat = new RuntimeSubApp();
         chtChat.setType(SubApps.CHT_CHAT);
         String chatPublicKey = "public_key_cht_chat";
         chtChat.setPublicKey(chatPublicKey);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
+
         //chtChat.setStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT);
+
+
 
         //Activity Chat
         runtimeActivity = new Activity();
@@ -2203,6 +2206,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+
 
         //Menu Tabs
         runtimeTabStrip = new TabStrip();
@@ -2253,8 +2257,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
@@ -2287,12 +2289,38 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeFragment.setType(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey());
-
+*/
         // Activity: Contact Detail
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT);
-        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getCode());
-        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
+        runtimeActivity.setBackPublicKey(chatPublicKey);
+        chtChat.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("View Contact");
+
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#1189a5");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getKey());
+
+        // Activity: Edit Contact
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_EDIT_CONTACT);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_EDIT_CONTACT.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
         runtimeActivity.setBackPublicKey(chatPublicKey);
         chtChat.addActivity(runtimeActivity);
 
@@ -2310,10 +2338,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT.getKey());
+        runtimeFragment.setType(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey());
 
+/*
         // Activity: Connections
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT);
@@ -2368,6 +2397,24 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         chtChat.addActivity(runtimeActivity);
         */
+
+        //NEWMIG
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+        runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        chtChat.addActivity(runtimeActivity);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey());
+
+        //
+
+
+
         listSubApp.put(chtChat.getPublicKey(), chtChat);
 
     }

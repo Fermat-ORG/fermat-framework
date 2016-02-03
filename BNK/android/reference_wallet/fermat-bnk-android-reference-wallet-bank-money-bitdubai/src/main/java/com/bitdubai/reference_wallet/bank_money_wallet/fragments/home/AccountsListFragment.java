@@ -81,15 +81,12 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
         header.setText("Accounts:   "+moduleManager.getBankingWallet().getBankName());
-
-        // todo SE COMENTA PORQ YA NO EXISTEN LOS MÉTODOS
-
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.bw_banner)
-                //.setBody("prueba Body")
+                .setBody(R.string.bnk_bank_money_wallet_account_body)
                 .setTitle("prueba Title")
-               // .setSubTitle("prueba subtitle")
-               // .setTextFooter("prueba footer").setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+               .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
+               .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                .build();
         showOrHideNoAccountListView(accountsList.isEmpty());
         /*presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -133,14 +130,20 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu,inflater);
-        menu.add(0, ReferenceWalletConstants.ADD_ACCOUNT_ACTION, 0, "Add Account")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+        menu.add(0, ReferenceWalletConstants.ADD_ACCOUNT_ACTION, 0, "Add Account").setIcon(R.drawable.bw_add_icon_action_bar)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, ReferenceWalletConstants.HELP_ACTION, 1, "help").setIcon(R.drawable.bw_help_icon_action_bar)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == ReferenceWalletConstants.ADD_ACCOUNT_ACTION) {
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT, appSession.getAppPublicKey());
+            return true;
+        }
+        if (item.getItemId() == ReferenceWalletConstants.HELP_ACTION) {
+            presentationDialog.show();
             return true;
         }
         return super.onOptionsItemSelected(item);
