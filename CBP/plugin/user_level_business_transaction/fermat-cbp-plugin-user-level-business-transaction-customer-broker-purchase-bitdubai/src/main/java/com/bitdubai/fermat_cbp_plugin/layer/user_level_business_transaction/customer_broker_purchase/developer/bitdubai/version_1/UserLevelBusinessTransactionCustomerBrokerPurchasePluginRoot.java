@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -43,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
+
 
 /**
  * Created by Yordin Alayn on 16.09.15.
@@ -88,6 +90,8 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
 
     @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.NOTIFICATION)
     NotificationManagerMiddleware notificationManagerMiddleware;
+
+    public static EventSource EVENT_SOURCE = EventSource.USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER;
 
     UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
 
@@ -153,10 +157,10 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    @Override
-    public FermatManager getManager() {
-        return customerBrokerPurchaseManager;
-    }
+//    @Override
+//    public FermatManager getManager() {
+//        return customerBrokerPurchaseManager;
+//    }
 
     public static LogLevel getLogLevelByClass(String className) {
         try {
@@ -207,6 +211,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
+
         if (userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent == null) {
             userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent = new UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent(errorManager,
                     customerBrokerPurchaseNegotiationManager,
@@ -216,8 +221,14 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
                     closeContractManager,
                     customerBrokerContractPurchaseManager,
                     fiatIndexManager,
-                    notificationManagerMiddleware);
+                    notificationManagerMiddleware,
+                    customerBrokerPurchaseManager
+                    );
             userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
         } else userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
     }
 }
