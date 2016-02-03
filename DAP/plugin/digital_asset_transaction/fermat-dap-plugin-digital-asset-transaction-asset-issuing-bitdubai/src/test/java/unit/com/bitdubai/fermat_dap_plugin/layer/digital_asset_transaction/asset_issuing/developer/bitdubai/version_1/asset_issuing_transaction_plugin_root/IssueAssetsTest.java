@@ -220,7 +220,7 @@ public class IssueAssetsTest {
         digitalAsset.setContract(digitalAssetContract);
         digitalAsset.setResources(resources);
 
-        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         MemberModifier.field(AssetIssuingDigitalAssetTransactionPluginRoot.class, "assetIssuingTransactionManager").set(assetIssuingPluginRoot, assetIssuingTransactionManager);
         MemberModifier.field(AssetIssuingDigitalAssetTransactionPluginRoot.class, "digitalAssetIssuingVault").set(assetIssuingPluginRoot, digitalAssetIssuingVault);

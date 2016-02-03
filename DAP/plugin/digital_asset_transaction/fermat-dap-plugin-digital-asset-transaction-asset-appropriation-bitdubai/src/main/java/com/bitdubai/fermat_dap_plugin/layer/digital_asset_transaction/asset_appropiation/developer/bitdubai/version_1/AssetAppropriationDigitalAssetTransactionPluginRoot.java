@@ -29,6 +29,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
@@ -105,6 +106,8 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.EXTRA_WALLET_USER)
+    private ExtraUserManager extraUserManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_ISSUER)
     private AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
@@ -189,21 +192,14 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
                     intraWalletUserIdentityManager,
                     assetIssuerActorNetworkServiceManager,
                     assetIssuerWalletManager,
-                    actorAssetUserManager);
+                    actorAssetUserManager,
+                    extraUserManager);
             monitorAgent.start();
         } catch (Exception e) {
             throw new CantStartPluginException(FermatException.wrapException(e), context, e.getMessage());
         } finally {
             this.serviceStatus = ServiceStatus.STOPPED;
         }
-
-
-        //TODO REMOVE TEST METHOD.
-//        try {
-//            test();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
 
         super.start();
     }

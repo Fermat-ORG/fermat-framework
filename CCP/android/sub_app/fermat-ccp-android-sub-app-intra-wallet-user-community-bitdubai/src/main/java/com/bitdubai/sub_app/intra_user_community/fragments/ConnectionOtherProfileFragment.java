@@ -176,7 +176,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             ConnectDialog connectDialog;
             try {
-                connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
                 connectDialog.setUsername(intraUserInformation.getName());
@@ -197,7 +197,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             CommonLogger.info(TAG, "User connection state " + intraUserInformation.getConnectionState());
             final DisconectDialog disconectDialog;
             try {
-                disconectDialog = new DisconectDialog(getActivity(), (IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                disconectDialog = new DisconectDialog(getActivity(), (IntraUserSubAppSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 disconectDialog.setTitle("Disconnect");
                 disconectDialog.setDescription("Want to disconnect from");
                 disconectDialog.setUsername(intraUserInformation.getName());
