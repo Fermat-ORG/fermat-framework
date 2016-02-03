@@ -122,7 +122,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             for (DatabaseTableRecord records : table.getRecords()) {
                 availableBalanceFrozen = getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME));
                 cryptoBrokerWalletBalanceRecord = new CryptoBrokerWalletBalanceRecordImpl();
-                cryptoBrokerWalletBalanceRecord.setAvilableBalance(new BigDecimal(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME)).subtract(new BigDecimal(availableBalanceFrozen)));
+                cryptoBrokerWalletBalanceRecord.setAvailableBalance(new BigDecimal(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME)).subtract(new BigDecimal(availableBalanceFrozen)));
                 cryptoBrokerWalletBalanceRecord.setCurrencyType(CurrencyType.getByCode(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME)));
                 if (CurrencyType.CRYPTO_MONEY.getCode() != CurrencyType.getByCode(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME)).getCode()) {
                     cryptoBrokerWalletBalanceRecord.setMerchandise(FiatCurrency.getByCode(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME)));
@@ -162,7 +162,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 } else {
                     cryptoBrokerWalletBalanceRecord.setMerchandise(CryptoCurrency.getByCode(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME)));
                 }
-                cryptoBrokerWalletBalanceRecord.setAvilableBalance(new BigDecimal(0));
+                cryptoBrokerWalletBalanceRecord.setAvailableBalance(new BigDecimal(0));
                 cryptoBrokerWalletBalanceRecord.setBrokerPublicKey(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME));
 
                 cryptoBrokerWalletBalanceRecords.add(cryptoBrokerWalletBalanceRecord);
@@ -882,7 +882,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     }else{
                         cryptoBrokerWalletBalanceRecord.setMerchandise(CryptoCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME)));
                     }
-                    cryptoBrokerWalletBalanceRecord.setAvilableBalance(new BigDecimal(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME)));
+                    cryptoBrokerWalletBalanceRecord.setAvailableBalance(new BigDecimal(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME)));
                     cryptoBrokerWalletBalanceRecord.setBookBalance(new BigDecimal(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BOOK_BALANCE_COLUMN_NAME)));
                     cryptoBrokerWalletBalanceRecord.setCurrencyType(CurrencyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME)));
                     cryptoBrokerWalletBalanceRecord.setBrokerPublicKey(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME));
@@ -903,7 +903,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     }else{
                         cryptoBrokerWalletBalanceRecord.setMerchandise(CryptoCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MERCHANDISE_COLUMN_NAME)));
                     }
-                    cryptoBrokerWalletBalanceRecord.setAvilableBalance(new BigDecimal(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME)));
+                    cryptoBrokerWalletBalanceRecord.setAvailableBalance(new BigDecimal(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_AVAILABLE_BALANCE_COLUMN_NAME)));
                     cryptoBrokerWalletBalanceRecord.setBookBalance(new BigDecimal(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BOOK_BALANCE_COLUMN_NAME)));
                     cryptoBrokerWalletBalanceRecord.setCurrencyType(CurrencyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_CURRENCY_TYPE_COLUMN_NAME)));
                     cryptoBrokerWalletBalanceRecord.setBrokerPublicKey(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_BROKER_PUBLIC_KEY_COLUMN_NAME));
