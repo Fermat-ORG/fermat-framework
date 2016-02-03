@@ -285,7 +285,6 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
             //TODO CHANGE THIS!!!!!!!!!!!!!
             List<String> assetRejectedByContractGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByContractStatus();
             for (String assetRejectedGenesisTransaction : assetRejectedByContractGenesisTransactionList) {
-                //TODO: I added this, getDefaultBlockchainNetworkType() only for make a build. Manuel
                 DigitalAssetMetadata digitalAssetMetadata = digitalAssetUserRedemptionVault.getUserWallet(BlockchainNetworkType.getDefaultBlockchainNetworkType()).getDigitalAssetMetadata(assetRejectedGenesisTransaction);
                 String internalId = userRedemptionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
                 List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(digitalAssetMetadata.getLastTransactionHash());
@@ -299,7 +298,6 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
 
             List<String> assetRejectedByHashGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByHashStatus();
             for (String assetRejectedGenesisTransaction : assetRejectedByHashGenesisTransactionList) {
-                //TODO: I added this, getDefaultBlockchainNetworkType() only for make a build. Manuel
                 DigitalAssetMetadata digitalAssetMetadata = digitalAssetUserRedemptionVault.getUserWallet(BlockchainNetworkType.getDefaultBlockchainNetworkType()).getDigitalAssetMetadata(assetRejectedGenesisTransaction);
                 String internalId = userRedemptionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
                 List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(digitalAssetMetadata.getLastTransactionHash());

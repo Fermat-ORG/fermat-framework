@@ -135,7 +135,6 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
                     pluginId,
                     pluginFileSystem
             );
-            //TODO: I added this, getDefaultBlockchainNetworkType() only for make a build. Manuel
             selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
             //getTransactionsAssetAll("", "");
             System.out.println("******* Asset Issuer Wallet Module Init ******");
@@ -353,6 +352,11 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
         identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
+    }
+
+    @Override
+    public BlockchainNetworkType getSelectedNetwork() {
+        return selectedNetwork;
     }
 
     @Override

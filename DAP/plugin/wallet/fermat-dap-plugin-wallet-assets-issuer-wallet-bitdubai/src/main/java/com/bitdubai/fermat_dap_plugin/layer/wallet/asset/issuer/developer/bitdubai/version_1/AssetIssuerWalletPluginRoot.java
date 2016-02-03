@@ -92,7 +92,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
                     createWalletAssetIssuer(walletPublicKey, BlockchainNetworkType.TEST_NET);
                     createWalletAssetIssuer(walletPublicKey, BlockchainNetworkType.PRODUCTION);
                 }
-                //TODO: I added this, getDefaultBlockchainNetworkType() only for make a build. Manuel
+
                 assetIssuerWallet = loadAssetIssuerWallet(walletPublicKey, BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
             } catch (CantLoadWalletException e) {

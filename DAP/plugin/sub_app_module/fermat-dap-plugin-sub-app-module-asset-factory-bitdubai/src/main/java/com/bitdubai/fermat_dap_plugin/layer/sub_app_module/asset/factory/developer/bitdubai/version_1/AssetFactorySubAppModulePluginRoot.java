@@ -26,7 +26,6 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.settings.BasicSubAppSettings;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
@@ -70,6 +69,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
     BitcoinWalletManager bitcoinWalletManager;
 
     private SettingsManager<AssetIssuerSettings> settingsManager;
+    private BlockchainNetworkType selectedNetwork;
 
     // TODO ADDED ERROR MANAGER REFERENCE, PLEASE MAKE USE OF THE ERROR MANAGER.
 
@@ -83,7 +83,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
     public void start() throws CantStartPluginException {
 
         assetFactorySupAppModuleManager = new AssetFactorySupAppModuleManager(assetFactoryManager, identityAssetIssuerManager);
-        //test();
+        selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -110,7 +110,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public void publishAsset(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException {
-        assetFactorySupAppModuleManager.publishAssetFactory(assetFactory, BlockchainNetworkType.getDefaultBlockchainNetworkType());
+        assetFactorySupAppModuleManager.publishAssetFactory(assetFactory, selectedNetwork);
     }
 
     @Override
@@ -156,6 +156,17 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public long getBitcoinWalletBalance(String walletPublicKey) throws CantLoadWalletException, CantCalculateBalanceException {
         return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+    }
+
+    @Override
+    public void changeNetworkType(BlockchainNetworkType networkType) {
+        if (networkType == null) return;
+        selectedNetwork = networkType;
+    }
+
+    @Override
+    public BlockchainNetworkType getSelectedNetwork() {
+        return selectedNetwork;
     }
 
     public List<AssetFactory> test(){

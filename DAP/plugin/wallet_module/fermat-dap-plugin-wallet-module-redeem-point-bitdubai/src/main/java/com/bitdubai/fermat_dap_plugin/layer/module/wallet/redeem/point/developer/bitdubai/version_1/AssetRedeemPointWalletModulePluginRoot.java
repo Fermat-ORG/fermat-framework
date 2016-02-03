@@ -81,7 +81,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
                     pluginId,
                     pluginFileSystem
             );
-            //TODO: I added this, getDefaultBlockchainNetworkType() only for make a build. Manuel
+
             selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
             System.out.println("******* Asset Redeem Point Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
@@ -121,6 +121,11 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     public void changeNetworkType(BlockchainNetworkType networkType) {
         if (selectedNetwork == null) return; //NOPE
         selectedNetwork = networkType;
+    }
+
+    @Override
+    public BlockchainNetworkType getSelectedNetwork() {
+        return selectedNetwork;
     }
 
     @Override
