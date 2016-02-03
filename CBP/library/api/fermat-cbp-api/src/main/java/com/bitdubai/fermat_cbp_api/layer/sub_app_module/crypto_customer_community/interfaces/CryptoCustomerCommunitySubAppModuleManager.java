@@ -7,9 +7,12 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by natalia on 16/09/15.
@@ -20,6 +23,35 @@ import java.util.List;
  * provides the methods for the Crypto Customer Community sub app, to Identity Management Customers and the relationship with other Customers.
  */
 public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManager<CryptoCustomerCommunitySettings, ActiveActorIdentityInformation> {
+
+
+    /**
+     * The method <code>listCryptoBrokersPendingLocalAction</code> returns the list of crypto customers waiting to be accepted
+     * or rejected by the logged user
+     *
+     * @return the list of crypto customers waiting to be accepted or rejected by the logged in user.
+     *
+     * @throws CantGetCryptoCustomerListException if something goes wrong.
+     */
+    List<LinkedCryptoCustomerIdentity> listCryptoCustomersPendingLocalAction(final CryptoCustomerCommunitySelectableIdentity selectedIdentity,
+                                                                               final int max,
+                                                                               final int offset) throws CantGetCryptoCustomerListException;
+
+
+
+    /**
+     * The method <code>acceptCryptoCustomer</code> takes the information of a connection request, accepts
+     * the request and adds the crypto customer to the list managed by this plugin with ContactState CONTACT.
+     *
+     * @param connectionId      The id of the connection
+     * @throws CantAcceptRequestException
+     */
+    public void acceptCryptoCustomer(UUID connectionId) throws CantAcceptRequestException;
+
+
+
+
+
 
 
 
@@ -51,16 +83,6 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      */
     public void askCryptoCustomerForAcceptance(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantStartRequestException;
 
-    /**
-     * The method <code>acceptCryptoCustomer</code> takes the information of a connection request, accepts
-     * the request and adds the crypto customer to the list managed by this plugin with ContactState CONTACT.
-     *
-     * @param cryptoCustomerToAddName      The name of the crypto customer to add
-     * @param cryptoCustomerToAddPublicKey The public key of the crypto customer to add
-     * @param profileImage            The profile image that the crypto customer has
-     * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException
-     */
-    public void acceptCryptoCustomer(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
 
 
     /**

@@ -285,7 +285,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
 
             //MOCK!
             for(int i = 1 ; i <= 5 ; i++){
-                result.add(new CryptoCustomerCommunityInformationImpl("pk-"+i, "mock-"+i, new byte[0]));
+                result.add(new CryptoCustomerCommunityInformationImpl("pk-"+i, "custmr"+i, new byte[0]));
             }
 
             dataSet.addAll(result);
