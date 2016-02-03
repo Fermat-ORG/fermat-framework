@@ -302,53 +302,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
     }
 
-    private void setOneFragmentInScreen(FermatFragmentFactory walletFragmentFactory) {
-
-        try {
-        WalletNavigationStructure walletRuntime = getWalletRuntimeManager().getLastWallet();
-        String walletPublicKey = walletRuntime.getPublicKey();
-        String walletCategory = walletRuntime.getWalletCategory();
-        String walletType = walletRuntime.getWalletType();
-
-        FermatSession walletSession = getWalletSessionManager().getWalletSession(walletPublicKey);
-        String fragment = walletRuntime.getLastActivity().getLastFragment().getType();
-
-            if (walletFragmentFactory != null) {
-
-                TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-                tabLayout.setVisibility(View.GONE);
-
-                ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-                pagertabs.setVisibility(View.VISIBLE);
-
-
-                adapter = new TabsPagerAdapter(getFragmentManager(),
-                        getApplicationContext(),
-                        walletFragmentFactory,
-                        fragment,
-                        walletSession,
-                        getWalletResourcesProviderManager());
-                pagertabs.setAdapter(adapter);
-
-
-                //pagertabs.setCurrentItem();
-                final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                        .getDisplayMetrics());
-                pagertabs.setPageMargin(pageMargin);
-                //pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
-
-
-                //tabLayout.setupWithViewPager(pagertabs);
-                //pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
-            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
     private FermatSession createOrCallWalletSession() {
         FermatSession walletSession = null;
         try {

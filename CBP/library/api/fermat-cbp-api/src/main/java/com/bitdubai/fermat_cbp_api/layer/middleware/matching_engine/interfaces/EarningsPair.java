@@ -20,7 +20,7 @@ public interface EarningsPair {
     /**
      * @return the currency which we decided to extract the earnings.
      */
-    Currency getSelectedCurrency();
+    Currency getEarningCurrency();
 
     /**
      * @return the currency that we're linking to the previous selected currency to conform the pair.
@@ -33,5 +33,12 @@ public interface EarningsPair {
     String walletPublicKey();
 
     // TODO add all the information referencing the wallet that we have linked.
+
+    /**
+     * Through the method <code>getSearch</code> you can get a search object with the search functionality encapsulated.
+     *
+     * @return an instance of earning search for the selected wallet.
+     */
+    EarningsSearch getSearch();
 
 }
