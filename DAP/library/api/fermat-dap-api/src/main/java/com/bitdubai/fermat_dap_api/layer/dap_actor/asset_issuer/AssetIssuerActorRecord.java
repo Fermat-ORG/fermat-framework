@@ -1,11 +1,14 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-
-import java.util.Arrays;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 /**
  * Created by Nerio on 22/09/15.
@@ -85,6 +88,21 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.extendedPublicKey = extendedPublicKey;
     }
 
+    private AssetIssuerActorRecord(JsonObject jsonObject, Gson gson) {
+        this.publicLinkedIdentity = jsonObject.get("publicLinkedIdentity").getAsString();
+        this.actorPublicKey = jsonObject.get("actorPublicKey").getAsString();
+        this.name = jsonObject.get("name").getAsString();
+        this.description = jsonObject.get("description").getAsString();
+        this.registrationDate = Long.parseLong(jsonObject.get("registrationDate").getAsString());
+        this.lastConnectionDate = Long.parseLong(jsonObject.get("lastConnectionDate").getAsString());
+        this.dapConnectionState = gson.fromJson(jsonObject.get("dapConnectionState").getAsString(), DAPConnectionState.class);
+        this.location = gson.fromJson(jsonObject.get("location").getAsString(), Location.class);
+        this.locationLatitude = Double.valueOf(jsonObject.get("locationLatitude").getAsString());
+        this.locationLongitude = Double.valueOf(jsonObject.get("locationLongitude").getAsString());
+        this.cryptoAddress = gson.fromJson(jsonObject.get("cryptoAddress").getAsString(), CryptoAddress.class);
+        this.profileImage = Base64.decode(jsonObject.get("profileImage").getAsString(), Base64.DEFAULT);
+        this.extendedPublicKey = jsonObject.get("extendedPublicKey").getAsString();
+    }
 
     /**
      * The metho <code>getActorPublicKey</code> gives us the public key of the represented Asset Issuer
@@ -218,20 +236,55 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         return extendedPublicKey;
     }
 
+    public static AssetIssuerActorRecord fromJson(String jsonString) {
+
+        Gson gson = new Gson();
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
+        return new AssetIssuerActorRecord(jsonObject, gson);
+    }
+
+    public String toJson() {
+
+        Gson gson = new Gson();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("publicLinkedIdentity",  publicLinkedIdentity);
+        jsonObject.addProperty("actorPublicKey",        actorPublicKey);
+        jsonObject.addProperty("name",                  name);
+        jsonObject.addProperty("description",           description);
+        jsonObject.addProperty("registrationDate",      registrationDate);
+        jsonObject.addProperty("lastConnectionDate",    lastConnectionDate);
+        jsonObject.addProperty("dapConnectionState",    dapConnectionState.toString());
+        jsonObject.addProperty("location",              location.toString());
+        jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
+        jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
+        jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
+        jsonObject.addProperty("profileImage", Base64.encodeToString(profileImage, Base64.DEFAULT));
+        jsonObject.addProperty("extendedPublicKey",     extendedPublicKey);
+        return gson.toJson(jsonObject);
+    }
+
     @Override
     public String toString() {
-        return "AssetIssuerActorRecord{" +
-                "publicLinkedIdentity='" + publicLinkedIdentity + '\'' +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", actorPublicKey='" + actorPublicKey + '\'' +
-                ", registrationDate=" + registrationDate +
-                ", DAPConnectionState=" + dapConnectionState +
-                ", location=" + location +
-                ", locationLatitude=" + locationLatitude +
-                ", locationLongitude=" + locationLongitude +
-                ", cryptoAddress=" + cryptoAddress +
-                ", profileImage=" + Arrays.toString(profileImage) +
+        String profileImageIssuer = null;
+        if(profileImage != null)
+            profileImageIssuer = Base64.encodeToString(profileImage, Base64.DEFAULT);
+
+        return "AssetIssuerActorRecord{"    +
+                "publicLinkedIdentity='"    + publicLinkedIdentity + '\'' +
+                ", actorPublicKey='"        + actorPublicKey + '\'' +
+                ", name='"                  + name + '\'' +
+                ", description='"           + description + '\'' +
+                ", registrationDate="       + registrationDate +
+                ", lastConnectionDate="     + lastConnectionDate +
+                ", dapConnectionState="     + dapConnectionState +
+                ", location="               + location +
+                ", locationLatitude="       + locationLatitude +
+                ", locationLongitude="      + locationLongitude +
+                ", cryptoAddress="          + cryptoAddress +
+                ", profileImage="           + profileImageIssuer +
+                ", extendedPublicKey='"     + extendedPublicKey + '\'' +
                 '}';
     }
 }

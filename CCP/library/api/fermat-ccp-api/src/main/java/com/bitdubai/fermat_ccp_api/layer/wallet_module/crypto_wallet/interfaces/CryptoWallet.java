@@ -363,11 +363,11 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
-                                                                                                                                        TransactionType transactionType,
-                                                                                                                                        String walletPublicKey,
+                                                                             TransactionType transactionType,
+                                                                             String walletPublicKey,
                                                                              String actorPublicKey,
-                                                                                                                                        int max,
-                                                                                                                                        int offset) throws CantListTransactionsException;
+                                                                             int max,
+                                                                             int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>listTransactionsByActorAndType</code> you can get the transactions for each actor

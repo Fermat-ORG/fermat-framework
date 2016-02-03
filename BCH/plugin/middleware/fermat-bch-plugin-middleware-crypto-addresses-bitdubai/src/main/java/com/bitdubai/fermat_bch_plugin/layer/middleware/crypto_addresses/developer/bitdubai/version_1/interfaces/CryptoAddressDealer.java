@@ -56,7 +56,7 @@ public abstract class CryptoAddressDealer {
 
         try {
 
-            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getCryptoAddress(BlockchainNetworkType.DEFAULT);
+            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getCryptoAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
         } catch (CantIdentifyVaultException e) {
 
