@@ -8,8 +8,32 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
  */
 public interface Quote {
     //TODO; Documentar y excepciones
+
+    /**
+     * The method <code>getMerchandise</code> returns the merchandise of the Quote
+     *
+     * @return a FermatEnum of the merchandise
+     */
     FermatEnum getMerchandise();
+
+    /**
+     * The method <code>getFiatCurrency</code> returns the fiat currency of the Quote
+     *
+     * @return FiatCurrency
+     */
     FiatCurrency getFiatCurrency();
+
+    /**
+     * The method <code>getPriceReference</code> returns the price reference of the Quote
+     *
+     * @return a float of the price reference
+     */
     float getPriceReference();
+
+    /**
+     * The method <code>getQuantity</code> returns the quantity of the Quote
+     *
+     * @return a float of the quantity
+     */
     float getQuantity();
 }
