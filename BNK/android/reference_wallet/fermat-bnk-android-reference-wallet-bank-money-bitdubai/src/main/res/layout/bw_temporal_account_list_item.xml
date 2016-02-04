@@ -47,7 +47,7 @@
         <ImageView
             android:id="@+id/bw_account_image"
             android:layout_width="100dp"
-            android:layout_height="115dp"
+            android:layout_height="100dp"
             android:src="@drawable/bw_bg_detail_number_01" />
 
         <LinearLayout
@@ -71,7 +71,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:layout_below="@id/balance_text"
                 android:layout_marginTop="4dp"
                 android:background="@color/white" />
@@ -102,7 +102,7 @@
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
+                android:layout_height="1dp"
                 android:layout_below="@id/available_text"
                 android:layout_marginTop="4dp"
                 android:background="@color/white" />
@@ -116,7 +116,7 @@
                     android:layout_below="@id/balance_text"
                     android:layout_marginTop="5dp"
                     android:text="To confirm"
-                    android:textColor="@color/soft_purple"
+                    android:textColor="@color/text_color_soft_grey"
                     android:textSize="@dimen/text_size"
                     android:visibility="visible" />
 
@@ -127,7 +127,7 @@
                     android:layout_marginTop="5dp"
                     android:text="30000.00 USD"
                     android:gravity="right"
-                    android:textColor="@color/soft_purple"
+                    android:textColor="@color/text_color_white"
                     android:textSize="@dimen/large_text_size" />
             </LinearLayout>
         </LinearLayout>

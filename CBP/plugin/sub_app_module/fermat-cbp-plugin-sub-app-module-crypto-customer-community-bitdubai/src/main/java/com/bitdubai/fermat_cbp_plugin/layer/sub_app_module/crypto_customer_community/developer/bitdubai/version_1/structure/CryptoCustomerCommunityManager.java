@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_comm
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcceptActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -117,7 +118,13 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     }
 
     @Override
-    public void denyConnection(String cryptoCustomerToRejectPublicKey) throws CryptoCustomerConnectionRejectionFailedException {
+    public void denyConnection(UUID connectionId) throws CantDenyActorConnectionRequestException {
+        try {
+            this.cryptoCustomerActorConnectionManager.denyConnection(connectionId);
+        } catch (CantDenyActorConnectionRequestException | ActorConnectionNotFoundException | UnexpectedConnectionStateException e)
+        {
+            throw new CantDenyActorConnectionRequestException("", e, "", "");
+        }
 
     }
 
@@ -161,6 +168,40 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
                 linkedCryptoCustomerIdentityList.add(new LinkedCryptoCustomerIdentityImpl(ccac));
 
             return linkedCryptoCustomerIdentityList;
+
+        } catch (final CantListActorConnectionsException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCryptoCustomerListException("", e, "", "Error trying to list actor connections.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCryptoCustomerListException("", e, "", "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public List<CryptoCustomerCommunityInformation> listAllConnectedCryptoCustomers(CryptoCustomerCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantGetCryptoCustomerListException {
+
+        try {
+
+            final CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType()
+            );
+
+            final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
+
+            search.addConnectionState(ConnectionState.CONNECTED);
+
+            final List<CryptoCustomerActorConnection> actorConnections = search.getResult(max, offset);
+
+            final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+
+            for (CryptoCustomerActorConnection ccac : actorConnections)
+                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac));
+
+            return cryptoCustomerCommunityInformationList;
 
         } catch (final CantListActorConnectionsException e) {
 
