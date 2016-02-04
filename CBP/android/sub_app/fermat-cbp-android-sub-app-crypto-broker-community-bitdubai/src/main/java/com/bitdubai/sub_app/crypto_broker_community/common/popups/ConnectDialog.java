@@ -25,15 +25,13 @@ import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
-
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/12/2015.
  *
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements
-        View.OnClickListener {
+public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -50,15 +48,17 @@ public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessi
     CharSequence username;
     CharSequence title;
 
-    CryptoBrokerCommunityInformation information;
+    private final CryptoBrokerCommunityInformation        information;
+    private final CryptoBrokerCommunitySelectableIdentity identity   ;
 
-    CryptoBrokerCommunitySelectableIdentity identity;
 
+    public ConnectDialog(final Activity                                activity                          ,
+                         final CryptoBrokerCommunitySubAppSession      cryptoBrokerCommunitySubAppSession,
+                         final SubAppResourcesProviderManager          subAppResources                   ,
+                         final CryptoBrokerCommunityInformation        information                       ,
+                         final CryptoBrokerCommunitySelectableIdentity identity                          ) {
 
-    public ConnectDialog(Activity a, CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager subAppResources,
-                         CryptoBrokerCommunityInformation information, CryptoBrokerCommunitySelectableIdentity identity) {
-
-        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+        super(activity, cryptoBrokerCommunitySubAppSession, subAppResources);
 
         this.information = information;
         this.identity = identity;
@@ -118,8 +118,12 @@ public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessi
         int i = v.getId();
         if (i == R.id.positive_button) {
             try {
-                //image null
+
                 if (information != null && identity != null) {
+
+                    System.out.println("*********** i'm the selected identity: "+identity);
+                    System.out.println("*********** i'm the selected broker information: "+information);
+
                     getSession().getModuleManager().requestConnectionToCryptoBroker(
                             identity,
                             information

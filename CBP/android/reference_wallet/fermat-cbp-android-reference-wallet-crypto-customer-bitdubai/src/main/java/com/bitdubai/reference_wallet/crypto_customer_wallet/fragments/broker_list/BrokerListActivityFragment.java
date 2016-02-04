@@ -14,7 +14,6 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -164,7 +163,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     @Override
     public void onItemClickListener(BrokerIdentityBusinessInfo data, int position) {
         final CryptoCustomerWalletSession walletSession = (CryptoCustomerWalletSession) this.appSession;
-        walletSession.setCurrencyToBuy(data.getMerchandiseCurrency());
+        walletSession.setCurrencyToBuy(data.getMerchandise());
         walletSession.setSelectedBrokerIdentity(data);
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION, this.appSession.getAppPublicKey());
     }
@@ -179,9 +178,9 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
         if (moduleManager != null) {
             try {
-                data.addAll(TestData.getBrokerListTestData());
+                //data.addAll(TestData.getBrokerListTestData());
 
-                // TODO: data.addAll(walletManager.getListOfConnectedBrokersAndTheirMerchandises("customer_1"));
+                data.addAll(walletManager.getListOfConnectedBrokersAndTheirMerchandises());
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

@@ -87,15 +87,17 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
     public final void start() throws CantStartAgentException {
 
-        try {
+        if (!isRunning()) {
+            try {
 
-            agentThread.start();
+                this.status = AgentStatus.STARTED;
 
-            this.status = AgentStatus.STARTED;
+                agentThread.start();
 
-        } catch (Exception exception) {
+            } catch (Exception exception) {
 
-            throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+                throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+            }
         }
     }
 
