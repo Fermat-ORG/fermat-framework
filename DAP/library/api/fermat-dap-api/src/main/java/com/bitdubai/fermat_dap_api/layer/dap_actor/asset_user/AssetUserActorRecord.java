@@ -1,10 +1,15 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.Arrays;
 
@@ -90,6 +95,22 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.lastConnectionDate     =       lastConnectionDate      ;
         this.profileImage           =       profileImage.clone()    ;
 
+    }
+
+    private AssetUserActorRecord(JsonObject jsonObject, Gson gson) {
+        this.publicLinkedIdentity = jsonObject.get("publicLinkedIdentity").getAsString();
+        this.actorPublicKey = jsonObject.get("actorPublicKey").getAsString();
+        this.name = jsonObject.get("name").getAsString();
+        this.age = jsonObject.get("age").getAsString();
+        this.genders = gson.fromJson(jsonObject.get("genders").getAsString(), Genders.class);
+        this.registrationDate = Long.parseLong(jsonObject.get("registrationDate").getAsString());
+        this.lastConnectionDate = Long.parseLong(jsonObject.get("lastConnectionDate").getAsString());
+        this.dapConnectionState = gson.fromJson(jsonObject.get("dapConnectionState").getAsString(), DAPConnectionState.class);
+        this.location = gson.fromJson(jsonObject.get("location").getAsString(), Location.class);
+        this.locationLatitude = Double.valueOf(jsonObject.get("locationLatitude").getAsString());
+        this.locationLongitude = Double.valueOf(jsonObject.get("locationLongitude").getAsString());
+        this.cryptoAddress = gson.fromJson(jsonObject.get("cryptoAddress").getAsString(), CryptoAddress.class);
+        this.profileImage = Base64.decode(jsonObject.get("profileImage").getAsString(), Base64.DEFAULT);
     }
 
     @Override
@@ -307,22 +328,54 @@ public class AssetUserActorRecord implements ActorAssetUser {
             this.cryptoAddress = cryptoAddress;
     }
 
+    public static AssetUserActorRecord fromJson(String jsonString) {
+
+        Gson gson = new Gson();
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
+        return new AssetUserActorRecord(jsonObject, gson);
+    }
+
+    public String toJson() {
+
+        Gson gson = new Gson();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("publicLinkedIdentity",  publicLinkedIdentity);
+        jsonObject.addProperty("actorPublicKey",        actorPublicKey);
+        jsonObject.addProperty("name",                  name);
+        jsonObject.addProperty("age",                   age);
+        jsonObject.addProperty("genders",               genders.toString());
+        jsonObject.addProperty("registrationDate",      registrationDate);
+        jsonObject.addProperty("lastConnectionDate",    lastConnectionDate);
+        jsonObject.addProperty("dapConnectionState",    dapConnectionState.toString());
+        jsonObject.addProperty("location",              location.toString());
+        jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
+        jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
+        jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
+        jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
+        return gson.toJson(jsonObject);
+    }
     @Override
     public String toString() {
+        String profileImageUser = null;
+        if(profileImage != null)
+            profileImageUser = Base64.encodeToString(profileImage, Base64.DEFAULT);
+
         return "AssetUserActorRecord{" +
-                "publicLinkedIdentity='" + publicLinkedIdentity + '\'' +
-                ", actorPublicKey='" + actorPublicKey + '\'' +
-                ", name='" + name + '\'' +
-                ", age='" + age + '\'' +
-                ", genders=" + genders +
-                ", dapConnectionState=" + dapConnectionState +
-                ", location=" + location +
-                ", locationLatitude=" + locationLatitude +
-                ", locationLongitude=" + locationLongitude +
-                ", registrationDate=" + registrationDate +
-                ", lastConnectionDate=" + lastConnectionDate +
-                ", cryptoAddress=" + cryptoAddress +
-                ", profileImage=" + Arrays.toString(profileImage) +
+                "publicLinkedIdentity='"    + publicLinkedIdentity + '\'' +
+                ", actorPublicKey='"        + actorPublicKey + '\'' +
+                ", name='"                  + name + '\'' +
+                ", age='"                   + age + '\'' +
+                ", genders="                + genders +
+                ", dapConnectionState="     + dapConnectionState +
+                ", location="               + location +
+                ", locationLatitude="       + locationLatitude +
+                ", locationLongitude="      + locationLongitude +
+                ", registrationDate="       + registrationDate +
+                ", lastConnectionDate="     + lastConnectionDate +
+                ", cryptoAddress="          + cryptoAddress +
+                ", profileImage="           + profileImageUser +
                 '}';
     }
 }

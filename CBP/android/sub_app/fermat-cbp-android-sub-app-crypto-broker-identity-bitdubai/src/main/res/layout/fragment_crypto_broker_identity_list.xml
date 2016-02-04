@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical"
-        android:visibility="gone"
-        android:background="@drawable/bg_notidentityes">
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="250dp"

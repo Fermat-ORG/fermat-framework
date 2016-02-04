@@ -13,21 +13,21 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 /**
- * The class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.FermatMessageProcessor</code> define
+ * The class <code>com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processor.FermatMessageProcessor</code> define
  * the method that have to implements a fermat messages processor class, side of the server
  * <p/>
  *
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/10/15.
- *
+ * Implemented by Gabriel Araujo to CHT
  * @version 1.0
  * @since Java JDK 1.7
  */
 public abstract class FermatMessageProcessor {
 
     /**
-     * Represent the assetTransmissionNetworkServicePluginRoot
+     * Represent the NetworkServiceChatNetworkServicePluginRoot
      */
-    private NetworkServiceChatNetworkServicePluginRoot chatNetworkServicePluginRoot;
+    private NetworkServiceChatNetworkServicePluginRoot networkServiceChatNetworkServicePluginRoot;
 
     /**
      * Represent the gson
@@ -36,11 +36,11 @@ public abstract class FermatMessageProcessor {
 
     /**
      * Constructor with parameters
-     * @param chatNetworkServicePluginRoot
+     * @param networkServiceChatNetworkServicePluginRoot
      */
-    public FermatMessageProcessor(NetworkServiceChatNetworkServicePluginRoot chatNetworkServicePluginRoot){
+    public FermatMessageProcessor(NetworkServiceChatNetworkServicePluginRoot networkServiceChatNetworkServicePluginRoot){
         super();
-        this.chatNetworkServicePluginRoot = chatNetworkServicePluginRoot;
+        this.networkServiceChatNetworkServicePluginRoot = networkServiceChatNetworkServicePluginRoot;
         this.gson = new Gson();
     }
 
@@ -58,10 +58,10 @@ public abstract class FermatMessageProcessor {
 
     /**
      * Get the NetworkServiceChatNetworkServicePluginRoot
-     * @return chatNetworkServicePluginRoot
+     * @return networkServiceChatNetworkServicePluginRoot
      */
-    public NetworkServiceChatNetworkServicePluginRoot getChatNetworkServicePluginRoot() {
-        return chatNetworkServicePluginRoot;
+    public NetworkServiceChatNetworkServicePluginRoot getNetworkServiceChatNetworkServicePluginRoot() {
+        return networkServiceChatNetworkServicePluginRoot;
     }
 
 

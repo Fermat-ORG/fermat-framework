@@ -37,7 +37,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.CryptoBrokerCommunityInformationImpl;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
@@ -71,7 +70,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     private int mNotificationsCount = 0;
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList;
 
-
     //Flags
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
@@ -83,8 +81,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     private GridLayoutManager layoutManager;
     private AppListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
-
-
 
 
     public static ConnectionsWorldFragment newInstance() {
@@ -125,6 +121,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                     e.printStackTrace();
                 }
             }
+           // moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
 
             try{
@@ -140,6 +137,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             //mNotificationsCount = 4;
             //new FetchCountTask().execute();
 
+            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -150,6 +148,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
@@ -171,6 +170,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
+            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
 
             if(launchActorCreationDialog) {
@@ -178,14 +178,19 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
                         .setBannerRes(R.drawable.banner_crypto_broker)
                         .setIconRes(R.drawable.crypto_broker)
-                        .setSubTitle(R.string.launch_action_creation_dialog_sub_title)
-                        .setBody(R.string.launch_action_creation_dialog_body)
-                        .setTextFooter(R.string.launch_action_creation_dialog_footer)
+                        .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
+                        .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
+                        .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
+                        .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
+                        .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
-                                invalidate();
+                                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
+                                invalidate();            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
                                 onRefresh();
                             }
                         });
@@ -193,11 +198,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             }
             else
             {
-                invalidate();
+                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
+                invalidate();            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
                 onRefresh();
             }
-
-
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -381,7 +387,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 //            int notificationCount = 0;
 //
 //            try {
-//                CryptoBrokerCommunitySelectableIdentity selectedIdentity = moduleManager.getSelectedActorIdentity();
+//                CryptoCustomerCommunitySelectableIdentity selectedIdentity = moduleManager.getSelectedActorIdentity();
 //                notificationCount = moduleManager.listCryptoBrokersPendingLocalAction(selectedIdentity, MAX, offset).size();
 //            } catch(CantListCryptoBrokersException | ActorIdentityNotSelectedException | CantGetSelectedActorIdentityException e){
 //                errorManager.reportUnexpectedUIException(UISource.TASK, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, e);

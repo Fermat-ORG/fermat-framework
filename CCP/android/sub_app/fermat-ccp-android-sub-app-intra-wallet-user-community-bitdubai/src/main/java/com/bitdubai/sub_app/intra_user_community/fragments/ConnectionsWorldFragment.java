@@ -110,6 +110,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private LinearLayout searchEmptyView;
     private LinearLayout noNetworkView;
     private LinearLayout noFermatNetworkView;
+    private Handler handler = new Handler();
 
     /**
      * Create a new instance of this fragment

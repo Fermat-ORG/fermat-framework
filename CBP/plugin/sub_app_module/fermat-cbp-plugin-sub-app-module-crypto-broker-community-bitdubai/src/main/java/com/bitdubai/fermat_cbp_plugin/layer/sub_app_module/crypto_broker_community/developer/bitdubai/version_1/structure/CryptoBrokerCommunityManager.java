@@ -32,6 +32,8 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.Crypt
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
@@ -84,6 +86,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                                         final PluginFileSystem                   pluginFileSystem                      ,
                                         final UUID                               pluginId                              ,
                                         final PluginVersionReference             pluginVersionReference                ) {
+        //System.out.println("CBC CryptoBrokerCommunityManager initttttt!!!!!");
 
         this.cryptoBrokerIdentityManager            = cryptoBrokerIdentityManager           ;
         this.cryptoBrokerActorConnectionManager     = cryptoBrokerActorConnectionManager    ;
@@ -397,6 +400,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
             search.addConnectionState(ConnectionState.CONNECTED);
 
+            //search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
+
             final List<CryptoBrokerActorConnection> actorConnections = search.getResult(Integer.MAX_VALUE, 0);
 
             for(CryptoBrokerActorConnection connection : actorConnections){
@@ -429,6 +434,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        //System.out.print("CBC getSelectedActorIdentity.. (PK=" + this.subAppPublicKey + ") ");
 
         //Try to get appSettings
         CryptoBrokerCommunitySettings appSettings = null;
@@ -437,26 +443,62 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
         }catch (Exception e){appSettings = null;}
 
 
-        //If appSettings exists, get selectedActorIdentityPublicKey
+        //Get all customer identities on local device
+        List<CryptoCustomerIdentity> identitiesInDevice = null;
+        try{
+            identitiesInDevice = cryptoCustomerIdentityManager.getAllCryptoCustomerFromCurrentDeviceUser();
+        } catch(CantGetCryptoCustomerIdentityException e) { /*Do nothing*/ }
+
+
+        //If appSettings exists, get its selectedActorIdentityPublicKey property
         if(appSettings != null)
         {
             String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
 
             if (lastSelectedIdentityPublicKey != null){
 
-                CryptoBrokerIdentity brokerIdentity = null;
-                try{
-                    brokerIdentity = cryptoBrokerIdentityManager.getCryptoBrokerIdentity(lastSelectedIdentityPublicKey);
-                } catch(IdentityNotFoundException | CantGetCryptoBrokerIdentityException e) {
-                    return null;
+                CryptoBrokerCommunitySelectableIdentityImpl selectedIdentity = null;
+
+                for(CryptoCustomerIdentity i : identitiesInDevice) {
+                    if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                        selectedIdentity = new CryptoBrokerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage());
                 }
 
-                return new CryptoBrokerCommunitySelectableIdentityImpl(brokerIdentity.getPublicKey(), Actors.CBP_CRYPTO_BROKER,
-                                                                       brokerIdentity.getAlias(), brokerIdentity.getProfileImage());
+                if(selectedIdentity == null)
+                    return null;
+
+                //System.out.println("Good");
+                return selectedIdentity;
+            }
+            //Check if at least one local customer identity has been created
+            else
+            {
+
+                if(identitiesInDevice.size() > 0)
+                {
+                    CryptoBrokerCommunitySelectableIdentityImpl selectedIdentity
+                            = new CryptoBrokerCommunitySelectableIdentityImpl(identitiesInDevice.get(0).getPublicKey(),
+                                                                              Actors.CBP_CRYPTO_BROKER,
+                                                                              identitiesInDevice.get(0).getAlias(),
+                                                                              identitiesInDevice.get(0).getProfileImage());
+
+                    appSettings.setLastSelectedIdentityPublicKey(selectedIdentity.getPublicKey());
+
+                    try {
+                        this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                    }catch (CantPersistSettingsException e){
+                        this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    }
+
+                    //System.out.println("Good");
+                    return selectedIdentity;
+                }
+
             }
 
         }
 
+        //System.out.println("Nope.. ");
         return null;
 
 
@@ -476,7 +518,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 //
 //        try {
 //
-//            CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
+//            CryptoCustomerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
 //
 //            if (lastSelectedIdentity != null)
 //                return lastSelectedIdentity;
@@ -489,7 +531,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 //
 //                getSettingsManager().persistSettings(this.subAppPublicKey, new CryptoBrokerCommunitySettings());
 //
-//                CryptoBrokerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
+//                CryptoCustomerCommunitySelectableIdentity lastSelectedIdentity = getSettingsManager().loadAndGetSettings(this.subAppPublicKey).getLastSelectedIdentity();
 //
 //                if (lastSelectedIdentity != null)
 //                    return lastSelectedIdentity;
@@ -516,14 +558,16 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        CryptoBrokerIdentity createdIdentity = null;
+
+        System.out.println("CBC ASD createIdentity a....." + name);
+
+
+        //TODO: Por ahora se crea un John / Jane customers.. pues interesa en el flujo actual, en el futuro el dialogo deberia preguntar si la persona quiere es crear un
+        // broker o un customer.. y crear aqui lo que se necesite crear.
+        CryptoCustomerIdentity createdIdentity = null;
         try{
-            createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img);
-            cryptoBrokerIdentityManager.publishIdentity(createdIdentity.getPublicKey());
-        }catch(CantCreateCryptoBrokerIdentityException | CryptoBrokerIdentityAlreadyExistsException e ) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            return;
-        }catch(CantPublishIdentityException | IdentityNotFoundException e) {
+            createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img);
+        }catch(CantCreateCryptoCustomerIdentityException e) {
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;
         }
@@ -550,6 +594,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public void setAppPublicKey(final String publicKey) {
+        //System.out.println("CBC setAppPublicKey a....." + publicKey);
+
         this.subAppPublicKey = publicKey;
     }
 

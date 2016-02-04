@@ -61,7 +61,6 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractPlugin 
     public void start() throws CantStartPluginException {
 
         try {
-
             fermatManager = new CryptoBrokerCommunityManager(
                     cryptoBrokerIdentityManager,
                     cryptoBrokerActorConnectionManager,

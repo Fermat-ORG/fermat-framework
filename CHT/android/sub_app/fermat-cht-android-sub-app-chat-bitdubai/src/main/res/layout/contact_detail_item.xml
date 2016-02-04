@@ -10,6 +10,7 @@
         android:id="@+id/contact_detail_header"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:textColor="@color/black"
         style="@style/addressHeader"/>
 
     <LinearLayout android:orientation="horizontal"
@@ -21,12 +22,13 @@
         android:divider="?android:attr/listDivider">
 
         <TextView
-            android:id="@+id/contact_detail_item"
+            android:id="@+id/alias"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:paddingRight="@dimen/padding"
             android:layout_gravity="center"
+            android:textColor="@color/black"
             style="@style/addressDetail"/>
 
         <ImageButton
@@ -37,6 +39,7 @@
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:layout_gravity="center"
+            android:textColor="@color/black"
             android:contentDescription="@string/address_button_description"
             style="@style/addressButton"/>
 

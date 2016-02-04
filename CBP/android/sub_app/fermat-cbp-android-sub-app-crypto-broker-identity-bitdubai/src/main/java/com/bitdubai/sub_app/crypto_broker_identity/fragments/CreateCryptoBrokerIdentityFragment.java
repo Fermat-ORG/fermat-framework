@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -82,10 +84,9 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_broker_identity, container, false);
         initViews(rootLayout);
-
+        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         return rootLayout;
     }
 
@@ -95,16 +96,11 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-
         actualizable = true;
-
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
-
         mBrokerName.requestFocus();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-
         mBrokerName.performClick();
-
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -114,7 +110,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                 }
             }
         });
-
         camara = (ImageView) layout.findViewById(R.id.camara);
         camara.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +117,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                 dispatchTakePictureIntent();
             }
         });
-
         galeria = (ImageView) layout.findViewById(R.id.galeria);
         galeria.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,23 +124,13 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                 loadImageFromGallery();
             }
         });
-
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
         mBrokerImage.setImageResource(R.drawable.img_new_user_camera);
-
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.getItem(0).setVisible(false);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        mBrokerName.requestFocus();
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
     @Override
@@ -163,7 +147,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             ImageView pictureView = mBrokerImage;
-
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
@@ -182,7 +165,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                     }
                     break;
             }
-
             if (pictureView != null && cryptoBrokerBitmap != null) {
                 pictureView.setImageBitmap(cryptoBrokerBitmap);
             }

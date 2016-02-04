@@ -181,7 +181,7 @@ public class ChatMiddlewareContactFactory {
                                 alias,
                                 PlatformComponentType.ACTOR_INTRA_USER,
                                 actorPublicKey,
-                                date
+                                date.getTime()
                         );
                         contactList.add(contact);
                     }
@@ -202,7 +202,7 @@ public class ChatMiddlewareContactFactory {
                                 alias,
                                 PlatformComponentType.ACTOR_ASSET_USER,
                                 actorPublicKey,
-                                date
+                                date.getTime()
                         );
                         contactList.add(contact);
                     }
