@@ -578,8 +578,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     }
 
     @Override
-    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfile = platformComponentProfile;
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfilePluginRoot) {
+        this.platformComponentProfile = platformComponentProfilePluginRoot;
     }
 
     /**

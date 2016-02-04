@@ -175,6 +175,8 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
         try {
 
+            System.out.println("************* I'm the crypto broker connection information created: "+brokerInformation);
+
             final UUID newId = UUID.randomUUID();
 
             final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
