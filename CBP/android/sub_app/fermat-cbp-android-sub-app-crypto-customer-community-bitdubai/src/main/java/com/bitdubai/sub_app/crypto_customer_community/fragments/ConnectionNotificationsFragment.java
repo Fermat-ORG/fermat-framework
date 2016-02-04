@@ -208,7 +208,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
     @Override
     public void onItemClickListener(LinkedCryptoCustomerIdentity data, int position) {
         try {
-            Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
             //moduleManager.acceptCryptoCustomer(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
             //TODO: Note, subAppResourcesProviderManager is badly casted as a WalletResourcesNetworkServicePluginRoot.. sending null, for now. so it doesnt throw a classCastException
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), cryptoCustomerCommunitySubAppSession, null, data, moduleManager.getSelectedActorIdentity());
