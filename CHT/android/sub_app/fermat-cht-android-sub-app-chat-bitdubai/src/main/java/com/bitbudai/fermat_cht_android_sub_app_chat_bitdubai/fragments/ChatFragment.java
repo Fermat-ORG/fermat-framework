@@ -1,11 +1,10 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,31 +22,33 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
-import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
-import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.text.DateFormat;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 //import android.widget.LinearLayout;
@@ -83,11 +84,18 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     int i = 4;
 
     Integer newmessage = 0;
-    String mensaje = "";
+
     ArrayList<String> historialmensaje = new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
     Map<String,Contact>others=new HashMap<String,Contact>();
     Map<String,Contact>me=new HashMap<String,Contact>();;
+
+
+
+    boolean chatwascreate=false;
+    PlatformComponentType remotepct;
+    String remotepk;
+    UUID chatid;
     //Data
     List<String> chatmessages = new ArrayList<>();
 
@@ -101,9 +109,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     TextView linear_layout_send_form;
 
 
-    public static ChatFragment newInstance() {
-        return new ChatFragment();
-    }
+    public static ChatFragment newInstance() { return new ChatFragment(); }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,7 +120,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             chatManager = moduleManager.getChatManager();
             //settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
-
+            whattodo();
 
         } catch (Exception e) {
             if (errorManager != null)
@@ -124,39 +130,76 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     }
 
-    public void addContactDirection(List<Contact> contactdirection){
+    UUID findchatid(String remotepk){
+        Map<String,UUID> relationchatidpkremote=new HashMap<String, UUID>();
+        UUID chatidofpk=null;
+        String tempremotepk;
+        try {
+            for (int i = 0; i < chatManager.getChats().size(); i++) {
+                tempremotepk = chatManager.getChats().get(i).getRemoteActorPublicKey();
+                if (!(relationchatidpkremote.containsKey(tempremotepk))) {
+                    relationchatidpkremote.put(tempremotepk, chatManager.getChats().get(i).getChatId());
+                }
+            }
+            for (int i = 0; i < chatManager.getChats().size(); i++) {
+                if (relationchatidpkremote.get(i).equals(remotepk)) {
+                    chatidofpk=relationchatidpkremote.get(i);
+                }
+            }
 
-        for (int i=0;i<contactdirection.size();i++){
-            others.put(contactdirection.get(i).getRemoteName(), contactdirection.get(i));
-            System.out.println("\n\nADDCONTACTDIRECTION("+i+"):\n\n"+contactdirection.get(i).getRemoteName()+" ?? "+contactdirection.get(i).getAlias()
-                    +" ?? "+contactdirection.get(i).getRemoteActorPublicKey().toString()+" ?? "+contactdirection.get(i).getContactId().toString()+" ?? "
-                    +contactdirection.get(i).getRemoteActorType().toString()+" ?? "+contactdirection.get(i).getCreationDate());
+        }catch (CantGetChatException e) {
+               e.printStackTrace();
         }
+        return chatidofpk;
+    }
 
+
+    void whattodo(){
+
+        if(appSession.getData("whocallme").equals("chatlist")){
+
+            chatid= (UUID) appSession.getData("chatvalues");
+            chatwascreate=true;
+
+        }else if(appSession.getData("whocallme").equals("contact")){  //fragment contact call this fragment
+
+            remotepct=(PlatformComponentType)appSession.getData("remotepct");//it has to sent me whocalme="contact"
+            remotepk= (String) appSession.getData("remotepk");               //and remote pk and platform
+            chatid=findchatid(remotepk);
+            if(chatid!=null){
+
+                chatwascreate=true;
+
+            }else{
+
+                chatwascreate=false;
+
+            }
+
+        }
 
     }
 
-    public boolean whoImy(String user){
-        boolean correct=false;
+    void findmessage(){
+        String message;
+        String inorout;
+        int messsize;
+    //    boolean findok=false;
         try {
-            //TODO: fix this
-            /*for (int i=0;i<chatManager.discoverActorsRegistered().size();i++){
-                System.out.println("\n\nwhoImy("+i+"):\n\n"+chatManager.discoverActorsRegistered().get(i).getRemoteName()+" ?? "
-                        +chatManager.discoverActorsRegistered().get(i).getAlias() +" ?? "+chatManager.discoverActorsRegistered().get(i).getRemoteActorPublicKey().toString()
-                        +" ?? "+chatManager.discoverActorsRegistered().get(i).getContactId().toString()+" ?? "
-                        +chatManager.discoverActorsRegistered().get(i).getRemoteActorType().toString()+" ?? "
-                        +chatManager.discoverActorsRegistered().get(i).getCreationDate().toString());
-                if(chatManager.discoverActorsRegistered().get(i).getRemoteName().equals("user"+user)){
-                    correct=true;
-                    me.put("yo",chatManager.discoverActorsRegistered().get(i));
-                }
-            }*/
-        } catch (Exception e) {
+            historialmensaje.clear();
+            messsize=chatManager.getMessageByChatId(chatid).size();
+            for (int i = 0; i < messsize; i++) {
+                message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
+                inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
+                historialmensaje.add(inorout+"@#@#"+message);
+      //          findok=true;
+            }
+        }catch (CantGetMessageException e) {
             e.printStackTrace();
         }
-
-return correct;
+        //return findok;
     }
+
 
 
     @Override
@@ -169,66 +212,25 @@ return correct;
         messageET = (EditText) layout.findViewById(R.id.messageEdit);
         sendBtn = (Button) layout.findViewById(R.id.chatSendButton);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
-
+        final ChatAdapterView adaptador;
         final FermatTextView meLabel = (FermatTextView) layout.findViewById(R.id.meLbl);
         FermatTextView companionLabel = (FermatTextView) layout.findViewById(R.id.friendLabel);
         RelativeLayout contain = (RelativeLayout) layout.findViewById(R.id.container);
         companionLabel.setText("My Contact");// Hard Coded
-      //  loadDummyHistory();// Hard Coded
 
-        historialmensaje.add("yo##Hola estoy haciendo pruebas con la vista");
-        historialmensaje.add("tu##Que bueno");
+
         ListView lstOpciones;
 //new se coloco la variable me para identificar cuando sea yo quien envie el mensaje y actualice el textview correcto
 
-        final ChatAdapterView adaptador =
-                new ChatAdapterView(getActivity(), historialmensaje);
 
-        lstOpciones = (ListView)layout.findViewById(R.id.messagesContainer);
+       findmessage();
 
-        lstOpciones.setAdapter(adaptador);
+       adaptador = new ChatAdapterView(getActivity(), historialmensaje);
 
-        adaptador.refreshEvents(historialmensaje);
 
-        if(!whoImy("PAYAREZ")){
-            Toast.makeText(getActivity(),"OOOPs...El usuario no existe",Toast.LENGTH_LONG).show();
-        }
+       lstOpciones = (ListView) layout.findViewById(R.id.messagesContainer);
 
-        //CODE FOR ALERT DIALOG
-
-/*          *//* Alert Dialog Code Start*//*
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle("Usuario de conexion"); //Set Alert dialog title here
-        alert.setMessage("Escriba su usuario segun su conexion"); //Message here
-
-        // Set an EditText view to get user input
-        final EditText input = new EditText(getActivity());
-        alert.setView(input);
-
-        alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //You will get as string input data in this variable.
-                // here we convert the input to a string and show in a toast.
-
-                String srt = input.getEditableText().toString();
-                while(!whoImy(srt)){
-                    if(!whoImy(srt)){
-                        Toast.makeText(getActivity(),"OOOPs...El usuario no existe",Toast.LENGTH_LONG).show();
-
-                    }
-
-                }
-            } // End of onClick(DialogInterface dialog, int whichButton)
-        }); //End of alert.setPositiveButton
-  *//*      alert.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-                dialog.cancel();
-            }
-        })*//*; //End of alert.setNegativeButton
-        AlertDialog alertDialog = alert.create();
-        alertDialog.show();
-       *//* Alert Dialog Code End*/
+       lstOpciones.setAdapter(adaptador);
 
 
 
@@ -242,48 +244,67 @@ return correct;
                 }
 
                 try {
-                    Chat testChat = new ChatMock();
-                    //Cambio ya que trabajamos con pk de las otras app
-               //    testChat.setLocalActorPublicKey(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey());
-                    testChat.setLocalActorPublicKey(me.get(0).getRemoteActorPublicKey());
-               //     chatManager.discoverActorsRegistered()
-                   if(!(others.get("userPAYAREZ")==null)) {
-                       Toast.makeText(getActivity(), "usuario"+others.get("userPAYAREZ").getRemoteName(), Toast.LENGTH_SHORT).show();
+                    ChatImpl chat=new ChatImpl();
+                    MessageImpl message=new MessageImpl();
+                    Long dv=System.currentTimeMillis();
+           //         Date df=new Date(dv);
+          //          Long vv=Long.valueOf(new SimpleDateFormat("dd-MM-YYYY HH:mm:ss").format(df));
 
-                       testChat.setRemoteActorPublicKey(others.get("userPAYAREZ").getRemoteActorPublicKey());
-                       Message testMessage = new MessageMock(others.get("userPAYAREZ").getContactId());
-                       testMessage.setMessage(messageET.getText().toString());
 
-                       chatManager.saveChat(testChat);
-                       chatManager.saveMessage(testMessage);
+                   if(chatwascreate) {
 
-                       mensaje = chatManager.getMessageByChatId((others.get("userPAYAREZ").getContactId())).getMessage();
+                       message.setChatId(chatid);
+                       message.setMessageId(UUID.randomUUID());
+                       message.setMessage(messageText);
+                       message.setMessageDate(new Timestamp(dv));
+                       message.setStatus(MessageStatus.CREATED);
+                       message.setType(TypeMessage.OUTGOING);
 
-                       historialmensaje.add("yo##" + mensaje);
+                       chatManager.saveMessage(message);
 
+                       findmessage();
                        adaptador.refreshEvents(historialmensaje);
-              //         System.out.println("chatmanager.gettext:" + chatManager.getMessages().size());
+                       Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
+
                    }else{
+
+                       chat.setChatId(UUID.randomUUID());
+                       chat.setObjectId(UUID.randomUUID());
+                       chat.setStatus(ChatStatus.VISSIBLE);
+                       chat.setChatName("DeathNote");
+                       chat.setDate(new Timestamp(dv));
+                       chat.setLastMessageDate(new Timestamp(dv));
+                       chat.setLocalActorPublicKey(appSession.getAppPublicKey());
+                       chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                       chat.setRemoteActorPublicKey(remotepk);
+                       chat.setRemoteActorType(remotepct);
+
+                       chatManager.saveChat(chat);
+
+                       message.setChatId(chatid);
+                       message.setMessageId(UUID.randomUUID());
+                       message.setMessage(messageText);
+                       message.setMessageDate(new Timestamp(dv));
+                       message.setStatus(MessageStatus.CREATED);
+                       message.setType(TypeMessage.OUTGOING);
+
+                       chatManager.saveMessage(message);
+
+                       findmessage();
+                       adaptador.refreshEvents(historialmensaje);
+                       Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
+
+
+
                        Toast.makeText(getActivity(), "usuario No encontrado", Toast.LENGTH_SHORT).show();
                    }
-                } catch (CantSaveChatException e) {
-                    e.printStackTrace();
                 } catch (CantSaveMessageException e) {
                     e.printStackTrace();
-                } catch (CantGetMessageException e) {
+                }catch (CantSaveChatException e) {
                     e.printStackTrace();
                 }
 
 
-/*                ChatMessage chatMessage = new ChatMessage();
-                chatMessage.setId(122);//dummy
-                chatMessage.setMessage(messageText);
-                chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-                chatMessage.setMe(true);
-
-                messageET.setText("");
-
-                displayMessage(chatMessage);*/
             }
         });
 
@@ -294,34 +315,17 @@ return correct;
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("Despierta Kakaroto");
-                        Toast.makeText(getActivity(), "Despierta Kakaroto", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "hello everybody", Toast.LENGTH_SHORT).show();
 
                         try {
                             System.out.println("Threar UI corriendo");
                             //TODO: fix this
-                            //addContactDirection(chatManager.discoverActorsRegistered());
-                            System.out.println("\n\nMENSAJES EN CON GETMESSAGES:"+chatManager.getMessages().size()+"\n\n");
-                            for (int i=0;i<chatManager.getMessages().size();i++){
-                                System.out.println("MENSAJE("+i+"):"+chatManager.getMessages().size());
 
-                            }
-                            if (chatManager.getMessages().size() > newmessage) {
+                                findmessage();
 
-                                newmessage = newmessage + 1;
-
-                                mensaje =chatManager.getMessageByChatId((others.get("userPRUEBA").getContactId())).getMessage();
-              //                  mensaje = chatManager.getMessageByChatId(chatManager.networkservicechatmanage)
-                                historialmensaje.add("tu##"+mensaje);
-                                //        datos.set(0, historialmensaje);
                                 adaptador.refreshEvents(historialmensaje);
 
-                            }else{
-                                Toast.makeText(getActivity(), "No new message sorry", Toast.LENGTH_SHORT).show();
 
-                            }
-                        } catch (CantGetMessageException e) {
-                            e.printStackTrace();
                         } catch (Exception e) {
                             //TODO: fix this
                             e.printStackTrace();
@@ -341,45 +345,9 @@ return correct;
 
     }
 
-    /*public void displayMessage(ChatMessage message) {
-        adapter.add(message);
-        //adapter.notifyDataSetChanged();
-        scroll();
-    }*/
-
-
-
-
 
     private void scroll() {
         messagesContainer.setSelection(messagesContainer.getCount() - 1);
     }
 
-    private void loadDummyHistory(){// Hard Coded
-
-        chatHistory = new ArrayList<ChatMessage>();
-
-        ChatMessage msg = new ChatMessage();
-        msg.setId("1");
-        msg.setMe(false);
-        msg.setMessage("Hi");
-        msg.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-        chatHistory.add(msg);
-        ChatMessage msg1 = new ChatMessage();
-        msg1.setId("2");
-        msg1.setMe(false);
-        msg1.setMessage("How r u doing???");
-        msg1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-        chatHistory.add(msg1);
-        //adapter = new ChatAdapter(getActivity(), msg);
-        //adapter.setFermatListEventListener(this);
-        //recyclerView.setAdapter(adapter);
-        //adapter = new ChatAdapter(getActivity());//,
-        //messagesContainer.setAdapter((ListAdapter) msg);
-
-        for(int i=0; i<chatHistory.size(); i++) {
-            ChatMessage message = chatHistory.get(i);
-            //displayMessage(message);
-        }
-    }
 }
