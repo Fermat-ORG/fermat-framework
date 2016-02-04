@@ -234,6 +234,8 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     getPluginVersionReference()
             );
 
+            initializeAgent();
+
             /*
              * Its all ok, set the new status
              */
@@ -620,6 +622,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             );
 
             cryptoBrokerExecutorAgent.start();
+            System.out.println("********** IM initialized  NOW (agent)....");
 
         } catch(final CantStartAgentException e) {
 
@@ -628,6 +631,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
+
+        System.out.println("*********** IM HANDLING A CompleteComponentRegistrationNotificationEvent");
+        System.out.println("*********** platfomcomponentprofile: "+platformComponentProfileRegistered);
 
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
@@ -670,8 +676,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
              */
             this.register = Boolean.TRUE;
 
-            if(!beforeRegistered)
-                initializeAgent();
+            System.out.println("********** IM REGISTERED NOW....");
+
+            initializeAgent();
 
             fermatManager.setPlatformComponentProfile(this.getPlatformComponentProfilePluginRoot());
 
@@ -760,16 +767,26 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if (communicationNetworkServiceConnectionManager == null){
-            this.initializeCommunicationNetworkServiceConnectionManager();
-        }else{
-            communicationNetworkServiceConnectionManager.restart();
-        }
+        System.out.println("crypto broker actor network service - handleClientSuccessfullReconnectNotificationEvent");
 
-        /*
-         * Mark as register
-         */
-        this.register = Boolean.TRUE;
+        try {
+
+            if (communicationNetworkServiceConnectionManager != null){
+                communicationNetworkServiceConnectionManager.restart();
+            }else{
+                this.initializeCommunicationNetworkServiceConnectionManager();
+            }
+
+            initializeAgent();
+
+            /*
+             * Mark as register
+             */
+            this.register = Boolean.TRUE;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
