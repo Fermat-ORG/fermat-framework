@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
@@ -29,7 +30,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.RedeemPointSession;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.SessionConstantsRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 
 import java.util.ArrayList;
@@ -46,9 +49,11 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
     private View rootView;
     private Toolbar toolbar;
 
-    private RedeemPointSession redeemPointSession;
     private Spinner spinner;
-    List<String> listElementSpinner;
+    List<BlockchainNetworkType> listElementSpinner;
+
+    private AssetRedeemPointWalletSubAppModule moduleManager;
+    private ErrorManager errorManager;
 
     SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
@@ -62,7 +67,8 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        redeemPointSession = (RedeemPointSession) appSession;
+        moduleManager = ((RedeemPointSession) appSession).getModuleManager();
+        errorManager = appSession.getErrorManager();
 
         settingsManager = appSession.getModuleManager().getSettingsManager();
 
@@ -77,22 +83,23 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.dap_wallet_asset_redeempoint_settings_main_network, container, false);
-            setUpUi();
-            configureToolbar();
 
             try {
                 settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
-            if (settings != null)
-                spinner.setSelection(settings.getBlockchainNetworkPosition());
+            if (settings != null) {
+                listElementSpinner = settings.getBlockchainNetwork();
+            }
 
+            setUpUi();
+            configureToolbar();
 
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), R.string.dap_redeem_point_wallet_opps_system_error, Toast.LENGTH_SHORT).show();
-            redeemPointSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
         return null;
@@ -116,7 +123,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
             }
 
         } catch (Exception e) {
-            redeemPointSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), R.string.dap_redeem_point_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
@@ -159,24 +166,25 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
 
     public void setUpUi() {
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
-        listElementSpinner = new ArrayList<String>();
-        listElementSpinner.add("MainNet");
-        listElementSpinner.add("TestNet");
-        listElementSpinner.add("RegTest");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+//        listElementSpinner = new ArrayList<String>();
+//        listElementSpinner.add("MainNet");
+//        listElementSpinner.add("TestNet");
+//        listElementSpinner.add("RegTest");
+        ArrayAdapter<BlockchainNetworkType> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.dap_wallet_asset_redeempoint_list_item_spinner, listElementSpinner);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dataAdapter.notifyDataSetChanged();
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(settings.getBlockchainNetworkPosition());
     }
 
-    private void managerSettings(String dataSet, int position) {
+    private void managerSettings(BlockchainNetworkType dataSet, int position) {
         try {
-            settings.setBlockchainNetwork(dataSet);
             settings.setBlockchainNetworkPosition(position);
 
             settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            moduleManager.changeNetworkType(dataSet);
         } catch (CantPersistSettingsException e) {
             e.printStackTrace();
         }
@@ -184,7 +192,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String network;
+        BlockchainNetworkType network;
 
         network = listElementSpinner.get(i);
         adapterView.setSelection(i);
