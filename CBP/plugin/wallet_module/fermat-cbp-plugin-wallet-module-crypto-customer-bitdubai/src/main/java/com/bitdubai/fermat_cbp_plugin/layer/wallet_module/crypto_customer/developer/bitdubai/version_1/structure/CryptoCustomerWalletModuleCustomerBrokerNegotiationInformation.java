@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
@@ -41,9 +42,10 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     private ActorIdentity brokerIdentity;
     private Map<ClauseType, String> summary;
     private Map<ClauseType, ClauseInformation> clauses;
-    private Collection<Clause> negotiationClause;
     private NegotiationStatus status;
+    private long lastUpdateDate;
     private long date;
+    private String note;
 
 
     public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(CustomerBrokerPurchaseNegotiation negotiation) {
@@ -75,16 +77,23 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         clauses.put(ClauseType.BROKER_DATE_TIME_TO_DELIVER, new CryptoCustomerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, "20-11-2015", ClauseStatus.DRAFT));
     }
 
-    public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(String customerAlias, String brokerAlias, NegotiationStatus status, Map<ClauseType, ClauseInformation> clauses) {
+    public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
+            String customerAlias,
+            String brokerAlias,
+            NegotiationStatus status,
+            Map<ClauseType, ClauseInformation> clauses,
+            String note,
+            long lastUpdateDate
+    ) {
 
-        this.customerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl(customerAlias, new byte[0]);
-        this.brokerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl(brokerAlias, new byte[0]);
+        this.customerIdentity   = new CryptoCustomerWalletModuleActorIdentityImpl(customerAlias, new byte[0]);
+        this.brokerIdentity     = new CryptoCustomerWalletModuleActorIdentityImpl(brokerAlias, new byte[0]);
 
-        String currencyQty = decimalFormat.format(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
-        String exchangeRate = decimalFormat.format(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-        String merchandise = "";
-        String paymentMethod = "";
-        String paymentCurrency = "";
+        String currencyQty      = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()));
+        String exchangeRate     = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue()));
+        String merchandise      = "";
+        String paymentMethod    = "";
+        String paymentCurrency  = "";
 
         if(clauses.get(ClauseType.CUSTOMER_CURRENCY) != null)
             merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
@@ -95,6 +104,9 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         if(clauses.get(ClauseType.BROKER_CURRENCY) != null)
             paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
+        if(note == "null")
+            note = null;
+
         summary = new HashMap<>();
         summary.put(ClauseType.CUSTOMER_CURRENCY_QUANTITY, currencyQty);
         summary.put(ClauseType.CUSTOMER_CURRENCY, merchandise);
@@ -102,8 +114,10 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         summary.put(ClauseType.BROKER_CURRENCY, paymentCurrency);
         summary.put(ClauseType.BROKER_PAYMENT_METHOD, paymentMethod);
 
-        this.status = status;
-        this.clauses = clauses;
+        this.status         = status;
+        this.clauses        = clauses;
+        this.note           = note;
+        this.lastUpdateDate = lastUpdateDate;
 
         /*this.customerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl("CustomerAlias", new byte[0]);
         this.brokerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl(brokerAlias, new byte[0]);
@@ -160,22 +174,22 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
 
     @Override
     public String getMemo() {
-        return null;
+        return note;
     }
 
     @Override
-    public void setMemo(String memo) {
-
+    public void setMemo(String note) {
+        this.note = note;
     }
 
     @Override
     public long getLastNegotiationUpdateDate() {
-        return 0;
+        return lastUpdateDate;
     }
 
     @Override
-    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) {
-
+    public void setLastNegotiationUpdateDate(Long lastUpdateDate) {
+        this.lastUpdateDate = lastUpdateDate;
     }
 
     @Override
@@ -198,5 +212,13 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     public String getCancelReason() {
         //TODO
         return null;
+    }
+
+    private BigDecimal getBigDecimal(String value){
+        return new BigDecimal(value.replace(",", ""));
+    }
+
+    private String getDecimalFormat(BigDecimal value){
+        return DecimalFormat.getInstance().format(value.doubleValue());
     }
 }

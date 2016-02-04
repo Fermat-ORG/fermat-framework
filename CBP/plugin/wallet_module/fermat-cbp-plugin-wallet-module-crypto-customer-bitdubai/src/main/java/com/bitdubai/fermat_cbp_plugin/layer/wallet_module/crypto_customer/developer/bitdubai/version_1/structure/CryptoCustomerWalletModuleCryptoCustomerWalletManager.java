@@ -387,6 +387,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }*/
 
     @Override
+    //Modified by Yordin Alayn 03.02.16
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) throws CantGetNegotiationsWaitingForBrokerException {
         try {
 
@@ -398,23 +399,19 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
                 Collection<Clause> negotiationClause = customerBrokerSaleNegotiation.getClauses();
 
-                String customerAlias        = customerBrokerSaleNegotiation.getCustomerPublicKey();
-                String brokerAlias          = customerBrokerSaleNegotiation.getBrokerPublicKey();
-                NegotiationStatus status    = customerBrokerSaleNegotiation.getStatus();
+                String customerAlias    = customerBrokerSaleNegotiation.getCustomerPublicKey();
+                String brokerAlias      = customerBrokerSaleNegotiation.getBrokerPublicKey();
+                String note             = customerBrokerSaleNegotiation.getMemo();
+                long lastUpdateDate     = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate();
                 Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
-                String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
-
-                System.out.print(" - NEGOTIATION: " +
-                                " \nCUSTOMER: " +customerAlias+
-                                " \nBROKER: " +brokerAlias+
-                                " \nSTATUS: "+status.getCode()+
-                                " \nMERCHANDISE: "+merchandise);
 
                 cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
                         customerAlias,
                         brokerAlias,
                         NegotiationStatus.WAITING_FOR_BROKER,
-                        clauses
+                        clauses,
+                        note,
+                        lastUpdateDate
                 );
 
                 waitingForBroker.add(cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation);
@@ -427,6 +424,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 }
 
     @Override
+    //Modified by Yordin Alayn 03.02.16
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset) throws CantGetNegotiationsWaitingForCustomerException {
         try {
             CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
@@ -489,38 +487,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         } catch (Exception ex) {
             throw new CantGetNegotiationsWaitingForCustomerException("Cant get negotiations waiting for the broker", ex, "", "");
         }
-    }
-
-    private Map<ClauseType, ClauseInformation> getNegotiationClause(Collection<Clause> negotiationClause){
-
-        Map<ClauseType, ClauseInformation> clauses = new HashMap<>();
-        for (Clause item : negotiationClause) {
-            clauses.put(
-                item.getType(),
-                putClause(item.getType(),item.getValue())
-            );
-        }
-
-        return clauses;
-    }
-
-    private ClauseInformation putClause(final ClauseType clauseType, final String value) {
-
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() { return UUID.randomUUID(); }
-
-            @Override
-            public ClauseType getType() { return clauseType; }
-
-            @Override
-            public String getValue() { return (value != null) ? value : ""; }
-
-            @Override
-            public ClauseStatus getStatus() { return ClauseStatus.DRAFT; }
-        };
-
-        return clauseInformation;
     }
 
     @Override
@@ -1177,5 +1143,39 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         }
 
         return collectionClause;
+    }
+
+    //Add by Yordin Alayn 03.02.16
+    private Map<ClauseType, ClauseInformation> getNegotiationClause(Collection<Clause> negotiationClause){
+
+        Map<ClauseType, ClauseInformation> clauses = new HashMap<>();
+        for (Clause item : negotiationClause) {
+            clauses.put(
+                    item.getType(),
+                    putClause(item.getType(),item.getValue())
+            );
+        }
+
+        return clauses;
+    }
+
+    //Add by Yordin Alayn 03.02.16
+    private ClauseInformation putClause(final ClauseType clauseType, final String value) {
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() { return UUID.randomUUID(); }
+
+            @Override
+            public ClauseType getType() { return clauseType; }
+
+            @Override
+            public String getValue() { return (value != null) ? value : ""; }
+
+            @Override
+            public ClauseStatus getStatus() { return ClauseStatus.DRAFT; }
+        };
+
+        return clauseInformation;
     }
 }
