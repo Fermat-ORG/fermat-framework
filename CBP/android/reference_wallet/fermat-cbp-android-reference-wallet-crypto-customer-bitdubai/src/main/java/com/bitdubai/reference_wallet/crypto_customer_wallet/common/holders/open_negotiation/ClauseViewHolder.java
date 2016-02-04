@@ -71,6 +71,11 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
 
     public interface Listener {
         void onClauseCLicked(Button triggerView, ClauseInformation clause, int clausePosition);
+        boolean setValuesHasChanged();
+    }
+
+    public void setValuesHasChanged(){
+        valuesHasChanged = listener.setValuesHasChanged();
     }
 
     private void configClauseViews(View itemView) {
@@ -78,10 +83,18 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (valuesHasChanged && actualStatus.equals(NegotiationStepStatus.CONFIRM))
+
+                if ((listener.setValuesHasChanged()) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
                     actualStatus = NegotiationStepStatus.CHANGED;
-                else if (!valuesHasChanged && actualStatus.equals(NegotiationStepStatus.CONFIRM))
+                else if ((!listener.setValuesHasChanged()) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
                     actualStatus = NegotiationStepStatus.ACCEPTED;
+
+//                if ((valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
+//                    actualStatus = NegotiationStepStatus.CHANGED;
+//                else if ((!valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
+//                    actualStatus = NegotiationStepStatus.ACCEPTED;
+
+                valuesHasChanged = false;
 
                 modifyData(actualStatus);
             }
@@ -125,4 +138,5 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected void modifyData(NegotiationStepStatus status) {
         setStatus(status);
     }
+
 }

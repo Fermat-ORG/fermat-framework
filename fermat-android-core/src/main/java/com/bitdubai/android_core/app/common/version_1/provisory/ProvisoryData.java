@@ -142,7 +142,7 @@ public class ProvisoryData {
                 null,
                 "sub_app_crypto_customer_community",
                 "Customers",
-                "sub_app_crypto_customer_community",
+                "public_key_crypto_customer_community",
                 "sub_app_crypto_customer_community",
                 new Version(1, 0, 0));
 

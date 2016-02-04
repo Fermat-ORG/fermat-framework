@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
@@ -9,7 +8,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
@@ -26,10 +25,9 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.WalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetAssociatedCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSummaryForCurrenciesOfInterestException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletAssociatedSettingException;
@@ -48,7 +46,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by nelson on 22/09/15.
@@ -77,19 +74,9 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     /**
      * return the list of brokers connected with the crypto customer and the merchandises that they sell
      *
-     * @param customerPublicKey the crypto customer public key
      * @return the list of crypto brokers
      */
-    Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises(String customerPublicKey) throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException;
-
-    /**
-     * return a list of exchange rate info for each merchandise the broker accept as payment
-     *
-     * @param brokerPublicKey the broker public key
-     * @param target          the currency against the exchange rate is going to be calculated
-     * @return list of exchange rate info
-     */
-    Collection<MerchandiseExchangeRate> getListOfBrokerMerchandisesExchangeRate(String brokerPublicKey, FermatEnum target);
+    Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises() throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException;
 
     /**
      * @return list of identities associated with this wallet
@@ -209,7 +196,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      * @param contractHash
      * @throws CantAckMerchandiseException
      */
-    void ackMerchandise(String contractHash) throws CantAckMerchandiseException;
+    ContractStatus ackMerchandise(String contractHash) throws CantAckMerchandiseException;
 
     /**
      * This method returns the ContractStatus by contractHash/Id

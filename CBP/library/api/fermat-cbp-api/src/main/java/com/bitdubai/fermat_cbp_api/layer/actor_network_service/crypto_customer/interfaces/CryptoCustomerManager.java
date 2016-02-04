@@ -38,7 +38,7 @@ public interface CryptoCustomerManager extends FermatManager {
      * Through the method <code>getSearch</code> we can get a new instance of Crypto Customer Search.
      * This Crypto Customer search provides all the necessary functionality to make a Crypto Customer Search.
      *
-     * @return a CryptoCustomerSearch instance.
+     * @return a CryptoCustomerCommunitySearch instance.
      */
     CryptoCustomerSearch getSearch();
 

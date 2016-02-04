@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.crypto_broker_community.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionNotificationsFragment;
@@ -19,30 +18,6 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @version 1.0.0
  */
 public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager, CryptoBrokerCommunityFragmentsEnumType> {
-
-
-   /* @Override
-    public fermatFragment getFermatFragment(final CryptoBrokerCommunityFragmentsEnumType fragment) throws FragmentNotFoundException {
-
-        switch (fragment) {
-
-            case CONNECTIONS               : return ConnectionsFragment            .newInstance();
-            case CONNECTIONS_LIST          : return ConnectionsListFragment        .newInstance();
-            case CONNECTIONS_NOTIFICATIONS : return ConnectionNotificationsFragment.newInstance();
-            case CONNECTIONS_OTHER_PROFILE : return ConnectionOtherProfileFragment .newInstance();
-            case CONNECTIONS_REGISTER_USER : return RegisterUserFragment           .newInstance();
-            case CONNECTIONS_REQUEST       : return RequestConnectionsFragment     .newInstance();
-            case CONNECTIONS_SETTINGS      : return ConnectionSettingsFragment     .newInstance();
-            case CONNECTIONS_WORLD         : return ConnectionsWorldFragment       .newInstance();
-            case MAIN                      : return ConnectionsWorldFragment       .newInstance();
-
-            default:
-                throw new FragmentNotFoundException(
-                        fragment.toString(),
-                        "Switch failed due to missing 'case' sentence for the requested fragment."
-                );
-        }
-    }*/
 
 
     @Override

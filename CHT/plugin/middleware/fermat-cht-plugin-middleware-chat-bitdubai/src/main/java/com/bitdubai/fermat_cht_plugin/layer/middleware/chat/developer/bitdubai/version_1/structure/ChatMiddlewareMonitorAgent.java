@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
@@ -59,6 +60,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -608,12 +610,64 @@ public class ChatMiddlewareMonitorAgent implements
          * @param chatMetadata
          * @return
          */
-        private Message getMessageFromChatMetadata(ChatMetadata chatMetadata){
-            Message message=new MessageImpl(
-                    chatMetadata,
-                    MessageStatus.CREATED,
-                    TypeMessage.INCOMMING);
-            return message;
+        private Message getMessageFromChatMetadata(ChatMetadata chatMetadata)
+                throws
+                CantGetMessageException{
+            if(chatMetadata==null){
+                throw new CantGetMessageException("The chat metadata from network service is null");
+            }
+            try{
+                String contactLocalPublicKey=chatMetadata.getLocalActorPublicKey();
+                Contact contact=chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
+                if(contact==null){
+                    contact = createUnregisteredContact(chatMetadata);
+                }
+                UUID contactId=contact.getContactId();
+                Message message=new MessageImpl(
+                        chatMetadata,
+                        MessageStatus.CREATED,
+                        TypeMessage.INCOMMING,
+                        contactId
+                        );
+                return message;
+            } catch (DatabaseOperationException e) {
+                throw new CantGetMessageException(e,
+                        "Getting message from ChatMetadata",
+                        "Unexpected exception in database");
+            } catch (CantGetContactException e) {
+                throw new CantGetMessageException(e,
+                        "Getting message from ChatMetadata",
+                        "Cannot get the contact");
+            } catch (CantSaveContactException e) {
+                throw new CantGetMessageException(e,
+                        "Getting message from ChatMetadata",
+                        "Cannot save the contact");
+            }
+
+        }
+
+        /**
+         * This method creates and saves a new contact.
+         * @param chatMetadata
+         * @return
+         * @throws CantSaveContactException
+         * @throws DatabaseOperationException
+         */
+        private Contact createUnregisteredContact(
+                ChatMetadata chatMetadata) throws
+                CantSaveContactException,
+                DatabaseOperationException {
+            Date date=new Date();
+            Contact contact=new ContactImpl(
+                    UUID.randomUUID(),
+                    "Not registered contact",
+                    "Not registered contact",
+                    chatMetadata.getLocalActorType(),
+                    chatMetadata.getLocalActorPublicKey(),
+                    date.getTime()
+            );
+            chatMiddlewareDatabaseDao.saveContact(contact);
+            return contact;
         }
 
         /**

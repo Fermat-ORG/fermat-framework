@@ -765,6 +765,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             createCryptoBrokerCommunitySubAppNavigationStructure();
 
             /**
+             * CBP CRYPTO CUSTOMER COMMUNITY
+             */
+            createCryptoCustomerCommunitySubAppNavigationStructure();
+
+            /**
              * CHT CHAT
              */
             createChatSubAppNavigationStructure();
@@ -2034,6 +2039,173 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(subAppBrokerCommunity.getPublicKey(), subAppBrokerCommunity);
     }
 
+    private void createCryptoCustomerCommunitySubAppNavigationStructure() {
+        TitleBar runtimeTitleBar;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+        StatusBar statusBar;
+        Activity runtimeActivity;
+        Fragment runtimeFragment;
+
+        RuntimeSubApp subAppCustomerCommunity = new RuntimeSubApp();
+        subAppCustomerCommunity.setType(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY);
+        String communityPublicKey = "public_key_crypto_customer_community";
+        subAppCustomerCommunity.setPublicKey(communityPublicKey);
+
+        //Side Menu definition
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Crypto Customer Users");
+        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS);
+        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+
+        //Activity: CONNECTION_WORLD
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getCode());
+        subAppCustomerCommunity.addPosibleStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Crypto Customer Users");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getKey());
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        subAppCustomerCommunity.addActivity(runtimeActivity);
+
+
+        // Activity: CONNECTION_FRIEND_LIST
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setBackPublicKey(communityPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Connections");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        subAppCustomerCommunity.addActivity(runtimeActivity);
+
+
+        // Activity: CONNECTION_NOTIFICATIONS
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setBackPublicKey(communityPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Notifications");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        subAppCustomerCommunity.addActivity(runtimeActivity);
+
+
+        // Activity: CONNECTION_OTHER_PROFILE
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE);
+        runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
+        runtimeActivity.setBackActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setBackPublicKey(communityPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Profile");
+        runtimeTitleBar.setIconName("Back");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
+
+        subAppCustomerCommunity.addActivity(runtimeActivity);
+
+
+        listSubApp.put(subAppCustomerCommunity.getPublicKey(), subAppCustomerCommunity);
+    }
+
     private void createDeveloperSubAppNavigationStructure() {
         RuntimeSubApp runtimeSubApp;
         Activity runtimeActivity;
@@ -2049,6 +2221,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_SUB_APP_ALL_DEVELOPER);
+        runtimeActivity.setActivityType(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
         runtimeActivity.setColor("#b46a54");
 
         statusBar = new StatusBar();
@@ -2062,58 +2235,118 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabel("Developer");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#d07b62");
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-        runtimeTabStrip.setTabsIndicateColor("#b46a54");
-        runtimeActivity.setTabStrip(runtimeTabStrip);
+//        runtimeTabStrip = new TabStrip();
+//        runtimeTabStrip.setTabsColor("#d07b62");
+//        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+//        runtimeTabStrip.setTabsIndicateColor("#b46a54");
+//        runtimeActivity.setTabStrip(runtimeTabStrip);
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("DataBase Tools");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT);
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Log Tools");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT);
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("DataBase Tools");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
-        runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Log Tools");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT);
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey(), runtimeFragment);
-        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE);
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE.getCode());
+        runtimeActivity.setBackActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
+        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
+        runtimeActivity.setColor("#b46a54");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Developer");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST);
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST.getCode());
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE);
+        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
+        runtimeActivity.setColor("#b46a54");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Developer");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST);
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST.getCode());
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST);
+        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
+        runtimeActivity.setColor("#b46a54");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Developer");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(), runtimeFragment);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), runtimeFragment);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(), runtimeFragment);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), runtimeFragment);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(), runtimeFragment);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
 
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
