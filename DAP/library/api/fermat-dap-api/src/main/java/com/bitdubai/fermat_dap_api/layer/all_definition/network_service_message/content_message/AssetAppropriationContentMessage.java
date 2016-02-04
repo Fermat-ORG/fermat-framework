@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * This POJO was created to be used as a message content for pass information
@@ -14,7 +15,7 @@ public class AssetAppropriationContentMessage implements Serializable, DAPConten
 
     //VARIABLE DECLARATION
 
-    private String digitalAssetAppropriated;
+    private UUID transactionId;
     private String userThatAppropriate;
 
     //CONSTRUCTORS
@@ -22,8 +23,8 @@ public class AssetAppropriationContentMessage implements Serializable, DAPConten
     public AssetAppropriationContentMessage() {
     }
 
-    public AssetAppropriationContentMessage(String digitalAssetAppropriated, String userThatAppropriate) {
-        this.digitalAssetAppropriated = digitalAssetAppropriated;
+    public AssetAppropriationContentMessage(UUID transactionId, String userThatAppropriate) {
+        this.transactionId = transactionId;
         this.userThatAppropriate = userThatAppropriate;
     }
 
@@ -53,12 +54,12 @@ public class AssetAppropriationContentMessage implements Serializable, DAPConten
         this.userThatAppropriate = userThatAppropriate;
     }
 
-    public String getDigitalAssetAppropriated() {
-        return digitalAssetAppropriated;
+    public UUID getTransactionId() {
+        return transactionId;
     }
 
-    public void setDigitalAssetAppropriated(String digitalAssetAppropriated) {
-        this.digitalAssetAppropriated = digitalAssetAppropriated;
+    public void setTransactionId(UUID transactionId) {
+        this.transactionId = transactionId;
     }
 
     //INNER CLASSES

@@ -23,6 +23,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
+import com.bitdubai.fermat_api.AndroidCoreManager;
+import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
@@ -235,4 +237,39 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return (FermatRuntime)getActivity();
     }
 
+    protected final AndroidCoreManager getFermatState(){
+        return ((FermatStates)getActivity()).getFermatStates();
+    }
+
+
+
+    public final void onUpdateViewUIThred(final String code){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                onUpdateViewOnUIThread(code);
+            }
+        });
+    }
+
+    /**
+     * This class have to be ovverride if someone wants to get broadcast
+     *
+     * @param code is a code for update some part of the fragment or everything
+     */
+    public void onUpdateView(String code) {
+        return;
+    }
+
+    /**
+     * This class have to be ovverride if someone wants to get broadcast on UI Thread
+     * ONLY FOR VIEW UPDATE
+     *
+     * @param code is a code for update some part of the fragment or everything
+     */
+
+
+    public void onUpdateViewOnUIThread(String code) {
+        return;
+    }
 }

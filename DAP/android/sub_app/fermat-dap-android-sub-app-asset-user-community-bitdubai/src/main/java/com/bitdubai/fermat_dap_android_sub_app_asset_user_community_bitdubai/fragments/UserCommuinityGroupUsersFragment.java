@@ -19,9 +19,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.dialogs.ConfirmDeleteDialog;
@@ -29,18 +34,23 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.int
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupMemberRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * Home Fragment
@@ -65,6 +75,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
     private MenuItem menuItemDelete;
     private Menu menu;
 
+    SettingsManager<AssetUserSettings> settingsManager;
     /**
      * Flags
      */
@@ -82,6 +93,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
             group = (Group) appSession.getData("group_selected");
             manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
+            settingsManager = appSession.getModuleManager().getSettingsManager();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -146,6 +158,27 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         //Toast.makeText(getActivity(), group.getGroupName(), Toast.LENGTH_LONG).show();
         getToolbar().setTitle(group.getGroupName()+" Users");
         //getToolbar().getMenu().getItem(1).setVisible(true);
+
+        //initialize settings
+        settingsManager = appSession.getModuleManager().getSettingsManager();
+        AssetUserSettings settings = null;
+        try {
+            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            settings = null;
+        }
+        if (settings == null) {
+            settings = new AssetUserSettings();
+            settings.setIsContactsHelpEnabled(true);
+            settings.setIsPresentationHelpEnabled(true);
+
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        }
+
         return rootView;
     }
 
@@ -166,8 +199,8 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                     public void onClick() {
                         try {
                             for (Actor actor : actors) {
-                                if (actor.selected)
-                                {   AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+                                if (actor.selected) {
+                                    AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
                                     actorGroup.setGroupId(group.getGroupId());
                                     actorGroup.setActorPublicKey(actor.getActorPublicKey());
                                     manager.removeActorAssetUserFromGroup(actorGroup);
@@ -188,7 +221,41 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                 return true;
             }
         });
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_MEMBERS, 0, "help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
+    }
+    private void setUpPresentation(boolean checkButton) {
+
+        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBannerRes(R.drawable.banner_asset_user)
+                .setIconRes(R.drawable.asset_user_comunity)
+                .setVIewColor(R.color.dap_community_user_view_color)
+                .setTitleTextColor(R.color.dap_community_user_view_color)
+                .setSubTitle(R.string.dap_user_community_group_users_subTitle)
+                .setBody(R.string.dap_user_community_group_users_body)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setIsCheckEnabled(checkButton)
+                .build();
+
+        presentationDialog.show();
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        try {
+            if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP_MEMBERS) {
+                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Asset User system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

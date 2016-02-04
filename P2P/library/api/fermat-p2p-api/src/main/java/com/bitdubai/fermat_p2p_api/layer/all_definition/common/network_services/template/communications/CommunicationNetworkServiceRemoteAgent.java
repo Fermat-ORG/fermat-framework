@@ -47,6 +47,7 @@ import java.util.concurrent.Future;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkService> extends Observable {
 
     /*
@@ -150,6 +151,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
 
     }
 
+
     /**
      * Constructor with parameters
      *
@@ -185,7 +187,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
         //Start the Threads
         future[sendTask] = executorService.submit(toSend);
         future[receiveTask] = executorService.submit(toReceive);
-        System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
+        System.out.println("TemplateCommunicationNetworkServiceRemoteAgent - started ");
 
     }
 
@@ -214,6 +216,9 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
 
         //Disconnect from the service
         communicationsVPNConnection.close();
+
+        System.out.println("TemplateCommunicationNetworkServiceRemoteAgent - stopped ");
+
     }
 
     /**
@@ -225,14 +230,14 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
 
         try {
 
-           // System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.isActive());
+            System.out.println("TemplateCommunicationNetworkServiceRemoteAgent - processMessageReceived "+communicationsVPNConnection.isActive());
 
             /**
              * Verified the status of the connection
              */
-            if (communicationsVPNConnection.isActive()){
+            if (communicationsVPNConnection.isConnected()){
 
-             //   System.out.println("CommunicationNetworkServiceRemoteAgent - "+communicationsVPNConnection.getUnreadMessagesCount());
+                System.out.println("TemplateCommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -278,6 +283,8 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
 
                 }
 
+            }else{
+
             }
 
             if(Thread.currentThread().isInterrupted() == Boolean.FALSE) {
@@ -287,7 +294,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
         } catch (InterruptedException e) {
             running = false;
             Thread.currentThread().interrupt();
-            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            System.out.println("TemplateCommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
@@ -305,6 +312,9 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
 
                 try {
 
+                    System.out.println("TemplateCommunicationNetworkServiceRemoteAgent - processMessageToSend ");
+
+
                     Map<String, Object> filters = new HashMap<>();
                     filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
                     filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
@@ -313,13 +323,16 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
                      * Read all pending message from database
                      */
                     List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
+
+                    System.out.println("TemplateCommunicationNetworkServiceRemoteAgent - messages.size() "+messages.size());
+
                     /*
                      * For each message
                      */
                     for (FermatMessage message: messages){
 
 
-                        if (communicationsVPNConnection.isActive() && (message.getFermatMessagesStatus() != FermatMessagesStatus.SENT) && communicationsVPNConnection.isConnected()) {
+                        if (communicationsVPNConnection.isConnected() && (message.getFermatMessagesStatus() == FermatMessagesStatus.PENDING_TO_SEND)){
 
                             /*
                              * Encrypt the content of the message whit the remote network service public key
@@ -351,11 +364,16 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
                             fermatEvent.setSource((networkServicePluginRoot!=null)?networkServicePluginRoot.getEventSource():abstractNetworkService.getEventSource());
                             ((NewNetworkServiceMessageSentNotificationEvent) fermatEvent).setData(message);
                             eventManager.raiseEvent(fermatEvent);
+
+                        }else{
+                            System.out.println("TemplateCommunicationNetworkServiceRemoteAgent - VPN connection is connected = "+communicationsVPNConnection.isConnected());
                         }
+
                     }
 
+
                 } catch (Exception e){
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: " + e.getMessage()));
+                    System.out.println("TemplateCommunicationNetworkServiceRemoteAgent - Error sending message: "+e.getMessage());
                 }
 
 
@@ -367,7 +385,7 @@ public class CommunicationNetworkServiceRemoteAgent<NS extends AbstractNetworkSe
         } catch (InterruptedException e) {
             running = false;
             Thread.currentThread().interrupt();
-            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            System.out.println("TemplateCommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         }
     }
 }

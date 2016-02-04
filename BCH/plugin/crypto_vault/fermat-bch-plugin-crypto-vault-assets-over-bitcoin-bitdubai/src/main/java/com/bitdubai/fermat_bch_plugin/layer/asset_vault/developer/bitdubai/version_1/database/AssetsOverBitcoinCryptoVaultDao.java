@@ -515,8 +515,8 @@ public class AssetsOverBitcoinCryptoVaultDao {
          * I will manually save the default value
          */
         if (networkTypes.size() == 0){
-            this.setActiveNetworkType(BlockchainNetworkType.DEFAULT);
-            networkTypes.add(BlockchainNetworkType.DEFAULT);
+            this.setActiveNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            networkTypes.add(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         }
 
         return networkTypes;

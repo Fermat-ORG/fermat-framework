@@ -136,9 +136,10 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     public List<ActorAssetRedeemPoint> getRedeemPointsConnectedForAsset(String assetPublicKey) throws CantGetAssetRedeemPointActorsException {
         String context = "Asset PK: " + assetPublicKey;
         try {
+            loadAssetUserWallet("walletPublicKeyTest");
             DigitalAsset digitalAsset = wallet.getDigitalAsset(assetPublicKey);
             return actorAssetRedeemPointManager.getAllRedeemPointActorConnectedForIssuer(digitalAsset.getIdentityAssetIssuer().getPublicKey());
-        } catch (CantGetDigitalAssetFromLocalStorageException e) {
+        } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException e) {
             throw new CantGetAssetRedeemPointActorsException(CantGetAssetRedeemPointActorsException.DEFAULT_MESSAGE, e, context, null);
         }
     }
@@ -164,8 +165,8 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
-        assetUserWalletModule.redeemAssetToRedeemPoint(digitalAssetPublicKey, walletPublicKey, actorAssetRedeemPoints);
+    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints, int assetAmount) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
+        assetUserWalletModule.redeemAssetToRedeemPoint(digitalAssetPublicKey, walletPublicKey, actorAssetRedeemPoints, assetAmount);
     }
 
     @Override

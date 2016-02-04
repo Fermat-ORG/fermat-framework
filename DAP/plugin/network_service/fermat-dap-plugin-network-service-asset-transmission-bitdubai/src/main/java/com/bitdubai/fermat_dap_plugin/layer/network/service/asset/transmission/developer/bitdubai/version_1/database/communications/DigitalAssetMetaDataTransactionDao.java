@@ -17,10 +17,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -376,6 +378,9 @@ public class DigitalAssetMetaDataTransactionDao {
 
         try {
 
+            if (findById(entity.getTransactionId().toString()) != null) {
+                return;
+            }
             /*
              * 1- Create the record to the entity
              */
@@ -388,7 +393,7 @@ public class DigitalAssetMetaDataTransactionDao {
             transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (DatabaseTransactionFailedException | CantReadRecordDataBaseException databaseTransactionFailedException) {
 
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -400,7 +405,6 @@ public class DigitalAssetMetaDataTransactionDao {
             throw cantInsertRecordDataBaseException;
 
         }
-
     }
 
     /**
@@ -416,21 +420,15 @@ public class DigitalAssetMetaDataTransactionDao {
         }
 
         try {
+            DatabaseTable metadataTable = getDatabaseTable();
+            metadataTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TRANSACTION_ID_COLUMN_NAME, entity.getTransactionId().toString(), DatabaseFilterType.EQUAL);
+            metadataTable.loadToMemory();
 
-            /*
-             * 1- Create the record to the entity
-             */
-            DatabaseTableRecord entityRecord = constructFrom(entity);
-
-            /*
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
-
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-
+            if (metadataTable.getRecords().isEmpty()) throw new RecordsNotFoundException();
+            DatabaseTableRecord record = metadataTable.getRecords().get(0);
+            setValuesToRecord(record, entity);
+            metadataTable.updateRecord(record);
+        } catch (CantUpdateRecordException | CantLoadTableToMemoryException | RecordsNotFoundException databaseTransactionFailedException) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
@@ -438,9 +436,7 @@ public class DigitalAssetMetaDataTransactionDao {
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
-
         }
-
     }
 
     /**
@@ -527,27 +523,22 @@ public class DigitalAssetMetaDataTransactionDao {
          * Create the record to the entity
          */
         DatabaseTableRecord entityRecord = getDatabaseTable().getEmptyRecord();
-
-        /*
-         * Set the entity values
-         */
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_FIRST_KEY_COLUMN,                digitalAssetMetadataTransactionImpl.getTransactionId().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_GENESIS_TRANSACTION_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getGenesisTransaction());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_SENDER_ID_COLUMN_NAME,           digitalAssetMetadataTransactionImpl.getSenderId());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_SENDER_TYPE_COLUMN_NAME,         digitalAssetMetadataTransactionImpl.getSenderType().getCode());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_RECEIVER_ID_COLUMN_NAME,         digitalAssetMetadataTransactionImpl.getReceiverId());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_RECEIVER_TYPE_COLUMN_NAME,       digitalAssetMetadataTransactionImpl.getReceiverType().getCode());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_META_DATA_XML_COLUMN_NAME,       digitalAssetMetadataTransactionImpl.getDigitalAssetMetadata().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TYPE_COLUMN_NAME,                digitalAssetMetadataTransactionImpl.getType().getCode());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_DISTRIBUTION_STATUS_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getDistributionStatus().getCode());
-        entityRecord.setLongValue(  CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TIMESTAMP_COLUMN_NAME,           digitalAssetMetadataTransactionImpl.getTimestamp());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_PROCESSED_COLUMN_NAME,           digitalAssetMetadataTransactionImpl.getProcessed());
-
-        /*
-         * return the new table record
-         */
+        setValuesToRecord(entityRecord, digitalAssetMetadataTransactionImpl);
         return entityRecord;
+    }
 
+    private void setValuesToRecord(DatabaseTableRecord entityRecord, DigitalAssetMetadataTransactionImpl digitalAssetMetadataTransactionImpl) {
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_FIRST_KEY_COLUMN, digitalAssetMetadataTransactionImpl.getTransactionId().toString());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_GENESIS_TRANSACTION_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getGenesisTransaction());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_SENDER_ID_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getSenderId());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_SENDER_TYPE_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getSenderType().getCode());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_RECEIVER_ID_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getReceiverId());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_RECEIVER_TYPE_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getReceiverType().getCode());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_META_DATA_XML_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getDigitalAssetMetadata().toString());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TYPE_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getType().getCode());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_DISTRIBUTION_STATUS_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getDistributionStatus().getCode());
+        entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_TIMESTAMP_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getTimestamp());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DIGITAL_ASSET_METADATA_TRANSACTION_PROCESSED_COLUMN_NAME, digitalAssetMetadataTransactionImpl.getProcessed());
     }
 
 }

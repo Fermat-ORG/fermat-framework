@@ -24,10 +24,10 @@ import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommon
 public class BrokerCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private Activity activity;
-    private ActorIdentity actorIdentity;
+    private ActiveActorIdentityInformation actorIdentity;
 
 
-    public BrokerCommunityNavigationViewPainter(Activity activity, ActorIdentity actorIdentity) {
+    public BrokerCommunityNavigationViewPainter(Activity activity, ActiveActorIdentityInformation actorIdentity) {
         this.activity = activity;
         this.actorIdentity = actorIdentity;
 
@@ -36,7 +36,7 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation actorIdentityInformation) {
         try {
-            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
+            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentityInformation);
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -64,7 +64,7 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
 
     @Override
     public Bitmap addBodyBackground() {
-        Bitmap drawable = null;
+       /* Bitmap drawable = null;
         try {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = true;
@@ -74,7 +74,8 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
-        return drawable;
+        return drawable;*/
+        return null;
     }
 
     @Override

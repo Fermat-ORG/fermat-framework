@@ -5,7 +5,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
-android:layout_height="wrap_content"
+android:layout_height="160dp"
 android:layout_marginBottom="16dp"
 app:cardBackgroundColor="#f1f1f1"
 app:cardCornerRadius="4dp"
@@ -32,7 +32,7 @@ tools:visibility="visible">
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/ccw_contract_detail_card_view_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,7 +52,7 @@ tools:visibility="visible">
             android:layout_height="wrap_content"
             android:layout_margin="16dp">
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/ccw_contract_detail_description_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -63,7 +63,7 @@ tools:visibility="visible">
                 android:textColor="@color/description_text_status_confirm"
                 tools:text="You receive:"/>
 
-            <Button
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:id="@+id/ccw_contract_detail_text_button"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
@@ -84,7 +84,7 @@ tools:visibility="visible">
             android:layout_height="1dp"
             android:background="#2e2e2e2e"/>
 
-        <Button
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/ccw_contract_detail_confirm_button"
             android:layout_width="wrap_content"
             android:layout_height="36dp"

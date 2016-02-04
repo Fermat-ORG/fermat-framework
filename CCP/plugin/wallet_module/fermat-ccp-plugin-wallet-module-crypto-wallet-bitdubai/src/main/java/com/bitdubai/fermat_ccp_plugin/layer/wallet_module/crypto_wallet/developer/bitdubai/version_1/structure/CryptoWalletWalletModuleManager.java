@@ -51,6 +51,7 @@ import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.W
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsSearch;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantSendAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantApproveCryptoPaymentRequestException;
@@ -431,6 +432,33 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e, "Error creation a wallet contact.", null);
         } catch (Exception e) {
             throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public void sendAddressExchangeRequest(String        actorAlias,
+                                           Actors        actorConnectedType,
+                                           String        actorConnectedPublicKey,
+                                           byte[]        actorPhoto,
+                                           Actors        actorWalletType ,
+                                           String        identityWalletPublicKey,
+                                           String        walletPublicKey,
+                                           CryptoCurrency walletCryptoCurrency,
+                                           BlockchainNetworkType blockchainNetworkType){
+
+        try {
+            //get to Crypto Address NS the intra user actor address
+            cryptoAddressesNSManager.sendAddressExchangeRequest(walletPublicKey,
+                    walletCryptoCurrency,
+                    actorWalletType,
+                    actorConnectedType,
+                    identityWalletPublicKey,
+                    actorConnectedPublicKey,
+                    CryptoAddressDealers.CRYPTO_WALLET,
+                    blockchainNetworkType);
+
+        } catch (CantSendAddressExchangeRequestException e) {
+            e.printStackTrace();
         }
     }
 
@@ -894,11 +922,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT, max, offset)) {
 
                 WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
-                if (walletContactRecord != null)
-                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord, profilePicture);
 
                 if (getImageByActorType(paymentRecord.getActorType(),paymentRecord.getActorPublicKey(),paymentRecord.getIdentityPublicKey()) != null)
                     profilePicture = getImageByActorType(paymentRecord.getActorType(),paymentRecord.getActorPublicKey(),paymentRecord.getIdentityPublicKey());
+
+                if (walletContactRecord != null)
+                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord, profilePicture);
+
 
 
                 CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(
@@ -1058,7 +1088,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                             intraUserLoggedInPublicKey,
                             paymentRequest.getWalletPublicKey() ,
                             CryptoCurrency.BITCOIN,
-                            BlockchainNetworkType.TEST);
+                            BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
                 catch (Exception e1)
                 {

@@ -362,20 +362,42 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
                 if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.CRYPTO_WALLET)) {
 
-                    if (request.getAction().equals(RequestAction.ACCEPT))
-                        this.handleCryptoAddressReceivedEvent(request);
-                    if (request.getAction().equals(RequestAction.DENY))
-                        this.handleCryptoAddressDeniedEvent(request);
+                    switch (request.getAction()){
+                        case ACCEPT:
+                            this.handleCryptoAddressReceivedEvent(request);
+                            break;
+                        case DENY:
+                            this.handleCryptoAddressDeniedEvent(request);
+                            break;
+                        case RECEIVED:
+                            this.handleCryptoAddressReceivedEvent(request);
+                            break;
+                        default:
+                            //TODO: mejorar esto que es una mierda por favor
+//                            if(request.getCryptoAddress()!=null) {
+//                                if(request.getCryptoAddress().getAddress()!=null)
+//                                    this.handleCryptoAddressReceivedEvent(request);
+//                            }
+                            break;
+                    }
+                    if(request.getCryptoAddress()!=null) {
+                        if (request.getCryptoAddress().getAddress() != null)
+                            if (request.getIdentityTypeResponding() == Actors.CCP_INTRA_WALLET_USER)
+                                cryptoAddressesManager.markReceivedRequest(request.getRequestId());
+                    }
 
                 }
 
             }
+
 
         } catch(CantListPendingCryptoAddressRequestsException |
                 CantHandleCryptoAddressDeniedActionException |
                 CantHandleCryptoAddressReceivedActionException e) {
 
             throw new CantHandleCryptoAddressesNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
+        } catch (CantConfirmAddressExchangeRequestException e) {
+            e.printStackTrace();
         }
     }
 
@@ -390,20 +412,27 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                         request.getIdentityPublicKeyResponding(),
                         request.getWalletPublicKey()
                 );
+                // SI ES WALLET CONTACT ES NULL PASA DIRECTO A CONFIRMAR EL ADDRESS YA QUE ES SOLO UN REQUEST DE ADDRESS
+                // SI POR EL CONTRARIO NO ES NULL ACTUALIZA EL CONTACTO CON EL ADDRESS
+                if (walletContactRecord != null){
 
-                this.addCryptoAddressToWalletContact(
-                    walletContactRecord.getContactId(),
-                    request.getCryptoAddress()
-                );
+                    this.addCryptoAddressToWalletContact(
+                            walletContactRecord.getContactId(),
+                            request.getCryptoAddress()
+                    );
 
-                System.out.println("----------------------------\n" +
-                        "ACTUALIZO ADDRESS PARA EL CONTACTO :" +  walletContactRecord.getContactId()
-                        + "\n-------------------------------------------------");
+                    System.out.println("----------------------------\n" +
+                            "ACTUALIZO ADDRESS PARA EL CONTACTO :" +  walletContactRecord.getContactId()
+                            + "\n-------------------------------------------------");
 
-                walletContactsMiddlewareDao.updateCompatibility(
-                        walletContactRecord.getContactId(),
-                        Compatibility.COMPATIBLE
-                );
+                    walletContactsMiddlewareDao.updateCompatibility(
+                            walletContactRecord.getContactId(),
+                            Compatibility.COMPATIBLE
+                    );
+
+                }
+
+
 
                 cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
 

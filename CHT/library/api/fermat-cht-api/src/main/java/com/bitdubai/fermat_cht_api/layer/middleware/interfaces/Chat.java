@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -26,8 +26,8 @@ public interface Chat {
     void setChatName(String chatName);
     ChatStatus getStatus();
     void setStatus(ChatStatus status);
-    Date getDate();
-    void setDate(Date date);
-    Date getLastMessageDate();
-    void setLastMessageDate(Date lastMessageDate);
+    Timestamp getDate();
+    void setDate(Timestamp date);
+    Timestamp getLastMessageDate();
+    void setLastMessageDate(Timestamp lastMessageDate);
 }

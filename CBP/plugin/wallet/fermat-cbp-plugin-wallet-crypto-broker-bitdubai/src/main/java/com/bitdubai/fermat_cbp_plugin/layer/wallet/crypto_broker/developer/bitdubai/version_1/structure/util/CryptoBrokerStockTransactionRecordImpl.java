@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -23,7 +24,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private TransactionType transactionType;
     private BigDecimal amount;
     private CurrencyType currencyType;
-    private FermatEnum merchandise;
+    private Currency merchandise;
     private BigDecimal runningBookBalance;
     private BigDecimal runningAvailableBalance;
     private long timeStamp;
@@ -38,7 +39,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             BalanceType balanceType,
             TransactionType transactionType,
             CurrencyType currencyType,
-            FermatEnum merchandise,
+            Currency merchandise,
             BigDecimal amount,
             BigDecimal runningBookBalance,
             BigDecimal runningAvailableBalance,
@@ -82,7 +83,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     public CurrencyType getCurrencyType() { return this.currencyType; }
 
     @Override
-    public FermatEnum getMerchandise() { return this.merchandise; }
+    public Currency getMerchandise() { return this.merchandise; }
 
     @Override
     public BigDecimal getAmount() { return this.amount; }

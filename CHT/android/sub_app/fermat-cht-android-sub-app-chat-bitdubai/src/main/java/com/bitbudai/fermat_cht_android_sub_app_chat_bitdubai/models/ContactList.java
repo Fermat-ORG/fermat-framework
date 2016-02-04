@@ -1,7 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models;
 
 /**
- * ChatMessage Model
+ * ContactList Model
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 14/01/15.
  * @version 1.0

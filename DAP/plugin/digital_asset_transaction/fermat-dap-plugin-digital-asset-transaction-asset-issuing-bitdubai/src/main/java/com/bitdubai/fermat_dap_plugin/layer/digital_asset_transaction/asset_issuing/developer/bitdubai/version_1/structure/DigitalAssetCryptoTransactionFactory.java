@@ -736,7 +736,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
                     Actors.DAP_ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                     true,
-                    BlockchainNetworkType.REG_TEST);
+                    BlockchainNetworkType.getDefaultBlockchainNetworkType());
             this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID(transactionId, outgoingId);
             this.assetIssuingTransactionDao.updateTransactionProtocolStatusByTransactionId(transactionId, ProtocolStatus.TO_BE_NOTIFIED);
         } catch (CantExecuteQueryException exception) {
@@ -788,9 +788,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
             //BTC Sending
             sendBitcoins(genesisAddress, digitalAssetHash, transactionId);
             saveDigitalAssetMetadataInVault(digitalAssetMetadata, transactionId);
-            //TODO REMOVE HARDCODE
-            assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest").createdNewAsset(digitalAsset);
-        } catch (CantPersistsGenesisAddressException | CantSaveStatisticException exception) {
+        } catch (CantPersistsGenesisAddressException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.DATABASE_EXCEPTION);
             throw new CantCreateDigitalAssetTransactionException(exception, "Issuing a new Digital Asset", "Cannot persists the Digital Asset genesis Address in database");
         } catch (CantExecuteQueryException | UnexpectedResultReturnedFromDatabaseException exception) {
@@ -820,8 +818,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
         } catch (CryptoWalletBalanceInsufficientException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.INSUFFICIENT_FONDS);
             throw new CantIssueDigitalAssetException(exception, "Issuing a new Digital Asset", "The crypto balance is insufficient");
-        } catch (com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException e) {
-            e.printStackTrace();
         }
 
     }

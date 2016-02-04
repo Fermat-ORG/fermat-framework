@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes;
 
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ public class RequestMessage extends NetworkServiceMessage {
     private final String                  senderPublicKey     ;
     private final Actors                  senderActorType     ;
     private final String                  senderAlias         ;
-    private final String                  senderImage         ;
+    private final byte[]                  senderImage         ;
     private final String                  destinationPublicKey;
     private final ConnectionRequestAction requestAction       ;
     private final long                    sentTime            ;
@@ -26,10 +27,12 @@ public class RequestMessage extends NetworkServiceMessage {
                           final String                  senderPublicKey     ,
                           final Actors                  senderActorType     ,
                           final String                  senderAlias         ,
-                          final String                  senderImage         ,
+                          final byte[]                  senderImage         ,
                           final String                  destinationPublicKey,
                           final ConnectionRequestAction requestAction       ,
                           final long                    sentTime            ) {
+
+        super(MessageTypes.REQUEST);
 
         this.requestId            = requestId           ;
         this.senderPublicKey      = senderPublicKey     ;
@@ -72,7 +75,7 @@ public class RequestMessage extends NetworkServiceMessage {
     /**
      * @return an array of bytes with the image exposed by the Crypto Broker.
      */
-    public final String getSenderImage() {
+    public final byte[] getSenderImage() {
         return senderImage;
     }
 
@@ -99,12 +102,12 @@ public class RequestMessage extends NetworkServiceMessage {
 
     @Override
     public String toString() {
-        return "CryptoBrokerConnectionRequest{" +
+        return "RequestMessage{" +
                 "requestId=" + requestId +
                 ", senderPublicKey='" + senderPublicKey + '\'' +
                 ", senderActorType=" + senderActorType +
                 ", senderAlias='" + senderAlias + '\'' +
-                ", senderImage=" + senderImage + '\'' +
+                ", senderImage=" + (senderImage != null) +
                 ", destinationPublicKey='" + destinationPublicKey + '\'' +
                 ", requestAction=" + requestAction +
                 ", sentTime=" + sentTime +

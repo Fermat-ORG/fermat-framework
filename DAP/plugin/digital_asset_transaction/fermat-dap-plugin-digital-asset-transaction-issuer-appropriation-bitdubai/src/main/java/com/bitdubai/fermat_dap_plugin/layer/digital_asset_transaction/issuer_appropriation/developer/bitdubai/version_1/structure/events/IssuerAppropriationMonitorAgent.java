@@ -20,10 +20,16 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
@@ -45,6 +51,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_app
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 
@@ -71,6 +78,8 @@ public class IssuerAppropriationMonitorAgent implements Agent {
     private final CryptoVaultManager cryptoVaultManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
     private final AssetIssuerWalletManager assetIssuerWalletManager;
+    private final ExtraUserManager extraUserManager;
+
 
     private AppropriationAgent appropriationAgent;
     //VARIABLES ACCESSED BY AGENT INNER CLASS.
@@ -91,7 +100,8 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                                            CryptoAddressBookManager cryptoAddressBookManager,
                                            CryptoVaultManager cryptoVaultManager,
                                            IntraWalletUserIdentityManager intraWalletUserIdentityManager,
-                                           AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException {
+                                           AssetIssuerWalletManager assetIssuerWalletManager,
+                                           ExtraUserManager extraUserManager) throws CantSetObjectException {
         this.assetVault = assetVault;
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
@@ -103,6 +113,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
         this.cryptoVaultManager = Validate.verifySetter(cryptoVaultManager, "cryptoVaultManager is null");
         this.intraWalletUserIdentityManager = Validate.verifySetter(intraWalletUserIdentityManager, "intraWalletUserIdentityManager is null");
         this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
+        this.extraUserManager = Validate.verifySetter(extraUserManager, "extraUserManager is null");
     }
 
     //PUBLIC METHODS
@@ -177,8 +188,6 @@ public class IssuerAppropriationMonitorAgent implements Agent {
         private void doTheMainTask() {
             try {
                 IssuerAppropriationDAO dao = new IssuerAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault);
-                eventMonitoring(dao);
-
                 statusMonitoring(dao);
 
             } catch (InvalidParameterException | CantRegisterDebitException | CantLoadWalletException | CantGetCryptoTransactionException e) {
@@ -191,53 +200,6 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
-
-        private void eventMonitoring(IssuerAppropriationDAO dao) throws Exception {
-            for (String eventId : dao.getPendingCryptoRouterEvents()) {
-                switch (dao.getEventTypeById(eventId)) {
-                    case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER:
-                        for (AppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.BITCOINS_SENT)) {
-                            if ("-".equals(record.genesisTransaction())) {
-                                //If for some reason it wasn't updated then the bitcoins wasn't sent.
-                                dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());
-                                continue;
-                            }
-                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_CRYPTO_NETWORK);
-                            if (cryptoTransaction == null) continue;
-                            AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey());
-                            AssetIssuerWalletBalance balance = issuerWallet.getBalance();
-                            AssetIssuerWalletTransactionRecordWrapper walletRecord = new AssetIssuerWalletTransactionRecordWrapper(record.assetMetadata(),
-                                    cryptoTransaction,
-                                    record.digitalAsset().getPublicKey(),
-                                    record.addressTo().getAddress());
-                            balance.debit(walletRecord, BalanceType.AVAILABLE);
-                            dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
-                        }
-                        break;
-
-                    case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER:
-                        for (AppropriationTransactionRecord record : dao.getTransactionsForStatus(AppropriationStatus.ASSET_DEBITED)) {
-                            CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
-                            if (cryptoTransaction == null) continue;
-                            AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey());
-                            AssetIssuerWalletBalance balance = issuerWallet.getBalance();
-                            AssetIssuerWalletTransactionRecordWrapper walletRecord = new AssetIssuerWalletTransactionRecordWrapper(record.assetMetadata(),
-                                    cryptoTransaction,
-                                    record.digitalAsset().getPublicKey(),
-                                    record.addressTo().getAddress());
-                            balance.debit(walletRecord, BalanceType.BOOK);
-                            dao.completeAppropriationSuccessful(record.transactionRecordId());
-                        }
-                        break;
-
-                    default:
-                        //THIS CAN'T HAPPEN. But if it happen, this event is not for me and I don't care...
-                        break;
-                }
-                dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
-            }
-        }
-
         private void statusMonitoring(IssuerAppropriationDAO dao) throws Exception {
             for (AppropriationTransactionRecord record : dao.getUnsendedTransactions()) {
                 IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation(dao.getUnsendedTransactions().size() + " unsended transactions were found.");
@@ -252,11 +214,12 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                         break;
                     case CRYPTOADDRESS_OBTAINED:
                         IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("registering crypto address in crypto book. : " + record.transactionRecordId());
-                        IntraWalletUserIdentity assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser("Issuer Appropriation: " + record.digitalAsset().getName(), null);
+                        IntraWalletUserIdentity assetIdentity = getIntraUserIdentity(record);
+                        Actor extraUser = getExtraUser(record.assetMetadata());
                         cryptoAddressBookManager.registerCryptoAddress(record.addressTo(),
                                 assetIdentity.getPublicKey(),
                                 Actors.INTRA_USER,
-                                intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0).getPublicKey(),
+                                extraUser.getActorPublicKey(),
                                 Actors.EXTRA_USER,
                                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                                 VaultType.CRYPTO_CURRENCY_VAULT,
@@ -272,12 +235,43 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                             IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("This transaction failed to have a crypto address... Returning to previous state");
                             dao.updateTransactionStatusAppropriationStarted(record.transactionRecordId());
                         } else {
-                            String genesisTransaction = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getGenesisTransaction(), record.assetMetadata().getGenesisBlock(), record.addressTo());
-                            dao.updateGenesisTransaction(genesisTransaction, record.transactionRecordId());
+                            String newTx = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getLastTransactionHash(), record.assetMetadata().getLastTransactionBlock(), record.addressTo());
+                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), newTx, null);
                             dao.updateTransactionStatusBitcoinsSent(record.transactionRecordId());
                             IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Bitcoins sent!");
                         }
                         break;
+                    case BITCOINS_SENT: {
+                        CryptoTransaction cryptoTransaction = AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.assetMetadata());
+                        if (cryptoTransaction == null) continue;
+                        AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey());
+                        AssetIssuerWalletBalance balance = issuerWallet.getBalance();
+                        AssetIssuerWalletTransactionRecordWrapper walletRecord = new AssetIssuerWalletTransactionRecordWrapper(record.assetMetadata(),
+                                cryptoTransaction,
+                                record.digitalAsset().getPublicKey(),
+                                record.addressTo().getAddress());
+                        balance.debit(walletRecord, BalanceType.AVAILABLE);
+                        dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
+                        break;
+                    }
+                    case ASSET_DEBITED: {
+                        switch (bitcoinNetworkManager.getCryptoStatus(record.assetMetadata().getLastTransactionHash())) {
+                            case ON_BLOCKCHAIN:
+                            case IRREVERSIBLE:
+                                CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
+                                if (cryptoTransaction == null) continue;
+                                AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey());
+                                AssetIssuerWalletBalance balance = issuerWallet.getBalance();
+                                AssetIssuerWalletTransactionRecordWrapper walletRecord = new AssetIssuerWalletTransactionRecordWrapper(record.assetMetadata(),
+                                        cryptoTransaction,
+                                        record.digitalAsset().getPublicKey(),
+                                        record.addressTo().getAddress());
+                                balance.debit(walletRecord, BalanceType.BOOK);
+                                dao.completeAppropriationSuccessful(record.transactionRecordId());
+                                break;
+                        }
+                        break;
+                    }
                     default:
                         //This should never happen.
                         break;
@@ -298,5 +292,25 @@ public class IssuerAppropriationMonitorAgent implements Agent {
         }
 
 
+        private IntraWalletUserIdentity getIntraUserIdentity(AppropriationTransactionRecord record) throws CantListIntraWalletUsersException, CantCreateNewIntraWalletUserException {
+            List<IntraWalletUserIdentity> allIdentities = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
+            String alias = "Issuer Appropriation: " + record.digitalAsset().getName();
+            IntraWalletUserIdentity assetIdentity = null;
+            for (IntraWalletUserIdentity identity : allIdentities) {
+                if (identity.getAlias().equals(alias)) assetIdentity = identity;
+            }
+            if (assetIdentity == null)
+                assetIdentity = intraWalletUserIdentityManager.createNewIntraWalletUser(alias, null);
+            return assetIdentity;
+        }
+
+        private Actor getExtraUser(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateExtraUserException {
+            try {
+                return extraUserManager.getActorByPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
+            } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
+                byte[] image = digitalAssetMetadata.getDigitalAsset().getResources().isEmpty() ? new byte[0] : digitalAssetMetadata.getDigitalAsset().getResources().get(0).getResourceBinayData();
+                return extraUserManager.createActor(digitalAssetMetadata.getDigitalAsset().getName(), image);
+            }
+        }
     }
 }

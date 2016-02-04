@@ -22,6 +22,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
@@ -46,7 +47,10 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingEventListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -82,7 +86,11 @@ public class ChatMiddlewareDatabaseDao {
             database = openDatabase();
             List<Contact> contacts = new ArrayList<>();
             // I will add the contact information from the database
-            for (DatabaseTableRecord record : getContactData(filter)) {
+            List<DatabaseTableRecord> records=getContactData(filter);
+            if(records==null|| records.isEmpty()){
+                return contacts;
+            }
+            for (DatabaseTableRecord record : records) {
                 final Contact contact = getContactTransaction(record);
 
                 contacts.add(contact);
@@ -119,6 +127,10 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
+            if(contacts.isEmpty()){
+                return null;
+            }
+
             return contacts.get(0);
         }
         catch (Exception e) {
@@ -145,8 +157,8 @@ public class ChatMiddlewareDatabaseDao {
             DatabaseTableRecord record = getContactRecord(contact);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(contact.getContactId().toString());
-            filter.setColumn(ChatMiddlewareDatabaseConstants.CONTACTS_FIRST_KEY_COLUMN);
+            filter.setValue(contact.getRemoteActorPublicKey().toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
 
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, record);
@@ -212,6 +224,10 @@ public class ChatMiddlewareDatabaseDao {
             database = openDatabase();
             List<Chat> chats = new ArrayList<>();
             // I will add the contact information from the database
+            List<DatabaseTableRecord> records=getContactData(filter);
+            if(records==null|| records.isEmpty()){
+                return chats;
+            }
             for (DatabaseTableRecord record : getChatData(filter)) {
                 final Chat chat = getChatTransaction(record);
 
@@ -249,14 +265,19 @@ public class ChatMiddlewareDatabaseDao {
 
             database.closeDatabase();
 
+            if(chats.isEmpty()){
+                return null;
+            }
+
             return chats.get(0);
         }
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Contact from the database with filter: " + chatId.toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Chat from the database with filter: " + chatId.toString(), null);
         }
     }
+
     public Chat newEmptyInstanceChat() throws CantNewEmptyChatException
     {
         ChatImpl chat = new ChatImpl();
@@ -327,7 +348,7 @@ public class ChatMiddlewareDatabaseDao {
      * @throws DatabaseOperationException
      * @throws CantGetMessageException
      */
-    public List<Message> getCreatedMesages() throws
+    public List<Message> getCreatedMessages() throws
             DatabaseOperationException,
             CantGetMessageException {
         DatabaseTable databaseTable=getDatabaseTable(
@@ -362,7 +383,11 @@ public class ChatMiddlewareDatabaseDao {
             database = openDatabase();
             List<Message> messages = new ArrayList<>();
             // I will add the message information from the database
-            for (DatabaseTableRecord record : getMessageData(filter)) {
+            List<DatabaseTableRecord> records=getMessageData(filter);
+            if(records==null|| records.isEmpty()){
+                return messages;
+            }
+            for (DatabaseTableRecord record : records) {
                 final Message message = getMessageTransaction(record);
 
                 messages.add(message);
@@ -375,7 +400,7 @@ public class ChatMiddlewareDatabaseDao {
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get message from the database with filter: " + filter.toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, e.getMessage(), null);
         }
     }
 
@@ -391,13 +416,21 @@ public class ChatMiddlewareDatabaseDao {
             filter.setValue(chatId.toString());
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
             // I will add the message information from the database
-            for (DatabaseTableRecord record : getMessageData(filter)) {
+            List<DatabaseTableRecord> records=getMessageData(filter);
+            if(records==null|| records.isEmpty()){
+                return null;
+            }
+            for (DatabaseTableRecord record : records) {
                 final Message message = getMessageTransaction(record);
 
                 messages.add(message);
             }
 
             database.closeDatabase();
+
+            if(messages.isEmpty()){
+                return null;
+            }
 
             return messages.get(0);
         }
@@ -542,7 +575,7 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_NAME_COLUMN_NAME, contact.getRemoteName());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME, contact.getRemoteActorType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME, contact.getRemoteActorPublicKey());
-        record.setStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME, contact.getCreationDate().toString());
+        record.setLongValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME, contact.getCreationDate());
 
         return record;
     }
@@ -623,8 +656,8 @@ public class ChatMiddlewareDatabaseDao {
         chat.setChatId(chatTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
         chat.setObjectId(chatTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_OBJECT_COLUMN_NAME));
         chat.setChatName(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CHAT_NAME_COLUMN_NAME));
-        chat.setDate(Date.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME)));
-        chat.setLastMessageDate(Date.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME)));
+        chat.setDate(Timestamp.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME)));
+        chat.setLastMessageDate(Timestamp.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME)));
         chat.setRemoteActorPublicKey(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
         chat.setRemoteActorType(PlatformComponentType.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_REMOTE_ACTOR_TYPE_COLUMN_NAME)));
         chat.setLocalActorPublicKey(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME));
@@ -641,7 +674,7 @@ public class ChatMiddlewareDatabaseDao {
         message.setChatId(messageTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME));
         message.setMessageId(messageTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME));
         message.setMessage(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_TEXT_MESSAGE_COLUMN_NAME));
-        message.setMessageDate(Date.valueOf(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME)));
+        message.setMessageDate(Timestamp.valueOf(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME)));
         message.setStatus(MessageStatus.getByCode(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME)));
         message.setType(TypeMessage.getByCode(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME)));
 
@@ -657,7 +690,7 @@ public class ChatMiddlewareDatabaseDao {
         contact.setRemoteName(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_NAME_COLUMN_NAME));
         contact.setRemoteActorType(PlatformComponentType.getByCode(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_TYPE_COLUMN_NAME)));
         contact.setRemoteActorPublicKey(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME));
-        contact.setCreationDate(Date.valueOf(contactTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME)));
+        contact.setCreationDate(contactTransactionRecord.getLongValue(ChatMiddlewareDatabaseConstants.CONTACTS_CREATION_DATE_COLUMN_NAME));
 
         return contact;
     }

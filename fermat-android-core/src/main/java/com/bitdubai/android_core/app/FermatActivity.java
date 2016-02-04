@@ -1,6 +1,5 @@
 package com.bitdubai.android_core.app;
 
-import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.ActionBar;
 import android.app.Notification;
@@ -9,7 +8,6 @@ import android.app.PendingIntent;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -60,15 +58,17 @@ import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapte
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
+import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.classes.NetworkStateReceiver;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
-import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
-import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
-import com.bitdubai.android_core.app.common.version_1.util.DepthPageTransformer;
+import com.bitdubai.android_core.app.common.version_1.top_settings.TopSettings;
+import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
+import com.bitdubai.android_core.app.common.version_1.util.BroadcasterInterface;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
+import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
@@ -78,34 +78,22 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
+import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetRuntimeManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ErrorManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ResourcesManagerNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.RuntimeManagerNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -114,14 +102,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMen
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
@@ -130,6 +116,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -178,7 +165,8 @@ public abstract class FermatActivity extends AppCompatActivity
         NavigationView.OnNavigationItemSelectedListener,
         FermatRuntime,
         NetworkStateReceiver.NetworkStateReceiverListener,
-        FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> {
+        FermatStates,
+        FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>,BroadcasterInterface, ServiceCallback {
 
 
     private static final String TAG = "fermat-core";
@@ -215,7 +203,7 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Receivers
      */
-    private NetworkStateReceiver networkStateReceiver;
+    //private NetworkStateReceiver networkStateReceiver;
 
     /**
      * UI
@@ -240,6 +228,12 @@ public abstract class FermatActivity extends AppCompatActivity
     private boolean hidden = true;
 
     /**
+     * Service
+     */
+//    boolean mServiceConnected = false;
+
+
+    /**
      * Called when the activity is first created
      *
      * @param savedInstanceState
@@ -260,6 +254,8 @@ public abstract class FermatActivity extends AppCompatActivity
             // need to create any new ones here.
         }
 
+        AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
+        androidCoreUtils.setContextAndResume(this);
 //        try {
 //            networkStateReceiver = new NetworkStateReceiver();
 //            networkStateReceiver.addListener(this);
@@ -317,8 +313,27 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void onStop() {
         try {
             super.onStop();
-            unregisterReceiver(networkStateReceiver);
+            try{
+                AndroidCoreUtils.getInstance().clear();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+//            if(networkStateReceiver!=null) {
+//                unregisterReceiver(networkStateReceiver);
+//                networkStateReceiver.removeListener(this);
+//            }
        //     networkStateReceiver.removeListener(this);
+
+
+            /**
+             * Service
+             */
+//            if (mServiceConnected) {
+//                unbindService(mServiceConnection);
+//                mServiceConnected = false;
+//            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -498,6 +513,8 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                  };
         view.findViewById(R.id.img_fermat_setting_1).setOnClickListener(onClickListener);
         view.findViewById(R.id.img_fermat_setting).setOnClickListener(onClickListener);
+
+        TopSettings.buildSettingsTop(mRevealView);
 
     }
 
@@ -770,6 +787,51 @@ public abstract class FermatActivity extends AppCompatActivity
         tabLayout.setupWithViewPager(pagertabs);
     }
 
+
+    protected void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory) {
+
+        try {
+            FermatStructure fermatStructure = getAppInUse();
+            String appPublicKey = fermatStructure.getPublicKey();
+            FermatSession walletSession = getFermatSessionInUse(appPublicKey); //getWalletSessionManager().getWalletSession(walletPublicKey);
+            String fragment = fermatStructure.getLastActivity().getLastFragment().getType();
+
+            if (fermatFragmentFactory != null) {
+
+                TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+                tabLayout.setVisibility(View.GONE);
+
+                pagertabs = (ViewPager) findViewById(R.id.pager);
+                pagertabs.setVisibility(View.VISIBLE);
+
+
+                adapter = new TabsPagerAdapter(getFragmentManager(),
+                        getApplicationContext(),
+                        fermatFragmentFactory,
+                        fragment,
+                        walletSession,
+                        getWalletResourcesProviderManager());
+                pagertabs.setAdapter(adapter);
+
+
+                //pagertabs.setCurrentItem();
+                final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                        .getDisplayMetrics());
+                pagertabs.setPageMargin(pageMargin);
+                //pagertabs.setCurrentItem(tabStrip.getStartItem(), true);
+
+
+                //tabLayout.setupWithViewPager(pagertabs);
+                //pagertabs.setOffscreenPageLimit(tabStrip.getTabs().size());
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * Select the xml based on the activity type
      *
@@ -922,6 +984,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 }
             } else {
                 navigationView.setVisibility(View.GONE);
+                mDrawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
 
         } catch (Exception e) {
@@ -942,8 +1005,8 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         try {
-            getNotificationManager().addObserver(this);
-            getNotificationManager().addCallback(this);
+            //getNotificationManager().addObserver(this);
+            //getNotificationManager().addCallback(this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -964,13 +1027,13 @@ public abstract class FermatActivity extends AppCompatActivity
 //            }
 //
 //        }
-        try {
-            networkStateReceiver = new NetworkStateReceiver();
-            networkStateReceiver.addListener(this);
-            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            networkStateReceiver = NetworkStateReceiver.getInstance();
+//            networkStateReceiver.addListener(this);
+//            this.registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
+//        }catch (Exception e){
+//            e.printStackTrace();
+//        }
     }
 
     @Override
@@ -981,15 +1044,18 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        try {
-            getNotificationManager().deleteObserver(this);
-            getNotificationManager().deleteCallback(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            getNotificationManager().deleteObserver(this);
+//            getNotificationManager().deleteCallback(this);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
+
+
+//        networkStateReceiver.removeListener(this);
         //mNotificationManager.notify(NOTIFICATION_ID, notification.build());
     }
     /**
@@ -1138,6 +1204,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 e.printStackTrace();
             }
 
+            if(adapter!=null) adapter.destroyCurrentFragments();
             this.adapter = null;
             paintStatusBar(null);
             if (navigation_recycler_view != null) {
@@ -1188,7 +1255,7 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void initialisePaging() {
 
         try {
-            List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
+            List<android.app.Fragment> fragments = new Vector<>();
 
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
 
@@ -1310,7 +1377,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
 
     public WalletSessionManager getWalletSessionManager() {
-        return ((ApplicationSession) getApplication()).getWalletSessionManager();
+        return ApplicationSession.getInstance().getWalletSessionManager();
     }
 
     /**
@@ -1319,7 +1386,7 @@ public abstract class FermatActivity extends AppCompatActivity
      * @return
      */
     public SubAppSessionManager getSubAppSessionManager() {
-        return ((ApplicationSession) getApplication()).getSubAppSessionManager();
+        return ApplicationSession.getInstance().getSubAppSessionManager();
     }
 
     /**
@@ -1349,7 +1416,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
 
     public WalletManager getWalletManager() {
-        return FermatSystemUtils.getWalletManager(getApplication());
+        return FermatSystemUtils.getWalletManager();
     }
 
     /**
@@ -1359,7 +1426,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
 
     protected SubAppManager getSubAppManager() {
-        return FermatSystemUtils.getSubAppManager(getApplication());
+        return FermatSystemUtils.getSubAppManager();
     }
 
     /**
@@ -1376,28 +1443,28 @@ public abstract class FermatActivity extends AppCompatActivity
      * Get WalletResourcesProvider
      */
     protected WalletResourcesProviderManager getWalletResourcesProviderManager() {
-        return FermatSystemUtils.getWalletResourcesProviderManager(getApplication());
+        return FermatSystemUtils.getWalletResourcesProviderManager();
     }
 
     /**
      * Get SubAppResourcesProvider
      */
     protected SubAppResourcesProviderManager getSubAppResourcesProviderManager() {
-        return FermatSystemUtils.getSubAppResourcesProviderManager(getApplication());
+        return FermatSystemUtils.getSubAppResourcesProviderManager();
     }
 
     /**
      * Get NotificationManager
      */
     private NotificationManagerMiddleware getNotificationManager() {
-        return FermatSystemUtils.getNotificationManager(getApplication());
+        return FermatSystemUtils.getNotificationManager();
     }
 
     /**
      * Get DesktopRuntimeManager
      */
     private DesktopRuntimeManager getDesktopRuntimeManager() {
-        return FermatSystemUtils.getDesktopRuntimeManager(getApplication());
+        return FermatSystemUtils.getDesktopRuntimeManager();
     }
 
     /**
@@ -1407,7 +1474,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference){
         try {
-            return getApplicationSession().getFermatSystem().getModuleManager(pluginVersionReference);
+            return getApplicationSession().getFermatSystem().getModuleManager2(pluginVersionReference);
         } catch (ModuleManagerNotFoundException | CantGetModuleManagerException e) {
             System.out.println(e.getMessage());
             System.out.println(e.toString());
@@ -1423,7 +1490,7 @@ public abstract class FermatActivity extends AppCompatActivity
      * @return
      */
     private final WsCommunicationsCloudClientManager getCloudClient() {
-        return FermatSystemUtils.getCloudClient(getApplication());
+        return FermatSystemUtils.getCloudClient();
     }
 
     /**
@@ -1431,11 +1498,11 @@ public abstract class FermatActivity extends AppCompatActivity
      * @return
      */
     private final BitcoinNetworkManager getNetwork() {
-        return FermatSystemUtils.getNetwork(getApplication());
+        return FermatSystemUtils.getNetwork();
     }
 
     protected FermatApplicationSession getApplicationSession(){
-        return (ApplicationSession)getApplication();
+        return ApplicationSession.getInstance();
     }
 
     /**
@@ -1486,6 +1553,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
         //navigationDrawerFragment.onDetach();
         resetThisActivity();
+        AndroidCoreUtils.getInstance().stop();
         super.onDestroy();
     }
 
@@ -1493,6 +1561,11 @@ public abstract class FermatActivity extends AppCompatActivity
         final LinearLayout linearLayout = (LinearLayout)findViewById(R.id.icons_container);
         if(linearLayout!=null)
         linearLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void changeActivityBack(String appBackPublicKey, String activityCode) {
+
     }
 
     @Override
@@ -1533,6 +1606,8 @@ public abstract class FermatActivity extends AppCompatActivity
                 .setContentText(notificationTextBody)
                 .setContentIntent(pi)
                 .setAutoCancel(true)
+                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
+                .setLights(Color.YELLOW, 3000, 3000)
                 .build();
         NotificationManager notificationManager = (NotificationManager)
                 getSystemService(NOTIFICATION_SERVICE);
@@ -1820,9 +1895,9 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void networkAvailable() {
-        Log.i(TAG,"NETWORK AVAILABLE MATIIIII");
+        Log.i(TAG, "NETWORK AVAILABLE MATIIIII");
         try {
-            getCloudClient().setNetworkState(true);
+            //getCloudClient().setNetworkState(true);
         }catch (Exception e){
             //e.printStackTrace();
         }
@@ -1832,9 +1907,73 @@ public abstract class FermatActivity extends AppCompatActivity
     public void networkUnavailable() {
         Log.i(TAG, "NETWORK UNAVAILABLE MATIIIII");
         try{
-            getCloudClient().setNetworkState(false);
+            //getCloudClient().setNetworkState(false);
         }catch (Exception e){
           //  e.printStackTrace();
+        }
+    }
+
+    @Override
+    public AndroidCoreManager getFermatStates(){
+        return FermatSystemUtils.getAndroidCoreModule().getAndroidCoreManager();
+    }
+
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String code) {
+        try {
+            if (broadcasterType == BroadcasterType.UPDATE_VIEW) {
+                for(AbstractFermatFragment fragment : adapter.getLstCurrentFragments()){
+                    fragment.onUpdateView(code);
+                    fragment.onUpdateViewUIThred(code);
+                }
+            }
+        }catch (Exception e){
+            Log.e(TAG,"Cant broadcast excepcion");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        Intent intent = new Intent(this, BoundService.class);
+//        intent.putExtra(BoundService.LOG_TAG,"Activity 1");
+//        startService(intent);
+//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+
+//    private BoundService mBoundService;
+//    /**
+//     * Service
+//     */
+//
+//
+//    private ServiceConnection mServiceConnection = new ServiceConnection() {
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName name) {
+//            mServiceConnected = false;
+//        }
+//
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service) {
+//            mBoundService = ((BoundService.LocalBinder)service).getService();
+//            mBoundService.registerCallback(registerCallback());
+//            mServiceConnected = true;
+//        }
+//    };
+//
+//    private ServiceCallback registerCallback(){
+//        return this;
+//    }
+
+
+    @Override
+    public void callback(int option) {
+        if (option==1){
+
         }
     }
 

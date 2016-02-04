@@ -27,11 +27,8 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  */
 public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
 
-    ActorIdentity identity;
-
-    public CryptoBrokerCommunityFermatAppConnection(Activity activity, ActorIdentity identity) {
+    public CryptoBrokerCommunityFermatAppConnection(Activity activity) {
         super(activity);
-        this.identity = identity;
     }
 
     @Override
@@ -58,8 +55,9 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
+        //System.out.println("CBC getNavigationViewPainter.. llamando a getActiveIdentity..");
 
-        return new BrokerCommunityNavigationViewPainter(getActivity(), identity);
+        return new BrokerCommunityNavigationViewPainter(getActivity(), getActiveIdentity());
 
     }
 

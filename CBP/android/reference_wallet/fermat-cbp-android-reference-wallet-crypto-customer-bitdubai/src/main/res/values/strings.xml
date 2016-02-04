@@ -11,6 +11,7 @@
     <string name="broker_bank_account_title">Broker Bank Accounts</string>
     <string name="broker_locations_title">Broker Locations</string>
     <string name="buying_text">Buying: </string>
+    <string name="paying_text">Paying: </string>
     <string name="buy_text_and_price">Buy: %1$s</string>
 
     <string name="ccw_account_alias">Account Alias</string>
@@ -24,13 +25,22 @@
     <string name="ccw_add_location">Add a Location</string>
     <string name="ccw_add_your_bank_accounts">Add Your Bank Accounts</string>
     <string name="ccw_amount_to_buy">Amount to Buy</string>
+    <string name="ccw_amount_title">Amount: </string>
     <string name="ccw_bank">Bank</string>
     <string name="ccw_bank_name">Bank Name</string>
+    <string name="ccw_bank_account_customer">Bank Account Customer</string>
+    <string name="ccw_bank_account_broker">Bank Account Broker</string>
+    <string name="ccw_bank_account_title">Bank Account:</string>
     <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
     <string name="ccw_broker_information">Broker Information</string>
     <string name="ccw_cancel_caps">CANCEL</string>
     <string name="ccw_cancellation_reason_title">Cancellation Reason:</string>
     <string name="ccw_cash">Cash</string>
+    <string name="ccw_cash_place_to_delivery_broker">Place To Delivery Broker</string>
+    <string name="ccw_cash_place_to_delivery_customer">Place To Delivery Customer</string>
+    <string name="ccw_cash_place_to_delivery_title">Place To Delivery:</string>
+    <string name="ccw_date_to_delivery_broker">Date To Delivery Broker</string>
+    <string name="ccw_date_to_delivery_customer">Date To Delivery Customer</string>
     <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
     <string name="ccw_city">City</string>
     <string name="ccw_contract_details_contract_title">SELLING BTC</string>
@@ -44,6 +54,9 @@
     <string name="ccw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
     <string name="ccw_create">Create</string>
     <string name="ccw_crypto">Crypto</string>
+    <string name="ccw_crypto_address_broker">Crypto Address Broker</string>
+    <string name="ccw_crypto_address_customer">Crypto Address Customer</string>
+    <string name="ccw_crypto_address_title">Crypto Address:</string>
     <string name="ccw_delete_caps">DELETE</string>
     <string name="ccw_delete_wallet_dialog_title">Delete Wallet</string>
     <string name="ccw_delete_wallet_dialog_msg">"Do you want to delete this wallet?"</string>
@@ -99,9 +112,10 @@
     <string name="contract_closed">Close</string>
     <string name="customer_locations_title">Customer Locations</string>
     <string name="customer_bank_account_title">Customer Bank Accounts</string>
+    <string name="cbw_select_identity_warning_msg">Need to Select an Identity</string>
 
-    <string name="delivery_date_title">Delivery Date</string>
-    <string name="delivery_date_text">Delivery Date: </string>
+    <string name="delivery_date_title">Date To Delivery:</string>
+    <string name="delivery_date_text">Delivery Date </string>
 
     <string name="exchange_rate_reference">Exchange Rate Reference</string>
     <string name="expiration_date_text">Expiration Date:</string>
@@ -149,6 +163,7 @@
 
     <string name="you_will_have_to_pay_amount">You will have to pay: </string>
     <string name="yours">Yours:</string>
+    <string name="yours_exchange_rate_title">Yours Exchange Rate:</string>
     <string name="ccw_currency_to_pay">Currency to Pay</string>
     <string name="ccw_amount_to_pay">Amount to Pay</string>
     <string name="ccw_currency_to_buy">Currency to Buy</string>
@@ -159,4 +174,16 @@
     <string name="hint">hint</string>
     <string name="title">Title</string>
 
+    <string name="cbw_wizard_merchandise_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
+    <string name="cbw_wizard_merchandise_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
+    <string name="cbw_wizard_merchandise_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
+    <string name="cbw_wizard_providers_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
+    <string name="cbw_wizard_providers_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
+    <string name="cbw_wizard_providers_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
+    <string name="cbw_wizard_accounts_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
+    <string name="cbw_wizard_accounts_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
+    <string name="cbw_wizard_accounts_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
+    <string name="cbw_wizard_locations_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
+    <string name="cbw_wizard_locations_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
+    <string name="cbw_wizard_locations_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
 </resources>

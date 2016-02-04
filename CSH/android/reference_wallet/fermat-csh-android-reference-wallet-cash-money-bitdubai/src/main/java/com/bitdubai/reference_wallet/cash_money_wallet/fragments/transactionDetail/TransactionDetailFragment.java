@@ -1,0 +1,157 @@
+package com.bitdubai.reference_wallet.cash_money_wallet.fragments.transactionDetail;
+
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.text.format.DateUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
+import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.reference_wallet.cash_money_wallet.R;
+import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
+import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
+
+/**
+ * Created by Alejandro Bicelis on 12/18/2015.
+ */
+public class TransactionDetailFragment extends AbstractFermatFragment implements View.OnClickListener, DialogInterface.OnDismissListener {
+
+    // Fermat Managers
+    private CashMoneyWalletSession walletSession;
+    private CashMoneyWalletModuleManager moduleManager;
+    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
+    private ErrorManager errorManager;
+
+    //Data
+    private CashMoneyWalletPreferenceSettings walletSettings;
+    private CashMoneyWalletTransaction transaction;
+    private boolean transactionIsEditable;
+
+    //UI
+    LinearLayout buttonContainer;
+    FermatTextView amount;
+    FermatTextView memo;
+    FermatTextView date;
+    FermatTextView transactionType;
+    CreateTransactionFragmentDialog transactionFragmentDialog;
+    Button deleteButton;
+    Button updateButton;
+
+
+    public TransactionDetailFragment() {}
+    public static TransactionDetailFragment newInstance() {return new TransactionDetailFragment();}
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        try {
+            walletSession = ((CashMoneyWalletSession) appSession);
+            moduleManager = walletSession.getModuleManager();
+            settingsManager = moduleManager.getSettingsManager();
+            errorManager = appSession.getErrorManager();
+
+        } catch (Exception e) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        }
+
+        //Get Transaction from session
+        transaction = (CashMoneyWalletTransaction)appSession.getData("transaction");
+
+        //Check if transaction needs to be verified if it is committed into wallet or not
+        if((boolean)appSession.getData("checkIfTransactionHasBeenCommitted"))
+        {
+            try {
+                transaction = moduleManager.getTransaction(walletSession.getAppPublicKey(), transaction.getTransactionId());
+
+                //Transaction is committed, disallow edition and deletion
+                transactionIsEditable = false;
+
+            } catch (CantGetCashMoneyWalletTransactionsException e){
+                //Transaction hasn't been committed, allow edition and deletion.
+                transactionIsEditable = true;
+            }
+        }
+        else    //Transaction is commited into wallet, cannot allow edition.
+            transactionIsEditable = false;
+
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
+        View layout = inflater.inflate(R.layout.csh_transaction_detail_page, container, false);
+
+        buttonContainer = (LinearLayout) layout.findViewById(R.id.csh_transaction_detail_btn_container);
+        amount = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_amount);
+        memo = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_memo);
+        date = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_date);
+        transactionType = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_transaction_type);
+
+
+        if(transactionIsEditable)
+            buttonContainer.setVisibility(View.VISIBLE);
+
+        amount.setText(transaction.getAmount().toPlainString());
+        memo.setText(transaction.getMemo());
+        date.setText(DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()) + " - " + getPrettyTime(transaction.getTimestamp()));
+        transactionType.setText(getTransactionTypeText(transaction.getTransactionType()));
+        layout.findViewById(R.id.csh_transaction_detail_delete_btn).setOnClickListener(this);
+        layout.findViewById(R.id.csh_transaction_detail_update_btn).setOnClickListener(this);
+
+        return layout;
+    }
+
+    @Override
+    public void onClick(View view) {
+        int i = view.getId();
+        if (i == R.id.csh_transaction_detail_delete_btn) {
+            this.changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
+        }else if(i == R.id.csh_transaction_detail_update_btn) {
+            transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transaction.getTransactionType(), transaction.getAmount(), transaction.getMemo());
+            transactionFragmentDialog.setOnDismissListener(this);
+            transactionFragmentDialog.show();
+        }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialogInterface) {
+        this.changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
+    }
+
+
+    /* HELPER FUNCTIONS */
+    private String getPrettyTime(long timestamp)
+    {
+        return DateUtils.getRelativeTimeSpanString(timestamp * 1000).toString();
+        //return DateFormat.format("dd MMM yyyy h:mm:ss aa", (timestamp * 1000)).toString();
+    }
+
+    private String getTransactionTypeText(TransactionType transactionType) {
+        if (transactionType == TransactionType.DEBIT)
+            return getResources().getString(R.string.csh_withdrawal_transaction_text);
+        else
+            return getResources().getString(R.string.csh_deposit_transaction_text);
+    }
+
+
+}

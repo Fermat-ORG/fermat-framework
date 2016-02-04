@@ -1,27 +1,33 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantDeleteBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.WalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetAssociatedCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCurrentIndexSummaryForCurrenciesOfInterestException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletAssociatedSettingException;
@@ -40,10 +46,10 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by nelson on 22/09/15.
+ * Updated by Manuel Perez on 24/01/2016
  */
 public interface CryptoCustomerWalletManager extends WalletManager {
 
@@ -68,19 +74,9 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     /**
      * return the list of brokers connected with the crypto customer and the merchandises that they sell
      *
-     * @param customerPublicKey the crypto customer public key
      * @return the list of crypto brokers
      */
-    Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises(String customerPublicKey) throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException;
-
-    /**
-     * return a list of exchange rate info for each merchandise the broker accept as payment
-     *
-     * @param brokerPublicKey the broker public key
-     * @param target          the currency against the exchange rate is going to be calculated
-     * @return list of exchange rate info
-     */
-    Collection<MerchandiseExchangeRate> getListOfBrokerMerchandisesExchangeRate(String brokerPublicKey, FermatEnum target);
+    Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises() throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException;
 
     /**
      * @return list of identities associated with this wallet
@@ -99,12 +95,12 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     /**
      * Start a new negotiation with a crypto broker
      *
-     * @param customerId the crypto customer ID
-     * @param brokerId   the crypto broker ID
+     * @param customerPublicKey the crypto customer publicKey
+     * @param brokerPublicKey   the crypto broker publicKey
      * @param clauses    the initial and mandatory clauses to start a negotiation
      * @return true if the association was successful false otherwise
      */
-    boolean startNegotiation(UUID customerId, UUID brokerId, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
+    boolean startNegotiation(String customerPublicKey, String brokerPublicKey, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 
     /**
      * This method list all wallet installed in device, start the transaction
@@ -166,4 +162,70 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException, CantPersistFileException, CantCreateFileException;
 
     List<CryptoCustomerWalletProviderSetting> getAssociatedProviders(String walletPublicKey);
+
+    /**
+     * This method returns the CustomerBrokerContractPurchase associated to a negotiationId
+     * @param negotiationId
+     * @return
+     * @throws CantGetListCustomerBrokerContractPurchaseException
+     */
+    CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseByNegotiationId(
+            String negotiationId
+    ) throws CantGetListCustomerBrokerContractPurchaseException;
+
+    /**
+     * This method returns the currency type from a contract
+     * @param customerBrokerContractPurchase
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    CurrencyType getCurrencyTypeFromContract(
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            ContractDetailType contractDetailType) throws
+            CantGetListPurchaseNegotiationsException;
+
+    /**
+     * This method send a payment according the contract elements.
+     * @param contractHash
+     */
+    void sendPayment(String contractHash) throws CantSendPaymentException;
+
+    /**
+     * This method execute a Customer Ack Merchandise Business Transaction
+     * @param contractHash
+     * @throws CantAckMerchandiseException
+     */
+    ContractStatus ackMerchandise(String contractHash) throws CantAckMerchandiseException;
+
+    /**
+     * This method returns the ContractStatus by contractHash/Id
+     * @param contractHash
+     * @return
+     */
+    ContractStatus getContractStatus(String contractHash) throws CantGetListCustomerBrokerContractPurchaseException;
+
+    /**
+     * This method returns a string with the currency code.
+     * @param customerBrokerContractPurchase
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    /*String getCurrencyCodeFromContract(
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            ContractDetailType contractDetailType) throws
+            CantGetListPurchaseNegotiationsException;*/
+
+    /**
+     * This method returns the currency amount
+     * @param customerBrokerContractPurchase
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    /*float getCurrencyAmountFromContract(
+            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            ContractDetailType contractDetailType) throws
+            CantGetListPurchaseNegotiationsException;*/
 }

@@ -7,6 +7,34 @@
 
     <string name="help">Help</string>
 
-    <string name="no_assets">No Assets</string>
+    <string name="no_assets_issuer">No Assets?</string>
+    <string name="no_assets_issuer_message">Don\'t worry, as an Asset Issuer you are able to create them using the Asset Factory. All the assets you published there, will be stored at this wallet.</string>
+    <string name="no_assets_user">No Assets?</string>
+    <string name="no_assets_user_message">Don\'t worry, as an Asset User you are able to receive assets from many Asset Owners. You are already eligible to receive them and store them at this wallet.</string>
+    <string name="no_assets_redeem_point">No Assets?</string>
+    <string name="no_assets_redeem_point_message">Don\'t worry, as a redeem point you need to connect your device to other Assets Issuers using the Asset Issuer Community application. Once you are connected, you will be eligible to redeem assets from any user!</string>
+
     <string name="no_redeempoints">No Redeem Points</string>
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_welcome_subTitle">Welcome to the Asset User Wallet.</string>
+    <string name="dap_user_wallet_welcome_body">From this wallet you will be able to redeem your assets or even get the monetary value associated with them.</string>
+    <string name="dap_user_wallet_welcome_Footer">We will be creating an avatar for you in order to identify you in the system as an Asset User. You will be able to edit this information at the Asset User Identity application.</string>
+    <string name="dap_user_wallet_welcome_name_left">Asset User</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_detail_subTitle">Asset detail section.</string>
+    <string name="dap_user_wallet_detail_body">You can review detailed information about the selected asset.\n\nYou can also decide to redeem your asset in a connected Redeem Point. If you are not connected to any Redeem Point, use the Redeem Point Community application to search for Redeem Points.\n\nYou can also appropriate the asset in order to get the Bitcoins associated with it. They will be sent to your Bitcoin wallet.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_redeem_subTitle">Asset Redemption.</string>
+    <string name="dap_user_wallet_redeem_body">You can decide how many assets to redeem at your connected Redeem Points. In order to connect to Redeem Points, search them at the Redeem Point Community application.\n\nThe selected Redeem Point will receive and confirm your asset so you can exchange it for what the asset represents.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_redeem_select_subTitle">Redeem Point Selection.</string>
+    <string name="dap_user_wallet_redeem_select_body">In order to redeem an asset, you must be connected to at least a redeem point. You can connect to Redeem Points at the Redeem Point Community application.\n\nYour assets may not be redeemable at any redeem point.</string>
+    <!--Dialog Help - End-->
 </resources>

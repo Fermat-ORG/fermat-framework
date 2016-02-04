@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
@@ -27,7 +28,7 @@ import java.util.UUID;
 public class EncodeMsjContent {
 
     /**
-     *  Construct the content of the message fot the type <code>DigitalAssetMetadataTransactionType.CHAT_METADATA_TRASMIT</code>
+     *  Construct the content of the message fot the type <code>ChatMessageTransactionType.CHAT_METADATA_TRASMIT</code>
      *
      * @param chatMetadata
      * @return String message content
@@ -54,21 +55,45 @@ public class EncodeMsjContent {
     }
 
     /**
-     * Construct the content of the message fot the type <code>DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE</code>
+     * Construct the content of the message fot the type <code>ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE</code>
      *
      * @param chatId
      * @param newDistributionStatus
      * @return String message content
      */
-
-    public static String encodeMSjContentTransactionNewStatusNotification(UUID chatId, DistributionStatus newDistributionStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
+    public static String encodeMSjContentTransactionNewStatusNotification(UUID chatId,UUID messageID, DistributionStatus newDistributionStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
 
 
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatId.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_ID, messageID.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, gson.toJson(newDistributionStatus));
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
+
+        return gson.toJson(jsonObjectContent);
+    }
+
+    /**
+     * Construct the content of the message fot the type <code>ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE</code>
+     * @param chatId
+     * @param messageID
+     * @param messageStatus
+     * @param senderType
+     * @param receiverType
+     * @return
+     */
+    public static String encodeMSjContentTransactionNewStatusNotification(UUID chatId,UUID messageID, MessageStatus messageStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
+
+
+        Gson gson = new Gson();
+        JsonObject jsonObjectContent = new JsonObject();
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatId.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_ID, messageID.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, gson.toJson(messageStatus));
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
 

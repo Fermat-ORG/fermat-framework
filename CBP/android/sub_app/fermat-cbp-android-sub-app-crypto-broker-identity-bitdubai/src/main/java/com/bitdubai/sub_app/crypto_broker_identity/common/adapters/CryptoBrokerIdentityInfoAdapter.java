@@ -64,6 +64,14 @@ public class CryptoBrokerIdentityInfoAdapter
         holder.setImage(data.getProfileImage());
         holder.setPublished(data.isPublished());
         holder.setIdentityPublicKey(data.getPublicKey());
+        if( data.isPublished() ){
+            holder.setStatus("Visible");
+        }else{
+            holder.setStatus("Not visible");
+        }
+
+        holder.itemView.setMinimumHeight(800);
+
     }
 
     @Override

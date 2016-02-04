@@ -104,10 +104,6 @@ public class CompleteRegistrationComponentTyrusPacketProcessor extends FermatTyr
              */
             getWsCommunicationsTyrusCloudClientChannel().setIsRegister(Boolean.TRUE);
             System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - getWsCommunicationsTyrusCloudClientChannel().isRegister() " + getWsCommunicationsTyrusCloudClientChannel().isRegister());
-            // getWsCommunicationsTyrusCloudClientChannel().launchCompleteClientComponentRegistrationNotificationEvent();
-            // System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - Raised a event = P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION");
-            //System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - getWsCommunicationsTyrusCloudClientChannel().isRegister() = "+ getWsCommunicationsTyrusCloudClientChannel().isRe            .raiseEvent(event);
-
 
         }
 

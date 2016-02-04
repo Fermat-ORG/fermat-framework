@@ -299,7 +299,7 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
     private boolean aliasExists (String alias) throws CantCreateNewDeveloperException {
 
         try {
-            DatabaseTable table = this.database.getTable (CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
+            DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
 
             table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
@@ -321,5 +321,63 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
 
         return new CryptoBrokerIdentityImpl(alias, keyPair, profileImage, published);
     }
+
+
+
+
+
+
+
+
+
+
+
+    public void updateCryptoBrokerIdentity(String alias, String publicKey, byte[] imageProfile){
+        try {
+            DatabaseTable table = this.database.getTable(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            table.addStringFilter(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            record.setStringValue(CryptoBrokerIdentityDatabaseConstants.CRYPTO_BROKER_ALIAS_COLUMN_NAME, alias);
+            table.updateRecord(record);
+
+            updateCryptoBrokerIdentityProfileImage(publicKey, imageProfile);
+
+        } catch (CantUpdateRecordException e) {
+            // TODO: manejar las excepciones
+            e.printStackTrace();
+        } catch (CantPersistProfileImageException e) {
+            // TODO: manejar las excepciones
+            e.printStackTrace();
+        }
+    }
+
+    private void updateCryptoBrokerIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
+        try {
+
+            this.pluginFileSystem.deleteBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT);
+
+            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+            file.setContent(profileImage);
+            file.persistToMedia();
+        } catch (CantPersistFileException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
+        } catch (CantCreateFileException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
+        } catch (FileNotFoundException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error removing file.", null);
+        }
+    }
+
+
+
 
 }

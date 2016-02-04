@@ -135,6 +135,31 @@ public interface CryptoWallet extends Serializable {
                                                           BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
         ;
 
+    /**
+     *
+     * Send an address request
+     * //TODO: ver si hay que actualizar solo el estado a pre_processing en el address y no pedir otra nueva.
+     *
+     * @param actorAlias
+     * @param actorConnectedType
+     * @param actorConnectedPublicKey
+     * @param actorPhoto
+     * @param actorWalletType
+     * @param identityWalletPublicKey
+     * @param walletPublicKey
+     * @param walletCryptoCurrency
+     * @param blockchainNetworkType
+     */
+
+    public void sendAddressExchangeRequest(String        actorAlias,
+                                           Actors        actorConnectedType,
+                                           String        actorConnectedPublicKey,
+                                           byte[]        actorPhoto,
+                                           Actors        actorWalletType ,
+                                           String        identityWalletPublicKey,
+                                           String        walletPublicKey,
+                                           CryptoCurrency walletCryptoCurrency,
+                                           BlockchainNetworkType blockchainNetworkType);
 
     /**
      * Create a new contact with a photo for an specific wallet
@@ -338,11 +363,11 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
-                                                                                                                                        TransactionType transactionType,
-                                                                                                                                        String walletPublicKey,
+                                                                             TransactionType transactionType,
+                                                                             String walletPublicKey,
                                                                              String actorPublicKey,
-                                                                                                                                        int max,
-                                                                                                                                        int offset) throws CantListTransactionsException;
+                                                                             int max,
+                                                                             int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>listTransactionsByActorAndType</code> you can get the transactions for each actor

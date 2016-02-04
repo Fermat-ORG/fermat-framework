@@ -80,7 +80,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * Represent the SERVER_IP
      */
     public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
- //   public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
+//      public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
 
     /**
      * Represent the executor
@@ -103,7 +103,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     /**
-     * Represent the disableClientFlag
+     * Represent the disableClientFlagq
      */
     private Boolean disableClientFlag;
 
@@ -211,9 +211,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                         /*
                          * Try to connect whit the cloud server
                          */
-                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
-                        System.out.println(" WsCommunicationsCloudClientPluginRoot - Connecting with the cloud server...");
-                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ===================================");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ================================================================");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - Connecting with the cloud server. Server IP ("+SERVER_IP+")");
+                        System.out.println(" WsCommunicationsCloudClientPluginRoot - ================================================================");
 
 
                         new Thread(new Runnable() {
@@ -260,9 +260,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     public void connectClient() throws URISyntaxException, IOException, DeploymentException {
 
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ***********************************");
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server...");
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ***********************************");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server. Server IP ("+SERVER_IP+")");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
 
         if (wsCommunicationsTyrusCloudClientConnection != null){
             wsCommunicationsTyrusCloudClientConnection.closeMainConnection();
@@ -404,16 +404,6 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
             throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
 
         }
-
-    }
-
-
-    public static void main(final String[] args) throws InterruptedException, URISyntaxException, IOException, DeploymentException {
-
-        WsCommunicationsCloudClientPluginRoot wsCommunicationsCloudClientPluginRoot = new WsCommunicationsCloudClientPluginRoot();
-        wsCommunicationsCloudClientPluginRoot.uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
-        WsCommunicationsTyrusCloudClientConnection wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(wsCommunicationsCloudClientPluginRoot.uri, wsCommunicationsCloudClientPluginRoot.eventManager, wsCommunicationsCloudClientPluginRoot.locationManager, wsCommunicationsCloudClientPluginRoot.clientIdentity);
-        wsCommunicationsTyrusCloudClientConnection.initializeAndConnect();
 
     }
 

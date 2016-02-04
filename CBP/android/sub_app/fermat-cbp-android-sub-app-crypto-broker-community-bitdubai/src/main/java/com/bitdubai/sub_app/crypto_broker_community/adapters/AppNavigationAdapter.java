@@ -75,16 +75,16 @@ public class AppNavigationAdapter extends FermatAdapter<MenuItem, AppNavigationH
             holder.getLabel().setText(data.getLabel());
             switch (position) {
                 case 0:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_friends);
+                    holder.getIcon().setImageResource(R.drawable.envelope);
                     break;
                 case 1:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_connections);
+                    holder.getIcon().setImageResource(R.drawable.envelope);
                     break;
                 case 2:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_notifications);
+                    holder.getIcon().setImageResource(R.drawable.envelope);
                     break;
                 case 3:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings);
+                    holder.getIcon().setImageResource(R.drawable.envelope);
                     break;
             }
         }catch (Exception e){
