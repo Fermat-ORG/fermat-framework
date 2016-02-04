@@ -5,18 +5,26 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
 
 import java.util.UUID;
+
+
+import org.powermock.api.mockito.PowerMockito;
+
+import static org.junit.Assert.assertNotNull;
+
+
 
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 03/02/16.
  */
-public class isContractHashInDatabaseTest {
+public class getPendingCryptoTransactionListTest {
+
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
     @Mock
@@ -32,17 +40,18 @@ public class isContractHashInDatabaseTest {
     public void setup()throws Exception{
         testId = UUID.randomUUID();
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase);
-        customerOnlinePaymentBusinessTransactionDaoSpy = PowerMockito.spy(customerOnlinePaymentBusinessTransactionDao);
+        customerOnlinePaymentBusinessTransactionDaoSpy = PowerMockito.spy( customerOnlinePaymentBusinessTransactionDao);
         MockitoAnnotations.initMocks(this);
         PowerMockito.doReturn(databaseTable).when(customerOnlinePaymentBusinessTransactionDaoSpy, "getDatabaseContractTable");
     }
 
     @Test
-    public void isContractHashInDatabaseTest_Should_()throws Exception{
-        customerOnlinePaymentBusinessTransactionDaoSpy.isContractHashInDatabase("65ef1c685c7a5502eef44a5f8552801d9cb4ca87");
+    public void getPendingCryptoTransactionListTest_Should_()throws Exception{
+        assertNotNull(customerOnlinePaymentBusinessTransactionDaoSpy.getPendingCryptoTransactionList());
     }
     @Test(expected = Exception.class)
-    public void isContractHashInDatabaseTest_Should_Throw_Exception()throws Exception{
-        customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(null);
+    public void getPendingCryptoTransactionListTest_Should_Throw_Exception()throws Exception{
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,null,null);
+        customerOnlinePaymentBusinessTransactionDao.getPendingCryptoTransactionList();
     }
 }
