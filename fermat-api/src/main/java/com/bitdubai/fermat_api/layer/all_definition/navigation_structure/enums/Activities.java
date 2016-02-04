@@ -83,6 +83,9 @@ public enum Activities implements FermatEnum {
     CWP_WALLET_ADULTS_ALL_WEEKLY_DISCOUNT("CWRAAWD"),
     CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT("CWRAAMD"),
     CWP_SUB_APP_ALL_DEVELOPER("CSAAD"),
+    CWP_WALLET_DEVELOPER_TOOL_DATABASE("CWDTD"),
+    CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST("CWDTDTL"),
+    CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST("CWDTDTR"),
     CWP_WALLET_FACTORY_MAIN("CWFM"),
     CWP_WALLET_FACTORY_EDIT_WALLET("CWFEW"),
     CWP_WALLET_PUBLISHER_MAIN("CWPM"),
@@ -375,6 +378,12 @@ public enum Activities implements FermatEnum {
                 return Activities.CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT;
             case "CSAAD":
                 return Activities.CWP_SUB_APP_ALL_DEVELOPER;
+            case "CWDTD":
+                return Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE;
+            case "CWDTDTL":
+                return Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST;
+            case "CWDTDTR":
+                return Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST;
             case "CWFM":
                 return Activities.CWP_WALLET_FACTORY_MAIN;
             case "CWFEW":
