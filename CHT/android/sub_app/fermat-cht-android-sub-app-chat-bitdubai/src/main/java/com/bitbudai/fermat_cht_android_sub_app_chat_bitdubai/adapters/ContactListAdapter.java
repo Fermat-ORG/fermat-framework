@@ -58,7 +58,7 @@ public class ContactListAdapter extends ArrayAdapter<String> {
     public void refreshEvents(ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
         this.contactinfo=contactinfo;
         this.contacticon=contacticon;
-        this.contacticon=contacticon;
+        this.contactid=contactid;
         notifyDataSetChanged();
     }
      /*public void refreshEvents(Parameters[] datos) {

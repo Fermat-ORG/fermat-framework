@@ -485,8 +485,8 @@ public class ChatListFragment extends AbstractFermatFragment{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_add_contact) {
-            changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
+        if (item.getItemId() == R.id.menu_open_chat) {
+            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
             return true;
         }
         return super.onOptionsItemSelected(item);
