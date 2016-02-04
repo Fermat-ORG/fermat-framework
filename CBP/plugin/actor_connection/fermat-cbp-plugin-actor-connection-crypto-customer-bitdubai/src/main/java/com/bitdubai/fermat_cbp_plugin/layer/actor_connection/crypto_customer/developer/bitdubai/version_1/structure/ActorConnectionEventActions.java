@@ -62,9 +62,17 @@ public class ActorConnectionEventActions {
 
             final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews();
 
+            for (final CryptoBrokerConnectionRequest request : list) {
 
-            for (final CryptoBrokerConnectionRequest request : list)
-                this.handleCryptoBrokerRequestConnection(request);
+                switch (request.getRequestAction()) {
+
+                    case REQUEST:
+                        this.handleCryptoBrokerRequestConnection(request);;
+                        break;
+
+                }
+
+            }
 
         } catch(CantListPendingConnectionRequestsException |
                 CantRequestActorConnectionException |
@@ -99,22 +107,9 @@ public class ActorConnectionEventActions {
                     request.getSentTime()
             );
 
-            switch(request.getSenderActorType()) {
-                case CBP_CRYPTO_BROKER:
+            dao.registerActorConnection(actorConnection);
 
-                    dao.registerActorConnection(actorConnection);
-
-                    cryptoBrokerNetworkService.confirm(request.getRequestId());
-                    break;
-
-                default:
-                    throw new UnsupportedActorTypeException("request: "+request, "Unsupported actor type exception.");
-            }
-
-        } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {
-
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, unsupportedActorTypeException);
-            throw unsupportedActorTypeException;
+            cryptoBrokerNetworkService.confirm(request.getRequestId());
 
         } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException) {
 

@@ -54,4 +54,10 @@ public class NetworkServiceMessage {
         return messageType;
     }
 
+    @Override
+    public String toString() {
+        return "NetworkServiceMessage{" +
+                "messageType=" + messageType +
+                '}';
+    }
 }
