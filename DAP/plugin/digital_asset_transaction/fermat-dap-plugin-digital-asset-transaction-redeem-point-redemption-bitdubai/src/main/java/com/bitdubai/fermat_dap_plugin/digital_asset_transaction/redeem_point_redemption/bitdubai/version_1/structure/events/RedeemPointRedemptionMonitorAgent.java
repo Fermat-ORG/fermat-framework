@@ -265,7 +265,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading redeem point wallet, public key is hardcoded");
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType());
 
                                 String userPublicKey = dao.getSenderPublicKeyById(transactionId);
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
@@ -299,7 +299,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading wallet, public key is hardcoded");
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType());
 
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
                                 assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
@@ -308,7 +308,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                         userPublicKey,
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
 
-                                updateMetadataTransactionChain(transactionId, cryptoTransaction.getTransactionHash(), cryptoTransaction.getBlockHash());
+                                updateMetadataTransactionChain(transactionId, cryptoTransaction);
                                 List<ActorAssetUser> userToAdd = new ArrayList<>();
                                 userToAdd.add((ActorAssetUser) metadata.getLastOwner());
                                 actorAssetUserManager.createActorAssetUserRegisterInNetworkService(userToAdd);
