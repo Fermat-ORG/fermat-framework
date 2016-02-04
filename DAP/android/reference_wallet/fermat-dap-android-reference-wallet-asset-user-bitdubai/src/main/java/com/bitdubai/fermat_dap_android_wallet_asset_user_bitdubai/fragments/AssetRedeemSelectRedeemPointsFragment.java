@@ -137,7 +137,7 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset User system error",
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_system_error),
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -159,12 +159,12 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
     private void configureToolbar() {
         toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(Color.parseColor("#381a5e"));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet_principal));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(Color.parseColor("#381a5e"));
+                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet_principal));
             }
         }
     }
@@ -266,7 +266,7 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    getResources().getString(R.string.dap_user_wallet_system_error),
                     Toast.LENGTH_SHORT).
                     show();
         }

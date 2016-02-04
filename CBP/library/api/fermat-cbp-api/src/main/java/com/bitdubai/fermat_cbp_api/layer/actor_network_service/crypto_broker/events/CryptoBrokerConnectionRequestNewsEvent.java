@@ -17,4 +17,6 @@ public final class CryptoBrokerConnectionRequestNewsEvent extends AbstractEvent 
         super(eventType);
     }
 
+
+
 }

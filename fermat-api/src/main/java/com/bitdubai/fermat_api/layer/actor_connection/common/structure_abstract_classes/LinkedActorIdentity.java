@@ -46,4 +46,12 @@ public abstract class LinkedActorIdentity {
         return actorType;
     }
 
+    @Override
+    public String toString() {
+        return "LinkedActorIdentity{" +
+                "publicKey='" + publicKey + '\'' +
+                ", actorType=" + actorType +
+                '}';
+    }
+
 }

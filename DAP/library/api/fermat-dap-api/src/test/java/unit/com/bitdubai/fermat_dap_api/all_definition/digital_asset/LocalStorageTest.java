@@ -20,7 +20,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import org.junit.Test;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -29,6 +28,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
+
+import org.junit.Test;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/11/15.
@@ -55,7 +56,7 @@ public class LocalStorageTest {
         DigitalAsset mockedDigitalAsset=getDigitalAssetForTesting();
         DigitalAssetMetadata mockedDigitalAssetMetadata=new DigitalAssetMetadata();
         mockedDigitalAssetMetadata.setDigitalAsset(mockedDigitalAsset);
-        mockedDigitalAssetMetadata.setGenesisTransaction("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
+//        mockedDigitalAssetMetadata.setGenesisTransaction("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
         String hash=mockedDigitalAssetMetadata.getDigitalAssetHash();
         System.out.println("DAM - HASH: " + hash);
         return mockedDigitalAssetMetadata;

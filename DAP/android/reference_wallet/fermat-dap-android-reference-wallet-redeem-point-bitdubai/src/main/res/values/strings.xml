@@ -14,6 +14,22 @@
 
     <string name="no_users">No Users</string>
 
+    <!-- error messages -->
+    <string name="dap_redeem_point_wallet_system_error">Asset Redeem Point system error</string>
+    <string name="dap_redeem_point_wallet_exception">Fermat Has detected an exception</string>
+    <string name="dap_redeem_point_wallet_exception_retry">Fermat Has detected an exception. Please retry again.</string>
+    <string name="dap_redeem_point_wallet_opps_system_error">Oooops! recovering from system error</string>
+    <!-- -->
+
+    <!-- validation messages -->
+    <string name="dap_redeem_point_wallet_identity">Identity must be created</string>
+    <!-- -->
+
+    <!-- app messages -->
+    <string name="dap_redeem_point_wallet_wait">Please wait...</string>
+    <string name="dap_redeem_point_wallet_remaining_assets">Assets Remaining</string>
+    <!-- -->
+
     <!--Dialog Help - Init-->
     <string name="dap_redeem_wallet_welcome_subTitle">Welcome to the RedeemPoint Wallet.</string>
     <string name="dap_redeem_wallet_welcome_body">From this wallet you will be able to verify the assets that users redeem with you and get statistic from them.</string>

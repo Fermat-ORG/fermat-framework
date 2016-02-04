@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.develope
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
@@ -28,7 +27,7 @@ public class AssetRedeemPointWalletBalanceImpl implements com.bitdubai.fermat_da
     /**
      * Constructor.
      */
-    public AssetRedeemPointWalletBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager, AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager) {
+    public AssetRedeemPointWalletBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager) {
         this.database = database;
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;

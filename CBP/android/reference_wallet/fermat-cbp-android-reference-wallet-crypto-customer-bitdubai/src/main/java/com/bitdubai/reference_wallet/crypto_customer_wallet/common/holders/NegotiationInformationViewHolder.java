@@ -73,8 +73,8 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         merchandiseAmount.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
         exchangeRateAmount.setText(negotiationSummary.get(ClauseType.EXCHANGE_RATE));
         merchandise.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY));
-        paymentMethod.setText(negotiationSummary.get(ClauseType.BROKER_PAYMENT_METHOD));
-        paymentCurrency.setText(negotiationSummary.get(ClauseType.BROKER_CURRENCY));
+//        paymentMethod.setText(negotiationSummary.get(ClauseType.BROKER_PAYMENT_METHOD));
+//        paymentCurrency.setText(negotiationSummary.get(ClauseType.BROKER_CURRENCY));
     }
 
     private int getStatusBackgroundColor(NegotiationStatus status) {

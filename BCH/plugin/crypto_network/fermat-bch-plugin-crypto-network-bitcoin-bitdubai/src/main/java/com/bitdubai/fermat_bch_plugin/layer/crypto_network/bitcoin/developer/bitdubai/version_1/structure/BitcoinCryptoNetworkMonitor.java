@@ -158,7 +158,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * creates the blockchain object for the specified network.
              */
             BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
-            BlockChain blockChain = CryptoNetworkBlockChain.getBlockChain();
+            blockChain = CryptoNetworkBlockChain.getBlockChain();
 
             /**
              * creates the peerGroup object
@@ -196,7 +196,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             peerGroup.setDownloadTxDependencies(true);
             peerGroup.start();
-            peerGroup.startBlockChainDownload(null);
+            peerGroup.downloadBlockChain();
+            System.out.println("***CryptoNetwork*** Blockchain Download completed. Total blocks: " + blockChain.getBestChainHeight());
 
             /**
              * I will broadcast any transaction that might be in broadcasting status.
