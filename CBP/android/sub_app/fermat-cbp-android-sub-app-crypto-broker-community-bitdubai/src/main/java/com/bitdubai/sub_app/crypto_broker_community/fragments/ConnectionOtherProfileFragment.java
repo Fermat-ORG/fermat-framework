@@ -157,14 +157,6 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
         return rootView;
     }
 
-    private Drawable getImgDrawable(byte[] customerImg) {
-        if (customerImg != null && customerImg.length > 0)
-            return ImagesUtils.getRoundedBitmap(res, customerImg);
-
-        return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image);
-    }
-
-
     @Override
     public void onMessageReceive(Context context, Intent data) {
         Bundle extras = data != null ? data.getExtras() : null;
