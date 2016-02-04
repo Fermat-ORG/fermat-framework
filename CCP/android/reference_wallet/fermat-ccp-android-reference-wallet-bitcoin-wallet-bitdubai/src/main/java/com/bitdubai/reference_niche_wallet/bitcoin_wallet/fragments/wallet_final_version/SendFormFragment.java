@@ -44,6 +44,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
@@ -119,6 +122,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
     private ImageView spinnerArrow;
 
     SettingsManager<BitcoinWalletSettings> settingsManager;
+    BlockchainNetworkType blockchainNetworkType;
 
 
     public static SendFormFragment newInstance() {
@@ -132,12 +136,32 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         setHasOptionsMenu(true);
         try {
             settingsManager = appSession.getModuleManager().getSettingsManager();
+            BitcoinWalletSettings bitcoinWalletSettings = null;
+            bitcoinWalletSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+
+            if(bitcoinWalletSettings != null) {
+
+                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                }
+                settingsManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+
+            }
+
+            blockchainNetworkType = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
+
             cryptoWallet = appSession.getModuleManager().getCryptoWallet();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         } catch (CantGetCryptoWalletException e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantPersistSettingsException e) {
+            e.printStackTrace();
         }
     }
 
@@ -437,7 +461,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 appSession.getIntraUserModuleManager().getPublicKey(),
                                 appSession.getAppPublicKey(),
                                 CryptoCurrency.BITCOIN,
-                                BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                                blockchainNetworkType);
                     }else {
                         try {
                             cryptoWalletWalletContact = appSession.getModuleManager().getCryptoWallet().findWalletContactById(walletContact.contactId,appSession.getIntraUserModuleManager().getPublicKey());
@@ -602,7 +626,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                     cryptoWalletWalletContact.getActorPublicKey(),
                                     cryptoWalletWalletContact.getActorType(),
                                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                    BlockchainNetworkType.getDefaultBlockchainNetworkType()
+                                    blockchainNetworkType
                                    // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType()
                             );
                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
