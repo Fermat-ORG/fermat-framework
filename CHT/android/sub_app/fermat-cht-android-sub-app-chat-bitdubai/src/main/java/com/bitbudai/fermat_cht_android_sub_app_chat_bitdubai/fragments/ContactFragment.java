@@ -135,7 +135,7 @@ public List<Contact> contacts;
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
-        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
+        //mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
@@ -482,6 +482,7 @@ public List<Contact> contacts;
             } catch (CantGetContactException e) {
               e.printStackTrace();
           }
+            return true;
         }
         if (item.getItemId() == R.id.menu_del_contact) {
             AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
@@ -495,15 +496,13 @@ public List<Contact> contacts;
                             dialog.cancel();
                             try {
                                 Contact con = chatSession.getSelectedContact();
-                                contactname.add(con.getRemoteName());
-                                contactid.add(con.getContactId());
-                                contactalias.add(con.getAlias());
-                                contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                chatManager.deleteContact(con);
                             }catch (Exception e)
                             {
                                 if (errorManager != null)
                                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                             }
+                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                         }
                     });
 
@@ -516,9 +515,11 @@ public List<Contact> contacts;
                     });
             AlertDialog alert11 = builder1.create();
             alert11.show();
+            return true;
         }
 
-        return true;
+
+        return super.onOptionsItemSelected(item);
 
 
     }

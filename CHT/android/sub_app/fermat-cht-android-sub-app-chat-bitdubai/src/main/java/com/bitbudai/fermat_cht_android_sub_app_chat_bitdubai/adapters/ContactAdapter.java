@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -59,17 +60,15 @@ public class ContactAdapter extends ArrayAdapter<String> {
             case "edit":
                 item = inflater.inflate(R.layout.contact_edit_item, null, true);
 
-                FermatTextView name = (FermatTextView) item.findViewById(R.id.contact_detail_header);
-                name.setText(contactName.get(0));
+                //FermatTextView name = (FermatTextView) item.findViewById(R.id.contact_edit_header);
+                //name.setText(contactName.get(0));
 
-                EditText alias = (EditText) item.findViewById(R.id.aliasEdit);
-                alias.setText(contactAlias.get(0));
                 break;
             case "detail":
                 item = inflater.inflate(R.layout.contact_detail_item, null, true);
 
                 FermatTextView name2 = (FermatTextView) item.findViewById(R.id.contact_detail_header);
-                name2.setText(contactName.get(0));
+                name2.setText("Alias");//name2.setText(contactName.get(0));
 
                 FermatTextView alias2 = (FermatTextView) item.findViewById(R.id.alias);
                 alias2.setText(contactAlias.get(0));

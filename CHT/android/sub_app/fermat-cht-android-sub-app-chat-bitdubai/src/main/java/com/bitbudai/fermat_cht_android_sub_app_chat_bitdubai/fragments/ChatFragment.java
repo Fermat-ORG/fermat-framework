@@ -88,8 +88,9 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     String mensaje = "";
     ArrayList<String> historialmensaje = new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
-    Map<String,Contact>others=new HashMap<String,Contact>();
-    Map<String,Contact>me=new HashMap<String,Contact>();;
+    Map<String, Contact> others = new HashMap<String, Contact>();
+    Map<String, Contact> me = new HashMap<String, Contact>();
+    ;
     //Data
     List<String> chatmessages = new ArrayList<>();
 
@@ -126,20 +127,20 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     }
 
-    public void addContactDirection(List<Contact> contactdirection){
+    public void addContactDirection(List<Contact> contactdirection) {
 
-        for (int i=0;i<contactdirection.size();i++){
+        for (int i = 0; i < contactdirection.size(); i++) {
             others.put(contactdirection.get(i).getRemoteName(), contactdirection.get(i));
-            System.out.println("\n\nADDCONTACTDIRECTION("+i+"):\n\n"+contactdirection.get(i).getRemoteName()+" ?? "+contactdirection.get(i).getAlias()
-                    +" ?? "+contactdirection.get(i).getRemoteActorPublicKey().toString()+" ?? "+contactdirection.get(i).getContactId().toString()+" ?? "
-                    +contactdirection.get(i).getRemoteActorType().toString()+" ?? "+contactdirection.get(i).getCreationDate());
+            System.out.println("\n\nADDCONTACTDIRECTION(" + i + "):\n\n" + contactdirection.get(i).getRemoteName() + " ?? " + contactdirection.get(i).getAlias()
+                    + " ?? " + contactdirection.get(i).getRemoteActorPublicKey().toString() + " ?? " + contactdirection.get(i).getContactId().toString() + " ?? "
+                    + contactdirection.get(i).getRemoteActorType().toString() + " ?? " + contactdirection.get(i).getCreationDate());
         }
 
 
     }
 
-    public boolean whoImy(String user){
-        boolean correct=false;
+    public boolean whoImy(String user) {
+        boolean correct = false;
         try {
             //TODO: fix this
             /*for (int i=0;i<chatManager.discoverActorsRegistered().size();i++){
@@ -157,7 +158,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             e.printStackTrace();
         }
 
-return correct;
+        return correct;
     }
 
 
@@ -176,7 +177,7 @@ return correct;
         FermatTextView companionLabel = (FermatTextView) layout.findViewById(R.id.friendLabel);
         RelativeLayout contain = (RelativeLayout) layout.findViewById(R.id.container);
         companionLabel.setText("My Contact");// Hard Coded
-      //  loadDummyHistory();// Hard Coded
+        //  loadDummyHistory();// Hard Coded
 
         historialmensaje.add("yo##Hola estoy haciendo pruebas con la vista");
         historialmensaje.add("tu##Que bueno");
@@ -186,14 +187,14 @@ return correct;
         final ChatAdapterView adaptador =
                 new ChatAdapterView(getActivity(), historialmensaje);
 
-        lstOpciones = (ListView)layout.findViewById(R.id.messagesContainer);
+        lstOpciones = (ListView) layout.findViewById(R.id.messagesContainer);
 
         lstOpciones.setAdapter(adaptador);
 
         adaptador.refreshEvents(historialmensaje);
 
-        if(!whoImy("PAYAREZ")){
-            Toast.makeText(getActivity(),"OOOPs...El usuario no existe",Toast.LENGTH_LONG).show();
+        if (!whoImy("PAYAREZ")) {
+            Toast.makeText(getActivity(), "OOOPs...El usuario no existe", Toast.LENGTH_LONG).show();
         }
 
         //CODE FOR ALERT DIALOG
@@ -233,8 +234,6 @@ return correct;
        *//* Alert Dialog Code End*/
 
 
-
-
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,28 +245,28 @@ return correct;
                 try {
                     Chat testChat = new ChatMock();
                     //Cambio ya que trabajamos con pk de las otras app
-               //    testChat.setLocalActorPublicKey(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey());
+                    //    testChat.setLocalActorPublicKey(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey());
                     testChat.setLocalActorPublicKey(me.get(0).getRemoteActorPublicKey());
-               //     chatManager.discoverActorsRegistered()
-                   if(!(others.get("userPAYAREZ")==null)) {
-                       Toast.makeText(getActivity(), "usuario"+others.get("userPAYAREZ").getRemoteName(), Toast.LENGTH_SHORT).show();
+                    //     chatManager.discoverActorsRegistered()
+                    if (!(others.get("userPAYAREZ") == null)) {
+                        Toast.makeText(getActivity(), "usuario" + others.get("userPAYAREZ").getRemoteName(), Toast.LENGTH_SHORT).show();
 
-                       testChat.setRemoteActorPublicKey(others.get("userPAYAREZ").getRemoteActorPublicKey());
-                       Message testMessage = new MessageMock(others.get("userPAYAREZ").getContactId());
-                       testMessage.setMessage(messageET.getText().toString());
+                        testChat.setRemoteActorPublicKey(others.get("userPAYAREZ").getRemoteActorPublicKey());
+                        Message testMessage = new MessageMock(others.get("userPAYAREZ").getContactId());
+                        testMessage.setMessage(messageET.getText().toString());
 
-                       chatManager.saveChat(testChat);
-                       chatManager.saveMessage(testMessage);
+                        chatManager.saveChat(testChat);
+                        chatManager.saveMessage(testMessage);
 
-                       mensaje = chatManager.getMessageByChatId((others.get("userPAYAREZ").getContactId())).getMessage();
+                        mensaje = chatManager.getMessageByChatId((others.get("userPAYAREZ").getContactId())).getMessage();
 
-                       historialmensaje.add("yo##" + mensaje);
+                        historialmensaje.add("yo##" + mensaje);
 
-                       adaptador.refreshEvents(historialmensaje);
-              //         System.out.println("chatmanager.gettext:" + chatManager.getMessages().size());
-                   }else{
-                       Toast.makeText(getActivity(), "usuario No encontrado", Toast.LENGTH_SHORT).show();
-                   }
+                        adaptador.refreshEvents(historialmensaje);
+                        //         System.out.println("chatmanager.gettext:" + chatManager.getMessages().size());
+                    } else {
+                        Toast.makeText(getActivity(), "usuario No encontrado", Toast.LENGTH_SHORT).show();
+                    }
                 } catch (CantSaveChatException e) {
                     e.printStackTrace();
                 } catch (CantSaveMessageException e) {
@@ -303,22 +302,22 @@ return correct;
                             System.out.println("Threar UI corriendo");
                             //TODO: fix this
                             //addContactDirection(chatManager.discoverActorsRegistered());
-                            System.out.println("\n\nMENSAJES EN CON GETMESSAGES:"+chatManager.getMessages().size()+"\n\n");
-                            for (int i=0;i<chatManager.getMessages().size();i++){
-                                System.out.println("MENSAJE("+i+"):"+chatManager.getMessages().size());
+                            System.out.println("\n\nMENSAJES EN CON GETMESSAGES:" + chatManager.getMessages().size() + "\n\n");
+                            for (int i = 0; i < chatManager.getMessages().size(); i++) {
+                                System.out.println("MENSAJE(" + i + "):" + chatManager.getMessages().size());
 
                             }
                             if (chatManager.getMessages().size() > newmessage) {
 
                                 newmessage = newmessage + 1;
 
-                                mensaje =chatManager.getMessageByChatId((others.get("userPRUEBA").getContactId())).getMessage();
-              //                  mensaje = chatManager.getMessageByChatId(chatManager.networkservicechatmanage)
-                                historialmensaje.add("tu##"+mensaje);
+                                mensaje = chatManager.getMessageByChatId((others.get("userPRUEBA").getContactId())).getMessage();
+                                //                  mensaje = chatManager.getMessageByChatId(chatManager.networkservicechatmanage)
+                                historialmensaje.add("tu##" + mensaje);
                                 //        datos.set(0, historialmensaje);
                                 adaptador.refreshEvents(historialmensaje);
 
-                            }else{
+                            } else {
                                 Toast.makeText(getActivity(), "No new message sorry", Toast.LENGTH_SHORT).show();
 
                             }
@@ -337,7 +336,6 @@ return correct;
         });
 
 
-
         return layout;
 
 
@@ -350,14 +348,11 @@ return correct;
     }*/
 
 
-
-
-
     private void scroll() {
         messagesContainer.setSelection(messagesContainer.getCount() - 1);
     }
 
-    private void loadDummyHistory(){// Hard Coded
+    private void loadDummyHistory() {// Hard Coded
 
         chatHistory = new ArrayList<ChatMessage>();
 
@@ -379,7 +374,7 @@ return correct;
         //adapter = new ChatAdapter(getActivity());//,
         //messagesContainer.setAdapter((ListAdapter) msg);
 
-        for(int i=0; i<chatHistory.size(); i++) {
+        for (int i = 0; i < chatHistory.size(); i++) {
             ChatMessage message = chatHistory.get(i);
             //displayMessage(message);
         }
