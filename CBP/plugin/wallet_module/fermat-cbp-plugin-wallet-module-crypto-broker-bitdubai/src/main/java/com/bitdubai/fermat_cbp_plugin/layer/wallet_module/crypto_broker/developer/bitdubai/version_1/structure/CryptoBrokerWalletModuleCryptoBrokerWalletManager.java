@@ -470,22 +470,22 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         try {
             Collection<IndexInfoSummary> summaryList = new ArrayList<>();
 
-            CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(brokerWalletPublicKey);
-            CryptoBrokerWalletSetting cryptoWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
-            List<CryptoBrokerWalletProviderSetting> providerSettings = cryptoWalletSetting.getCryptoBrokerWalletProviderSettings();
+//            CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(brokerWalletPublicKey);
+//            CryptoBrokerWalletSetting cryptoWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
+//            List<CryptoBrokerWalletProviderSetting> providerSettings = cryptoWalletSetting.getCryptoBrokerWalletProviderSettings();
+//
+//            for (CryptoBrokerWalletProviderSetting providerSetting : providerSettings) {
+//                CurrencyExchangeRateProviderManager providerReference = currencyExchangeProviderFilterManager.getProviderReference(providerSetting.getId());
+//                // TODO: se debe guardar en el setting del proveedor, el par de monedas con la que se va a usar dicho proveedor
+//                ExchangeRate currentExchangeRate = providerReference.getCurrentExchangeRate(new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR));
+//
+//                summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(currentExchangeRate));
+//            }
 
-            for (CryptoBrokerWalletProviderSetting providerSetting : providerSettings) {
-                CurrencyExchangeRateProviderManager providerReference = currencyExchangeProviderFilterManager.getProviderReference(providerSetting.getId());
-                // TODO: se debe guardar en el setting del proveedor, el par de monedas con la que se va a usar dicho proveedor
-                ExchangeRate currentExchangeRate = providerReference.getCurrentExchangeRate(new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR));
-
-                summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(currentExchangeRate));
-            }
-
-//            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, 240.62, 235.87));
-//            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.VENEZUELAN_BOLIVAR, CryptoCurrency.BITCOIN, 245000, 240000));
-//            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, 840, 800));
-//            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.US_DOLLAR, FiatCurrency.EURO, 1.2, 1.1));
+            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, 240.62, 235.87));
+            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.VENEZUELAN_BOLIVAR, CryptoCurrency.BITCOIN, 245000, 240000));
+            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, 840, 800));
+            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.US_DOLLAR, FiatCurrency.EURO, 1.2, 1.1));
 
             return summaryList;
 
