@@ -74,6 +74,10 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
             if (valuesHasChanged) {
                 listener.exchangeValueChanged(actualValue);
                 setStatus(NegotiationStepStatus.CHANGED);
+
+            }else{
+                listener.exchangeValueChanged(actualValue);
+                setStatus(NegotiationStepStatus.ACCEPTED);
             }
         }
     }
