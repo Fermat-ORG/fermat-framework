@@ -192,7 +192,7 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
 
             final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
 
-            //search.addConnectionState(ConnectionState.CONNECTED);
+            search.addConnectionState(ConnectionState.CONNECTED);
 
             final List<CryptoCustomerActorConnection> actorConnections = search.getResult(max, offset);
 
