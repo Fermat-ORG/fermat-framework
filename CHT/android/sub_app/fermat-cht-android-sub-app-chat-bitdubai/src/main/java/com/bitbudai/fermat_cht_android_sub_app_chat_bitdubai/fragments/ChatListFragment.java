@@ -2,6 +2,8 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,10 +15,46 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
 
 
 /**
@@ -24,7 +62,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16
  * @version 1.0
- * Update by miguel
+ * Upd
  *
  */
 
@@ -70,86 +108,314 @@ public class ChatListFragment extends AbstractFermatFragment{
 
     private long clickedId;*/
 
+
+    private ChatManager chatManager;
+    private ChatModuleManager moduleManager;
+    private ErrorManager errorManager;
+    private SettingsManager<ChatSettings> settingsManager;
+    private ChatSession chatSession;
+
     ListView list;
- //   static HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
+
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    Map<UUID,Chat> chatcreated=new HashMap<UUID,Chat>();
+    Map<UUID,List<Message>> messagecreated=new HashMap<UUID,List<Message>>();
+    Map<String,Contact>contactcreated=new HashMap<String,Contact>();
+    ArrayList<String> infochat=new ArrayList<String>();
+
+
+    //   static HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
    // static Integer[] imgid=new Integer[6];
-    String[] chatinfo={"GABRIEL@@hola como estas##24/10/2015",
-         "MIGUEL@@chao nos vemos##25/10/2015",
-         "FRANKLIN@@A la victoria siempre##24/12/2015",
-         "MANUEL@@Tigres Campeon##24/10/2015",
-         "JOSE@@gracias totales##24/10/2015",
-         "LUIS@@Fermat Rules##20/10/2015"};   //work
-    Integer[] imgid={R.drawable.ken,
+    ArrayList<ArrayList<String>> chatinfo=new ArrayList<ArrayList<String>>();   //work
+    ArrayList imgid=new ArrayList();
+   /* Integer[] imgid={R.drawable.ken,
     R.drawable.sas,
     R.drawable.koj,
     R.drawable.veg,
     R.drawable.ren,
     R.drawable.pat
     };
+*/
 
-    static void initchatinfo(){
-     //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
-        //imgid[0]=R.drawable.ken;
-    }
 
     public static ChatListFragment newInstance() {
-        initchatinfo();
         return new ChatListFragment();}
 
-//    public ChatListFragment() {}
-//
-//    /*public static ChatListFragment newInstance() {
-//        return new ChatListFragment();}*/
-//
-//    public void setSearchQuery(String query) {
-//        if (TextUtils.isEmpty(query)) {
-//            mIsSearchResultView = false;
-//        } else {
-//            mSearchTerm = query;
-//            mIsSearchResultView = true;
-//        }
-//    }
+    //Create a object list with
+    //contactcreated(Map<remoteactorPK,Map<PlatformComponentType,Contact>)
+    //chatcreated(chatid,chat);
+    //Message(Map<chatid,Kist<Message>)
+
+    public void listChatcreated(){
+        String tempcon;
+        UUID tempchat;
+        UUID tempmessage;
+        try {
+            chatcreated.clear();
+            messagecreated.clear();
+            contactcreated.clear();
+
+            if((chatManager.getChats().isEmpty())){
+                System.out.println("/n/nSORRY NO CHAT FOR YOU/n/n");
+            }else{
+                for (int i=0;i<chatManager.getChats().size();i++){
+                    tempchat=chatManager.getChats().get(i).getChatId();
+                    if(!(chatcreated.containsKey(tempchat))) {
+                        chatcreated.put(tempchat, chatManager.getChatByChatId(chatManager.getChats().get(i).getChatId()));
+                    }
+                }
+                for (int i=0;i<chatManager.getMessages().size();i++){
+                        tempmessage=chatManager.getMessages().get(i).getMessageId();
+                        if(!messagecreated.containsKey((tempmessage))){
+                            messagecreated.put(tempmessage,chatManager.getMessageByChatId(tempmessage));
+                        }
+
+                }
+                for (int i=0;i<chatManager.getContacts().size();i++){
+                    tempcon=chatManager.getContacts().get(i).getRemoteActorPublicKey();
+                    if(!(contactcreated.containsKey(tempcon))) {
+                        contactcreated.put(tempcon,chatManager.getContacts().get(i));
+                    }
+                }
+            }
+
+        } catch (CantGetChatException e) {
+            e.printStackTrace();
+        } catch (CantGetMessageException e) {
+            e.printStackTrace();
+        } catch (CantGetContactException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    //contactcreated(Map<remoteactorPK,Map<PlatformComponentType,Contact>)
+    //chatcreated(chatid,chat);
+    //Message(Map<chatid,Kist<Message>)
+
+
+    //Load chatlist viewdata
+
+    public void chatlistview (){
+
+        int sizeofmessagelist=0;
+        UUID chatidtemp;
+        Contact tempcontac=new ContactImpl();
+        String name,message,datemessage,pkremote,chatid;
+        try {
+              infochat.clear();
+        for (int i=0;i<chatcreated.size();i++){
+
+            chatidtemp=chatManager.getChats().get(i).getChatId();
+            tempcontac=contactcreated.get(chatManager.getChats().get(i).getRemoteActorPublicKey());
+            name=tempcontac.getRemoteName();
+            sizeofmessagelist=chatManager.getMessageByChatId(chatidtemp).size();
+            message=chatManager.getMessageByChatId(chatidtemp).get(sizeofmessagelist - 1).getMessage();
+            datemessage=chatManager.getChatByChatId(chatidtemp).getLastMessageDate().toString();
+            chatid=chatidtemp.toString();
+            pkremote=chatManager.getChats().get(i).getRemoteActorPublicKey();
+            infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+pkremote+"@#@#");
+            imgid.add(R.drawable.ken);
+        }
+
+        } catch (CantGetChatException e) {
+            e.printStackTrace();
+        } catch (CantGetMessageException e) {
+            e.printStackTrace();
+        }
+    }
+
+    void especialfilldatabase(){
+        ChatImpl dato;
+        MessageImpl mess;
+        ContactImpl cont=new ContactImpl();
+        Calendar c = Calendar.getInstance();
+        UUID chatid;
+        UUID messageid;
+        String pkremote;
+
+        try {
+            String dateString = "30/09/2014";
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+            long startDate = date.getTime();
+        }catch (java.text.ParseException e){
+            e.printStackTrace();
+        }
+
+        try {
+
+            messageid=UUID.randomUUID();
+            pkremote=String.valueOf(Math.random() * 1000);
+            String dateString = "30/09/2014";
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+            long startDate = date.getTime();
+
+            //Contactos
+
+            for (int i=0;i<chatManager.getContacts().size();i++) {
+                cont.setContactId(UUID.randomUUID());
+                cont.setRemoteName(chatManager.getContacts().get(i).getRemoteName());
+                cont.setAlias("other");
+                cont.setRemoteActorType(chatManager.getContacts().get(i).getRemoteActorType());
+                cont.setRemoteActorPublicKey(chatManager.getContacts().get(i).getRemoteActorPublicKey());
+                cont.setCreationDate(startDate);
+                chatManager.saveContact(cont);
+            }
+            //Chat
+            for (int i=0;i<chatManager.getContacts().size();i++) {
+                chatid=UUID.randomUUID();
+                dato = new ChatImpl(chatid,
+                        UUID.randomUUID(),
+                        PlatformComponentType.ACTOR_ASSET_ISSUER,
+                        appSession.getAppPublicKey(),
+                        chatManager.getContacts().get(i).getRemoteActorType(),
+                        chatManager.getContacts().get(i).getRemoteActorPublicKey(),
+                        "Nuevo",
+                        ChatStatus.VISSIBLE,
+                        new Timestamp(startDate),
+                        new Timestamp(startDate));
+                chatManager.saveChat(dato);
+                mess=new MessageImpl();
+                mess.setType(TypeMessage.INCOMMING);
+                mess.setStatus(MessageStatus.DELIVERED);
+                mess.setChatId(chatid);
+                mess.setMessage("HOLA A TODOS");
+                mess.setMessageDate(new Timestamp(startDate));
+                mess.setMessageId(UUID.randomUUID());
+                chatManager.saveMessage(mess);
+            }
+        }
+    catch (CantGetContactException e) {
+        System.out.println("/n/n CHT FILLDATA SAVECONTACT:"+e);
+        e.printStackTrace();
+    }catch (CantSaveMessageException e) {
+            System.out.println("/n/n CHT FILLDATA SAVEMESSAGE:"+e);
+            e.printStackTrace();
+        }catch (CantSaveContactException e) {
+            System.out.println("/n/n CHT FILLDATA SAVECONTACT:"+e);
+            e.printStackTrace();
+        }catch (CantSaveChatException e) {
+            System.out.println("/n/n CHT FILLDATA SAVECHAT:"+e);
+            e.printStackTrace();
+        }catch (java.text.ParseException e){
+            e.printStackTrace();
+
+        }
+    }
+
+    void filldatabase(){
+
+        ChatImpl dato;
+        MessageImpl mess;
+        ContactImpl cont=new ContactImpl();
+        Calendar c = Calendar.getInstance();
+        UUID chatid;
+        UUID messageid;
+        String pkremote;
+
+        try {
+            String dateString = "30/09/2014";
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+            long startDate = date.getTime();
+        }catch (java.text.ParseException e){
+            e.printStackTrace();
+        }
+
+        try {
+            chatid=UUID.randomUUID();
+            messageid=UUID.randomUUID();
+            pkremote=String.valueOf(Math.random() * 1000);
+            String dateString = "30/09/2014";
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date = sdf.parse(dateString);
+            long startDate = date.getTime();
+            //Contactos
+
+            cont.setContactId(UUID.randomUUID());
+            cont.setRemoteName("Elproblema");
+            cont.setAlias("miguel");
+            cont.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+            cont.setRemoteActorPublicKey(pkremote);
+            cont.setCreationDate(startDate);
+
+        //       System.out.println("/n/nCONTACT TO SAVED:/n/n"+ cont.getContactId()+" - "+cont.getAlias()+" - "+cont.getRemoteActorPublicKey()
+        //            +" - "+cont.getCreationDate()+" - "+cont.getRemoteName()+" - "+cont.getRemoteActorType());
+
+            chatManager.saveContact(cont);
+        //Chat
+
+            dato=new ChatImpl(chatid,
+            UUID.randomUUID(),
+            PlatformComponentType.ACTOR_ASSET_ISSUER,
+            appSession.getAppPublicKey(),
+            PlatformComponentType.ACTOR_ASSET_ISSUER,
+            pkremote,
+            "Nuevo",
+            ChatStatus.VISSIBLE,
+            new Timestamp(startDate),
+            new Timestamp(startDate));
+            chatManager.saveChat(dato);
+
+        //Mensaje
+            mess=new MessageImpl();
+            mess.setType(TypeMessage.INCOMMING);
+            mess.setStatus(MessageStatus.DELIVERED);
+            mess.setChatId(chatid);
+            mess.setMessage("HOLA A TODOS");
+            mess.setMessageDate(new Timestamp(startDate));
+            mess.setMessageId(UUID.randomUUID());
+            chatManager.saveMessage(mess);
+   //     }
+   //     catch (CantGetContactException e) {
+   //         System.out.println("/n/n CHT FILLDATA CONTACT:"+e);
+   //         e.printStackTrace();
+        }catch (CantSaveContactException e) {
+            System.out.println("/n/n CHT FILLDATA SAVECONTACT:"+e);
+            e.printStackTrace();
+        }catch (CantSaveChatException e) {
+            System.out.println("/n/n CHT FILLDATA SAVECHAT:"+e);
+            e.printStackTrace();
+        }catch (CantSaveMessageException e) {
+            System.out.println("/n/n CHT FILLDATA SAVEMESSAGE:"+e);
+            e.printStackTrace();
+        }catch (java.text.ParseException e){
+            e.printStackTrace();
+        }
+    }
 
     @Override
      public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try {
+            chatSession = ((ChatSession) appSession);
+            moduleManager = chatSession.getModuleManager();
+            chatManager = moduleManager.getChatManager();
+            //settingsManager = moduleManager.getSettingsManager();
+            errorManager = appSession.getErrorManager();
+      //      filldatabase();
+        } catch (Exception e) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
         // corresponding resource size-qualified directory.
-        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
+    //    mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
-
-//        // Create the main contacts adapter
-//        //adapter = new ChatListAdapter(getActivity());
-//
-//        if (savedInstanceState != null) {
-//            // If we're restoring state after this fragment was recreated then
-//            // retrieve previous search term and previously selected search
-//            // result.
-//            mSearchTerm = savedInstanceState.getString(SearchManager.QUERY);
-//            mPreviouslySelectedSearchItem =
-//                    savedInstanceState.getInt(STATE_PREVIOUSLY_SELECTED_KEY, 0);
-//        }
+   }
 
 
-        /*mImageLoader = new ImageLoader(getActivity(), getListPreferredItemHeight()) {
-            @Override
-            protected Bitmap processBitmap(Object data) {
-                // This gets called in a background thread and passed the data from
-                // ImageLoader.loadImage().
-                return loadContactPhotoThumbnail((String) data, getImageSize());
-            }
-        };
-
-        // Set a placeholder loading image for the image loader
-        mImageLoader.setLoadingImage(R.drawable.ic_contact_picture_holo_light);
-*/
-        // Add a cache to the image loader
-        //mImageLoader.addImageCache(getActivity().getSupportFragmentManager(), 0.1f);
+   void updatevalues(){
+       listChatcreated();
+       chatlistview();
 
    }
 
@@ -159,26 +425,63 @@ public class ChatListFragment extends AbstractFermatFragment{
 //System.out.println("**********LISTA:"+chatinfo.get(0).get(0)+" - "+chatinfo.get(0).get(1)+" - "+chatinfo.get(0).get(2));
      //   setContentView(getActivity());
         View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
-
-        ChatListAdapter adapter=new ChatListAdapter(getActivity(), chatinfo, imgid);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
+        updatevalues();
+        final ChatListAdapter adapter=new ChatListAdapter(getActivity(), infochat, imgid);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
-
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Auto-generated method stub
-                String Slecteditem = chatinfo[position];
+                String Slecteditem = infochat.get(position).toString();
+                String values=infochat.get(position);
+                List<String> converter=new ArrayList<String>();
+                converter.addAll(Arrays.asList(values.split("@#@#")));
                 Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+                appSession.setData("whocallme", "chatlist");
+                appSession.setData("chatvalues",UUID.fromString(converter.get(3)));
                 changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-
             }
         });
 
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        System.out.println("LEAN ON");
+                        Toast.makeText(getActivity(), "Wake up Kakaroto", Toast.LENGTH_SHORT).show();
+
+                        try {
+                            System.out.println("Threar UI corriendo");
+                            //TODO: fix this
+                            especialfilldatabase();
+                            updatevalues();
+                            adapter.refreshEvents(infochat,imgid);
+                            } catch (Exception e) {
+                            //TODO: fix this
+                            e.printStackTrace();
+                        }
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
+            }
+        });
         return layout;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        // Inflate the menu items
+        inflater.inflate(R.menu.chat_list_menu, menu);
+        // Locate the search item
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -189,476 +492,4 @@ public class ChatListFragment extends AbstractFermatFragment{
         return super.onOptionsItemSelected(item);
     }
 
-
-//mig chance
-    /*   @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
-        adapter = new ChatListAdapter(getActivity());
-<<<<<<< HEAD
-        //layout = (LinearLayout) getActivity().findViewById(R.id.fragment_layout);
-        noChatsMessage = (FermatTextView) layout.findViewById(R.id.no_chats);//getActivity()
-        return layout;
-       // return inflater.inflate(R.layout.chats_list_fragment, null);
-    }
-=======
-        layout = (LinearLayout) getActivity().findViewById(R.id.fragment_layout);
-        noChatsMessage = (TextView) getActivity().findViewById(R.id.no_chats);
-        return inflater.inflate(R.layout.chats_list_fragment, null);
-    }*/
- //
-
-//mig chance
-/*    @Override
-    public void onActivityCreated(Bundle savedState) {
-        super.onActivityCreated(savedState);
-
-        noChatsMessage = (FermatTextView) getActivity().findViewById(R.id.no_chats);
-
-        //FragmentManager manager = getActivity().getFragmentManager();
-        ///manager.findFragmentById(R.id.messages);
-        /*if (manager.findFragmentById(R.id.messages) != null) {
-            layout.setVisibility(View.INVISIBLE);
-        } else {
-            layout.setVisibility(View.VISIBLE);
-        }
-*/
-   /*     progressBar = (ProgressBar) getActivity().findViewById(R.id.chat_list_progress_bar);
-
-        //getChatsList(Const.CHATS_LIST_OFFSET, Const.CHATS_LIST_LIMIT);
-
-        FloatingActionButton fab = (FloatingActionButton) getActivity().findViewById(R.id.fab);*/
-    //
-        //fab.attachToListView(getListView());
-        //fab.setColorPressedResId(R.color.background_floating_button_pressed);
-        //fab.setColorNormalResId(R.color.background_floating_button);
-        //fab.setShadow(true);
-
-        /*fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), TransparentActivity.class);
-                intent.putExtra("choice", Const.CONTACT_LIST_FRAGMENT);
-                intent.putExtra("destination", getActivity().getString(R.string.chat_list));
-                startActivityForResult(intent, Const.REQUEST_CODE_NEW_MESSAGE);
-            }
-        });
-        setListAdapter(adapter);*/
-//mig chance
-  /*      View detailsFrame = getActivity().findViewById(R.id.messages);
-        dualPane = detailsFrame != null
-                && detailsFrame.getVisibility() == View.VISIBLE;
-        if (savedState != null) {
-            currentCheckPosition = savedState.getInt("curChoice", 0);
-        }
-       /* if (dualPane) {
-            getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        }*/
-         /*long id = ((ChatActivity) getActivity()).getIntentChatId();
-       if (id != 0) {
-            clickedId = id;
-            int position = getChatPosition(id);
-            showMessages(position);
-        }
-
-    }*/
-//
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//
-//        // In the case onPause() is called during a fling the image loader is
-//        // un-paused to let any remaining background work complete.
-//        mImageLoader.setPauseWork(false);
-//    }
-/*
-    public void setChatsList(final ChatsList chats1) {
-
- //   }
-//mig
-/*    public void setChatsList(final ChatsList chats1) {
-        if (progressBar != null) {
-            progressBar.setVisibility(View.GONE);
-        }
-        chats = chats1;
-        //adapter.clear();
-        //adapter.addAll(chats.chats);
-
-    }
-
-    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-        // Gets the Cursor object currently bound to the ListView
-        //final Cursor cursor = adapter.getCursor();
-
-        // Moves to the Cursor row corresponding to the ListView item that was clicked
-        //cursor.moveToPosition(position);
-
-       /*
-       // Creates a contact lookup Uri from contact ID and lookup_key
-
-        final Uri uri = ChatsContract.Contacts.getLookupUri(
-                cursor.getLong(ContactsQuery.ID),
-                cursor.getString(ChatsQuery.LOOKUP_KEY));
-*/
-        // Notifies the parent activity that the user selected a contact. In a two-pane layout, the
-        // parent activity loads a ContactDetailFragment that displays the details for the selected
-        // contact. In a single-pane layout, the parent activity starts a new activity that
-        // displays contact details in its own Fragment.
-        //mOnChatSelectedListener.onContactSelected(uri);
-
-        // If two-pane layout sets the selected item to checked so it remains highlighted. In a
-        // single-pane layout a new activity is started so this is not needed.
-        /*if (mIsTwoPaneLayout) {
-            getListView().setItemChecked(position, true);
-        }
-    }
-*/
-
-    /*public void getChatsList(int offset, int limit) {
-        new ApiClient<>(new TdApi.GetChats(offset, limit), new ChatsHandler(), new ApiClient.OnApiResultHandler() {
-            @Override
-            public void onApiResult(BaseHandler output) {
-                if (output == null) {
-                    getChatsList(0, 200);
-                } else {
-                    if (output.getHandlerId() == ChatsHandler.HANDLER_ID) {
-                        TdApi.Chats receivedChats = (TdApi.Chats) output.getResponse();
-                        if (receivedChats.chats.length == 0) {
-                            noChatsMessage.setVisibility(View.VISIBLE);
-                            progressBar.setVisibility(View.GONE);
-                        } else {
-                            noChatsMessage.setVisibility(View.GONE);
-                            setChatsList(receivedChats);
-                            UserInfoHolder.addUsersToMap(receivedChats);
-                            MessagesFragmentHolder.setChats(receivedChats);
-                        }
-                    }
-                }
-            }
-        }).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-    }*/
-
-
-//    private void onSelectionCleared() {
-//        // Uses callback to notify activity this contains this fragment
-//        mOnChatSelectedListener.onSelectionCleared();
-//
-//        // Clears currently checked item
-//        //getListView().clearChoices();
-//    }
-//
-//
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        // Inflate the menu items
-        inflater.inflate(R.menu.chat_list_menu, menu);
-        // Locate the search item
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
-
-        // In versions prior to Android 3.0, hides the search item to prevent additional
-        // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
-        // Since the search doesn't create a new Activity to do the searching, the menu item
-        // doesn't need to be turned off.
-//        if (mIsSearchResultView) {
-//            searchItem.setVisible(false);
-//        }
-    }
-
-        // Retrieves the system search manager service
-/*        final SearchManager searchManager =
-                (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-
-        // Retrieves the SearchView from the search menu item
- /*       final SearchView searchView = (SearchView) searchItem.getActionView();
-
-        final SearchView searchView = (SearchView) searchItem.getActionView();
-
-        // Assign searchable info to SearchView
-        searchView.setSearchableInfo(
-                searchManager.getSearchableInfo(getActivity().getComponentName()));
-
-        // Set listeners for SearchView
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String queryText) {
-                // Nothing needs to happen when the user submits the search string
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                // Called when the action bar search text has changed.  Updates
-                // the search filter, and restarts the loader to do a new query
-                // using the new search string.
-                String newFilter = !TextUtils.isEmpty(newText) ? newText : null;
-
-                // Don't do anything if the filter is empty
-                if (mSearchTerm == null && newFilter == null) {
-                    return true;
-                }
-
-                // Don't do anything if the new filter is the same as the current filter
-                if (mSearchTerm != null && mSearchTerm.equals(newFilter)) {
-                    return true;
-                }
-
-                // Updates current filter to new filter
-                mSearchTerm = newFilter;
-
-                // Restarts the loader. This triggers onCreateLoader(), which builds the
-                // necessary content Uri from mSearchTerm.
-                mSearchQueryChanged = true;
-                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
-                return true;
-            }
-        });
-
-        searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem menuItem) {
-                // Nothing to do when the action item is expanded
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                // When the user collapses the SearchView the current search string is
-                // cleared and the loader restarted.
-                if (!TextUtils.isEmpty(mSearchTerm)) {
-                    onSelectionCleared();
-                }
-                mSearchTerm = null;
-                //getLoaderManager().restartLoader(ContactsQuery.QUERY_ID, null, ContactsListFragment.this);
-                return true;
-            }
-        });
-
-        if (mSearchTerm != null) {
-            // If search term is already set here then this fragment is
-            // being restored from a saved state and the search menu item
-            // needs to be expanded and populated again.
-
-            // Stores the search term (as it will be wiped out by
-            // onQueryTextChange() when the menu item is expanded).
-            final String savedSearchTerm = mSearchTerm;
-
-            // Expands the search menu item
-            searchItem.expandActionView();
-
-            // Sets the SearchView to the previous search string
-            searchView.setQuery(savedSearchTerm, false);
-        }
-
-    }*/
-
-
-//mig chance
-/*    public ChatsList getChat(long id) {
-       // if (chats == null *//*|| chats.chats.length == 0*//*) {
-        *//*    chats = ChatsListHolder.getChats();
-        }
-        if (id != 0) {
-            clickedId = id;
-            getListView().setSelection(getChatPosition(clickedId));
-        }
-        for (int i = 0; i < chats.chats.length; i++) {
-            if (chats.chats[i].id == clickedId) {
-                return chats.chats[i];
-            }
-        }
-        if (chats.chats.length == 1) {
-            return chats.chats[0];
-        } else {
-            return chats.chats[currentCheckPosition];
-        }*//*
-        return null;
-    }*/
-//
-    /*public int getChatPosition(long id) {
-        if (chats == null) {
-            chats = MessagesFragmentHolder.getChats();
-        }
-        for (int i = 0; i < chats.chats.length; i++) {
-            if (chats.chats[i].id == id) {
-                return i;
-            }
-        }
-        return Const.CHAT_NOT_FOUND;
-    }*/
-
-   /* public void setAdapterFilter(String filter) {
-        if (chats != null) {
-            if (filter.isEmpty()) {
-                adapter.clear();
-                adapter.addAll(chats.chats);
-            } else {
-                List<TdApi.Chat> list = new ArrayList<>();
-                for (int i = 0; i < chats.chats.length; i++) {
-                    String name;
-                    String messageText = "";
-                    TdApi.ChatInfo info = chats.chats[i].type;
-                    if (info.getConstructor() == TdApi.PrivateChatInfo.CONSTRUCTOR) {
-                        TdApi.PrivateChatInfo privateInfo = (TdApi.PrivateChatInfo) info;
-                        name = privateInfo.user.firstName + " " + privateInfo.user.lastName;
-                    } else {
-                        TdApi.GroupChatInfo groupInfo = (TdApi.GroupChatInfo) info;
-                        name = groupInfo.groupChat.title;
-                    }
-                    TdApi.MessageContent message = chats.chats[i].topMessage.message;
-                    if (message.getConstructor() == TdApi.MessageText.CONSTRUCTOR) {
-                        TdApi.MessageText textMessage = (TdApi.MessageText) message;
-                        messageText = textMessage.text;
-                    }
-                    if (name.toLowerCase().contains(filter.toLowerCase()) || messageText.toLowerCase().contains(filter.toLowerCase())) {
-                        list.add(chats.chats[i]);
-                    }
-                    adapter.clear();
-                    adapter.addAll(list);
-                }
-            }
-        }
-        adapter.notifyDataSetChanged();
-    }*/
-//mig chanve
-/*    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        if (!TextUtils.isEmpty(mSearchTerm)) {
-            // Saves the current search string
-            outState.putString(SearchManager.QUERY, mSearchTerm);
-            //outState.putInt("curChoice", currentCheckPosition);
-            // Saves the currently selected contact
-            //outState.putInt(STATE_PREVIOUSLY_SELECTED_KEY, getListView().getCheckedItemPosition());
-        }
-    }
-
-        outState.putInt("curChoice", currentCheckPosition);
-    }*/
-//
-
-    /*@Override
-    public void onListItemClick(ListView l, View v, int pos, long id) {
-        TdApi.Chat selectedItem = adapter.getItem(pos);
-        clickedId = selectedItem.id;
-        showMessages(pos);
-    }*/
-
-    /*void showMessages(int index) {
-        currentCheckPosition = index;
-        if (getFragmentManager() != null) {
-            FragmentTransaction ft
-                    = getFragmentManager().beginTransaction();
-            getListView().setItemChecked(index, true);
-            MessagesFragment messagesFragment = new MessagesFragment();
-            if (!fragmentStopped) {
-                ft.replace(R.id.messages, messagesFragment);
-                ft.commit();
-            }
-            layout.setVisibility(View.INVISIBLE);
-        }
-    }*/
-//mig chance
-/*    public void openChat(long resultId) {
-        clickedId = resultId;
-        *//*int position = getChatPosition(resultId);
-        if (position == Const.CHAT_NOT_FOUND) {
-            newPrivateChat(resultId);
-        } else {
-            showMessages(position);
-        }*//*
-    }*/
-//
-   /* private void newPrivateChat(final long userId) {
-        getActivity().setRequestedOrientation(getResources().getConfiguration().orientation);
-        mProgressDialog = ProgressDialog.show(getActivity(), getActivity().getString(R.string.loading),
-                getActivity().getString(R.string.please_wait), true, false);
-        ApiHelper.createPrivateChat(userId);
-        new ApiClient<>(new TdApi.GetChat(userId), new ChatHandler(), new ApiClient.OnApiResultHandler() {
-            @Override
-            public void onApiResult(BaseHandler output) {
-                if (output.getHandlerId() == ChatHandler.HANDLER_ID) {
-                    TdApi.Chat chat = (TdApi.Chat) output.getResponse();
-                    clickedId = chat.id;
-                    addChatToChatsArray(chat);
-                    adapter.clear();
-                    adapter.addAll(chats.chats);
-                    showMessages(adapter.getPosition(chat));
-                    if (mProgressDialog != null && mProgressDialog.isShowing()) {
-                        try {
-                            mProgressDialog.dismiss();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_USER);
-                }
-            }
-        }).executeOnExecutor(AsyncTask.SERIAL_EXECUTOR);
-    }*/
-
-   /* private void addChatToChatsArray(TdApi.Chat chat) {
-        TdApi.Chat[] newChatArray = new TdApi.Chat[chats.chats.length + 1];
-        newChatArray[0] = chat;
-        System.arraycopy(chats.chats, 0, newChatArray, 1, chats.chats.length);
-        chats = new TdApi.Chats(newChatArray);
-    }*/
-
-   /* public void updateChat(long chatId, int unread, int lastRead) {
-        boolean updated = false;
-        for (int i = 0; i < adapter.getCount(); i++) {
-            TdApi.Chat chat = adapter.getItem(i);
-            if (chat.id == chatId) {
-                adapter.getItem(i).unreadCount = unread;
-                adapter.getItem(i).lastReadInboxMessageId = lastRead;
-                updated = true;
-            }
-        }
-        if (!updated) {
-            getChatsList(Const.CHATS_LIST_OFFSET, Const.CHATS_LIST_LIMIT);
-        }
-        adapter.notifyDataSetChanged();
-    }*/
-
-    /*@Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Const.REQUEST_CODE_NEW_MESSAGE && resultCode == Activity.RESULT_OK) {
-            long resultId = data.getLongExtra("id", 0);
-            openChat(resultId);
-        }
-    }*/
-
-    //mig change
- /*   @Override
-    public void onStop() {
-        super.onStop();
-        fragmentStopped = true;
-    }*/
-    //
-    /*@Override
-    public void onResume() {
-        fragmentStopped = false;
-        if (adapter.getCount() == 0) {
-            getChatsList(Const.CHATS_LIST_OFFSET, Const.CHATS_LIST_LIMIT);
-        }
-        super.onResume();
-    }*/
-
-//    public interface OnChatInteractionListener {
-//        /**
-//         * Called when a chat is selected from the ListView.
-//         * @param chatUri The contact Uri.
-//         */
-//        public void onChatSelected(Uri chatUri);
-//
-//        /**
-//         * Called when the ListView selection is cleared like when
-//         * a chat search is taking place or is finishing.
-//         */
-//        public void onSelectionCleared();
-//    }
 }

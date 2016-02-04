@@ -1,11 +1,10 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,7 +25,6 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettin
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -34,15 +32,10 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
-import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
-import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -51,9 +44,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -97,8 +89,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     ArrayList<String> historialmensaje = new ArrayList<>();
     SwipeRefreshLayout mSwipeRefreshLayout;
-    Map<String, Contact> others = new HashMap<String, Contact>();
-    Map<String, Contact> me = new HashMap<String, Contact>();
+    Map<String,Contact>others=new HashMap<String,Contact>();
+    Map<String,Contact>me=new HashMap<String,Contact>();;
 
 
 
@@ -119,9 +111,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     TextView linear_layout_send_form;
 
 
-    public static ChatFragment newInstance() {
-        return new ChatFragment();
-    }
+    public static ChatFragment newInstance() { return new ChatFragment(); }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -157,20 +147,19 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             }
 
         }catch (CantGetChatException e) {
-            e.printStackTrace();
+               e.printStackTrace();
         }
         return chatidofpk;
     }
 
+
     void whattodo(){
         Contact con= chatSession.getSelectedContact();
-        if(appSession.getData("whocallme").equals("chatlist")){
-
+        if(appSession.getData("whocallme").equals("chatlist"))
+        {
             chatid= (UUID) appSession.getData("chatvalues");
             chatwascreate=true;
-
         }else if(appSession.getData("whocallme").equals("contact")){  //fragment contact call this fragment
-
             //remotepct=(PlatformComponentType)appSession.getData("remotepct");//it has to sent me whocalme="contact"
             remotepct=con.getRemoteActorType();
             remotepk= con.getRemoteActorPublicKey();//appSession.getData("remotepk");               //and remote pk and platform
@@ -187,7 +176,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         String message;
         String inorout;
         int messsize;
-        //    boolean findok=false;
+    //    boolean findok=false;
         try {
             historialmensaje.clear();
             messsize=chatManager.getMessageByChatId(chatid).size();
@@ -195,7 +184,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
                 inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
                 historialmensaje.add(inorout+"@#@#"+message);
-                //          findok=true;
+      //          findok=true;
             }
         }catch (CantGetMessageException e) {
             e.printStackTrace();
@@ -220,11 +209,12 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         companionLabel.setText("My Contact");
         ListView lstOpciones;
         //new se coloco la variable me para identificar cuando sea yo quien envie el mensaje y actualice el textview correcto
+
         findmessage();
-        //new se coloco la variable me para identificar cuando sea yo quien envie el mensaje y actualice el textview correcto
         adaptador = new ChatAdapterView(getActivity(), historialmensaje);
         lstOpciones = (ListView) layout.findViewById(R.id.messagesContainer);
         lstOpciones.setAdapter(adaptador);
+
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -238,54 +228,54 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     ChatImpl chat=new ChatImpl();
                     MessageImpl message=new MessageImpl();
                     Long dv=System.currentTimeMillis();
-                    //         Date df=new Date(dv);
-                    //          Long vv=Long.valueOf(new SimpleDateFormat("dd-MM-YYYY HH:mm:ss").format(df));
+           //         Date df=new Date(dv);
+          //          Long vv=Long.valueOf(new SimpleDateFormat("dd-MM-YYYY HH:mm:ss").format(df));
 
 
-                    if(chatwascreate) {
+                   if(chatwascreate) {
 
-                        message.setChatId(chatid);
-                        message.setMessageId(UUID.randomUUID());
-                        message.setMessage(messageText);
-                        message.setMessageDate(new Timestamp(dv));
-                        message.setStatus(MessageStatus.CREATED);
-                        message.setType(TypeMessage.OUTGOING);
+                       message.setChatId(chatid);
+                       message.setMessageId(UUID.randomUUID());
+                       message.setMessage(messageText);
+                       message.setMessageDate(new Timestamp(dv));
+                       message.setStatus(MessageStatus.CREATED);
+                       message.setType(TypeMessage.OUTGOING);
 
-                        chatManager.saveMessage(message);
+                       chatManager.saveMessage(message);
 
-                        findmessage();
-                        adaptador.refreshEvents(historialmensaje);
-                        Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
+                       findmessage();
+                       adaptador.refreshEvents(historialmensaje);
+                       Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
 
-                    }else{
+                   }else{
 
-                        chat.setChatId(UUID.randomUUID());
-                        chat.setObjectId(UUID.randomUUID());
-                        chat.setStatus(ChatStatus.VISSIBLE);
-                        chat.setChatName("DeathNote");
-                        chat.setDate(new Timestamp(dv));
-                        chat.setLastMessageDate(new Timestamp(dv));
-                        chat.setLocalActorPublicKey(appSession.getAppPublicKey());
-                        chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        chat.setRemoteActorPublicKey(remotepk);
-                        chat.setRemoteActorType(remotepct);
+                       chat.setChatId(UUID.randomUUID());
+                       chat.setObjectId(UUID.randomUUID());
+                       chat.setStatus(ChatStatus.VISSIBLE);
+                       chat.setChatName("DeathNote");
+                       chat.setDate(new Timestamp(dv));
+                       chat.setLastMessageDate(new Timestamp(dv));
+                       chat.setLocalActorPublicKey(appSession.getAppPublicKey());
+                       chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                       chat.setRemoteActorPublicKey(remotepk);
+                       chat.setRemoteActorType(remotepct);
 
-                        chatManager.saveChat(chat);
+                       chatManager.saveChat(chat);
 
-                        message.setChatId(chatid);
-                        message.setMessageId(UUID.randomUUID());
-                        message.setMessage(messageText);
-                        message.setMessageDate(new Timestamp(dv));
-                        message.setStatus(MessageStatus.CREATED);
-                        message.setType(TypeMessage.OUTGOING);
+                       message.setChatId(chatid);
+                       message.setMessageId(UUID.randomUUID());
+                       message.setMessage(messageText);
+                       message.setMessageDate(new Timestamp(dv));
+                       message.setStatus(MessageStatus.CREATED);
+                       message.setType(TypeMessage.OUTGOING);
 
-                        chatManager.saveMessage(message);
+                       chatManager.saveMessage(message);
 
-                        findmessage();
-                        adaptador.refreshEvents(historialmensaje);
-                        Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
-                        Toast.makeText(getActivity(), "usuario No encontrado", Toast.LENGTH_SHORT).show();
-                    }
+                       findmessage();
+                       adaptador.refreshEvents(historialmensaje);
+                       Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
+                       Toast.makeText(getActivity(), "User Not Found", Toast.LENGTH_SHORT).show();
+                   }
                 } catch (CantSaveMessageException e) {
                     e.printStackTrace();
                 }catch (CantSaveChatException e) {
@@ -301,13 +291,12 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getActivity(), "hello everybody", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
                         try {
                             //System.out.println("Threar UI corriendo");
                             //TODO: fix this
-
-                            findmessage();
-                            adaptador.refreshEvents(historialmensaje);
+                                findmessage();
+                                adaptador.refreshEvents(historialmensaje);
                         } catch (Exception e) {
                             //TODO: fix this
                             e.printStackTrace();
@@ -327,4 +316,5 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
     }
+
 }
