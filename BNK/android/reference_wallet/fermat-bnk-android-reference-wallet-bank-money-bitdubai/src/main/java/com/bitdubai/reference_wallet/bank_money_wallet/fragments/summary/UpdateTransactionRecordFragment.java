@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
@@ -29,7 +30,8 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
     private EditText transactionConcept;
 
     private BankMoneyTransactionRecord transactionRecord;
-    public static UpdateTransactionRecordFragment newInstance(){
+
+    public static UpdateTransactionRecordFragment newInstance() {
         return new UpdateTransactionRecordFragment();
     }
 
@@ -37,12 +39,12 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        transactionRecord = ( BankMoneyTransactionRecord )appSession.getData("transaction_data");
+        transactionRecord = (BankMoneyTransactionRecord) appSession.getData("transaction_data");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.bw_transaction_detail,container,false);
+        View layout = inflater.inflate(R.layout.bw_transaction_detail, container, false);
         transactionAmount = (EditText) layout.findViewById(R.id.transaction_amount);
         transactionType = (EditText) layout.findViewById(R.id.transaction_type);
         transactionDate = (EditText) layout.findViewById(R.id.transaction_date);
@@ -53,12 +55,19 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
         transactionDate.setText(Utils.dateTimeFormat(transactionRecord.getTimestamp()));
         transactionConcept.setText(transactionRecord.getMemo());
         configureToolbar();
+
+        if (transactionRecord.getStatus() != BankTransactionStatus.PENDING) {
+            transactionAmount.setEnabled(false);
+            transactionType.setEnabled(false);
+            transactionDate.setEnabled(false);
+            transactionConcept.setEnabled(false);
+        }
         return layout;
     }
 
     private void configureToolbar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background,null));
+            getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background, null));
         else
             getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background));
 
@@ -66,7 +75,7 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()== ReferenceWalletConstants.UPDATE_RECORD_ACTION){
+        if (item.getItemId() == ReferenceWalletConstants.UPDATE_RECORD_ACTION) {
             System.out.println("item selected UPDATE ACTION");
             //TODO:update transaction
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
@@ -79,7 +88,9 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.UPDATE_RECORD_ACTION, 0, "Save")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        if (transactionRecord.getStatus() == BankTransactionStatus.PENDING) {
+            menu.add(0, ReferenceWalletConstants.UPDATE_RECORD_ACTION, 0, "Save")
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
     }
 }
