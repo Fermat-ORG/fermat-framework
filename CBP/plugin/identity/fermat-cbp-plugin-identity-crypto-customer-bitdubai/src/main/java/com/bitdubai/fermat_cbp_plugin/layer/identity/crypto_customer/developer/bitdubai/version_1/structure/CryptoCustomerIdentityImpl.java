@@ -20,14 +20,6 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity {
     private byte[] profileImage;
     private final boolean published;
 
-    public CryptoCustomerIdentityImpl(final String alias, final KeyPair keyPair, final byte[] profileImage, final boolean published){
-        this.alias = alias;
-        this.privateKey = keyPair.getPrivateKey();
-        this.publicKey = keyPair.getPublicKey();
-        this.profileImage = profileImage;
-        this.published = published;
-    }
-
     public CryptoCustomerIdentityImpl(final String alias,
                                       final String privateKey,
                                       final String publicKey,

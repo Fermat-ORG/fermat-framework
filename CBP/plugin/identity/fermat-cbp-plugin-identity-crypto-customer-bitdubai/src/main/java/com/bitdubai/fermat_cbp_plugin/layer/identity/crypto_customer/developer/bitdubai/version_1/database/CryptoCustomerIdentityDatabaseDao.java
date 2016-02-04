@@ -80,20 +80,29 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
     }
 
     /*CREATE NEW IDENTITY*/
-    public void createNewCryptoCustomerIdentity (final CryptoCustomerIdentity cryptoCustomer, final String privateKey,final DeviceUser deviceUser) throws CantCreateNewDeveloperException {
+    public void createNewCryptoCustomerIdentity (final CryptoCustomerIdentity cryptoCustomer,
+                                                 final String                 privateKey    ,
+                                                 final DeviceUser             deviceUser    ) throws CantCreateNewDeveloperException {
+
         try {
-            if (aliasExists(cryptoCustomer.getAlias())) {
+            if (aliasExists(cryptoCustomer.getAlias()))
                 throw new CantCreateNewDeveloperException ("Cant create new Crypto Customer Identity, alias exists.", "Crypto Customer Identity", "Cant create new Crypto Customer Identity, alias exists.");
-            }
+
             persistNewCryptoCustomerIdentityPrivateKeysFile(cryptoCustomer.getPublicKey(), privateKey);
+
             DatabaseTable table = this.database.getTable(CRYPTO_CUSTOMER_TABLE_NAME);
+
             DatabaseTableRecord record = table.getEmptyRecord();
-            record.setStringValue(CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, cryptoCustomer.getPublicKey());
-            record.setStringValue(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME, cryptoCustomer.getAlias());
+
+            record.setStringValue(CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME            , cryptoCustomer.getPublicKey());
+            record.setStringValue(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME                 , cryptoCustomer.getAlias());
             record.setStringValue(CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-            record.setIntegerValue(CRYPTO_CUSTOMER_CRYPTO_CUSTOMER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME, cryptoCustomer.isPublished() ? 1 : 0 );
+            record.setStringValue(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME          , Boolean.toString(cryptoCustomer.isPublished()));
+
             table.insertRecord(record);
+
             persistNewCryptoCustomerIdentityProfileImage(cryptoCustomer.getPublicKey(), cryptoCustomer.getProfileImage());
+
         } catch (CantInsertRecordException e){
             throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Customer Identity", "Cant create new Crypto Customer Identity, insert database problems.");
         } catch (CantPersistPrivateKeyException e){
@@ -239,13 +248,12 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
 
     private CryptoCustomerIdentity getIdentityFromRecord(final DatabaseTableRecord record) throws CantGetCryptoCustomerIdentityProfileImageException, CantGetCryptoCustomerIdentityPrivateKeyException {
 
-        String  alias        = record.getStringValue (CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME     );
         String  publicKey    = record.getStringValue (CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-        boolean published    = record.getIntegerValue(CRYPTO_CUSTOMER_CRYPTO_CUSTOMER_PUBLIC_KEY_PUBLISHED_COLUMN_NAME) == 1;
+        String  alias        = record.getStringValue (CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME     );
+        boolean published    = Boolean.parseBoolean(record.getStringValue(CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME));
 
         String privateKey   = getCryptoCustomerIdentityPrivateKey(publicKey);
         byte[] profileImage = getCryptoCustomerIdentityProfileImagePrivateKey(publicKey);
-
 
         return new CryptoCustomerIdentityImpl(
                 alias,
