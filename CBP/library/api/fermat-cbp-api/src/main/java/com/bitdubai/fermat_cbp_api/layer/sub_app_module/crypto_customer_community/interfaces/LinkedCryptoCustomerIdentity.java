@@ -1,16 +1,21 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces;
 
+
 /**
- * Created by natalia on 16/09/15.
+ * Created by Alejandro Bicelis on 2/2/2016.
  */
 
 import java.util.List;
+import java.util.UUID;
 
-/**
- * The interface <code>CryptoCustomerCommunityInformation</code>
- * provides the method to extract information about a crypto customer.
- */
-public interface CryptoCustomerCommunityInformation {
+
+public interface LinkedCryptoCustomerIdentity {
+
+    /**
+     * The method <code>getPublicKey</code> returns the UUID of the connected actor to this identity
+     */
+    UUID getConnectionId();
+
     /**
      * The method <code>getPublicKey</code> returns the public key of the represented crypto broker
      * @return the public key of the crypto broker
