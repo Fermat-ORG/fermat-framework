@@ -13,24 +13,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
@@ -41,15 +40,17 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 01/02/16.
  */
-public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment {
+public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener {
 
     private View rootView;
     private Spinner spinner;
+    List<String> listElementSpinner;
 
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
     SettingsManager<AssetIssuerSettings> settingsManager;
+    AssetIssuerSettings settings = null;
 
     public static SettingsAssetIssuerNetworkFragment newInstance() {
         return new SettingsAssetIssuerNetworkFragment();
@@ -80,6 +81,15 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment {
             setUpUi();
             configureToolbar();
 
+            try {
+                settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                settings = null;
+            }
+            if (settings != null)
+                spinner.setSelection(settings.getBlockchainNetworkPosition());
+
+
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -89,12 +99,12 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment {
         return null;
     }
 
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_SETTINGS_NETWORK, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);    }
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -150,14 +160,41 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment {
 
     public void setUpUi() {
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
-        List<String> list = new ArrayList<String>();
-        list.add("MainNet");
-        list.add("TestNet");
-        list.add("RegTest");
+        listElementSpinner = new ArrayList<String>();
+        listElementSpinner.add("MainNet");
+        listElementSpinner.add("TestNet");
+        listElementSpinner.add("RegTest");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
-                R.layout.dap_wallet_asset_issuer_list_item_spinner, list);
+                R.layout.dap_wallet_asset_issuer_list_item_spinner, listElementSpinner);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dataAdapter.notifyDataSetChanged();
         spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(this);
     }
 
+    private void managerSettings(String dataSet, int position) {
+        try {
+            settings.setBlockchainNetwork(dataSet);
+            settings.setBlockchainNetworkPosition(position);
+
+            settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+        } catch (CantPersistSettingsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        String network;
+
+        network = listElementSpinner.get(i);
+        adapterView.setSelection(i);
+
+        managerSettings(network, i);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }
