@@ -137,6 +137,8 @@ public class CryptoBrokerWalletDeveloperDatabaseFactory  {
         walletSettingProviderColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_ID_COLUMN_NAME);
         walletSettingProviderColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_PLUGIN_COLUMN_NAME);
         walletSettingProviderColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_DESCRIPTION_COLUMN_NAME);
+        walletSettingProviderColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_CURRENCY_FROM_COLUMN_NAME);
+        walletSettingProviderColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_CURRENCY_TO_COLUMN_NAME);
         walletSettingProviderColumns.add(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_BROKER_PUBLIC_KEY_COLUMN_NAME);
         /**
          * walletSettingAssociatedColumns table
