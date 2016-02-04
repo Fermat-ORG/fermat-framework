@@ -35,8 +35,20 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * @throws CantGetCryptoCustomerListException if something goes wrong.
      */
     List<LinkedCryptoCustomerIdentity> listCryptoCustomersPendingLocalAction(final CryptoCustomerCommunitySelectableIdentity selectedIdentity,
-                                                                               final int max,
-                                                                               final int offset) throws CantGetCryptoCustomerListException;
+                                                                             final int max,
+                                                                             final int offset) throws CantGetCryptoCustomerListException;
+
+    /**
+     * The method <code>listAllConnectedCryptoCustomers</code> returns the list of all crypto customers registered by the
+     * logged in user
+     *
+     * @return the list of crypto customers connected to the logged in user
+     *
+     * @throws CantGetCryptoCustomerListException if something goes wrong.
+     */
+    List<CryptoCustomerCommunityInformation> listAllConnectedCryptoCustomers(final CryptoCustomerCommunitySelectableIdentity selectedIdentity,
+                                                                             final int max,
+                                                                             final int offset) throws CantGetCryptoCustomerListException;
 
     /**
      * The method <code>acceptCryptoCustomer</code> takes the information of a connection request, accepts
