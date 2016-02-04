@@ -12,9 +12,16 @@ import android.widget.EditText;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
+import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
+import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 import org.bitcoinj.core.Utils;
@@ -24,12 +31,18 @@ import org.bitcoinj.core.Utils;
  */
 public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
 
+
+    private static final String TAG = "updatetransactionFragment";
+
     private EditText transactionType;
     private EditText transactionAmount;
     private EditText transactionDate;
     private EditText transactionConcept;
 
     private BankMoneyTransactionRecord transactionRecord;
+
+    private BankMoneyWalletModuleManager moduleManager;
+    private ErrorManager errorManager;
 
     public static UpdateTransactionRecordFragment newInstance() {
         return new UpdateTransactionRecordFragment();
@@ -40,6 +53,17 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         transactionRecord = (BankMoneyTransactionRecord) appSession.getData("transaction_data");
+
+        try {
+
+            moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+        }
     }
 
     @Override
@@ -55,7 +79,7 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
         transactionDate.setText(Utils.dateTimeFormat(transactionRecord.getTimestamp()));
         transactionConcept.setText(transactionRecord.getMemo());
         configureToolbar();
-
+        transactionType.setEnabled(false);
         if (transactionRecord.getStatus() != BankTransactionStatus.PENDING) {
             transactionAmount.setEnabled(false);
             transactionType.setEnabled(false);
@@ -78,6 +102,7 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
         if (item.getItemId() == ReferenceWalletConstants.UPDATE_RECORD_ACTION) {
             System.out.println("item selected UPDATE ACTION");
             //TODO:update transaction
+            makeTransaction();
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
             return true;
         }
@@ -91,6 +116,15 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
         if (transactionRecord.getStatus() == BankTransactionStatus.PENDING) {
             menu.add(0, ReferenceWalletConstants.UPDATE_RECORD_ACTION, 0, "Save")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        }
+    }
+
+    private void makeTransaction(){
+        if(transactionRecord.getTransactionType()==TransactionType.CREDIT){
+
+        }
+        if(transactionRecord.getTransactionType()==TransactionType.DEBIT){
+
         }
     }
 }

@@ -20,7 +20,9 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.constants.BankWalletBroadcasterConstants;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
@@ -255,6 +257,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     @Override
     public void onItemClickListener(BankMoneyTransactionRecord data, int position) {
         appSession.setData("transaction_data", data);
+        System.out.println("(bank) cancel transaction");
+        cancelTransaction(data);
         changeActivity(Activities.BNK_BANK_MONEY_WALLET_UPDATE_RECORD, appSession.getAppPublicKey());
     }
 
@@ -305,7 +309,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    /*@Override
     public void onUpdateView(String code) {
         switch (code) {
             case BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
@@ -314,9 +318,9 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
             default:
                 super.onUpdateView(code);
         }
-    }
+    }*/
 
-    /*@Override
+    @Override
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
             case BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
@@ -325,5 +329,12 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
             default:
                 super.onUpdateViewOnUIThread(code);
         }
-    }*/
+    }
+
+    private void cancelTransaction(BankMoneyTransactionRecord data){
+        if (data.getStatus()== BankTransactionStatus.PENDING){
+            //TODO: cancel transction
+            moduleManager.getBankingWallet().cancelAsyncBankTransaction(data);
+        }
+    }
 }
