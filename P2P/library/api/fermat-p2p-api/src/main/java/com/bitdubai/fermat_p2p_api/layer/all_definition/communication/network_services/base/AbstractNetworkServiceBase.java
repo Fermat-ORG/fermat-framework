@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -34,9 +35,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CantInitializeTemplateNetworkServiceDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionLooseNotificationEvent;
@@ -48,7 +46,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.ClientConnectionLooseNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.ClientSuccessfulReconnectNotificationEventHandler;
@@ -60,13 +61,17 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.VPNConnectionLooseNotificationEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase</code> implements
@@ -77,7 +82,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AbstractNetworkServiceBase  extends AbstractPlugin implements NetworkService {
+public abstract class AbstractNetworkServiceBase  extends AbstractPlugin implements NetworkService {
 
     /**
      * Represent the errorManager
@@ -122,6 +127,11 @@ public class AbstractNetworkServiceBase  extends AbstractPlugin implements Netwo
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     /**
+     * Represent the flag to start only once
+     */
+    private AtomicBoolean starting;
+
+    /**
      * Represent the EVENT_SOURCE
      */
     public EventSource eventSource;
@@ -135,6 +145,26 @@ public class AbstractNetworkServiceBase  extends AbstractPlugin implements Netwo
      * Represent the identity
      */
     private ECCKeyPair identity;
+
+    /**
+    * Represent the platformComponentType
+    */
+    private PlatformComponentType platformComponentType;
+
+    /**
+     * Represent the networkServiceType
+     */
+    private NetworkServiceType networkServiceType;
+
+    /**
+     * Represent the name
+     */
+    private String name;
+
+    /**
+     * Represent the extraData
+     */
+    private String extraData;
 
     /**
      * Represent the register
@@ -162,6 +192,11 @@ public class AbstractNetworkServiceBase  extends AbstractPlugin implements Netwo
     private Database dataBase;
 
     /**
+     * Represent the communicationNetworkServiceDeveloperDatabaseFactory
+     */
+    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+
+    /**
      * Constructor with parameters
      *
      * @param pluginVersionReference
@@ -174,8 +209,116 @@ public class AbstractNetworkServiceBase  extends AbstractPlugin implements Netwo
     public AbstractNetworkServiceBase(PluginVersionReference pluginVersionReference, EventSource eventSource, PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String name, String extraData) {
         super(pluginVersionReference);
         this.eventSource = eventSource;
+        this.platformComponentType = platformComponentType;
+        this.networkServiceType    = networkServiceType;
+        this.name                  = name;
+        this.extraData             = extraData;
+        this.starting              = new AtomicBoolean(false);
     }
 
+
+    /**
+     * (non-javadoc)
+     * @see AbstractPlugin#start()
+     */
+    @Override
+    public final void start() throws CantStartPluginException {
+
+        if(!starting.getAndSet(true)) {
+
+            if (this.serviceStatus != ServiceStatus.STARTING) {
+
+                /*
+                 * Set status tu starting
+                 */
+                this.serviceStatus = ServiceStatus.STARTING;
+
+                /*
+                 * Validate required resources
+                 */
+                validateInjectedResources();
+
+                try {
+
+                    /*
+                     * Initialize the identity
+                     */
+                    initializeIdentity();
+
+                    /*
+                     * Initialize the data base
+                     */
+                    initializeDataBase();
+
+                    /*
+                     * Initialize the  data base for developers tools
+                     */
+                    initializeDataBaseForDevelopers();
+
+                    /*
+                     * Initialize listeners
+                     */
+                    initializeListener();
+
+                    /*
+                     * Verify if the communication cloud client is active
+                     */
+                    if (!wsCommunicationsCloudClientManager.isDisable()) {
+
+                        /*
+                         * Construct my profile and register me
+                         */
+                        this.networkServiceProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(identity.getPublicKey(),
+                                                                                                                                                                            name.toLowerCase(),
+                                                                                                                                                                            name,
+                                                                                                                                                                            networkServiceType,
+                                                                                                                                                                            platformComponentType,
+                                                                                                                                                                            extraData);
+
+                        /*
+                         * Initialize connection manager
+                         */
+                        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(this);
+
+                        /*
+                         * Initialize the agent and start
+                         */
+                        this.communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this);
+                        this.communicationRegistrationProcessNetworkServiceAgent.start();
+                    }
+
+
+                    /*
+                     * Call on start method
+                     */
+                    onStart();
+
+                    /*
+                     * Its all ok, set the new status
+                    */
+                    this.serviceStatus = ServiceStatus.STARTED;
+
+
+                } catch (Exception exception) {
+
+                    StringBuffer contextBuffer = new StringBuffer();
+                    contextBuffer.append("Plugin ID: " + pluginId);
+                    contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                    contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+                    String context = contextBuffer.toString();
+                    String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
+                    CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+
+                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                    throw pluginStartException;
+
+                }
+
+            }
+        }
+
+    }
 
     /**
      * This method validate is all required resource are injected into
@@ -208,7 +351,7 @@ public class AbstractNetworkServiceBase  extends AbstractPlugin implements Netwo
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
@@ -374,9 +517,9 @@ public class AbstractNetworkServiceBase  extends AbstractPlugin implements Netwo
     /**
      * This method initialize the database
      *
-     * @throws CantInitializeTemplateNetworkServiceDatabaseException
+     * @throws CantInitializeNetworkServiceDatabaseException
      */
-    private void initializeDataBase() throws CantInitializeTemplateNetworkServiceDatabaseException {
+    private void initializeDataBase() throws CantInitializeNetworkServiceDatabaseException {
 
         try {
             /*
@@ -390,7 +533,7 @@ public class AbstractNetworkServiceBase  extends AbstractPlugin implements Netwo
              * The database exists but cannot be open. I can not handle this situation.
              */
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+            throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
         } catch (DatabaseNotFoundException e) {
 
@@ -413,11 +556,36 @@ public class AbstractNetworkServiceBase  extends AbstractPlugin implements Netwo
                  * The database cannot be created. I can not handle this situation.
                  */
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+                throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
             }
         }
 
+    }
+
+    /**
+     * This method create the data base for developers tools
+     *
+     * @throws CantInitializeNetworkServiceDatabaseException
+     */
+    private void initializeDataBaseForDevelopers() throws CantInitializeNetworkServiceDatabaseException {
+
+        try{
+
+            /*
+             * Initialize Developer Database Factory
+             */
+            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+
+
+        }catch (Exception e){
+             /*
+             * The database cannot be created. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantInitializeNetworkServiceDatabaseException(e);
+        }
     }
 
     /**
@@ -505,7 +673,55 @@ public class AbstractNetworkServiceBase  extends AbstractPlugin implements Netwo
 
     }
 
+    /**
+     * This method is called when the network service method
+     * AbstractPlugin#start() is called
+     */
+    protected abstract void onStart();
+
+    /**
+     * This method is called when the network service receive
+     * a new message
+     *
+     * @param newFermatMessageReceive
+     */
+    protected abstract void onNewMessagesReceive(FermatMessage newFermatMessageReceive);
+
+    /**
+     * This method is called when the network service receive
+     * a new message was sent
+     *
+     * @param messageSent
+     */
+    public abstract void onSentMessage(FermatMessage messageSent);
+
+
     public PlatformComponentProfile getNetworkServiceProfile() {
         return networkServiceProfile;
+    }
+
+    protected Database getDataBase() {
+        return dataBase;
+    }
+
+    protected CommunicationsClientConnection getCommunicationsClientConnection() {
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+    }
+
+
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
+    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+        return wsCommunicationsCloudClientManager;
+    }
+
+    public boolean isRegister() {
+        return register;
     }
 }

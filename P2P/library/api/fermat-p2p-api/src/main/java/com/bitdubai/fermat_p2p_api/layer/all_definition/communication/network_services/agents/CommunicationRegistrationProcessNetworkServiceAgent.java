@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,21 +23,26 @@ import java.util.concurrent.Executors;
  */
 public final class CommunicationRegistrationProcessNetworkServiceAgent {
 
-    /*
-     * Represent the sleep time for the read or send (5000 milliseconds)
+    /**
+     * Represent the sleep time for registration process (5000 milliseconds)
      */
     private static final long SLEEP_TIME = 5000;
+
+    /**
+     * Represent the sleep time  for registration process (20000 milliseconds)
+     */
     private static final long MAX_SLEEP_TIME = 20000;
+
+    /**
+     *  Represent the network service plugin root
+     */
+    private AbstractNetworkServiceBase networkServiceRoot;
 
     /**
      * Represent the networkService
      */
     private NetworkService networkService;
 
-    /**
-     * Represent the communicationsClientConnection
-     */
-    private WsCommunicationsCloudClientManager communicationsClientConnection;
 
     /**
      * Represent the active
@@ -62,27 +67,29 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
 
     /**
      * Constructor with parameters
-     * @param networkService
-     * @param communicationsClientConnection
+     * @param networkServiceRoot
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(NetworkService networkService, WsCommunicationsCloudClientManager communicationsClientConnection) {
-        this.networkService = networkService;
-        this.communicationsClientConnection = communicationsClientConnection;
+    public CommunicationRegistrationProcessNetworkServiceAgent(AbstractNetworkServiceBase networkServiceRoot) {
+        super();
+        this.networkServiceRoot = networkServiceRoot;
         this.active = Boolean.FALSE;
     }
 
+    /**
+     * Process to the registration
+     */
     private void processRegistration() {
 
             try{
 
-                System.out.println(networkService.getName()+" isRegister "+networkService.isRegister()+" communicationsClientConnection.isRegister() "+communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister());
+                System.out.println(networkService.getName()+" isRegister "+networkService.isRegister());
 
-                if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
+                if (networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
 
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), networkService.getPlatformComponentProfilePluginRoot());
+                    networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), networkService.getPlatformComponentProfilePluginRoot());
 
                     /*
                      * Stop the internal threads

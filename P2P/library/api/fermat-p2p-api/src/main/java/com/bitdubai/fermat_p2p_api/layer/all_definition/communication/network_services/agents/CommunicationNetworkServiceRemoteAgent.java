@@ -9,21 +9,15 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_s
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.daos.IncomingMessageDao;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.daos.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -49,15 +43,20 @@ import java.util.concurrent.Future;
  */
 public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
-    /*
+    /**
      * Represent the sleep time for the read or send (2000 milliseconds)
      */
     private static final long SLEEP_TIME = 2000;
 
+    /**
+     * Represent the SEND_TASK
+     */
     private static final int SEND_TASK = 0;
-    private static final int RECEIVE_TASK = 1;
 
-    private final NetworkService networkServicePluginRoot;
+    /**
+     * Represent the RECEIVE_TASK
+     */
+    private static final int RECEIVE_TASK = 1;
 
     /**
      * Represent the communicationsVPNConnection
@@ -65,28 +64,9 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
     private CommunicationsVPNConnection communicationsVPNConnection;
 
     /**
-     * Manager
+     * Represent the communicationNetworkServiceConnectionManager
      */
     private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    private EventManager eventManager;
-
-    /**
-     * Represent the incomingMessageDao
-     */
-    private IncomingMessageDao incomingMessageDao;
-
-    /**
-     * Represent the outgoingMessageDao
-     */
-    private OutgoingMessageDao outgoingMessageDao;
 
     /**
      * Represent is the tread is running
@@ -126,23 +106,13 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
     /**
      * Constructor with parameters
-     *  @param eccKeyPair from the plugin root
-     * @param errorManager  instance
-     * @param incomingMessageDao instance
-     * @param outgoingMessageDao instance
-     * @param networkServicePluginRoot
+     *
+     * @param communicationNetworkServiceConnectionManager
      */
-    public CommunicationNetworkServiceRemoteAgent(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,ECCKeyPair eccKeyPair, CommunicationsVPNConnection communicationsVPNConnection, ErrorManager errorManager, EventManager eventManager, IncomingMessageDao incomingMessageDao, OutgoingMessageDao outgoingMessageDao, NetworkService networkServicePluginRoot) {
+    public CommunicationNetworkServiceRemoteAgent(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager) {
 
         super();
-        this.eccKeyPair                          = eccKeyPair;
-        this.errorManager                        = errorManager;
-        this.eventManager                        = eventManager;
-        this.running                             = Boolean.FALSE;
-        this.incomingMessageDao                  = incomingMessageDao;
-        this.outgoingMessageDao                  = outgoingMessageDao;
-        this.communicationsVPNConnection         = communicationsVPNConnection;
-        this.networkServicePluginRoot            = networkServicePluginRoot;
+        this.running                                      = Boolean.FALSE;
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
 
     }
@@ -239,7 +209,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Save to the data base table
                      */
-                    incomingMessageDao.create(message);
+                    communicationNetworkServiceConnectionManager.getIncomingMessageDao().create(message);
 
                     /*
                      * Remove the message from the queue
@@ -267,7 +237,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
             Thread.currentThread().interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         } catch (CantInsertRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
+            communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getErrorManager().reportUnexpectedPluginException(communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
         }
 
     }
@@ -284,9 +254,6 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
             if (communicationsVPNConnection.isConnected()){
                 try {
 
-                    System.out.println("CommunicationNetworkServiceRemoteAgent - processMessageToSend ");
-
-
                     Map<String, Object> filters = new HashMap<>();
                     filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
                     filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
@@ -294,9 +261,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Read all pending message from database
                      */
-                    List<FermatMessage> messages = outgoingMessageDao.findAll(filters);
-
-                    System.out.println("CommunicationNetworkServiceRemoteAgent - messages.size() "+messages.size());
+                    List<FermatMessage> messages = communicationNetworkServiceConnectionManager.getOutgoingMessageDao().findAll(filters);
 
                     /*
                      * For each message
@@ -326,10 +291,12 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                              * Change the message and update in the data base
                              */
                             ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
-                            outgoingMessageDao.update(message);
+                            communicationNetworkServiceConnectionManager.getOutgoingMessageDao().update(message);
 
-
-                            networkServicePluginRoot.handleNewSentMessageNotificationEvent(message);
+                            /*
+                             * Notify a new message send
+                             */
+                            communicationNetworkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
 
 
                         }else{

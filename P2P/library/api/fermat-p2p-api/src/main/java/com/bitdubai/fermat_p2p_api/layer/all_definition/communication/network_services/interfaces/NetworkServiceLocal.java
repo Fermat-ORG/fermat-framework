@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces;
+package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal</code>
@@ -23,6 +23,6 @@ public interface NetworkServiceLocal {
      * @param senderIdentityPublicKey
      * @param messageContent
      */
-    public void sendMessage(final String senderIdentityPublicKey,final String receiverPublicKey ,final String messageContent);
+     void sendMessage(final String senderIdentityPublicKey, final String messageContent);
 
 }
