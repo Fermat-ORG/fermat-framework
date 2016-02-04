@@ -157,11 +157,11 @@ public class ConnectionsListFragment extends AbstractFermatFragment<CryptoCustom
 
     private synchronized List<CryptoCustomerCommunityInformation> getMoreData() {
         List<CryptoCustomerCommunityInformation> dataSet = new ArrayList<>();
-        /*try {
+        try {
             dataSet.addAll(moduleManager.listAllConnectedCryptoCustomers(moduleManager.getSelectedActorIdentity(), MAX, offset));
-        } catch (CantListCryptoCustomersException | CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {
+        } catch (CantGetCryptoCustomerListException | CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {
             e.printStackTrace();
-        }*/
+        }
 
         return dataSet;
     }
