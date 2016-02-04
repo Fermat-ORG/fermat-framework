@@ -60,7 +60,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         dataSet.addAll(buildListOfItems());
 
         haveNote = false;
-        haveNote = ((negotiationInformation.getMemo() != null) && (negotiationInformation.getMemo() != "") );
+        haveNote = (negotiationInformation.getMemo() != null && negotiationInformation.getMemo() != "null");
     }
 
     public void changeDataSet(CustomerBrokerNegotiationInformation negotiationInfo) {
@@ -159,7 +159,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     @Override
     public int getItemViewType(int position) {
 
-        if(idHeaderPosition(position))
+        if(isHeaderPosition(position))
             return TYPE_HEADER;
 
         if (isFooterPosition(position))
@@ -187,7 +187,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     @Override
     public void onBindViewHolder(FermatViewHolder holder, int position) {
 
-        if (!isFooterPosition(position)) {
+        if (!isFooterPosition(position) && !isHeaderPosition(position)) {
             position = getItemPosition(position);
             super.onBindViewHolder(holder, position);
         }
@@ -354,7 +354,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         return haveNote ? position - 1 : position;
     }
 
-    private boolean idHeaderPosition(int position){
+    private boolean isHeaderPosition(int position){
         return (position == 0) && (haveNote);
     }
 
