@@ -167,13 +167,13 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException {
-        return assetFactoryMiddlewareManager.getAssetFactoryByState(state);
+    public List<AssetFactory> getAssetFactoryByState(State state, BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException {
+        return assetFactoryMiddlewareManager.getAssetFactoryByState(state, networkType);
     }
 
     @Override
-    public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
-        return assetFactoryMiddlewareManager.getAssetFactoryAll();
+    public List<AssetFactory> getAssetFactoryAll(BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException {
+        return assetFactoryMiddlewareManager.getAssetFactoryAll(networkType);
     }
 
     @Override
@@ -208,8 +208,8 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void publishAsset(final AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException {
-        assetFactoryMiddlewareManager.publishAsset(assetFactory, blockchainNetworkType);
+    public void publishAsset(final AssetFactory assetFactory) throws CantSaveAssetFactoryException {
+        assetFactoryMiddlewareManager.publishAsset(assetFactory);
     }
 
     @Override

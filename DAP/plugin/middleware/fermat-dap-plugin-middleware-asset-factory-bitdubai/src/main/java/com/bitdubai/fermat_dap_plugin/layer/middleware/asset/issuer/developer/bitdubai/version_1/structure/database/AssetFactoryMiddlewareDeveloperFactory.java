@@ -137,6 +137,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE);
         assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE);
         assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE);
         DeveloperDatabaseTable assetFactoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME, assetFactoryColumns);
         tables.add(assetFactoryTable);
 

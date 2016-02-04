@@ -76,6 +76,7 @@ public class AssetFactoryMiddlewareDatabaseFactory {
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE, DatabaseDataType.STRING, 5, Boolean.FALSE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY, DatabaseDataType.STRING, 255, Boolean.FALSE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
 
             table.addIndex(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FIRST_KEY_COLUMN);
