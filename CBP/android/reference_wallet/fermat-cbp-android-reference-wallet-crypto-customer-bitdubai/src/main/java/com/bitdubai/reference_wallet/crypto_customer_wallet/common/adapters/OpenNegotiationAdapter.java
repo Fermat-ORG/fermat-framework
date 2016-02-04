@@ -60,7 +60,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         dataSet.addAll(buildListOfItems());
 
         haveNote = false;
-        haveNote = (negotiationInformation.getMemo() != null);
+        haveNote = ((negotiationInformation.getMemo() != null) && (negotiationInformation.getMemo() != "") );
     }
 
     public void changeDataSet(CustomerBrokerNegotiationInformation negotiationInfo) {

@@ -678,7 +678,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void putReceptionInfo(Map<ClauseType, ClauseInformation> clauses){
 
         String currencyType = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
-        Toast.makeText(getActivity(), "PutReceptionInfo. "+currencyType, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), "PutReceptionInfo. "+currencyType, Toast.LENGTH_LONG).show();
         if(currencyType != null) {
             if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyName())) {
                 if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null) {

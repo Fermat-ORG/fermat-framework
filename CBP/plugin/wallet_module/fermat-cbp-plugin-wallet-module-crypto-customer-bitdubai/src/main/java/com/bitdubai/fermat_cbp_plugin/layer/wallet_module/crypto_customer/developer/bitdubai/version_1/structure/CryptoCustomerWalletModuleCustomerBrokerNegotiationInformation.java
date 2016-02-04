@@ -105,7 +105,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
             paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
         if(note == "null")
-            note = null;
+            note = "";
 
         summary = new HashMap<>();
         summary.put(ClauseType.CUSTOMER_CURRENCY_QUANTITY, currencyQty);
