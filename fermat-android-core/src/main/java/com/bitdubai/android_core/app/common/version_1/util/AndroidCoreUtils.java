@@ -1,12 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.util;
 
-import android.content.Context;
-
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 
-import java.lang.ref.WeakReference;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,12 +22,16 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
 
     @Override
     public void publish(final BroadcasterType broadcasterType, final String code) {
-        executor.submit(new Runnable() {
-            @Override
-            public void run() {
-                context.publish(broadcasterType,code);
-            }
-        });
+        try {
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    context.publish(broadcasterType, code);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public BroadcasterInterface getContext() {
@@ -49,7 +48,7 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
 
     public void stop(){
         this.context = null;
-        executor.shutdownNow();
+        //executor.shutdownNow();
     }
 
 
