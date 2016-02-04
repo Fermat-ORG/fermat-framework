@@ -55,8 +55,8 @@
 
         <!-- Falta darle el permiso a alguien para que pueda o no apagar el servicio este -->
         <service
-            android:name="com.bitdubai.android_core.app.LoaderService"
-            android:enabled="true" />
+            android:name="com.bitdubai.android_core.app.BoundService"
+            />
 
 
         <activity

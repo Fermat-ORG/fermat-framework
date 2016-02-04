@@ -2,16 +2,14 @@ package com.bitdubai.android_core.app;
 
 
 import android.content.Context;
-import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_api.AndroidCoreManager;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.AndroidCoreUtils;
 import com.bitdubai.fermat_core.FermatSystem;
+
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -28,6 +26,9 @@ import java.util.HashMap;
 
 
 public class ApplicationSession extends MultiDexApplication implements Serializable,FermatApplicationSession {
+
+
+    private static ApplicationSession instance;
 
     /**
      * Application states
@@ -66,6 +67,9 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
 
 
+    public static ApplicationSession getInstance(){
+        return instance;
+    }
 
     /**
      *  Application session constructor
@@ -73,7 +77,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     public ApplicationSession() {
         super();
-
         fermatSystem = FermatSystem.getInstance();
         subAppSessionManager=new SubAppSessionManager();
         walletSessionManager = new WalletSessionManager();
@@ -140,16 +143,15 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     }
 
     @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(this);
-    }
-
-    @Override
     public void onCreate() {
         super.onCreate();
-        MultiDex.install(this);
+        instance = this;
     }
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+       // MultiDex.install(this);
+    }
+
 
 
 }

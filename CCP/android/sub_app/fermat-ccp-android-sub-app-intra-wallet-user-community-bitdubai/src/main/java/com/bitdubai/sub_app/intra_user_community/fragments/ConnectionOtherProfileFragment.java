@@ -28,7 +28,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetInt
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
@@ -213,7 +212,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         if (i == R.id.btn_connection_accept){
             try {
 
-                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(IntraUserSubAppSession) appSession, null, intraUserInformation, moduleManager.getActiveIntraUserIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {

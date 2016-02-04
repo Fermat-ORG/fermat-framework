@@ -383,7 +383,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         event.setAlertTitle(getSourceString(ChatMiddlewarePluginRoot.EVENT_SOURCE));
         event.setTextTitle(tittle);
         event.setTextBody(body);
-        event.setNotificationType(NotificationType.INCOMING_CHAT_MESSAGE.getCode());
+        //event.setNotificationType(NotificationType.INCOMING_CHAT_MESSAGE.getCode());
         event.setSource(ChatMiddlewarePluginRoot.EVENT_SOURCE);
         this.chatMiddlewarePluginRoot.getEventManager().raiseEvent(event);
         System.out.println("MiddleWareChatPluginRoot - IncomingChatMessageNotificationEvent fired!: "+event.toString());
