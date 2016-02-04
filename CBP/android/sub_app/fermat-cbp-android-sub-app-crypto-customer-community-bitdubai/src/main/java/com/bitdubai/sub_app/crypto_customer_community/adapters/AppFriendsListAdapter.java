@@ -29,7 +29,7 @@ public class AppFriendsListAdapter extends FermatAdapter<CryptoCustomerCommunity
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_connection_list;
+        return R.layout.ccc_row_connection_list;
     }
 
     @Override
