@@ -497,10 +497,21 @@ public List<Contact> contacts;
                             try {
                                 Contact con = chatSession.getSelectedContact();
                                 chatManager.deleteContact(con);
-                            }catch (Exception e)
-                            {
-                                if (errorManager != null)
-                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                List <Contact> cont=  chatManager.getContacts();
+                                if (cont.size() > 0) {
+                                    for (int i=0;i<cont.size();i++){
+                                        contactname.add(cont.get(i).getAlias());
+                                        contactid.add(cont.get(i).getContactId());
+                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                    }
+                                    final ContactListAdapter adaptador =
+                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
+                                    adaptador.refreshEvents(contactname, contacticon, contactid);
+                                }
+                            } catch (CantGetContactException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
                             changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                         }

@@ -241,4 +241,10 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
         // Inflate the list fragment layout
         //return inflater.inflate(R.layout.contact_list_fragment, container, false);
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+    }
+
 }

@@ -217,20 +217,6 @@ public class ContactsListFragment extends AbstractFermatFragment {
         TextView text=(TextView) layout.findViewById(R.id.text);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
-            //Comentar, solo para pruebas
-            ContactImpl cadded=new ContactImpl();
-            cadded.setContactId(UUID.randomUUID());
-            cadded.setAlias("josejcb");
-            cadded.setRemoteActorPublicKey("jose");
-            cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
-            String dateString = "30/09/2014";
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = sdf.parse(dateString);
-            long startDate = date.getTime();
-            cadded.setCreationDate(startDate);
-            cadded.setRemoteName("No hay nadie conectado");
-            chatManager.saveContact(cadded);
-            //Fin Comentar
             List <Contact> con=  chatManager.getContacts();
             int size = con.size();
             if (size > 0) {
@@ -241,8 +227,22 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 }
                 text.setVisibility(View.GONE);
             }else{
-                text.setVisibility(View.VISIBLE);
-                text.setText("No Contacts");
+                //Comentar, solo para pruebas
+                ContactImpl cadded=new ContactImpl();
+                cadded.setContactId(UUID.randomUUID());
+                cadded.setAlias("josejcb");
+                cadded.setRemoteActorPublicKey("jose");
+                cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
+                String dateString = "30/09/2014";
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Date date = sdf.parse(dateString);
+                long startDate = date.getTime();
+                cadded.setCreationDate(startDate);
+                cadded.setRemoteName("No hay nadie conectado");
+                chatManager.saveContact(cadded);
+                //Fin Comentar
+                //text.setVisibility(View.VISIBLE);
+                //text.setText("No Contacts");
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -324,7 +324,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_add_contact) {
             //System.out.println("\n\ngetAppPublicKey:\n\n" + appSession.getAppPublicKey().toString());
-            changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
+            changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
             return true;
         }
         return super.onOptionsItemSelected(item);
