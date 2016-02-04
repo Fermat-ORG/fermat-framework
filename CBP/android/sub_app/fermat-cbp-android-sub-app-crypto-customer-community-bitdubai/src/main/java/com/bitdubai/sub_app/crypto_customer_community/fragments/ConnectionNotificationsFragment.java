@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -24,20 +23,17 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.LinkedCryptoCustomerIdentity;
-import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1.structure.LinkedCryptoCustomerIdentityImpl;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppNotificationAdapter;
-import com.bitdubai.sub_app.crypto_customer_community.common.CryptoCustomerCommunityInformationImpl;
 import com.bitdubai.sub_app.crypto_customer_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 02/02/2016.
