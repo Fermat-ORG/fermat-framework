@@ -395,10 +395,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
             for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.SENT_TO_BROKER))
-                waitingForBroker.add(getNegotiationInformation(negotiation,NegotiationStatus.WAITING_FOR_BROKER));
+                waitingForBroker.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_BROKER));
 
             for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_BROKER))
-                waitingForBroker.add(getNegotiationInformation(negotiation,NegotiationStatus.WAITING_FOR_BROKER));
+                waitingForBroker.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_BROKER));
 
             return waitingForBroker;
 
@@ -415,7 +415,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
             for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_CUSTOMER))
-                waitingForBroker.add(getNegotiationInformation(negotiation,NegotiationStatus.WAITING_FOR_CUSTOMER));
+                waitingForBroker.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_CUSTOMER));
 
             //TODO:Eliminar solo para que se terminen las pantallas
 //            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation("publicKeyCustomer", "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
@@ -1087,7 +1087,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     //Add by Yordin Alayn 03.02.16
-    private CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation getNegotiationInformation(CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation,NegotiationStatus status)
+    private CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation getItemNegotiationInformation(CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation,NegotiationStatus status)
             throws CantGetNegotiationsWaitingForBrokerException{
 
         try{
