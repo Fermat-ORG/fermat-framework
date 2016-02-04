@@ -396,12 +396,9 @@ public class CryptoCustomerActorDao {
                 try {
                     table.loadToMemory();
                 } catch (CantLoadTableToMemoryException e) {
-                    //throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
-                    return null;
+                    throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
                 }
                 List<DatabaseTableRecord> records = table.getRecords();
-
-                System.out.println("VLZ: Registros"+records.toString());
 
                 table.clearAllFilters();
                 Collection<QuotesExtraData> quotes = new ArrayList<QuotesExtraData>();
@@ -414,7 +411,7 @@ public class CryptoCustomerActorDao {
                         try {
                             mer = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME));
                         } catch (InvalidParameterException e1) {
-                            //throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
+                            throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
                         }
                     }
                     try {
@@ -423,7 +420,7 @@ public class CryptoCustomerActorDao {
                         try {
                             pay = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME));
                         } catch (InvalidParameterException e1) {
-                            //throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
+                            throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
                         }
                     }
                     Float pri = record.getFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);

@@ -34,50 +34,80 @@ public class pruebaExtraData {
     }
 
     public void test(){
+        Collection<QuotesExtraData> quotes = null;
+        QuotesExtraData quote = null;
+        Collection<Platforms> pla = null;
+        Map<Currency, Collection<Platforms>> currencies = null;
+        ActorIdentity Customer = null;
+        ActorExtraData actorExtraData = null;
+
 
         KeyPair key = new ECCKeyPair();
-        ActorIdentity Customer = new ActorExtraDataIdentity("Angel", key.getPublicKey());
+        Customer = new ActorExtraDataIdentity("Pedro", key.getPublicKey());
+        quotes = new ArrayList<>();
+        quote = new QuotesExtraDataInformation(UUID.randomUUID(), CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR, 348000f); quotes.add(quote);
+        quote = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.VENEZUELAN_BOLIVAR, CryptoCurrency.BITCOIN, 0.00034f); quotes.add(quote);
 
-        Collection<QuotesExtraData> quotes = new ArrayList<>();
-
-        QuotesExtraData quote = new QuotesExtraDataInformation(
-            UUID.randomUUID(),
-            CryptoCurrency.BITCOIN,
-            FiatCurrency.VENEZUELAN_BOLIVAR,
-            348f
-        );
-
-        quotes.add(quote);
-
-        Map<Currency, Collection<Platforms>> currencies = new HashMap<Currency, Collection<Platforms>>();
-
-        Collection<Platforms> pla = new ArrayList<>();
-        pla.add(Platforms.BANKING_PLATFORM);
-        pla.add(Platforms.CASH_PLATFORM);
-
+        currencies = new HashMap<Currency, Collection<Platforms>>();
+        pla = new ArrayList<>();
+            pla.add(Platforms.BANKING_PLATFORM);
+            pla.add(Platforms.CASH_PLATFORM);
         currencies.put(FiatCurrency.VENEZUELAN_BOLIVAR, pla);
 
-        ActorExtraData actorExtraData = new ActorExtraDataInformation(Customer, quotes, currencies);
+        actorExtraData = new ActorExtraDataInformation(Customer, quotes, currencies);
 
         try {
             this.dao.createCustomerExtraData(actorExtraData);
-            System.out.println("VLZ: Actor Extra Data Creada Exitosamente");
         } catch (CantCreateNewActorExtraDataException e) {
-            System.out.println("VLZ: Error creando el registro");
+            System.out.println("VLZ: Error creando el registro 1");
         }
 
+        // ===========================================================================================================================================================
+
+        Customer = new ActorExtraDataIdentity("Juan", key.getPublicKey());
+        quotes = new ArrayList<>();
+        quote = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR, 1000f); quotes.add(quote);
+        quote = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, 0.001f); quotes.add(quote);
+
+        currencies = new HashMap<Currency, Collection<Platforms>>();
+        pla = new ArrayList<>();
+        pla.add(Platforms.BANKING_PLATFORM);
+        currencies.put(FiatCurrency.US_DOLLAR, pla);
+
+        pla = new ArrayList<>();
+            pla.add(Platforms.BANKING_PLATFORM);
+            pla.add(Platforms.CASH_PLATFORM);
+        currencies.put(FiatCurrency.VENEZUELAN_BOLIVAR, pla);
+
+        actorExtraData = new ActorExtraDataInformation(Customer, quotes, currencies);
+
+        try {
+            this.dao.createCustomerExtraData(actorExtraData);
+        } catch (CantCreateNewActorExtraDataException e) {
+            System.out.println("VLZ: Error creando el registro 2");
+        }
+
+        /*
         try {
             Collection<ActorExtraData> datas = this.dao.getAllActorExtraData();
 
             for(ActorExtraData data : datas){
                 System.out.println("VLZ: getAlias: "+data.getBrokerIdentity().getAlias());
                 System.out.println("VLZ: getPublicKey: "+data.getBrokerIdentity().getPublicKey());
+
+                for(QuotesExtraData quo : data.getQuotes()){
+                    System.out.println("VLZ: \tgetQuoteId: "+quo.getQuoteId() );
+                    System.out.println("VLZ: \tgetMerchandise: "+quo.getMerchandise() );
+                    System.out.println("VLZ: \tgetPaymentCurrency: "+quo.getPaymentCurrency() );
+                    System.out.println("VLZ: \tgetPrice: "+quo.getPrice() );
+                }
+
             }
 
         } catch (CantGetListActorExtraDataException e) {
-            System.out.println("VLZ: Error recuperando el registro 1");
+            System.out.println("VLZ: Error recuperando el registro");
         }
-        
+        */
     }
 
 }
