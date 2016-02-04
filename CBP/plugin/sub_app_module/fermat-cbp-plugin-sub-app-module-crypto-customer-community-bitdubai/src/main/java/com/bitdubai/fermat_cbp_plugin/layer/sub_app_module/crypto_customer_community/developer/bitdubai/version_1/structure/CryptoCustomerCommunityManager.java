@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_comm
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcceptActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -117,7 +118,13 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     }
 
     @Override
-    public void denyConnection(String cryptoCustomerToRejectPublicKey) throws CryptoCustomerConnectionRejectionFailedException {
+    public void denyConnection(UUID connectionId) throws CantDenyActorConnectionRequestException {
+        try {
+            this.cryptoCustomerActorConnectionManager.denyConnection(connectionId);
+        } catch (CantDenyActorConnectionRequestException | ActorConnectionNotFoundException | UnexpectedConnectionStateException e)
+        {
+            throw new CantDenyActorConnectionRequestException("", e, "", "");
+        }
 
     }
 
