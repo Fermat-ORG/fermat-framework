@@ -37,6 +37,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_customer_community.common.CryptoCustomerCommunityInformationImpl;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
@@ -44,10 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/12/2015.
- *
- * @author lnacosta
- * @version 1.0.0
+ * Created by Alejandro Bicelis on 02/02/2016.
  */
 public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSession, SubAppResourcesProviderManager> implements
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoCustomerCommunityInformation> {
@@ -68,7 +66,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
     private int mNotificationsCount = 0;
     private ArrayList<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList;
 
-
     //Flags
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
@@ -80,8 +77,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
     private GridLayoutManager layoutManager;
     private AppListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
-
-
 
 
     public static ConnectionsWorldFragment newInstance() {
@@ -187,9 +182,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-                                invalidate();            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
+                                invalidate();
+                                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                                 onRefresh();
                             }
                         });
@@ -198,13 +192,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
             else
             {
                 //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-                invalidate();            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
+                invalidate();
+                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                 onRefresh();
             }
-
-
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -289,15 +280,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
 
         try {
             CryptoCustomerCommunitySearch cryptoCustomerCommunitySearch = moduleManager.searchNewCryptoCustomer(moduleManager.getSelectedActorIdentity());
-
             List<CryptoCustomerCommunityInformation> result = cryptoCustomerCommunitySearch.getResult();
 
-            /*//TODO: "FIXING" los images en null pues en el ConnectionOtherProfileFragment explota.
-            //Eventualmente este result traera las imagenes correctas. Quitar este for cuando eso ocurra.
-            List<CryptoCustomerCommunityInformation> fixedResult = new ArrayList<>();
-            for(CryptoCustomerCommunityInformation i : result){
-                fixedResult.add(new CryptoCustomerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), new byte[0]));
-            }*/
+
+            //MOCK!
+            for(int i = 1 ; i <= 5 ; i++){
+                result.add(new CryptoCustomerCommunityInformationImpl("pk-"+i, "custmr"+i, new byte[0]));
+            }
 
             dataSet.addAll(result);
             offset = dataSet.size();

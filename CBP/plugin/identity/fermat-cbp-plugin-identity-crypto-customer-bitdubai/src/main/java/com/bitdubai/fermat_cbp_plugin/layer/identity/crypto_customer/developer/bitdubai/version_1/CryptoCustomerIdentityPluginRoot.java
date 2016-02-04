@@ -73,7 +73,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
      /*CryptoCustomerIdentityManager Interface implementation.*/
      public List<CryptoCustomerIdentity> getAllCryptoCustomerFromCurrentDeviceUser() throws CantGetCryptoCustomerIdentityException {
         try {
-            List<CryptoCustomerIdentity> cryptoCustomerIdentityList1 = new ArrayList<CryptoCustomerIdentity>();
+            List<CryptoCustomerIdentity> cryptoCustomerIdentityList1;
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             cryptoCustomerIdentityList1 = cryptoCustomerIdentityDatabaseDao.getAllCryptoCustomerIdentitiesFromCurrentDeviceUser(loggedUser);
             return cryptoCustomerIdentityList1;
@@ -90,7 +90,8 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
-            CryptoCustomerIdentity cryptoCustomer = new CryptoCustomerIdentityImpl(alias, keyPair, profileImage, false);
+            // TODO BY DEFAULT THE CUSTOMER IS PUBLISHED
+            CryptoCustomerIdentity cryptoCustomer = new CryptoCustomerIdentityImpl(alias, keyPair.getPrivateKey(), keyPair.getPublicKey(), profileImage, true);
             cryptoCustomerIdentityDatabaseDao.createNewCryptoCustomerIdentity(cryptoCustomer, keyPair.getPrivateKey(), loggedUser);
             return cryptoCustomer;
         } catch (CantGetLoggedInDeviceUserException e) {

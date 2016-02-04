@@ -1,4 +1,4 @@
-package com.bitdubai.sub_app.crypto_broker_community.common;
+package com.bitdubai.sub_app.crypto_customer_community.common;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

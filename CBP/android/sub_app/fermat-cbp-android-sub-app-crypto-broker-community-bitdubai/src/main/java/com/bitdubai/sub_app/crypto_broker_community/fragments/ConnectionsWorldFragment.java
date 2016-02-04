@@ -37,6 +37,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_broker_community.common.CryptoBrokerCommunityInformationImpl;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
@@ -70,7 +71,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     private int mNotificationsCount = 0;
     private ArrayList<CryptoBrokerCommunityInformation> cryptoBrokerCommunityInformationList;
 
-
     //Flags
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
@@ -82,8 +82,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     private GridLayoutManager layoutManager;
     private AppListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
-
-
 
 
     public static ConnectionsWorldFragment newInstance() {
@@ -184,6 +182,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                         .setSubTitle(R.string.cbp_cbc_launch_action_creation_dialog_sub_title)
                         .setBody(R.string.cbp_cbc_launch_action_creation_dialog_body)
                         .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
+                        .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
+                        .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
@@ -205,8 +205,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
                 onRefresh();
             }
-
-
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -294,12 +292,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
             List<CryptoBrokerCommunityInformation> result = cryptoBrokerCommunitySearch.getResult();
 
-            /*//TODO: "FIXING" los images en null pues en el ConnectionOtherProfileFragment explota.
-            //Eventualmente este result traera las imagenes correctas. Quitar este for cuando eso ocurra.
-            List<CryptoBrokerCommunityInformation> fixedResult = new ArrayList<>();
-            for(CryptoBrokerCommunityInformation i : result){
-                fixedResult.add(new CryptoBrokerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), new byte[0]));
-            }*/
+            //MOCK!
+            for(int i = 1 ; i <= 5 ; i++){
+                result.add(new CryptoBrokerCommunityInformationImpl("pk-"+i, "broker"+i, new byte[0]));
+            }
 
             dataSet.addAll(result);
             offset = dataSet.size();
@@ -311,60 +307,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         return dataSet;
     }
 
-
-
-
-
-    /**
-     * OptionMenu implementation.
-     */
-//    private void updateOptionMenuNotificationsBadge(int count) {
-//        mNotificationsCount = count;
-//
-//        // force the ActionBar to relayout its MenuItems.
-//        // onCreateOptionsMenu(Menu) will be called again.
-//        getActivity().invalidateOptionsMenu();
-//    }
-//
-//
-//
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//
-//        super.onCreateOptionsMenu(menu, inflater);
-//
-//        menu.add(0, Constants.SELECT_IDENTITY, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        try {
-//
-//            int id = item.getItemId();
-//
-//            if(id == Constants.SELECT_IDENTITY){
-//                final ListIdentitiesDialog progressDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
-//                progressDialog.setTitle("Select an Identity");
-//                progressDialog.setCancelable(false);
-//                progressDialog.show();
-//                return true;
-//            }
-//
-//        } catch (Exception e) {
-//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-//            makeText(getActivity(), "Oooops! recovering from system error",
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-
-
-
-
-
-
     @Override
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
 
@@ -375,35 +317,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
     @Override
     public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {}
-
-
-
-
-
-    /**
-     * Simple AsyncTask to fetch the notifications count.
-     */
-//    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
-//
-//        @Override
-//        protected Integer doInBackground(Void... params) {
-//            int notificationCount = 0;
-//
-//            try {
-//                CryptoCustomerCommunitySelectableIdentity selectedIdentity = moduleManager.getSelectedActorIdentity();
-//                notificationCount = moduleManager.listCryptoBrokersPendingLocalAction(selectedIdentity, MAX, offset).size();
-//            } catch(CantListCryptoBrokersException | ActorIdentityNotSelectedException | CantGetSelectedActorIdentityException e){
-//                errorManager.reportUnexpectedUIException(UISource.TASK, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, e);
-//            }
-//            notificationCount = 80;
-//            return notificationCount;
-//        }
-//
-//        @Override
-//        public void onPostExecute(Integer count) {
-//            updateOptionMenuNotificationsBadge(count);
-//        }
-//    }
 
 }
 

@@ -8,11 +8,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1.CustomerCommunitySubAppModuleCryptoPluginRootSubApp;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1.CryptoCustomerCommunitySubAppModulePluginRoot;
 
 /**
- * Created by ciencias on 20.01.15.
+ * Created by Alejandro Bicelis on 2/2/2016.
  */
+
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 
 
@@ -47,7 +48,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new CustomerCommunitySubAppModuleCryptoPluginRootSubApp());
+            this.registerVersion(new CryptoCustomerCommunitySubAppModulePluginRoot());
 
         } catch (CantRegisterVersionException e) {
 

@@ -43,20 +43,10 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
     }
 
     public final void setActiveIdentity(ActiveActorIdentityInformation activeIdentity){
-        System.out.print("CBC setActiveIdentity.. a ");
-        try {
-            System.out.println(activeIdentity.getAlias());
-        }catch (Exception e) {System.out.println("null");}
-
         this.activeIdentity = activeIdentity;
     }
 
     public ActiveActorIdentityInformation getActiveIdentity() {
-        System.out.print("CBC getActiveIdentity.. de ");
-        try {
-            System.out.println(activeIdentity.getAlias());
-        }catch (Exception e) {System.out.println("null");}
-
         return activeIdentity;
     }
 
