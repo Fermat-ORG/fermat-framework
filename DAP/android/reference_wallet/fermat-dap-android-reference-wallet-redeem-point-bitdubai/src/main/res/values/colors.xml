@@ -22,4 +22,8 @@
 
     <color name="dap_wallet_redeem_point_gradient_start_color">#005580</color>
     <color name="dap_wallet_redeem_point_gradient_end_color">#005580</color>
+
+    <!-- dap asset redeem point wallet colors -->
+    <color name="dap_redeem_point_wallet_principal">#015581</color>
+    <!-- -->
 </resources>
