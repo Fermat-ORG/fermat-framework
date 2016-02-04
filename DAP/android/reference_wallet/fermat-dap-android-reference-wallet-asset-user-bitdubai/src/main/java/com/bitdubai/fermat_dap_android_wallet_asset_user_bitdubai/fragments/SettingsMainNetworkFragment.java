@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
     List<String> listElementSpinner;
 
     SettingsManager<AssetUserSettings> settingsManager;
+    private ErrorManager errorManager;
     AssetUserSettings settings = null;
 
     public static SettingsMainNetworkFragment newInstance() {
@@ -50,6 +52,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
         setHasOptionsMenu(true);
 
         assetUserSession = (AssetUserSession) appSession;
+        errorManager = appSession.getErrorManager();
 
         settingsManager = appSession.getModuleManager().getSettingsManager();
 
@@ -77,7 +80,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), R.string.dap_user_wallet_opps_system_error, Toast.LENGTH_SHORT).show();
-            assetUserSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
         return null;
