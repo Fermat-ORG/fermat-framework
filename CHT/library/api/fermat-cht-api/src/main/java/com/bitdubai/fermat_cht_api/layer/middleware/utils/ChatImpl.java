@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -20,8 +21,8 @@ public class ChatImpl implements Chat {
     private String                      remoteActorPublicKey;
     private String                      chatName;
     private ChatStatus                  status;
-    private Date                        date;
-    private Date                        lastMessageDate;
+    private Timestamp                   date;
+    private Timestamp                        lastMessageDate;
 
     public ChatImpl(){};
 
@@ -33,8 +34,8 @@ public class ChatImpl implements Chat {
                     String remoteActorPublicKey,
                     String chatName,
                     ChatStatus status,
-                    Date date,
-                    Date lastMessageDate
+                    Timestamp date,
+                    Timestamp lastMessageDate
     )
     {
         this.chatId               = chatId;
@@ -130,22 +131,22 @@ public class ChatImpl implements Chat {
     }
 
     @Override
-    public Date getDate() {
+    public Timestamp getDate() {
         return this.date;
     }
 
     @Override
-    public void setDate(Date date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 
     @Override
-    public Date getLastMessageDate() {
+    public Timestamp getLastMessageDate() {
         return this.lastMessageDate;
     }
 
     @Override
-    public void setLastMessageDate(Date lastMessageDate) {
+    public void setLastMessageDate(Timestamp lastMessageDate) {
         this.lastMessageDate = lastMessageDate;
     }
 }

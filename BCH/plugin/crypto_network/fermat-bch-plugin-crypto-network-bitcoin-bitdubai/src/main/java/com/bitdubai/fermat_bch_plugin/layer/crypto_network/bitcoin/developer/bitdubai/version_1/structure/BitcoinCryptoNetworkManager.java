@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
@@ -102,6 +103,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
     PluginDatabaseSystem pluginDatabaseSystem;
     BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao;
     UUID pluginId;
+    PluginFileSystem pluginFileSystem;
 
     /**
      * Constructor
@@ -109,9 +111,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param eventManager
      * @param pluginDatabaseSystem
      */
-    public BitcoinCryptoNetworkManager(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public BitcoinCryptoNetworkManager(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
 
         runningAgents = new HashMap<>();
@@ -209,7 +212,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                      * once the agent is stoped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename);
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem);
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     bitcoinCryptoNetworkMonitor.start();
@@ -219,7 +222,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 bitcoinCryptoNetworkMonitor.start();
@@ -303,7 +306,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             /**
              * Will set the autosave information and save it.
              */
-            wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
+            wallet.autosaveToFile(walletFile, 1, TimeUnit.NANOSECONDS, null);
             try {
                 wallet.saveToFile(walletFile);
             } catch (IOException e1) {
@@ -466,7 +469,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         try {
             blockchainNetworkType = getDao().getBlockchainNetworkTypeFromBroadcast(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
         runningAgents.get(blockchainNetworkType).broadcastTransaction(txHash);
     }
@@ -560,7 +563,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         /**
          * I will get the list of stored transactions for the default network.
          */
-        List<Transaction> transactions = getBitcoinTransactions(BlockchainNetworkType.DEFAULT);
+        List<Transaction> transactions = getBitcoinTransactions(BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
         for (Transaction transaction : transactions) {
             /**
@@ -690,7 +693,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param transactionProtocolData
      */
     private void fixCryptoAmountInconsistency(TransactionProtocolData transactionProtocolData) {
-        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
     }
 
@@ -701,7 +704,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param transactionProtocolData
      */
     private void fixAddressToInconsistency(TransactionProtocolData transactionProtocolData) {
-        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
     }
 
@@ -711,7 +714,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param transactionProtocolData
      */
     private void fixAddressFromInconsistency(TransactionProtocolData transactionProtocolData) {
-        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.DEFAULT, transactionProtocolData.getCryptoTransaction().getTransactionHash());
+        Transaction transaction = getBitcoinTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(), transactionProtocolData.getCryptoTransaction().getTransactionHash());
         //todo get the correct address and update the database
 
     }
@@ -724,8 +727,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
-        runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId);
+    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException {
+        runningAgents.get(blockchainNetworkType).storeBitcoinTransaction(tx, transactionId, commit);
     }
 
     /**
@@ -757,7 +760,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         try {
             blockchainNetworkType = getDao().getBlockchainNetworkTypeFromBroadcast(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
-            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
 
 
@@ -879,7 +882,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          * will set default network if non provided.
          */
         if (blockchainNetworkType == null)
-            blockchainNetworkType = BlockchainNetworkType.DEFAULT;
+            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         Transaction parentTransaction = null, childTransaction = null, genesisTransaction = null;
 
@@ -974,7 +977,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         /**
          * I will get all the stored transactions
          */
-        for (Transaction transaction : this.getBitcoinTransactions(BlockchainNetworkType.DEFAULT)){
+        for (Transaction transaction : this.getBitcoinTransactions(BlockchainNetworkType.getDefaultBlockchainNetworkType())){
             /**
              * for each transaction I will search in the input the outpoint that matches the passed transactionHash
              */

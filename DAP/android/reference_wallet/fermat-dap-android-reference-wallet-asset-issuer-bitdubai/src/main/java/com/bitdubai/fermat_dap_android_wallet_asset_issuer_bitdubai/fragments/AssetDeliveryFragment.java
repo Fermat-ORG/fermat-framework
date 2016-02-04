@@ -77,6 +77,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
     int selectedUsersCount;
     int selectedGroupsCount;
+    int selectedUsersInGroupsCount;
 
     SettingsManager<AssetIssuerSettings> settingsManager;
 
@@ -182,7 +183,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                     Toast.makeText(activity, R.string.dap_issuer_wallet_validate_no_available_assets, Toast.LENGTH_SHORT).show();
                 } else if (selectedUsersCount == 0 && selectedGroupsCount == 0) {
                     Toast.makeText(activity, R.string.dap_issuer_wallet_validate_no_users_groups, Toast.LENGTH_SHORT).show();
-                } else if (selectedUsersCount > digitalAsset.getAvailableBalanceQuantity() || selectedGroupsCount > digitalAsset.getAvailableBalanceQuantity()) {
+                } else if (selectedUsersCount > digitalAsset.getAvailableBalanceQuantity() || selectedUsersInGroupsCount > digitalAsset.getAvailableBalanceQuantity()) {
                     Toast.makeText(activity, R.string.dap_issuer_wallet_validate_not_enought_assets, Toast.LENGTH_SHORT).show();
                 } else {
                     if (selectedUsersCount > 0) {
@@ -234,7 +235,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         });
 
         selectedUsersCount = getUsersSelectedCount();
-        selectedGroupsCount = getGroupsSelectedCount();
+        setupGroupsSelectedCount();
 
         String message = "";
         if (selectedUsersCount == 0 && selectedGroupsCount == 0) {
@@ -242,7 +243,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         } else if (selectedUsersCount > 0) {
             message = selectedUsersCount + ((selectedUsersCount == 1) ? " user" : " users") + " selected";
         } else if (selectedGroupsCount > 0) {
-            message = selectedGroupsCount  + ((selectedUsersCount == 1) ? " group" : " groups") + " selected";
+            message = selectedGroupsCount  + ((selectedGroupsCount == 1) ? " group" : " groups") + " selected";
         }
         selectedUsersText.setText(message);
     }
@@ -299,21 +300,24 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         return count;
     }
 
-    private int getGroupsSelectedCount() {
+    private void setupGroupsSelectedCount() {
         Object x = appSession.getData("groups");
-        int count = 0;
+        int countUsers = 0;
+        int countGroups = 0;
         if (x != null) {
             List<Group> groups = (List<Group>) x;
             if (groups.size() > 0) {
                 for (Group group :
                         groups) {
                     if (group.isSelected()) {
-                        count++;
+                        countGroups += 1;
+                        countUsers += group.getUsers().size();
                     }
                 }
             }
         }
-        return count;
+        selectedGroupsCount = countGroups;
+        selectedUsersInGroupsCount = countUsers;
     }
 
     private void doDistributeToUsers(final String assetPublicKey, final List<User> users, final int assetsAmount) {
@@ -412,7 +416,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
         assetDeliveryNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetsToDeliverEditText.setText(((selectedUsersCount > 0) ? selectedUsersCount : selectedGroupsCount) + "");
+        assetsToDeliverEditText.setText(((selectedUsersCount > 0) ? selectedUsersCount : selectedUsersInGroupsCount) + "");
         assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_issuer_wallet_remaining_assets));
 
         if (digitalAsset.getAvailableBalanceQuantity() == 0) {
@@ -439,12 +443,13 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
 
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetDeliveryImage, res, R.drawable.img_asset_without_image, false);
-        //bitmapWorkerTask.execute(img); //todo commenting to compile, please review
+        bitmapWorkerTask.execute(img); //todo commenting to compile, please review
 
         assetDeliveryNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetsToDeliverEditText.setText(((selectedUsersCount > 0) ? selectedUsersCount : selectedGroupsCount) + "");
-        assetDeliveryRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_issuer_wallet_remaining_assets));
+        assetsToDeliverEditText.setText(((selectedUsersCount > 0) ? selectedUsersCount : selectedUsersInGroupsCount) + "");
+        long quantity = digitalAsset.getAvailableBalanceQuantity();
+        assetDeliveryRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
     }
 
     private void configureToolbar() {

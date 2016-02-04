@@ -83,8 +83,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/spinner2Cash"
-                android:textColor="#000">
-                </Spinner>
+                android:text="Bank"
+                android:theme="@style/Base.TextAppearance.AppCompat.Button"
+                android:textColor="#000000"
+                android:backgroundTint="#a5a5a5"
+                android:backgroundTintMode="add"
+                android:background="#c2c2c2"
+                android:foregroundTint="#000000"
+                android:foregroundTintMode="add"
+                android:layout_weight="5.21" />
+
 
 
 

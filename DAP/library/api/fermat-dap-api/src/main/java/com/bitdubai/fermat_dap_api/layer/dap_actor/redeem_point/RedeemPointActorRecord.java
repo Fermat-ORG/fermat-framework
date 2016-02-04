@@ -1,10 +1,15 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +33,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     private String              hoursOfOperation    ;
     private Address             address             ;
     private byte[]              profileImage        ;
-    private List<String> registeredIssuers;
+    private List<String>        registeredIssuers;
 
     {
         registeredIssuers = new ArrayList<>();
@@ -134,6 +139,23 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         this.lastConnectionDate     =       lastConnectionDate      ;
         this.profileImage           =       profileImage.clone()    ;
         this.registeredIssuers = registeredIssuers;
+    }
+
+    private RedeemPointActorRecord(JsonObject jsonObject, Gson gson) {
+        this.actorPublicKey = jsonObject.get("actorPublicKey").getAsString();
+        this.name = jsonObject.get("name").getAsString();
+        this.registrationDate = Long.parseLong(jsonObject.get("registrationDate").getAsString());
+        this.lastConnectionDate = Long.parseLong(jsonObject.get("lastConnectionDate").getAsString());
+        this.dapConnectionState = gson.fromJson(jsonObject.get("dapConnectionState").getAsString(), DAPConnectionState.class);
+        this.location = gson.fromJson(jsonObject.get("location").getAsString(), Location.class);
+        this.locationLatitude = Double.valueOf(jsonObject.get("locationLatitude").getAsString());
+        this.locationLongitude = Double.valueOf(jsonObject.get("locationLongitude").getAsString());
+        this.cryptoAddress = gson.fromJson(jsonObject.get("cryptoAddress").getAsString(), CryptoAddress.class);
+        this.contactInformation = jsonObject.get("contactInformation").getAsString();
+        this.hoursOfOperation = jsonObject.get("hoursOfOperation").getAsString();
+        this.address = gson.fromJson(jsonObject.get("address").getAsString(), Address.class);
+        this.profileImage = Base64.decode(jsonObject.get("profileImage").getAsString(), Base64.DEFAULT);
+        this.registeredIssuers = gson.fromJson(jsonObject.get("registeredIssuers").getAsString(), List.class);
     }
 
     /**
@@ -306,21 +328,56 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         this.hoursOfOperation = hoursOfOperation;
     }
 
+    public static RedeemPointActorRecord fromJson(String jsonString) {
+
+        Gson gson = new Gson();
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
+        return new RedeemPointActorRecord(jsonObject, gson);
+    }
+
+    public String toJson() {
+
+        Gson gson = new Gson();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("actorPublicKey",        actorPublicKey);
+        jsonObject.addProperty("name",                  name);
+        jsonObject.addProperty("registrationDate",      registrationDate);
+        jsonObject.addProperty("lastConnectionDate",    lastConnectionDate);
+        jsonObject.addProperty("dapConnectionState",    dapConnectionState.toString());
+        jsonObject.addProperty("location",              location.toString());
+        jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
+        jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
+        jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
+        jsonObject.addProperty("contactInformation",                  contactInformation);
+        jsonObject.addProperty("hoursOfOperation",                  hoursOfOperation);
+        jsonObject.addProperty("address",                  address.toString());
+        jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
+        jsonObject.addProperty("registeredIssuers", String.valueOf(registeredIssuers));
+        return gson.toJson(jsonObject);
+    }
     @Override
     public String toString() {
+        String profileImageRedeem = null;
+        if(profileImage != null)
+            profileImageRedeem = Base64.encodeToString(profileImage, Base64.DEFAULT);
+
         return "RedeemPointActorRecord{" +
-                " actorPublicKey='" + actorPublicKey + '\'' +
-                ", name='" + name + '\'' +
-                ", registrationDate=" + registrationDate +
-                ", DAPConnectionState=" + dapConnectionState +
-                ", cryptoAddress=" + cryptoAddress +
-                ", location=" + location +
-                ", locationLatitude=" + locationLatitude +
-                ", locationLongitude=" + locationLongitude +
-                ", contactInformation='" + contactInformation + '\'' +
-                ", hoursOfOperation='" + hoursOfOperation + '\'' +
-                ", address=" + address +
-                ", profileImage=" + Arrays.toString(profileImage) +
+                "actorPublicKey='"          + actorPublicKey + '\'' +
+                ", name='"                  + name + '\'' +
+                ", registrationDate="       + registrationDate +
+                ", lastConnectionDate="     + lastConnectionDate +
+                ", dapConnectionState="     + dapConnectionState +
+                ", cryptoAddress="          + cryptoAddress +
+                ", location="               + location +
+                ", locationLatitude="       + locationLatitude +
+                ", locationLongitude="      + locationLongitude +
+                ", contactInformation='"    + contactInformation + '\'' +
+                ", hoursOfOperation='"      + hoursOfOperation + '\'' +
+                ", address="                + address +
+                ", profileImage="           + profileImageRedeem +
+                ", registeredIssuers="      + registeredIssuers +
                 '}';
     }
 }

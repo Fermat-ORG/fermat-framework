@@ -121,7 +121,7 @@ public class IssuePendingDigitalAssetsTest {
         digitalAsset.setContract(digitalAssetContract);
         digitalAsset.setResources(resources);
 
-        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
         MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "digitalAsset").set(digitalAssetCryptoTransactionFactory, digitalAsset);
         MemberModifier.field(DigitalAssetCryptoTransactionFactory.class, "blockchainNetworkType").set(digitalAssetCryptoTransactionFactory, blockchainNetworkType);

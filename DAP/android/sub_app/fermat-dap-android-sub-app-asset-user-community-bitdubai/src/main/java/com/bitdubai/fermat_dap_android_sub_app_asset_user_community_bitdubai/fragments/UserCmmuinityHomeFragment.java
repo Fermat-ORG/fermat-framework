@@ -326,8 +326,9 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     dialog.dismiss();
-                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
+//                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), " Asset Issuer or Asset User Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+//                    ex.printStackTrace();
                 }
             });
             worker.execute();
