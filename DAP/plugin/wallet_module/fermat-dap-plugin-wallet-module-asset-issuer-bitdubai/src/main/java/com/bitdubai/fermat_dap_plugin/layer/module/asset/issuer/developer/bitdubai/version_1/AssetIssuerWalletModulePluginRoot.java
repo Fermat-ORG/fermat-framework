@@ -59,7 +59,9 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO explain here the main functionality of the plug-in.
@@ -100,13 +102,15 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
 
     private List<ActorAssetUser> selectedUsersToDeliver;
 
-    private SettingsManager<AssetIssuerSettings> settingsManager;
-
     {
         selectedUsersToDeliver = new ArrayList<>();
     }
 
     private BlockchainNetworkType selectedNetwork;
+
+    private SettingsManager<AssetIssuerSettings> settingsManager;
+    AssetIssuerSettings settings = null;
+    String publicKeyApp;
 
     private boolean showUsersOutsideGroup;
 
@@ -361,7 +365,31 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public void setAppPublicKey(String publicKey) {
+        this.publicKeyApp = publicKey;
 
+        try {
+            settings = settingsManager.loadAndGetSettings(publicKeyApp);
+        } catch (Exception e) {
+            settings = null;
+        }
+
+        if(settings != null && settings.getBlockchainNetwork() != null) {
+            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
+        } else {
+            int position = 0;
+            List<BlockchainNetworkType> list = Arrays.asList(BlockchainNetworkType.values());
+
+            for (BlockchainNetworkType networkType : list) {
+
+                if(Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    settings.setBlockchainNetworkPosition(position);
+                    break;
+                } else {
+                    position++;
+                }
+            }
+            settings.setBlockchainNetwork(list);
+        }
     }
 
     @Override

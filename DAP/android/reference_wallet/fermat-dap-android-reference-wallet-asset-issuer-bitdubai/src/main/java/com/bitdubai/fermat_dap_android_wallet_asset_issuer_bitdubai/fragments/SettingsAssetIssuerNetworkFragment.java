@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -44,7 +45,7 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
 
     private View rootView;
     private Spinner spinner;
-    List<String> listElementSpinner;
+    List<BlockchainNetworkType> listElementSpinner;
 
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
@@ -78,17 +79,18 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.dap_wallet_asset_issuer_settings_main_network, container, false);
-            setUpUi();
-            configureToolbar();
 
             try {
                 settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
-            if (settings != null)
-                spinner.setSelection(settings.getBlockchainNetworkPosition());
+            if (settings != null) {
+                listElementSpinner = settings.getBlockchainNetwork();
+            }
 
+            setUpUi();
+            configureToolbar();
 
             return rootView;
         } catch (Exception e) {
@@ -160,24 +162,25 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
 
     public void setUpUi() {
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
-        listElementSpinner = new ArrayList<String>();
-        listElementSpinner.add("MainNet");
-        listElementSpinner.add("TestNet");
-        listElementSpinner.add("RegTest");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
+//        listElementSpinner = new ArrayList<String>();
+//        listElementSpinner.add("MainNet");
+//        listElementSpinner.add("TestNet");
+//        listElementSpinner.add("RegTest");
+        ArrayAdapter<BlockchainNetworkType> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.dap_wallet_asset_issuer_list_item_spinner, listElementSpinner);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dataAdapter.notifyDataSetChanged();
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(settings.getBlockchainNetworkPosition());
     }
 
-    private void managerSettings(String dataSet, int position) {
+    private void managerSettings(BlockchainNetworkType dataSet, int position) {
         try {
-            settings.setBlockchainNetwork(dataSet);
             settings.setBlockchainNetworkPosition(position);
 
             settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            moduleManager.changeNetworkType(dataSet);
         } catch (CantPersistSettingsException e) {
             e.printStackTrace();
         }
@@ -185,7 +188,7 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        String network;
+        BlockchainNetworkType network;
 
         network = listElementSpinner.get(i);
         adapterView.setSelection(i);
