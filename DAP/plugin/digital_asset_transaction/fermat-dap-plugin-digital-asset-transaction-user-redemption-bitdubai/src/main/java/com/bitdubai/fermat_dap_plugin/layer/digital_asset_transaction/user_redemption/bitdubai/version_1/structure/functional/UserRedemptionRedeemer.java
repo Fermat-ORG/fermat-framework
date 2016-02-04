@@ -124,11 +124,6 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
         }
     }
 
-    @Override
-    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
-        //To implement
-    }
-
     /**
      * This method will deliver the DigitalAssetMetadata to ActorAssetUser
      */
@@ -246,12 +241,6 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 actorAddress);
         System.out.println("ASSET USER REDEMPTION registered in database");
     }
-
-    @Override
-    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
-        //To implement
-    }
-
 
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
         this.digitalAssetUserRedemptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, digitalAssetMetadata.getGenesisTransaction());
