@@ -159,7 +159,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
     public void onAddNoteButtonClicked() {
        // Toast.makeText(getActivity(), "Click on add_a_note_card_view", Toast.LENGTH_SHORT).show();
 
-        NegotiationDetailsAdapter adapter = new NegotiationDetailsAdapter(getActivity(), appSession, walletManager, negotiationInfo, negotiationSteps);
+       /// NegotiationDetailsAdapter adapter = new NegotiationDetailsAdapter(getActivity(), appSession, walletManager, negotiationInfo, negotiationSteps);
 
     }
 
