@@ -257,6 +257,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     @Override
     public void onItemClickListener(BankMoneyTransactionRecord data, int position) {
         appSession.setData("transaction_data", data);
+        appSession.setData("bank_account_number_data",bankAccountNumber);
         System.out.println("(bank) cancel transaction");
         cancelTransaction(data);
         changeActivity(Activities.BNK_BANK_MONEY_WALLET_UPDATE_RECORD, appSession.getAppPublicKey());
