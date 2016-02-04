@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 
@@ -43,7 +44,7 @@ public class VPNConnectionCloseNotificationEventHandler implements FermatEventHa
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (this.networkService.getStatus().equals(ServiceStatus.STARTED)) {
-            this.networkService.handleVpnConnectionCloseNotificationEvent(fermatEvent);
+            this.networkService.handleVpnConnectionCloseNotificationEvent((VPNConnectionCloseNotificationEvent) fermatEvent);
         }
     }
 }
