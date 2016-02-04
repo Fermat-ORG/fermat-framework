@@ -29,7 +29,7 @@
         android:background="@drawable/gradient_line"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:layout_alignParentBottom="true"></View>
+        android:layout_alignParentBottom="true"/>
 
 
 </LinearLayout>

@@ -1,3 +1,9 @@
+/*
+ * @#CompleteRequestListComponentRegisteredNotificationEventHandler.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
@@ -5,19 +11,25 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 
 /**
- * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler</code>
  * implements the handle to the event <code>com.bitdubai.fermat_api.layer.platform_service.event_manager.events.CompleteRequestListComponentRegisteredNotificationEvent</code><p/>
  *
- * Created by lnacosta (laion.cj91@gmail.com) on 20/11/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 22/09/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public final class CompleteRequestListComponentRegisteredNotificationEventHandler extends AbstractCommunicationBaseEventHandler<CompleteRequestListComponentRegisteredNotificationEvent>  {
+public class CompleteRequestListComponentRegisteredNotificationEventHandler extends AbstractCommunicationBaseEventHandler<CompleteRequestListComponentRegisteredNotificationEvent> {
 
-     public CompleteRequestListComponentRegisteredNotificationEventHandler(AbstractNetworkService networkService) {
+    /**
+     * Constructor with parameter
+     *
+     * @param networkService
+     */
+    public CompleteRequestListComponentRegisteredNotificationEventHandler(AbstractNetworkService networkService) {
         super(networkService);
     }
+
 
     @Override
     public void processEvent(CompleteRequestListComponentRegisteredNotificationEvent event) {
