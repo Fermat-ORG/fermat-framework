@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -71,12 +72,12 @@ public class MessageMock implements Message {
     }
 
     @Override
-    public Date getMessageDate() {
-        return new Date(2001);
+    public Timestamp getMessageDate() {
+        return new Timestamp(2001l);
     }
 
     @Override
-    public void setMessageDate(Date messageDate) {
+    public void setMessageDate(Timestamp messageDate) {
 
     }
 }

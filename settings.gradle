@@ -15,6 +15,7 @@ apply from: 'OSA/settings.gradle'
 apply from: 'P2P/settings.gradle'
 apply from: 'PIP/settings.gradle'
 apply from: 'WPD/settings.gradle'
+apply from: 'android_toolbox/settings.gradle'
 
 
 include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai'

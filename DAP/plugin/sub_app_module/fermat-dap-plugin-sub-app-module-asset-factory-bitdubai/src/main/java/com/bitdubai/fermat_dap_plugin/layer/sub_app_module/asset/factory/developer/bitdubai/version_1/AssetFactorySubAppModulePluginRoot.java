@@ -114,8 +114,9 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public void publishAsset(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException {
-        assetFactorySupAppModuleManager.publishAssetFactory(assetFactory, selectedNetwork);
+    public void publishAsset(AssetFactory assetFactory) throws CantSaveAssetFactoryException {
+        assetFactory.setNetworkType(selectedNetwork);
+        assetFactorySupAppModuleManager.publishAssetFactory(assetFactory);
     }
 
     @Override
@@ -135,12 +136,12 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException {
-        return assetFactorySupAppModuleManager.getAssetsFactoryByState(state);
+        return assetFactorySupAppModuleManager.getAssetsFactoryByState(state, selectedNetwork);
     }
 
     @Override
     public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
-        return assetFactorySupAppModuleManager.getAssetsFactoryAll();
+        return assetFactorySupAppModuleManager.getAssetsFactoryAll(selectedNetwork);
     }
 
     @Override

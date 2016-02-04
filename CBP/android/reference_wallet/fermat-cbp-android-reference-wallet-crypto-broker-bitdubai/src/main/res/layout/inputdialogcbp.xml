@@ -120,18 +120,36 @@
             </RelativeLayout>
 
 
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner2Bank"
-                android:text="Bank"
-                android:theme="@style/Base.TextAppearance.AppCompat.Button"
-                android:textColor="#000000"
-                android:backgroundTint="#a5a5a5"
-                android:backgroundTintMode="add"
-                android:background="#c2c2c2"
-                android:foregroundTint="#000000"
-                android:foregroundTintMode="add" />
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:padding="10dip"
+                android:textColor="#000"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="94dp"
+                    android:layout_height="wrap_content"
+                    android:text="Bank type"
+                    android:textColor="#000"
+                    android:id="@+id/textView5"
+                    android:layout_weight="40.20" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner2Bank"
+                    android:text="Bank"
+                    android:theme="@style/Base.TextAppearance.AppCompat.Button"
+                    android:textColor="#000000"
+                    android:backgroundTint="#a5a5a5"
+                    android:backgroundTintMode="add"
+                    android:background="#c2c2c2"
+                    android:foregroundTint="#000000"
+                    android:foregroundTintMode="add"
+                    android:layout_weight="5.21" />
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -183,16 +201,36 @@
                     android:layout_weight="1"
                     android:textColor="#000"/>
             </LinearLayout>
-            <Spinner
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/spinner2Currency"
-                android:text="Currency"
-                android:theme="@style/Base.TextAppearance.AppCompat.Button"
-                android:textColor="#000000"
-                android:backgroundTint="#a5a5a5"
-                android:foregroundTint="#000000"
-                android:foregroundTintMode="add" />
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:padding="10dip"
+                android:textColor="#000"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="94dp"
+                    android:layout_height="wrap_content"
+                    android:text="Currency"
+                    android:textColor="#000"
+                    android:id="@+id/textView4"
+                    android:layout_weight="40.20" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/spinner2Currency"
+                    android:text="Bank"
+                    android:theme="@style/Base.TextAppearance.AppCompat.Button"
+                    android:textColor="#000000"
+                    android:backgroundTint="#a5a5a5"
+                    android:backgroundTintMode="add"
+                    android:background="#c2c2c2"
+                    android:foregroundTint="#000000"
+                    android:foregroundTintMode="add"
+                    android:layout_weight="5.21" />
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
