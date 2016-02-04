@@ -31,11 +31,11 @@ import java.util.UUID;
 //public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 public class ContactAdapter extends ArrayAdapter<String> {
 
-    private final ArrayList<String> contactAlias;
-    private final ArrayList<String> contactName;
-    private final ArrayList<UUID> contactUUID;
-    private final String action;
-    public ContactAdapter(Context context, ArrayList<String> contactName, ArrayList<String> contactAlias,ArrayList<UUID> contactUUID, String action) {
+    ArrayList<String> contactAlias;
+    ArrayList<String> contactName;
+    ArrayList<UUID> contactUUID;
+    String action;
+    public ContactAdapter(Context context, ArrayList contactName, ArrayList contactAlias,ArrayList contactUUID, String action) {
         super(context, R.layout.contact_detail_item, contactName);
 //        switch (action)
 //        {
@@ -77,4 +77,11 @@ public class ContactAdapter extends ArrayAdapter<String> {
         return item;
     }
 
+    public void refreshEvents(ArrayList contactName, ArrayList contactAlias, ArrayList contactUUID, String action) {
+        this.contactName=contactName;
+        this.contactAlias=contactAlias;
+        this.contactUUID=contactUUID;
+        this.action=action;
+        notifyDataSetChanged();
+    }
 }
