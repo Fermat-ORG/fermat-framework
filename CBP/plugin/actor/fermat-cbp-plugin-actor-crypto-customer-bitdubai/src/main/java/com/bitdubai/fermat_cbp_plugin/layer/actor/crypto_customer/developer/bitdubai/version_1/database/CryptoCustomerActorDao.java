@@ -77,6 +77,8 @@ public class CryptoCustomerActorDao {
                     throw new CantInitializeCryptoCustomerActorDatabaseException(cantCreateDatabaseException.getMessage());
                 }
             }
+
+            new pruebaExtraData(this);
         }
 
         public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewCustomerIdentityWalletRelationshipException {
@@ -223,9 +225,8 @@ public class CryptoCustomerActorDao {
                     record.setUUIDValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME, UUID.randomUUID());
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, quote.getMerchandise().getCode());
-                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getMerchandise().getCode());
-                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPaymentMethod().getCode());
-                    record.setFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPrice());
+                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPaymentCurrency().getCode());
+                    record.setFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME, quote.getPrice());
                     table.insertRecord(record);
                 }
             } catch (CantInsertRecordException e) {
@@ -280,7 +281,7 @@ public class CryptoCustomerActorDao {
                     table.addUUIDFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME, quote.getQuoteId(), DatabaseFilterType.EQUAL);
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, quote.getMerchandise().getCode());
-                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPaymentMethod().getCode());
+                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPaymentCurrency().getCode());
                     record.setFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPrice());
                     table.updateRecord(record);
                 }
@@ -329,7 +330,7 @@ public class CryptoCustomerActorDao {
                     String publicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
                     ActorIdentity identity = new ActorExtraDataIdentity(alias, publicKey);
                     Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(publicKey);
-                    Map<Currency, Collection<Platforms>> currencies =  getPlatformsByIdentity(publicKey);
+                    Map<Currency, Collection<Platforms>> currencies = getPlatformsByIdentity(publicKey);
                     ActorExtraData data = new ActorExtraDataInformation(
                             identity,
                             quotes,
@@ -389,11 +390,19 @@ public class CryptoCustomerActorDao {
         }
 
         private Collection<QuotesExtraData> getQuotesByIdentity(String publicKey) throws CantGetListActorExtraDataException {
-            try {
+
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
                 table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
-                table.loadToMemory();
+                try {
+                    table.loadToMemory();
+                } catch (CantLoadTableToMemoryException e) {
+                    //throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                    return null;
+                }
                 List<DatabaseTableRecord> records = table.getRecords();
+
+                System.out.println("VLZ: Registros"+records.toString());
+
                 table.clearAllFilters();
                 Collection<QuotesExtraData> quotes = new ArrayList<QuotesExtraData>();
                 for (DatabaseTableRecord record : records) {
@@ -405,7 +414,7 @@ public class CryptoCustomerActorDao {
                         try {
                             mer = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME));
                         } catch (InvalidParameterException e1) {
-                            throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
+                            //throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
                         }
                     }
                     try {
@@ -414,7 +423,7 @@ public class CryptoCustomerActorDao {
                         try {
                             pay = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME));
                         } catch (InvalidParameterException e1) {
-                            throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
+                            //throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
                         }
                     }
                     Float pri = record.getFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);
@@ -422,9 +431,6 @@ public class CryptoCustomerActorDao {
                     quotes.add(quote);
                 }
                 return quotes;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
-            }
         }
 
         private Map<Currency, Collection<Platforms>> getPlatformsByIdentity(String publicKey) throws CantGetListActorExtraDataException {
