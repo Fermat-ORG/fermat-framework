@@ -165,7 +165,7 @@ public class ChatMiddlewareMonitorAgent implements
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000;
-        public final int DISCOVER_ITERATION_LIMIT = 1000;
+        public final int DISCOVER_ITERATION_LIMIT = 300;
         int discoverIteration = 0;
         int iterationNumber = 0;
         ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
@@ -268,7 +268,7 @@ public class ChatMiddlewareMonitorAgent implements
                 /**
                  * Discover contact
                  */
-                if(discoverIteration==0){
+             //   if(discoverIteration==0){
                     //increase counter
                     System.out.println("Chat Middleware discovery contact process "+discoverIteration+":");
                     List<Contact> contactList=chatMiddlewareManager.discoverActorsRegistered();
@@ -277,11 +277,11 @@ public class ChatMiddlewareMonitorAgent implements
                             chatMiddlewareDatabaseDao.saveContact(contact);
                         }
                     }
-                }
+            //    }
                 discoverIteration++;
-                if(discoverIteration==DISCOVER_ITERATION_LIMIT){
-                    discoverIteration=0;
-                }
+                //if(discoverIteration==DISCOVER_ITERATION_LIMIT){
+                //    discoverIteration=0;
+               // }
                 /**
                  * Check if pending messages to submit
                  */
