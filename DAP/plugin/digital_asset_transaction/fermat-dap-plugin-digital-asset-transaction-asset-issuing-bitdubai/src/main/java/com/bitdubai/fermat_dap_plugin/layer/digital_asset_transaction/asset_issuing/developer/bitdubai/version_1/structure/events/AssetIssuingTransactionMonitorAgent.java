@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_iss
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
@@ -160,9 +161,10 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                     List<String> transactionHashFromAssetsDelivered = assetIssuingTransactionDao.getTransactionHashByDeliveredStatus();
                     for (String transactionHash : transactionHashFromAssetsDelivered) {
                         CryptoTransaction cryptoGenesisTransaction = getGenesisTransactionFromAssetVault(transactionHash);
-
+                        if (cryptoGenesisTransaction == null) continue;
+                        BlockchainNetworkType networkType = cryptoGenesisTransaction.getBlockchainNetworkType();
                         String digitalAssetPublicKey = assetIssuingTransactionDao.getPublicKeyByTransactionHash(transactionHash);
-                        if (digitalAssetIssuingVault.isAssetTransactionHashAvailableBalanceInAssetWallet(transactionHash, digitalAssetPublicKey)) {
+                        if (digitalAssetIssuingVault.isAssetTransactionHashAvailableBalanceInAssetWallet(transactionHash, digitalAssetPublicKey, networkType)) {
                             assetIssuingTransactionDao.updateDigitalAssetTransactionStatusByTransactionHash(transactionHash, TransactionStatus.RECEIVED);
                             continue;
                         }
@@ -292,12 +294,13 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                     System.out.println("ASSET ISSUING is null - continue asking");
                     continue;
                 }
+                CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
                 System.out.println("ASSET ISSUING Persisting in database Outgoing Id: " + outgoingId);
                 System.out.println("ASSET ISSUING Persisting in database genesis transaction: " + genesisTransaction);
                 assetIssuingTransactionDao.persistGenesisTransaction(outgoingId, genesisTransaction);
                 String internalId = assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                 DigitalAssetMetadata metadata = digitalAssetIssuingVault.setGenesisTransaction(internalId, genesisTransaction);
-                assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest").createdNewAsset(metadata);
+                assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType()).createdNewAsset(metadata);
             }
 
             for (String genesisTransaction : assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.PENDING_SUBMIT)) {

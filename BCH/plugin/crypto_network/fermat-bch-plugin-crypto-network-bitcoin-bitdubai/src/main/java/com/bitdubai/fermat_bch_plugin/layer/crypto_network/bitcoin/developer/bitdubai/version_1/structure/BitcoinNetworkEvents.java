@@ -86,9 +86,11 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         //System.out.println("*****CryptoNetwork " + filteredBlock.toString());
     }
 
+
+
     @Override
     public void onChainDownloadStarted(Peer peer, int blocksLeft) {
-
+        System.out.println("***CryptoNetwork*** Blockchain Download started. Blocks left: " + blocksLeft);
     }
 
     @Override
