@@ -1,0 +1,4 @@
+
+
+include ':chat'
+project(':chat').projectDir = new File('android_toolbox/chat')

@@ -77,6 +77,7 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
                     actorSending.getPublicKey(),
                     actorSending.getActorType()
             );
+            System.out.println("*****************  I'm sending a connection request: "+linkedIdentity);
             final ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
             final long currentTime = System.currentTimeMillis();
 

@@ -58,16 +58,17 @@ import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapte
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
+import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.classes.NetworkStateReceiver;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
-import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.top_settings.TopSettings;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.BroadcasterInterface;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
+import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
@@ -165,7 +166,7 @@ public abstract class FermatActivity extends AppCompatActivity
         FermatRuntime,
         NetworkStateReceiver.NetworkStateReceiverListener,
         FermatStates,
-        FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>,BroadcasterInterface {
+        FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>,BroadcasterInterface, ServiceCallback {
 
 
     private static final String TAG = "fermat-core";
@@ -225,6 +226,12 @@ public abstract class FermatActivity extends AppCompatActivity
     private BottomNavigation bottomNavigation;
 
     private boolean hidden = true;
+
+    /**
+     * Service
+     */
+//    boolean mServiceConnected = false;
+
 
     /**
      * Called when the activity is first created
@@ -316,6 +323,17 @@ public abstract class FermatActivity extends AppCompatActivity
 //                networkStateReceiver.removeListener(this);
 //            }
        //     networkStateReceiver.removeListener(this);
+
+
+            /**
+             * Service
+             */
+//            if (mServiceConnected) {
+//                unbindService(mServiceConnection);
+//                mServiceConnected = false;
+//            }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -987,8 +1005,8 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         try {
-            getNotificationManager().addObserver(this);
-            getNotificationManager().addCallback(this);
+            //getNotificationManager().addObserver(this);
+            //getNotificationManager().addCallback(this);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1026,12 +1044,12 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
-        try {
-            getNotificationManager().deleteObserver(this);
-            getNotificationManager().deleteCallback(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            getNotificationManager().deleteObserver(this);
+//            getNotificationManager().deleteCallback(this);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
@@ -1359,7 +1377,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
 
     public WalletSessionManager getWalletSessionManager() {
-        return ((ApplicationSession) getApplication()).getWalletSessionManager();
+        return ApplicationSession.getInstance().getWalletSessionManager();
     }
 
     /**
@@ -1368,7 +1386,7 @@ public abstract class FermatActivity extends AppCompatActivity
      * @return
      */
     public SubAppSessionManager getSubAppSessionManager() {
-        return ((ApplicationSession) getApplication()).getSubAppSessionManager();
+        return ApplicationSession.getInstance().getSubAppSessionManager();
     }
 
     /**
@@ -1398,7 +1416,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
 
     public WalletManager getWalletManager() {
-        return FermatSystemUtils.getWalletManager(getApplication());
+        return FermatSystemUtils.getWalletManager();
     }
 
     /**
@@ -1408,7 +1426,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
 
     protected SubAppManager getSubAppManager() {
-        return FermatSystemUtils.getSubAppManager(getApplication());
+        return FermatSystemUtils.getSubAppManager();
     }
 
     /**
@@ -1425,28 +1443,28 @@ public abstract class FermatActivity extends AppCompatActivity
      * Get WalletResourcesProvider
      */
     protected WalletResourcesProviderManager getWalletResourcesProviderManager() {
-        return FermatSystemUtils.getWalletResourcesProviderManager(getApplication());
+        return FermatSystemUtils.getWalletResourcesProviderManager();
     }
 
     /**
      * Get SubAppResourcesProvider
      */
     protected SubAppResourcesProviderManager getSubAppResourcesProviderManager() {
-        return FermatSystemUtils.getSubAppResourcesProviderManager(getApplication());
+        return FermatSystemUtils.getSubAppResourcesProviderManager();
     }
 
     /**
      * Get NotificationManager
      */
     private NotificationManagerMiddleware getNotificationManager() {
-        return FermatSystemUtils.getNotificationManager(getApplication());
+        return FermatSystemUtils.getNotificationManager();
     }
 
     /**
      * Get DesktopRuntimeManager
      */
     private DesktopRuntimeManager getDesktopRuntimeManager() {
-        return FermatSystemUtils.getDesktopRuntimeManager(getApplication());
+        return FermatSystemUtils.getDesktopRuntimeManager();
     }
 
     /**
@@ -1456,7 +1474,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference){
         try {
-            return getApplicationSession().getFermatSystem().getModuleManager(pluginVersionReference);
+            return getApplicationSession().getFermatSystem().getModuleManager2(pluginVersionReference);
         } catch (ModuleManagerNotFoundException | CantGetModuleManagerException e) {
             System.out.println(e.getMessage());
             System.out.println(e.toString());
@@ -1472,7 +1490,7 @@ public abstract class FermatActivity extends AppCompatActivity
      * @return
      */
     private final WsCommunicationsCloudClientManager getCloudClient() {
-        return FermatSystemUtils.getCloudClient(getApplication());
+        return FermatSystemUtils.getCloudClient();
     }
 
     /**
@@ -1480,11 +1498,11 @@ public abstract class FermatActivity extends AppCompatActivity
      * @return
      */
     private final BitcoinNetworkManager getNetwork() {
-        return FermatSystemUtils.getNetwork(getApplication());
+        return FermatSystemUtils.getNetwork();
     }
 
     protected FermatApplicationSession getApplicationSession(){
-        return (ApplicationSession)getApplication();
+        return ApplicationSession.getInstance();
     }
 
     /**
@@ -1543,6 +1561,11 @@ public abstract class FermatActivity extends AppCompatActivity
         final LinearLayout linearLayout = (LinearLayout)findViewById(R.id.icons_container);
         if(linearLayout!=null)
         linearLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void changeActivityBack(String appBackPublicKey, String activityCode) {
+
     }
 
     @Override
@@ -1874,7 +1897,7 @@ public abstract class FermatActivity extends AppCompatActivity
     public void networkAvailable() {
         Log.i(TAG, "NETWORK AVAILABLE MATIIIII");
         try {
-            getCloudClient().setNetworkState(true);
+            //getCloudClient().setNetworkState(true);
         }catch (Exception e){
             //e.printStackTrace();
         }
@@ -1884,7 +1907,7 @@ public abstract class FermatActivity extends AppCompatActivity
     public void networkUnavailable() {
         Log.i(TAG, "NETWORK UNAVAILABLE MATIIIII");
         try{
-            getCloudClient().setNetworkState(false);
+            //getCloudClient().setNetworkState(false);
         }catch (Exception e){
           //  e.printStackTrace();
         }
@@ -1892,7 +1915,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public AndroidCoreManager getFermatStates(){
-        return FermatSystemUtils.getAndroidCoreModule(getApplication()).getAndroidCoreManager();
+        return FermatSystemUtils.getAndroidCoreModule().getAndroidCoreManager();
     }
 
 
@@ -1910,4 +1933,49 @@ public abstract class FermatActivity extends AppCompatActivity
             e.printStackTrace();
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        Intent intent = new Intent(this, BoundService.class);
+//        intent.putExtra(BoundService.LOG_TAG,"Activity 1");
+//        startService(intent);
+//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+
+//    private BoundService mBoundService;
+//    /**
+//     * Service
+//     */
+//
+//
+//    private ServiceConnection mServiceConnection = new ServiceConnection() {
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName name) {
+//            mServiceConnected = false;
+//        }
+//
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service) {
+//            mBoundService = ((BoundService.LocalBinder)service).getService();
+//            mBoundService.registerCallback(registerCallback());
+//            mServiceConnected = true;
+//        }
+//    };
+//
+//    private ServiceCallback registerCallback(){
+//        return this;
+//    }
+
+
+    @Override
+    public void callback(int option) {
+        if (option==1){
+
+        }
+    }
+
+
 }
