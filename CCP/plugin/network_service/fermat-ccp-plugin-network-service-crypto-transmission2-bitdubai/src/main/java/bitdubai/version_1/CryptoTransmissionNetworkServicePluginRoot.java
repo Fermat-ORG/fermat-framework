@@ -255,7 +255,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     Timer timer = new Timer();
 
-    private long reprocessTimer =  300000; //five minutes
+    private long reprocessTimer = 300000; //five minutes
 
 
     /**
@@ -435,7 +435,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     @Override
     public synchronized void start() throws CantStartPluginException {
 
-        if(!flag.getAndSet(true)) {
+        if (!flag.getAndSet(true)) {
             if (this.serviceStatus != ServiceStatus.STARTING) {
                 serviceStatus = ServiceStatus.STARTING;
 
@@ -476,6 +476,21 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                      */
                     initializeCommunicationNetworkServiceConnectionManager();
 
+
+                    //DAO
+                    incomingNotificationsDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+                    outgoingNotificationDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
+
+                    // change message state to process again first time
+                    reprocessMessage();
+
+                    //declare a schedule to process waiting request message
+                    this.startTimer();
+
+                    initializeAgent();
+
+
                     /*
                      * Verify if the communication cloud client is active
                      */
@@ -484,7 +499,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                         /*
                          * Construct my profile and register me
                          */
-                        this.platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                        this.platformComponentProfilePluginRoot = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
                                 getAlias().toLowerCase(),
                                 getName(),
                                 getNetworkServiceType(),
@@ -496,19 +511,6 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                         communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                         communicationRegistrationProcessNetworkServiceAgent.start();
                     }
-
-                    //DAO
-                    incomingNotificationsDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication,CryptoTransmissionNetworkServiceDatabaseConstants.INCOMING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
-
-                    outgoingNotificationDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
-
-                    // change message state to process again first time
-                    reprocessMessage();
-
-                    //declare a schedule to process waiting request message
-                    this.startTimer();
-
-                    initializeAgent();
 
                     /*
                      * Its all ok, set the new status
@@ -686,9 +688,11 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
         try {
 
-            if(cryptoTransmissionTransactionRecordedAgent == null){
+            if (cryptoTransmissionTransactionRecordedAgent == null) {
                 cryptoTransmissionTransactionRecordedAgent = new CryptoTransmissionTransactionRecordedAgent(this);
                 cryptoTransmissionTransactionRecordedAgent.start();
+            } else {
+                cryptoTransmissionTransactionRecordedAgent.setCryptoTransmissionPluginRoot(this);
             }
 
         } catch (CantStartAgentException e) {
@@ -708,9 +712,9 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         try {
 
 
-            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
+            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register) {
 
-                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
+                if (communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()) {
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;
                 }
@@ -776,26 +780,26 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     }
 
-    public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage){
+    public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage) {
         //TODO: ver bien esto, no creo que sea así, hay que ponerle DONE al credited in wallet seguramente
         //TODO: esto vamos a tener que cambiarlo porque está horrible
         CryptoTransmissionMessage cryptoTransmissionMetadata = new Gson().fromJson(fermatMessage.getContent(), CryptoTransmissionMessage.class);
         try {
-            if(cryptoTransmissionMetadata.getCryptoTransmissionMetadataState()==CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET){
+            if (cryptoTransmissionMetadata.getCryptoTransmissionMetadataState() == CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET) {
                 outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.DONE);
 
-            }else {
+            } else {
                 outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
             }
         } catch (CantUpdateRecordDataBaseException e) {
-            try{
+            try {
                 incomingNotificationsDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
             } catch (CantUpdateRecordDataBaseException e1) {
                 e1.printStackTrace();
-            } catch (Exception e1){
+            } catch (Exception e1) {
                 e1.printStackTrace();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -831,7 +835,26 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 case METADATA:
                     CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = cryptoTransmissionMetadata;
                     cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PROCESSING_RECEIVE);
-                    incomingNotificationsDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
+                    if (!incomingNotificationsDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord)) {
+                        try {
+                            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord1 = incomingNotificationsDao.getMetadata(cryptoTransmissionMetadata.getTransactionId());
+                            switch (cryptoTransmissionMetadataRecord1.getCryptoTransmissionMetadataState()) {
+                                case CREDITED_IN_OWN_WALLET:
+                                    // send inform to other ns
+                                    cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+                                    cryptoTransmissionMetadataRecord.changeMetadataState(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
+                                    cryptoTransmissionMetadataRecord.setPendingToRead(false);
+                                    String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
+                                    cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
+                                    cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
+                                    outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
+                                    break;
+                            }
+                        } catch (CantGetCryptoTransmissionMetadataException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
 
                     System.out.println("-----------------------\n" +
                             "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
@@ -896,8 +919,8 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                             System.out.println("-----------------------\n" +
                                     "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET \n"+
-                            "----CERRANDO CONEXION");
+                                    "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET \n" +
+                                    "----CERRANDO CONEXION");
                             // deberia ver si tengo que lanzar un evento acá
 
                             break;
@@ -918,11 +941,10 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
 
-    private void checkFailedDeliveryTime(String destinationPublicKey)
-    {
-        try{
+    private void checkFailedDeliveryTime(String destinationPublicKey) {
+        try {
 
-            Map<String, Object> filters =new HashMap<>();
+            Map<String, Object> filters = new HashMap<>();
             filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME, destinationPublicKey);
                     /*
          * Read all pending CryptoTransmissionMetadata from database
@@ -933,25 +955,19 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             //if I try to send more than 5 times I put it on hold
             for (CryptoTransmissionMetadata record : lstCryptoTransmissionMetadata) {
 
-                if(!record.getCryptoTransmissionProtocolState().getCode().equals(CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE.getCode()))
-                {
-                    if(record.getSentCount() > 10)
-                    {
-                       // if(record.getSentCount() > 20)
-                         //   reprocessTimer =  2 * 3600 * 1000; //reprocess at two hours
+                if (!record.getCryptoTransmissionProtocolState().getCode().equals(CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE.getCode())) {
+                    if (record.getSentCount() > 10) {
+                        // if(record.getSentCount() > 20)
+                        //   reprocessTimer =  2 * 3600 * 1000; //reprocess at two hours
 
                         //update state and process again later
                         outgoingNotificationDao.changeCryptoTransmissionProtocolState(record.getTransactionId(), CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE);
                         outgoingNotificationDao.changeSentNumber(record.getTransactionId(), 1);
 
-                    }
-                    else
-                    {
+                    } else {
                         outgoingNotificationDao.changeSentNumber(record.getTransactionId(), record.getSentCount() + 1);
                     }
-                }
-                else
-                {
+                } else {
                     //I verify the number of days I'm around trying to send if it exceeds three days I delete record
 
                     long sentDate = record.getTimestamp();
@@ -960,8 +976,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
                     double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
 
-                    if((int) dias > 3)
-                    {
+                    if ((int) dias > 3) {
                         //notify the user does not exist to intra user actor plugin
 
                         outgoingNotificationDao.delete(record.getRequestId());
@@ -972,9 +987,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             }
 
 
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("CRYPTO TRANSMISSION EXCEPCION VERIFICANDO WAIT MESSAGE");
             e.printStackTrace();
         }
@@ -982,11 +995,12 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     }
 
 
-    private String convertTime(long time){
+    private String convertTime(long time) {
         Date date = new Date(time);
         Format format = new SimpleDateFormat("yyyy MM dd HH:mm:ss");
         return format.format(date);
     }
+
     /**
      * Get the IdentityPublicKey
      *
@@ -1052,6 +1066,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
         return communicationNetworkServiceConnectionManager;
     }
+
+    //TODO: Este metodo es porque viene en null
+    public CommunicationNetworkServiceConnectionManager_V2 getNetworkServiceConnectionManager_v2_fix() {
+        return communicationNetworkServiceConnectionManager;
+    }
+
+
 
     /**
      * (non-javadoc)
@@ -1198,13 +1219,13 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
                 communicationNetworkServiceConnectionManager.stop();
             }
 
-            if(cryptoTransmissionTransactionRecordedAgent !=null) {
-                cryptoTransmissionTransactionRecordedAgent.stop();
-            }
+//            if(cryptoTransmissionTransactionRecordedAgent !=null) {
+//                cryptoTransmissionTransactionRecordedAgent.stop();
+//            }
 
             this.register = Boolean.FALSE;
 
-        } catch (CantStopAgentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -1444,30 +1465,31 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     @Override
     public void informTransactionSeenByVault(UUID transaction_id) throws CantSetToSeenByCryptoVaultException {
-        try {
+//        try {
             //change status to send , to inform Seen
-            CryptoTransmissionMetadata cryptoTransmissionMetadata = incomingNotificationsDao.changeCryptoTransmissionProtocolStateAndNotificationState(
-                    transaction_id,
-                    CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE,
-                    CryptoTransmissionMetadataState.SEEN_BY_OWN_VAULT);
+//            CryptoTransmissionMetadataRecord cryptoTransmissionMetadata = incomingNotificationsDao.changeCryptoTransmissionProtocolStateAndNotificationState(
+//                    transaction_id,
+//                    CryptoTransmissionProtocolState.WAITING_FOR_RESPONSE,
+//                    CryptoTransmissionMetadataState.SEEN_BY_OWN_VAULT);
+//
+//
+//            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+//            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
+//            cryptoTransmissionMetadata.setPendingToRead(false);
+//            String pkAux = cryptoTransmissionMetadata.getDestinationPublicKey();
+//            cryptoTransmissionMetadata.setDestinationPublickKey(cryptoTransmissionMetadata.getSenderPublicKey());
+//            cryptoTransmissionMetadata.setSenderPublicKey(pkAux);
+            //outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
 
-            CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = (CryptoTransmissionMetadataRecord)cryptoTransmissionMetadata;
-            // send inform to other ns
-            cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
-            cryptoTransmissionMetadataRecord.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
-            cryptoTransmissionMetadataRecord.setPendingToRead(false);
-            String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
-            cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
-            cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
-           // outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
 
+//        }
+//        catch(CantUpdateRecordDataBaseException e) {
+//            throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
+//        } catch (PendingRequestNotFoundException e) {
+//            e.printStackTrace();
+//        }
 
-        }
-        catch(CantUpdateRecordDataBaseException e) {
-            throw  new CantSetToSeenByCryptoVaultException("Can't Set Metadata To Seen By Crypto Vault Exception",e,"","Can't update record");
-        } catch (PendingRequestNotFoundException e) {
-            e.printStackTrace();
-        }
+        System.out.println("VISTO POR LA VAULT");
     }
 
     @Override

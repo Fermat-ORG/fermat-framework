@@ -15,6 +15,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.AmountToSellStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
@@ -245,13 +247,16 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
 
         switch (type) {
             case PAYMENT_METHOD:
-                String currencyToSell = data.getClauses().get(ClauseType.CUSTOMER_CURRENCY).getValue();
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.payment_methods_title,
-                        R.string.payment_method,
-                        step.getValue(),
-                        walletManager.getPaymentMethods(currencyToSell));
+                try {
+                    String currencyToSell = data.getClauses().get(ClauseType.CUSTOMER_CURRENCY).getValue();
+                    List<String> paymentMethods = walletManager.getPaymentMethods(currencyToSell, session.getAppPublicKey());
+
+                    viewHolder.bind(stepNumber, R.string.payment_methods_title,
+                            R.string.payment_method, step.getValue(), paymentMethods);
+
+                } catch (FermatException ignored) {
+                }
+
                 break;
             case BROKER_BANK_ACCOUNT:
                 //TODO:Revisar Nelson

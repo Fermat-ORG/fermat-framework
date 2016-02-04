@@ -160,10 +160,8 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
                 .setTitleTextColor(R.color.dap_community_user_view_color)
-                .setSubTitle("Welcome to the Asset User Community.")
-                .setBody("This application will help you discover and connect to Asset Users registered in our network.!\n\n" +
-                        "If you are identified as an Asset Issuer, you will need to connect to Assets Users in order to be able to deliver them your assets." +
-                        "\n\nSelect any available Asset User and click connect to start the process. If your network speed is low, you may have to retry several times.")
+                .setSubTitle(R.string.dap_user_community_welcome_subTitle)
+                .setBody(R.string.dap_user_community_welcome_body)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIsCheckEnabled(checkButton)
                 .build();
@@ -328,8 +326,9 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
                 @Override
                 public void onErrorOccurred(Exception ex) {
                     dialog.dismiss();
-                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
+//                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), " Asset Issuer or Asset User Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+//                    ex.printStackTrace();
                 }
             });
             worker.execute();

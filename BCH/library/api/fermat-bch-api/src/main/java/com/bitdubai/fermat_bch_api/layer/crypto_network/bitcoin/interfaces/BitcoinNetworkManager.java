@@ -74,9 +74,10 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @param blockchainNetworkType
      * @param tx
      * @param transactionId
+     * @param commit specifies if we commit this transaction or there is a chance of rolling back.
      * @throws CantStoreBitcoinTransactionException
      */
-    void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException;
+    void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException;
 
     /**
      * Broadcast a well formed, commited and signed transaction into the network.
@@ -147,7 +148,7 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
      * of the chain until the Genesis Transaction is reached.
      * The genesis Transaction will be the first transaction in the map.
-     * @param blockchainNetworkType the active network we are getting this info from. Defaults to BlockchainNetworkType.DEFAULT
+     * @param blockchainNetworkType the active network we are getting this info from. Defaults to BlockchainNetworkType.getDefaultBlockchainNetworkType()
      * @param transactionChain a Map with the form TransactionHash / BlockHash
      * @return all the CryptoTransactions originated at the genesis transaction
      * @throws CantGetCryptoTransactionException

@@ -4,11 +4,15 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -22,11 +26,11 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
-import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.AccountListAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.adapters.TransactionListAdapter;
 import com.bitdubai.reference_wallet.bank_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
+import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +62,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private ImageView imageView;
     private  int imageAccount;
 
+    private PresentationDialog presentationDialog;
+
     private static final String TAG = "AccountListActivityFragment";
     public AccountDetailFragment() {
     }
@@ -70,6 +76,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         BankAccountNumber data = (BankAccountNumber)appSession.getData("account_data");
         imageAccount = (int) appSession.getData("account_image");
         try {
@@ -97,7 +104,13 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.available_balance);
         this.bookTextView = (FermatTextView) layout.findViewById(R.id.book_balance);
-
+        presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
+                .setBannerRes(R.drawable.bw_banner)
+                .setBody(R.string.bnk_bank_money_wallet_account_body)
+                .setTitle("prueba Title")
+                .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
+                .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .build();
         List<BankAccountNumber> tempList= new ArrayList<>();
         tempList.add(bankAccountNumber);
 
@@ -145,6 +158,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     private void configureToolbar() {
         getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
+        getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
     }
 
     @Override
@@ -256,5 +270,19 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         }
         return data;
 
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        menu.add(0, ReferenceWalletConstants.HELP_ACTION, 0, "help").setIcon(R.drawable.bw_help_icon_action_bar)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == ReferenceWalletConstants.HELP_ACTION) {
+            presentationDialog.show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

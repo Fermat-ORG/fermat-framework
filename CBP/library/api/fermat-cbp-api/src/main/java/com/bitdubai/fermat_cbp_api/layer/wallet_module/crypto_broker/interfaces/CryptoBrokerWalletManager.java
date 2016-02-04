@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAddNewAccountException;
@@ -70,6 +69,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -94,7 +94,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      */
     List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException;
 
-    List<String> getPaymentMethods(String currencyToSell);
+    List<String> getPaymentMethods(String currencyToSell, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
     List<NegotiationStep> getSteps(CustomerBrokerNegotiationInformation negotiationInfo);
 
@@ -349,7 +349,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @return FiatIndex
      * @exception CantGetCryptoBrokerMarketRateException
      */
-    FiatIndex getMarketRate(FermatEnum merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType, String walletPublicKey) throws CantGetCryptoBrokerMarketRateException, CryptoBrokerWalletNotFoundException;
+    FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType, String walletPublicKey) throws CantGetCryptoBrokerMarketRateException, CryptoBrokerWalletNotFoundException;
 
    CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);
 
@@ -368,6 +368,13 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @exception CantGetCryptoBrokerWalletSettingException
      */
     List<CryptoBrokerWalletProviderSetting> getCryptoBrokerWalletProviderSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
+
+    /**
+     * Returns a list of Providers able to obtain the  CurrencyPair for providers wallet associated
+     *
+     * @return a map containing both the ProviderID and the CurrencyPair for providers wallet associated
+     */
+    Map<String, CurrencyPair> getWalletProviderAssociatedCurrencyPairs(CurrencyPair currencyPair, String walletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
     /**
      * This method load the list CryptoBrokerWalletProviderSetting
@@ -400,9 +407,9 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @return List<CryptoBrokerStockTransaction>
      * @exception CantGetCryptoBrokerStockTransactionException
      */
-    List<CryptoBrokerStockTransaction> getStockHistory(FermatEnum merchandise, CurrencyType currencyType, int offset, long timeStamp, String walletPublicKey) throws CantGetCryptoBrokerStockTransactionException;
+    List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, CurrencyType currencyType, int offset, long timeStamp, String walletPublicKey) throws CantGetCryptoBrokerStockTransactionException;
 
-    float getAvailableBalance(FermatEnum merchandise, String walletPublicKey) throws CantGetAvailableBalanceCryptoBrokerWalletException, CryptoBrokerWalletNotFoundException, CantGetStockCryptoBrokerWalletException;
+    float getAvailableBalance(Currency merchandise, String walletPublicKey) throws CantGetAvailableBalanceCryptoBrokerWalletException, CryptoBrokerWalletNotFoundException, CantGetStockCryptoBrokerWalletException;
 
     /**
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair

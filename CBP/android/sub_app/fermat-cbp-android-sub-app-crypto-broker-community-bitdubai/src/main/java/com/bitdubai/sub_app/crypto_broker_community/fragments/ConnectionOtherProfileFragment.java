@@ -25,14 +25,11 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantValidateConnectionStateException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.DisconectDialog;
-import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
 import com.bitdubai.sub_app.crypto_broker_community.interfaces.MessageReceiver;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
@@ -43,12 +40,11 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionOtherProfileFragment extends AbstractFermatFragment implements MessageReceiver {
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements MessageReceiver {
 
     public static final String ACTOR_SELECTED = "actor_selected";
     private Resources res;
     private View rootView;
-    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     private FermatTextView userEmail;
@@ -72,9 +68,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
-        cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData(ACTOR_SELECTED);
-        moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         cryptoBrokerCommunityInformation = (CryptoBrokerCommunityInformation) appSession.getData(ConnectionsWorldFragment.ACTOR_SELECTED);
 
@@ -131,7 +125,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             public void onClick(View view) {
                 ConnectDialog connectDialog;
                 try {
-                    connectDialog = new ConnectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
+                    connectDialog = new ConnectDialog(getActivity(), appSession, null,
+                                                      cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
                     connectDialog.setTitle("Connection Request");
                     connectDialog.setDescription("Do you want to send ");
                     connectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
@@ -148,7 +143,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
 
                 final DisconectDialog disconectDialog;
                 try {
-                    disconectDialog = new DisconectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
+                    disconectDialog = new DisconectDialog(getActivity(), appSession, null, cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
                     disconectDialog.setTitle("Disconnect");
                     disconectDialog.setDescription("Want to disconnect from");
                     disconectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
@@ -161,14 +156,6 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
 
         return rootView;
     }
-
-    private Drawable getImgDrawable(byte[] customerImg) {
-        if (customerImg != null && customerImg.length > 0)
-            return ImagesUtils.getRoundedBitmap(res, customerImg);
-
-        return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image);
-    }
-
 
     @Override
     public void onMessageReceive(Context context, Intent data) {

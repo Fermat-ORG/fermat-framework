@@ -315,4 +315,15 @@ public class CommunicationNetworkServiceConnectionManager_V2 implements NetworkS
     public IncomingMessageDao getIncomingMessageDao() {
         return incomingMessageDao;
     }
+
+
+    //TODO: Estos metodos van a la fuerza porque esto queda en null en ocasiones robert, perdoname
+    // XXOO
+    public CommunicationsClientConnection getCommunicationsClientConnection() {
+        return communicationsClientConnection;
+    }
+
+    public void setCommunicationsClientConnection(CommunicationsClientConnection communicationsClientConnection) {
+        this.communicationsClientConnection = communicationsClientConnection;
+    }
 }

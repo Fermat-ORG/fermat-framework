@@ -1,7 +1,13 @@
+<android.support.v4.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/swipe_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/background_activity">
 
     <RelativeLayout
         android:id="@+id/container"
@@ -17,6 +23,7 @@
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@+id/chatSendButton"
             android:autoText="true"
+            android:textColor="@color/black"
             android:hint="type message" />
 
         <Button
@@ -49,6 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical"
             android:text="Me"
+            android:textColor="@color/black"
             android:singleLine="false"
             android:textSize="20dp" />
 
@@ -62,3 +70,4 @@
 
     </RelativeLayout>
 </LinearLayout>
+</android.support.v4.widget.SwipeRefreshLayout>

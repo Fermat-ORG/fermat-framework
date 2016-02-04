@@ -86,6 +86,10 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     public final void start() throws CantStartAgentException {
 
         try {
+            if(future!=null){
+                future.cancel(true);
+            }
+
             future = executorService.submit(agentTask);
             this.status = AgentStatus.STARTED;
 
@@ -105,6 +109,9 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     @Override
     public void resume() {
         this.status = AgentStatus.STARTED;
+        if(future!=null){
+            future.cancel(true);
+        }
         future = executorService.submit(agentTask);
     }
 

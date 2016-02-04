@@ -420,7 +420,11 @@ public class IncomingMessageDao {
              * 1- Create the record to the entity
              */
             DatabaseTableRecord entityRecord = constructFrom(entity);
-
+            DatabaseTableFilter filter = getDatabaseTable().getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(entity.getId().toString());
+            filter.setColumn(NetworkServiceChatNetworkServiceDatabaseConstants.INCOMING_MESSAGES_FIRST_KEY_COLUMN);
+            getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
             /**
              * 2.- Create a new transaction and execute
              */

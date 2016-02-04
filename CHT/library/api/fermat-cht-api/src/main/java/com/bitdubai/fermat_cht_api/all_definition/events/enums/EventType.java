@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventLi
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
@@ -31,7 +32,10 @@ public enum EventType implements FermatEventEnum {
     },
     INCOMING_STATUS("INSTS"){
         public final FermatEvent getNewEvent()  { return new IncomingNewChatStatusUpdate(this);}
-        }
+        },
+    INCOMING_CHAT_MESSAGE_NOTIFICATION("INCCM"){
+        public final FermatEvent getNewEvent() {  return new IncomingChatMessageNotificationEvent(this);}
+    }
     ;
 
     private final String code;

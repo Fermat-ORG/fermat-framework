@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -16,6 +17,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
@@ -28,7 +37,9 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.uti
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,15 +56,21 @@ import java.util.UUID;
  */
 public final class ConnectionNewsDao {
 
+    private static final String PROFILE_IMAGE_DIRECTORY_NAME   = DeviceDirectory.LOCAL_USERS.getName() + "/CBP/cryptoBrokerActorNS";
+    private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
+
     private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final PluginFileSystem     pluginFileSystem    ;
     private final UUID                 pluginId            ;
 
     private Database database;
 
     public ConnectionNewsDao(final PluginDatabaseSystem pluginDatabaseSystem,
+                             final PluginFileSystem     pluginFileSystem    ,
                              final UUID                 pluginId            ) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginFileSystem     = pluginFileSystem    ;
         this.pluginId             = pluginId            ;
     }
 
@@ -115,7 +132,7 @@ public final class ConnectionNewsDao {
             final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
             for(final ConnectionRequestAction action : actions)
-                connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action, DatabaseFilterType.EQUAL);
+                tableFilters.add(connectionNewsTable.getNewFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, DatabaseFilterType.EQUAL, action.getCode()));
 
             final DatabaseTableFilterGroup filterGroup = connectionNewsTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
 
@@ -191,7 +208,7 @@ public final class ConnectionNewsDao {
                     brokerInformation.getSenderPublicKey()     ,
                     brokerInformation.getSenderActorType()     ,
                     brokerInformation.getSenderAlias()         ,
-                    null                                       ,
+                    brokerInformation.getSenderImage()         ,
                     brokerInformation.getDestinationPublicKey(),
                     type                                       ,
                     state                                      ,
@@ -425,7 +442,7 @@ public final class ConnectionNewsDao {
 
                 final DatabaseTableRecord record = records.get(0);
 
-                record.setFermatEnum(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME , state );
+                record.setFermatEnum(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, state);
                 record.setFermatEnum(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action);
 
                 connectionNewsTable.updateRecord(record);
@@ -445,47 +462,160 @@ public final class ConnectionNewsDao {
     private DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord       record       ,
                                                     final CryptoBrokerConnectionRequest connectionNew) {
 
-        record.setUUIDValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            , connectionNew.getRequestId()           );
-        record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     , connectionNew.getSenderPublicKey()     );
-        record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     , connectionNew.getSenderActorType()     );
-        record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          , connectionNew.getSenderAlias()         );
-        record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME, connectionNew.getDestinationPublicKey());
-        record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , connectionNew.getRequestType()         );
-        record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , connectionNew.getProtocolState()       );
-        record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , connectionNew.getRequestAction()       );
-        record.setLongValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             , connectionNew.getSentTime()            );
+        try {
 
-        return record;
+            record.setUUIDValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            , connectionNew.getRequestId())           ;
+            record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     , connectionNew.getSenderPublicKey())     ;
+            record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     , connectionNew.getSenderActorType())     ;
+            record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          , connectionNew.getSenderAlias())         ;
+            record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME, connectionNew.getDestinationPublicKey());
+            record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , connectionNew.getRequestType())         ;
+            record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , connectionNew.getProtocolState())       ;
+            record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , connectionNew.getRequestAction())       ;
+            record.setLongValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             , connectionNew.getSentTime())            ;
+
+            if (connectionNew.getSenderImage() != null && connectionNew.getSenderImage().length > 0)
+                persistNewUserProfileImage(connectionNew.getSenderPublicKey(), connectionNew.getSenderImage());
+
+            return record;
+        } catch (final Exception e) {
+
+            // TODO add better error management, "throws CantBuildDatabaseRecordException".
+
+            System.err.println("error trying to persist image:"+e.getMessage());
+            return null;
+        }
     }
 
     private CryptoBrokerConnectionRequest buildConnectionNewRecord(final DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID   requestId                    = record.getUUIDValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            );
-        String senderPublicKey              = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     );
-        String senderActorTypeString        = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     );
-        String senderAlias                  = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          );
-        String destinationPublicKey         = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
-        String requestTypeString            = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          );
-        String protocolStateString          = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         );
-        String requestActionString          = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        );
-        Long   sentTime                     = record.getLongValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             );
+        try {
+            UUID   requestId             = record.getUUIDValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME            );
+            String senderPublicKey       = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME     );
+            String senderActorTypeString = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     );
+            String senderAlias           = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          );
+            String destinationPublicKey  = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
+            String requestTypeString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          );
+            String protocolStateString   = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         );
+            String requestActionString   = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        );
+            Long   sentTime              = record.getLongValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             );
 
-        Actors                  senderActorType  = Actors                 .getByCode(senderActorTypeString);
-        RequestType             requestType      = RequestType            .getByCode(requestTypeString    );
-        ProtocolState           state            = ProtocolState          .getByCode(protocolStateString  );
-        ConnectionRequestAction action           = ConnectionRequestAction.getByCode(requestActionString  );
+            Actors senderActorType = Actors.getByCode(senderActorTypeString);
+            RequestType requestType = RequestType.getByCode(requestTypeString);
+            ProtocolState state = ProtocolState.getByCode(protocolStateString);
+            ConnectionRequestAction action = ConnectionRequestAction.getByCode(requestActionString);
 
-        return new CryptoBrokerConnectionRequest(
-                requestId           ,
-                senderPublicKey     ,
-                senderActorType     ,
-                senderAlias         ,
-                null                ,
-                destinationPublicKey,
-                requestType         ,
-                state               ,
-                action              ,
-                sentTime
-        );
+            byte[] profileImage;
+
+            try {
+                profileImage = getProfileImage(senderPublicKey);
+            } catch (FileNotFoundException e) {
+                profileImage = new byte[0];
+            }
+
+            return new CryptoBrokerConnectionRequest(
+                    requestId,
+                    senderPublicKey,
+                    senderActorType,
+                    senderAlias,
+                    profileImage,
+                    destinationPublicKey,
+                    requestType,
+                    state,
+                    action,
+                    sentTime
+            );
+
+        } catch (final CantGetProfileImageException e) {
+
+            throw new InvalidParameterException(
+                    e,
+                    "",
+                    "Problem trying to get the profile image."
+            );
+        }
     }
+
+    private void persistNewUserProfileImage(final String publicKey   ,
+                                            final byte[] profileImage) throws CantPersistProfileImageException {
+
+        try {
+
+            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.setContent(profileImage);
+            file.persistToMedia();
+
+        } catch (final CantPersistFileException e) {
+
+            throw new CantPersistProfileImageException(
+                    e,
+                    "Error persist file.",
+                    null
+            );
+
+        } catch (final CantCreateFileException e) {
+
+            throw new CantPersistProfileImageException(
+                    e,
+                    "Error creating file.",
+                    null
+            );
+        } catch (final Exception e) {
+
+            throw new CantPersistProfileImageException(
+                    e,
+                    "",
+                    "Unhandled Exception."
+            );
+        }
+    }
+
+
+    private byte[] getProfileImage(final String publicKey) throws CantGetProfileImageException,
+                                                                  FileNotFoundException       {
+
+        try {
+
+            PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
+                    PROFILE_IMAGE_DIRECTORY_NAME,
+                    buildProfileImageFileName(publicKey),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
+            file.loadFromMedia();
+
+            return file.getContent();
+
+        } catch (final CantLoadFileException e) {
+
+            throw new CantGetProfileImageException(
+                    e,
+                    "Error loaded file.",
+                    null
+            );
+
+        } catch (final FileNotFoundException | CantCreateFileException e) {
+
+            throw new FileNotFoundException(e, "", null);
+        } catch (Exception e) {
+
+            throw new CantGetProfileImageException(
+                    e,
+                    "",
+                    "Unhandled Exception"
+            );
+        }
+    }
+
+    private String buildProfileImageFileName(final String publicKey) {
+        return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
+    }
+
 }

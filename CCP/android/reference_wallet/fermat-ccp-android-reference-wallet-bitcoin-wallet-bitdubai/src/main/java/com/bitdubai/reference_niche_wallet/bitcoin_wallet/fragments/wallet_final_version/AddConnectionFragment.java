@@ -3,14 +3,17 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_fina
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -24,7 +27,9 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
@@ -36,6 +41,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.AddCon
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.AddConnectionCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +61,11 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
     private ReferenceWalletSession referenceWalletSession;
     private Menu menu;
     private boolean isMenuVisible;
+    private boolean isContactAddPopUp = false;
     private int connectionPickCounter;
     private LinearLayout empty_view;
     private boolean connectionDialogIsShow=false;
+    Handler hnadler;
 
 
     public static AddConnectionFragment newInstance() {
@@ -76,6 +84,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             isMenuVisible=false;
             connectionPickCounter = 0;
+            hnadler = new Handler();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -88,18 +97,59 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             setUpScreen(layout);
+            setUpFAV();
             onRefresh();
             if(intraUserInformationList.isEmpty()){
                 FermatAnimationsUtils.showEmpty(getActivity(), true, empty_view);
+                isContactAddPopUp = false;
             }else {
                 FermatAnimationsUtils.showEmpty(getActivity(),false,empty_view);
+                isContactAddPopUp = true;
             }
+
         } catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
 
+    }
+
+    private void setUpFAV() {
+        FrameLayout frameLayout = new FrameLayout(getActivity());
+
+        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+
+        frameLayout.setLayoutParams(lbs);
+
+        //ImageView icon = new ImageView(getActivity());  Create an icon
+        //icon.setImageResource(R.drawable.btn_request_selector);
+        //icon.setImageResource(R.drawable.ic_contact_newcontact);
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Object[] object = new Object[2];
+                    changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, referenceWalletSession.getCommunityConnection(), object);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        View view = new View(getActivity());
+        view.setLayoutParams(lbs);
+
+        frameLayout.addView(view);
+        frameLayout.setOnClickListener(onClickListener);
+        view.setOnClickListener(onClickListener);
+        final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+                .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_add_connection_selector)
+                .build();
+
+        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+                .attachTo(actionButton)
+                .build();
     }
 
     private void setUpScreen(View layout) {
@@ -111,8 +161,9 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                         getActivity(),
                         referenceWalletSession,
                         null);
-
-                connectionWithCommunityDialog.show();
+                if (isContactAddPopUp){
+                    connectionWithCommunityDialog.show();
+                }
                 connectionWithCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -183,7 +234,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,ex);
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
     }
 
@@ -235,7 +286,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                                     referenceWalletSession.getIntraUserModuleManager().getPublicKey()
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
-                                    BlockchainNetworkType.DEFAULT);
+                                    BlockchainNetworkType.getDefaultBlockchainNetworkType());
                             Toast.makeText(getActivity(),"Contact Created",Toast.LENGTH_SHORT).show();
                         }
                     }catch (Exception e){
@@ -268,6 +319,16 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                         MAX_USER_SHOW,
                         offset);
             }
+//            if(data.isEmpty()){
+//                if(hnadler!=null) {
+//                    hnadler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            new ConnectionWithCommunityDialog(getActivity(), referenceWalletSession, null).show();
+//                        }
+//                    });
+//                }
+//            }
         }
         catch(Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();

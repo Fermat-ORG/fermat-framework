@@ -22,7 +22,6 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
@@ -106,10 +105,8 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset Users selection.")
-                    .setBody("Use this screen to select users that you are connected to.\n\n" +
-                            "If no users are available, you need to connect to them from the Asset User Community application.\n\n" +
-                            "Use this application to identify and connect to users and they will be permanently available to receive your assets.")
+                    .setSubTitle(R.string.dap_issuer_wallet_redeemed_users_subTitle)
+                    .setBody(R.string.dap_issuer_wallet_redeemed_users_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -139,7 +136,7 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Issuer system error",
+            makeText(getActivity(), R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -161,20 +158,14 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBackgroundColor(Color.TRANSPARENT);
             toolbar.setBottom(Color.WHITE);
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
-//            }
             Drawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
             else
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
-
             toolbar.setBackground(drawable);
         }
     }
@@ -247,9 +238,6 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
 
     @Override
     public void onItemClickListener(User data, int position) {
-        //TODO select user
-//        appSession.setData("asset_data", data);
-//        changeActivity(Activities.DAP_ASSET_ISSUER_WALLET_ASSET_DETAIL, appSession.getAppPublicKey());
     }
 
     @Override
@@ -275,7 +263,7 @@ public class AssetDeliverySelectUsersFragment extends FermatWalletListFragment<U
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).
                     show();
         }

@@ -40,9 +40,9 @@ public class EditIdentityWorker extends FermatWorker {
 
         boolean valueChanged = (identity.isPublished() != identityInfo.isPublished());
 
-        if (identity == null) {
+        if ( identity == null ) {
             return INVALID_ENTRY_DATA;
-        }else {
+        } else {
             moduleManager.updateCryptoBrokerIdentity(identity);
             if (valueChanged) {
                 if (identity.isPublished())

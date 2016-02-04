@@ -26,10 +26,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.AssetDeliverySelectGroupsAdapter;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.AssetDeliverySelectUsersAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Group;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
@@ -107,10 +105,8 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setSubTitle("Asset Issuer Deliver Groups.")
-                    .setBody("You can also deliver your assets to entire groups of users.\n\n" +
-                            "If you have many users you are already connected to, it may be better to organize them in groups.\n\n" +
-                            "You can accomplish this from the Asset User Community application.")
+                    .setSubTitle(R.string.dap_issuer_wallet_delivery_group_subTitle)
+                    .setBody(R.string.dap_issuer_wallet_delivery_group_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -140,7 +136,7 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Issuer system error",
+            makeText(getActivity(), R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -162,27 +158,21 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBackgroundColor(Color.TRANSPARENT);
             toolbar.setBottom(Color.WHITE);
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
-//            }
             Drawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
             else
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
-
             toolbar.setBackground(drawable);
         }
     }
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
     }
 
     @Override
@@ -265,7 +255,7 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).
                     show();
         }

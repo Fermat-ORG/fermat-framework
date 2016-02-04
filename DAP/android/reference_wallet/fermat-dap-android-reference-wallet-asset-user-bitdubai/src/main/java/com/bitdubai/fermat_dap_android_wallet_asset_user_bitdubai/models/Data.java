@@ -27,7 +27,7 @@ public class Data {
             digitalAsset.setName(asset.getDigitalAsset().getName());
             digitalAsset.setAvailableBalanceQuantity(asset.getQuantityAvailableBalance());
             digitalAsset.setBookBalanceQuantity(asset.getQuantityBookBalance());
-            digitalAsset.setAvailableBalance(asset.getDigitalAsset().getGenesisAmount());
+            digitalAsset.setAvailableBalance(asset.getAvailableBalance());
             digitalAsset.setExpDate((Timestamp) asset.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
 
             digitalAssets.add(digitalAsset);
@@ -52,7 +52,7 @@ public class Data {
                 digitalAsset.setName(balance.getDigitalAsset().getName());
                 digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
                 digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
-                digitalAsset.setAvailableBalance(balance.getDigitalAsset().getGenesisAmount());
+                digitalAsset.setAvailableBalance(balance.getAvailableBalance());
                 Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
                 digitalAsset.setExpDate(expirationDate);
 

@@ -79,6 +79,9 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             } else {
 
+                System.out.println("**************** I'm being exposed: "+cryptoBroker);
+                System.out.println("**************** Do i have profile image?: "+(cryptoBroker.getImage() != null)  );
+
                 final String imageString = Base64.encodeToString(cryptoBroker.getImage(), Base64.DEFAULT);
 
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
@@ -87,7 +90,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                         (cryptoBroker.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                        null// imageString
+                        imageString
                 );
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
@@ -171,6 +174,8 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     public final void requestConnection(final CryptoBrokerConnectionInformation brokerInformation) throws CantRequestConnectionException {
 
         try {
+
+            System.out.println("************* I'm the crypto broker connection information created: "+brokerInformation);
 
             final UUID newId = UUID.randomUUID();
 

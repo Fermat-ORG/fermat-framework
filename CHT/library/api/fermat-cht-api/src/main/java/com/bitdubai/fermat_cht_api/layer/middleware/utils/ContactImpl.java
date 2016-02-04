@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -16,7 +16,7 @@ public class ContactImpl implements Contact {
     private String alias;
     private PlatformComponentType remoteActorType;
     private String remoteActorPublicKey;
-    private Date creationDate;
+    private long creationDate;
 
     public ContactImpl(){};
     public ContactImpl(UUID contactId,
@@ -24,7 +24,7 @@ public class ContactImpl implements Contact {
                        String alias,
                        PlatformComponentType remoteActorType,
                        String remoteActorPublicKey,
-                       Date creationDate)
+                       long creationDate)
     {
         this.contactId            = contactId;
         this.remoteName           = remoteName;
@@ -84,12 +84,24 @@ public class ContactImpl implements Contact {
     }
 
     @Override
-    public Date getCreationDate() {
+    public long getCreationDate() {
         return this.creationDate;
     }
 
     @Override
-    public void setCreationDate(Date creationDate) {
+    public void setCreationDate(long creationDate) {
         this.creationDate = creationDate;
+    }
+
+    @Override
+    public String toString() {
+        return "ContactImpl{" +
+                "contactId=" + contactId +
+                ", remoteName='" + remoteName + '\'' +
+                ", alias='" + alias + '\'' +
+                ", remoteActorType=" + remoteActorType +
+                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
+                ", creationDate=" + creationDate +
+                '}';
     }
 }

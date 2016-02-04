@@ -43,6 +43,7 @@ public enum EventSource implements FermatEnum {
     OUTGOING_INTRA_USER                     ("OIU"),
     INCOMING_INTRA_USER                     ("IIU"),
     MIDDLEWARE_APP_RUNTIME_PLUGIN           ("MAR"),
+    MIDDLEWARE_CHAT_MANAGER                 ("MWCM"),
     MIDDLEWARE_MONEY_REQUEST_PLUGIN         ("MMR"),
     MIDDLEWARE_WALLET_CONTACTS_PLUGIN       ("MWC"),
     MIDDLEWARE_WALLET_PLUGIN                ("MW0"),
@@ -68,6 +69,7 @@ public enum EventSource implements FermatEnum {
     USER_INTRA_USER_PLUGIN                  ("UIU"),
     WORLD_BLOCKCHAIN_INFO_PLUGIN            ("WBI"),
     WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN    ("WSCCLCL"),
+    USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER ("ULCBPM")
 
     ;
 
@@ -107,6 +109,7 @@ public enum EventSource implements FermatEnum {
             case "IEU":    return INCOMING_EXTRA_USER;
             case "IIU":    return INCOMING_INTRA_USER;
             case "MAR":    return MIDDLEWARE_APP_RUNTIME_PLUGIN;
+            case "MWCM":   return MIDDLEWARE_CHAT_MANAGER;
             case "MMR":    return MIDDLEWARE_MONEY_REQUEST_PLUGIN;
             case "MWC":    return MIDDLEWARE_WALLET_CONTACTS_PLUGIN;
             case "MW0":    return MIDDLEWARE_WALLET_PLUGIN;
@@ -132,6 +135,7 @@ public enum EventSource implements FermatEnum {
             case "UIU":    return USER_INTRA_USER_PLUGIN;
             case "WBI":    return WORLD_BLOCKCHAIN_INFO_PLUGIN;
             case "WSCCC" : return WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN;
+            case "ULCBPM" : return USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER;
 
             default: throw new InvalidParameterException(
                     "Code Received: " + code,

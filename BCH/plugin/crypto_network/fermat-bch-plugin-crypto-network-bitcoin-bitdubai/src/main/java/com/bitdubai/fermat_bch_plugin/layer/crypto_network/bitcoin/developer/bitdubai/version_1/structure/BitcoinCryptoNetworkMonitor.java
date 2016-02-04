@@ -4,7 +4,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
@@ -21,6 +29,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.XML;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -38,6 +48,7 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutPoint;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
@@ -81,12 +92,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
+    PluginFileSystem pluginFileSystem;
+    final String TRANSACTION_DIRECTORY = "CryptoNetworkTransactions";
 
     /**
      * Constructor
      * @param pluginDatabaseSystem
      */
-    public BitcoinCryptoNetworkMonitor(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Wallet wallet, File walletFilename) {
+    public BitcoinCryptoNetworkMonitor(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Wallet wallet, File walletFilename, PluginFileSystem pluginFileSystem) {
         /**
          * I initialize the local variables
          */
@@ -94,6 +107,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         this.wallet = wallet;
         this.pluginId = pluginId;
         this.walletFileName = walletFilename;
+        this.pluginFileSystem = pluginFileSystem;
 
         /**
          * I get the network parameter from the passed wallet.
@@ -137,7 +151,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * Agent main method
      */
     private void doTheMainTask() throws BlockchainException {
-        System.out.println("Crypto Network starting and connecting...");
+        System.out.println("***CryptoNetwork***  starting and connecting...");
 
         try{
             /**
@@ -155,7 +169,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * add the events
              */
-            events = new BitcoinNetworkEvents(pluginDatabaseSystem, pluginId, this.walletFileName);
+            events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, pluginDatabaseSystem, pluginId, this.walletFileName);
             peerGroup.addEventListener(events);
             this.wallet.addEventListener(events);
             blockChain.addListener(events);
@@ -229,8 +243,21 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * The transaction is stored in the Wallet and the database, so I will make sure this is correct.
          */
         Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
-         validateTransactionExistsInWallet(sha256Hash);
          validateTransactionExistsinDatabase(txHash);
+
+        // gets the transaction from the wallet.
+        Transaction transaction = wallet.getTransaction(sha256Hash);
+
+        // if I don't have it, it wasn't yet commited, I will load it from file and commit it.
+        if (transaction == null){
+            try {
+                transaction = loadTransactionFromDisk(txHash);
+            } catch (CantLoadTransactionFromFileException e) {
+                throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, "No transaction was found to broadcast.", null);
+            }
+
+            wallet.commitTx(transaction);
+        }
 
         final int connectedPeers = peerGroup.getConnectedPeers().size();
 
@@ -243,7 +270,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              e.printStackTrace();
          }
 
-         final Transaction transaction = wallet.getTransaction(sha256Hash);
+        System.out.println("***CryptoNetwork***  Broadcasting transaction " + txHash + "...");
+
+
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
          transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
 
@@ -251,6 +280,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * I add the future that will get the broadcast result into a call back to respond to it.
          */
+        final Transaction finalTransaction = transaction;
         Futures.addCallback(future, new FutureCallback<Transaction>() {
             @Override
             public void onSuccess(Transaction result) {
@@ -261,7 +291,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                      * Store this outgoing transaction in the table
                      */
                     UUID transactionId = getDao().getBroadcastedTransactionId(BLOCKCHAIN_NETWORKTYPE, txHash);
-                    storeOutgoingTransaction(wallet, transaction, transactionId);
+                    storeOutgoingTransaction(wallet, finalTransaction, transactionId);
 
 
                     /**
@@ -269,7 +299,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                      */
                     wallet.saveToFile(walletFileName);
 
-                    System.out.println("Transaction succesfully broadcasted: " + transaction.getHashAsString());
+                    System.out.println("***CryptoNetwork***  Transaction succesfully broadcasted: " + finalTransaction.getHashAsString());
                 } catch (CantExecuteDatabaseOperationException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -279,6 +309,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             @Override
             public void onFailure(Throwable t) {
+                System.out.println("***CryptoNetwork*** Error bradcasting transaction " + txHash + "...");
                 try {
                     getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                 } catch (CantExecuteDatabaseOperationException e) {
@@ -318,6 +349,23 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 //                e1.printStackTrace();
 //            }
 //        }
+    }
+
+    /**
+     * Loads the passed transaction from disk
+     * @param txHash
+     * @return
+     */
+    private Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException {
+        try {
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String transactionContent = pluginTextFile.getContent();
+
+            Transaction transaction = (Transaction) XMLParser.parseXML(transactionContent, new Transaction(NETWORK_PARAMETERS));
+            return transaction;
+        } catch (Exception e) {
+            throw new CantLoadTransactionFromFileException(CantLoadTransactionFromFileException.CONTEXT_CONTENT_SEPARATOR, e, "Error loading transaction " + txHash + " from disk.", "IO Error");
+        }
     }
 
 
@@ -426,20 +474,30 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param transactionId
      * @throws CantStoreBitcoinTransactionException
      */
-    public synchronized void storeBitcoinTransaction (Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException{
+    public synchronized void storeBitcoinTransaction (Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException{
         try {
             /**
              * I store it in the database
              */
             getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerGroup.getDownloadPeer().getAddress().toString());
 
-            /**
-             * I store it in the wallet.
-             */
-            wallet.maybeCommitTx(tx);
-            wallet.saveToFile(walletFileName);
+            if (commit){
+                // commit and save the transaction
+                wallet.commitTx(tx);
+                wallet.saveToFile(walletFileName);
 
-            System.out.println("Transaction succesfully stored for broadcasting: " + tx.getHashAsString());
+                // verify it was successfuly stored.
+                Transaction storedTransaction = wallet.getTransaction(tx.getHash());
+                if (storedTransaction == null){
+                    throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "transaction was not correctly stored at the wallet.", null);
+                }
+            } else {
+                // if no commit, then I will save it into a file.
+                persistTransactionOnFile(tx);
+            }
+
+
+            System.out.println("***CryptoNetwork*** Transaction successfully stored for broadcasting: " + tx.getHashAsString());
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
         } catch (Exception e) {
@@ -448,12 +506,44 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              */
             try {
                 getDao().deleteStoredBitcoinTransaction(tx.getHashAsString());
+                deleteTransactionFromFile(tx.getHashAsString());
             } catch (CantExecuteDatabaseOperationException e1) {
                 /**
                  * I will ignore this error
                  */
                 e1.printStackTrace();
             }
+            throw  new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error storing the transaction in the wallet. TxId: " + tx.getHashAsString(), "Crypto Network");
+        }
+    }
+
+    /**
+     * deletes the passed transaction from file
+     * @param hashAsString
+     */
+    private void deleteTransactionFromFile(String hashAsString) {
+        try {
+            pluginFileSystem.deleteTextFile(this.pluginId, TRANSACTION_DIRECTORY, hashAsString, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Stores the passed transaction into disk
+     * @param tx
+     */
+    private void persistTransactionOnFile(Transaction tx) throws CantStoreBitcoinTransactionException {
+        String txId = tx.getHashAsString();
+        try {
+            PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(this.pluginId, TRANSACTION_DIRECTORY, txId, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String transactionContent = XMLParser.parseObject(tx);
+            pluginTextFile.setContent(transactionContent);
+            pluginTextFile.persistToMedia();
+        } catch (Exception e) {
+            throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "Cant store transaction into file", "IO Error");
         }
     }
 
@@ -473,46 +563,17 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException{
         try {
-            /**
-             * I will get the transaction
-             */
-            Sha256Hash sha256Hash = Sha256Hash.wrap(txHash);
-            Transaction transaction = wallet.getTransaction(sha256Hash);
-
-            if (transaction == null)
-                throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "the specified transaction does not exists.", null);
-
-            if (transaction.getConfidence().getConfidenceType() != TransactionConfidence.ConfidenceType.PENDING)
-                throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, null, "The transaction was already broadcasted and Can't be cancelled.", null);
-
-            /**
-             * I will disconnect all inputs from the outpoint
-             */
-            for (TransactionInput input : transaction.getInputs()){
-                input.disconnect();
-            }
-
-            /**
-             * I will change all outputs values to zero
-             */
-            for (TransactionOutput output : transaction.getOutputs()){
-                output.setValue(Coin.ZERO);
-            }
-
-            /**
-             * do wallet maintenance
-             */
-            //wallet.maybeCommitTx(transaction);
-            wallet.cleanup();
-
-            wallet.saveToFile(walletFileName);
+            // delete the transaction
+            deleteTransactionFromFile(txHash);
 
             /**
              * update Broadcasting table to set it to cancelled.
              */
             this.getDao().setBroadcastStatus(Status.CANCELLED, peerGroup.getConnectedPeers().size(), null, txHash);
+
+            System.out.println("***CryptoNetwork*** Transaction " + txHash + " cancelled.");
         } catch (Exception e) {
-            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Change in transaction could not be saved in wallet.", null);
+            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't rollback properly.", "Crypto Network error");
         }
     }
 
