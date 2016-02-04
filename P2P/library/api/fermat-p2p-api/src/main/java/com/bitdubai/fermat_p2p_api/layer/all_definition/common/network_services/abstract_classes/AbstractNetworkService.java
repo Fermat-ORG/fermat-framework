@@ -37,7 +37,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     private final EventSource              eventSource             ;
 
-    private       PlatformComponentProfile platformComponentProfile;
+    protected     PlatformComponentProfile platformComponentProfilePluginRoot;
 
     protected     ECCKeyPair               identity                ;
     protected     boolean                  register                ;
@@ -95,11 +95,11 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     }
 
     public final PlatformComponentProfile getPlatformComponentProfilePluginRoot() {
-        return platformComponentProfile;
+        return platformComponentProfilePluginRoot;
     }
 
-    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfile = platformComponentProfile;
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfilePluginRoot) {
+        this.platformComponentProfilePluginRoot = platformComponentProfilePluginRoot;
     }
 
     public abstract void initializeCommunicationNetworkServiceConnectionManager();
