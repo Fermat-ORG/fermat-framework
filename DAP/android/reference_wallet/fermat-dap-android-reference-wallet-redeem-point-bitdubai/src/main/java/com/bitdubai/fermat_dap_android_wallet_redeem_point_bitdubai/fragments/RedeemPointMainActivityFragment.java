@@ -199,7 +199,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Redeem Point system error",
+            makeText(getActivity(), R.string.dap_redeem_point_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -229,14 +229,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
-//            toolbar.setBackgroundColor(Color.TRANSPARENT);
-//            toolbar.setBottom(Color.WHITE);
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
-//            }
             Drawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_redeem_point_action_bar_gradient_colors, null);
@@ -379,7 +372,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    R.string.dap_redeem_point_wallet_system_error,
                     Toast.LENGTH_SHORT).
                     show();
         }
