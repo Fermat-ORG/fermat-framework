@@ -44,8 +44,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantFindWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
@@ -116,6 +118,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
     private FermatTextView txt_type;
     private ImageView spinnerArrow;
 
+    SettingsManager<BitcoinWalletSettings> settingsManager;
+
 
     public static SendFormFragment newInstance() {
         return new SendFormFragment();
@@ -127,6 +131,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         bitcoinConverter = new BitcoinConverter();
         setHasOptionsMenu(true);
         try {
+            settingsManager = appSession.getModuleManager().getSettingsManager();
             cryptoWallet = appSession.getModuleManager().getCryptoWallet();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -596,7 +601,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                     Actors.INTRA_USER,
                                     cryptoWalletWalletContact.getActorPublicKey(),
                                     cryptoWalletWalletContact.getActorType(),
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                    BlockchainNetworkType.getDefaultBlockchainNetworkType()
+                                   // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType()
                             );
                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                             onBack(null);

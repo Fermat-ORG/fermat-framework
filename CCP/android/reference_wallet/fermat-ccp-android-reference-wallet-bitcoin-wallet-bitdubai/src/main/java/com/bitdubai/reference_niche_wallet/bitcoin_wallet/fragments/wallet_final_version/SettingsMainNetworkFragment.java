@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -13,8 +14,14 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -39,6 +46,8 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
     private FermatEditText ipAdress;
     private Spinner spinner;
 
+    SettingsManager<BitcoinWalletSettings> settingsManager;
+
 
     public static SettingsMainNetworkFragment newInstance() {
         return new SettingsMainNetworkFragment();
@@ -51,6 +60,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
         } catch (CantGetCryptoWalletException e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
@@ -85,6 +95,46 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
                 R.layout.list_item_spinner, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                Object item = parent.getItemAtPosition(pos);
+                String text = spinner.getSelectedItem().toString();
+                BlockchainNetworkType blockchainNetworkType;
+
+                try {
+
+                    if(text.equals("MainNet")){
+                        blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+                    }else if(text.equals("TestNet")){
+                        blockchainNetworkType = BlockchainNetworkType.TEST_NET;
+                    }else if(text.equals("RegTest")){
+                        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+                    }else{
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                    }
+
+
+                    System.out.println("NETWORK TYPE SYS OUT "+text);
+                    System.out.println("NETWORK TYPE SYS OUT "+blockchainNetworkType.getCode());
+
+                    BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                    bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+                    bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                    settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+                } catch (CantGetSettingsException e) {
+                    e.printStackTrace();
+                } catch (SettingsNotFoundException e) {
+                    e.printStackTrace();
+                } catch (CantPersistSettingsException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
     }
 
 }
