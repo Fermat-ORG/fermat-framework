@@ -296,7 +296,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onAddNoteButtonClicked() {
-        Toast.makeText(getActivity(), "ADD NOTE", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), "ADD NOTE", Toast.LENGTH_LONG).show();
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_ADD_NOTE, this.appSession.getAppPublicKey());
     }
 
@@ -550,9 +550,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void validateChange(String oldValue, String newValue) {
         valuesHasChanged = false;
 
-        Toast.makeText(getActivity(), "VALIDATE CHAGE: " + oldValue + " != " + newValue, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), "VALIDATE CHAGE: " + oldValue + " != " + newValue, Toast.LENGTH_LONG).show();
         if (oldValue != newValue) {
-            Toast.makeText(getActivity(), "CHANGE VALUE", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(), "CHANGE VALUE", Toast.LENGTH_LONG).show();
             valuesHasChanged = true;
         }
     }

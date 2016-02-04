@@ -83,7 +83,7 @@ public class OpenNegotiationAddNoteFragment  extends AbstractFermatFragment<Cryp
             public void onClick(View view) {
                 negotiationInfo.setMemo(noteEditText.getText().toString());
                 String memo = negotiationInfo.getMemo();
-                Toast.makeText(getActivity(), "Note add the negotiation "+memo, Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Note add the negotiation ", Toast.LENGTH_LONG).show();
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
             }
         });
