@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +31,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
@@ -44,9 +44,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,8 +93,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
 
     boolean chatwascreate=false;
-    PlatformComponentType remotepct;
-    String remotepk;
+    UUID contactid;
     UUID chatid;
     //Data
     List<String> chatmessages = new ArrayList<>();
@@ -129,27 +126,26 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         }
     }
 
-    UUID findchatid(String remotepk){
-        Map<String,UUID> relationchatidpkremote=new HashMap<String, UUID>();
-        UUID chatidofpk=null;
-        String tempremotepk;
+    UUID findchatid(UUID contactid){
+        Map<String,UUID> relationchatid_contactid=new HashMap<String, UUID>();
+        UUID tempremotepk=UUID.fromString("");
         try {
-            for (int i = 0; i < chatManager.getChats().size(); i++) {
-                tempremotepk = chatManager.getChats().get(i).getRemoteActorPublicKey();
-                if (!(relationchatidpkremote.containsKey(tempremotepk))) {
-                    relationchatidpkremote.put(tempremotepk, chatManager.getChats().get(i).getChatId());
+            for (int i=0; i<chatManager.getContacts().size();i++){
+                if(contactid.equals(chatManager.getContacts().get(i).getContactId())){
+                    tempremotepk=UUID.fromString(chatManager.getContacts().get(i).getRemoteActorPublicKey());
                 }
             }
-            for (int i = 0; i < chatManager.getChats().size(); i++) {
-                if (relationchatidpkremote.get(i).equals(remotepk)) {
-                    chatidofpk=relationchatidpkremote.get(i);
+            for (int i=0; i<chatManager.getMessages().size();i++){
+                if(contactid.equals(chatManager.getMessages().get(i).get)){
+                    tempremotepk=UUID.fromString(chatManager.getContacts().get(i).getRemoteActorPublicKey());
                 }
             }
-
-        }catch (CantGetChatException e) {
-               e.printStackTrace();
+        }catch (CantGetContactException e) {
+            e.printStackTrace();
+        }catch (CantGetMessageException e) {
+            e.printStackTrace();
         }
-        return chatidofpk;
+        return tempremotepk;
     }
 
 
@@ -160,10 +156,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             chatid= (UUID) appSession.getData("chatvalues");
             chatwascreate=true;
         }else if(appSession.getData("whocallme").equals("contact")){  //fragment contact call this fragment
-            //remotepct=(PlatformComponentType)appSession.getData("remotepct");//it has to sent me whocalme="contact"
-            remotepct=con.getRemoteActorType();
-            remotepk= con.getRemoteActorPublicKey();//appSession.getData("remotepk");               //and remote pk and platform
-            chatid=findchatid(remotepk);
+            contactid=con.getContactId();
+            chatid=findchatid(contactid);
             if(chatid!=null){
                 chatwascreate=true;
             }else{
@@ -273,8 +267,10 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
                        findmessage();
                        adaptador.refreshEvents(historialmensaje);
-                       Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
-                       Toast.makeText(getActivity(), "User Not Found", Toast.LENGTH_SHORT).show();
+                       Toast.makeText(getActivity(),"Sending message", Toast.LENGTH_SHORT).show();
+                       messageET.setText("");
+
+
                    }
                 } catch (CantSaveMessageException e) {
                     e.printStackTrace();
