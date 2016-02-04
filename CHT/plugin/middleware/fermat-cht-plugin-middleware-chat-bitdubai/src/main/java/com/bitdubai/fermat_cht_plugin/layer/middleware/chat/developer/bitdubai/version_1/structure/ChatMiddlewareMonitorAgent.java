@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
@@ -25,6 +26,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatExceptio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
@@ -34,6 +36,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
@@ -379,6 +382,7 @@ public class ChatMiddlewareMonitorAgent implements
                     incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         //If message exists in database, this message will be update
+                        saveChat(incomingChatMetadata);
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
@@ -439,6 +443,18 @@ public class ChatMiddlewareMonitorAgent implements
 //                        "Checking the incoming chat pending transactions",
 //                        "Cannot send Notification to PIP"
 //                );
+            } catch (CantGetChatException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Cannot get chat"
+                );
+            } catch (CantSaveChatException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Cannot save chat"
+                );
             }
 
         }
@@ -567,8 +583,24 @@ public class ChatMiddlewareMonitorAgent implements
                 messageRecorded=getMessageFromChatMetadata(
                         chatMetadata);
             }
+
             messageRecorded.setStatus(MessageStatus.RECEIVE);
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+        }
+
+        /**
+         * This method saves the new chat in database
+         * @param chatMetadata
+         * @throws DatabaseOperationException
+         */
+        private void saveChat(ChatMetadata chatMetadata) throws DatabaseOperationException, CantGetChatException, CantSaveChatException {
+
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
+            if(chat == null){
+                chat = getChatFromChatMetadata(chatMetadata);
+            }
+            chat.setStatus(ChatStatus.VISSIBLE);
+            chatMiddlewareDatabaseDao.saveChat(chat);
         }
 
         /**
@@ -584,6 +616,25 @@ public class ChatMiddlewareMonitorAgent implements
             return message;
         }
 
+        /**
+         * THis Method creates a new Chat from incoming Metadata
+         * @param chatMetadata
+         * @return
+         */
+        private Chat getChatFromChatMetadata(ChatMetadata chatMetadata){
+            return new ChatImpl(
+                    chatMetadata.getChatId(),
+                    chatMetadata.getObjectId(),
+                    chatMetadata.getLocalActorType(),
+                    chatMetadata.getLocalActorPublicKey(),
+                    chatMetadata.getRemoteActorType(),
+                    chatMetadata.getRemoteActorPublicKey(),
+                    chatMetadata.getChatName(),
+                    ChatStatus.VISSIBLE,
+                    chatMetadata.getDate(),
+                    chatMetadata.getDate()
+            );
+        }
         /**
          * This method updates a message record in database.
          * @param chatMetadata

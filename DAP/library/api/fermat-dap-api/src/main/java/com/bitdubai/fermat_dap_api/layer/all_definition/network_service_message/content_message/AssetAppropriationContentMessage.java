@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 
 import java.io.Serializable;
@@ -17,15 +18,17 @@ public class AssetAppropriationContentMessage implements Serializable, DAPConten
 
     private UUID transactionId;
     private String userThatAppropriate;
+    private BlockchainNetworkType networkType;
 
     //CONSTRUCTORS
 
     public AssetAppropriationContentMessage() {
     }
 
-    public AssetAppropriationContentMessage(UUID transactionId, String userThatAppropriate) {
+    public AssetAppropriationContentMessage(UUID transactionId, String userThatAppropriate, BlockchainNetworkType networkType) {
         this.transactionId = transactionId;
         this.userThatAppropriate = userThatAppropriate;
+        this.networkType = networkType;
     }
 
     //PUBLIC METHODS
@@ -60,6 +63,14 @@ public class AssetAppropriationContentMessage implements Serializable, DAPConten
 
     public void setTransactionId(UUID transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public BlockchainNetworkType getNetworkType() {
+        return networkType;
+    }
+
+    public void setNetworkType(BlockchainNetworkType networkType) {
+        this.networkType = networkType;
     }
 
     //INNER CLASSES

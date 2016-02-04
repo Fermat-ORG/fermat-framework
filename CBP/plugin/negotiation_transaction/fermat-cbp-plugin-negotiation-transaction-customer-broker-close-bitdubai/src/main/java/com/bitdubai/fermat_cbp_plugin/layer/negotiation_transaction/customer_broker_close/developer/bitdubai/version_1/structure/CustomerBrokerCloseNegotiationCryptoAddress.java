@@ -201,7 +201,7 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
                 negotiation.getBrokerPublicKey(),
                 negotiation.getCustomerPublicKey(),
                 CryptoCurrency.BITCOIN,
-                BlockchainNetworkType.DEFAULT
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
             );
 
             return request;
@@ -222,7 +222,7 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
                 negotiation.getCustomerPublicKey(),
                 negotiation.getBrokerPublicKey(),
                 CryptoCurrency.BITCOIN,
-                BlockchainNetworkType.DEFAULT
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
             );
 
             return request;

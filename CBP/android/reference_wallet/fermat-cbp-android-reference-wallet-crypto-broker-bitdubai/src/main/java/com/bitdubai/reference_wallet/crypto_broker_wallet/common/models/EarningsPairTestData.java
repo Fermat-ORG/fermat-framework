@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 
 import java.util.UUID;
 
@@ -31,7 +32,7 @@ public class EarningsPairTestData implements EarningsPair {
 
 
     @Override
-    public Currency getSelectedCurrency() {
+    public Currency getEarningCurrency() {
         return selectedCurrency;
     }
 
@@ -45,4 +46,8 @@ public class EarningsPairTestData implements EarningsPair {
         return "earningWalletPublicKey";
     }
 
+    @Override
+    public EarningsSearch getSearch() {
+        return null;
+    }
 }

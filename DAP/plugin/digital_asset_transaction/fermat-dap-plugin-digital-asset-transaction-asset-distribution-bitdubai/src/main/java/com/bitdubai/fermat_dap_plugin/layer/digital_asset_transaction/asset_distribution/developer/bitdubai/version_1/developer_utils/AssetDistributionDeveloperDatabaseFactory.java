@@ -149,6 +149,7 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
 
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME);
+        assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME);
