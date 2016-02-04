@@ -116,7 +116,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
 // public ArrayList<ContactList> contactList;
     public List<Contact> contacts;
 //    private ListView contactsContainer;
-     private Contact contactl;//= new Contact();
+    private Contact contactl;//= new Contact();
 //
 //    // Whether or not the search query has changed since the last time the loader was refreshed
 //    private boolean mSearchQueryChanged;
@@ -158,7 +158,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             errorManager=appSession.getErrorManager();
         }catch (Exception e)
         {
-            //if(errorManager!=null)
+           // if(errorManager!=null)
                 //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT);
         }
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
@@ -217,21 +217,22 @@ public class ContactsListFragment extends AbstractFermatFragment {
         TextView text=(TextView) layout.findViewById(R.id.text);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
+            //Comentar, solo para pruebas
             ContactImpl cadded=new ContactImpl();
             cadded.setContactId(UUID.randomUUID());
-            cadded.setAlias("joseremoto");
-            cadded.setRemoteActorPublicKey("joseremoto");
+            cadded.setAlias("josejcb");
+            cadded.setRemoteActorPublicKey("jose");
             cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
             String dateString = "30/09/2014";
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
             Date date = sdf.parse(dateString);
             long startDate = date.getTime();
             cadded.setCreationDate(startDate);
-            cadded.setRemoteName("joseremoto");
+            cadded.setRemoteName("No hay nadie conectado");
             chatManager.saveContact(cadded);
+            //Fin Comentar
             List <Contact> con=  chatManager.getContacts();
             int size = con.size();
-            //System.out.println("\n\nCONTACTsize:\n\n" + size);
             if (size > 0) {
                 for (int i=0;i<size;i++){
                     contactname.add(con.get(i).getAlias());
@@ -241,12 +242,11 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 text.setVisibility(View.GONE);
             }else{
                 text.setVisibility(View.VISIBLE);
-                text.setText("No Contacts");//Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
+                text.setText("No Contacts");
             }
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
         }
         ContactListAdapter adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
         list=(ListView)layout.findViewById(R.id.list);
@@ -256,12 +256,14 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Auto-generated method stub
-                //String Slecteditem= contactname[position];
-                //Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
-                appSession.setData(ChatSession.CONTACT_DATA, contactl);
-                changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-
+                try{
+                    appSession.setData("whocallme", "contact");
+                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                    changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+                }catch(CantGetContactException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -269,10 +271,12 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Auto-generated method stub
-
-                appSession.setData(ChatSession.CONTACT_DATA, contactl);
-                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                try{
+                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+                }catch(CantGetContactException e) {
+                    e.printStackTrace();
+                }
                 return true;
             }
         });
@@ -283,8 +287,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("Updated");
-                        Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
 
                         try {
                             List <Contact> con=  chatManager.getContacts();
@@ -296,8 +299,6 @@ public class ContactsListFragment extends AbstractFermatFragment {
                                 }
                                 final ContactListAdapter adaptador =
                                         new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
-                               // ListView contactlist;
-                                //contactlist=(ListView) layout.findViewById(R.id.list);
                                 adaptador.refreshEvents(contactname, contacticon, contactid);
                             }else{
                                 Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
@@ -315,39 +316,18 @@ public class ContactsListFragment extends AbstractFermatFragment {
         });
 
         return layout;
-        //loadDummyHistory();
         // Inflate the list fragment layout
         //return inflater.inflate(R.layout.contact_list_fragment, container, false);
-    }
-
-    public Map<UUID,Contact> listContactcreated() {
-
-        Map<UUID, Contact> cntcreated = new HashMap<UUID, Contact>();
-
-        try {
-
-            if (!(chatManager.getContacts().size() > 0)) {
-                System.out.println("/n/nNO contact here /n/n");
-            } else {
-                for (int i = 0; i < chatManager.getContacts().size(); i++) {
-                    cntcreated.put(chatManager.getContacts().get(i).getContactId(), chatManager.getContacts().get(i));
-                }
-            }
-        } catch (CantGetContactException e) {
-            e.printStackTrace();
-        }
-        return cntcreated;
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_add_contact) {
-            System.out.println("\n\ngetAppPublicKey:\n\n" + appSession.getAppPublicKey().toString());
+            //System.out.println("\n\ngetAppPublicKey:\n\n" + appSession.getAppPublicKey().toString());
             changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
+            return true;
         }
-
-        return true;
+        return super.onOptionsItemSelected(item);
     }
 
 //    public void setSearchQuery(String query) {
@@ -508,7 +488,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
+        menu.clear();
         // Inflate the menu items
         inflater.inflate(R.menu.contact_list_menu, menu);
         // Locate the search item

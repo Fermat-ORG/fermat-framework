@@ -2128,17 +2128,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 
-
-
         chtChat = new RuntimeSubApp();
         chtChat.setType(SubApps.CHT_CHAT);
         String chatPublicKey = "public_key_cht_chat";
         chtChat.setPublicKey(chatPublicKey);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
-
-        //chtChat.setStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT);
-
-
 
         //Activity Chat
         runtimeActivity = new Activity();
@@ -2167,7 +2161,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         //Menu Tabs
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#d07b62");
+        runtimeTabStrip.setTabsColor("#0072bb");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#b46a54");
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -2196,14 +2190,15 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         chtChat.addActivity(runtimeActivity);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
-/*
+
         // Activity: Contacts
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
-        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getCode());
-        runtimeActivity.setBackPublicKey(chatPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONTACTLIST);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
+        chtChat.addPosibleStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
 
+        statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
+        runtimeActivity.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2218,41 +2213,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
-        chtChat.addActivity(runtimeActivity);
-   */
-/*
-        // Activity: Edit Contact
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CHT_CHAT_EDIT_CONTACT_FRAGMENT);
-        runtimeActivity.setActivityType(Activities.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getCode());
-        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
-        runtimeActivity.setBackPublicKey(chatPublicKey);
-        chtChat.addActivity(runtimeActivity);
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#0e738b");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Edit Contact");
-
-        runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setTitleColor("#FFFFFF");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a5");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey());
-*/
         // Activity: Contact Detail
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
-        runtimeActivity.setBackPublicKey(chatPublicKey);
+        runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2260,8 +2227,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("View Contact");
-
+        runtimeTitleBar.setLabel("Contact View");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -2278,7 +2244,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CHT_CHAT_EDIT_CONTACT);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_EDIT_CONTACT.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
-        runtimeActivity.setBackPublicKey(chatPublicKey);
+        runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2287,7 +2253,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Edit Contact");
-
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -2299,13 +2264,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_EDIT_CONTACT_FRAGMENT.getKey());
 
-/*
-        // Activity: Connections
+        // Activity: Connection list
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT);
-        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getCode());
-        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
-        runtimeActivity.setBackPublicKey(chatPublicKey);
+        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
+        runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2313,8 +2277,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Connections");
-
+        runtimeTitleBar.setLabel("Available Connections");
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -2326,36 +2289,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey());
 
-        // Activity: Chat Detail
-        runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT);
-        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT.getCode());
-        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT);
-        runtimeActivity.setBackPublicKey(chatPublicKey);
-        chtChat.addActivity(runtimeActivity);
-
-        statusBar = new StatusBar();
-        statusBar.setColor("#0e738b");
-        runtimeActivity.setStatusBar(statusBar);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Edit Contact");
-
-        runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setTitleColor("#FFFFFF");
-        runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a5");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT.getKey());
-
-        chtChat.addActivity(runtimeActivity);
-        */
-
-        //NEWMIG
+        //NEWMIG // Activity: Chat Detail Messages
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST.getCode());
@@ -2363,17 +2297,50 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
         chtChat.addActivity(runtimeActivity);
 
+        statusBar = new StatusBar();
+        statusBar.setColor("#0e738b");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Messages");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#1189a5");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEM_MESSAGE_LIST_FRAGMENT.getKey());
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey());
 
-        //
-
-
-
+//        // Activity: Connections
+//        runtimeActivity = new Activity();
+//        runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT);
+//        runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getCode());
+//        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
+//        runtimeActivity.setBackPublicKey(chatPublicKey);
+//        chtChat.addActivity(runtimeActivity);
+//
+//        statusBar = new StatusBar();
+//        statusBar.setColor("#0e738b");
+//        runtimeActivity.setStatusBar(statusBar);
+//
+//        runtimeTitleBar = new TitleBar();
+//        runtimeTitleBar.setLabel("Connections");
+//
+//        runtimeTitleBar.setLabelSize(16);
+//        runtimeTitleBar.setTitleColor("#FFFFFF");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+//        runtimeTitleBar.setColor("#1189a5");
+//        runtimeActivity.setTitleBar(runtimeTitleBar);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT.getKey());
+//
         listSubApp.put(chtChat.getPublicKey(), chtChat);
-
     }
 
 }

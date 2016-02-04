@@ -224,7 +224,7 @@ public class ChatMiddlewareDatabaseDao {
             database = openDatabase();
             List<Chat> chats = new ArrayList<>();
             // I will add the contact information from the database
-            List<DatabaseTableRecord> records=getContactData(filter);
+            List<DatabaseTableRecord> records=getChatData(filter);
             if(records==null|| records.isEmpty()){
                 return chats;
             }
@@ -404,7 +404,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
+    public List<Message> getMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
     {
         Database database = null;
         try {
@@ -432,7 +432,7 @@ public class ChatMiddlewareDatabaseDao {
                 return null;
             }
 
-            return messages.get(0);
+            return messages;
         }
         catch (Exception e) {
             if (database != null)
