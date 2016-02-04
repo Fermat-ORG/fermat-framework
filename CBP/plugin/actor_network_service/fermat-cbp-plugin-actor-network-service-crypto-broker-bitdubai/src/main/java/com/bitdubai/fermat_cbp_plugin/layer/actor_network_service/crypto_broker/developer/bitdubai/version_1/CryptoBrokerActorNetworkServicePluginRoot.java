@@ -51,10 +51,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.NewMessagesEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.VPNConnectionCloseNotificationEventHandler;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.ConnectionNewsDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
@@ -69,6 +68,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceConnectionManager_V2;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
@@ -114,7 +115,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      * Network Service Implementation Variables.
      */
     private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
-    private CommunicationNetworkServiceConnectionManager        communicationNetworkServiceConnectionManager;
+    private CommunicationNetworkServiceConnectionManager_V2        communicationNetworkServiceConnectionManager;
     private CopyOnWriteArrayList<PlatformComponentProfile>      remoteNetworkServicesRegisteredList;
     private List<FermatEventListener>                           listenersAdded;
     private Database                                            dataBase;
@@ -184,29 +185,28 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             initializeCommunicationNetworkServiceConnectionManager();
 
 
-            /*
-             * Verify if the communication cloud client is active
-             */
-            if (!wsCommunicationsCloudClientManager.isDisable()){
 
-                 /*
-                  * Construct my profile and register me
-                  */
-                PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                    /*
+                     * Verify if the communication cloud client is active
+                     */
+            if (!wsCommunicationsCloudClientManager.isDisable()) {
+
+                        /*
+                         * Construct my profile and register me
+                         */
+                this.platformComponentProfilePluginRoot = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
                         getAlias().toLowerCase(),
                         getName(),
                         getNetworkServiceType(),
                         getPlatformComponentType(),
                         getExtraData());
-
-                setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
-
-                /*
-                 * Initialize the agent and start
-                 */
+                        /*
+                         * Initialize the agent and start
+                         */
                 communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
                 communicationRegistrationProcessNetworkServiceAgent.start();
             }
+
 
             remoteNetworkServicesRegisteredList = new CopyOnWriteArrayList<>();
 
@@ -233,6 +233,8 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     errorManager                           ,
                     getPluginVersionReference()
             );
+
+            initializeAgent();
 
             /*
              * Its all ok, set the new status
@@ -315,7 +317,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         return fermatManager;
     }
 
-    private void initializeListener(){
+    private void initializeListener() {
 
          /*
          * Listen and handle Complete Component Registration Notification Event
@@ -325,14 +327,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-         /*
-         * Listen and handle Complete Request List Component Registered Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
-//        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler());
-//        eventManager.addListener(fermatEventListener);
-//        listenersAdded.add(fermatEventListener);
-
         /*
          * Listen and handle Complete Request List Component Registered Notification Event
          */
@@ -341,24 +335,15 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
+        /*
          *  failure connection
          */
-
         fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        /**
-         * new message
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewReceiveMessagesNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-         /*
+        /*
          * Listen and handle VPN Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
@@ -366,7 +351,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-              /*
+        /*
          * Listen and handle Client Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
@@ -374,14 +359,13 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-          /*
+        /*
          * Listen and handle Client Connection Loose Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
         fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
-
 
         /*
          * Listen and handle Client Connection Success Reconnect Notification Event
@@ -390,8 +374,33 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+        initializeMessagesListeners();
     }
 
+
+    /**
+     * Messages listeners
+     */
+    private void initializeMessagesListeners() {
+
+        /**
+         *Listen and handle the received messages
+         */
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewMessagesEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        /**
+         * Listen and handle the sent messages
+         */
+        fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION);
+        fermatEventListener.setEventHandler(new NewSentMessageNotificationEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+    }
 
     /**
      * This method initialize the database
@@ -538,16 +547,14 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      */
     @Override
     public void initializeCommunicationNetworkServiceConnectionManager() {
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
+        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager_V2(
+                this,
                 this.getPlatformComponentProfilePluginRoot(),
                 identity,
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
                 dataBase,
                 errorManager,
-                eventManager,
-                this.getEventSource(),
-                getPluginVersionReference(),
-                this
+                eventManager
         );
     }
 
@@ -584,16 +591,16 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                                                                          final NetworkServiceType    fromOtherNetworkServiceType   ) {
 
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
-                platformComponentType         ,
-                networkServiceType            ,
-                alias                         ,
-                identityPublicKey             ,
-                location                      ,
-                distance                      ,
-                name                          ,
-                extraData                     ,
-                firstRecord                   ,
-                numRegister                   ,
+                platformComponentType,
+                networkServiceType,
+                alias,
+                identityPublicKey,
+                location,
+                distance,
+                name,
+                extraData,
+                firstRecord,
+                numRegister,
                 fromOtherPlatformComponentType,
                 fromOtherNetworkServiceType
         );
@@ -615,6 +622,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             );
 
             cryptoBrokerExecutorAgent.start();
+            System.out.println("********** IM initialized  NOW (agent)....");
 
         } catch(final CantStartAgentException e) {
 
@@ -623,6 +631,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
+
+        System.out.println("*********** IM HANDLING A CompleteComponentRegistrationNotificationEvent");
+        System.out.println("*********** platfomcomponentprofile: "+platformComponentProfileRegistered);
 
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
@@ -665,8 +676,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
              */
             this.register = Boolean.TRUE;
 
-            if(!beforeRegistered)
-                initializeAgent();
+            System.out.println("********** IM REGISTERED NOW....");
+
+            initializeAgent();
 
             fermatManager.setPlatformComponentProfile(this.getPlatformComponentProfilePluginRoot());
 
@@ -755,26 +767,43 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if (communicationNetworkServiceConnectionManager == null){
-            this.initializeCommunicationNetworkServiceConnectionManager();
-        }else{
-            communicationNetworkServiceConnectionManager.restart();
-        }
+        System.out.println("crypto broker actor network service - handleClientSuccessfullReconnectNotificationEvent");
 
-        /*
-         * Mark as register
-         */
-        this.register = Boolean.TRUE;
+        try {
+
+            if (communicationNetworkServiceConnectionManager != null){
+                communicationNetworkServiceConnectionManager.restart();
+            }else{
+                this.initializeCommunicationNetworkServiceConnectionManager();
+            }
+
+            initializeAgent();
+
+            /*
+             * Mark as register
+             */
+            this.register = Boolean.TRUE;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public final void handleNewMessages(final FermatMessage fermatMessage) {
+    @Override
+    public final void handleNewSentMessageNotificationEvent(final FermatMessage fermatMessage) {
 
+
+    }
+
+    @Override
+    public void handleNewMessages(FermatMessage fermatMessage) {
         try {
 
             String jsonMessage = fermatMessage.getContent();
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, NetworkServiceMessage.class);
+            System.out.println("************ im the network service message: "+networkServiceMessage);
 
             switch (networkServiceMessage.getMessageType()) {
 
@@ -797,13 +826,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             }
 
         } catch (Exception e) {
+            System.out.println(e.toString());
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
-    }
-
-    @Override
-    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
-
     }
 
     /**

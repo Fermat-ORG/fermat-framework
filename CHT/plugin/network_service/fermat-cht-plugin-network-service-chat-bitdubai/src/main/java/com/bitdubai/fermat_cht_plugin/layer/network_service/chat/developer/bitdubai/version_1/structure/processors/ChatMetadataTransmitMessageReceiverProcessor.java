@@ -28,10 +28,11 @@ import com.google.gson.JsonObject;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.processors.ChatMetadataTransmitMessageReceiverProcessor</code> is
- * that implement the logic when a Digital Asset Metadata Transmit Message is Receiver
+ * The Class <code>com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processors.ChatMetadataTransmitMessageReceiverProcessor</code> is
+ *
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/10/15.
+ * Implemented by Gabriel Araujo to CHT
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -40,10 +41,10 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
 
     /**
      * Constructor with parameters
-     * @param chatNetworkServicePluginRoot
+     * @param networkServiceChatNetworkServicePluginRoot
      */
-    public ChatMetadataTransmitMessageReceiverProcessor(NetworkServiceChatNetworkServicePluginRoot chatNetworkServicePluginRoot) {
-        super(chatNetworkServicePluginRoot);
+    public ChatMetadataTransmitMessageReceiverProcessor(NetworkServiceChatNetworkServicePluginRoot networkServiceChatNetworkServicePluginRoot) {
+        super(networkServiceChatNetworkServicePluginRoot);
     }
 
     /**
@@ -74,32 +75,32 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
              * Save into data base for audit control
              */
             //get the transactions an UUID
-            chatMetadataTransactionRecord.setTransactionId(getChatNetworkServicePluginRoot().getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
+            chatMetadataTransactionRecord.setTransactionId(getNetworkServiceChatNetworkServicePluginRoot().getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
             String transactionHash = CryptoHasher.performSha256(chatMetadataTransactionRecord.getChatId().toString() + chatMetadataTransactionRecord.getMessageId().toString());
             chatMetadataTransactionRecord.setTransactionHash(transactionHash);
             chatMetadataTransactionRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
             chatMetadataTransactionRecord.setMessageStatus(MessageStatus.CREATED);
             chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERING);
             chatMetadataTransactionRecord.setProcessed(ChatMetadataTransactionRecord.NO_PROCESSED);
-            getChatNetworkServicePluginRoot().getChatMetaDataDao().create(chatMetadataTransactionRecord);
+            getNetworkServiceChatNetworkServicePluginRoot().getChatMetaDataDao().create(chatMetadataTransactionRecord);
 
             /*
              * Mark the message as read
              */
             ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-            ((CommunicationNetworkServiceConnectionManager) getChatNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
+            ((CommunicationNetworkServiceConnectionManager) getNetworkServiceChatNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
 
             /*
              * Notify to the interested
              */
-            IncomingChat event = (IncomingChat) getChatNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.INCOMING_CHAT);
+            IncomingChat event = (IncomingChat) getNetworkServiceChatNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.INCOMING_CHAT);
             event.setChatId(chatMetadataTransactionRecord.getChatId());
             event.setSource(NetworkServiceChatNetworkServicePluginRoot.EVENT_SOURCE);
-            getChatNetworkServicePluginRoot().getEventManager().raiseEvent(event);
-            System.out.println("NetworkServiceChatNetworkServicePluginRoot - Incoming Chat fired!");
+            getNetworkServiceChatNetworkServicePluginRoot().getEventManager().raiseEvent(event);
+            //System.out.println("NetworkServiceChatNetworkServicePluginRoot - Incoming Chat fired!");
 
         } catch (Exception e) {
-            getChatNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            getNetworkServiceChatNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
     }
