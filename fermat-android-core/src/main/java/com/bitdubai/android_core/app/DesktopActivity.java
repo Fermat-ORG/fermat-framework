@@ -1,6 +1,5 @@
 package com.bitdubai.android_core.app;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -9,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
@@ -381,41 +379,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     Toast.LENGTH_LONG).show();
         }
     }
-
-
-//    private SubAppsSession createOrCallSubAppSession(){
-//        SubAppsSession subAppSession = null;
-//        try {
-//            Bundle bundle = getIntent().getExtras();
-//            InstalledSubApp installedSubApp=null;
-//            if(bundle!=null){
-//                if(bundle.containsKey(StartActivity.START_ACTIVITY_INIT)){
-//
-//                }else if(bundle.containsKey(ConnectionConstants.SUB_APP_CONNECTION)){
-//                    //installedSubApp =  bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION);
-//                }
-//            }
-//            if(installedSubApp!=null){
-//                if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getAppPublicKey())) {
-//                    subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getAppPublicKey());
-//                } else {
-//                    ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
-//                    subAppSession = getSubAppSessionManager().openSubAppSession(
-//                            installedSubApp,
-//                            getErrorManager(),
-//                            managerFactory.getModuleManagerFactory(installedSubApp.getSubAppType())
-//                    );
-//                }
-//            }
-//
-//        } catch (NullPointerException nullPointerException){
-//            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(nullPointerException));
-//        } catch (Exception e){
-//            e.printStackTrace();
-//            //this happend when is in home screen
-//        }
-//        return subAppSession;
-//    }
 
 
     @Override
