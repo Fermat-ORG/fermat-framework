@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting;
 
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+
 import java.util.UUID;
 
 /**
@@ -63,4 +65,28 @@ public interface CryptoBrokerWalletProviderSetting {
      * @param description
      */
     void setDescription(String description);
+    /**
+     * The method <code>getCurrencyFrom</code> returns description of the CryptoBrokerWalletProviderSetting
+     *
+     * @return an String of the currencyFrom of the CryptoBrokerWalletProviderSetting
+     */
+    String getCurrencyFrom();
+    /**
+     * The method <code>setCurrencyFrom</code> sets the description of the CryptoBrokerWalletProviderSetting
+     *
+     * @param currencyFrom
+     */
+    void setCurrencyFrom(String currencyFrom);
+    /**
+     * The method <code>getCurrencyTo</code> returns description of the CryptoBrokerWalletProviderSetting
+     *
+     * @return an String of the currencyTo of the CryptoBrokerWalletProviderSetting
+     */
+    String getCurrencyTo();
+    /**
+     * The method <code>setCurrencyFrom</code> sets the description of the CryptoBrokerWalletProviderSetting
+     *
+     * @param currencyTo
+     */
+    void setCurrencyTo(String currencyTo);
 }

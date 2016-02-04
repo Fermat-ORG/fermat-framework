@@ -82,6 +82,11 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
     }
 
     @Override
+    public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListPurchaseNegotiationsException {
+        return null;
+    }
+
+    @Override
     public ClauseType getNextClauseType(ClauseType type) throws CantGetNextClauseTypeException {
         return null;
     }

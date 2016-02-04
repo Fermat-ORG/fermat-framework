@@ -149,6 +149,7 @@ public class UserRedemptionDeveloperDatabaseFactory implements DealsWithPluginDa
 
         assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
         assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME);
+        assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME);
         assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME);
         assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_REPO_PUBLICKEY_COLUMN_NAME);
         assetDeliveringColumns.add(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME);

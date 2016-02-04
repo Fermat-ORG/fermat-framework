@@ -3,58 +3,39 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#e2e4e6"
-    android:orientation="vertical"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp">
-
-    <!--<LinearLayout-->
-        <!--android:id="@+id/row_container"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:paddingLeft="16dp"-->
-        <!--android:paddingRight="16dp"-->
-        <!--tools:background="@color/navigation_view_menu_item_overlay">-->
-
-        <!--<ImageView-->
-            <!--android:id="@+id/imageView_icon"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--android:paddingLeft="14dp"-->
-            <!--android:paddingRight="14dp"-->
-            <!--android:scaleType="centerCrop"-->
-            <!--android:src="@drawable/sad_face"-->
-            <!--android:visibility="gone"-->
-            <!--tools:ignore="contentDescription" />-->
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:id="@+id/row_container">
 
         <ImageView
             android:id="@+id/imageView_icon"
-            android:layout_width="20dp"
+            android:layout_width="35dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:background="#e2e4e6"
+            android:paddingLeft="24dp"
+            android:paddingRight="14dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_nav_home_normal"
             android:visibility="visible"
             tools:ignore="ContentDescription" />
 
+
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/textView_label"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="#e2e4e6"
             android:paddingBottom="14dp"
-            android:paddingLeft="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:paddingTop="14dp"
             android:text="Home"
-            android:textColor="#000000"
+            android:textColor="#ffffff"
             android:textSize="16sp"
+            android:layout_weight="1"
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
@@ -62,6 +43,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#ffffff" />
-
+        android:background="@drawable/cbw_divider_shape"
+        android:id="@+id/navigation_row_divider"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        />
 </LinearLayout>

@@ -63,5 +63,5 @@ public interface Wallet {
      * @return Quote
      * @exception CantGetCryptoBrokerQuoteException
      */
-    Quote getQuote(Currency merchandise, float quantity, FiatCurrency payment) throws CantGetCryptoBrokerQuoteException;
+    Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException;
 }

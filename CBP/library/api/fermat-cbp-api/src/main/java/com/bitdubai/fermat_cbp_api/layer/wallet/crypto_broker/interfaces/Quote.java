@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 
 /**
  * Created by franklin on 04/12/15.
@@ -21,7 +22,7 @@ public interface Quote {
      *
      * @return FiatCurrency
      */
-    FiatCurrency getFiatCurrency();
+    Currency getFiatCurrency();
 
     /**
      * The method <code>getPriceReference</code> returns the price reference of the Quote

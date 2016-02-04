@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 
 /**
@@ -10,7 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 public class QuoteImpl implements Quote {
     //Documentar
     FermatEnum merchandise;
-    FiatCurrency fiatCurrency;
+    Currency fiatCurrency;
     float priceReference;
     float quantity;
 
@@ -23,7 +24,7 @@ public class QuoteImpl implements Quote {
      */
     public QuoteImpl(
             FermatEnum merchandise,
-            FiatCurrency fiatCurrency,
+            Currency fiatCurrency,
             float priceReference,
             float quantity
     ) {
@@ -45,7 +46,7 @@ public class QuoteImpl implements Quote {
      * {@inheritDoc}
      */
     @Override
-    public FiatCurrency getFiatCurrency() {
+    public Currency getFiatCurrency() {
         return fiatCurrency;
     }
 
