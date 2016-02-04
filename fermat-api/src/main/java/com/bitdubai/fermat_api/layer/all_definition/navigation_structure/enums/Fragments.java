@@ -284,9 +284,7 @@ public enum Fragments implements FermatFragments {
     CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT("CHTOCODF"),
     CHT_CHAT_EDIT_CONTACT_FRAGMENT("CHTEDCOF"),
     CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT("CHTOCONNLTF"),
-
     ;
-
 
     private String code;
 
