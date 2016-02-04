@@ -249,7 +249,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         if (moduleManager != null) {
             try {
                 CryptoBrokerWalletManager wallet = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
-                data.addAll(wallet.getCurrentIndexSummaryForStockCurrencies());
+                data.addAll(wallet.getCurrentIndexSummaryForStockCurrencies(appSession.getAppPublicKey()));
 
             } catch (CantGetCryptoBrokerWalletException | CantGetCurrentIndexSummaryForStockCurrenciesException ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
