@@ -12,7 +12,9 @@
     <color name="fab_normal">#6633B5E5</color>
     <color name="white">#ffffff</color>
     <color name="black">#400F4D</color>
-    <color name="fab_black_semi_transparent">#B2000000</color>
+    <color name="soft_purple">#7A63A7</color>
+    <color name="dark_purple">#391459</color>
+    <color name="fab_black_semi_transparent">#00000000</color>
 
     <color name="bnk_fab_color_normal_w">#FD0018</color>
     <color name="bnk_fab_color_normal_d">#00B8FE</color>
@@ -34,5 +36,7 @@
 
     <color name="bnk_gradient_start_background">#391459</color>
     <color name="bnk_gradient_end_background">#462685</color>
+
+    <color name="fab_button_color">#eeeff1</color>
 
 </resources>
