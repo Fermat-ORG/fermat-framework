@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
@@ -35,6 +36,7 @@ public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSess
     private FermatTextView userName;
     private FermatButton positiveBtn;
     private FermatButton negativeBtn;
+
 
     public AcceptDialog(Activity a,
                         CryptoCustomerCommunitySubAppSession cryptoBrokerCommunitySubAppSession,
@@ -85,11 +87,10 @@ public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSess
         if (i == R.id.positive_button) {
            try {
                 if (cryptoCustomerCommunityInformation != null && identity != null) {
-                    Toast.makeText(getContext(), "TODO ACCEPT ->", Toast.LENGTH_SHORT).show();
                     getSession().getModuleManager().acceptCryptoCustomer(cryptoCustomerCommunityInformation.getConnectionId());
-                    Toast.makeText(getContext(), cryptoCustomerCommunityInformation.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), " Accepted connection request from" + cryptoCustomerCommunityInformation.getAlias(), Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "There has been an error accepting request", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (CantAcceptRequestException e) {
@@ -97,17 +98,16 @@ public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSess
             }
             dismiss();
         } else if (i == R.id.negative_button) {
-            //try {
+            try {
                 if (cryptoCustomerCommunityInformation != null && identity != null) {
-                    Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
-                    // getSession().getModuleManager().denyConnection(identity.getPublicKey(), information.getPublicKey());
+                    getSession().getModuleManager().denyConnection(cryptoCustomerCommunityInformation.getConnectionId());
                 } else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "There has been an error denying request", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            /*} catch (IntraUserConnectionDenialFailedException e) {
+            } catch (CantDenyActorConnectionRequestException e) {
                 e.printStackTrace();
-            }*/
+            }
             dismiss();
         }
     }
