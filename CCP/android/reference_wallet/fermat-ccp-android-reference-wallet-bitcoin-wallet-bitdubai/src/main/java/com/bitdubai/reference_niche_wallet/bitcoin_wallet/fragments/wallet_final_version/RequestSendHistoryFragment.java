@@ -148,7 +148,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.transaction_main_fragment;
+        return R.layout.fragment_transaction_main;
     }
 
     @Override
