@@ -42,6 +42,7 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String MESSAGE_STATUS_COLUMN_NAME = "status";
     public static final String MESSAGE_TYPE_COLUMN_NAME = "type";
     public static final String MESSAGE_MESSAGE_DATE_COLUMN_NAME = "message_date";
+    public static final String MESSAGE_CONTACT_ID = "contact_id";
 
     public static final String MESSAGE_FIRST_KEY_COLUMN = "id_message";
 

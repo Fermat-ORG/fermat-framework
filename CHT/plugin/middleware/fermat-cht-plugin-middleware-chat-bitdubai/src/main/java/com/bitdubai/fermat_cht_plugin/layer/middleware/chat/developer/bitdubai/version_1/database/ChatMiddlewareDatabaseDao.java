@@ -140,6 +140,50 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    /**
+     * This method returns the contact id by local public key.
+     * @param localPublicKey
+     * @return
+     * @throws CantGetContactException
+     * @throws DatabaseOperationException
+     */
+    public Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException, DatabaseOperationException
+    {
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Contact> contacts = new ArrayList<>();
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(localPublicKey.toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_LOCAL_ACTOR_PUB_KEY_COLUMN_NAME);
+            // I will add the contact information from the database
+            for (DatabaseTableRecord record : getContactData(filter)) {
+                final Contact contact = getContactTransaction(record);
+
+                contacts.add(contact);
+            }
+
+            database.closeDatabase();
+
+            if(contacts.isEmpty()){
+                return null;
+            }
+
+            return contacts.get(0);
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "error trying to get Contact from the database with filter: " + localPublicKey,
+                    null);
+        }
+    }
+
     public Contact newEmptyInstanceContact() throws CantNewEmptyContactException
     {
         ContactImpl contact = new ContactImpl();
@@ -610,6 +654,7 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME, message.getStatus().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME, message.getType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, message.getMessageDate().toString());
+        record.setUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID, message.getContactId());
 
         return record;
     }
