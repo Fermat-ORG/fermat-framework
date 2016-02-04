@@ -2,7 +2,6 @@ package com.bitdubai.android_core.app;
 
 
 import android.content.Context;
-import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
