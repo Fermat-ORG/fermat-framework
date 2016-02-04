@@ -2196,6 +2196,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONTACTLIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
         chtChat.addPosibleStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
         runtimeActivity.setColor("#0072bb");
@@ -2219,7 +2220,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
-        runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
+        runtimeActivity.setBackPublicKey(chatPublicKey);
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2244,7 +2245,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CHT_CHAT_EDIT_CONTACT);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_EDIT_CONTACT.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
-        runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
+        runtimeActivity.setBackPublicKey(chatPublicKey);
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2269,7 +2270,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONNECTIONLIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
-        runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
+        runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
@@ -2294,7 +2295,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_MESSAGE_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
-        runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
