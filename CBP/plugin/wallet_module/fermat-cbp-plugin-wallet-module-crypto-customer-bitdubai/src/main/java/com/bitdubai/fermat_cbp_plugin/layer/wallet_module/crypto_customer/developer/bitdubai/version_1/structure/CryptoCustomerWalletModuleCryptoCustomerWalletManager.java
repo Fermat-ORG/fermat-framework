@@ -394,11 +394,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
 
             Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
-            for (CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.SENT_TO_BROKER))
-                waitingForBroker.add(getNegotiationInformation(customerBrokerSaleNegotiation));
+            for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.SENT_TO_BROKER))
+                waitingForBroker.add(getNegotiationInformation(negotiation,NegotiationStatus.WAITING_FOR_BROKER));
 
-            for (CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_BROKER))
-                waitingForBroker.add(getNegotiationInformation(customerBrokerSaleNegotiation));
+            for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_BROKER))
+                waitingForBroker.add(getNegotiationInformation(negotiation,NegotiationStatus.WAITING_FOR_BROKER));
 
             return waitingForBroker;
 
@@ -414,53 +414,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
 
             Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
-            for (CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.SENT_TO_BROKER))
-            {
+            for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_CUSTOMER))
+                waitingForBroker.add(getNegotiationInformation(negotiation,NegotiationStatus.WAITING_FOR_CUSTOMER));
 
-                Collection<Clause> negotiationClause = customerBrokerSaleNegotiation.getClauses();
-
-                String customerAlias        = customerBrokerSaleNegotiation.getCustomerPublicKey();
-                String brokerAlias          = customerBrokerSaleNegotiation.getBrokerPublicKey();
-                NegotiationStatus status    = customerBrokerSaleNegotiation.getStatus();
-                Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
-                String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
-//                String paymentMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
-//                String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-
-                String paymentMethod = "PPP";
-                String paymentCurrency = "CCC";
-
-                System.out.print(" - NEGOTIATION: " +
-                        " \nCUSTOMER: " +customerAlias+
-                        " \nBROKER: " +brokerAlias+
-                        " \nSTATUS: "+status.getCode()+
-                        " \nMERCHANDISE: "+merchandise
-                );
-
-
-//            getNegotiationClauses();
-//                cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(customerBrokerSaleNegotiation.getCustomerPublicKey(), "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
-                cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(customerBrokerSaleNegotiation);
-                /*cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
-                        customerAlias,
-                        merchandise,
-                        paymentMethod,
-                        paymentCurrency,
-                        NegotiationStatus.WAITING_FOR_BROKER,
-                        clauses
-                );*/
-//                cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
-//                        customerAlias,
-//                        brokerAlias,
-//                        merchandise,
-//                        paymentMethod,
-//                        paymentCurrency,
-//                        NegotiationStatus.WAITING_FOR_BROKER,
-//                        clauses
-//                );
-
-                waitingForBroker.add(cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation);
-            }
             //TODO:Eliminar solo para que se terminen las pantallas
 //            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation("publicKeyCustomer", "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
 //            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation("publicKeyCustomer", "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
@@ -606,6 +562,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             customerBrokerPurchaseNegotiation.setNearExpirationDatetime(Boolean.FALSE);
             customerBrokerPurchaseNegotiation.setNegotiationExpirationDate((long) 0);
             customerBrokerPurchaseNegotiation.setLastNegotiationUpdateDate(time.getTime());
+            customerBrokerPurchaseNegotiation.setMemo("");
 
             System.out.print("\n**** 1.1) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION - CLAUSES INFORMATION****\n");
 //            for (ClauseInformation information: clauses){
@@ -1130,7 +1087,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     //Add by Yordin Alayn 03.02.16
-    private CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation getNegotiationInformation(CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation)
+    private CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation getNegotiationInformation(CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation,NegotiationStatus status)
             throws CantGetNegotiationsWaitingForBrokerException{
 
         try{
@@ -1138,17 +1095,19 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
 
             Collection<Clause> negotiationClause = customerBrokerSaleNegotiation.getClauses();
-
+            Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
             String customerAlias    = customerBrokerSaleNegotiation.getCustomerPublicKey();
             String brokerAlias      = customerBrokerSaleNegotiation.getBrokerPublicKey();
-            String note             = customerBrokerSaleNegotiation.getMemo();
             long lastUpdateDate     = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate();
-            Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
+            String note             = "";
+            if(customerBrokerSaleNegotiation.getMemo() != null)
+                note = customerBrokerSaleNegotiation.getMemo();
+
 
             cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
                     customerAlias,
                     brokerAlias,
-                    NegotiationStatus.WAITING_FOR_BROKER,
+                    status,
                     clauses,
                     note,
                     lastUpdateDate
