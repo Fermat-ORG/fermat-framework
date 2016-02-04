@@ -117,7 +117,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
 
         } catch (Exception e) {
             redeemPointSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Redeem Point system error",
+            makeText(getActivity(), R.string.dap_redeem_point_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
