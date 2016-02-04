@@ -24,7 +24,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
  *
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/01/16
  * @version 1.0
- * Upd
+ * Update by miguel
  *
  */
 
@@ -180,9 +180,14 @@ public class ChatListFragment extends AbstractFermatFragment{
     }
 
 
-
-
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_add_contact) {
+            changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 //mig chance

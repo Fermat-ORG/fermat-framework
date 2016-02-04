@@ -158,7 +158,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             errorManager=appSession.getErrorManager();
         }catch (Exception e)
         {
-            //if(errorManager!=null)
+           // if(errorManager!=null)
                 //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT);
         }
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
@@ -228,7 +228,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             Date date = sdf.parse(dateString);
             long startDate = date.getTime();
             cadded.setCreationDate(startDate);
-            cadded.setRemoteName("No hay nadie conectado xD");
+            cadded.setRemoteName("No hay nadie conectado");
             chatManager.saveContact(cadded);
             //Fin Comentar
             List <Contact> con=  chatManager.getContacts();
@@ -242,7 +242,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 text.setVisibility(View.GONE);
             }else{
                 text.setVisibility(View.VISIBLE);
-                text.setText("No Contacts");//Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
+                text.setText("No Contacts");
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -285,8 +285,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        System.out.println("Updated");
-                        Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
 
                         try {
                             List <Contact> con=  chatManager.getContacts();
