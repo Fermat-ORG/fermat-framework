@@ -34,8 +34,8 @@ public class AppNotificationAdapter extends FermatAdapter<LinkedCryptoCustomerId
 
     @Override
     protected void bindHolder(AppNotificationsHolder holder, LinkedCryptoCustomerIdentity data, int position) {
-        holder.userName.setText(data.getAlias());
         Bitmap bitmap;
+        holder.userName.setText(data.getAlias());
         if (data.getImage().length > 0) {
             bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
         } else {

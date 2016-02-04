@@ -307,7 +307,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                             System.out.println("ASSET RECEPTION crypto transaction on blockchain " + cryptoGenesisTransaction.getTransactionHash());
                             assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CRYPTO_RECEIVED, genesisTransaction);
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
-                            metadata = digitalAssetReceptionVault.updateMetadataTransactionChain(genesisTransaction, cryptoGenesisTransaction.getTransactionHash(), cryptoGenesisTransaction.getBlockHash());
+                            metadata = digitalAssetReceptionVault.updateMetadataTransactionChain(genesisTransaction, cryptoGenesisTransaction);
                             digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, metadata, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
                         }

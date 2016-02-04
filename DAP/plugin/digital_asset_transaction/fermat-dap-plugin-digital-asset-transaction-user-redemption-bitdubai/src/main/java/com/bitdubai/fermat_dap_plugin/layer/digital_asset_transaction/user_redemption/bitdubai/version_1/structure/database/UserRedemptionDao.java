@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
@@ -74,7 +75,8 @@ public class UserRedemptionDao {
 
     public void startDelivering(String genesisTransaction,
                                 String assetPublicKey,
-                                String repoPublicKey) throws CantStartDeliveringException {
+                                String repoPublicKey,
+                                BlockchainNetworkType networkType) throws CantStartDeliveringException {
         String context = "Genesis Transaction: " + genesisTransaction + " - Asset Public Key: " + assetPublicKey + " - User Public Key: " + repoPublicKey;
 
         String transactionId = UUID.randomUUID().toString();
@@ -86,6 +88,7 @@ public class UserRedemptionDao {
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
             record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, transactionId);
             record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+            record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME, networkType.getCode());
             record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME, assetPublicKey);
             record.setStringValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_REPO_PUBLICKEY_COLUMN_NAME, repoPublicKey);
             record.setLongValue(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME, startTime);
@@ -168,7 +171,7 @@ public class UserRedemptionDao {
             recordToReturn.setTransactionId(transactionId);
             recordToReturn.setGenesisTransaction(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME));
             recordToReturn.setRedeemPointPublicKey(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_REPO_PUBLICKEY_COLUMN_NAME));
-            recordToReturn.setDigitalAssetMetadata(userRedemptionVault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME)));
+            recordToReturn.setDigitalAssetMetadata(userRedemptionVault.getDigitalAssetMetadataFromWallet(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME), BlockchainNetworkType.getByCode(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME))));
             recordToReturn.setStartTime(new Date(getLongFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_START_TIME_COLUMN_NAME)));
             recordToReturn.setTimeOut(new Date(getLongFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TIMEOUT_COLUMN_NAME)));
             recordToReturn.setState(DistributionStatus.getByCode(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME)));

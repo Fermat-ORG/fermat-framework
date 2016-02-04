@@ -24,6 +24,7 @@ public class AppNotificationsHolder extends FermatViewHolder {
         super(itemView);
 
         userName = (FermatTextView)itemView.findViewById(R.id.userName);
+
         userAvatar = (FermatRoundedImageView)itemView.findViewById(R.id.imageView_avatar);
 
     }

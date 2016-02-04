@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -91,6 +92,8 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
     private AssetUserWallet wallet;
 
+    private BlockchainNetworkType selectedNetwork;
+
     //TODO MAKE USE OF THE ERROR MANAGER
 
     private AssetUserWalletModule assetUserWalletModule;
@@ -112,7 +115,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
                     pluginId,
                     pluginFileSystem
             );
-
+            selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
             System.out.println("******* Asset User Wallet Module Init ******");
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
@@ -124,7 +127,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException {
         //TODO MAKE USE OF THE ERROR MANAGER
-        return assetUserWalletModule.getAssetUserWalletBalances(publicKey);
+        return assetUserWalletModule.getAssetUserWalletBalances(publicKey, selectedNetwork);
     }
 
     @Override
@@ -146,13 +149,13 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public AssetUserWallet loadAssetUserWallet(String walletPublicKey) throws CantLoadWalletException {
-        wallet = assetUserWalletManager.loadAssetUserWallet(walletPublicKey);
+        wallet = assetUserWalletManager.loadAssetUserWallet(walletPublicKey, selectedNetwork);
         return wallet;
     }
 
     @Override
     public void createAssetUserWallet(String walletPublicKey) throws CantCreateWalletException {
-        assetUserWalletManager.createAssetUserWallet(walletPublicKey);
+        assetUserWalletManager.createAssetUserWallet(walletPublicKey, selectedNetwork);
     }
 
     public IdentityAssetUser getActiveAssetUserIdentity() throws CantGetIdentityAssetUserException {
@@ -166,7 +169,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints, int assetAmount) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
-        assetUserWalletModule.redeemAssetToRedeemPoint(digitalAssetPublicKey, walletPublicKey, actorAssetRedeemPoints, assetAmount);
+        assetUserWalletModule.redeemAssetToRedeemPoint(digitalAssetPublicKey, walletPublicKey, actorAssetRedeemPoints, assetAmount, selectedNetwork);
     }
 
     @Override
@@ -180,7 +183,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
             }
             //TODO REMOVE HARDCODE
             InstalledWallet installedWallet = installedWallets.get(0);
-            assetUserWalletModule.appropriateAsset(digitalAssetPublicKey, installedWallet.getWalletPublicKey());
+            assetUserWalletModule.appropriateAsset(digitalAssetPublicKey, installedWallet.getWalletPublicKey(), selectedNetwork);
         } catch (CantListWalletsException e) {
             e.printStackTrace();
         }
@@ -194,6 +197,17 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryResource(resource);
+    }
+
+    @Override
+    public void changeNetworkType(BlockchainNetworkType networkType) {
+        if (networkType == null) return; //NOPE
+        selectedNetwork = networkType;
+    }
+
+    @Override
+    public BlockchainNetworkType getSelectedNetwork() {
+        return selectedNetwork;
     }
 
     @Override

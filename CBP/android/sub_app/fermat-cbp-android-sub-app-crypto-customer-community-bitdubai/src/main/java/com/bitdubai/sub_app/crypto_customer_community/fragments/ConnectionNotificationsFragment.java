@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -60,7 +61,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
     private CryptoCustomerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
-    //private CryptoCustomerCommunityInformation cryptoCustomerInformation;
+    private CryptoCustomerCommunityInformation cryptoCustomerInformation;
     private List<LinkedCryptoCustomerIdentity> cryptoCustomerInformationList;
 
     /**
@@ -78,7 +79,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
 
         // setting up  module
         cryptoCustomerCommunitySubAppSession = ((CryptoCustomerCommunitySubAppSession) appSession);
-        //cryptoCustomerInformation = (CryptoCustomerCommunityInformation) appSession.getData(ACTOR_SELECTED);
+        cryptoCustomerInformation = (CryptoCustomerCommunityInformation) appSession.getData(ACTOR_SELECTED);
         moduleManager = cryptoCustomerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         cryptoCustomerInformationList = new ArrayList<>();
@@ -134,9 +135,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
         }
 
         //MOCK!
-        for(int i = 1 ; i <= 5 ; i++){
+       /* for(int i = 1 ; i <= 5 ; i++){
             dataSet.add(new LinkedCryptoCustomerIdentityImpl(UUID.randomUUID(),"pk-"+i, "mock-"+i, new byte[0]));
-        }
+        }*/
 
         return dataSet;
     }
