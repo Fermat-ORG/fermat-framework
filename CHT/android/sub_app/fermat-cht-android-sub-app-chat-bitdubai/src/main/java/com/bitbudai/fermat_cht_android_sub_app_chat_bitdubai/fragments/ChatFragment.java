@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,7 +30,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
@@ -44,9 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,9 +92,11 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
 
     boolean chatwascreate=false;
-    PlatformComponentType remotepct;
-    String remotepk;
+    UUID contactid;
     UUID chatid;
+
+    String remotepk;
+    PlatformComponentType remotepct;
     //Data
     List<String> chatmessages = new ArrayList<>();
 
@@ -106,6 +105,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     public Button sendBtn;
     private ChatAdapter adapter;
     public ArrayList<ChatMessage> chatHistory;
+
+
 
 
     TextView linear_layout_send_form;
@@ -129,27 +130,26 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         }
     }
 
-    UUID findchatid(String remotepk){
-        Map<String,UUID> relationchatidpkremote=new HashMap<String, UUID>();
-        UUID chatidofpk=null;
-        String tempremotepk;
-        try {
-            for (int i = 0; i < chatManager.getChats().size(); i++) {
-                tempremotepk = chatManager.getChats().get(i).getRemoteActorPublicKey();
-                if (!(relationchatidpkremote.containsKey(tempremotepk))) {
-                    relationchatidpkremote.put(tempremotepk, chatManager.getChats().get(i).getChatId());
-                }
-            }
-            for (int i = 0; i < chatManager.getChats().size(); i++) {
-                if (relationchatidpkremote.get(i).equals(remotepk)) {
-                    chatidofpk=relationchatidpkremote.get(i);
-                }
-            }
+    void findvalues(UUID contactid){ //With contact Id find chatid,pkremote,actortype
 
-        }catch (CantGetChatException e) {
-               e.printStackTrace();
+        try {
+            for (int i=0; i<chatManager.getContacts().size();i++){
+                if(contactid.equals(chatManager.getContacts().get(i).getContactId())){
+                    remotepk=chatManager.getContacts().get(i).getRemoteActorPublicKey();
+                    remotepct=chatManager.getContacts().get(i).getRemoteActorType();
+                }
+            }
+            for (int i=0; i<chatManager.getMessages().size();i++){
+                if(contactid.equals(chatManager.getMessages().get(i).getContactId())){
+                    chatid=chatManager.getMessages().get(i).getChatId();
+                }
+            }
+        }catch (CantGetContactException e) {
+            e.printStackTrace();
+        }catch (CantGetMessageException e) {
+            e.printStackTrace();
         }
-        return chatidofpk;
+
     }
 
 
@@ -157,13 +157,12 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         Contact con= chatSession.getSelectedContact();
         if(appSession.getData("whocallme").equals("chatlist"))
         {
-            chatid= (UUID) appSession.getData("chatvalues");
+            contactid= (UUID) appSession.getData("contactid");
+            findvalues(contactid);
             chatwascreate=true;
         }else if(appSession.getData("whocallme").equals("contact")){  //fragment contact call this fragment
-            //remotepct=(PlatformComponentType)appSession.getData("remotepct");//it has to sent me whocalme="contact"
-            remotepct=con.getRemoteActorType();
-            remotepk= con.getRemoteActorPublicKey();//appSession.getData("remotepk");               //and remote pk and platform
-            chatid=findchatid(remotepk);
+            contactid=con.getContactId();
+            findvalues(contactid);
             if(chatid!=null){
                 chatwascreate=true;
             }else{
@@ -179,13 +178,18 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     //    boolean findok=false;
         try {
             historialmensaje.clear();
+            if(chatid!=null){
             messsize=chatManager.getMessageByChatId(chatid).size();
             for (int i = 0; i < messsize; i++) {
                 message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
                 inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
                 historialmensaje.add(inorout+"@#@#"+message);
-      //          findok=true;
+      //        findok=true;
             }
+            }else{
+                    Toast.makeText(getActivity(),"chatid null", Toast.LENGTH_SHORT).show();
+            }
+
         }catch (CantGetMessageException e) {
             e.printStackTrace();
         }
@@ -234,13 +238,25 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
                    if(chatwascreate) {
 
+                       chat.setChatId(chatid);
+                       chat.setObjectId(UUID.randomUUID());
+                       chat.setStatus(ChatStatus.VISSIBLE);
+                       chat.setChatName("DeathNote");
+                       chat.setDate(new Timestamp(dv));
+                       chat.setLastMessageDate(new Timestamp(dv));
+                       chat.setLocalActorPublicKey(appSession.getAppPublicKey());
+                       chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                       chat.setRemoteActorPublicKey(remotepk);
+                       chat.setRemoteActorType(remotepct);
+
+
                        message.setChatId(chatid);
                        message.setMessageId(UUID.randomUUID());
                        message.setMessage(messageText);
                        message.setMessageDate(new Timestamp(dv));
                        message.setStatus(MessageStatus.CREATED);
                        message.setType(TypeMessage.OUTGOING);
-
+                       message.setContactId(contactid);
                        chatManager.saveMessage(message);
 
                        findmessage();
@@ -249,7 +265,9 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
                    }else{
 
-                       chat.setChatId(UUID.randomUUID());
+                       UUID newchatid=UUID.randomUUID();
+
+                       chat.setChatId(newchatid);
                        chat.setObjectId(UUID.randomUUID());
                        chat.setStatus(ChatStatus.VISSIBLE);
                        chat.setChatName("DeathNote");
@@ -262,19 +280,23 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
                        chatManager.saveChat(chat);
 
-                       message.setChatId(chatid);
+                       message.setChatId(newchatid);
                        message.setMessageId(UUID.randomUUID());
                        message.setMessage(messageText);
                        message.setMessageDate(new Timestamp(dv));
                        message.setStatus(MessageStatus.CREATED);
                        message.setType(TypeMessage.OUTGOING);
+                       message.setContactId(contactid);
 
                        chatManager.saveMessage(message);
 
                        findmessage();
+
                        adaptador.refreshEvents(historialmensaje);
-                       Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
-                       Toast.makeText(getActivity(), "User Not Found", Toast.LENGTH_SHORT).show();
+                       Toast.makeText(getActivity(),"Sending message", Toast.LENGTH_SHORT).show();
+                       messageET.setText("");
+
+
                    }
                 } catch (CantSaveMessageException e) {
                     e.printStackTrace();

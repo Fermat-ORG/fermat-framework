@@ -60,3 +60,4 @@
         android:src="@drawable/cht_floating_pencil" />-->
 </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+
