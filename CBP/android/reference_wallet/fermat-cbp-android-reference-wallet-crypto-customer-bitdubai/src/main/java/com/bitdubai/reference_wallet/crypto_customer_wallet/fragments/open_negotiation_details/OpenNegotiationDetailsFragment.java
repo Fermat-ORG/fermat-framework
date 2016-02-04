@@ -61,7 +61,7 @@ import java.util.UUID;
  */
 //FermatWalletExpandableListFragment<GrouperItem>
 public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
-        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener{
+        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener/*, ClauseViewHolder.ValueHasChanged*/{
 
     private static final String TAG = "OpenNegotiationFrag";
 
@@ -70,6 +70,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private FermatTextView exchangeRateSummary;
     private FermatTextView brokerName;
     private RecyclerView recyclerView;
+    private boolean valuesHasChanged;
 
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
@@ -110,6 +111,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             //LIST OF MAKET RATE OF BROKER
             brokerCurrencyQuotationlist = TestData.getMarketRateForCurrencyTest();
             brokerCurrencyQuotation = new BrokerCurrencyQuotation(brokerCurrencyQuotationlist);
+
+            valuesHasChanged = false;
 
             //REMOVE CURRENCY TO PAY OF CURRENCY LIST
             //no lo esta quitando
@@ -282,6 +285,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     }
 
     @Override
+    public boolean setValuesHasChanged(){ return valuesHasChanged; }
+
+    @Override
     public void onSendButtonClicked() {
         Map<ClauseType, ClauseInformation> mapClauses = negotiationInfo.getClauses();
         String contClause = Integer.toString(getTotalSteps(mapClauses));
@@ -294,7 +300,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_ADD_NOTE, this.appSession.getAppPublicKey());
     }
 
-    /*PRIVATE METHOD*/
+    /*------------------------------------- PRIVATE METHOD  -------------------------------------*/
+
+    /*------------------------------------- VIEW METHODS  -------------------------------------*/
     //VIEW TOOLBAR
     private void configureToolbar() {
 
@@ -399,7 +407,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         return cont;
 
     }
+    /*------------------------------------- END VIEW METHODS  -------------------------------------*/
 
+    /* ------------------------------------- ACTION LISTENER  -------------------------------------*/
     //ACTION LISTENER FOR CUSTOMER PAYMENT METHOD
     private void actionListenerCustomerPaymentMethod(ClauseInformation clause, String selectedItem){
 
@@ -434,6 +444,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         if(validateExchangeRate()) {
 
             final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+            //VALIDATE CHANGE
+            validateChange(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue(), newValue);
 
             //ASIGNAMENT NEW VALUE
             newValue = getDecimalFormat(getBigDecimal(newValue));
@@ -481,7 +494,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void actionListenerBrokerCurrency(ClauseInformation clause, Currency selectedItem){
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-//        String payment = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
         String payment = selectedItem.getCode();
         String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
@@ -531,6 +543,18 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         }
 
     }
+    /*------------------------------------------ END ACTION LISTENER -------------------------------------*/
+
+    /*------------------------------------------ VALIDATE OF DATE -------------------------------------*/
+    private void validateChange(String oldValue, String newValue) {
+        valuesHasChanged = false;
+
+        Toast.makeText(getActivity(), "VALIDATE CHAGE: " + oldValue + " != " + newValue, Toast.LENGTH_LONG).show();
+        if (oldValue != newValue) {
+            Toast.makeText(getActivity(), "CHANGE VALUE", Toast.LENGTH_LONG).show();
+            valuesHasChanged = true;
+        }
+    }
 
     //VALIDATE CLAUSE
     private Boolean validateClauses(Map<ClauseType, ClauseInformation> clauses){
@@ -541,6 +565,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             final BigDecimal amountToBuy    = getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue());
             final BigDecimal amountToPay    = getBigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
 
+            //VALIDATE STATUS CLAUSE
+
+            //VALIDATE CLAUSE PAYMENT-INFO
+
+            //VALIDATE QUANTITY
             if(exchangeRate.compareTo(BigDecimal.ZERO) <= 0){
                 Toast.makeText(getActivity(), "The exchange must be greater than zero.", Toast.LENGTH_LONG).show();
                 return false;
@@ -584,7 +613,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         return true;
 
     }
+    /*------------------------------------------ END VALIDATE OF DATE -------------------------------------*/
 
+    /*------------------------------------------ OTHER METHODS -------------------------------------*/
     //ARRAY PAYMENT
     private ArrayList<String> getPaymentMethod(String currency){
 
@@ -604,6 +635,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         return paymentMethods;
     }
+
     //REMOVE CURRENCY TO PAY
     private void removeCurrency(){
 
@@ -657,15 +689,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, "Insert Place To Delivery");
             }
         }
-
-    }
-
-    private void addClause(Map<ClauseType, ClauseInformation> clauses, ClauseType clauseType, String value) {
-
-        ClauseInformation clauseInformation = clauses.get(clauseType);
-
-        if (clauseInformation == null) putClause(clauseType, value);
-        else putClause(clauseInformation,value);
 
     }
 
@@ -725,6 +748,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private String getDecimalFormat(BigDecimal value){
         return DecimalFormat.getInstance().format(value.doubleValue());
     }
+    /*------------------------------------------ END OTHER METHODS -------------------------------------*/
     /*END PRIVATE METHOD*/
 
 

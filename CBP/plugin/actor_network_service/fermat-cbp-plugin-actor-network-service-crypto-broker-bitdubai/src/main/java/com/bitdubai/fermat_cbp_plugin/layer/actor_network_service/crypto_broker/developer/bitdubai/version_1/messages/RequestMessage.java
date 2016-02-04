@@ -2,8 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -31,6 +31,8 @@ public class RequestMessage extends NetworkServiceMessage {
                           final String                  destinationPublicKey,
                           final ConnectionRequestAction requestAction       ,
                           final long                    sentTime            ) {
+
+        super(MessageTypes.REQUEST);
 
         this.requestId            = requestId           ;
         this.senderPublicKey      = senderPublicKey     ;
@@ -105,7 +107,7 @@ public class RequestMessage extends NetworkServiceMessage {
                 ", senderPublicKey='" + senderPublicKey + '\'' +
                 ", senderActorType=" + senderActorType +
                 ", senderAlias='" + senderAlias + '\'' +
-                ", senderImage=" + Arrays.toString(senderImage) +
+                ", senderImage=" + (senderImage != null) +
                 ", destinationPublicKey='" + destinationPublicKey + '\'' +
                 ", requestAction=" + requestAction +
                 ", sentTime=" + sentTime +

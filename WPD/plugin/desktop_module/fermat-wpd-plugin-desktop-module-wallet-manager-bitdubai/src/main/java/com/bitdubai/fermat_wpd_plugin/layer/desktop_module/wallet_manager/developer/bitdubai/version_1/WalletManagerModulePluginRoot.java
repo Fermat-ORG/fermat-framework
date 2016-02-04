@@ -181,6 +181,10 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                 }
             }
 
+            this.serviceStatus = ServiceStatus.STARTED;
+
+
+
         } catch (Exception cantLoadWalletsException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadWalletsException);
             throw new CantStartPluginException();

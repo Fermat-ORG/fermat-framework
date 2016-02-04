@@ -132,7 +132,7 @@ public final class ConnectionNewsDao {
             final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
             for(final ConnectionRequestAction action : actions)
-                connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action, DatabaseFilterType.EQUAL);
+                tableFilters.add(connectionNewsTable.getNewFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, DatabaseFilterType.EQUAL, action.getCode()));
 
             final DatabaseTableFilterGroup filterGroup = connectionNewsTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
 

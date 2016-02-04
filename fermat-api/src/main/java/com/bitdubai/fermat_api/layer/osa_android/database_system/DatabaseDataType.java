@@ -1,57 +1,61 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * <p>The enum <code>DatabaseDataType</code>
  * defined data types for fields in a table
  *
+ * Modified by Manuel Perez on 05/08/2015
+ * Updated by Leon Acosta (laion.cj91a@gmail.com) on 03/02/2016.
+ *
  * @author Luis
  * @version 1.0.0
  * @since 01/02/15.
  */
-public enum DatabaseDataType {
+public enum DatabaseDataType implements FermatEnum {
 
-    //Modified by Manuel Perez on 05/08/2015
-    STRING("STR"),
-    INTEGER("INT"),
-    LONG_INTEGER("LINT"),
-    MONEY("MONEY"),
-    BLOB("BLOB"),
-    TEXT("TEXT"),
-    REAL("REAL");
+    BLOB          ("BLB"),
+    INTEGER       ("INT"),
+    LONG_INTEGER  ("LIN"),
+    MONEY         ("MNY"),
+    REAL          ("REL"),
+    STRING        ("STR"),
+    TEXT          ("TXT"),
 
-    private String code;
+    ;
 
-    DatabaseDataType(String code) {
+    private final String code;
+
+    DatabaseDataType(final String code) {
+
         this.code = code;
     }
 
-    public String getCode() {
-        return this.code;
-    }
-
-    public static DatabaseDataType getByCode(String code) throws InvalidParameterException {
+    public static DatabaseDataType getByCode(final String code) throws InvalidParameterException {
 
         switch (code) {
 
-            case "STR":
-                return STRING;
-            case "INT":
-                return INTEGER;
-            case "LINT":
-                return LONG_INTEGER;
-            case "MONEY":
-                return MONEY;
-            case "BLOB":
-                return BLOB;
-            case "TEXT":
-                return TEXT;
-            case "REAL":
-                return REAL;
+            case "BLB":return BLOB        ;
+            case "INT":return INTEGER     ;
+            case "LIN":return LONG_INTEGER;
+            case "MNY":return MONEY       ;
+            case "REL":return REAL        ;
+            case "STR":return STRING      ;
+            case "TXT":return TEXT        ;
+
             default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the DatabaseDataType enum");
+                throw new InvalidParameterException(
+                        "Code Received: " + code,
+                        "This code is not valid for the DatabaseDataType enum."
+                );
         }
+    }
+
+    @Override
+    public String getCode() {
+        return this.code;
     }
 
 }
