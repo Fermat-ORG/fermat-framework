@@ -146,7 +146,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset User system error",
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_system_error),
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -169,15 +169,15 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailAppropriateLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 new ConfirmDialog.Builder(getActivity(), appSession)
-                        .setTitle("Confirm")
-                        .setMessage("Are you sure you want to do this? This action is irreversible")
-                        .setColorStyle(Color.parseColor("#381a5e"))
-                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                            @Override
-                            public void onClick() {
-                                doAppropriate(digitalAsset.getAssetPublicKey());
-                            }
-                        }).build().show();
+                        .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                        .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
+                                .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
+                                .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                    @Override
+                                    public void onClick() {
+                                        doAppropriate(digitalAsset.getAssetPublicKey());
+                                    }
+                                }).build().show();
             }
         });
 
@@ -274,12 +274,12 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private void configureToolbar() {
         toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(Color.parseColor("#381a5e"));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet_principal));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(Color.parseColor("#381a5e"));
+                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet_principal));
             }
         }
     }
@@ -287,7 +287,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private void doAppropriate(final String assetPublicKey) {
         final Activity activity = getActivity();
         final ProgressDialog dialog = new ProgressDialog(activity);
-        dialog.setMessage("Please wait...");
+        dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
         dialog.show();
         FermatWorker task = new FermatWorker() {
@@ -309,7 +309,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             public void onPostExecute(Object... result) {
                 dialog.dismiss();
                 if (activity != null) {
-                    Toast.makeText(activity, "Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_appropriation_ok), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -317,7 +317,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             public void onErrorOccurred(Exception ex) {
                 dialog.dismiss();
                 if (activity != null)
-                    Toast.makeText(activity, "Fermat Has detected an exception. Please retry again.",
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
                             Toast.LENGTH_SHORT).show();
             }
         });
