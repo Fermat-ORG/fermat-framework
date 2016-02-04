@@ -142,7 +142,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
      * @throws CantGetCryptoBrokerQuoteException
      */
     @Override
-    public Quote getQuote(Currency merchandise, float quantity, FiatCurrency payment) throws CantGetCryptoBrokerQuoteException {
+    public Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException {
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
