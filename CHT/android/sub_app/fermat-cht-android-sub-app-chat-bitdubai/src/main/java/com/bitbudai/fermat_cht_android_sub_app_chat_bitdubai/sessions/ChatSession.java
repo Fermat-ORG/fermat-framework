@@ -16,6 +16,8 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
 
     public static final String CONTACT_DATA = "CONTACT_DATA";
     public static final String CONNECTION_DATA = "CONNECTION_DATA";
+    public static final String whocallme = "whocallme";
+    public static final String chatvalues = "chatvalues";
 
     public ChatSession() {}
 

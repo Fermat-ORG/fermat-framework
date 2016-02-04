@@ -257,6 +257,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try{
+                    appSession.setData("whocallme", "contact");
+                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
                     appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 }catch(CantGetContactException e) {
