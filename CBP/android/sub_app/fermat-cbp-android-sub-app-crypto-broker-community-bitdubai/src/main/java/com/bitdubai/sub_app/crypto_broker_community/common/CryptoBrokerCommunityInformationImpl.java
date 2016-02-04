@@ -5,7 +5,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import java.util.List;
 
 /**
- * Created by Alex on 26/1/2016.
+ * Created by Alejandro Bicelis on 26/1/2016.
  */
 public class CryptoBrokerCommunityInformationImpl implements CryptoBrokerCommunityInformation {
 

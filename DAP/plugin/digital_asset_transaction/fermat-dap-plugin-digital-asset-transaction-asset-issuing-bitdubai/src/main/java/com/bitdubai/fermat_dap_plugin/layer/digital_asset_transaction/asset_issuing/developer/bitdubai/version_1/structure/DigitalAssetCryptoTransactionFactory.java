@@ -736,7 +736,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
                     Actors.DAP_ASSET_ISSUER,
                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                     true,
-                    BlockchainNetworkType.REG_TEST);
+                    BlockchainNetworkType.getDefaultBlockchainNetworkType());
             this.assetIssuingTransactionDao.persistOutgoingIntraActorUUID(transactionId, outgoingId);
             this.assetIssuingTransactionDao.updateTransactionProtocolStatusByTransactionId(transactionId, ProtocolStatus.TO_BE_NOTIFIED);
         } catch (CantExecuteQueryException exception) {

@@ -43,6 +43,7 @@ dependencies {
     compile project(':fermat-osa-addon-android-file-system-bitdubai')
     compile project(':fermat-osa-addon-android-device-location-bitdubai')
     compile project(':fermat-osa-addon-android-logger-bitdubai')
+    compile project(':fermat-osa-addon-android-broadcaster-system-bitdubai')
 
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:support-v13:23.0.1'

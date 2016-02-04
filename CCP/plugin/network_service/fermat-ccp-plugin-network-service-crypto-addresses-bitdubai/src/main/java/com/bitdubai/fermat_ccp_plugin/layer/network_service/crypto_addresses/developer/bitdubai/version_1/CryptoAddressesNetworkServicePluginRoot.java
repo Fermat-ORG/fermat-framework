@@ -1003,7 +1003,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
         System.out.println("----------------------------------\n" +
-                "CRYPTO ADDRESSES FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
+                "CRYPTO ADDRESSES FAILED CONNECTION WITH "+remoteParticipant.getIdentityPublicKey()+"\n" +
                 "--------------------------------------------------------");
         cryptoAddressesExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 

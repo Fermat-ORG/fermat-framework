@@ -14,6 +14,7 @@ public final class DAPStandardFormats {
     public static final DateFormat DATE_FORMAT = DateFormat.getDateInstance();
     public static final DateFormat TIME_FORMAT = new SimpleDateFormat("HH:mm");
     public static final DateFormat DATETIME_FORMAT = DateFormat.getDateTimeInstance();
+    public static final SimpleDateFormat SIMPLE_DATETIME_FORMAT = new SimpleDateFormat("MMM d, yyyy HH:mm");
     public static final DecimalFormat BITCOIN_FORMAT = new DecimalFormat("0.000000");
     public static final long MINIMUN_SATOSHI_AMOUNT = 50000;
 

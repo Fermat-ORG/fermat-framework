@@ -99,7 +99,6 @@ public class CustomerBrokerPurchaseNegotiationDatabaseFactory implements DealsWi
 
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_VALUE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
