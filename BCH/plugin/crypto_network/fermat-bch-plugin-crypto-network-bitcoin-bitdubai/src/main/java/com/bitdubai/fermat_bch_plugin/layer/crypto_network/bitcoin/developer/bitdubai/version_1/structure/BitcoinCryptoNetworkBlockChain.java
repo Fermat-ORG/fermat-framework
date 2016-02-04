@@ -20,6 +20,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
+
+import javax.print.attribute.standard.DateTimeAtCompleted;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptonetwork.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkBlockChain</code>
@@ -40,8 +47,7 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
     private BlockStore blockStore;
     private Wallet wallet;
     private NetworkParameters networkParameters;
-    private final String BLOCKCHAIN_FILENAME = "/data/data/com.bitdubai.fermat/files/bitcoin_Blockchain_";
-    private final String CHECKPOINT_DIRECTORY = "";
+    private final String BLOCKCHAIN_FILENAME;
     private final String CHECKPOINT_FILENAME;
     private final BlockchainNetworkType BLOCKCHAIN_NETWORK_TYPE;
 
@@ -54,7 +60,9 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
         this.wallet = wallet;
 
         this.BLOCKCHAIN_NETWORK_TYPE = BitcoinNetworkSelector.getBlockchainNetworkType(this.networkParameters);
-        this.CHECKPOINT_FILENAME = "checkpoint_" + BLOCKCHAIN_NETWORK_TYPE.getCode();
+
+        this.BLOCKCHAIN_FILENAME = "/data/data/com.bitdubai.fermat/files/bitcoin_Blockchain_" + BLOCKCHAIN_NETWORK_TYPE.getCode();
+        this.CHECKPOINT_FILENAME = "checkpoints-" + BLOCKCHAIN_NETWORK_TYPE.getCode();
 
         /**
          * initialize the objects
@@ -75,7 +83,7 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
     }
 
     /**
-     * Initializes the blochchain and blockstore objects.
+     * Initializes the blockchain and blockstore objects.
      * @param withError since I'm using this recursively, I will use this parameter to avoid a loop.
      * @throws BlockStoreException if something went wrong and I can't create the blockchain
      */
@@ -84,17 +92,28 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
          * I will define the SPV blockstore were I will save the blockchain.
          * I will be saving the file under the network type I'm being created for.
          */
-        String fileName = BLOCKCHAIN_FILENAME + BLOCKCHAIN_NETWORK_TYPE.getCode();
-        File blockChainFile = new File(fileName);
+        File blockChainFile = new File(BLOCKCHAIN_FILENAME);
+
+        /**
+         * I will verify in the blockchain file already exists.
+         * to set a boolean variable and decide later If I will add checkpoints.
+         */
+        boolean firstTime = true;
+        if (blockChainFile.exists())
+            firstTime = false;
 
         /**
          * If this is the RegTest Network, I will delete any previous blockstore
          * Since this blockchain will be very small, I will rebuild it each time.
          */
         if (BLOCKCHAIN_NETWORK_TYPE == BlockchainNetworkType.REG_TEST){
-            blockChainFile.delete();
+            if (blockChainFile.exists())
+                blockChainFile.delete();
         }
 
+        /**
+         * I create the blockstore.
+         */
         try {
             blockStore = new SPVBlockStore(networkParameters, blockChainFile);
         } catch (Exception e) {
@@ -109,12 +128,14 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
         }
 
         /**
-         * I will load the checkpoints for this network, if they exists.
+         * I will load the checkpoints for this network, if this is the initialization of the blockchain and
+         * the checkpoint exists.
          */
         try {
-            loadCheckpoint();
+            if (firstTime)
+                loadCheckpoint();
         } catch (IOException e) {
-            // if the file doesn't exists, I will continue.
+            // if there are no checkpoints, then I will continue
             e.printStackTrace();
         }
 
@@ -137,12 +158,26 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
     /**
      * If there are checkpoints for this network type, then I will load them to the blockchain
      */
-    private void loadCheckpoint() throws IOException, BlockStoreException {
+    private void loadCheckpoint() throws BlockStoreException, IOException {
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        InputStream inputStream = classLoader.getResourceAsStream(CHECKPOINT_FILENAME);
 
-        File checkpointFile = new File(CHECKPOINT_DIRECTORY,CHECKPOINT_FILENAME);
-        if (checkpointFile.exists()){
-            FileInputStream fileInputStream = new FileInputStream(checkpointFile);
-            CheckpointManager.checkpoint(networkParameters, fileInputStream, blockStore, System.currentTimeMillis());
+        if (inputStream != null) {
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            Date date = null;
+            try {
+                date = format.parse("2016-01-05 01:24:22");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            long millis = date.getTime();
+
+
+            CheckpointManager.checkpoint(networkParameters, inputStream, blockStore, millis);
+            System.out.println("*** Crypto Network *** Checkpoint loaded for network " + BLOCKCHAIN_NETWORK_TYPE.getCode());
         }
+
     }
 }
