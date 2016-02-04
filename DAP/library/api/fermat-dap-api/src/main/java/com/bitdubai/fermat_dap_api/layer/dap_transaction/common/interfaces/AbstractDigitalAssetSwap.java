@@ -8,10 +8,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Ass
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 
 import java.util.UUID;
@@ -55,10 +53,6 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
     public CryptoTransaction foundCryptoTransaction(DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
         return AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, digitalAssetMetadata);
     }
-
-    public abstract void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException;
-
-    public abstract void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException;
 
     public boolean isAvailableBalanceInAssetVault(long genesisAmount, String genesisTransaction) {
         //I will hardcode this control for testing
