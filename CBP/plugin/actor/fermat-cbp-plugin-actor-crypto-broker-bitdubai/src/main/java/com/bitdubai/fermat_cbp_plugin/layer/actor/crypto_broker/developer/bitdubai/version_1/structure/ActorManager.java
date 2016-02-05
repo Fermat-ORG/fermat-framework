@@ -66,8 +66,8 @@ public class ActorManager implements CryptoBrokerActorManager {
         }
 
         @Override
-        public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException {
-            return this.dao.getBrokerIdentityWalletRelationshipByIdentity(identity);
+        public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListBrokerIdentityWalletRelationshipException {
+            return this.dao.getBrokerIdentityWalletRelationshipByIdentity(publicKey);
         }
 
         @Override
