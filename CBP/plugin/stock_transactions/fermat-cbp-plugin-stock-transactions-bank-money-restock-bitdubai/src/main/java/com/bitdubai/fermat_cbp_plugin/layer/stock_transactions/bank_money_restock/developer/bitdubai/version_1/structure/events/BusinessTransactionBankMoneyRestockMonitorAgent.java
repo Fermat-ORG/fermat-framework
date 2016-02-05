@@ -156,7 +156,15 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent implements Agent {
                                 bankMoneyTransaction.getAmount(),
                                 bankMoneyTransaction.getMemo(),
                                 pluginId.toString());
-                        holdManager.hold(bankTransactionParametersWrapper);
+
+                        if (!holdManager.isTransactionRegistered(bankMoneyTransaction.getTransactionId()))
+                            holdManager.hold(bankTransactionParametersWrapper);
+
+                        bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
+
+                        break;
+                    case IN_EJECUTION:
                         //Luego cambiar el status al registro de la transaccion leido
                         if (holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode() == BankTransactionStatus.CONFIRMED.getCode())
                         {

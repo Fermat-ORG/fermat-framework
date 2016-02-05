@@ -145,8 +145,14 @@ public class StockTransactionsCashMoneyRestockMonitorAgent implements Agent {
                                 //cashMoneyTransaction.getCashReference(),
                                 cashMoneyTransaction.getMemo(),
                                 pluginId.toString());
-                        //TODO:Buscar si existe la transaccion en CASH y si es positivo no volverla agregar
-                        cashHoldTransactionManager.createCashHoldTransaction(cashTransactionParametersWrapper);
+
+                        if (!cashHoldTransactionManager.isTransactionRegistered(cashMoneyTransaction.getTransactionId()))
+                            cashHoldTransactionManager.createCashHoldTransaction(cashTransactionParametersWrapper);
+
+                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
+                        break;
+                    case IN_EJECUTION:
                         CashTransactionStatus castTransactionStatus = cashHoldTransactionManager.getCashHoldTransactionStatus(cashMoneyTransaction.getTransactionId());
 
                         if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {
