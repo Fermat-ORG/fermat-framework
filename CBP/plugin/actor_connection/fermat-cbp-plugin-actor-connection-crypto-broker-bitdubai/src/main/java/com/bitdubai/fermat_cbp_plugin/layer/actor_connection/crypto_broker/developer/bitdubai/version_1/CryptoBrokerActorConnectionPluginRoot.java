@@ -95,7 +95,7 @@ public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin implem
                     this.getPluginVersionReference()
             );
 
-            FermatEventListener newsListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
+           /* FermatEventListener newsListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
             newsListener.setEventHandler(new CryptoBrokerConnectionRequestNewsEventHandler(eventActions, this));
             eventManager.addListener(newsListener);
             listenersAdded.add(newsListener);
@@ -103,7 +103,7 @@ public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin implem
             FermatEventListener updatesListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES);
             updatesListener.setEventHandler(new CryptoBrokerConnectionRequestUpdatesEventHandler(eventActions, this));
             eventManager.addListener(updatesListener);
-            listenersAdded.add(updatesListener);
+            listenersAdded.add(updatesListener);*/
 
             fermatManager = new ActorConnectionManager(
                     cryptoBrokerManagerNetworkService,

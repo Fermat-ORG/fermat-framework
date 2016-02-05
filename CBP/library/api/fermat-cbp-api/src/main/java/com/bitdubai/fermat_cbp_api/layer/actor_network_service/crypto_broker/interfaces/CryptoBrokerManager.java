@@ -116,11 +116,13 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * This method is exposed for the crypto broker actor connection plug-in. Here we'll return all the new requests that arrive to him.
      *
+     * @param actorType type of the actor whom wants to be new notifications
+     *
      * @return a list of instance of CryptoBrokerConnectionNews
      *
      * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
-    List<CryptoBrokerConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException;
+    List<CryptoBrokerConnectionRequest> listPendingConnectionNews(Actors actorType) throws CantListPendingConnectionRequestsException;
 
     /**
      * Through the method <code>listPendingConnectionUpdates</code> we can list all the connection news

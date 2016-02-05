@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker
 
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
 
 import java.util.UUID;
 
@@ -20,7 +19,7 @@ public class InformationMessage extends NetworkServiceMessage {
     public InformationMessage(final UUID                    requestId,
                               final ConnectionRequestAction action   ) {
 
-        super(MessageTypes.INFORMATION);
+        super(MessageTypes.CONNECTION_INFORMATION);
 
         this.requestId = requestId;
         this.action    = action   ;
