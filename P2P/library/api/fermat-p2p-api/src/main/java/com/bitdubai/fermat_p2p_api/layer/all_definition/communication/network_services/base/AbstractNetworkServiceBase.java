@@ -35,6 +35,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionLooseNotificationEvent;
@@ -43,7 +45,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteUpdateActorNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents.CommunicationRegistrationProcessNetworkServiceAgent;
@@ -53,7 +55,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.ClientConnectionLooseNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.ClientSuccessfulReconnectNotificationEventHandler;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.CloseConnectionNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.CompleteComponentRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
@@ -63,14 +64,18 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.VPNConnectionLooseNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -214,6 +219,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         this.name                  = name;
         this.extraData             = extraData;
         this.starting              = new AtomicBoolean(false);
+        this.register              = Boolean.FALSE;
     }
 
 
@@ -387,15 +393,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         listenersAdded.add(fermatEventListener);
 
         /*
-         * 4 Listen and handle Client Connection Success Reconnect Notification Event
-         */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
-        fermatEventListener.setEventHandler(new CloseConnectionNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
-        listenersAdded.add(fermatEventListener);
-
-        /*
-         * 5 Listen and handle Complete Request List Component Registered Notification Event
+         * 4 Listen and handle Complete Request List Component Registered Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
@@ -403,7 +401,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         listenersAdded.add(fermatEventListener);
 
         /*
-         * 6 Listen and handle Complete Component Registration Notification Event
+         * 5 Listen and handle Complete Component Registration Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
@@ -412,7 +410,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
 
         /*
-         * 7 Listen and handle Complete Request list
+         * 6 Listen and handle Complete Request list
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
@@ -420,7 +418,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         listenersAdded.add(fermatEventListener);
 
         /*
-         * 8 Listen and handle Complete Update Actor Profile Notification Event
+         * 7 Listen and handle Complete Update Actor Profile Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_UPDATE_ACTOR_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteUpdateActorNotificationEventHandler(this));
@@ -428,7 +426,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         listenersAdded.add(fermatEventListener);
 
         /*
-         * 9 Listen and handle failure component connection
+         * 8 Listen and handle failure component connection
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
@@ -436,7 +434,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         listenersAdded.add(fermatEventListener);
 
         /*
-         * 10 Listen and handle VPN Connection Close Notification Event
+         * 9 Listen and handle VPN Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
         fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
@@ -445,7 +443,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
 
         /*
-         * 11 Listen and handle VPN Connection Close Notification Event
+         * 10 Listen and handle VPN Connection Close Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_LOOSE);
         fermatEventListener.setEventHandler(new VPNConnectionLooseNotificationEventHandler(this));
@@ -593,6 +591,31 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @param event
      */
     public void handleCompleteComponentRegistrationNotificationEvent(CompleteComponentRegistrationNotificationEvent event) {
+
+        try {
+
+            if (event.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
+
+                if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
+                    communicationRegistrationProcessNetworkServiceAgent.stop();
+                    communicationRegistrationProcessNetworkServiceAgent = null;
+                }
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceProfile().getNetworkServiceType(), this.getNetworkServiceProfile());
+            }
+
+            if (event.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
+                    event.getPlatformComponentProfileRegistered().getNetworkServiceType() == getNetworkServiceProfile().getNetworkServiceType() &&
+                        event.getPlatformComponentProfileRegistered().getIdentityPublicKey().equals(identity.getPublicKey())) {
+
+                this.register = Boolean.TRUE;
+                onNetworkServiceRegistered();
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -600,6 +623,22 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @param event
      */
     public void handleClientConnectionCloseNotificationEvent(ClientConnectionCloseNotificationEvent event) {
+
+        try {
+
+            this.register = Boolean.FALSE;
+
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.closeAllConnection();
+                communicationNetworkServiceConnectionManager.stop();
+            }
+
+            onClientConnectionClose();
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -607,6 +646,20 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @param event
      */
     public void handleClientSuccessfulReconnectNotificationEvent(ClientSuccessReconnectNotificationEvent event) {
+
+        try {
+
+            if (communicationNetworkServiceConnectionManager != null){
+                communicationNetworkServiceConnectionManager.restart();
+            }
+
+            this.register = Boolean.TRUE;
+
+            onClientSuccessfulReconnect();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -616,13 +669,19 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleClientConnectionLooseNotificationEvent(ClientConnectionLooseNotificationEvent event) {
 
-    }
+        try {
 
-    /**
-     * Handle the event ClientConnectionCloseNotificationEvent
-     * @param event
-     */
-    public void handleCloseConnectionNotificationEvent(ClientConnectionCloseNotificationEvent event) {
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.stop();
+            }
+
+            this.register = Boolean.FALSE;
+
+            onClientConnectionLoose();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -631,6 +690,11 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @param event
      */
     public void handleCompleteComponentConnectionRequestNotificationEvent(CompleteComponentConnectionRequestNotificationEvent event) {
+
+        /*
+         * Tell the manager to handler the new connection established
+         */
+        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(event.getRemoteComponent());
     }
 
     /**
@@ -639,6 +703,10 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(CompleteRequestListComponentRegisteredNotificationEvent event) {
 
+        CopyOnWriteArrayList<PlatformComponentProfile> remotePlatformComponentProfileRegisteredList  = new CopyOnWriteArrayList<>();
+        remotePlatformComponentProfileRegisteredList.addAllAbsent(event.getRegisteredComponentList());
+
+        onReceivePlatformComponentProfileRegisteredList(remotePlatformComponentProfileRegisteredList);
     }
 
     /**
@@ -647,14 +715,17 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleCompleteUpdateActorNotificationEvent(CompleteUpdateActorNotificationEvent event) {
 
+        onCompleteActorProfileUpdate(event.getPlatformComponentProfileUpdate());
     }
+
 
     /**
      * Handle the event FailureComponentConnectionRequestNotificationEvent
      * @param event
      */
-    public void handleFailureComponentRegistrationNotificationEvent(FailureComponentConnectionRequestNotificationEvent event) {
+    public void handleFailureComponentRegistrationNotificationEvent(FailureComponentRegistrationNotificationEvent event) {
 
+        onFailureComponentRegistration(event.getPlatformComponentProfile());
     }
 
     /**
@@ -662,6 +733,15 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @param event
      */
     public void handleVpnConnectionCloseNotificationEvent(VPNConnectionCloseNotificationEvent event) {
+
+        if(event.getNetworkServiceApplicant() == getNetworkServiceProfile().getNetworkServiceType()){
+
+            String remotePublicKey = event.getRemoteParticipant().getIdentityPublicKey();
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
+            }
+
+        }
 
     }
 
@@ -671,6 +751,65 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleVPNConnectionLooseNotificationEvent(VPNConnectionLooseNotificationEvent event) {
 
+        if(event.getNetworkServiceApplicant() == getNetworkServiceProfile().getNetworkServiceType()){
+
+            String remotePublicKey = event.getRemoteParticipant().getIdentityPublicKey();
+            if(communicationNetworkServiceConnectionManager != null) {
+                communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
+            }
+
+        }
+
+    }
+
+    /**
+     * Method tha send a new Message
+     */
+    public void sendNewMessage(PlatformComponentProfile sender, PlatformComponentProfile destination, String messageContent) throws CantSendMessageException {
+
+        try {
+
+             /*
+             * ask for a previous connection
+             */
+            CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(destination.getIdentityPublicKey());
+
+            if (communicationNetworkServiceLocal != null) {
+
+                //Send the message
+                communicationNetworkServiceLocal.sendMessage(sender.getIdentityPublicKey(), messageContent);
+
+            } else {
+
+                /*
+                 * Created the message
+                 */
+                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(sender.getIdentityPublicKey(),//Sender
+                        destination.getIdentityPublicKey(), //Receiver
+                        messageContent, //Message Content
+                        FermatMessageContentType.TEXT);//Type
+
+                /*
+                 * Configure the correct status
+                 */
+                ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+
+                /*
+                 * Save to the data base table
+                 */
+                communicationNetworkServiceConnectionManager.getOutgoingMessageDao().create(fermatMessage);
+
+                /*
+                 * Ask the client to connect
+                 */
+                communicationNetworkServiceConnectionManager.connectTo(sender, getNetworkServiceProfile(), destination);
+            }
+
+        }catch (Exception e){
+
+            System.out.println("Error sending message: "+e.getMessage());
+            throw new CantSendMessageException(CantSendMessageException.DEFAULT_MESSAGE, e);
+        }
     }
 
     /**
@@ -680,7 +819,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     protected abstract void onStart();
 
     /**
-     * This method is called when the network service receive
+     * This method is automatically called when the network service receive
      * a new message
      *
      * @param newFermatMessageReceive
@@ -688,40 +827,113 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     protected abstract void onNewMessagesReceive(FermatMessage newFermatMessageReceive);
 
     /**
-     * This method is called when the network service receive
+     * This method is automatically called when the network service receive
      * a new message was sent
      *
      * @param messageSent
      */
     public abstract void onSentMessage(FermatMessage messageSent);
 
+    /**
+     * This method is automatically called when the network service is registered
+     */
+    protected abstract void onNetworkServiceRegistered();
 
+    /**
+     * This method is automatically called when the client connection is close
+     */
+    protected abstract void  onClientConnectionClose();
+
+    /**
+     * This method is automatically called when the client connection is Successful reconnect
+     */
+    protected abstract void onClientSuccessfulReconnect();
+
+    /**
+     * This method is automatically called when the client connection is loose
+     */
+    protected abstract void onClientConnectionLoose();
+
+    /**
+     * This method is automatically called when the list of platform Component Profile Registered
+     * is received for the network service
+     */
+    protected abstract void onReceivePlatformComponentProfileRegisteredList(CopyOnWriteArrayList<PlatformComponentProfile> remotePlatformComponentProfileRegisteredList);
+
+    /**
+     * This method is automatically called when the request to update a actor profile is complete
+     */
+    protected abstract void onCompleteActorProfileUpdate(PlatformComponentProfile platformComponentProfileUpdate);
+
+    /**
+     * This method is automatically called when the request of component registrations is fail
+     */
+    protected abstract void onFailureComponentRegistration(PlatformComponentProfile platformComponentProfile);
+
+
+    protected abstract void reprocessMessages();
+
+    /**
+     * Get the value of the NetworkServiceProfile
+     * @return PlatformComponentProfile
+     */
     public PlatformComponentProfile getNetworkServiceProfile() {
         return networkServiceProfile;
     }
 
+    /**
+     * Get the database instance
+     * @return Database
+     */
     protected Database getDataBase() {
         return dataBase;
     }
 
+    /**
+     * Get the CommunicationsClientConnection instance
+     * @return CommunicationsClientConnection
+     */
     protected CommunicationsClientConnection getCommunicationsClientConnection() {
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
     }
 
-
+    /**
+     * Get the ErrorManager instance
+     * @return ErrorManager
+     */
     public ErrorManager getErrorManager() {
         return errorManager;
     }
 
+    /**
+     * Get the EventManager instance
+     * @return EventManager
+     */
     public EventManager getEventManager() {
         return eventManager;
     }
 
+    /**
+     * Get the WsCommunicationsCloudClientManager instance
+     * @return WsCommunicationsCloudClientManager
+     */
     public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
         return wsCommunicationsCloudClientManager;
     }
 
+    /**
+     * Get is register value
+     * @return boolean
+     */
     public boolean isRegister() {
         return register;
+    }
+
+    /**
+     * Get the CommunicationNetworkServiceConnectionManager instance
+     * @return CommunicationNetworkServiceConnectionManager
+     */
+    public CommunicationNetworkServiceConnectionManager getCommunicationNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
     }
 }
