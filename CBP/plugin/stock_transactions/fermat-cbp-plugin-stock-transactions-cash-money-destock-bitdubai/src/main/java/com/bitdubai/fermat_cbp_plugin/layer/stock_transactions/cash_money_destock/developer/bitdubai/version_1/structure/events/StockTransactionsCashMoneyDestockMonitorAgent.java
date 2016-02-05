@@ -188,7 +188,14 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
                                 //cashMoneyTransaction.getCashReference(),
                                 cashMoneyTransaction.getMemo(),
                                 pluginId.toString());
-                        cashUnholdTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
+
+                        if (!cashUnholdTransactionManager.isTransactionRegistered(cashMoneyTransaction.getTransactionId()))
+                            cashUnholdTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
+
+                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+                        break;
+                    case IN_EJECUTION:
                         CashTransactionStatus castTransactionStatus = cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
                         if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);

@@ -202,7 +202,14 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
                                 bankMoneyTransaction.getAmount(),
                                 bankMoneyTransaction.getMemo(),
                                 pluginId.toString());
-                        unHoldManager.unHold(bankTransactionParametersWrapper);
+
+                        if (!unHoldManager.isTransactionRegistered(bankMoneyTransaction.getTransactionId()))
+                            unHoldManager.unHold(bankTransactionParametersWrapper);
+
+                        bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
+                        break;
+                    case IN_EJECUTION:
                         BankTransactionStatus bankTransactionStatus = unHoldManager.getUnholdTransactionsStatus(bankMoneyTransaction.getTransactionId());
                         if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode()) {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
