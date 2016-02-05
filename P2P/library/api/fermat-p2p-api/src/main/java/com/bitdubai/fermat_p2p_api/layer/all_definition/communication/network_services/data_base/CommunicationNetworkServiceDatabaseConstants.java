@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base;
 
+import java.util.UUID;
+
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.template.developer.bitdubai.version_1.structure.CommunicationNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
@@ -17,7 +19,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_s
  */
 public final class CommunicationNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "template_network_service_data_base";
+    public static final String DATA_BASE_NAME  = "network_service_data_base_"+ UUID.randomUUID().toString();
 
     /**
      * incoming messages database table definition.

@@ -397,7 +397,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
     }
 
     @Override
-    public PlatformComponentProfile getProfileToRequestConnectionDestination(String identityPublicKeyDestination) {
+    public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
         return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                 .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
                         "destination_alias",
@@ -408,7 +408,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
     }
 
     @Override
-    public PlatformComponentProfile getProfileToRequestConnectionSender(String identityPublicKeySender) {
+    public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
         return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                                                                        .constructPlatformComponentProfileFactory(identityPublicKeySender,
                                                                                                                  "sender_alias",
@@ -860,8 +860,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
             // Sending message to the destination
             sendNewMessage(
-                    getProfileToRequestConnectionSender(intraUserSelectedPublicKey),
-                    getProfileToRequestConnectionDestination(intraUserToAddPublicKey),
+                    getProfileSenderToRequestConnection(intraUserSelectedPublicKey),
+                    getProfileDestinationToRequestConnection(intraUserToAddPublicKey),
                     actorNetworkServiceRecord.toJson());
 
 
@@ -914,8 +914,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
             // Sending message to the destination
             sendNewMessage(
-                    getProfileToRequestConnectionSender(messageToSend.getActorSenderPublicKey()),
-                    getProfileToRequestConnectionDestination(messageToSend.getActorDestinationPublicKey()),
+                    getProfileSenderToRequestConnection(messageToSend.getActorSenderPublicKey()),
+                    getProfileDestinationToRequestConnection(messageToSend.getActorDestinationPublicKey()),
                     messageToSend.toJson());
 
 
@@ -943,8 +943,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
             // Sending message to the destination
             sendNewMessage(
-                    getProfileToRequestConnectionSender(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                    getProfileToRequestConnectionDestination(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                    getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
+                    getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
                     actorNetworkServiceRecord.toJson());
 
         } catch (Exception e) {
@@ -985,8 +985,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
             // Sending message to the destination
             sendNewMessage(
-                    getProfileToRequestConnectionSender(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                    getProfileToRequestConnectionDestination(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                    getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
+                    getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
                     actorNetworkServiceRecord.toJson());
 
 
@@ -1020,8 +1020,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
             // Sending message to the destination
             sendNewMessage(
-                    getProfileToRequestConnectionSender(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                    getProfileToRequestConnectionDestination(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                    getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
+                    getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
                     actorNetworkServiceRecord.toJson());
 
         } catch (Exception e) {

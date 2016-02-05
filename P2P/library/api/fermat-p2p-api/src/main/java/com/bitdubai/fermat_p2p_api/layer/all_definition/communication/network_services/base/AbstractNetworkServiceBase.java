@@ -949,10 +949,39 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * <code>
      *
      *     @overray
-     *     public PlatformComponentProfile getProfileToRequestConnectionDestination(String identityPublicKey) {
+     *     public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeySender) {
      *
      *         return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
-     *                                                       .constructPlatformComponentProfileFactory(actor.getIdentityPublicKey(),
+     *                                                       .constructPlatformComponentProfileFactory(identityPublicKeySender,
+     *                                                                                                 actor.getAlias(),
+     *                                                                                                 actor.getName(),
+     *                                                                                                 NetworkServiceType.UNDEFINED,
+     *                                                                                                 PlatformComponentType.ACTOR_INTRA_USER,
+     *                                                                                                 "");
+     *
+     *     }
+     *
+     * </code>
+     *
+     * @param identityPublicKeySender
+     * @return PlatformComponentProfile
+     */
+    public abstract PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender);
+
+    /**
+     * This method is automatically called when the CommunicationSupervisorPendingMessagesAgent is trying to request
+     * a new connection for a message pending to send. This method need construct the profile specific to
+     * the network service work.
+     *
+     * Example: Is the network service work with actor this profile has to mach with the actor.
+     *
+     * <code>
+     *
+     *     @overray
+     *     public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
+     *
+     *         return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
+     *                                                       .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
      *                                                                                                 actor.getAlias(),
      *                                                                                                 actor.getName(),
      *                                                                                                 NetworkServiceType.UNDEFINED,
@@ -966,10 +995,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @param identityPublicKeyDestination
      * @return PlatformComponentProfile
      */
-    public abstract PlatformComponentProfile getProfileToRequestConnectionDestination(String identityPublicKeyDestination);
-
-    //TODO: Robert i love you
-    public abstract PlatformComponentProfile getProfileToRequestConnectionSender(String identityPublicKey);
+    public abstract PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination);
 
     /**
      * This method is automatically called  when the client connection is close
