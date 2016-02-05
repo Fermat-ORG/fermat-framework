@@ -200,9 +200,9 @@ public class ChatListFragment extends AbstractFermatFragment{
 
         int sizeofmessagelist=0;
         UUID chatidtemp;
-        UUID contactid;
+        String contactid;
         Contact tempcontac=new ContactImpl();
-        String name,message,datemessage,pkremote,chatid;
+        String name,message,datemessage,chatid;
         try {
               infochat.clear();
         for (int i=0;i<chatcreated.size();i++){
@@ -214,7 +214,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             message=chatManager.getMessageByChatId(chatidtemp).get(sizeofmessagelist - 1).getMessage();
             datemessage=chatManager.getChatByChatId(chatidtemp).getLastMessageDate().toString();
             chatid=chatidtemp.toString();
-            contactid=chatManager.getMessageByChatId(chatidtemp).get(i).getContactId();
+            contactid=String.valueOf(chatManager.getMessageByChatId(chatidtemp).get(i).getContactId());
             infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+contactid+"@#@#");
             imgid.add(R.drawable.ken);
         }
@@ -224,7 +224,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         } catch (CantGetMessageException e) {
             e.printStackTrace();
         }
-    }
+    }//3f73559d-6fee-4a66-a5fc-25d12823798f
 
     @Override
      public void onCreate(Bundle savedInstanceState) {
@@ -293,14 +293,19 @@ public class ChatListFragment extends AbstractFermatFragment{
                     @Override
                     public void run() {
                         System.out.println("LEAN ON");
-                        Toast.makeText(getActivity(), "Wake up Kakaroto", Toast.LENGTH_SHORT).show();
+                 //       Toast.makeText(getActivity(), "Wake up Kakaroto", Toast.LENGTH_SHORT).show();
 
                         try {
                             System.out.println("Threar UI corriendo");
                             //TODO: fix this
-                            especialfilldatabase();
-                            updatevalues();
-                            adapter.refreshEvents(infochat, imgid);
+                            if (!chatManager.getContacts().isEmpty()) {
+                                especialfilldatabase();
+                                updatevalues();
+                                adapter.refreshEvents(infochat, imgid);
+                            } else {
+                                Toast.makeText(getActivity(), "No Contact now", Toast.LENGTH_SHORT).show();
+
+                            }
                         } catch (Exception e) {
                             //TODO: fix this
                             e.printStackTrace();
