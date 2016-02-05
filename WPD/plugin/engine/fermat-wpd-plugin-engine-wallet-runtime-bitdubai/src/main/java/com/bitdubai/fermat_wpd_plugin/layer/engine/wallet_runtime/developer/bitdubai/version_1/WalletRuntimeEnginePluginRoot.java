@@ -1185,6 +1185,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
