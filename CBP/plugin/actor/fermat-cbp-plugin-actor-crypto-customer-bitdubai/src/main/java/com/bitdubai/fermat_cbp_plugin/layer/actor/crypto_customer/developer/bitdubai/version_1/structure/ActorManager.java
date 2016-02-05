@@ -49,8 +49,8 @@ public class ActorManager implements ActorExtraDataManager {
         }
 
         @Override
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListCustomerIdentityWalletRelationshipException {
-            return this.dao.getCustomerIdentityWalletRelationshipByIdentity(identity);
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+            return this.dao.getCustomerIdentityWalletRelationshipByIdentity(publicKey);
         }
 
         @Override
