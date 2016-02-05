@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:weightSum="1">
 
-    <RelativeLayout
+    <!--<RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="95dp"
         android:background="@drawable/ccw_negotiation_details_gradient_colors"
@@ -16,7 +16,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
-        tools:visibility="visible">
+        tools:visibility="visible">-->
 
 
         <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
@@ -29,7 +29,7 @@
             <!--android:layout_centerVertical="true"-->
             <!--android:layout_centerHorizontal="true" />-->
 
-        <TextView
+        <!--<TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Negotiation Note"
@@ -39,7 +39,7 @@
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
             android:typeface="sans" />
-    </RelativeLayout>
+    </RelativeLayout>-->
 
     <LinearLayout
         android:orientation="vertical"

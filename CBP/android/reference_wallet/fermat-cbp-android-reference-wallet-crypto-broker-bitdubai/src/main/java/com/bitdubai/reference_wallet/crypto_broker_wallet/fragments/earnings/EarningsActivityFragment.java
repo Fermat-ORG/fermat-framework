@@ -64,8 +64,6 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
     private FermatTextView currentValue;
     private FermatTextView previousValue;
     private ImageView sortByButton;
-    private MenuItem monthMenuItem;
-    private MenuItem dayMenuItem;
     private PopupMenu popupMenu;
     private FermatTextView timeFieldTextView;
 
@@ -114,7 +112,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         currencyPairsRecyclerView.setAdapter(currencyPairsAdapter);
 
         final EarningsPair earningsPair = earningsPairs.get(0);
-        final Currency earningCurrency = earningsPair.getSelectedCurrency();
+        final Currency earningCurrency = earningsPair.getEarningCurrency();
         final List<EarningTestData> dataSet = TestData.getEarnings(earningCurrency, Calendar.MONTH);
         earningsOverviewAdapter = new EarningsOverviewAdapter(getActivity(), dataSet);
         earningsOverviewRecyclerView = (RecyclerView) layout.findViewById(R.id.earning_overview_recycler_view);
@@ -165,7 +163,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
 
     @Override
     public void onItemClickListener(EarningsPair data, int position) {
-        selectedCurrency = data.getSelectedCurrency();
+        selectedCurrency = data.getEarningCurrency();
 
         List<EarningTestData> earnings = TestData.getEarnings(selectedCurrency, Calendar.MONTH);
         earningsOverviewAdapter.changeDataSet(earnings);

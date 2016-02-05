@@ -53,7 +53,7 @@ public abstract class AbstractCryptoAddress {
 
         try {
 
-            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getCryptoAddress(BlockchainNetworkType.DEFAULT);
+            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getCryptoAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
         } catch (CantIdentifyVaultException e) {
             throw new CantGenerateCryptoAddressException(e, "", "Problem identifying vault.");
