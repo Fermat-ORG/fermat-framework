@@ -18,7 +18,7 @@ November 2015
 _www.fermat.org_
 
 <br>
-## Status of the Document
+## Document Status
 
 This document is a DRAFT with no formal reviews yet. Some changes are being done from time to time. If you want, you  can make a formal review of this document. We will be happy to add you at the _reviewers_ section.
 
@@ -32,16 +32,16 @@ Developing peer-to-peer financial applications is challenging. Bitcoin provides 
 
 We propose a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. A synchronization scheme running on top of it transforms a standalone app into a distributed application across several devices still owned by the same user.
 
-We propose a framework to replace the standalone wallet application. This framework handles the full stack on top of crypto networks up to the user interface and it is intended to easily build and run APPs designed for that framework. In this way we enable the development of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled, and that does not require a trusted third party of any sort.
+We propose a framework to replace the standalone wallet application. This framework handles the full stack on top of crypto networks up to the user interface and it is intended to easily build and run APPs designed for that framework. In this way we enable the development of peer-to-peer financial applications that are both crypto currency and digital-asset-enabled, and that does not require a trusted third party of any sort.
 
 <br>
 ## Introduction
 
-Standalone Bitcoin wallets were the first generation of trust-less financial applications since they didn't require to trust any third party, inheriting this property from the Bitcoin network itself. As the ecosystem evolved, trusted third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to build in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, securing funds, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the benefit of Bitcoin of not relying on trust, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and standalone wallets were effectively left behind.
+Standalone Bitcoin wallets were the first generation of trust-less financial applications since they didn't require to trust any third party, inheriting this property from the Bitcoin network itself. As the ecosystem evolved, trusted third parties were introduced again and they took over the wallet space because of technical capabilities that are easier to build in a centralized way: communication between wallets, synchronization between devices, interfacing the legacy financial system, securing funds, etc., and they consistently took the biggest share of funding, leaving standalone wallets far behind and at the same time trashing the Bitcoin benefit of not relying on trust, one of its key features. Applications trying to use the blockchain to transport meta-data were considered spammers and standalone wallets were effectively left behind.
 
 What is needed on top of all existing protocols is a layer that faces end users and that finishes the job Bitcoin started regarding its core principles of openness, decentralization and privacy. Using crypto networks for transporting value or as a registry for digital assets and a new P2P Network for transporting the required meta-data at a network client level. This would allow financial apps to run any user level interconnected functionality without ever going through a trusted third party.
 
-Fermat is a Framework, a P2P Network and an Ecosystem of Fermat APPs. The Fermat Framework is an open source software that runs on end user devices. This software can run Fermat APPs, which are like mobile APPs but running on top of the Fermat Framework.
+Fermat is a Framework, a P2P Network and an Ecosystem of Fermat APPs. The Fermat Framework is an open source software that runs on end user devices. This software can run Fermat APPs, which are like mobile APPs but that run on the Fermat Framework.
 
 By choosing a plug-in architecture for the Framework we make it possible for any developer to add their own reusable components. We define the micro use licensing scheme as the mechanism for developers to monetize their work. The Framework itself enforces these micro use licenses and guarantees developers a revenue stream.
 
@@ -56,9 +56,9 @@ The Ecosystem of Fermat APPs offers different products to end users. From the ou
 <br>
 ## The Fermat Framework
 
-The solution we propose begins with a Framework that must be portable into different OS. On a multi-layered format, the bottom most layer is interfacing the OS and must be built with replaceable components implementing the same set of public interfaces in order to build on top a single set of OS-independent components. At the same time, the upper most layers are again OS-dependent, providing a native GUI on each device.
+The solution we propose begins with a Framework that must be portable into different OSs. On a multi-layered format, the bottom most layer is interfacing the OS and must be built with replaceable components implementing the same set of public interfaces in order to build on top a single set of OS-independent components. At the same time, the upper most layers are again OS-dependent, providing a native GUI on each device.
 
-We identify 3 different kinds of components that we arbitrarily call **Add-ons**, **Plug-ins**, and **GUI** components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. They have broad access to the file system and databases. Plug-ins have their own identity and must identify themselves to other components to use their services which in return restrict the scope of their services based on the caller's identity (for example the filesystem Add-on would only give access to the Plug-ins own folder structure, the database system Add-on would only give access to a Plug-in's own databases, and so on). In this way we handle the problem of Plug-ins accessing the information of other Plug-ins.
+We identify 3 different kinds of components that we arbitrarily call **Add-ons**, **Plug-ins**, and **GUI** components. We define Add-ons as low level components that do not need to identify themselves to consume services from other components. They have broad access to the file system and databases. Plug-ins have their own identity and must identify themselves to other components to use their services which in return restrict the scope of their services based on the caller's identity (for example the filesystem Add-on would only give access to the Plug-in's own folder structure, the database system Add-on would only give access to a Plug-in's own databases, and so on). In this way we handle the problem of Plug-ins accessing the information of other Plug-ins.
 
 The core framework is in charge of initializing Add-ons and Plug-ins and managing Plug-ins identities. An internal API library defines the public interfaces that each component exposes to the rest of the components within the same device in order to allow them to use their services locally. This provides a strong encapsulation of each components business logic allowing them to freely define their internal structure and data model.
 
@@ -90,7 +90,7 @@ Each node is home to a set of end users identities. These identities can receive
 
 #### Acts as a Call Bridge
 
-Each node interconnects clients between each other in order to let them freely transfer information between them. This role is ruled by the Fermat Client Protocol.
+Each node interconnects clients to each other in order to let them freely transfer information between them. This role is ruled by the Fermat Client Protocol.
 
 #### Maintain the Fermat Blockchain
 
@@ -98,17 +98,17 @@ Each node maintains the Fermat Blockchain: a public record of all _coinbase_ tra
 
 ### Fermat Clients
 
-Fermat clients run the Fermat Framework, which in turn run the Fermat Components (Libraries, Add-ons, Plug-ins, GUIs, etc.). Clients adhere to the Fermat Client Protocol.
+Fermat clients run the Fermat Framework, which in turn runs the Fermat Components (Libraries, Add-ons, Plug-ins, GUIs, etc.). Clients adhere to the Fermat Client Protocol.
 
 
 <br>
 ## The Ecosystem of Fermat APPs
 
-A Fermat APP is an APP designed to run on top of the Fermat Framework. Fermat APPs are abstractions that make end users believe they are installing and running custom tailored APPs for some specific use cases. Technically a Fermat APP is a set of components interacting between each other with a certain user interface.
+A Fermat APP is an APP designed to run on the Fermat Framework. Fermat APPs are abstractions that make end users believe they are installing and running custom tailored APPs for some specific use cases. Technically a Fermat APP is a set of components interacting between each other with a certain user interface.
 
-These components are part of an ever incresing pool of re-usable components. Some new Fermat APPs add more components to this pool, some others just re-use components that are already there.
+These components are part of an ever incresing pool of reusable components. Some new Fermat APPs add more components to this pool, some others just reuse components that are already there.
 
-Underneath the sight of end users all these components collaborate between each other to provide the functionality of all Fermat APPs in the ecosystem. Their interactions are divided in _workflows_. Fermat APPs and all their components are part of a big master plan designed to maximaze re-usability.
+Underneath the sight of end users all these components collaborate with each other to provide the functionality of all Fermat APPs in the ecosystem. Their interactions are divided in _workflows_. Fermat APPs and all their components are part of a big master plan designed to maximaze reusability.
 
 <br>
 ## Fermat Application Tokens
@@ -119,11 +119,11 @@ End Users requires two different types of tokens to use Fermat:
 
 **b-fermats tokens [BFT]** : Are required to pay Fermat Miners for bandwidth.
 
-The Fermat Foundation issues _d-fermats_ to incentivice the development of Fermat Intraestructure and Fermat APPs according to a road map and master plan. End Users must aquire these tokens from developers and holders in order to run Fermat APPs that require the payment of micro use licenses.
+The Fermat Foundation issues _d-fermats_ to incentivise the development of Fermat Infrastructure and Fermat APPs according to a road map and master plan. End Users must acquire these tokens from developers and holders in order to run Fermat APPs that require the payment of micro use licenses.
 
-The Fermat Protocol issues _b-fermats_, with a predetermined algorithm that cannot be changed, and those tokens are necessary for The Fermat Network to function. Fermat miners are rewarded with _b-fermats_ for their contributions in running the Fermat network. End Users must aquire these tokens from miners and holders in order to pay for bandwidth on the Fermat Network. 
+The Fermat Protocol issues _b-fermats_, with a predetermined algorithm that cannot be changed, and those tokens are necessary for The Fermat Network to function. Fermat miners are rewarded with _b-fermats_ for their contributions in running the Fermat network. End Users must acquire these tokens from miners and holders in order to pay for bandwidth on the Fermat Network. 
 
-These application tokens are native to the Fermat system and are necessary to have access to the application. Contribution of value from miners are rewarded in the application’s tokens called _b-fermats_. Developers are rewarded with tokens called _d-fermats_ for the components they build for the system. Fermat's blockchain only records the issuing of new _b-fermats_ and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]. Developer tokens _d-fermats_ are issued by the Fermat Foundation as digital assets.
+These application tokens are native to the Fermat system and are necessary to have access to the application. Contribution of value from miners are rewarded with application tokens called _b-fermats_. Developers are rewarded with tokens called _d-fermats_ for the components they build for the system. Fermat's blockchain only records the issuing of new _b-fermats_ and outsources the transaction processing from the bitcoin network. In this sense Fermat is a type II Dapp.[2]. Developer tokens or _d-fermats_ are issued by the Fermat Foundation as digital assets.
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Tokens/Fermat%20App%20Token/PerspView/HQ_1920x1080.jpg "Fermat Application Token")
 
@@ -131,20 +131,20 @@ These application tokens are native to the Fermat system and are necessary to ha
 
 Fermat's bandwidth tokens (_b-fermats_) issuing data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat Nodes.
 
-Fermat's developer tokens (_d-fermats_) issuing data and records are cryptographically stored in a public, decentralized blockchain of digital assets in order to avoid any central points of failure. This blockchain is stored at a Device Public Network owend by the Fermat Foundation and runs on top of the Fermat Network.
+Fermat's developer tokens (_d-fermats_) issuing data and records are cryptographically stored in a public, decentralized blockchain of digital assets in order to avoid any central points of failure. This blockchain is stored at a Public Network Device owned by the Fermat Foundation and ran on top of the Fermat Network.
 
 
 ### Token Generation & Distribution
 
-Fermat implement three different mechanisms for token generation and distribution:
+Fermat implements three different mechanisms for token generation and distribution:
 
-#### Fund-Raising Mechanism
+#### Fundraising Mechanism
 
-With the fund-raising mechanism, developer tokens (_d-fermats_) are distributed to those who fund the initial development of the Fermat System. The funds collected are used to fund the development of the core of the Fermat System (core libraries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fund-raising are recorded at the Fermat's developer tokens blockchain.
+With the fundraising mechanism, developer tokens (_d-fermats_) are distributed to those who fund the initial development of the Fermat System. The funds collected are used to fund the development of the core of the Fermat System (core libraries, api libraries, add-ons and the fermat.org web site). The tokens generated during the fundraising are recorded at the Fermat token developer blockchain.
 
 #### Development Mechanism
 
-With the development mechanism, development tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analisys of future development). These fermats become available through a pre-determined schedule and are distributed in two ways:
+With the development mechanism, development tokens are generated using a predefined mechanism and are only available for the development of Fermat components (plug-ins, GUI components, skins, language packages, and analysis of future development). These fermat components become available through a predetermined schedule and are distributed in two ways:
 
 1. Via a community-driven contribution program [3] where different teams of developers and designers work either part-time or full-time on the project.
 
@@ -160,29 +160,29 @@ With the mining mechanism, tokens are distributed to those who contribute most w
 
 The Fermat Open Source Project founders started issuing Fermat development tokens (_d-fermats_) in 2014. A complete disclosure of the issued tokens and distribution can be found at a separate document called Fermat Tokens. [5]
 
-Bandwidth tokens (_b-fermats_) have not been issued yet. Their issuing will start once the Fermat Blockchain is implemented and miners start minging _b-fermats_. There will be no _b-fermats_ pre-mined.
+Bandwidth tokens (_b-fermats_) have not been issued yet. Their issuing will start once the Fermat Blockchain is implemented and miners start mining _b-fermats_. There will be no premined _b-fermats_ .
 
 #### Fermat.org (Non-profit organization)
 
-Fund-raising Fermat developers tokens (_d-fermats_) are issued by a non-profit organization called Fermat.org that will never receive financial benefits from the Fermat system. This organization have the following responsibilities:
+Fundraiser Fermat developer tokens (_d-fermats_) are issued by a non-profit organization called Fermat.org that will never receive financial benefits from the Fermat system. This organization has the following responsibilities:
 
 * Issuance of initial  _d-fermats_ tokens
-* Holding of developer tokens _d-fermats_
-* Management of bounty payments
+* Holding of developer  _d-fermats_ tokens
+* Managing of bounty payments
 * Determining the Fermat System direction
 * Collecting and distributing statistical information from the Fermat System
 
-Fermat.org will make decisions in a decentralized manner, using a “proof of stake” voting mechanism for any decision once the project is mature enought. Meanwhile the direction of the project is determined by its founders.
+Fermat.org will make decisions in a decentralized manner, using a “proof of stake” voting mechanism for any decision once the project is mature enough. Meanwhile the direction of the project is determined by its founders.
 
 #### Fermat Protocol
 
-The protocol itself issues bandwidth tokens for miners. In the case od developers tokens, they are generated by the Non-profit Fermat.org until awarded as bounty or contribution payments for developers.
+The protocol itself issues bandwidth tokens for miners. In the case of developer tokens, they are generated by the non-profit organization Fermat.org until awarded as bounty or contribution payments for developers.
 
 ### Token Usage
 
-End users automatically acquire b-fermats by receiving bitcoins into a b-fermat wallet of their own. They can go back to bitcoins by transfering b-fermats into a Bitcoin wallet.
+End users automatically acquire _b-fermats_ by receiving bitcoins into a _b-fermat_ wallet of their own. They can go back to bitcoins by transfering _b-fermats_ into a Bitcoin wallet.
 
-Development tokens can be aquiered from the d-fermat wallet from holders willing to sell them. From this same wallet the Fermat Framework debits the fees corresponding to the micro-use-licenses that End Users need to pay,
+Development tokens can be acquired from the _d-fermat_ wallet from holders willing to sell them. From this same wallet the Fermat Framework debits the fees corresponding to the micro use licenses that End Users need to pay.
 
 Fermat tokens are necessary for users to pay for three things:
 
@@ -192,18 +192,18 @@ End users pay Fermat Nodes with _b-fermats_ to be able to receive calls from oth
 
 #### Use of Fermat Components
 
-End users pay Fermat Component's developers with _d-fermats_ to be able to use their plug-ins, GUI components, skins, language packages, etc. Developers defines a Micro-Use-License for each components. Products like Wallets or Financial APPs use these components, so the cost for using these products is the sum of the cost of the Micro Use Licenses defined by each developer involved. This is the way how developers are paid for developing and mantaining their components.
+End users pay Fermat Component developers with _d-fermats_ to be able to use their plug-ins, GUI components, skins, language packages, etc. Developers defines a Micro Use License for each component. Products like Wallets or Financial APPs use these components, so the cost for using these products is the sum of the cost of the Micro Use Licenses defined by each developer involved. This is the way that developers are paid for developing and mantaining their components.
 
 #### Technical Support
 
-End users pay with _d-fermats_ to receive personalized technical support from Fermat APPs's developers.
+End users pay with _d-fermats_ to receive personalized technical support from Fermat APPs developers.
 
 <br>
 ## Fermat Blockchain
 
-Fermat's blockchain keeps track of all Fermat Bandwidth Tokens issued. Fermat outsources the transaction procesing of Fermat Tokens to one ore more crypto networks. This means that Fermat newly issued _b-fermat_ tokens are registered at some crypto network with a technique similar to a _digital asset_ or _colored coin_, and the transactions representing the transfers of ownership are handled directly by these crypto networks with no intervention of the Fermat Blockchain or Fermat Network whatsoever. The first implementation of Fermat Tokens is using only the bitcoin network as it is the most reliable at present time. Later, however, the decision where to register new fermats will be taken by the miners winning the block reward. They will be able to choose between all the crypto networks integrated into the Fermat system at the moment of that event happening. During the rest of this document all further explanations will be refering to the bitcoin network as it is the first of one of multiple possible future implementations.  
+Fermat's blockchain keeps track of all Fermat Bandwidth Tokens issued. Fermat outsources the transaction procesing of Fermat Tokens to one or more crypto networks. This means that Fermat newly issued _b-fermat_ tokens are registered at some crypto network with a technique similar to a _digital asset_ or _colored coin_, and the transactions representing the transfers of ownership are handled directly by these crypto networks with no intervention of the Fermat Blockchain or Fermat Network whatsoever. The first implementation of Fermat Tokens is using only the bitcoin network as it is currently the most reliable. Later, however, the decision of where to register new fermats will be taken by the miners winning the block reward. They will be able to choose between all the crypto networks integrated into the Fermat system at the moment of that event happening. During the rest of this document all further explanations will be referring to the bitcoin network as it is the first of multiple possible future implementations.  
 
-The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are _coinbase_ transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back" each referring to the previous block in the chain.
+The data structure is an ordered, back-linked list of blocks of transactions. In our case all the transactions are _coinbase_ transactions, meaning that they are transactions where new fermats are issued by the protocol. Blocks are linked "back", each referring to the previous block in the chain.
 
 Each block within the blockchain:
 
@@ -213,11 +213,11 @@ Each block within the blockchain:
 <br>
 ## Mining
 
-Mining is the process by which new _b-fermats_ are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate between each other without going through trusted third parties. Miners provide bandwidth to the Extended Fermat Network in exchange for the opportunity to be rewarded with fermats.
+Mining is the process by which new _b-fermats_ are added to the token supply. Mining also serves to the main purpose of the Fermat Network: to enable devices to communicate with each other without going through trusted third parties. Miners provide bandwidth to the Extended Fermat Network in exchange for the opportunity to be rewarded with fermats.
 
-Miners inter-connect devices and act as a bridge relaying data from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every approximately 10 minutes, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of _b-fermats_ to spend the _b-fermats_ they received in those transactions.
+Miners interconnect devices and act as a bridge relaying data from one device to the other. A new block, containing transactions that occurred since the last block, is "mined" every 10 minutes approximately, thereby adding those transactions to the blockchain. Transactions that become part of a block and added to the blockchain are considered "confirmed," which allows the new owners of _b-fermats_ to spend the _b-fermats_ they received in those transactions.
 
-A transaction at the Fermat Blockchain is considered "irreversible" as soon as it is added to a block. This is true because it is based on information read from the bitcoin blockchain that it is already on an irreversible state. The Fermat Blockchain is synchronize with the bitcoin blockchain but 6 blocks behind the bitcoin blockchain's head.
+A transaction at the Fermat Blockchain is considered "irreversible" as soon as it is added to a block. This is true because it is based on information read from the bitcoin blockchain that it is already on an irreversible state. The Fermat Blockchain is synchronized with the bitcoin blockchain but 6 blocks behind the bitcoin blockchain's head.
 
 ### Rewards
 
@@ -225,7 +225,7 @@ Miners receive two types of rewards for mining: new _b-fermats_ tokens created w
 
 #### New Minted _b-fermats_
 
-To earn this reward, the miners compete to sell incoming bandwidth to network clients, i.e. being their home node. Network Clients are free to choose which node to use as their home and at some point they pay in _b-fermats_ to these nodes for their services. Fermat "proof of work" consist on nodes proving that they have received payments for being a home node.
+To earn this reward, the miners compete to sell incoming bandwidth to network clients, i.e. being their home node, Network Clients are free to choose which node to use as their home and at some point they pay in _b-fermats_ to these nodes for their services. Fermat "proof of work" consists on nodes proving that they have received payments for being a home node.
 
 The amount of newly created _b-fermats_ that can be added to a block decreases approximately every four years. It starts at 50 fermats per block and halves by 2 every 4 years. Based on this formula, fermat mining rewards decrease exponentially until all fermats (21,000,000 million) have been issued. After that, no new fermats will be issued.
 
@@ -266,13 +266,13 @@ Immediately when a new block is mined at the bitcoin network, the following acti
 
 They create a _coinbase_ transaction racing between each other to be incorporated first by a bitcoin miner into the bitcoin blockchain at the next block mined. The first 10 % of valid transactions to be incorporated at the bitcoin blockchain will be the ones recorded by every Fermat Node on the Fermat blockchain by adding them on a new block. The recording will happen when that block has 6 more blocks on top of it.
 
-As every node is reading confirmed bitcoin transactions and they all share a syncronized copy of the node catalogue, the Proof of Work algorithm should give exactly the same result to every node in the network. This means every node knows how many nodes should be part of the race, and how many _b-fermats_ they should add on their own _coinbase_ transaction in order for the 10% of all these nodes not to exceed the amount of fermats per block.
+As every node is reading confirmed bitcoin transactions and they all share a synchronized copy of the node catalogue, the Proof of Work algorithm should give exactly the same result to every node in the network. This means every node knows how many nodes should be part of the race, and how many _b-fermats_ they should add on their own _coinbase_ transaction in order for the 10% of all these nodes not to exceed the amount of fermats per block.
 
 The sum of the amounts of all these transactions must not exceed the amount of fermats per block allowed by the Fermat Protocol.
 
 ### Rationale
 
-By using the fees payed by network clients as "proof of work" we discourage dishonest nodes to lie to the rest of the network about the value added. Network Clients will often pay after the service is delivered. Of course node operators can create fake fees to qualify for the race, but they will need to pay bitcoin mining fees for this and they are not guaranteed that they will win the race to the blockchain. In fact to have better chances to win the race they will have to invest in higher bitcoin miner's fees in order to be included first, again without any guarantee of being among the first 10%.
+By using the fees payed by network clients as "proof of work" we discourage dishonest nodes to lie to the rest of the network about the value added. Network Clients will often pay after the service is delivered. Of course node operators can create fake fees to qualify for the race, but they will need to pay bitcoin mining fees for this and they are not guaranteed that they will win the race to the blockchain. In fact to have better chances to win the race they will have to invest in higher bitcoin miner fees in order to be included first, again without any guarantee of being among the first 10%.
 
 
 <br>
@@ -334,7 +334,7 @@ We handle identities at different levels for multiple reasons. In all cases, ide
 
 The need to handle multiple logins on the same device brings with it, the first kind of identity which we call _device-user_. This identity lives only at a certain device and not even a public key is exposed to the network.
 
-Besides, the end users can have multiple types of identities (we call them _actors_), and within each type as many instances as they want. Each type of identity corresponds to a role in real life or an _actor_ in a Use Case. Usually each Platform introduces a set of _actors_ and all the Platforms functionality orbits around all the use cases derived on the interactions between those _actors_.
+Besides, the end users can have multiple types of identities (we call them _actors_), and within each type as many instances as they want. Each type of identity corresponds to a role in real life or an _actor_ in a Use Case. Usually each Platform introduces a set of _actors_ and all the Platform's functionality orbits around all the use cases derived on the interactions between those _actors_.
 
 The Framework handles a hierarchy of identities. One of them is what we call the _root identity_. At root level end users can set a standard set of information that can be overwritten at any level down the hierarchy, narrowing or expanding that information as needed. All these identities are exposed to the Fermat Network in a way that from the outside, no one could tell they are related between each other or to a certain end user.
 
@@ -353,7 +353,7 @@ d. Nodes to recognize each other even when their IP location or other profile in
 <br>
 ## Platforms
 
-We define as a _Platform_ a set of interrelated functionality. _Platforms_ may consume services from other _platforms_ and their dependencies form a hierarchical stack.
+We define as a _Platform_ a set of interrelated functionalities. _Platforms_ may consume services from other _platforms_ and their dependencies form a hierarchical stack.
 
 Each _Platform_ may introduce new workflows to the system, Add-ons, Plug-ins, GUI components (Apps, wallets) and _actors_. This enables the system to target different use cases with different _actors_ involved.
 
@@ -380,7 +380,7 @@ The solution is to make each plug-in responsible for the workflow while they are
 
 We handle monetary and digital assets transactions dividing the accounting from the value. Usually transactions start on specialized plug-ins which are in charge of coordinating the whole transaction. These plug-ins usually interact with wallet plug-ins debiting or crediting the accounts involved. The accounting of the currency or digital asset involved are kept by these wallet plug-ins. Later the transactional workflow splits between moving the value (usually crypto currency) and moving the meta-data associated to the transaction.
 
-Through two different paths, the value and the meta-data arrive to the recipients device and they are combined together by the remote counter-party transaction component which in return interacts with the remote wallet plug-in to record the accounting as appropriate.
+Through two different paths, the value and the meta-data arrive to the recipients device and they are combined together by the remote counterparty transaction component which in return interacts with the remote wallet plug-in to record the accounting as appropriate.
 
 <br>
 ## Synchronization
@@ -411,9 +411,9 @@ Several tools were designed with the purpose of enabling the development of new 
 
 **Wallet Factory**: Is a built-in functionality that enables the development of reference and niche wallets.
 
-**Wallet Editor**: Enables the creation by non-developers of _Branded Wallets_ based on any one of the _Niche Wallets_ available.
+**Wallet Editor**: Enables the creation of _Branded Wallets_ by non-developers based on any one of the _Niche Wallets_ available.
 
-**Wallet Store**: Is a distributed application which manages a shared wallet catalog and enables end users to download from peers the different wallets available for the Framework.
+**Wallet Store**: Is a distributed application which manages a shared wallet catalogue and enables end users to download from peers the different wallets available for the Framework.
 
 <br>
 ## Privacy
