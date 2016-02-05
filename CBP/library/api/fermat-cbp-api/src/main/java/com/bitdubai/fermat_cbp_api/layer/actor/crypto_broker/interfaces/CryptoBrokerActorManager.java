@@ -17,11 +17,11 @@ public interface CryptoBrokerActorManager extends FermatManager {
     /**
      *
      * @param identity
-     * @param wallet
+     * @param walletPublicKey
      * @return
      * @throws CantCreateNewBrokerIdentityWalletRelationshipException
      */
-    BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException;
+    BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException;
 
     /**
      *

@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
@@ -246,7 +247,11 @@ public class ActorConnectionManager implements CryptoCustomerActorConnectionMana
 
         try {
 
+            System.out.println("************* im accepting in actor connection the request: "+connectionId);
+
             ConnectionState currentConnectionState = dao.getConnectionState(connectionId);
+
+            System.out.println("************* im accepting in actor connection the request: -> current connection state: "+currentConnectionState);
 
             switch (currentConnectionState) {
 
@@ -256,14 +261,21 @@ public class ActorConnectionManager implements CryptoCustomerActorConnectionMana
 
                 case PENDING_LOCALLY_ACCEPTANCE:
 
-                    // cancel connection through network service and after that mark as CANCELLED LOCALLY
-                    cryptoBrokerNetworkService.acceptConnection(connectionId);
+                    Actors linkedActorType = dao.getLinkedIdentityActorType(connectionId);
 
-                    dao.changeConnectionState(
-                            connectionId,
-                            ConnectionState.CONNECTED
-                    );
+                    switch (linkedActorType) {
+                        case CBP_CRYPTO_BROKER:
 
+                            cryptoBrokerNetworkService.acceptConnection(connectionId);
+
+                            dao.changeConnectionState(
+                                    connectionId,
+                                    ConnectionState.CONNECTED
+                            );
+
+                            break;
+
+                    }
                     break;
 
                 default:

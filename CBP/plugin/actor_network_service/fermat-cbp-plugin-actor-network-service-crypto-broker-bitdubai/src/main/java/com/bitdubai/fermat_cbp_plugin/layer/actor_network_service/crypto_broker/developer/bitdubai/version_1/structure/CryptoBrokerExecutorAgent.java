@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -29,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -155,7 +155,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
                 switch (cbcr.getRequestAction()) {
 
-                    case ACCEPT:
+                   case ACCEPT:
 
                         System.out.println("********* Crypto Broker: Executor Agent -> Sending ACCEPTANCE. "+cbcr);
 
@@ -171,7 +171,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
                         break;
 
-                    case DENY:
+                  /*   case DENY:
 
                         System.out.println("********* Crypto Broker: Executor Agent -> Sending DENIAL. "+cbcr);
 
@@ -185,7 +185,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                              confirmRequest(cbcr.getRequestId());
                         }
 
-                        break;
+                        break;*/
 
                     case REQUEST:
 
@@ -198,7 +198,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                                 cbcr.getDestinationPublicKey(),
                                 Actors.CBP_CRYPTO_BROKER
                         )) {
-                            toPendingRemoteAction(cbcr.getRequestId());
+                            confirmRequest(cbcr.getRequestId());
                         }
 
                         break;
@@ -206,7 +206,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
             }
 
         } catch(CantListPendingConnectionRequestsException |
-                CantChangeProtocolStateException |
+               // CantChangeProtocolStateException |
                 CantConfirmConnectionRequestException |
                 ConnectionRequestNotFoundException           e) {
 
@@ -265,11 +265,11 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
         }
     }
 
-    private boolean sendMessageToActor(final String jsonMessage      ,
-                                       final String identityPublicKey,
-                                       final Actors identityType     ,
-                                       final String actorPublicKey   ,
-                                       final Actors actorType        ) {
+    public boolean sendMessageToActor(final String jsonMessage      ,
+                                      final String identityPublicKey,
+                                      final Actors identityType     ,
+                                      final String actorPublicKey   ,
+                                      final Actors actorType        ) {
 
         try {
 
@@ -331,7 +331,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                     actorPublicKey,
                     jsonMessage
             );
-            System.out.println("mensaje enviado");
+
             poolConnectionsWaitingForResponse.remove(actorPublicKey);
 
             return true;
@@ -387,18 +387,6 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                 aer.getRequestAction(),
                 aer.getSentTime()
         ).toJson();
-    }
-
-    private void toPendingLocalAction(final UUID requestId) throws CantChangeProtocolStateException   ,
-                                                                   ConnectionRequestNotFoundException {
-
-        dao.changeProtocolState(requestId, ProtocolState.PENDING_LOCAL_ACTION);
-    }
-
-    private void toPendingRemoteAction(final UUID requestId) throws CantChangeProtocolStateException   ,
-                                                                    ConnectionRequestNotFoundException {
-
-        dao.changeProtocolState(requestId, ProtocolState.PENDING_REMOTE_ACTION);
     }
 
     private void confirmRequest(final UUID requestId) throws CantConfirmConnectionRequestException,
