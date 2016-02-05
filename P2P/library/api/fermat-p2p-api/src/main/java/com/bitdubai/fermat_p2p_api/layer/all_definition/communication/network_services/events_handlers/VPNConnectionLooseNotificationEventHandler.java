@@ -45,7 +45,7 @@ public class VPNConnectionLooseNotificationEventHandler implements FermatEventHa
      */
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if (this.networkService.getStatus().equals(ServiceStatus.STARTED)) {
+        if (this.networkService.getStatus() == ServiceStatus.STARTED) {
             VPNConnectionLooseNotificationEvent vpnConnectionLooseNotificationEvent = (VPNConnectionLooseNotificationEvent) fermatEvent;
             if (vpnConnectionLooseNotificationEvent.getNetworkServiceApplicant() == networkService.getNetworkServiceProfile().getNetworkServiceType()) {
                 this.networkService.handleVPNConnectionLooseNotificationEvent(vpnConnectionLooseNotificationEvent);
