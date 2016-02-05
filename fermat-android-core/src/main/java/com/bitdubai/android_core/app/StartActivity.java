@@ -1,7 +1,5 @@
 package com.bitdubai.android_core.app;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -17,16 +15,16 @@ import android.widget.Toast;
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.BroadcasterInterface;
+import com.bitdubai.android_core.app.common.version_1.util.task.GetTaskV2;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
@@ -35,12 +33,9 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
-
-import java.util.ArrayList;
 
 
 /**
@@ -53,22 +48,23 @@ import java.util.ArrayList;
  * -- Luis.
  */
 
-public class StartActivity extends AppCompatActivity implements FermatWorkerCallBack, BroadcasterInterface {
+public class StartActivity extends AppCompatActivity implements  BroadcasterInterface, FermatWorkerCallBack /**,ServiceCallback */{
 
 
 
     // Indicate if the app was loaded, for not load again the start activity.
     private static boolean WAS_START_ACTIVITY_LOADED = false;
 
-    ArrayList<Platforms> activePlatforms;
-
-    private ProgressDialog mDialog;
-
     private ImageView imageView_fermat;
-
 
     Animation animation1;
     Animation animation2;
+
+    /**
+     * Service
+     */
+    private BoundService mBoundService;
+    boolean mServiceConnected = false;
 
 
 
@@ -76,7 +72,7 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final FermatSystem fermatSystem =((ApplicationSession) getApplication()).getFermatSystem();
+        final FermatSystem fermatSystem =ApplicationSession.getInstance().getFermatSystem();
 
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
@@ -107,7 +103,7 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
                         Toast.LENGTH_LONG).show();
             }
 
-            int applicationState = ((ApplicationSession)getApplication()).getApplicationState();
+            int applicationState = ApplicationSession.getInstance().getApplicationState();
 
             if(applicationState==ApplicationSession.STATE_NOT_CREATED) {
 //                mDialog = new ProgressDialog(this);
@@ -175,7 +171,8 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
 
 
 
-                GetTask getTask = new GetTask(this,this);
+
+                GetTaskV2 getTask = new GetTaskV2(this,this);
                 getTask.setCallBack(this);
                 getTask.execute();
             }else if (applicationState == ApplicationSession.STATE_STARTED ){
@@ -192,26 +189,69 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
 
     private boolean fermatInit() {
         //Intent intent = new Intent(this, SubAppActivity.class);
+        WAS_START_ACTIVITY_LOADED = true;
         Intent intent = new Intent(this, DesktopActivity.class);
-        intent.putExtra(ApplicationConstants.ACTIVE_PLATFORMS,activePlatforms);
         intent.putExtra(ApplicationConstants.START_ACTIVITY_INIT, "init");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        startActivity(intent);
+        finish();
         return true;
     }
 
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String code) {
+        Toast.makeText(this,"holas",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String code, Platforms lauchedPlatform) {
+
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String code, FermatApps fermatApp) {
+
+    }
+
+
     /**
-     * implement this function to handle the result object through dynamic array
-     *
-     * @param result array of native object (handle result field with result[0], result[1],... result[n]
+     * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
      */
     @Override
-    public void onPostExecute(Object... result) {
+    protected void onStop() {
+        try {
+            super.onStop();
 
+            /**
+             * Service
+             */
+//            if (mServiceConnected) {
+//                unbindService(mServiceConnection);
+//                mServiceConnected = false;
+//            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        Intent intent = new Intent(this, BoundService.class);
+//        intent.putExtra(BoundService.LOG_TAG,"Activity 1");
+//        startService(intent);
+//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
         try {
 
-            final FermatSystem fermatSystem = ((ApplicationSession)getApplication()).getFermatSystem();
+            final FermatSystem fermatSystem = ApplicationSession.getInstance().getFermatSystem();
 
             PlatformInfoManager platformInfoManager = (PlatformInfoManager) fermatSystem.startAndGetAddon(
                     new AddonVersionReference(
@@ -228,78 +268,26 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
 
             System.out.println(e.toString());
         }
-        //mDialog.dismiss();
-
-        imageView_fermat.clearAnimation();
 
         // Indicate that app was loaded.
         WAS_START_ACTIVITY_LOADED = true;
         fermatInit();
     }
 
-    /**
-     * Implement this function to handle errors during the execution of any fermat worker instance
-     *
-     * @param ex Throwable object
-     */
     @Override
     public void onErrorOccurred(Exception ex) {
-        //mDialog.dismiss();
         ex.printStackTrace();
         Toast.makeText(getApplicationContext(), "Application crash, re open the app please",
                 Toast.LENGTH_LONG).show();
     }
 
-    @Override
-    public void publish(BroadcasterType broadcasterType, String code) {
-        Toast.makeText(this,"holas",Toast.LENGTH_SHORT).show();
-    }
-
-
-    class GetTask extends FermatWorker{
-
-
-        public GetTask(Activity activity,FermatWorkerCallBack fermatWorkerCallBack){
-            super(activity,fermatWorkerCallBack);
-        }
-
-
-        /**
-         * This function is used for the run method of the fermat background worker
-         *
-         * @throws Exception any type of exception
-         */
-        @Override
-        protected Object doInBackground() throws Exception {
-
-            final FermatSystem fermatSystem =((ApplicationSession) getApplication()).getFermatSystem();
-
-            try {
-                fermatSystem.startAllRegisteredPlatforms();
-
-            } catch (CantStartAllRegisteredPlatformsException e) {
-                e.printStackTrace();
-            }
-            //TODO delete: unreachable section
-//            catch (FermatException e) {
-//                System.err.println(e.toString());
-//                System.out.println(e.getPossibleReason());
-//                System.out.println(e.getFormattedContext());
-//                System.out.println(e.getFormattedTrace());
-//            }
-
-            return true;
-        }
-    }
-
     private void setPlatformDeviceInfo(PlatformInfoManager platformInfoManager){
         try {
             PlatformInfo platformInfo = platformInfoManager.getPlatformInfo();
-            activePlatforms = loadActivePlatforms(platformInfo);
             platformInfo.setScreenSize(getScreenSize());
             platformInfoManager.setPlatformInfo(platformInfo);
-        } catch(CantLoadPlatformInformationException |
-                CantSetPlatformInformationException  e) {
+        } catch(
+                CantSetPlatformInformationException | com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException e) {
             e.printStackTrace();
         }
     }
@@ -310,19 +298,41 @@ public class StartActivity extends AppCompatActivity implements FermatWorkerCall
 
         float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        return DeviceInfoUtils.toScreenSize(dpHeight,dpWidth);
+        return DeviceInfoUtils.toScreenSize(dpHeight, dpWidth);
 
     }
 
-    private ArrayList<Platforms> loadActivePlatforms(PlatformInfo platformInfo){
-        ArrayList<Platforms> list;
-        //if(platformInfo.getActivePlatforms().size()==0){
-           list = platformInfo.addActivePlatform(Platforms.CRYPTO_CURRENCY_PLATFORM);
-        //}else{
-         //  list = platformInfo.getActivePlatforms();
-        //}
-        return list;
-    }
 
-
+    /**
+     * Service
+     */
+//    private ServiceConnection mServiceConnection = new ServiceConnection() {
+//
+//        @Override
+//        public void onServiceDisconnected(ComponentName name) {
+//            mServiceConnected = false;
+//        }
+//
+//        @Override
+//        public void onServiceConnected(ComponentName name, IBinder service) {
+//            mBoundService = ((BoundService.LocalBinder)service).getService();
+//            mBoundService.registerCallback(registerCallback());
+//            mServiceConnected = true;
+//            Log.i("APP","service connected");
+//        }
+//    };
+//
+//    private ServiceCallback registerCallback(){
+//        return this;
+//    }
+//
+//
+//    @Override
+//    public void callback(int option) {
+//        if (option==1){
+//            fermatInit();
+//        }else if(option==2){
+//            Toast.makeText(this,"Ooooops, an error occur, please re open the app",Toast.LENGTH_SHORT).show();
+//        }
+//    }
 }

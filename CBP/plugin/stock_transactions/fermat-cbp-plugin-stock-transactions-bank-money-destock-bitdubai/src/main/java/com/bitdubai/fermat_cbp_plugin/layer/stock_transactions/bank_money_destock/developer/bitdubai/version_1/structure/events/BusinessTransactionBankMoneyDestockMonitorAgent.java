@@ -47,6 +47,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final UnholdManager unHoldManager;
     StockTransactionBankMoneyDestockFactory stockTransactionBankMoneyDestockFactory;
+    private UUID pluginId;
 
     /**
      * Constructor for BusinessTransactionBankMoneyDestockMonitorAgent
@@ -70,6 +71,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.unHoldManager = unHoldManager;
         this.stockTransactionBankMoneyDestockFactory = new StockTransactionBankMoneyDestockFactory(pluginDatabaseSystem, pluginId);
+        this.pluginId = pluginId;
     }
 
     /**
@@ -151,10 +153,10 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
-                        WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
+                        WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
                                 bankMoneyTransaction.getTransactionId(),
-                                null,
-                                BalanceType.AVAILABLE,
+                                bankMoneyTransaction.getFiatCurrency(),
+                                BalanceType.BOOK,
                                 TransactionType.DEBIT,
                                 CurrencyType.BANK_MONEY,
                                 bankMoneyTransaction.getCbpWalletPublicKey(),
@@ -165,10 +167,23 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
                                 bankMoneyTransaction.getPriceReference(),
                                 bankMoneyTransaction.getOriginTransaction());
 
+                        WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
+                                bankMoneyTransaction.getTransactionId(),
+                                bankMoneyTransaction.getFiatCurrency(),
+                                BalanceType.AVAILABLE,
+                                TransactionType.DEBIT,
+                                CurrencyType.BANK_MONEY,
+                                bankMoneyTransaction.getCbpWalletPublicKey(),
+                                bankMoneyTransaction.getActorPublicKey(),
+                                bankMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                bankMoneyTransaction.getConcept(),
+                                bankMoneyTransaction.getPriceReference(),
+                                bankMoneyTransaction.getOriginTransaction());
                         //TODO:Solo para testear
                         bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordBook, BalanceType.BOOK);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
                         bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
 
@@ -186,7 +201,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
                                 bankMoneyTransaction.getBankAccount(),
                                 bankMoneyTransaction.getAmount(),
                                 bankMoneyTransaction.getMemo(),
-                                "pluginId");
+                                pluginId.toString());
                         unHoldManager.unHold(bankTransactionParametersWrapper);
                         BankTransactionStatus bankTransactionStatus = unHoldManager.getUnholdTransactionsStatus(bankMoneyTransaction.getTransactionId());
                         if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode()) {

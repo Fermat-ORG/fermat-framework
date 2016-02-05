@@ -199,7 +199,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.transaction_main_fragment;
+        return R.layout.fragment_transaction_main;
     }
 
     @Override

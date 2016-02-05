@@ -16,7 +16,7 @@
 - Es necesario actualizar `NegotiationBankAccount` para cambiar `UUID getBankAccountId();`por `String getWalletPublicKey();`
 - Agregar en la interface `FiatIndex` creando por Fraklin un metodo `Currency getCurrency()` para devolver la otra moneda que se usa para obtener la cotizacion, dado que actualmente solo existe `Currency getMerchandise()`
 - Despues de analizar la situacion con respecto a obtener la data complementaria que se debe mostrar en la lista de brokers y en la broker community llegamos a la siguientes concluciones:
-  - Basicamente el Plugin `Crypto Customer Actor` va a ser el encargado de persistir la informacion complementaria en Base de Datos, esta es:
+  - Basicamente el Plugin `Crypto Broker Actor` va a ser el encargado de persistir la informacion complementaria en Base de Datos, esta es:
     - Informacion basica del actor: 
       - Foto, Alias, PublicKey
     - Mercancias:
