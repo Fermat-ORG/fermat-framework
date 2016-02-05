@@ -32,11 +32,11 @@ public interface CryptoBrokerActorManager extends FermatManager {
 
     /**
      *
-     * @param identity
+     * @param publicKey
      * @return
      * @throws CantGetListBrokerIdentityWalletRelationshipException
      */
-    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException;
+    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListBrokerIdentityWalletRelationshipException;
 
     /**
      *
