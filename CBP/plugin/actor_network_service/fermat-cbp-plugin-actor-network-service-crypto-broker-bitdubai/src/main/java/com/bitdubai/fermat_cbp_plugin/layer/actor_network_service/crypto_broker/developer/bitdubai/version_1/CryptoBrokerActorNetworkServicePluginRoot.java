@@ -803,19 +803,19 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     receiveConnectionInformation(informationMessage);
 
                     String destinationPublicKey = connectionNewsDao.getDestinationPublicKey(informationMessage.getRequestId());
-/*
+
                     communicationNetworkServiceConnectionManager.closeConnection(destinationPublicKey);
                     //remove from the waiting pool
-                    cryptoBrokerExecutorAgent.connectionFailure(destinationPublicKey);*/
+                    cryptoBrokerExecutorAgent.connectionFailure(destinationPublicKey);
                     break;
 
                 case CONNECTION_REQUEST:
                     // update the request to processing receive state with the given action.
                     RequestMessage requestMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, RequestMessage.class);
                     receiveRequest(requestMessage);
-                    /*communicationNetworkServiceConnectionManager.closeConnection(requestMessage.getSenderPublicKey());
+                    communicationNetworkServiceConnectionManager.closeConnection(requestMessage.getSenderPublicKey());
                     //remove from the waiting pool
-                    cryptoBrokerExecutorAgent.connectionFailure(requestMessage.getSenderPublicKey());*/
+                    cryptoBrokerExecutorAgent.connectionFailure(requestMessage.getSenderPublicKey());
                     break;
 
                 default:

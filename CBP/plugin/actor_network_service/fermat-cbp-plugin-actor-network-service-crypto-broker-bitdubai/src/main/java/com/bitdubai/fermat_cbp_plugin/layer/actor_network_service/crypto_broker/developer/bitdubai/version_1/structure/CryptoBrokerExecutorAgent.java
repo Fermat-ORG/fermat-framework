@@ -278,15 +278,20 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                 if (cryptoBrokerActorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
 
                     PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                            .constructBasicPlatformComponentProfileFactory(
+                            .constructPlatformComponentProfileFactory(
                                     identityPublicKey,
+                                    "no_matter",
+                                    "no_matter",
                                     NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(identityType));
+                                    platformComponentTypeSelectorByActorType(identityType), "");
+
                     PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                            .constructBasicPlatformComponentProfileFactory(
+                            .constructPlatformComponentProfileFactory(
                                     actorPublicKey,
+                                    "no_matter",
+                                    "no_matter",
                                     NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(actorType));
+                                    platformComponentTypeSelectorByActorType(actorType), "");
 
                     cryptoBrokerActorNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(
                             applicantParticipant,
