@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
@@ -293,7 +294,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 "reference_wallet_icon", // ICOIN
                 "bitDubai bitcoin Wallet", // WALLET NAME
                 "reference_wallet", // PUBLIC KEY
-                FermatApps.BITCOIN_REFERENCE_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
+                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
                 "medium",
