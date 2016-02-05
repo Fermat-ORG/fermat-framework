@@ -135,6 +135,31 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
 
+* **Manuel Perez [Team Leader]**<br/>
+---
+    Email:   darkpriestrelative@gmail.com
+    Skype:   darkestpriest
+    Github:  https://github.com/darkestpriest
+
+* **Franklin Marcano [Team Leader]**<br/>
+---
+    Email:   franklinmarcano1970@gmail.com
+    Skype:   franklginmarcano1970
+    Github:  https://github.com/franklinmarcano1970
+
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
+---
+      Email:   nerioindriago@gmail.com
+      Skype:   nerioindriago
+      Github:  https://github.com/nindriago
+
+* **Victor Mars [New Team Leader]** <br/>
+---
+      Email:   marsvicam@gmail.com
+      Skype:   yayotron
+      Github:  https://github.com/yayotron
+
+ 
 ### Coin Diggers Team:
 -----------------------------------
 <br>
