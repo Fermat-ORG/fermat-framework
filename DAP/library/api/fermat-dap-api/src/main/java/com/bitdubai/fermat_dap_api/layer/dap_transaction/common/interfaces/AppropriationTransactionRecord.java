@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -13,7 +14,9 @@ import java.util.Date;
 public interface AppropriationTransactionRecord {
 
     String transactionRecordId();
-    
+
+    BlockchainNetworkType networkType();
+
     String genesisTransaction();
     
     AppropriationStatus status();
