@@ -316,7 +316,7 @@ public abstract class FermatActivity extends AppCompatActivity
         try {
             super.onStop();
             try{
-                AndroidCoreUtils.getInstance().clear();
+                //AndroidCoreUtils.getInstance().clear();
             }catch (Exception e){
                 e.printStackTrace();
             }
