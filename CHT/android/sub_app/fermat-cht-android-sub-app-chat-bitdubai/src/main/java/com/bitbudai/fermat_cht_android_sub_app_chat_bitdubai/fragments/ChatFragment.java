@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -130,9 +131,12 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         }
     }
 
-    void findvalues(UUID contactid){ //With contact Id find chatid,pkremote,actortype
+    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
 
         try {
+            remotepk=contact.getRemoteActorPublicKey();
+            remotepct=contact.getRemoteActorType();
+
             for (int i=0; i<chatManager.getContacts().size();i++){
                 if(contactid.equals(chatManager.getContacts().get(i).getContactId())){
                     remotepk=chatManager.getContacts().get(i).getRemoteActorPublicKey();
@@ -155,14 +159,13 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     void whattodo(){
         Contact con= chatSession.getSelectedContact();
+        contactid = con.getContactId();
         if(appSession.getData("whocallme").equals("chatlist"))
         {
-            contactid= (UUID) appSession.getData("contactid");
-            findvalues(contactid);
+            findvalues(con);//findvalues(contactid);
             chatwascreate=true;
         }else if(appSession.getData("whocallme").equals("contact")){  //fragment contact call this fragment
-            contactid=con.getContactId();
-            findvalues(contactid);
+            findvalues(con);
             if(chatid!=null){
                 chatwascreate=true;
             }else{
@@ -244,7 +247,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                        chat.setChatName("DeathNote");
                        chat.setDate(new Timestamp(dv));
                        chat.setLastMessageDate(new Timestamp(dv));
-                       chat.setLocalActorPublicKey(appSession.getAppPublicKey());
+                       chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
                        chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
                        chat.setRemoteActorPublicKey(remotepk);
                        chat.setRemoteActorType(remotepct);
@@ -273,7 +276,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                        chat.setChatName("DeathNote");
                        chat.setDate(new Timestamp(dv));
                        chat.setLastMessageDate(new Timestamp(dv));
-                       chat.setLocalActorPublicKey(appSession.getAppPublicKey());
+                       chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
                        chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
                        chat.setRemoteActorPublicKey(remotepk);
                        chat.setRemoteActorType(remotepct);
@@ -301,6 +304,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 } catch (CantSaveMessageException e) {
                     e.printStackTrace();
                 }catch (CantSaveChatException e) {
+                    e.printStackTrace();
+                } catch (CantGetNetworkServicePublicKeyException e) {
                     e.printStackTrace();
                 }
             }

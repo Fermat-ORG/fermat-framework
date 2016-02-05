@@ -722,6 +722,7 @@ public class ChatMiddlewareDatabaseDao {
         message.setMessageDate(Timestamp.valueOf(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME)));
         message.setStatus(MessageStatus.getByCode(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME)));
         message.setType(TypeMessage.getByCode(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME)));
+        message.setContactId(UUID.fromString(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID)));
 
         return message;
     }
