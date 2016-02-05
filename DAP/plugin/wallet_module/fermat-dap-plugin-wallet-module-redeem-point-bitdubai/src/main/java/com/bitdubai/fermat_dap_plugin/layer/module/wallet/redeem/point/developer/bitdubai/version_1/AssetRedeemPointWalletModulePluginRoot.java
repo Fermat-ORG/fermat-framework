@@ -33,7 +33,9 @@ import com.bitdubai.fermat_dap_plugin.layer.module.wallet.redeem.point.developer
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO ADD HERE A LITTLE EXPLANATION ABOUT THE FUNCIONALITY OF THE PLUG-IN
@@ -60,6 +62,8 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     private AssetRedeemPointWalletModuleManager assetRedeemPointWalletModuleManager;
 
     private SettingsManager<RedeemPointSettings> settingsManager;
+    RedeemPointSettings settings = null;
+    String publicKeyApp;
 
     private BlockchainNetworkType selectedNetwork;
 
@@ -160,7 +164,31 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
 
     @Override
     public void setAppPublicKey(String publicKey) {
+        this.publicKeyApp = publicKey;
 
+        try {
+            settings = settingsManager.loadAndGetSettings(publicKeyApp);
+        } catch (Exception e) {
+            settings = null;
+        }
+
+        if(settings != null && settings.getBlockchainNetwork() != null) {
+            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
+        } else {
+            int position = 0;
+            List<BlockchainNetworkType> list = Arrays.asList(BlockchainNetworkType.values());
+
+            for (BlockchainNetworkType networkType : list) {
+
+                if(Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    settings.setBlockchainNetworkPosition(position);
+                    break;
+                } else {
+                    position++;
+                }
+            }
+            settings.setBlockchainNetwork(list);
+        }
     }
 
     @Override
