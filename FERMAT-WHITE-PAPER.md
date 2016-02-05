@@ -131,7 +131,7 @@ These application tokens are native to the Fermat system and are necessary to ha
 
 Fermat's bandwidth tokens (_b-fermats_) issuing data and records are cryptographically stored in a public, decentralized blockchain in order to avoid any central points of failure. This blockchain is stored at Fermat Nodes.
 
-Fermat's developer tokens (_d-fermats_) issuing data and records are cryptographically stored in a public, decentralized blockchain of digital assets in order to avoid any central points of failure. This blockchain is stored at a Public Network Device owned by the Fermat Foundation and ran on top of the Fermat Network.
+Fermat's developer tokens (_d-fermats_) issuing data and records are cryptographically stored in a public, decentralized blockchain of digital assets in order to avoid any central points of failure. This blockchain is stored at a Device Public Network owned by the Fermat Foundation and ran on top of the Fermat Network.
 
 
 ### Token Generation & Distribution
