@@ -83,7 +83,13 @@ public class AmountToSellStepViewHolder extends StepViewHolder
 
             if (!valuesHasChanged) {
                 valuesHasChanged = !actualAmountToSell.equals(sourceAmountToSell);
+                setStatus(NegotiationStepStatus.CHANGED);
+
+            }else{
+                setStatus(NegotiationStepStatus.ACCEPTED);
+
             }
+
         }
     }
 
