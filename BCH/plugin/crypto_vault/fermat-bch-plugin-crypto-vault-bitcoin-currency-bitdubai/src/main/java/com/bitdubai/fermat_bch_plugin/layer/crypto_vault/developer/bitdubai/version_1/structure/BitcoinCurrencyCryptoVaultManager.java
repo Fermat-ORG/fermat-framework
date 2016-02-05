@@ -230,7 +230,9 @@ public class BitcoinCurrencyCryptoVaultManager  {
          * if the network parameters calculated is different that the Default network I will double check
          */
         if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
-            return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            //return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            // implement a better way to validate this.
+            return networkParameters;
         } else
             return networkParameters;
     }
@@ -284,9 +286,9 @@ public class BitcoinCurrencyCryptoVaultManager  {
     /**
      * gets a fresh un used crypto Address from the vault
      */
-    public CryptoAddress getAddress() {
+    public CryptoAddress getAddress(BlockchainNetworkType blockchainNetworkType) {
         try {
-            return this.getNewBitcoinVaultCryptoAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            return this.getNewBitcoinVaultCryptoAddress(blockchainNetworkType);
         } catch (GetNewCryptoAddressException e) {
             e.printStackTrace();
             return null;
