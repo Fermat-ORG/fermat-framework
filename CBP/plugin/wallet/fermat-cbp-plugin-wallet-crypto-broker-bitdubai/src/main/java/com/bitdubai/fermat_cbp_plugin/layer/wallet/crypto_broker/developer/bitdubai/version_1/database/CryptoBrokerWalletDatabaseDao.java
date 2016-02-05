@@ -639,6 +639,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         cryptoBrokerWalletProviderSetting.setDescription(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_DESCRIPTION_COLUMN_NAME));
         cryptoBrokerWalletProviderSetting.setPlugin(record.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_PLUGIN_COLUMN_NAME));
         cryptoBrokerWalletProviderSetting.setCurrencyFrom(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_CURRENCY_FROM_COLUMN_NAME));
+        cryptoBrokerWalletProviderSetting.setCurrencyTo(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_PROVIDER_CURRENCY_TO_COLUMN_NAME));
 
         return cryptoBrokerWalletProviderSetting;
     }

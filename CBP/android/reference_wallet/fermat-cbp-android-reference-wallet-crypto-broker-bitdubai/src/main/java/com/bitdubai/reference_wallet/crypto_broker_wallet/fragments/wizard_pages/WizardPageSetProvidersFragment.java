@@ -225,7 +225,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 setting.setId(provider.getProviderId());
                 setting.setPlugin(provider.getProviderId());
                 setting.setCurrencyFrom(currencyPairAndProvider.getCurrencyFrom().getCode());
-                setting.setCurrencyFrom(currencyPairAndProvider.getCurrencyTo().getCode());
+                setting.setCurrencyTo(currencyPairAndProvider.getCurrencyTo().getCode());
 
                 walletManager.saveCryptoBrokerWalletProviderSetting(setting, appSession.getAppPublicKey());
             }
