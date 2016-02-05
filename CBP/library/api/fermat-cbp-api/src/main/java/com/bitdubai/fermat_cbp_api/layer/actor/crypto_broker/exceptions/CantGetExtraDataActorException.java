@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by Yordin Alayn on 11.11.2015.
+ * Created by Angel on 04/02/2016
  */
-public class CantCreatePurchaseContractException extends FermatException {
+public class CantGetExtraDataActorException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T CREATE CUSTOMER BROKER CONTRACT";
+    public static final String DEFAULT_MESSAGE = "CAN'T GET EXTRA DATA ACTOR";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,7 @@ public class CantCreatePurchaseContractException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantCreatePurchaseContractException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetExtraDataActorException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

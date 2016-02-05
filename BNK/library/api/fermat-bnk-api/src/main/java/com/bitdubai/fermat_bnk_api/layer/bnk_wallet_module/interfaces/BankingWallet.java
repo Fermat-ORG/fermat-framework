@@ -31,4 +31,5 @@ public interface BankingWallet {
     float getAvailableBalance(String account);
     void createBankName(String bankName);
     String getBankName();
+    void cancelAsyncBankTransaction(BankMoneyTransactionRecord transaction);
 }
