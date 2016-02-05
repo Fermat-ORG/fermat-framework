@@ -441,7 +441,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          * Listen and handle Complete Update Actor Profile Notification Event
          */
         fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_UPDATE_ACTOR_NOTIFICATION);
-        fermatEventListener.setEventHandler(new CompleteUpdateActorNotificationEventHandler(this));
+
+        //TODO: MATIAS REVISAR POR QUE HACE REFERENCIA AL OLD
+       // fermatEventListener.setEventHandler(new CompleteUpdateActorNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -457,7 +459,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
          *Listen and handle the received messages
          */
         FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEventListener.setEventHandler(new NewMessagesEventHandler(this));
+        //TODO: MATIAS REVISAR POR QUE HACE REFERENCIA AL OLD
+      //  fermatEventListener.setEventHandler(new NewMessagesEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
@@ -741,7 +744,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
            
             if (actorNetworkServiceRecordedAgent == null){
 
-                actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(this);
+
+                //TODO: MATIAS REVISAR POR QUE HACE REFERENCIA AL OLD
+              //  actorNetworkServiceRecordedAgent = new ActorNetworkServiceRecordedAgent(this);
                 actorNetworkServiceRecordedAgent.start();
 
             }
@@ -1961,12 +1966,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             /*
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+
+            //TODO: MATIAS REVISAR POR QUE HACE REFERENCIA AL OLD
+          /*  if (com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
                 com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
                 com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
                 com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
+            } */
         }
 
     }
