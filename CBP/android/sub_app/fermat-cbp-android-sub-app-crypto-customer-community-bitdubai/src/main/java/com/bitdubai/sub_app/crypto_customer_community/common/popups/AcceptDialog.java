@@ -87,6 +87,7 @@ public class AcceptDialog extends FermatDialog<CryptoCustomerCommunitySubAppSess
         if (i == R.id.positive_button) {
            try {
                 if (cryptoCustomerCommunityInformation != null && identity != null) {
+                    System.out.println("************* im goint to accept: "+cryptoCustomerCommunityInformation.getConnectionId());
                     getSession().getModuleManager().acceptCryptoCustomer(cryptoCustomerCommunityInformation.getConnectionId());
                     Toast.makeText(getContext(), " Accepted connection request from " + cryptoCustomerCommunityInformation.getAlias(), Toast.LENGTH_SHORT).show();
                 } else {

@@ -784,6 +784,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     @Override
     public final void handleNewSentMessageNotificationEvent(final FermatMessage fermatMessage) {
 
+        System.out.println("****************** Ya se envio el mensaje: "+fermatMessage);
 
     }
 
@@ -800,12 +801,21 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                 case CONNECTION_INFORMATION:
                     InformationMessage informationMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, InformationMessage.class);
                     receiveConnectionInformation(informationMessage);
+
+                    String destinationPublicKey = connectionNewsDao.getDestinationPublicKey(informationMessage.getRequestId());
+/*
+                    communicationNetworkServiceConnectionManager.closeConnection(destinationPublicKey);
+                    //remove from the waiting pool
+                    cryptoBrokerExecutorAgent.connectionFailure(destinationPublicKey);*/
                     break;
 
                 case CONNECTION_REQUEST:
                     // update the request to processing receive state with the given action.
                     RequestMessage requestMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, RequestMessage.class);
                     receiveRequest(requestMessage);
+                    /*communicationNetworkServiceConnectionManager.closeConnection(requestMessage.getSenderPublicKey());
+                    //remove from the waiting pool
+                    cryptoBrokerExecutorAgent.connectionFailure(requestMessage.getSenderPublicKey());*/
                     break;
 
                 default:
@@ -829,14 +839,15 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         try {
 
+            ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
             switch (informationMessage.getAction()) {
-                /*case ACCEPT:
+                case ACCEPT:
                     connectionNewsDao.acceptConnection(
                             informationMessage.getRequestId(),
                             state
                     );
                     break;
-                case DENY:
+               /* case DENY:
                     connectionNewsDao.denyConnection(
                             informationMessage.getRequestId(),
                             state

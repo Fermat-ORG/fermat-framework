@@ -110,6 +110,7 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     @Override
     public void acceptCryptoCustomer(UUID connectionId) throws CantAcceptRequestException {
         try {
+            System.out.println("************* im accepting in module the request: "+connectionId);
             this.cryptoCustomerActorConnectionManager.acceptConnection(connectionId);
         } catch (CantAcceptActorConnectionRequestException | ActorConnectionNotFoundException | UnexpectedConnectionStateException e)
         {
