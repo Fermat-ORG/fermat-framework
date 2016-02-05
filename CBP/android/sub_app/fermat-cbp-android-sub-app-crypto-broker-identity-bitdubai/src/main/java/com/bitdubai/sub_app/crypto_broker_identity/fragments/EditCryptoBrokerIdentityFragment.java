@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.Toast;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -254,9 +255,10 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             imgInBytes = profileImage;
         }
         if(mBrokerName != null && imgInBytes != null && cryptoBrokerPublicKey != null) {
-            CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
-            EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
-            executor = EditIdentityWorker.execute();
+            //TODO: esta clase tiene que ir en la api
+//            CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
+//            EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
+//            executor = EditIdentityWorker.execute();
         }
     }
 
@@ -278,6 +280,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             imgInBytes = profileImage;
         }
         if(mBrokerName != null && imgInBytes != null && cryptoBrokerPublicKey != null) {
+            //TODO: esta clase tiene que ir en la api
+
             CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(
                 brokerNameText,
                 cryptoBrokerPublicKey,

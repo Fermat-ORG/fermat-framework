@@ -1224,8 +1224,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         //DAP FACTORY SETTINGS
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
-//            runtimeActivity.setBackActivity(Activities.DAP_MAIN);
-//            runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+            runtimeActivity.setBackActivity(Activities.DAP_MAIN);
+            runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
         runtimeActivity.setColor("#1d1d25");
 
         statusBar = new StatusBar();

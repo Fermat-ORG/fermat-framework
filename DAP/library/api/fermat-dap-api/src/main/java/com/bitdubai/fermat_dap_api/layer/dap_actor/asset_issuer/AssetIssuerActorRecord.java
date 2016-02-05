@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer;
 
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -9,6 +10,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
+import java.util.Arrays;
 
 /**
  * Created by Nerio on 22/09/15.
@@ -25,7 +28,6 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     private Location location;
     private Double locationLatitude;
     private Double locationLongitude;
-    private CryptoAddress cryptoAddress;
     private byte[] profileImage;
     private String extendedPublicKey;
 
@@ -89,6 +91,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     }
 
     private AssetIssuerActorRecord(JsonObject jsonObject, Gson gson) {
+
         this.publicLinkedIdentity = jsonObject.get("publicLinkedIdentity").getAsString();
         this.actorPublicKey = jsonObject.get("actorPublicKey").getAsString();
         this.name = jsonObject.get("name").getAsString();
@@ -99,9 +102,9 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.location = gson.fromJson(jsonObject.get("location").getAsString(), Location.class);
         this.locationLatitude = Double.valueOf(jsonObject.get("locationLatitude").getAsString());
         this.locationLongitude = Double.valueOf(jsonObject.get("locationLongitude").getAsString());
-        this.cryptoAddress = gson.fromJson(jsonObject.get("cryptoAddress").getAsString(), CryptoAddress.class);
         this.profileImage = Base64.decode(jsonObject.get("profileImage").getAsString(), Base64.DEFAULT);
         this.extendedPublicKey = jsonObject.get("extendedPublicKey").getAsString();
+
     }
 
     /**
@@ -221,16 +224,6 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         return locationLongitude;
     }
 
-//    @Override
-//    public CryptoAddress getCryptoAddress() {
-//        return cryptoAddress;
-//    }
-
-    public void setCryptoAddress(CryptoAddress cryptoAddress) {
-        if (cryptoAddress != null)
-            this.cryptoAddress = cryptoAddress;
-    }
-
     @Override
     public String getExtendedPublicKey() {
         return extendedPublicKey;
@@ -255,12 +248,11 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         jsonObject.addProperty("description",           description);
         jsonObject.addProperty("registrationDate",      registrationDate);
         jsonObject.addProperty("lastConnectionDate",    lastConnectionDate);
-        jsonObject.addProperty("dapConnectionState",    dapConnectionState.toString());
+        jsonObject.addProperty("dapConnectionState",    dapConnectionState.getCode());
         jsonObject.addProperty("location",              location.toString());
         jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
-        jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
-        jsonObject.addProperty("profileImage", Base64.encodeToString(profileImage, Base64.DEFAULT));
+        jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
         jsonObject.addProperty("extendedPublicKey",     extendedPublicKey);
         return gson.toJson(jsonObject);
     }
@@ -278,11 +270,10 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                 ", description='"           + description + '\'' +
                 ", registrationDate="       + registrationDate +
                 ", lastConnectionDate="     + lastConnectionDate +
-                ", dapConnectionState="     + dapConnectionState +
+                ", dapConnectionState="     + dapConnectionState.getCode() +
                 ", location="               + location +
                 ", locationLatitude="       + locationLatitude +
                 ", locationLongitude="      + locationLongitude +
-                ", cryptoAddress="          + cryptoAddress +
                 ", profileImage="           + profileImageIssuer +
                 ", extendedPublicKey='"     + extendedPublicKey + '\'' +
                 '}';
