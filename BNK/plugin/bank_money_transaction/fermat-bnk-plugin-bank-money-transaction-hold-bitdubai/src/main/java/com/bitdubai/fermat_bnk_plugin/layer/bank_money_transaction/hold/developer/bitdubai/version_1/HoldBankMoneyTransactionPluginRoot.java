@@ -118,6 +118,11 @@ public class HoldBankMoneyTransactionPluginRoot extends AbstractPlugin implement
         return tableRecordList;
     }
 
+    @Override
+    public boolean isTransactionRegistered(UUID transactionId) {
+        return holdTransactionManager.isTransactionRegistered(transactionId);
+    }
+
     private void test(){
          final UUID id=UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
         BankTransactionParameters t = new BankTransactionParameters() {
