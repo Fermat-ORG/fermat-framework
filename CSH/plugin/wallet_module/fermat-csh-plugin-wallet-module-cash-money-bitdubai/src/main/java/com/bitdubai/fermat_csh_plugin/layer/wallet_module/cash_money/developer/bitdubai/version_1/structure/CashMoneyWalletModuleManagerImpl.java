@@ -70,7 +70,7 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
         this.cashWithdrawalTransactionManager = cashWithdrawalTransactionManager;
         this.broadcaster = broadcaster;
 
-        this.setTransactionDelayMillis(30000);
+        this.setTransactionDelayMillis(15000);
 
         //CashTransactionParameters params = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(200.3), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD", TransactionType.CREDIT);
         //CashTransactionParameters params2 = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(200.3), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD", TransactionType.DEBIT);
