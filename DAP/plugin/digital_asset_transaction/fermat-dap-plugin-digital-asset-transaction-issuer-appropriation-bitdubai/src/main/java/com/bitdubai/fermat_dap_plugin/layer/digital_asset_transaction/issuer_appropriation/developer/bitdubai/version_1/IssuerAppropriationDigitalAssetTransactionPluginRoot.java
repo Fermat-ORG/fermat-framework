@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -145,12 +146,12 @@ public class IssuerAppropriationDigitalAssetTransactionPluginRoot extends Abstra
      * @throws TransactionAlreadyStartedException           in case for some reason you try to appropriate the same asset twice.
      */
     @Override
-    public void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetIssuerWalletPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
-        String context = "Asset: " + digitalAssetMetadata + " - User Wallet: " + assetIssuerWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
+    public void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetIssuerWalletPublicKey, String bitcoinWalletPublicKey, BlockchainNetworkType networkType) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+        String context = "Asset: " + digitalAssetMetadata + " - User Wallet: " + assetIssuerWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey + " - Network: " + networkType;
 
         try {
             IssuerAppropriationDAO dao = new IssuerAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault);
-            String transactionId = dao.startAppropriation(digitalAssetMetadata, assetIssuerWalletPublicKey, bitcoinWalletPublicKey);
+            String transactionId = dao.startAppropriation(digitalAssetMetadata, assetIssuerWalletPublicKey, bitcoinWalletPublicKey, networkType);
         } catch (TransactionAlreadyStartedException | CantExecuteAppropriationTransactionException e) {
             throw e;
         } catch (Exception e) {
