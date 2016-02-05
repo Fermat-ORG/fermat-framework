@@ -544,7 +544,6 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
             communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(getPluginDatabaseSystem(), pluginId);
             communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
-
         }catch (Exception e){
              /*
              * The database cannot be created. I can not handle this situation.
@@ -663,10 +662,16 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleCompleteComponentConnectionRequestNotificationEvent(CompleteComponentConnectionRequestNotificationEvent event) {
 
-        /*
-         * Tell the manager to handler the new connection established
-         */
-        communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(event.getRemoteComponent());
+        try {
+
+            /*
+             * Tell the manager to handler the new connection established
+             */
+            communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(event.getRemoteComponent());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -675,10 +680,16 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleCompleteRequestListComponentRegisteredNotificationEvent(CompleteRequestListComponentRegisteredNotificationEvent event) {
 
-        CopyOnWriteArrayList<PlatformComponentProfile> remotePlatformComponentProfileRegisteredList  = new CopyOnWriteArrayList<>();
-        remotePlatformComponentProfileRegisteredList.addAllAbsent(event.getRegisteredComponentList());
+        try {
 
-        onReceivePlatformComponentProfileRegisteredList(remotePlatformComponentProfileRegisteredList);
+            CopyOnWriteArrayList<PlatformComponentProfile> remotePlatformComponentProfileRegisteredList  = new CopyOnWriteArrayList<>();
+            remotePlatformComponentProfileRegisteredList.addAllAbsent(event.getRegisteredComponentList());
+
+            onReceivePlatformComponentProfileRegisteredList(remotePlatformComponentProfileRegisteredList);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -687,7 +698,13 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleCompleteUpdateActorNotificationEvent(CompleteUpdateActorNotificationEvent event) {
 
-        onCompleteActorProfileUpdate(event.getPlatformComponentProfileUpdate());
+        try {
+
+            onCompleteActorProfileUpdate(event.getPlatformComponentProfileUpdate());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -696,9 +713,15 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleFailureComponentConnectionRequest(FailureComponentConnectionRequestNotificationEvent event) {
 
-        communicationSupervisorPendingMessagesAgent.connectionFailure(event.getRemoteParticipant().getIdentityPublicKey());
+        try {
 
-        onFailureComponentConnectionRequest();
+            communicationSupervisorPendingMessagesAgent.connectionFailure(event.getRemoteParticipant().getIdentityPublicKey());
+
+            onFailureComponentConnectionRequest();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -708,7 +731,13 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleFailureComponentRegistrationNotificationEvent(FailureComponentRegistrationNotificationEvent event) {
 
-        onFailureComponentRegistration(event.getPlatformComponentProfile());
+        try {
+
+            onFailureComponentRegistration(event.getPlatformComponentProfile());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -717,15 +746,21 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleVpnConnectionCloseNotificationEvent(VPNConnectionCloseNotificationEvent event) {
 
-        if(event.getNetworkServiceApplicant() == getNetworkServiceProfile().getNetworkServiceType()){
+        try {
 
-            String remotePublicKey = event.getRemoteParticipant().getIdentityPublicKey();
-            if(communicationNetworkServiceConnectionManager != null) {
-                communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
+            if(event.getNetworkServiceApplicant() == getNetworkServiceProfile().getNetworkServiceType()){
+
+                String remotePublicKey = event.getRemoteParticipant().getIdentityPublicKey();
+                if(communicationNetworkServiceConnectionManager != null) {
+                    communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
+                }
+
+                reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
+
             }
 
-            reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
@@ -736,15 +771,21 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public void handleVPNConnectionLooseNotificationEvent(VPNConnectionLooseNotificationEvent event) {
 
-        if(event.getNetworkServiceApplicant() == getNetworkServiceProfile().getNetworkServiceType()){
+        try {
 
-            String remotePublicKey = event.getRemoteParticipant().getIdentityPublicKey();
-            if(communicationNetworkServiceConnectionManager != null) {
-                communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
+            if(event.getNetworkServiceApplicant() == getNetworkServiceProfile().getNetworkServiceType()){
+
+                String remotePublicKey = event.getRemoteParticipant().getIdentityPublicKey();
+                if(communicationNetworkServiceConnectionManager != null) {
+                    communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
+                }
+
+                reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
+
             }
 
-            reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }
