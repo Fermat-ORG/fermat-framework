@@ -123,6 +123,26 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
      */
     private void processPendingIncomingMessage() {
 
+        try {
+
+            /*
+             * Read all pending message from database
+             */
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.NEW_RECEIVED.getCode());
+            List<FermatMessage> messages = networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().findAll(filters);
+
+            /*
+             * For all destination in the message request a new connection
+             */
+            for (FermatMessage fermatMessage: messages) {
+
+                networkServiceRoot.onNewMessagesReceive(fermatMessage);
+            }
+
+        }catch (Exception e){
+            System.out.println("CommunicationSupervisorPendingMessagesAgent - processPendingIncomingMessage detect a error: "+e.getMessage());
+        }
     }
 
     /**
@@ -149,11 +169,9 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
                 if (!poolConnectionsWaitingForResponse.containsKey(fermatMessage.getReceiver())) {
                     if (networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getNetworkServiceLocalInstance(fermatMessage.getReceiver()) == null) {
 
-                        PlatformComponentProfile applicantParticipant = networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
-                                                                                          .constructPlatformComponentProfileFactory(fermatMessage.getSender(), "", "", NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER, "");
+                        PlatformComponentProfile applicantParticipant = networkServiceRoot.getProfileToRequestConnection(fermatMessage.getSender());
 
-                        PlatformComponentProfile remoteParticipant = networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
-                                                                                        .constructPlatformComponentProfileFactory(fermatMessage.getReceiver(), "", "", NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_INTRA_USER, "");
+                        PlatformComponentProfile remoteParticipant = networkServiceRoot.getProfileToRequestConnection(fermatMessage.getReceiver());
 
                         networkServiceRoot.getCommunicationNetworkServiceConnectionManager().connectTo(applicantParticipant, networkServiceRoot.getNetworkServiceProfile(), remoteParticipant);
 
@@ -258,4 +276,21 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
         }
     }
 
+    /**
+     * Notify to the agent that a request connection fail
+     *
+     * @param identityPublicKey
+     */
+    public void connectionFailure(String identityPublicKey){
+        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
+    }
+
+    /**
+     * Get the poolConnectionsWaitingForResponse instance
+     *
+     * @return Map<String, PlatformComponentProfile>
+     */
+    public Map<String, PlatformComponentProfile> getPoolConnectionsWaitingForResponse() {
+        return poolConnectionsWaitingForResponse;
+    }
 }

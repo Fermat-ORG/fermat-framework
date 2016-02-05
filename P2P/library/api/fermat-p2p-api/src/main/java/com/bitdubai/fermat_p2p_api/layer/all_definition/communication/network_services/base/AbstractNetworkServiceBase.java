@@ -45,10 +45,12 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteUpdateActorNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents.CommunicationSupervisorPendingMessagesAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDeveloperDatabaseFactory;
@@ -192,6 +194,11 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
 
     /**
+     * Represent the communicationSupervisorPendingMessagesAgent
+     */
+    private CommunicationSupervisorPendingMessagesAgent communicationSupervisorPendingMessagesAgent;
+
+    /**
      * Represent the dataBase
      */
     private Database dataBase;
@@ -287,10 +294,13 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                         this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(this);
 
                         /*
-                         * Initialize the agent and start
+                         * Initialize the agents and start
                          */
                         this.communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this);
                         this.communicationRegistrationProcessNetworkServiceAgent.start();
+
+                        this.communicationSupervisorPendingMessagesAgent = new CommunicationSupervisorPendingMessagesAgent(this);
+                        this.communicationSupervisorPendingMessagesAgent.start();
                     }
 
 
@@ -718,6 +728,17 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         onCompleteActorProfileUpdate(event.getPlatformComponentProfileUpdate());
     }
 
+    /**
+     * Handle the event FailureComponentConnectionRequestNotificationEvent
+     * @param event
+     */
+    public void handleFailureComponentConnectionRequest(FailureComponentConnectionRequestNotificationEvent event) {
+
+        communicationSupervisorPendingMessagesAgent.connectionFailure(event.getRemoteParticipant().getIdentityPublicKey());
+
+        onFailureComponentConnectionRequest();
+
+    }
 
     /**
      * Handle the event FailureComponentConnectionRequestNotificationEvent
@@ -824,7 +845,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      *
      * @param newFermatMessageReceive
      */
-    protected abstract void onNewMessagesReceive(FermatMessage newFermatMessageReceive);
+    public abstract void onNewMessagesReceive(FermatMessage newFermatMessageReceive);
 
     /**
      * This method is automatically called when the network service receive
@@ -855,6 +876,11 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     protected abstract void onClientConnectionLoose();
 
     /**
+     * This method is automatically called when a component connection request is fail
+     */
+    protected abstract void onFailureComponentConnectionRequest();
+
+    /**
      * This method is automatically called when the list of platform Component Profile Registered
      * is received for the network service
      */
@@ -869,6 +895,35 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * This method is automatically called when the request of component registrations is fail
      */
     protected abstract void onFailureComponentRegistration(PlatformComponentProfile platformComponentProfile);
+
+    /**
+     * This method is called when the CommunicationSupervisorPendingMessagesAgent is trying to request
+     * a new connection for a message pending to send. This method need construct the profile specific to
+     * the network service work.
+     *
+     * Example: Is the network service work whit actor this profile has to mach with the actor.
+     *
+     * <code>
+     *
+     *     @overray
+     *     public PlatformComponentProfile getProfileToRequestConnection(String identityPublicKey) {
+     *
+     *         return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
+     *                                                       .constructPlatformComponentProfileFactory(actor.getIdentityPublicKey(),
+     *                                                                                                 actor.getAlias(),
+     *                                                                                                 actor.getName(),
+     *                                                                                                 NetworkServiceType.UNDEFINED,
+     *                                                                                                 PlatformComponentType.ACTOR_INTRA_USER,
+     *                                                                                                 "");
+     *
+     *     }
+     *
+     * </code>
+     *
+     * @param identityPublicKey
+     * @return PlatformComponentProfile
+     */
+    public abstract PlatformComponentProfile getProfileToRequestConnection(String identityPublicKey);
 
 
     protected abstract void reprocessMessages();
@@ -936,4 +991,5 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     public CommunicationNetworkServiceConnectionManager getCommunicationNetworkServiceConnectionManager() {
         return communicationNetworkServiceConnectionManager;
     }
+
 }

@@ -55,7 +55,7 @@ public class FailureComponentConnectionRequestNotificationEventHandler implement
             if (failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant().getPlatformComponentType()  == networkService.getNetworkServiceProfile().getPlatformComponentType() &&
                     failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant().getNetworkServiceType() == networkService.getNetworkServiceProfile().getNetworkServiceType()){
 
-                this.networkService.handleFailureComponentRegistrationNotificationEvent(failureComponentConnectionRequestNotificationEvent);
+                this.networkService.handleFailureComponentConnectionRequest(failureComponentConnectionRequestNotificationEvent);
 
             }
 

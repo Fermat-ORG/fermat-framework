@@ -48,7 +48,10 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (this.networkService.getStatus().equals(ServiceStatus.STARTED)) {
-            this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent((CompleteRequestListComponentRegisteredNotificationEvent) fermatEvent);
+            CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent = (CompleteRequestListComponentRegisteredNotificationEvent) fermatEvent;
+            if(completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceProfile().getNetworkServiceType()) {
+                this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent);
+            }
         }
     }
 }
