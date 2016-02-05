@@ -803,16 +803,15 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             String jsonMessage = fermatMessage.getContent();
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, NetworkServiceMessage.class);
-            System.out.println("************ im the network service message: "+networkServiceMessage);
 
             switch (networkServiceMessage.getMessageType()) {
 
-                case INFORMATION:
+                case CONNECTION_INFORMATION:
                     InformationMessage informationMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, InformationMessage.class);
-                    receiveInformation(informationMessage);
+                    receiveConnectionInformation(informationMessage);
                     break;
 
-                case REQUEST:
+                case CONNECTION_REQUEST:
                     // update the request to processing receive state with the given action.
                     RequestMessage requestMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, RequestMessage.class);
                     receiveRequest(requestMessage);
@@ -835,15 +834,12 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING_RECEIVE.    .
      */
-    private void receiveInformation(final InformationMessage informationMessage) throws CantHandleNewMessagesException {
+    private void receiveConnectionInformation(final InformationMessage informationMessage) throws CantHandleNewMessagesException {
 
         try {
-// TODO CHANGE TO PROCESSING RECEIVE
-
-            final ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
 
             switch (informationMessage.getAction()) {
-                case ACCEPT:
+                /*case ACCEPT:
                     connectionNewsDao.acceptConnection(
                             informationMessage.getRequestId(),
                             state
@@ -854,6 +850,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                             informationMessage.getRequestId(),
                             state
                     );
+                    break;*/
+                case INFORM_RECEPTION:
+                    connectionNewsDao.confirmActorConnectionRequest(informationMessage.getRequestId());
                     break;
                 default:
                     throw new CantHandleNewMessagesException(
@@ -862,7 +861,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     );
             }
 
-         } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException e) {
+         } catch(/*CantAcceptConnectionRequestException | CantDenyConnectionRequestException |*/ ConnectionRequestNotFoundException e) {
             // i inform to error manager the error.
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
@@ -881,11 +880,12 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     private void receiveRequest(final RequestMessage requestMessage) throws CantHandleNewMessagesException {
 
         try {
-// TODO CHANGE TO PROCESSING RECEIVE
-            final ProtocolState           state  = ProtocolState.PENDING_LOCAL_ACTION;
-            final RequestType             type   = RequestType  .RECEIVED            ;
+
+            final ProtocolState           state  = ProtocolState.PROCESSING_RECEIVE;
+            final RequestType             type   = RequestType  .RECEIVED          ;
 
             final CryptoBrokerConnectionInformation connectionInformation = new CryptoBrokerConnectionInformation(
+                    requestMessage.getRequestId(),
                     requestMessage.getSenderPublicKey(),
                     requestMessage.getSenderActorType(),
                     requestMessage.getSenderAlias(),

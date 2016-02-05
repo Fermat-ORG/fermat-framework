@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -29,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -147,15 +147,20 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
         try {
 
-            List<CryptoBrokerConnectionRequest> cryptoAddressRequestList = dao.listAllRequestByProtocolState(
-                    ProtocolState.PROCESSING_SEND
+            List<ProtocolState> protocolStatesList = new ArrayList<>();
+
+            protocolStatesList.add(ProtocolState.PROCESSING_SEND             );
+            protocolStatesList.add(ProtocolState.WAITING_RECEIPT_CONFIRMATION);
+
+            List<CryptoBrokerConnectionRequest> cryptoAddressRequestList = dao.listAllRequestByProtocolStates(
+                    protocolStatesList
             );
 
             for(CryptoBrokerConnectionRequest cbcr : cryptoAddressRequestList) {
 
                 switch (cbcr.getRequestAction()) {
 
-                    case ACCEPT:
+                   /* case ACCEPT:
 
                         System.out.println("********* Crypto Broker: Executor Agent -> Sending ACCEPTANCE. "+cbcr);
 
@@ -185,7 +190,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                              confirmRequest(cbcr.getRequestId());
                         }
 
-                        break;
+                        break;*/
 
                     case REQUEST:
 
@@ -198,7 +203,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                                 cbcr.getDestinationPublicKey(),
                                 Actors.CBP_CRYPTO_BROKER
                         )) {
-                            toPendingRemoteAction(cbcr.getRequestId());
+                            toWaitingReceiptConfirmation(cbcr.getRequestId());
                         }
 
                         break;
@@ -207,7 +212,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
         } catch(CantListPendingConnectionRequestsException |
                 CantChangeProtocolStateException |
-                CantConfirmConnectionRequestException |
+               // CantConfirmConnectionRequestException |
                 ConnectionRequestNotFoundException           e) {
 
             reportUnexpectedError(e);
@@ -240,6 +245,23 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
     public void processReceive(){
 
         try {
+
+            List<CryptoBrokerConnectionRequest> cryptoAddressRequestList = dao.listAllRequestByProtocolState(
+                    ProtocolState.PROCESSING_RECEIVE
+            );
+
+            for(CryptoBrokerConnectionRequest cbcr :cryptoAddressRequestList) {
+
+                if (sendMessageToActor(
+                        buildJsonInformReceptionMessage(cbcr),
+                        cbcr.getDestinationPublicKey(),
+                        Actors.CBP_CRYPTO_BROKER,
+                        cbcr.getSenderPublicKey(),
+                        cbcr.getSenderActorType()
+                )) {
+                    toPendingLocalAction(cbcr.getRequestId());
+                }
+            }
 
             // if there is pending actions i raise a crypto address news event.
             if(dao.isPendingRequests()) {
@@ -367,6 +389,14 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
         ).toJson();
     }
 
+    private String buildJsonInformReceptionMessage(final CryptoBrokerConnectionRequest aer) {
+
+        return new InformationMessage(
+                aer.getRequestId(),
+                ConnectionRequestAction.INFORM_RECEPTION
+        ).toJson();
+    }
+
     private String buildJsonDenyMessage(final CryptoBrokerConnectionRequest aer) {
 
         return new InformationMessage(
@@ -395,10 +425,10 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
         dao.changeProtocolState(requestId, ProtocolState.PENDING_LOCAL_ACTION);
     }
 
-    private void toPendingRemoteAction(final UUID requestId) throws CantChangeProtocolStateException   ,
+    private void toWaitingReceiptConfirmation(final UUID requestId) throws CantChangeProtocolStateException   ,
                                                                     ConnectionRequestNotFoundException {
 
-        dao.changeProtocolState(requestId, ProtocolState.PENDING_REMOTE_ACTION);
+        dao.changeProtocolState(requestId, ProtocolState.WAITING_RECEIPT_CONFIRMATION);
     }
 
     private void confirmRequest(final UUID requestId) throws CantConfirmConnectionRequestException,

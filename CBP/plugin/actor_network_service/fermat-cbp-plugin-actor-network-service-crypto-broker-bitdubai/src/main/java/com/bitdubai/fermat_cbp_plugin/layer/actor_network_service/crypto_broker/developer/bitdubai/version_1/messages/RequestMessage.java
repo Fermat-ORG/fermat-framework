@@ -32,7 +32,7 @@ public class RequestMessage extends NetworkServiceMessage {
                           final ConnectionRequestAction requestAction       ,
                           final long                    sentTime            ) {
 
-        super(MessageTypes.REQUEST);
+        super(MessageTypes.CONNECTION_REQUEST);
 
         this.requestId            = requestId           ;
         this.senderPublicKey      = senderPublicKey     ;
