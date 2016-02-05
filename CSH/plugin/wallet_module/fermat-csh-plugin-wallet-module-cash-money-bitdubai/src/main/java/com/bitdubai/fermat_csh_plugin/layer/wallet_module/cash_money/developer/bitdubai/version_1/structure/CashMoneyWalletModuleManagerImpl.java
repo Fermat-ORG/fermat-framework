@@ -7,7 +7,10 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_csh_api.all_definition.constants.CashMoneyWalletBroadcasterConstants;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
@@ -52,17 +55,20 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
     private final CashMoneyWalletManager cashMoneyWalletManager;
     private final CashDepositTransactionManager cashDepositTransactionManager;
     private final CashWithdrawalTransactionManager cashWithdrawalTransactionManager;
+    private final Broadcaster broadcaster;
 
 
 
     public CashMoneyWalletModuleManagerImpl(final CashMoneyWalletManager cashMoneyWalletManager, final UUID pluginId, final PluginFileSystem pluginFileSystem,
-                                           final ErrorManager errorManager, final CashDepositTransactionManager cashDepositTransactionManager, final CashWithdrawalTransactionManager cashWithdrawalTransactionManager) {
+                                           final ErrorManager errorManager, final CashDepositTransactionManager cashDepositTransactionManager,
+                                            final CashWithdrawalTransactionManager cashWithdrawalTransactionManager, final Broadcaster broadcaster) {
         this.errorManager = errorManager;
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
         this.cashMoneyWalletManager = cashMoneyWalletManager;
         this.cashDepositTransactionManager = cashDepositTransactionManager;
         this.cashWithdrawalTransactionManager = cashWithdrawalTransactionManager;
+        this.broadcaster = broadcaster;
 
         this.setTransactionDelayMillis(30000);
 
@@ -85,17 +91,20 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
             else
                 this.doCreateCashWithdrawalTransaction(transaction);
 
-            //TODO: Evento al GUI de actualizar la transaccion indicando que se realizo satisfactoriamente
+            //Send Broadcast to android wallet so it can refresh the screen
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
 
         }catch(CantCreateDepositTransactionException e){
-            //TODO: Evento al GUI de actualizar el deposito indicando que hubo una falla y no se pudo realizar
+            //Send Broadcast to android wallet so it can refresh the screen, indicating an error
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_TRANSACTION_FAILED);
 
         }catch(CantCreateWithdrawalTransactionException e){
-            //TODO: Evento al GUI de actualizar el retiro indicando que hubo una falla y no se pudo realizar
+            //Send Broadcast to android wallet so it can refresh the screen, indicating an error
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_TRANSACTION_FAILED);
 
         }catch(CashMoneyWalletInsufficientFundsException e){
-            //TODO: Evento al GUI de actualizar el retiro indicando que no hay fondos suficientes
-
+            //Send Broadcast to android wallet so it can refresh the screen, indicating an error of insufficient funds
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_INSUFICCIENT_FUNDS);
         }
     }
 
