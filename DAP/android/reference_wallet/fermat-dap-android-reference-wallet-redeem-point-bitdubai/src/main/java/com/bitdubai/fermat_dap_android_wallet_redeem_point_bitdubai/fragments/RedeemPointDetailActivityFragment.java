@@ -159,7 +159,7 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Redeem Point system error",
+            makeText(getActivity(), R.string.dap_redeem_point_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -296,12 +296,12 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         toolbar = getToolbar();
         if (toolbar != null) {
 
-            toolbar.setBackgroundColor(Color.parseColor("#015581"));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_redeem_point_wallet_principal));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(Color.parseColor("#015581"));
+                window.setStatusBarColor(getResources().getColor(R.color.dap_redeem_point_wallet_principal));
             }
         }
     }
@@ -375,7 +375,7 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    R.string.dap_redeem_point_wallet_system_error,
                     Toast.LENGTH_SHORT).
                     show();
         }
