@@ -56,8 +56,8 @@ public class ActorManager implements CryptoBrokerActorManager {
     *==============================================================================================*/
 
         @Override
-        public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
-            return this.dao.createNewBrokerIdentityWalletRelationship(identity, wallet);
+        public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException {
+            return this.dao.createNewBrokerIdentityWalletRelationship(identity, walletPublicKey);
         }
 
         @Override

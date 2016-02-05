@@ -552,6 +552,43 @@ public final class ConnectionNewsDao {
         }
     }
 
+    public String getDestinationPublicKey(final UUID connectionId) throws CantListPendingConnectionRequestsException  ,
+            ConnectionRequestNotFoundException {
+
+        if (connectionId == null)
+            throw new CantListPendingConnectionRequestsException("", "The connectionId is required, can not be null");
+
+        try {
+            final DatabaseTable actorConnectionsTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            actorConnectionsTable.addUUIDFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, connectionId, DatabaseFilterType.EQUAL);
+
+            actorConnectionsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+
+            if (!records.isEmpty()) {
+
+                final DatabaseTableRecord record = records.get(0);
+
+                return record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
+
+            } else
+                throw new ConnectionRequestNotFoundException(
+                        "connectionId: "+connectionId,
+                        "Cannot find an actor connection request with that requestId."
+                );
+
+        } catch (final CantLoadTableToMemoryException cantLoadTableToMemoryException) {
+
+            throw new CantListPendingConnectionRequestsException(
+                    cantLoadTableToMemoryException,
+                    "connectionId: "+connectionId,
+                    "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
+
     public boolean existsConnectionRequest(final UUID requestId) throws CantFindRequestException {
 
         if (requestId == null)

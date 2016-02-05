@@ -62,17 +62,17 @@ public class CryptoBrokerActorDao {
             }
         }
 
-        public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException {
+        public BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException {
 
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_TABLE_NAME);
                 DatabaseTableRecord recordToInsert   = RelationshipTable.getEmptyRecord();
                 UUID relationshipId = UUID.randomUUID();
                 loadRecordAsNew(
-                    recordToInsert,
-                    relationshipId,
-                    identity.getPublicKey(),
-                    wallet
+                        recordToInsert,
+                        relationshipId,
+                        identity.getPublicKey(),
+                        walletPublicKey
                 );
                 RelationshipTable.insertRecord(recordToInsert);
                 return constructCryptoBrokerActorRelationshipFromRecord(recordToInsert);
@@ -153,11 +153,11 @@ public class CryptoBrokerActorDao {
                 DatabaseTableRecord databaseTableRecord,
                 UUID   relationshipId,
                 String publicKeyBroker,
-                UUID   walletId
+                String   walletPublicKey
         ) {
             databaseTableRecord.setUUIDValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME, relationshipId);
             databaseTableRecord.setStringValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKeyBroker);
-            databaseTableRecord.setUUIDValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, walletId);
+            databaseTableRecord.setStringValue(CryptoBrokerActorDatabaseConstants.CRYPTO_BROKER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, walletPublicKey);
         }
 
         private BrokerIdentityWalletRelationship newCryptoBrokerActorRelationship(
