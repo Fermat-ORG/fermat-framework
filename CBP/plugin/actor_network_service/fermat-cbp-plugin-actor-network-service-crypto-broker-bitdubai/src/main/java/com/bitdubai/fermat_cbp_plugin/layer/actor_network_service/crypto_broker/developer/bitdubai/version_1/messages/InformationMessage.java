@@ -2,6 +2,9 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker
 
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.UUID;
 
@@ -23,6 +26,36 @@ public class InformationMessage extends NetworkServiceMessage {
 
         this.requestId = requestId;
         this.action    = action   ;
+    }
+
+    private InformationMessage(JsonObject jsonObject, Gson gson) {
+
+        super(MessageTypes.CONNECTION_INFORMATION);
+
+        this.requestId   = UUID.fromString(jsonObject.get("requestId").getAsString());
+        this.action      = gson.fromJson(jsonObject.get("action").getAsString(), ConnectionRequestAction.class);
+
+    }
+
+    public static InformationMessage fromJson(String jsonString){
+
+        Gson gson = new Gson();
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
+        return new InformationMessage(jsonObject, gson);
+    }
+
+    @Override
+    public String toJson() {
+
+        Gson gson = new Gson();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("messageType",          getMessageType().toString());
+        jsonObject.addProperty("requestId",   requestId.toString());
+        jsonObject.addProperty("action",      action.toString());
+        return gson.toJson(jsonObject);
+
     }
 
     public UUID getRequestId() {

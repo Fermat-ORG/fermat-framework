@@ -1,8 +1,13 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.UUID;
 
@@ -42,6 +47,48 @@ public class RequestMessage extends NetworkServiceMessage {
         this.destinationPublicKey = destinationPublicKey;
         this.requestAction        = requestAction       ;
         this.sentTime             = sentTime            ;
+    }
+
+    private RequestMessage(JsonObject jsonObject, Gson gson) {
+
+        super(MessageTypes.CONNECTION_REQUEST);
+
+        this.requestId            = UUID.fromString(jsonObject.get("requestId").getAsString());
+        this.senderPublicKey      = jsonObject.get("senderPublicKey").getAsString();
+        this.senderActorType      = gson.fromJson(jsonObject.get("senderActorType").getAsString(), Actors.class);
+        this.senderAlias          = jsonObject.get("senderAlias").getAsString();
+        this.senderImage          = Base64.decode(jsonObject.get("senderImage").getAsString(), Base64.DEFAULT);
+        this.destinationPublicKey = jsonObject.get("destinationPublicKey").getAsString();
+        this.requestAction        = gson.fromJson(jsonObject.get("requestAction").getAsString(), ConnectionRequestAction.class);
+        this.sentTime             = jsonObject.get("sentTime").getAsLong();
+
+    }
+
+    public static RequestMessage fromJson(String jsonString){
+
+        Gson gson = new Gson();
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
+        return new RequestMessage(jsonObject, gson);
+    }
+
+    @Override
+    public String toJson() {
+
+        Gson gson = new Gson();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("messageType",          getMessageType().toString());
+        jsonObject.addProperty("requestId",            requestId.toString());
+        jsonObject.addProperty("senderPublicKey",      senderPublicKey);
+        jsonObject.addProperty("senderActorType",      senderActorType.toString());
+        jsonObject.addProperty("senderAlias",          senderAlias);
+        jsonObject.addProperty("senderImage",          Base64.encodeToString(senderImage, Base64.DEFAULT));
+        jsonObject.addProperty("destinationPublicKey", destinationPublicKey);
+        jsonObject.addProperty("requestAction",        requestAction.toString());
+        jsonObject.addProperty("sentTime",             sentTime);
+        return gson.toJson(jsonObject);
+
     }
 
     /**
