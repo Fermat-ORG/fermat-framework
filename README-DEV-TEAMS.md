@@ -42,6 +42,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 | | Kabuto | | |
 | | Mordor | | |
 | | Skynet | | |
+| | Yayo | | |
 | Code Butchers | | | |
 | | DBZ Team | | |
 | Coin Diggers | | | |
