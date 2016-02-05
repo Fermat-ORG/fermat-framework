@@ -92,48 +92,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public abstract class AbstractNetworkServiceBase  extends AbstractPlugin implements NetworkService {
 
     /**
-     * Represent the errorManager
-     */
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    /**
-     * Represent the errorManager
-     */
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
-
-    /**
-     * Represent the pluginDatabaseSystem
-     */
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * Represent the pluginFileSystem
-     */
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
-
-    /**
-     * Represent the broadcaster
-     */
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
-    private Broadcaster broadcaster;
-
-    /**
-     * Represent the logManager
-     */
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
-
-    /**
-     * Represent the wsCommunicationsCloudClientManager
-     */
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
-
-    /**
      * Represent the flag to start only once
      */
     private AtomicBoolean starting;
@@ -276,12 +234,12 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     /*
                      * Verify if the communication cloud client is active
                      */
-                    if (!wsCommunicationsCloudClientManager.isDisable()) {
+                    if (!getWsCommunicationsCloudClientManager().isDisable()) {
 
                         /*
                          * Construct my profile and register me
                          */
-                        this.networkServiceProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(identity.getPublicKey(),
+                        this.networkServiceProfile =  getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(identity.getPublicKey(),
                                                                                                                                                                             name.toLowerCase(),
                                                                                                                                                                             name,
                                                                                                                                                                             networkServiceType,
@@ -326,7 +284,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
                     CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                    getErrorManager().reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
                     throw pluginStartException;
 
                 }
@@ -347,27 +305,27 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
          /*
          * If all resources are inject
          */
-        if (wsCommunicationsCloudClientManager == null ||
-                pluginDatabaseSystem == null ||
-                errorManager == null ||
-                eventManager == null) {
+        if (getWsCommunicationsCloudClientManager() == null ||
+                getPluginDatabaseSystem() == null ||
+                getErrorManager() == null ||
+                getEventManager() == null) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append("getWsCommunicationsCloudClientManager(): " + getWsCommunicationsCloudClientManager());
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append("getPluginDatabaseSystem(): " + getPluginDatabaseSystem());
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append("getErrorManager(): " + getErrorManager());
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
+            contextBuffer.append("getEventManager(): " + getEventManager());
 
             String context = contextBuffer.toString();
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            getErrorManager().reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
         }
 
@@ -381,83 +339,83 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         /*
          * 1. Listen and handle Client Connection Close Notification Event
          */
-        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+        FermatEventListener fermatEventListener = getEventManager().getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
         fermatEventListener.setEventHandler(new ClientConnectionCloseNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
+        getEventManager().addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
         /*
          * 2 Listen and handle Client Connection Loose Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+        fermatEventListener = getEventManager().getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
         fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
+        getEventManager().addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
         /*
          * 3 Listen and handle Client Connection Success Reconnect Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
+        fermatEventListener = getEventManager().getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
         fermatEventListener.setEventHandler(new ClientSuccessfulReconnectNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
+        getEventManager().addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
         /*
          * 4 Listen and handle Complete Request List Component Registered Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener = getEventManager().getNewListener(P2pEventType.COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentConnectionRequestNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
+        getEventManager().addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
         /*
          * 5 Listen and handle Complete Component Registration Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        fermatEventListener = getEventManager().getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
+        getEventManager().addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
 
         /*
          * 6 Listen and handle Complete Request list
          */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
+        fermatEventListener = getEventManager().getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
+        getEventManager().addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
         /*
          * 7 Listen and handle Complete Update Actor Profile Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_UPDATE_ACTOR_NOTIFICATION);
+        fermatEventListener = getEventManager().getNewListener(P2pEventType.COMPLETE_UPDATE_ACTOR_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteUpdateActorNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
+        getEventManager().addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
         /*
          * 8 Listen and handle failure component connection
          */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
+        fermatEventListener = getEventManager().getNewListener(P2pEventType.FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION);
         fermatEventListener.setEventHandler(new FailureComponentConnectionRequestNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
+        getEventManager().addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
         /*
          * 9 Listen and handle VPN Connection Close Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
+        fermatEventListener = getEventManager().getNewListener(P2pEventType.VPN_CONNECTION_CLOSE);
         fermatEventListener.setEventHandler(new VPNConnectionCloseNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
+        getEventManager().addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
 
         /*
          * 10 Listen and handle VPN Connection Close Notification Event
          */
-        fermatEventListener = eventManager.getNewListener(P2pEventType.VPN_CONNECTION_LOOSE);
+        fermatEventListener = getEventManager().getNewListener(P2pEventType.VPN_CONNECTION_LOOSE);
         fermatEventListener.setEventHandler(new VPNConnectionLooseNotificationEventHandler(this));
-        eventManager.addListener(fermatEventListener);
+        getEventManager().addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
     }
@@ -474,7 +432,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
              /*
               * Load the file with the clientIdentity
               */
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile pluginTextFile = getPluginFileSystem().getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String content = pluginTextFile.getContent();
 
             //System.out.println("content = "+content);
@@ -497,7 +455,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 /*
                  * save into the file
                  */
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile pluginTextFile = getPluginFileSystem().createTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(identity.getPrivateKey());
                 pluginTextFile.persistToMedia();
 
@@ -505,7 +463,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 /*
                  * The file cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                getErrorManager().reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 throw new CantStartPluginException(exception.getLocalizedMessage());
             }
 
@@ -515,7 +473,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
             /*
              * The file cannot be load. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
+            getErrorManager().reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
             throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
 
         }
@@ -533,14 +491,14 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.getPluginDatabaseSystem().openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            getErrorManager().reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
         } catch (DatabaseNotFoundException e) {
@@ -549,7 +507,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CommunicationNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(getPluginDatabaseSystem());
 
             try {
 
@@ -563,7 +521,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                getErrorManager().reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
 
             }
@@ -583,7 +541,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
             /*
              * Initialize Developer Database Factory
              */
-            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(getPluginDatabaseSystem(), pluginId);
             communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
 
@@ -591,7 +549,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
              /*
              * The database cannot be created. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            getErrorManager().reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantInitializeNetworkServiceDatabaseException(e);
         }
     }
@@ -610,7 +568,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     communicationRegistrationProcessNetworkServiceAgent.stop();
                     communicationRegistrationProcessNetworkServiceAgent = null;
                 }
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceProfile().getNetworkServiceType(), this.getNetworkServiceProfile());
+                getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceProfile().getNetworkServiceType(), this.getNetworkServiceProfile());
             }
 
             if (event.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
@@ -665,6 +623,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
             this.register = Boolean.TRUE;
 
+            reprocessMessages();
+
             onClientSuccessfulReconnect();
 
         } catch (Exception e) {
@@ -686,6 +646,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
             }
 
             this.register = Boolean.FALSE;
+
+            reprocessMessages();
 
             onClientConnectionLoose();
 
@@ -762,6 +724,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
             }
 
+            reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
+
         }
 
     }
@@ -779,7 +743,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
             }
 
-            reprocessMessages();
+            reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
 
         }
 
@@ -834,6 +798,46 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
             throw new CantSendMessageException(CantSendMessageException.DEFAULT_MESSAGE, e);
         }
     }
+
+    /**
+     * Get the value of the NetworkServiceProfile
+     * @return PlatformComponentProfile
+     */
+    public PlatformComponentProfile getNetworkServiceProfile() {
+        return networkServiceProfile;
+    }
+
+    /**
+     * Get the database instance
+     * @return Database
+     */
+    protected Database getDataBase() {
+        return dataBase;
+    }
+
+    /**
+     * Get is register value
+     * @return boolean
+     */
+    public boolean isRegister() {
+        return register;
+    }
+
+    /**
+     * Get the CommunicationNetworkServiceConnectionManager instance
+     * @return CommunicationNetworkServiceConnectionManager
+     */
+    public CommunicationNetworkServiceConnectionManager getCommunicationNetworkServiceConnectionManager() {
+        return communicationNetworkServiceConnectionManager;
+    }
+
+    public List<FermatEventListener> getListenersAdded() {
+        return listenersAdded;
+    }
+
+    /* ***********************************************************************
+     * Abstract methods definition
+     **************************************************************************/
 
     /**
      * This method is called when the network service method
@@ -899,7 +903,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     protected abstract void onFailureComponentRegistration(PlatformComponentProfile platformComponentProfile);
 
     /**
-     * This method is called when the CommunicationSupervisorPendingMessagesAgent is trying to request
+     * This method is automatically called when the CommunicationSupervisorPendingMessagesAgent is trying to request
      * a new connection for a message pending to send. This method need construct the profile specific to
      * the network service work.
      *
@@ -927,71 +931,69 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public abstract PlatformComponentProfile getProfileToRequestConnection(String identityPublicKey);
 
-
+    /**
+     * This method is automatically called  when the client connection is close
+     * for the network service when need to update message state,
+     * is his define protocol are no complete
+     * and change incomplete message process to his original state
+     * for reprocessing again
+     */
     protected abstract void reprocessMessages();
 
     /**
-     * Get the value of the NetworkServiceProfile
-     * @return PlatformComponentProfile
+     * This method is automatically called  when the vpn connection is close
+     * for the network service when need to update message state,
+     * is his define protocol are no complete
+     * and change incomplete message process to his original state
+     * for reprocessing again
      */
-    public PlatformComponentProfile getNetworkServiceProfile() {
-        return networkServiceProfile;
-    }
-
-    /**
-     * Get the database instance
-     * @return Database
-     */
-    protected Database getDataBase() {
-        return dataBase;
-    }
+    protected abstract void reprocessMessages(String identityPublicKey);
 
     /**
      * Get the CommunicationsClientConnection instance
      * @return CommunicationsClientConnection
      */
-    protected CommunicationsClientConnection getCommunicationsClientConnection() {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
-    }
+    protected abstract CommunicationsClientConnection getCommunicationsClientConnection();
 
     /**
      * Get the ErrorManager instance
      * @return ErrorManager
      */
-    public ErrorManager getErrorManager() {
-        return errorManager;
-    }
+    public abstract ErrorManager getErrorManager();
 
     /**
      * Get the EventManager instance
      * @return EventManager
      */
-    public EventManager getEventManager() {
-        return eventManager;
-    }
+    public abstract EventManager getEventManager();
 
     /**
      * Get the WsCommunicationsCloudClientManager instance
      * @return WsCommunicationsCloudClientManager
      */
-    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-        return wsCommunicationsCloudClientManager;
-    }
+    public abstract WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager();
 
     /**
-     * Get is register value
-     * @return boolean
+     * Get the PluginDatabaseSystem instance
+     * @return PluginDatabaseSystem
      */
-    public boolean isRegister() {
-        return register;
-    }
+    public abstract PluginDatabaseSystem getPluginDatabaseSystem();
 
     /**
-     * Get the CommunicationNetworkServiceConnectionManager instance
-     * @return CommunicationNetworkServiceConnectionManager
+     * Get the PluginFileSystem instance
+     * @return PluginFileSystem
      */
-    public CommunicationNetworkServiceConnectionManager getCommunicationNetworkServiceConnectionManager() {
-        return communicationNetworkServiceConnectionManager;
-    }
+    public abstract PluginFileSystem getPluginFileSystem();
 
+    /**
+     * Get the Broadcaster instance
+     * @return Broadcaster
+     */
+    public abstract Broadcaster getBroadcaster();
+
+    /**
+     * Get the LogManager instance
+     * @return LogManager
+     */
+    public abstract LogManager getLogManager();
 }
