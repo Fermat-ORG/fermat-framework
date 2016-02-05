@@ -145,7 +145,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
              */
             ECCKeyPair keyPair = new ECCKeyPair();
 
-            walletManagerDao.persistWallet(keyPair.getPublicKey(),keyPair.getPrivateKey(),installedWallet.getWalletDeviceUserPublicKey(),installedWallet.getWalletCategory(),newName, installedWallet.getWalletIcon(), installedWallet.getWalletPlatformIdentifier(), installedWallet.getWalletCatalogId(), installedWallet.getWalletVersion(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(),installedWallet.getWalletNavigationStructureVersion());
+            walletManagerDao.persistWallet(keyPair.getPublicKey(),keyPair.getPrivateKey(),installedWallet.getWalletDeviceUserPublicKey(),installedWallet.getWalletCategory(),newName, installedWallet.getWalletIcon(), installedWallet.getWalletPlatformIdentifier(), installedWallet.getWalletCatalogId(), installedWallet.getWalletVersion(), installedWallet.getWalletDeveloperName(), installedWallet.getWalletScreenSize(),installedWallet.getWalletNavigationStructureVersion(),BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
             /**
              * I persist skin and language on database
@@ -301,7 +301,8 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 "1.0.0",
                 null,
                 "bitDubai",
-                ""
+                "",
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
         );
         lstInstalledWallet.add(installedWallet);
 
@@ -321,7 +322,8 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 null,
                 "bitDubai",
                 "",
-                Platforms.BANKING_PLATFORM
+                Platforms.BANKING_PLATFORM,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
         );
         lstInstalledWallet.add(installedWallet);
 
@@ -341,7 +343,8 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 null,
                 "bitDubai",
                 "",
-                Platforms.CASH_PLATFORM
+                Platforms.CASH_PLATFORM,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()
         );
         lstInstalledWallet.add(installedWallet);
 
