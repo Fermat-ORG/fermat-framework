@@ -63,7 +63,8 @@
                 android:ems="10"
                 android:id="@+id/ccw_open_negotiation_text_note"
                 android:textSize="18dp"
-                android:textColor="#5F5F5F" />
+                android:textColor="#5F5F5F"
+                android:hint="Insert Note" />
         </LinearLayout>
 
         <LinearLayout

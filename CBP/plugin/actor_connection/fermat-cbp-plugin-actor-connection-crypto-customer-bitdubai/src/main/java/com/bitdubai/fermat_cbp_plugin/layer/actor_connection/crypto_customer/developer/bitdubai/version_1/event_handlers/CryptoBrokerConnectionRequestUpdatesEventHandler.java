@@ -7,23 +7,24 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestNewsEvent;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestUpdatesEvent;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.CryptoCustomerActorConnectionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.exceptions.CryptoCustomerActorConnectionNotStartedException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.structure.ActorConnectionEventActions;
 
 /**
- * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestNewsEventHandler</code>
+ * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestUpdatesEventHandler</code>
  * bla bla bla.
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 03/02/2016.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 04/02/2016.
  */
-public class CryptoBrokerConnectionRequestNewsEventHandler implements FermatEventHandler {
+public class CryptoBrokerConnectionRequestUpdatesEventHandler implements FermatEventHandler {
 
     private final ActorConnectionEventActions actorConnectionEventActions          ;
     private final CryptoCustomerActorConnectionPluginRoot cryptoCustomerActorConnectionPluginRoot;
 
-    public CryptoBrokerConnectionRequestNewsEventHandler(final ActorConnectionEventActions             actorConnectionEventActions            ,
-                                                         final CryptoCustomerActorConnectionPluginRoot cryptoCustomerActorConnectionPluginRoot) {
+    public CryptoBrokerConnectionRequestUpdatesEventHandler(final ActorConnectionEventActions actorConnectionEventActions,
+                                                            final CryptoCustomerActorConnectionPluginRoot cryptoCustomerActorConnectionPluginRoot) {
 
         this.actorConnectionEventActions             = actorConnectionEventActions            ;
         this.cryptoCustomerActorConnectionPluginRoot = cryptoCustomerActorConnectionPluginRoot;
@@ -40,14 +41,14 @@ public class CryptoBrokerConnectionRequestNewsEventHandler implements FermatEven
 
         if (this.cryptoCustomerActorConnectionPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if (fermatEvent instanceof CryptoBrokerConnectionRequestNewsEvent) {
+            if (fermatEvent instanceof CryptoBrokerConnectionRequestUpdatesEvent) {
 
                 System.out.println("************* EVENT RECEIVED *************"+fermatEvent);
 
-                actorConnectionEventActions.handleCryptoBrokerNewsEvent();
+                actorConnectionEventActions.handleCryptoBrokerUpdateEvent();
 
             } else {
-                EventType eventExpected = EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS;
+                EventType eventExpected = EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
                         "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);

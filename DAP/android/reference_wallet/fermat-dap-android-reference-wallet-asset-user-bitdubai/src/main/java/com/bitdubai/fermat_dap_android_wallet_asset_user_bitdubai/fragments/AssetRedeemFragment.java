@@ -152,7 +152,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset User system error",
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_system_error),
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -178,20 +178,20 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                         final List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
                         if (redeemPoints.size() > 0) {
                             new ConfirmDialog.Builder(getActivity(), appSession)
-                                    .setTitle("Confirm")
-                                    .setMessage("Are you sure that the entered information is correct? This action is irreversible")
-                                    .setColorStyle(Color.parseColor("#381a5e"))
-                                    .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                        @Override
-                                        public void onClick() {
-                                            int assetsAmount = Integer.parseInt(assetsToRedeemEditText.getText().toString());
-                                            doRedeem(digitalAsset.getAssetPublicKey(), redeemPoints, assetsAmount);
-                                        }
-                                    }).build().show();
+                                    .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
+                                                    .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
+                                                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                                                @Override
+                                                                public void onClick() {
+                                                                    int assetsAmount = Integer.parseInt(assetsToRedeemEditText.getText().toString());
+                                                                    doRedeem(digitalAsset.getAssetPublicKey(), redeemPoints, assetsAmount);
+                                                                }
+                                                            }).build().show();
                         }
                     }
                 } else {
-                    Toast.makeText(activity, "No redeem points selected", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_redeem_points), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -262,7 +262,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
 
     private void doRedeem(final String assetPublicKey, final List<RedeemPoint> redeemPoints, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
-        dialog.setMessage("Please wait...");
+        dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
         dialog.show();
         FermatWorker task = new FermatWorker() {
@@ -280,8 +280,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                 dialog.dismiss();
                 if (activity != null) {
                     refreshUIData();
-                    Toast.makeText(activity, "Redemption of the asset has successfully started.\n\n" +
-                            "The process will take some minutes and if not accepted at the destination, it will be rollback.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_redeem_ok), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -289,7 +288,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
             public void onErrorOccurred(Exception ex) {
                 dialog.dismiss();
                 if (activity != null)
-                    Toast.makeText(activity, "Fermat Has detected an exception. Please retry again.",
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
                             Toast.LENGTH_SHORT).show();
             }
         });
@@ -307,7 +306,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         assetRedeemNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
         assetsToRedeemEditText.setText(selectedRPCount + "");
-        assetRedeemRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " Assets Remaining");
+        assetRedeemRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
 
         if (digitalAsset.getAvailableBalanceQuantity() == 0) {
             selectRPButton.setOnClickListener(null);
@@ -344,12 +343,12 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     private void configureToolbar() {
         toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(Color.parseColor("#381a5e"));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet_principal));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(Color.parseColor("#381a5e"));
+                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet_principal));
             }
         }
     }

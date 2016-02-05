@@ -94,6 +94,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -1553,7 +1555,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
         //navigationDrawerFragment.onDetach();
         resetThisActivity();
-        AndroidCoreUtils.getInstance().stop();
         super.onDestroy();
     }
 
@@ -1918,21 +1919,72 @@ public abstract class FermatActivity extends AppCompatActivity
         return FermatSystemUtils.getAndroidCoreModule().getAndroidCoreManager();
     }
 
+    public TabsPagerAdapter getAdapter() {
+        return adapter;
+    }
+
 
     @Override
     public void publish(BroadcasterType broadcasterType, String code) {
         try {
-            if (broadcasterType == BroadcasterType.UPDATE_VIEW) {
-                for(AbstractFermatFragment fragment : adapter.getLstCurrentFragments()){
-                    fragment.onUpdateView(code);
-                    fragment.onUpdateViewUIThred(code);
-                }
+            switch (broadcasterType){
+                case UPDATE_VIEW:
+                    for(AbstractFermatFragment fragment : adapter.getLstCurrentFragments()){
+                        fragment.onUpdateView(code);
+                        fragment.onUpdateViewUIThred(code);
+                    }
+                    break;
+                case NOTIFICATION_SERVICE:
+
+                    break;
             }
         }catch (Exception e){
             Log.e(TAG,"Cant broadcast excepcion");
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String code,Platforms platform) {
+        try {
+            switch (broadcasterType){
+                case UPDATE_VIEW:
+                    for(AbstractFermatFragment fragment : adapter.getLstCurrentFragments()){
+                        fragment.onUpdateView(code);
+                        fragment.onUpdateViewUIThred(code);
+                    }
+                    break;
+                case NOTIFICATION_SERVICE:
+
+                    break;
+            }
+        }catch (Exception e){
+            Log.e(TAG,"Cant broadcast excepcion");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String code,FermatApps fermatApps) {
+        try {
+            switch (broadcasterType){
+                case UPDATE_VIEW:
+                    for(AbstractFermatFragment fragment : adapter.getLstCurrentFragments()){
+                        fragment.onUpdateView(code);
+                        fragment.onUpdateViewUIThred(code);
+                    }
+                    break;
+                case NOTIFICATION_SERVICE:
+
+                    break;
+            }
+        }catch (Exception e){
+            Log.e(TAG,"Cant broadcast excepcion");
+            e.printStackTrace();
+        }
+    }
+
+
 
     @Override
     protected void onStart() {
@@ -1976,6 +2028,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
         }
     }
+
 
 
 }

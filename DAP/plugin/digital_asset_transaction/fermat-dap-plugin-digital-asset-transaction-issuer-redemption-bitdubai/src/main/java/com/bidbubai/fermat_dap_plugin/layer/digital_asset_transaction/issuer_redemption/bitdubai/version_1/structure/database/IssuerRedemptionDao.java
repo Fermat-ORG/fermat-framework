@@ -3,10 +3,10 @@ package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_re
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantCheckAssetIssuerRedemptionProgressException;
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantLoadIssuerRedemptionEventListException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -26,7 +26,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantS
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -77,11 +79,12 @@ public class IssuerRedemptionDao {
         }
     }
 
-    public void assetReceived(DigitalAssetMetadata digitalAssetMetadata) throws CantInsertRecordException {
+    public void assetReceived(DigitalAssetMetadata digitalAssetMetadata, BlockchainNetworkType networkType) throws CantInsertRecordException {
         DatabaseTable databaseTable = this.database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME);
         DatabaseTableRecord redemptionRecord = databaseTable.getEmptyRecord();
         redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, digitalAssetMetadata.getGenesisTransaction());
         redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_DIGITAL_ASSET_HASH_COLUMN_NAME, digitalAssetMetadata.getDigitalAssetHash());
+        redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_NETWORK_COLUMN_NAME, networkType.getCode());
         redemptionRecord.setStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_APPLIED.getCode());
         databaseTable.insertRecord(redemptionRecord);
     }
@@ -193,18 +196,18 @@ public class IssuerRedemptionDao {
 
     //GETTER AND SETTERS
 
-    public List<String> getToBeAppliedGenesisTransaction() throws CantCheckAssetIssuerRedemptionProgressException {
+    public Map<BlockchainNetworkType, String> getToBeAppliedGenesisTransaction() throws CantCheckAssetIssuerRedemptionProgressException {
         try {
             DatabaseTable issuerRedemptionTable;
             issuerRedemptionTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME);
             issuerRedemptionTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_APPLIED.getCode(), DatabaseFilterType.EQUAL);
 
             issuerRedemptionTable.loadToMemory();
-            List<String> eventIdList = new ArrayList<>();
+            Map<BlockchainNetworkType, String> toReturn = new HashMap<>();
             for (DatabaseTableRecord record : issuerRedemptionTable.getRecords()) {
-                eventIdList.add(record.getStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME));
+                toReturn.put(BlockchainNetworkType.getByCode(record.getStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_NETWORK_COLUMN_NAME)), record.getStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME));
             }
-            return eventIdList;
+            return toReturn;
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantCheckAssetIssuerRedemptionProgressException(exception, "Getting pending events.", "Cannot load table to memory.");
         } catch (Exception exception) {
