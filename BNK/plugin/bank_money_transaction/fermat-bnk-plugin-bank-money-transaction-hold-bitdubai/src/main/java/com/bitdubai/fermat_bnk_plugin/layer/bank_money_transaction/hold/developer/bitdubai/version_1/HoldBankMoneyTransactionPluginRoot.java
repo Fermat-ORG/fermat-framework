@@ -72,7 +72,7 @@ public class HoldBankMoneyTransactionPluginRoot extends AbstractPlugin implement
 
         processorAgent = new HoldBankMoneyTransactionProcessorAgent(errorManager, holdTransactionManager, bankMoneyWalletManager);
         processorAgent.start();
-        test();
+        //test();
         serviceStatus = ServiceStatus.STARTED;
     }
 

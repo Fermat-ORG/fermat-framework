@@ -158,10 +158,10 @@ public class UnholdBankMoneyTransactionDao {
         table.addStringFilter(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
         table.loadToMemory();
         records = table.getRecords();
-
-        if (records.size() != 1)
+        //TODO: fix this
+        /*if (records.size() != 1)
             throw new UnholdBankMoneyTransactionInconsistentTableStateException("Inconsistent ("+ records.size() +") number of fetched records, should be between 0 and 1.", null, "The id is: " + transactionId.toString(), "");
-
+        */
         return records.get(0);
     }
 
