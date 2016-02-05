@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -283,6 +284,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
         // Harcoded para testear el circuito más arriba
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
 
+        //TODO: joaquin, a esta clase le tenes que agregar el blockCHain networkType que viene por default, acá solo se va a hardcodear
         InstalledWallet installedWallet= new WalletManagerMiddlewareInstalledWallet(
 
                 WalletCategory.REFERENCE_WALLET, // CATEGORY
@@ -291,7 +293,7 @@ public class WalletManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 "reference_wallet_icon", // ICOIN
                 "bitDubai bitcoin Wallet", // WALLET NAME
                 "reference_wallet", // PUBLIC KEY
-                "BWBW", //  WALLET PLATFORM IDENTIFIER
+                FermatApps.BITCOIN_REFERENCE_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE
                 "medium",

@@ -78,7 +78,8 @@ public class BroadcastManager implements BroadcasterInterface {
                     updateView(code);
                     break;
                 case NOTIFICATION_SERVICE:
-                    fermatActivity.get().notificateBroadcast(null,code);
+                    String publicKey = fermatActivity.get().searchAppFromPlatformIdentifier(fermatApps);
+                    fermatActivity.get().notificateBroadcast(publicKey,code);
                     break;
             }
         }catch (Exception e){

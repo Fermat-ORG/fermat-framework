@@ -93,6 +93,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -1949,6 +1950,18 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
+    public String searchAppFromPlatformIdentifier(FermatApps fermatApps) {
+        String appPublicKey = null;
+        try {
+            appPublicKey = getWalletManager().getInstalledWallet(fermatApps.getCode()).getWalletPublicKey();
+        }catch (NullPointerException i){
+            appPublicKey = getSubAppManager().getInstalledSubApp(fermatApps.getCode()).getAppPublicKey();
+        }catch (Exception e){
+
+        }
+        return appPublicKey;
+    }
+
     //TODO: to remove
 
     public abstract void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses);
@@ -2045,7 +2058,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
         }
     }
-
 
 
 
