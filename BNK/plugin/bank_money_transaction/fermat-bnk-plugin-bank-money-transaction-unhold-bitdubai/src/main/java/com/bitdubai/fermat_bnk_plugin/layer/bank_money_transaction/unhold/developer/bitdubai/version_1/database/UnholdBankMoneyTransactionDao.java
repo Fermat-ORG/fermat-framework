@@ -126,7 +126,7 @@ public class UnholdBankMoneyTransactionDao {
             record = getRecordByPrimaryKey(transactionId);
             record.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, status.getCode());
             if(status == BankTransactionStatus.CONFIRMED || status == BankTransactionStatus.REJECTED)
-                record.setLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, (new Date().getTime() / 1000));
+                record.setLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, new Date().getTime());
 
             DatabaseTable table = database.getTable(pluginId.toString());
             table.updateRecord(record);

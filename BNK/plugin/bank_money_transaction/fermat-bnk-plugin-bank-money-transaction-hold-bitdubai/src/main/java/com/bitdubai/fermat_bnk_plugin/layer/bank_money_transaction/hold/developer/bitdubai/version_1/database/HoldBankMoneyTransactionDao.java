@@ -129,7 +129,7 @@ public class HoldBankMoneyTransactionDao {
             record = getRecordByPrimaryKey(transactionId);
             record.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, status.getCode());
             if(status == BankTransactionStatus.CONFIRMED || status == BankTransactionStatus.REJECTED)
-                record.setLongValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, (new Date().getTime() / 1000));
+                record.setLongValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, new Date().getTime());
 
             DatabaseTable table = database.getTable(pluginId.toString());
             table.updateRecord(record);
