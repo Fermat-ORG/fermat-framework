@@ -1407,4 +1407,59 @@ public class BitcoinCryptoNetworkDatabaseDao {
         BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(databaseTable.getRecords().get(0).getStringValue(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_NETWORK));
         return blockchainNetworkType;
     }
+
+    /**
+     * Updates the ActiveNetwork table with the active network information and the monitored keys.
+     * @param blockchainNetworkType
+     * @param amountOfKeys amount of keys we are monitoring on the passed network
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public synchronized  void updateActiveNetworks (BlockchainNetworkType blockchainNetworkType, int amountOfKeys) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_TABLE_NAME);
+
+        databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        DatabaseTableRecord record = null;
+        /**
+         * If no previous record exists, I will insert a new one
+         */
+        if (databaseTable.getRecords().isEmpty()){
+               record = getNewActiveNetworkRecord(blockchainNetworkType, amountOfKeys);
+            try {
+                databaseTable.insertRecord(record);
+            } catch (CantInsertRecordException e) {
+                throw new CantExecuteDatabaseOperationException("There was an error inserting a new ActiveNetwork record.", e, "updateActiveNetworks method", "Database Error");
+            }
+        } else {
+            /**
+             * or update the existing one with the data.
+             */
+            record = databaseTable.getRecords().get(0);
+            record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_KEYS, amountOfKeys);
+            record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_LAST_UPDATE, getCurrentDateTime());
+            try {
+                databaseTable.updateRecord(record);
+            } catch (CantUpdateRecordException e) {
+                throw new CantExecuteDatabaseOperationException("There was an error updating an existing ActiveNetwork record.", e, "updateActiveNetworks method", "Database Error");
+            }
+        }
+    }
+
+    private DatabaseTableRecord getNewActiveNetworkRecord(BlockchainNetworkType blockchainNetworkType, int amountOfKeys) {
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_TABLE_NAME);
+
+        DatabaseTableRecord record = databaseTable.getEmptyRecord();
+        record.setStringValue(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE, blockchainNetworkType.getCode());
+        record.setIntegerValue(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_KEYS, amountOfKeys);
+        record.setLongValue(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_LAST_UPDATE, getCurrentDateTime());
+        return record;
+    }
+
+
 }
