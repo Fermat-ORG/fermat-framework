@@ -10,15 +10,10 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
-import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.daos.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 
@@ -169,9 +164,9 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
                 if (!poolConnectionsWaitingForResponse.containsKey(fermatMessage.getReceiver())) {
                     if (networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getNetworkServiceLocalInstance(fermatMessage.getReceiver()) == null) {
 
-                        PlatformComponentProfile applicantParticipant = networkServiceRoot.getProfileToRequestConnection(fermatMessage.getSender());
+                        PlatformComponentProfile applicantParticipant = networkServiceRoot.getProfileToRequestConnectionSender(fermatMessage.getSender());
 
-                        PlatformComponentProfile remoteParticipant = networkServiceRoot.getProfileToRequestConnection(fermatMessage.getReceiver());
+                        PlatformComponentProfile remoteParticipant = networkServiceRoot.getProfileToRequestConnectionDestination(fermatMessage.getReceiver());
 
                         networkServiceRoot.getCommunicationNetworkServiceConnectionManager().connectTo(applicantParticipant, networkServiceRoot.getNetworkServiceProfile(), remoteParticipant);
 

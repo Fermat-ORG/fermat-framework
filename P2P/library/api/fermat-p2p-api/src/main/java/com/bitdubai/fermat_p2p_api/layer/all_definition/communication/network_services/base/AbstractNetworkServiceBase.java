@@ -8,16 +8,10 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_s
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -65,8 +59,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.events_handlers.VPNConnectionLooseNotificationEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantInitializeNetworkServiceDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -260,6 +254,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                         this.communicationSupervisorPendingMessagesAgent = new CommunicationSupervisorPendingMessagesAgent(this);
                         this.communicationSupervisorPendingMessagesAgent.start();
                     }
+
+                    reprocessMessages();
 
 
                     /*
@@ -698,7 +694,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
         communicationSupervisorPendingMessagesAgent.connectionFailure(event.getRemoteParticipant().getIdentityPublicKey());
 
-        onFailureComponentConnectionRequest();
+        onFailureComponentConnectionRequest(event.getRemoteParticipant());
 
     }
 
@@ -883,8 +879,9 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
     /**
      * This method is automatically called when a component connection request is fail
+     * @param remoteParticipant
      */
-    protected abstract void onFailureComponentConnectionRequest();
+    protected abstract void onFailureComponentConnectionRequest(PlatformComponentProfile remoteParticipant);
 
     /**
      * This method is automatically called when the list of platform Component Profile Registered
@@ -907,12 +904,12 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * a new connection for a message pending to send. This method need construct the profile specific to
      * the network service work.
      *
-     * Example: Is the network service work whit actor this profile has to mach with the actor.
+     * Example: Is the network service work with actor this profile has to mach with the actor.
      *
      * <code>
      *
      *     @overray
-     *     public PlatformComponentProfile getProfileToRequestConnection(String identityPublicKey) {
+     *     public PlatformComponentProfile getProfileToRequestConnectionDestination(String identityPublicKey) {
      *
      *         return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
      *                                                       .constructPlatformComponentProfileFactory(actor.getIdentityPublicKey(),
@@ -926,10 +923,13 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      *
      * </code>
      *
-     * @param identityPublicKey
+     * @param identityPublicKeyDestination
      * @return PlatformComponentProfile
      */
-    public abstract PlatformComponentProfile getProfileToRequestConnection(String identityPublicKey);
+    public abstract PlatformComponentProfile getProfileToRequestConnectionDestination(String identityPublicKeyDestination);
+
+    //TODO: Robert i love you
+    public abstract PlatformComponentProfile getProfileToRequestConnectionSender(String identityPublicKey);
 
     /**
      * This method is automatically called  when the client connection is close
