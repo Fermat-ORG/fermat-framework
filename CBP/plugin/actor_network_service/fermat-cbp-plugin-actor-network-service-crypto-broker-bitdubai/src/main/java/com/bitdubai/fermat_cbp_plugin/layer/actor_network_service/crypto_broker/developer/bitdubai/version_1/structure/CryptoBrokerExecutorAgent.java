@@ -155,7 +155,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
                 switch (cbcr.getRequestAction()) {
 
-                   /* case ACCEPT:
+                   case ACCEPT:
 
                         System.out.println("********* Crypto Broker: Executor Agent -> Sending ACCEPTANCE. "+cbcr);
 
@@ -171,7 +171,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
                         break;
 
-                    case DENY:
+                  /*   case DENY:
 
                         System.out.println("********* Crypto Broker: Executor Agent -> Sending DENIAL. "+cbcr);
 
@@ -387,18 +387,6 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                 aer.getRequestAction(),
                 aer.getSentTime()
         ).toJson();
-    }
-
-    private void toPendingLocalAction(final UUID requestId) throws CantChangeProtocolStateException   ,
-                                                                   ConnectionRequestNotFoundException {
-
-        dao.changeProtocolState(requestId, ProtocolState.PENDING_LOCAL_ACTION);
-    }
-
-    private void toWaitingReceiptConfirmation(final UUID requestId) throws CantChangeProtocolStateException   ,
-                                                                    ConnectionRequestNotFoundException {
-
-        dao.changeProtocolState(requestId, ProtocolState.WAITING_RECEIPT_CONFIRMATION);
     }
 
     private void confirmRequest(final UUID requestId) throws CantConfirmConnectionRequestException,
