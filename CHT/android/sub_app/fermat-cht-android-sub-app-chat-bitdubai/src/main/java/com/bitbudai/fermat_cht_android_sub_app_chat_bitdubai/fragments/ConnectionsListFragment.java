@@ -1,62 +1,23 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-import android.app.Activity;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
-/*import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;*/
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.SpannableString;
-import android.text.TextUtils;
-import android.widget.CursorAdapter;
-
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ConnectionListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ConnectionList;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageLoader;
-import com.bitdubai.android_api.BuildConfig;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-
-//import android.os.Bundle;
-//import android.text.TextUtils;
-import android.text.style.TextAppearanceSpan;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-//import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.AlphabetIndexer;
-//import android.widget.Button;
-//import android.widget.EditText;
-//import android.widget.ListAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.QuickContactBadge;
-import android.widget.SearchView;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
-//import android.widget.LinearLayout;
-//import android.widget.ListView;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ConnectionListAdapter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -64,27 +25,30 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
-import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+/*import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.CursorAdapter;*/
+//import android.os.Bundle;
+//import android.text.TextUtils;
+//import android.widget.AbsListView;
+//import android.widget.Button;
+//import android.widget.EditText;
+//import android.widget.ListAdapter;
+//import android.widget.LinearLayout;
+//import android.widget.ListView;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 //import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 //import com.bitdubai.fermat_cht_api.layer.chat_module.interfaces.ChatModuleManager;
 //import com.bitdubai.fermat_cht_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
-import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.lang.String;
-import java.util.Date;
-import java.text.DateFormat;
-import java.util.Locale;
-import java.util.UUID;
 
 
 /**
@@ -97,7 +61,6 @@ import java.util.UUID;
 public class ConnectionsListFragment extends AbstractFermatFragment {
 
     // Defines a tag for identifying log entries
-    private static final String TAG = "ConnectionListFragment";
     public List<Contact> contacts;
 
     private Contact contactl;
@@ -114,16 +77,17 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
     ListView list;
+    String TAG="CHT_ConnectionsListFragment";
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     SwipeRefreshLayout mSwipeRefreshLayout;
     //public ContactsListFragment() {}
-    static void initchatinfo(){
-    }
+   // static void initchatinfo(){
+   // }
 
     public static ContactsListFragment newInstance() {
-        initchatinfo();
+    //    initchatinfo();
         return new ContactsListFragment();}
 
     @Override
@@ -137,9 +101,9 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
             errorManager=appSession.getErrorManager();
         }catch (Exception e)
         {
-            //if(errorManager!=null)
-            //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT);
-        }
+            CommonLogger.exception(TAG + "onCreate()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+      }
     }
 
     @Override
@@ -193,12 +157,16 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                     appSession.setData(ChatSession.CONNECTION_DATA, chatManager.getContactByContactId(contactid.get(position)));
                     Contact conn = chatSession.getSelectedConnection();
                     chatManager.saveContact(conn);
-                    Toast.makeText(getActivity(), "Contact Added", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "ItemClink", Toast.LENGTH_SHORT).show();
                     changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
                 } catch (CantGetContactException e) {
-                    e.printStackTrace();
+                    CommonLogger.exception(TAG + "ItemClick", e.getMessage(), e);
+                    Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
                 } catch (CantSaveContactException e) {
-                e.printStackTrace();
+                    CommonLogger.exception(TAG + "ItemClick", e.getMessage(), e);
+                    Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });
@@ -226,10 +194,11 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                 Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
                             }
                         } catch (CantGetContactException e) {
-                            e.printStackTrace();
+                            CommonLogger.exception(TAG + "swipedown", e.getMessage(), e);
+                            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
-                            //TODO: fix this
-                            e.printStackTrace();
+                            CommonLogger.exception(TAG + "swiptedown", e.getMessage(), e);
+                            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

@@ -1,33 +1,22 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AlphabetIndexer;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -100,7 +89,7 @@ public List<Contact> contacts;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
-    private static final String TAG = "ContactEditFragment";
+    private static final String TAG = "CHT_ContactEditFragment";
 
 
     ArrayList<String> contactname=new ArrayList<String>();
@@ -111,13 +100,13 @@ public List<Contact> contacts;
     EditText aliasET ;
     Button saveBtn ;
     //public ContactsListFragment() {}
-    static void initchatinfo(){
+  //  static void initchatinfo(){
         //   chatinfo.put(0, Arrays.asList("Miguel", "Que paso?", "12/09/2007"));
         //imgid[0]=R.drawable.ken;
-    }
+  //  }
 
     public static ContactEditFragment newInstance() {
-        initchatinfo();
+  //      initchatinfo();
         return new ContactEditFragment();}
 
 //    public void setSearchQuery(String query) {
@@ -146,7 +135,9 @@ public List<Contact> contacts;
             errorManager=appSession.getErrorManager();
 
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
+            CommonLogger.exception(TAG + "onCreate()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
 
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
@@ -257,7 +248,9 @@ public List<Contact> contacts;
                     Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
 
                 } catch (CantSaveContactException e) {
-                    e.printStackTrace();
+                    CommonLogger.exception(TAG + "savebtnclick()", e.getMessage(), e);
+                    Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
                 }
             }
         });

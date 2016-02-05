@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -30,11 +31,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatExceptio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
@@ -47,9 +44,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 //import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
@@ -114,26 +109,11 @@ public class ChatListFragment extends AbstractFermatFragment{
     private ChatSession chatSession;
 
     ListView list;
-
+    String TAG="CHT_ChatListFragment";
     SwipeRefreshLayout mSwipeRefreshLayout;
-    Map<UUID,Chat> chatcreated=new HashMap<UUID,Chat>();
-    Map<UUID,List<Message>> messagecreated=new HashMap<UUID,List<Message>>();
-    Map<String,Contact>contactcreated=new HashMap<String,Contact>();
     ArrayList<String> infochat=new ArrayList<String>();
-
-
-    //   static HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
-   // static Integer[] imgid=new Integer[6];
     ArrayList<ArrayList<String>> chatinfo=new ArrayList<ArrayList<String>>();   //work
     ArrayList imgid=new ArrayList();
-   /* Integer[] imgid={R.drawable.ken,
-    R.drawable.sas,
-    R.drawable.koj,
-    R.drawable.veg,
-    R.drawable.ren,
-    R.drawable.pat
-    };
-*/
 
 
     public static ChatListFragment newInstance() {
@@ -144,7 +124,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     //chatcreated(chatid,chat);
     //Message(Map<chatid,Kist<Message>)
 
-    public void listChatcreated(){
+    /*public void listChatcreated(){
         String tempcon;
         UUID tempchat;
         UUID tempmessage;
@@ -184,7 +164,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         } catch (CantGetContactException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
 
     //contactcreated(Map<remoteactorPK,Map<PlatformComponentType,Contact>)
@@ -199,28 +179,34 @@ public class ChatListFragment extends AbstractFermatFragment{
         int sizeofmessagelist=0;
         UUID chatidtemp;
         String contactid;
-        Contact tempcontac=new ContactImpl();
         String name,message,datemessage,chatid;
         try {
               infochat.clear();
-        for (int i=0;i<chatcreated.size();i++){
+        for (int i=0;i<chatManager.getChats().size();i++){
 
             chatidtemp=chatManager.getChats().get(i).getChatId();
-            tempcontac=contactcreated.get(chatManager.getChats().get(i).getRemoteActorPublicKey());
-            name=tempcontac.getRemoteName();
+            contactid=String.valueOf(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId());
+            name=chatManager.getContactByContactId(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId()).getRemoteName();
             sizeofmessagelist=chatManager.getMessageByChatId(chatidtemp).size();
             message=chatManager.getMessageByChatId(chatidtemp).get(sizeofmessagelist - 1).getMessage();
             datemessage=chatManager.getChatByChatId(chatidtemp).getLastMessageDate().toString();
             chatid=chatidtemp.toString();
-            contactid=String.valueOf(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId());
+
             infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+contactid+"@#@#");
             imgid.add(R.drawable.ken);
         }
 
         } catch (CantGetChatException e) {
-            e.printStackTrace();
+            CommonLogger.exception(TAG + "chatlistview()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         } catch (CantGetMessageException e) {
-            e.printStackTrace();
+            CommonLogger.exception(TAG+"chatlistview()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+        catch (CantGetContactException e) {
+            CommonLogger.exception(TAG+"chatlistview()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -252,9 +238,16 @@ public class ChatListFragment extends AbstractFermatFragment{
 
 
    void updatevalues(){
-       listChatcreated();
-       chatlistview();
-
+      try{
+      if(!chatManager.getMessages().isEmpty()) {
+           chatlistview();
+      }else{
+           Toast.makeText(getActivity(), "Right now theirs no chat swipe to create with contact table", Toast.LENGTH_SHORT).show();
+      }
+      } catch (CantGetMessageException e) {
+          CommonLogger.exception(TAG+"updatevalues()", e.getMessage(), e);
+          Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+      }
    }
 
     @Override
@@ -263,6 +256,8 @@ public class ChatListFragment extends AbstractFermatFragment{
 //System.out.println("**********LISTA:"+chatinfo.get(0).get(0)+" - "+chatinfo.get(0).get(1)+" - "+chatinfo.get(0).get(2));
      //   setContentView(getActivity());
         View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
+
+
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updatevalues();
         final ChatListAdapter adapter=new ChatListAdapter(getActivity(), infochat, imgid);
@@ -278,6 +273,17 @@ public class ChatListFragment extends AbstractFermatFragment{
                 List<String> converter = new ArrayList<String>();
                 converter.addAll(Arrays.asList(values.split("@#@#")));
                 Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+         /*  try{
+                for (int i=0;i<chatManager.getContacts().size();i++){
+                    Contact con;
+                    if(chatManager.getContacts().get(i).getContactId().equals(converter.get(4))){
+                        con=chatManager.getContacts().get(i);
+                    }
+                }
+            } catch (CantGetContactException e) {
+                e.printStackTrace();
+            }*/
+
                 appSession.setData("whocallme", "chatlist");
                 appSession.setData("contactid", UUID.fromString(converter.get(4)));
                 changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
@@ -291,13 +297,13 @@ public class ChatListFragment extends AbstractFermatFragment{
                     @Override
                     public void run() {
                         System.out.println("LEAN ON");
-                 //       Toast.makeText(getActivity(), "Wake up Kakaroto", Toast.LENGTH_SHORT).show();
+                        //       Toast.makeText(getActivity(), "Wake up Kakaroto", Toast.LENGTH_SHORT).show();
 
                         try {
                             System.out.println("Threar UI corriendo");
                             //TODO: fix this
                             if (!chatManager.getContacts().isEmpty()) {
-                                especialfilldatabase();
+                                specialfilldatabase();
                                 updatevalues();
                                 adapter.refreshEvents(infochat, imgid);
                             } else {
@@ -305,8 +311,8 @@ public class ChatListFragment extends AbstractFermatFragment{
 
                             }
                         } catch (Exception e) {
-                            //TODO: fix this
-                            e.printStackTrace();
+                            CommonLogger.exception(TAG+"swipedown", e.getMessage(), e);
+                            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
@@ -338,84 +344,77 @@ public class ChatListFragment extends AbstractFermatFragment{
     }
 
 
-
-    void especialfilldatabase(){
+    void specialfilldatabase(){
         ChatImpl dato;
         MessageImpl mess;
         ContactImpl cont=new ContactImpl();
         Calendar c = Calendar.getInstance();
         UUID chatid;
-        UUID messageid;
         UUID contactid;
-        String pkremote;
 
 
         try {
 
-            messageid=UUID.randomUUID();
-            pkremote=String.valueOf(Math.random() * 1000);
-
             Long startDate=System.currentTimeMillis();
 
-
             //Chat
-            for (int i=0;i<chatManager.getContacts().size();i++) {
+            if(!chatManager.getContacts().isEmpty()) {
+                if(chatManager.getMessages().isEmpty()) {
+                     for (int i = 0; i < chatManager.getContacts().size(); i++) {
 
+                         if(chatManager.getContacts().get(i).getRemoteName().contains("chat")) {
+                             chatid = UUID.randomUUID();
 
-                if(!infochat.contains(chatManager.getContacts().get(i).getContactId())) {
-                    chatid = UUID.randomUUID();
-                    contactid = chatManager.getContacts().get(i).getContactId();
+                             contactid = chatManager.getContacts().get(i).getContactId();
 
+                             mess = new MessageImpl();
+                             mess.setType(TypeMessage.INCOMMING);
+                             mess.setStatus(MessageStatus.DELIVERED);
+                             mess.setChatId(chatid);
+                             mess.setMessage("HOLA A TODOS");
+                             mess.setMessageDate(new Timestamp(startDate));
+                             mess.setMessageId(UUID.randomUUID());
+                             mess.setContactId(contactid);
 
-                    cont.setContactId(contactid);
-                    cont.setRemoteName(chatManager.getContacts().get(i).getRemoteName());
-                    cont.setAlias("other");
-                    cont.setRemoteActorType(chatManager.getContacts().get(i).getRemoteActorType());
-                    cont.setRemoteActorPublicKey(chatManager.getContacts().get(i).getRemoteActorPublicKey());
-                    cont.setCreationDate(startDate);
+                             chatManager.saveMessage(mess);
 
-                    chatManager.saveContact(cont);
+                             dato = new ChatImpl(chatid,
+                                     UUID.randomUUID(),
+                                     PlatformComponentType.ACTOR_ASSET_ISSUER,
+                                     appSession.getAppPublicKey(),
+                                     chatManager.getContacts().get(i).getRemoteActorType(),
+                                     chatManager.getContacts().get(i).getRemoteActorPublicKey(),
+                                     "Nuevo",
+                                     ChatStatus.VISSIBLE,
+                                     new Timestamp(startDate),
+                                     new Timestamp(startDate));
 
+                             chatManager.saveChat(dato);
+                         }
 
-                    dato = new ChatImpl(chatid,
-                            UUID.randomUUID(),
-                            PlatformComponentType.ACTOR_ASSET_ISSUER,
-                            appSession.getAppPublicKey(),
-                            chatManager.getContacts().get(i).getRemoteActorType(),
-                            chatManager.getContacts().get(i).getRemoteActorPublicKey(),
-                            "Nuevo",
-                            ChatStatus.VISSIBLE,
-                            new Timestamp(startDate),
-                            new Timestamp(startDate));
-
-                    chatManager.saveChat(dato);
-
-
-                    mess = new MessageImpl();
-                    mess.setType(TypeMessage.INCOMMING);
-                    mess.setStatus(MessageStatus.DELIVERED);
-                    mess.setChatId(chatid);
-                    mess.setMessage("HOLA A TODOS");
-                    mess.setMessageDate(new Timestamp(startDate));
-                    mess.setMessageId(UUID.randomUUID());
-                    mess.setContactId(contactid);
-
-                    chatManager.saveMessage(mess);
+                    }
                 }
+            }else{
+
+                System.out.println("\n\n################# NO CONTACT ON TABLE ###################");
+
             }
+
         }
         catch (CantGetContactException e) {
-            System.out.println("/n/n CHT FILLDATA SAVECONTACT:"+e);
-            e.printStackTrace();
+            CommonLogger.exception(TAG + "specialfilldatabase()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }catch (CantSaveMessageException e) {
-            System.out.println("/n/n CHT FILLDATA SAVEMESSAGE:"+e);
-            e.printStackTrace();
-        }catch (CantSaveContactException e) {
-            System.out.println("/n/n CHT FILLDATA SAVECONTACT:"+e);
-            e.printStackTrace();
+            CommonLogger.exception(TAG + "specialfilldatabase()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }catch (CantSaveChatException e) {
-            System.out.println("/n/n CHT FILLDATA SAVECHAT:"+e);
-            e.printStackTrace();
+            CommonLogger.exception(TAG + "specialfilldatabase()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+        catch (CantGetMessageException e) {
+            CommonLogger.exception(TAG + "specialfilldatabase()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
     }
 
