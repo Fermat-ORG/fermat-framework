@@ -284,6 +284,10 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                 AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
                 alphaAnimation.setDuration(300);
                 final String finalText = text;
+
+                if (newAmount.equals("0"))
+                    newAmount = "";
+
                 final String finalAmount = newAmount;
                 alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
                     @Override
