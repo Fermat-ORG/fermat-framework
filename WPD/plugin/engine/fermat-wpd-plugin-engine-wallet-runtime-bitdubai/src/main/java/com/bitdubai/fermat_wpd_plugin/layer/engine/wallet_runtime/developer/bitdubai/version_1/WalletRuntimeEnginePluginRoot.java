@@ -60,7 +60,9 @@ import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitd
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -82,7 +84,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
      * WalletRuntimeManager Interface member variables.
      */
 
-    WalletNavigationStructure walletNavigationStructureOpen;
+    Map<String,WalletNavigationStructure> lstWalletNavigationStructureOpen;
+    String lastWalletPublicKey;
+
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -138,6 +142,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         eventManager.addListener(fermatEventListenerStructureDownloaded);
         listenersAdded.add(fermatEventListenerStructureDownloaded);
 
+        lstWalletNavigationStructureOpen = new HashMap<>();
         /**
          * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
          * functionality based on wallets downloaded by users this wont be an option.
@@ -225,13 +230,25 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public WalletNavigationStructure getNavigationStructureFromWallet(String publicKey) {
-        return getNavigationStructure(publicKey);
+    public WalletNavigationStructure getNavigationStructureFromWallet(String publicKey) throws WalletRuntimeExceptions {
+        try {
+            WalletNavigationStructure walletNavigationStructure = null;
+            if (!lstWalletNavigationStructureOpen.containsKey(publicKey)){
+                walletNavigationStructure = getNavigationStructure(publicKey);
+                lstWalletNavigationStructureOpen.put(publicKey,walletNavigationStructure);
+            }else{
+                walletNavigationStructure = lstWalletNavigationStructureOpen.get(publicKey);
+            }
+            lastWalletPublicKey = publicKey;
+            return walletNavigationStructure;
+        } catch (Exception e) {
+            throw new WalletRuntimeExceptions("WALLET RUNTIME GET WALLET", e, "wallet runtime not found the navigation structure for: " + publicKey, "");
+        }
     }
 
     @Override
     public WalletNavigationStructure getLastWallet() {
-        return walletNavigationStructureOpen;
+        return lstWalletNavigationStructureOpen.get(lastWalletPublicKey);
     }
 
 
@@ -239,8 +256,15 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     public WalletNavigationStructure getWallet(String publicKey) throws WalletRuntimeExceptions {
         //TODO: acá hay que poner una excepcion si no encuentra la wallet
         try {
-            walletNavigationStructureOpen = getNavigationStructure(publicKey);
-            return walletNavigationStructureOpen;
+            WalletNavigationStructure walletNavigationStructure = null;
+            if (!lstWalletNavigationStructureOpen.containsKey(publicKey)){
+                walletNavigationStructure = getNavigationStructure(publicKey);
+                lstWalletNavigationStructureOpen.put(publicKey,walletNavigationStructure);
+            }else{
+                walletNavigationStructure = lstWalletNavigationStructureOpen.get(publicKey);
+            }
+            lastWalletPublicKey = publicKey;
+            return walletNavigationStructure;
         } catch (Exception e) {
             throw new WalletRuntimeExceptions("WALLET RUNTIME GET WALLET", e, "wallet runtime not found the navigation structure for: " + publicKey, "");
         }
@@ -3612,7 +3636,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         publicKey = "reference_wallet";
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
-        walletNavigationStructureOpen = runtimeWalletNavigationStructure;
+        lastWalletPublicKey = publicKey;
+        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
 
         runtimeActivity = new Activity();
         runtimeActivity.setActivityType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
