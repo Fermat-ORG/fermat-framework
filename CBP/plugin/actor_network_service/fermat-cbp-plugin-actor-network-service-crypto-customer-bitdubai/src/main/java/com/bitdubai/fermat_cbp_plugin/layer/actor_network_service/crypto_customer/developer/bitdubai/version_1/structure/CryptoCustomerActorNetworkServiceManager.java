@@ -56,6 +56,8 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
 
             } else {
 
+                System.out.println("************************ exposing crypto customer identity en serio :"+cryptoCustomer);
+
                 final String imageString = Base64.encodeToString(cryptoCustomer.getImage(), Base64.DEFAULT);
 
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
@@ -97,6 +99,8 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
     public final void exposeIdentities(final Collection<CryptoCustomerExposingData> cryptoCustomerExposingDataList) throws CantExposeIdentitiesException {
 
         try {
+
+            System.out.println("************** im in the network service exposing the identities: quantitty:"+cryptoCustomerExposingDataList.size());
 
             for (final CryptoCustomerExposingData cryptoCustomer : cryptoCustomerExposingDataList)
                 this.exposeIdentity(cryptoCustomer);
