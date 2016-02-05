@@ -794,12 +794,12 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
             String jsonMessage = fermatMessage.getContent();
 
-            NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, NetworkServiceMessage.class);
+            NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
 
             switch (networkServiceMessage.getMessageType()) {
 
                 case CONNECTION_INFORMATION:
-                    InformationMessage informationMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, InformationMessage.class);
+                    InformationMessage informationMessage = InformationMessage.fromJson(jsonMessage);
                     receiveConnectionInformation(informationMessage);
 
                     String destinationPublicKey = connectionNewsDao.getDestinationPublicKey(informationMessage.getRequestId());
@@ -811,7 +811,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
                 case CONNECTION_REQUEST:
                     // update the request to processing receive state with the given action.
-                    RequestMessage requestMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, RequestMessage.class);
+                    RequestMessage requestMessage = RequestMessage.fromJson(jsonMessage);
                     receiveRequest(requestMessage);
                     communicationNetworkServiceConnectionManager.closeConnection(requestMessage.getSenderPublicKey());
                     //remove from the waiting pool
