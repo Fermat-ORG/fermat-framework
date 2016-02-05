@@ -563,7 +563,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void updateAssetUserConnectionStateCryptoAddress(String actorAssetPublicKey, DAPConnectionState dapConnectionState, CryptoAddress cryptoAddress, BlockchainNetworkType BlockchainNetworkType) throws CantUpdateAssetUserConnectionException {
+    public void updateAssetUserConnectionStateCryptoAddress(String actorAssetPublicKey, DAPConnectionState dapConnectionState, CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) throws CantUpdateAssetUserConnectionException {
 
         DatabaseTable table;
         try {
@@ -596,6 +596,10 @@ public class AssetUserActorDao implements Serializable {
                 if (cryptoAddress != null) {
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
+                }
+
+                if (blockchainNetworkType != null) {
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
                 }
 
                 if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
@@ -999,13 +1003,14 @@ public class AssetUserActorDao implements Serializable {
         for (DatabaseTableRecord record : records) {
             CryptoAddress cryptoAddress = null;
             BlockchainNetworkType blockchainNetworkType = null;
+
             if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
                 cryptoAddress = new CryptoAddress(
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
                         CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
             }
-            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME) != null) {
-                blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME));
+            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME) != null) {
+                blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME));
             }
 
             list.add(new AssetUserActorRecord(

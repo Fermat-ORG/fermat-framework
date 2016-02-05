@@ -503,7 +503,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             if (request.getCryptoAddress() != null) {
                 System.out.println("*****Actor Asset User Recibiendo Crypto Localmente*****");
 
-                this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress(),request.getBlockchainNetworkType());
+                this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress(), request.getBlockchainNetworkType());
 
                 List<ActorAssetUser> actorAssetUser = this.assetUserActorDao.getAssetUserRegistered(request.getIdentityPublicKeyResponding());
 
