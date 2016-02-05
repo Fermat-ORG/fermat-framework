@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
@@ -562,7 +563,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public void updateAssetUserConnectionStateCryptoAddress(String actorAssetPublicKey, DAPConnectionState dapConnectionState, CryptoAddress cryptoAddress) throws CantUpdateAssetUserConnectionException {
+    public void updateAssetUserConnectionStateCryptoAddress(String actorAssetPublicKey, DAPConnectionState dapConnectionState, CryptoAddress cryptoAddress, BlockchainNetworkType BlockchainNetworkType) throws CantUpdateAssetUserConnectionException {
 
         DatabaseTable table;
         try {
@@ -965,10 +966,15 @@ public class AssetUserActorDao implements Serializable {
 
         for (DatabaseTableRecord record : records) {
             CryptoAddress cryptoAddress = null;
+            BlockchainNetworkType blockchainNetworkType = null;
             if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
                 cryptoAddress = new CryptoAddress(
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME),
                         CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME)));
+            }
+
+            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME) != null) {
+                blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME));
             }
 
             actorAssetUser = new AssetUserActorRecord(
@@ -982,6 +988,7 @@ public class AssetUserActorDao implements Serializable {
                     cryptoAddress,
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME),
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME),
+                    blockchainNetworkType,
                     getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME)));
         }
         return actorAssetUser;
@@ -991,10 +998,14 @@ public class AssetUserActorDao implements Serializable {
 
         for (DatabaseTableRecord record : records) {
             CryptoAddress cryptoAddress = null;
+            BlockchainNetworkType blockchainNetworkType = null;
             if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
                 cryptoAddress = new CryptoAddress(
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
                         CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
+            }
+            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME) != null) {
+                blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME));
             }
 
             list.add(new AssetUserActorRecord(
@@ -1008,6 +1019,7 @@ public class AssetUserActorDao implements Serializable {
                     cryptoAddress,
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
+                    blockchainNetworkType,
                     getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME))));
         }
     }
@@ -1398,10 +1410,15 @@ public class AssetUserActorDao implements Serializable {
         ActorAssetUser actorAssetUser = null;
         for (DatabaseTableRecord record : records) {
             CryptoAddress cryptoAddress = null;
+            BlockchainNetworkType blockchainNetworkType = null;
             if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
                 cryptoAddress = new CryptoAddress(
                         record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
                         CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
+            }
+
+            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME) != null) {
+                blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME));
             }
 
             actorAssetUser = new AssetUserActorRecord(
@@ -1415,6 +1432,7 @@ public class AssetUserActorDao implements Serializable {
                     cryptoAddress,
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
+                    blockchainNetworkType,
                     getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)));
         }
 
