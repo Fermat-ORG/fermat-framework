@@ -184,6 +184,7 @@ public class UnholdBankMoneyTransactionDao {
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyActor());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyPlugin());
         //TODO: Colocar BigDecimal holdParameters.getAmount().floatValue()
+        newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACCOUNT_NUMBER_COLUMN_NAME,holdParameters.getAccount());
         newRecord.setDoubleValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount().floatValue());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME, holdParameters.getCurrency().getCode());
         newRecord.setStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME, holdParameters.getMemo());
@@ -202,7 +203,7 @@ public class UnholdBankMoneyTransactionDao {
         String memo = record.getStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME);
         long timestampAcknowledged = record.getLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME);
         long timestampConfirmedRejected = record.getLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME);
-        String accountNumber="";
+        String accountNumber=record.getStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACCOUNT_NUMBER_COLUMN_NAME);
         FiatCurrency currency;
         try {
             currency = FiatCurrency.getByCode(record.getStringValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_CURRENCY_COLUMN_NAME));
