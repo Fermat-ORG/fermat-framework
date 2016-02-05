@@ -228,18 +228,18 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 text.setVisibility(View.GONE);
             }else{
                 //Comentar, solo para pruebas
-                ContactImpl cadded=new ContactImpl();
-                cadded.setContactId(UUID.randomUUID());
-                cadded.setAlias("josejcb");
-                cadded.setRemoteActorPublicKey("jose");
-                cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
-                String dateString = "30/09/2014";
-                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                Date date = sdf.parse(dateString);
-                long startDate = date.getTime();
-                cadded.setCreationDate(startDate);
-                cadded.setRemoteName("No hay nadie conectado");
-                chatManager.saveContact(cadded);
+//                ContactImpl cadded=new ContactImpl();
+//                cadded.setContactId(UUID.randomUUID());
+//                cadded.setAlias("josejcb");
+//                cadded.setRemoteActorPublicKey("jose");
+//                cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
+//                String dateString = "30/09/2014";
+//                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+//                Date date = sdf.parse(dateString);
+//                long startDate = date.getTime();
+//                cadded.setCreationDate(startDate);
+//                cadded.setRemoteName("No hay nadie conectado");
+//                chatManager.saveContact(cadded);
                 //Fin Comentar
                 //text.setVisibility(View.VISIBLE);
                 //text.setText("No Contacts");
@@ -259,7 +259,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 try{
                     appSession.setData("whocallme", "contact");
                     appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
-                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                   // appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 }catch(CantGetContactException e) {
                     e.printStackTrace();
