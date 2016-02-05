@@ -115,8 +115,8 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
                     }
 
 
-                    System.out.println("NETWORK TYPE SYS OUT "+text);
-                    System.out.println("NETWORK TYPE SYS OUT "+blockchainNetworkType.getCode());
+                    System.out.println("NETWORK TYPE SELECTED IS "+text);
+                    System.out.println("NETWORK TYPE TO BE SAVED IS  "+blockchainNetworkType.getCode());
 
                     BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
                     bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
