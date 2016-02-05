@@ -46,10 +46,5 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
         this.context = null;
     }
 
-    public void stop(){
-        this.context = null;
-        //executor.shutdownNow();
-    }
-
 
 }

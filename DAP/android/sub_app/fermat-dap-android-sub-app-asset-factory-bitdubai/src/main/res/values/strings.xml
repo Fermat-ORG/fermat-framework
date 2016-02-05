@@ -15,6 +15,7 @@
     <string name="dap_asset_factory_editor_quantity_hint">Quantity</string>
     <string name="dap_asset_factory_editor_bitcoin_price_hint">Asset Value</string>
     <string name="dap_asset_factory_editor_expiration_date_hint">Expiration Date</string>
+    <string name="dap_identity_alias_default_text">Asset Issuer</string>
 
     <string name="help">Help</string>
 

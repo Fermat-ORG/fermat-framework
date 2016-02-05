@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Ver
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
@@ -202,6 +203,16 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
     @Override
     public void publish(BroadcasterType broadcasterType, String code) {
         Toast.makeText(this,"holas",Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String code, Platforms lauchedPlatform) {
+
+    }
+
+    @Override
+    public void publish(BroadcasterType broadcasterType, String code, FermatApps fermatApp) {
+
     }
 
 

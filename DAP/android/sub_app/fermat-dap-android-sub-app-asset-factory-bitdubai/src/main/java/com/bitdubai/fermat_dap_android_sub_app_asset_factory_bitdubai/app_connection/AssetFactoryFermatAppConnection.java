@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.factory.AssetFactoryFragmentFactory;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.navigation_drawer.AssetFactoryNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 
 /**
@@ -47,10 +48,9 @@ public class AssetFactoryFermatAppConnection extends AppConnections {
         return new AssetFactorySession();
     }
 
-
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return null;
+        return new AssetFactoryNavigationViewPainter(getActivity(), getActiveIdentity());
     }
 
     @Override

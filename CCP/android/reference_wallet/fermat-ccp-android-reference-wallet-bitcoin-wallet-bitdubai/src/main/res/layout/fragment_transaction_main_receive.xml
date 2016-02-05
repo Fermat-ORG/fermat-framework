@@ -26,13 +26,14 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <ImageView
                     android:id="@+id/frame_tx_record"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:scaleType="centerCrop"
-                    android:layout_gravity="center"
-                    />
+                    android:layout_gravity="center" />
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -45,12 +46,11 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-
                         <AutoCompleteTextView
                             android:id="@+id/contact_name"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="name"
+                            android:text="@string/name_text"
                             android:textColor="#72af9c"
                             android:textColorHint="#BDBDBD"
                             android:textSize="22sp"
@@ -63,7 +63,6 @@
                             android:layout_weight="0.2"
                             android:background="@null"
                             android:gravity="center"
-
                             />
 
                         <ImageView
@@ -73,8 +72,6 @@
                             android:paddingRight="7dp"
                             android:id="@+id/imageView_new_contact"
                             android:src="@drawable/btn_send_adduser_normal"/>
-
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -95,7 +92,7 @@
                             android:src="@drawable/ic_action_send_now_grey"
                             android:padding="3dp"
                             android:clickable="true"
-                            android:text="Give me an Address!"
+                            android:text="@string/give_me_an_address_address_text"
                             android:layout_weight="0.5"
                             android:background="#1172aa"
                             android:textColor="#fff"
@@ -109,18 +106,17 @@
                             android:src="@drawable/ic_action_send_now_grey"
                             android:padding="3dp"
                             android:clickable="true"
-                            android:text="Share"
+                            android:text="@string/action_share"
                             android:visibility="gone"
                             android:layout_weight="0.5"
-
                             />
                     </LinearLayout>
 
-
                 </LinearLayout>
-            </RelativeLayout>
-        </LinearLayout>
 
+            </RelativeLayout>
+
+        </LinearLayout>
 
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -137,7 +133,6 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp" />
-
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
@@ -161,11 +156,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="You don t have\n any received transactions"
+            android:text="@string/you_dont_have_transactions_received_text"
             android:textColor="#000"
             android:textSize="20sp" />
 
     </LinearLayout>
-
 
 </FrameLayout>

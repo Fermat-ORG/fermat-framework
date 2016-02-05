@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
@@ -123,11 +124,6 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
         }
     }
 
-    @Override
-    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser actorAssetUser) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
-        //To implement
-    }
-
     /**
      * This method will deliver the DigitalAssetMetadata to ActorAssetUser
      */
@@ -179,10 +175,10 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
                 actorAssetUser = actorAssetUserManager.getActorAssetUser();
                 String newTx = assetVaultManager.createBitcoinTransaction(digitalAssetMetadata.getLastTransactionHash(), actorAssetRedeemPoint.getCryptoAddress());
-                digitalAssetMetadata = digitalAssetUserRedemptionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null);
+                digitalAssetMetadata = digitalAssetUserRedemptionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null, cryptoTransaction.getBlockchainNetworkType());
                 digitalAssetUserRedemptionVault.updateWalletBalance(digitalAssetMetadata, this.cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.RECEPTION, actorAssetRedeemPoint.getActorPublicKey());
                 System.out.println("ASSET USER REDEMPTION Begins the deliver to an remote actor");
-                deliverToRemoteActor(digitalAssetMetadata, actorAssetRedeemPoint);
+                deliverToRemoteActor(digitalAssetMetadata, actorAssetRedeemPoint, cryptoTransaction.getBlockchainNetworkType());
             }
         } catch (CantPersistDigitalAssetException exception) {
             throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into database");
@@ -208,7 +204,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
     }
 
 
-    private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint actorAssetRedeemPoint) throws CantSendDigitalAssetMetadataException {
+    private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetRedeemPoint actorAssetRedeemPoint, BlockchainNetworkType networkType) throws CantSendDigitalAssetMetadataException {
         String genesisTransaction;
         try {
             System.out.println("ASSET USER REDEMPTION Preparing delivering to remote actor");
@@ -217,7 +213,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
             userRedemptionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING, genesisTransaction);
             System.out.println("ASSET USER REDEMPTION Sender Actor name " + actorAssetRedeemPoint.getName());
             System.out.println("ASSET USER REDEMPTION Before deliver - remote asset user ");
-            userRedemptionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), actorAssetRedeemPoint.getActorPublicKey());
+            userRedemptionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), actorAssetRedeemPoint.getActorPublicKey(), networkType);
             assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(actorAssetUser, actorAssetRedeemPoint, digitalAssetMetadata);
         } catch (CantExecuteQueryException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
@@ -245,12 +241,6 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 actorAddress);
         System.out.println("ASSET USER REDEMPTION registered in database");
     }
-
-    @Override
-    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
-        //To implement
-    }
-
 
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
         this.digitalAssetUserRedemptionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, digitalAssetMetadata.getGenesisTransaction());

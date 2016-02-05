@@ -85,8 +85,6 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         moduleManager = intraUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         intraUserInformation = (IntraUserInformation) appSession.getData(ConnectionsWorldFragment.INTRA_USER_SELECTED);
-
-
     }
 
     @SuppressLint("SetTextI18n")
