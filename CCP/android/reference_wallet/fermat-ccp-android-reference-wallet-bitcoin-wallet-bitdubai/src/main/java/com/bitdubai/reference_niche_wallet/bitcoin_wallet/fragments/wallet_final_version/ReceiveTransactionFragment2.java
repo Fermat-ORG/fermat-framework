@@ -134,6 +134,12 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
             }
 
+
+            if(bitcoinWalletSettings.getBlockchainNetworkType()==null){
+                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            }
+            settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+
             } catch (Exception ex) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
