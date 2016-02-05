@@ -189,6 +189,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         null,
                         System.currentTimeMillis(),
                         System.currentTimeMillis(),
+                        null,
                         assetUserActorprofileImage);
 
                 this.assetUserActorDao.createNewAssetUser(record);
@@ -216,6 +217,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         actorAssetUser.getCryptoAddress(),
                         actorAssetUser.getRegistrationDate(),
                         System.currentTimeMillis(),
+                        null,
                         assetUserActorprofileImage);
 
                 this.assetUserActorDao.updateAssetUser(record);
@@ -501,7 +503,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             if (request.getCryptoAddress() != null) {
                 System.out.println("*****Actor Asset User Recibiendo Crypto Localmente*****");
 
-                this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress());
+                this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress(),request.getBlockchainNetworkType());
 
                 List<ActorAssetUser> actorAssetUser = this.assetUserActorDao.getAssetUserRegistered(request.getIdentityPublicKeyResponding());
 

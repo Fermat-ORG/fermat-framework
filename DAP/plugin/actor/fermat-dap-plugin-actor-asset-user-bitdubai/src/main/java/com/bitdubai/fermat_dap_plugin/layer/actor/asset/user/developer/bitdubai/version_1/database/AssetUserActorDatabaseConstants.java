@@ -24,6 +24,7 @@ public class AssetUserActorDatabaseConstants {
     public static final String ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
     public static final String ASSET_USER_REGISTRATION_DATE_COLUMN_NAME = "registration_date";
     public static final String ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME = "last_connection_date";
+    public static final String ASSET_USER_NETWORK_TYPE_COLUMN_NAME = "network_type";
 
     public static final String ASSET_USER_FIRST_KEY_COLUMN = ASSET_USER_PUBLIC_KEY_COLUMN_NAME;
 
@@ -44,6 +45,7 @@ public class AssetUserActorDatabaseConstants {
     public static final String ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME = "register_crypto_currency";
     public static final String ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME = "register_registration_date";
     public static final String ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME = "register_last_connection_date";
+    public static final String ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME = "register_network_type";
 
     public static final String ASSET_USER_REGISTERED_FIRST_KEY_COLUMN = ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME;
 
@@ -55,6 +57,7 @@ public class AssetUserActorDatabaseConstants {
     public static final String ASSET_USER_GROUP_ID_COLUMN_NAME = "group_id";
     public static final String ASSET_USER_GROUP_NAME_COLUMN_NAME = "group_name";
 
+
     public static final String ASSET_USER_GROUP_FIRST_KEY_COLUMN = ASSET_USER_GROUP_ID_COLUMN_NAME;
 
     /**
@@ -64,6 +67,7 @@ public class AssetUserActorDatabaseConstants {
 
     public static final String ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME = "asset_user_group_id_member";
     public static final String ASSET_USER_GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME = "asset_user_group_member_publicKey";
+
 
     public static final String ASSET_USER_GROUP_MEMBER_FIRST_KEY_COLUMN = ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME;
 
