@@ -255,8 +255,10 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                         this.communicationSupervisorPendingMessagesAgent.start();
                     }
 
+                    /*
+                     * Reprocess messages
+                     */
                     reprocessMessages();
-
 
                     /*
                      * Call on start method
