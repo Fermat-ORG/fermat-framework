@@ -165,7 +165,7 @@ public class ChatMiddlewareMonitorAgent implements
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000;
-        public final int DISCOVER_ITERATION_LIMIT = 1000;
+        public final int DISCOVER_ITERATION_LIMIT = 1;
         int discoverIteration = 0;
         int iterationNumber = 0;
         ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
