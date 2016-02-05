@@ -43,6 +43,8 @@ public class CryptoBrokerWalletDatabaseConstants {
     static final String CRYPTO_BROKER_WALLET_PROVIDER_ID_COLUMN_NAME = "provider_id";
     static final String CRYPTO_BROKER_WALLET_PROVIDER_PLUGIN_COLUMN_NAME = "plugin";
     static final String CRYPTO_BROKER_WALLET_PROVIDER_DESCRIPTION_COLUMN_NAME = "description";
+    static final String CRYPTO_BROKER_WALLET_PROVIDER_CURRENCY_FROM_COLUMN_NAME = "currencyFrom";
+    static final String CRYPTO_BROKER_WALLET_PROVIDER_CURRENCY_TO_COLUMN_NAME = "currencyTo";
     static final String CRYPTO_BROKER_WALLET_PROVIDER_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
 
     /**
