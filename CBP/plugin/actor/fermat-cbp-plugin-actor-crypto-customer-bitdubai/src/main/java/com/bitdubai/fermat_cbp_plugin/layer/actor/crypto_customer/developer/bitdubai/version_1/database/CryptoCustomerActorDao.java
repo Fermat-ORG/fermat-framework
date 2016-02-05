@@ -124,10 +124,10 @@ public class CryptoCustomerActorDao {
             }
         }
 
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListCustomerIdentityWalletRelationshipException {
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
-                RelationshipTable.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, identity.getPublicKey(), DatabaseFilterType.EQUAL);
+                RelationshipTable.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
                 RelationshipTable.loadToMemory();
                 List<DatabaseTableRecord> records = RelationshipTable.getRecords();
                 RelationshipTable.clearAllFilters();
@@ -182,7 +182,7 @@ public class CryptoCustomerActorDao {
         private CustomerIdentityWalletRelationship newCryptoCustomerActorRelationship(
                 UUID   relationshipId,
                 String publicKeyCustomer,
-                UUID   walletId
+                String   walletId
         ){
             return new CustomerIdentityWalletRelationshipInformation(relationshipId, publicKeyCustomer, walletId);
         }
@@ -190,7 +190,7 @@ public class CryptoCustomerActorDao {
         private CustomerIdentityWalletRelationship constructCryptoCustomerActorRelationshipFromRecord(DatabaseTableRecord record) throws InvalidParameterException, CantGetListClauseException {
             UUID    relationshipId       = record.getUUIDValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME);
             String  publicKeyCustomer     = record.getStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-            UUID    walletId            = record.getUUIDValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME);
+            String    walletId            = record.getStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME);
             return newCryptoCustomerActorRelationship(relationshipId, publicKeyCustomer, walletId);
         }
 
