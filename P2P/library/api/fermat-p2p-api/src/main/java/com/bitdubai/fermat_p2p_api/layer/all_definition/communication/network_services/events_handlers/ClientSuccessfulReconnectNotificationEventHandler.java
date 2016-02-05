@@ -44,7 +44,7 @@ public class ClientSuccessfulReconnectNotificationEventHandler implements Fermat
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        if (this.networkService.getStatus().equals(ServiceStatus.STARTED)) {
+        if (this.networkService.getStatus() == ServiceStatus.STARTED) {
             this.networkService.handleClientSuccessfulReconnectNotificationEvent((ClientSuccessReconnectNotificationEvent) fermatEvent);
         }
 

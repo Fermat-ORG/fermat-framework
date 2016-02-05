@@ -44,7 +44,7 @@ public class VPNConnectionCloseNotificationEventHandler implements FermatEventHa
      */
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if (this.networkService.getStatus().equals(ServiceStatus.STARTED)) {
+        if (this.networkService.getStatus() == ServiceStatus.STARTED) {
             VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
             if (vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == networkService.getNetworkServiceProfile().getNetworkServiceType()) {
                 this.networkService.handleVpnConnectionCloseNotificationEvent(vpnConnectionCloseNotificationEvent);
