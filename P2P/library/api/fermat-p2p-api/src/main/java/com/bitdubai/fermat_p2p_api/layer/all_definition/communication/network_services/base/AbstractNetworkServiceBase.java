@@ -779,6 +779,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
             }
 
+            reprocessMessages();
+
         }
 
     }
