@@ -8,6 +8,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.AssetEditorFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.EditableAssetsFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.PublishedAssetsFragment;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.SettingsFactoryFragment;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.SettingsFactoryNetworkFragment;
+import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.fragments.SettingsFactoryNotificationFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
@@ -27,7 +30,12 @@ public class AssetFactoryFragmentFactory extends FermatFragmentFactory<AssetFact
                 return PublishedAssetsFragment.newInstance();
         if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY))
                 return AssetEditorFragment.newInstance(EditableAssetsFragment.getAssetForEdit());
-
+        if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_SETTINGS))
+            return SettingsFactoryFragment.newInstance();
+        if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN))
+            return SettingsFactoryNetworkFragment.newInstance();
+        if (fragments.equals(AssetFactoryFragmentsEnumType.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS))
+            return SettingsFactoryNotificationFragment.newInstance();
         throw createFragmentNotFoundException(fragments);
     }
 

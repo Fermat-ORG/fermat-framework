@@ -30,10 +30,15 @@ public class StockBalanceImpl implements StockBalance {
     UUID plugin;
     PluginFileSystem pluginFileSystem;
 
+
     /**
-     * Constructor.
+     * Constructor for StockBalanceImpl
+     *
+     * @param database
+     * @param plugin
+     * @param pluginFileSystem
      */
-    public StockBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem){
+    public StockBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem) {
         this.database = database;
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;
@@ -42,26 +47,39 @@ public class StockBalanceImpl implements StockBalance {
         cryptoBrokerWalletDatabaseDao.setPlugin(this.plugin);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
     }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float getBookedBalance(Currency merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException {
         return cryptoBrokerWalletDatabaseDao.getBookedBalance(merchandise);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float getAvailableBalance(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
         return cryptoBrokerWalletDatabaseDao.geAvailableBalance(merchandise);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public float getAvailableBalanceFrozen(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
         return cryptoBrokerWalletDatabaseDao.getAvailableBalanceFrozen(merchandise);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CryptoBrokerWalletBalanceRecord> getCryptoBrokerWalletBalanceBook() throws CantGetBookedBalanceCryptoBrokerWalletException {
         List<CryptoBrokerWalletBalanceRecord> cryptoBrokerWalletBalanceRecords = null;
         try {
-            cryptoBrokerWalletBalanceRecords =  cryptoBrokerWalletDatabaseDao.getAvailableBalanceByMerchandise();
+            cryptoBrokerWalletBalanceRecords = cryptoBrokerWalletDatabaseDao.getAvailableBalanceByMerchandise();
         } catch (CantCalculateBalanceException e) {
             e.printStackTrace();
         } catch (CantGetBalanceRecordException e) {
@@ -70,6 +88,9 @@ public class StockBalanceImpl implements StockBalance {
         return cryptoBrokerWalletBalanceRecords;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CryptoBrokerWalletBalanceRecord> getCryptoBrokerWalletBalanceAvailable() throws CantGetBookedBalanceCryptoBrokerWalletException {
         List<CryptoBrokerWalletBalanceRecord> cryptoBrokerWalletBalanceRecords = null;
@@ -83,6 +104,9 @@ public class StockBalanceImpl implements StockBalance {
         return cryptoBrokerWalletBalanceRecords;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CryptoBrokerWalletBalanceRecord> getCryptoBrokerWalletBalanceBookFrozen() throws CantGetBookedBalanceCryptoBrokerWalletException {
         List<CryptoBrokerWalletBalanceRecord> cryptoBrokerWalletBalanceRecords = null;
@@ -94,6 +118,9 @@ public class StockBalanceImpl implements StockBalance {
         return cryptoBrokerWalletBalanceRecords;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CryptoBrokerWalletBalanceRecord> getCryptoBrokerWalletBalanceAvailableFrozen() throws CantGetBookedBalanceCryptoBrokerWalletException {
         List<CryptoBrokerWalletBalanceRecord> cryptoBrokerWalletBalanceRecords = null;
@@ -105,6 +132,9 @@ public class StockBalanceImpl implements StockBalance {
         return cryptoBrokerWalletBalanceRecords;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void debit(CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, BalanceType balanceType) throws CantAddDebitCryptoBrokerWalletException {
         try {
@@ -114,6 +144,9 @@ public class StockBalanceImpl implements StockBalance {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void credit(CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, BalanceType balanceType) throws CantAddCreditCryptoBrokerWalletException {
         try {

@@ -87,7 +87,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     /**
      * @return a summary of the current market rate for the different currencies the broker have as stock
      */
-    Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies() throws CantGetCurrentIndexSummaryForStockCurrenciesException;
+    //TODO: Implementar CER provider seleccionado en la wallet
+    Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies(String brokerWalletPublicKey) throws CantGetCurrentIndexSummaryForStockCurrenciesException;
 
     /**
      * @return list of identities associated with this wallet

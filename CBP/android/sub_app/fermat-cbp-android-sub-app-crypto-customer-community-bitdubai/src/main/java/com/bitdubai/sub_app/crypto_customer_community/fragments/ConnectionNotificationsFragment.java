@@ -42,7 +42,8 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 02/02/2016.
  */
-public class ConnectionNotificationsFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<LinkedCryptoCustomerIdentity> {
+public class ConnectionNotificationsFragment extends AbstractFermatFragment<CryptoCustomerCommunitySubAppSession, SubAppResourcesProviderManager>
+        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<LinkedCryptoCustomerIdentity> {
 
     public static final String ACTOR_SELECTED = "actor_selected";
 
@@ -207,9 +208,10 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
     @Override
     public void onItemClickListener(LinkedCryptoCustomerIdentity data, int position) {
         try {
-            Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
+            //Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
             //moduleManager.acceptCryptoCustomer(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), cryptoCustomerCommunitySubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
+            //TODO: Note, subAppResourcesProviderManager is badly casted as a WalletResourcesNetworkServicePluginRoot.. sending null, for now. so it doesnt throw a classCastException
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), cryptoCustomerCommunitySubAppSession, null, data, moduleManager.getSelectedActorIdentity());
             notificationAcceptDialog.show();
         } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
             e.printStackTrace();
