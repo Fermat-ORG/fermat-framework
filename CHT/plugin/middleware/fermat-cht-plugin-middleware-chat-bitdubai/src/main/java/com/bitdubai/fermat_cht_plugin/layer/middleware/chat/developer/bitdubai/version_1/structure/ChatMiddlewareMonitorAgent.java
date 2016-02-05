@@ -31,7 +31,9 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactExce
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
@@ -274,7 +276,7 @@ public class ChatMiddlewareMonitorAgent implements
                     List<Contact> contactList=chatMiddlewareManager.discoverActorsRegistered();
                     if(!contactList.isEmpty()){
                         for(Contact contact : contactList){
-                            chatMiddlewareDatabaseDao.saveContact(contact);
+                            saveContact(contact);
                         }
                     }
                 }
@@ -356,6 +358,41 @@ public class ChatMiddlewareMonitorAgent implements
 
         }
 
+        /**
+         * This method saves a contact in database.
+         * Also it checks if the Public key is already registered in database, in this case, updates
+         *
+         * @param contact
+         * @throws CantSaveContactException
+         * @throws DatabaseOperationException
+         */
+        private void saveContact(Contact contact) throws
+                CantSaveContactException,
+                DatabaseOperationException {
+            try{
+                ObjectChecker.checkArgument(contact, "The contact is null");
+                String actorPublicKey=contact.getRemoteActorPublicKey();
+                Contact contactFromDatabase=
+                        chatMiddlewareDatabaseDao.getContactByLocalPublicKey(
+                                actorPublicKey);
+                if(contactFromDatabase!=null){
+                    //This contact already exists, so, I don't gonna save in database.
+                    //TODO: I need to study if the contact must be updated.
+                    return;
+                }
+                chatMiddlewareDatabaseDao.saveContact(contact);
+            } catch (ObjectNotSetException e) {
+                throw new CantSaveContactException(
+                        e,
+                        "Saving the remote contact",
+                        "The contact object is null");
+            } catch (CantGetContactException e) {
+                throw new CantSaveContactException(
+                        e,
+                        "Saving the remote contact",
+                        "Unexpected error in database");
+            }
+        }
         /**
          * This method checks the incoming chat event and acts according to this.
          * @param eventChatId
