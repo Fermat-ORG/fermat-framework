@@ -96,7 +96,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         if(cryptoAddress != null)
             this.cryptoAddress          = cryptoAddress             ;
         if(blockchainNetworkType != null)
-        this.blockchainNetworkType            =       blockchainNetworkType             ;
+            this.blockchainNetworkType  =    blockchainNetworkType  ;
         this.registrationDate       =       registrationDate        ;
         this.lastConnectionDate     =       lastConnectionDate      ;
         this.profileImage           =       profileImage.clone()    ;
@@ -375,7 +375,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
         jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
-        jsonObject.addProperty("blockchainNetworkType",           blockchainNetworkType.toString());
+        jsonObject.addProperty("blockchainNetworkType", blockchainNetworkType.toString());
         jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
         return gson.toJson(jsonObject);
     }
@@ -398,7 +398,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
                 ", registrationDate="       + registrationDate +
                 ", lastConnectionDate="     + lastConnectionDate +
                 ", cryptoAddress="          + cryptoAddress +
-                ", blockchainNetworkType="            + blockchainNetworkType +
+                ", blockchainNetworkType="  + blockchainNetworkType +
                 ", profileImage="           + profileImageUser +
                 '}';
     }

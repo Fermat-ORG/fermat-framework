@@ -47,6 +47,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO explain here the main functionality of the plug-in.
@@ -85,6 +86,8 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
     private SettingsManager<AssetUserSettings> settingsManager;
 
+    BlockchainNetworkType blockchainNetworkType;
+
     public AssetUserCommunitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -108,8 +111,14 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
             try {
                 for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered()) {
+                    blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+
                     AssetUserActorRecord assetUserActorRecord = (AssetUserActorRecord) actorAssetUser;
-                    assetUserActorRecords.add(assetUserActorRecord);
+                    if (assetUserActorRecord.getCryptoAddress() == null) {
+                        assetUserActorRecords.add(assetUserActorRecord);
+                    } else if (Objects.equals(assetUserActorRecord.getBlockchainNetworkType().getCode(), blockchainNetworkType.getCode())) {
+                        assetUserActorRecords.add(assetUserActorRecord);
+                    }
                 }
 
             } catch (CantGetAssetUserActorsException e) {
@@ -122,8 +131,9 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException {
-        BlockchainNetworkType blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+        blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
         ActorAssetIssuer actorAssetIssuer;
+
         //TODO Actor Asset Issuer de BD Local
         try {
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
