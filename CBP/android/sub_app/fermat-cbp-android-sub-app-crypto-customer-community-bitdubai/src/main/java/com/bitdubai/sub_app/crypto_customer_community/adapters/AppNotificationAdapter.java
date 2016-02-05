@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.LinkedCryptoCustomerIdentity;
 import com.bitdubai.sub_app.crypto_customer_community.R;
@@ -29,7 +28,7 @@ public class AppNotificationAdapter extends FermatAdapter<LinkedCryptoCustomerId
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_connection_notification;
+        return R.layout.ccc_row_connection_notification;
     }
 
     @Override
@@ -42,7 +41,8 @@ public class AppNotificationAdapter extends FermatAdapter<LinkedCryptoCustomerId
             bitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.profile_image);
         }
         bitmap = Bitmap.createScaledBitmap(bitmap, 40,40, true);
-        holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+        //holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+        holder.userAvatar.setImageBitmap(bitmap);
     }
 
     public int getSize() {

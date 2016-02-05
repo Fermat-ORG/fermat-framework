@@ -76,29 +76,32 @@ public class ActorConnectionEventActions {
 
     }
 
-    public void handleUpdateEvent() throws CantHandleNewsEventException {
+    public void handleCryptoBrokerUpdateEvent() throws CantHandleNewsEventException {
 
         try {
 
-            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews();
-
+            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionUpdates();
 
             for (final CryptoBrokerConnectionRequest request : list) {
 
-                switch (request.getRequestAction()) {
+                if ((request.getSenderActorType() == Actors.CBP_CRYPTO_BROKER)) {
 
-                    case ACCEPT:
-                        this.handleAcceptConnection(request.getRequestId());
-                        break;
-                    case CANCEL:
-                        this.handleCancelConnection(request.getRequestId());
-                        break;
-                    case DENY:
-                        this.handleDenyConnection(request.getRequestId());
-                        break;
-                    case DISCONNECT:
-                        this.handleDisconnect(request.getRequestId());
-                        break;
+                    switch (request.getRequestAction()) {
+
+                        case ACCEPT:
+                            this.handleAcceptConnection(request.getRequestId());
+                            break;
+                        case CANCEL:
+                            this.handleCancelConnection(request.getRequestId());
+                            break;
+                        case DENY:
+                            this.handleDenyConnection(request.getRequestId());
+                            break;
+                        case DISCONNECT:
+                            this.handleDisconnect(request.getRequestId());
+                            break;
+
+                    }
 
                 }
             }
