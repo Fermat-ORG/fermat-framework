@@ -62,14 +62,13 @@ public class ActorConnectionEventActions {
 
         try {
 
-            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews();
+            System.out.println("******** CRYPTO BROKER NEWS -> CUSTOMER ACTOR CONNECTION");
 
-            /**
-             * If the actor type of the request is a crypto customer, i will process it.
-             */
+            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews(Actors.CBP_CRYPTO_CUSTOMER);
+
+            System.out.println("******** CRYPTO BROKER NEWS -> CUSTOMER ACTOR CONNECTION -> there is "+list.size() + " request from customers.");
             for (final CryptoBrokerConnectionRequest request : list)
-                if (request.getSenderActorType() == Actors.CBP_CRYPTO_CUSTOMER)
-                    this.handleRequestConnection(request);
+                this.handleRequestConnection(request, Actors.CBP_CRYPTO_BROKER);
 
         } catch(CantListPendingConnectionRequestsException |
                 CantRequestActorConnectionException |
@@ -81,15 +80,15 @@ public class ActorConnectionEventActions {
 
     }
 
-    public void handleRequestConnection(final CryptoBrokerConnectionRequest request) throws CantRequestActorConnectionException ,
-                                                                                            UnsupportedActorTypeException       ,
-                                                                                            ConnectionAlreadyRequestedException {
+    public void handleRequestConnection(final CryptoBrokerConnectionRequest request, Actors actorType) throws CantRequestActorConnectionException ,
+                                                                                                              UnsupportedActorTypeException       ,
+                                                                                                              ConnectionAlreadyRequestedException {
 
         try {
 
             final CryptoCustomerLinkedActorIdentity linkedIdentity = new CryptoCustomerLinkedActorIdentity(
                     request.getDestinationPublicKey(),
-                    Actors.CBP_CRYPTO_BROKER
+                    actorType
             );
             final ConnectionState connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
 
@@ -110,9 +109,15 @@ public class ActorConnectionEventActions {
 
         } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, actorConnectionAlreadyExistsException);
-            throw new ConnectionAlreadyRequestedException(actorConnectionAlreadyExistsException, "request: "+request, "The connection was already requested or exists.");
-        } catch (final CantRegisterActorConnectionException cantRegisterActorConnectionException) {
+            try {
+                cryptoBrokerNetworkService.confirm(request.getRequestId());
+            } catch (Exception e) {
+
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, actorConnectionAlreadyExistsException);
+                throw new ConnectionAlreadyRequestedException(actorConnectionAlreadyExistsException, "request: "+request, "The connection was already requested or exists.");
+            }
+
+         } catch (final CantRegisterActorConnectionException cantRegisterActorConnectionException) {
 
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRegisterActorConnectionException);
             throw new CantRequestActorConnectionException(cantRegisterActorConnectionException, "request: "+request, "Problem registering the actor connection in DAO.");

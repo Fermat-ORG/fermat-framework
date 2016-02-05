@@ -79,9 +79,6 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             } else {
 
-                System.out.println("**************** I'm being exposed: "+cryptoBroker);
-                System.out.println("**************** Do i have profile image?: "+(cryptoBroker.getImage() != null)  );
-
                 final String imageString = Base64.encodeToString(cryptoBroker.getImage(), Base64.DEFAULT);
 
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
@@ -318,17 +315,15 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * @throws CantListPendingConnectionRequestsException  if something goes wrong.
      */
     @Override
-    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException {
+    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews(Actors actorType) throws CantListPendingConnectionRequestsException {
 
         try {
 
             List<ConnectionRequestAction> actions = new ArrayList<>();
 
-            actions.add(ConnectionRequestAction.CANCEL    );
-            actions.add(ConnectionRequestAction.DISCONNECT);
             actions.add(ConnectionRequestAction.REQUEST   );
 
-            return connectionNewsDao.listAllPendingRequests(actions);
+            return connectionNewsDao.listAllPendingRequestsByActorType(actorType, actions);
 
         } catch (final CantListPendingConnectionRequestsException e){
 

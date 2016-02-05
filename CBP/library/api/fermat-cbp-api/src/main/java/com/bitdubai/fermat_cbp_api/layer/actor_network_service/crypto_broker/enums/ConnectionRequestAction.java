@@ -19,7 +19,6 @@ public enum ConnectionRequestAction implements FermatEnum {
     CANCEL             ("CAN"), // cancel a connection request.
     DENY               ("DEN"), // deny a connection request.
     DISCONNECT         ("DIS"), // disconnect from a crypto broker.
-    INFORM_RECEPTION   ("REQ"), // inform the reception of the message.
     NONE               ("NON"), // no action needed.
     REQUEST            ("REQ"), // created the connection request.
 

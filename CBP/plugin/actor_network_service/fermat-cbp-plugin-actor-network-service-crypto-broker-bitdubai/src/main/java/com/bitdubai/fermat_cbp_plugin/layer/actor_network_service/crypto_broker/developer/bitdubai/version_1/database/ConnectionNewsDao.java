@@ -160,6 +160,56 @@ public final class ConnectionNewsDao {
     }
 
     /**
+     * Return all the pending requests depending on the action informed through parameters.
+     *
+     * @param actions  the list of actions that we need to bring.
+     *
+     * @return a list of CryptoBrokerConnectionRequest instances.
+     *
+     * @throws CantListPendingConnectionRequestsException  if something goes wrong.
+     */
+    public final List<CryptoBrokerConnectionRequest> listAllPendingRequestsByActorType(final Actors actorType, final List<ConnectionRequestAction> actions) throws CantListPendingConnectionRequestsException {
+
+        try {
+
+            final ProtocolState protocolState = ProtocolState.PENDING_LOCAL_ACTION;
+
+            final DatabaseTable connectionNewsTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, protocolState, DatabaseFilterType.EQUAL);
+            connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME, actorType, DatabaseFilterType.EQUAL);
+
+            final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
+
+            for(final ConnectionRequestAction action : actions)
+                tableFilters.add(connectionNewsTable.getNewFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, DatabaseFilterType.EQUAL, action.getCode()));
+
+            final DatabaseTableFilterGroup filterGroup = connectionNewsTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
+
+            connectionNewsTable.setFilterGroup(filterGroup);
+
+            connectionNewsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
+
+            final List<CryptoBrokerConnectionRequest> cryptoAddressRequests = new ArrayList<>();
+
+            for (final DatabaseTableRecord record : records)
+                cryptoAddressRequests.add(buildConnectionNewRecord(record));
+
+            return cryptoAddressRequests;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantListPendingConnectionRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
+        }
+    }
+
+
+    /**
      * Return all the pending requests depending on the protocol state informed through parameters.
      *
      * @param protocolState  the protocol state that we need to bring.
@@ -443,8 +493,6 @@ public final class ConnectionNewsDao {
 
         List<ConnectionRequestAction> actions = new ArrayList<>();
 
-        actions.add(ConnectionRequestAction.CANCEL    );
-        actions.add(ConnectionRequestAction.DISCONNECT);
         actions.add(ConnectionRequestAction.REQUEST   );
 
         return this.listAllPendingRequests(actions) != null && !(this.listAllPendingRequests(actions).isEmpty());

@@ -60,7 +60,7 @@ public class ActorConnectionEventActions {
 
         try {
 
-            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews();
+            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews(Actors.CBP_CRYPTO_BROKER);
 
 
             for (final CryptoBrokerConnectionRequest request : list)

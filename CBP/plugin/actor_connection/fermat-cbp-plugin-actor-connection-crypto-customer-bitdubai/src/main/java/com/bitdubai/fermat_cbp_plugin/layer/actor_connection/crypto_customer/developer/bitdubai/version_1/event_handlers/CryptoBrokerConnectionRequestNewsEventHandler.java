@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.Unexpected
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestUpdatesEvent;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestNewsEvent;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.CryptoCustomerActorConnectionPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.exceptions.CryptoCustomerActorConnectionNotStartedException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.structure.ActorConnectionEventActions;
@@ -40,7 +40,7 @@ public class CryptoBrokerConnectionRequestNewsEventHandler implements FermatEven
 
         if (this.cryptoCustomerActorConnectionPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if (fermatEvent instanceof CryptoBrokerConnectionRequestUpdatesEvent) {
+            if (fermatEvent instanceof CryptoBrokerConnectionRequestNewsEvent) {
 
                 System.out.println("************* EVENT RECEIVED *************"+fermatEvent);
 
