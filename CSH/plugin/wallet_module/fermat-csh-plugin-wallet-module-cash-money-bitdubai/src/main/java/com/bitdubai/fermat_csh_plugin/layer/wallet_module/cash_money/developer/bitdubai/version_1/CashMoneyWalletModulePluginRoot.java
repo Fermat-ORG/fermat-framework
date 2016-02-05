@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -72,6 +73,8 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
 
 
     /* CASH PLUGINS */
@@ -88,10 +91,6 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     /* CER PLUGINS */
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
     private CurrencyExchangeProviderFilterManager providerFilter;
-
-    //TODO:
-    //@NeededLayerReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER)
-    //private CurrencyExchangeRateProviderLayerManager currencyExchangeRateProviderLayer;
 
 
 
@@ -115,7 +114,8 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
         System.out.println("CASHMONEYWALLETMODULE - PluginRoot START");
 
         try {
-            cashMoneyWalletModuleManager = new CashMoneyWalletModuleManagerImpl(cashMoneyWalletManager, pluginId, pluginFileSystem, errorManager, cashDepositTransactionManager, cashWithdrawalTransactionManager);
+            cashMoneyWalletModuleManager = new CashMoneyWalletModuleManagerImpl(cashMoneyWalletManager, pluginId, pluginFileSystem,
+                    errorManager, cashDepositTransactionManager, cashWithdrawalTransactionManager, broadcaster);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
