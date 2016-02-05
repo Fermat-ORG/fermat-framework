@@ -44,11 +44,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -214,7 +212,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             message=chatManager.getMessageByChatId(chatidtemp).get(sizeofmessagelist - 1).getMessage();
             datemessage=chatManager.getChatByChatId(chatidtemp).getLastMessageDate().toString();
             chatid=chatidtemp.toString();
-            contactid=String.valueOf(chatManager.getMessageByChatId(chatidtemp).get(i).getContactId());
+            contactid=String.valueOf(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId());
             infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+contactid+"@#@#");
             imgid.add(R.drawable.ken);
         }
@@ -224,7 +222,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         } catch (CantGetMessageException e) {
             e.printStackTrace();
         }
-    }//3f73559d-6fee-4a66-a5fc-25d12823798f
+    }
 
     @Override
      public void onCreate(Bundle savedInstanceState) {
@@ -351,70 +349,59 @@ public class ChatListFragment extends AbstractFermatFragment{
         UUID contactid;
         String pkremote;
 
-        try {
-            String dateString = "30/09/2014";
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = sdf.parse(dateString);
-            long startDate = date.getTime();
-        }catch (java.text.ParseException e){
-            e.printStackTrace();
-        }
 
         try {
 
             messageid=UUID.randomUUID();
             pkremote=String.valueOf(Math.random() * 1000);
-            String dateString = "30/09/2014";
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = sdf.parse(dateString);
-            long startDate = date.getTime();
+
+            Long startDate=System.currentTimeMillis();
 
 
             //Chat
             for (int i=0;i<chatManager.getContacts().size();i++) {
-                chatid=UUID.randomUUID();
-                contactid=UUID.randomUUID();
 
 
-
-                cont.setContactId(contactid);
-                cont.setRemoteName(chatManager.getContacts().get(i).getRemoteName());
-                cont.setAlias("other");
-                cont.setRemoteActorType(chatManager.getContacts().get(i).getRemoteActorType());
-                cont.setRemoteActorPublicKey(chatManager.getContacts().get(i).getRemoteActorPublicKey());
-                cont.setCreationDate(startDate);
-
-                chatManager.saveContact(cont);
+                if(!infochat.contains(chatManager.getContacts().get(i).getContactId())) {
+                    chatid = UUID.randomUUID();
+                    contactid = chatManager.getContacts().get(i).getContactId();
 
 
+                    cont.setContactId(contactid);
+                    cont.setRemoteName(chatManager.getContacts().get(i).getRemoteName());
+                    cont.setAlias("other");
+                    cont.setRemoteActorType(chatManager.getContacts().get(i).getRemoteActorType());
+                    cont.setRemoteActorPublicKey(chatManager.getContacts().get(i).getRemoteActorPublicKey());
+                    cont.setCreationDate(startDate);
+
+                    chatManager.saveContact(cont);
 
 
-                dato = new ChatImpl(chatid,
-                        UUID.randomUUID(),
-                        PlatformComponentType.ACTOR_ASSET_ISSUER,
-                        appSession.getAppPublicKey(),
-                        chatManager.getContacts().get(i).getRemoteActorType(),
-                        chatManager.getContacts().get(i).getRemoteActorPublicKey(),
-                        "Nuevo",
-                        ChatStatus.VISSIBLE,
-                        new Timestamp(startDate),
-                        new Timestamp(startDate));
+                    dato = new ChatImpl(chatid,
+                            UUID.randomUUID(),
+                            PlatformComponentType.ACTOR_ASSET_ISSUER,
+                            appSession.getAppPublicKey(),
+                            chatManager.getContacts().get(i).getRemoteActorType(),
+                            chatManager.getContacts().get(i).getRemoteActorPublicKey(),
+                            "Nuevo",
+                            ChatStatus.VISSIBLE,
+                            new Timestamp(startDate),
+                            new Timestamp(startDate));
 
-                chatManager.saveChat(dato);
+                    chatManager.saveChat(dato);
 
 
+                    mess = new MessageImpl();
+                    mess.setType(TypeMessage.INCOMMING);
+                    mess.setStatus(MessageStatus.DELIVERED);
+                    mess.setChatId(chatid);
+                    mess.setMessage("HOLA A TODOS");
+                    mess.setMessageDate(new Timestamp(startDate));
+                    mess.setMessageId(UUID.randomUUID());
+                    mess.setContactId(contactid);
 
-                mess=new MessageImpl();
-                mess.setType(TypeMessage.INCOMMING);
-                mess.setStatus(MessageStatus.DELIVERED);
-                mess.setChatId(chatid);
-                mess.setMessage("HOLA A TODOS");
-                mess.setMessageDate(new Timestamp(startDate));
-                mess.setMessageId(UUID.randomUUID());
-                mess.setContactId(contactid);
-
-                chatManager.saveMessage(mess);
-
+                    chatManager.saveMessage(mess);
+                }
             }
         }
         catch (CantGetContactException e) {
@@ -429,9 +416,6 @@ public class ChatListFragment extends AbstractFermatFragment{
         }catch (CantSaveChatException e) {
             System.out.println("/n/n CHT FILLDATA SAVECHAT:"+e);
             e.printStackTrace();
-        }catch (java.text.ParseException e){
-            e.printStackTrace();
-
         }
     }
 
