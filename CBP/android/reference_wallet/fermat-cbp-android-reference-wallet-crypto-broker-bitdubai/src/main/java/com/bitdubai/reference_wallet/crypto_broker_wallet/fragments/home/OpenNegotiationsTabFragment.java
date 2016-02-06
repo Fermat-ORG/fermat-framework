@@ -4,53 +4,35 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.MarketExchangeRatesPageAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
-import com.viewpagerindicator.LinePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
-
-import static android.widget.Toast.makeText;
 
 
 /**
@@ -69,7 +51,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     // Data
     private List<GrouperItem> openNegotiationList;
-    private List<IndexInfoSummary> marketExchangeRateSummaryList;
     private CryptoBrokerWalletManager walletManager;
 
 
@@ -100,10 +81,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     protected void initViews(View layout) {
         super.initViews(layout);
 
-
         Activity activity = getActivity();
-        LayoutInflater layoutInflater = activity.getLayoutInflater();
-        getMarketExchangeRateSummaryData(layoutInflater);
         configureToolbar();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.cbw_divider_shape);
@@ -113,19 +91,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
             recyclerView.setVisibility(View.GONE);
             View emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        try {
-            CryptoBrokerNavigationViewPainter navigationViewPainter = new CryptoBrokerNavigationViewPainter(getActivity(), null);
-//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
-        } catch (Exception e) {
-            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
 
@@ -139,35 +104,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         toolbar.setTitleTextColor(Color.WHITE);
         if (toolbar.getMenu() != null) toolbar.getMenu().clear();
-    }
-
-    private void configureActivityHeader(LayoutInflater layoutInflater) {
-
-        RelativeLayout toolbarHeader = getToolbarHeader();
-        try {
-            toolbarHeader.removeAllViews();
-        } catch (Exception exception) {
-            CommonLogger.exception(TAG, "Error removing all views from toolbarHeader ", exception);
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
-        }
-        toolbarHeader.setVisibility(View.VISIBLE);
-        View container = layoutInflater.inflate(R.layout.cbw_header_layout, toolbarHeader, true);
-
-        if (marketExchangeRateSummaryList.isEmpty()) {
-            FermatTextView noMarketRateTextView = (FermatTextView) container.findViewById(R.id.cbw_no_market_rate);
-            noMarketRateTextView.setVisibility(View.VISIBLE);
-            View marketRateViewPagerContainer = container.findViewById(R.id.cbw_market_rate_view_pager_container);
-            marketRateViewPagerContainer.setVisibility(View.VISIBLE);
-        } else {
-            ViewPager viewPager = (ViewPager) container.findViewById(R.id.cbw_exchange_rate_view_pager);
-            viewPager.setOffscreenPageLimit(3);
-            MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(getFragmentManager(), marketExchangeRateSummaryList);
-            viewPager.setAdapter(pageAdapter);
-
-            LinePageIndicator indicator = (LinePageIndicator) container.findViewById(R.id.cbw_exchange_rate_view_pager_indicator);
-            indicator.setViewPager(viewPager);
-        }
-
     }
 
     @Override
@@ -244,41 +180,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
 
         return data;
-    }
-
-    private void getMarketExchangeRateSummaryData(final LayoutInflater layoutInflater) {
-
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
-            @Override
-            protected Object doInBackground() throws Exception {
-                List<IndexInfoSummary> data = new ArrayList<>();
-                CryptoBrokerWalletManager wallet = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
-                data.addAll(wallet.getCurrentIndexSummaryForStockCurrencies(appSession.getAppPublicKey()));
-
-                return data;
-            }
-        };
-
-        fermatWorker.setCallBack(new FermatWorkerCallBack() {
-            @Override
-            public void onPostExecute(Object... result) {
-                if (result != null && result.length > 0) {
-                    marketExchangeRateSummaryList = (List<IndexInfoSummary>) result[0];
-                    configureActivityHeader(layoutInflater);
-                }
-            }
-
-            @Override
-            public void onErrorOccurred(Exception ex) {
-                if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                else
-                    Log.e(TAG, ex.getMessage(), ex);
-            }
-        });
-
-        Executors.newSingleThreadExecutor().execute(fermatWorker);
     }
 
     @Override
