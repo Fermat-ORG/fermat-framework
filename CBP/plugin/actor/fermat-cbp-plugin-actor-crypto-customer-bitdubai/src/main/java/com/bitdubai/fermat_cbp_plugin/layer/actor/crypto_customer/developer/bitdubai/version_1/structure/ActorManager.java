@@ -71,7 +71,7 @@ public class ActorManager implements ActorExtraDataManager {
 
         @Override
         public void updateCustomerExtraData(ActorExtraData actorExtraData) throws CantUpdateActorExtraDataException {
-
+            this.dao.updateCustomerExtraData(actorExtraData);
         }
 
         @Override
@@ -96,6 +96,6 @@ public class ActorManager implements ActorExtraDataManager {
 
         @Override
         public Collection<Platforms> getPlatformsSupport(String CustomerPublicKey, Currency currency) throws CantGetListPlatformsException {
-            return this.dao.getPlatformsSupport(CustomerPublicKey, currency);
+            return null;
         }
 }
