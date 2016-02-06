@@ -369,7 +369,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
 
     @Override
-    public void requestQuotes(UUID requestId, String requesterPublicKey, Actors requesterActorType, String cryptoBrokerPublicKey, long updateTime, List<com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerQuote> quotes) throws CantRequestQuotesException {
+    public void requestQuotes(String requesterPublicKey, Actors requesterActorType, String cryptoBrokerPublicKey, long updateTime, List<CryptoBrokerQuote> quotes) throws CantRequestQuotesException {
 
     }
 

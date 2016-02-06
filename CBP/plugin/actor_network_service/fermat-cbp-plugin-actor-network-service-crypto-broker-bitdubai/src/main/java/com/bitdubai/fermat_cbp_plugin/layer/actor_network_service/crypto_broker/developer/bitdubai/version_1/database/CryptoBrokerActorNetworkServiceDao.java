@@ -636,7 +636,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
             // TODO add better error management, "throws CantBuildDatabaseRecordException".
 
             System.err.println("error trying to persist image:"+e.getMessage());
-            return null;
+            return record;
         }
     }
 

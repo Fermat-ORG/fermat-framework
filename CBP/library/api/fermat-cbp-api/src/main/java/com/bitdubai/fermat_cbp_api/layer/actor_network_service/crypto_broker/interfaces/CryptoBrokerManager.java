@@ -14,7 +14,10 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.*;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 
 import java.util.Collection;
 import java.util.List;
@@ -138,7 +141,6 @@ public interface CryptoBrokerManager extends FermatManager {
     /**
      * Through the method <code>listPendingQuotesRequests</code> we can list all the pending quotes requests.
      *
-     * @param requestId
      * @param requesterPublicKey
      * @param requesterActorType
      * @param cryptoBrokerPublicKey
@@ -147,8 +149,7 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * @throws CantRequestQuotesException if something goes wrong.
      */
-    void requestQuotes(UUID                    requestId            ,
-                       String                  requesterPublicKey   ,
+    void requestQuotes(String                  requesterPublicKey   ,
                        Actors                  requesterActorType   ,
                        String                  cryptoBrokerPublicKey,
                        long                    updateTime           ,
