@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -211,10 +212,15 @@ public class NegotiationTransmissionAgent {
             List<NegotiationTransmission> negotiationTransmissionList = databaseDao.findAllByTransmissionState(NegotiationTransmissionState.PROCESSING_SEND);
 
             for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
-                //TEST
-                String receiverPublicKey= negotiationTransmission.getPublicKeyActorReceive();
 
-                String jsonNegotiationTransmission = new NegotiationMessage(
+//                String receiverPublicKey= negotiationTransmission.getPublicKeyActorReceive();
+//                String receiverPublicKey = "04E670900EC6DED47E0F633BB692C4AB866E392EAB5684BC09002F001F939F3782A81402AD209AEB396183D848170B7A3C8AC35EE250A85612F70581C98550F9D4";
+                  String receiverPublicKey = "04E670900EC6DED47E0F633BB692C4AB866E392EAB5684BC09002F001F939F3782A81402AD209AEB396183D848170B7A3C8AC35EE250A85612F70581C98550F9D4";
+
+
+
+                //TEST
+                /*String jsonNegotiationTransmissionTest = new NegotiationMessage(
                         negotiationTransmission.getTransmissionId(),
                         negotiationTransmission.getTransactionId(),
                         negotiationTransmission.getNegotiationId(),
@@ -231,11 +237,11 @@ public class NegotiationTransmissionAgent {
                 ).toJson();
 
                 if(negotiationTransmission.getTransmissionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode() ){
-                    System.out.print("\n\n**** 11) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
+                    System.out.print("\n\n**** 11-Test) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
                     System.out.print("*** SEND DATES: " +
                                     "\n - Sender Id = " + identity.getPublicKey() +
                                     "\n - Receiver Id = " + receiverPublicKey +
-                                    "\n - JsonNegotiationTransmission " + jsonNegotiationTransmission
+                                    "\n - JsonNegotiationTransmission " + jsonNegotiationTransmissionTest
                     );
 
 //                    negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PENDING_REMOTE_ACTION);
@@ -244,22 +250,29 @@ public class NegotiationTransmissionAgent {
 //                    negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
                 }
 //                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - PENDING FOR SEND TO : " + receiverPublicKey + "****\n");
+*/
+                //END TEST
 
-                /*if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
-                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
+
+
+
+                if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
+                    System.out.print("\n\n**** X-1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
                     //TODO: hacer un filtro por aquellas que se encuentran conectadas
                     if (communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey) == null) {
+                        System.out.print("\n\n**** X-2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
                         if (wsCommunicationsCloudClientManager != null) {
+                            System.out.print("\n\n**** X-3) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
                             if (platformComponentProfile != null) {
-
+                                System.out.print("\n\n**** X-4) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
                                 PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
                                         negotiationTransmission.getPublicKeyActorSend(),
-                                        NetworkServiceType.UNDEFINED,
-                                        negotiationTransmission.getActorSendType());
+                                        NetworkServiceType.NEGOTIATION_TRANSMISSION,
+                                        PlatformComponentType.NETWORK_SERVICE);
                                 PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
                                         negotiationTransmission.getPublicKeyActorReceive(),
-                                        NetworkServiceType.UNDEFINED,
-                                        negotiationTransmission.getActorReceiveType());
+                                        NetworkServiceType.NEGOTIATION_TRANSMISSION,
+                                        PlatformComponentType.NETWORK_SERVICE);
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
                                 // pass the negotiationTransmission to a pool waiting for the response of the other peer or server failure
                                 poolConnectionsWaitingForResponse.put(receiverPublicKey, negotiationTransmission);
@@ -270,6 +283,7 @@ public class NegotiationTransmissionAgent {
                 }else{
 //                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - FOR SEND****\n");
                     NetworkServiceLocal communicationNetworkServiceLocal = networkServiceNegotiationTransmissionPluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(receiverPublicKey);
+//                    NetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey);
                     if (communicationNetworkServiceLocal != null) {
                         try {
 
@@ -289,20 +303,20 @@ public class NegotiationTransmissionAgent {
                                     negotiationTransmission.getTimestamp()
                             ).toJson();
 
-//                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransmission);
+                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransmission);
 
 
                             if(negotiationTransmission.getTransmissionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode() ){
-//                                System.out.print("\n\n**** 10) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
-//                                System.out.print("*** SEND DATES: " +
-//                                                "\n - Sender Id = " + identity.getPublicKey() +
-//                                                "\n - Receiver Id = " + receiverPublicKey +
-//                                                "\n - JsonNegotiationTransmission " + jsonNegotiationTransmission
-//                                );
+                                System.out.print("\n\n**** 10) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
+                                System.out.print("*** SEND DATES: " +
+                                                "\n - Sender Id = " + identity.getPublicKey() +
+                                                "\n - Receiver Id = " + receiverPublicKey +
+                                                "\n - JsonNegotiationTransmission " + jsonNegotiationTransmission
+                                );
 
                                 negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PENDING_REMOTE_ACTION);
                             }else{
-//                                System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND CONFIRMATION TO : " + receiverPublicKey + "****\n");
+                                System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND CONFIRMATION TO : " + receiverPublicKey + "****\n");
                                 negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
                             }
 
@@ -315,14 +329,14 @@ public class NegotiationTransmissionAgent {
                         }
 
                     }else {
-//                        System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SERVER LOCAL NO FOUNT.****\n");
+                        System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SERVER LOCAL NO FOUNT.****\n");
                     }
-                }*/
+                }
             }
         } catch (CantReadRecordDataBaseException e) {
             e.printStackTrace();
-//        } catch (CantEstablishConnectionException e) {
-//            e.printStackTrace();
+        } catch (CantEstablishConnectionException e) {
+            e.printStackTrace();
         }
     }
 

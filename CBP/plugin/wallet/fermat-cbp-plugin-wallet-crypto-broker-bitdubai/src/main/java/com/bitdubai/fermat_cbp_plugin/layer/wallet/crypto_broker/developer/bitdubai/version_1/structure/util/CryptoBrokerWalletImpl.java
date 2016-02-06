@@ -49,13 +49,13 @@ import java.util.UUID;
  * Modified by Yordin Alayn 27.10.15
  * Modified by Franklin Marcano 30.11.2015
  */
-public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
+public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
 
 
     public static final String PATH_DIRECTORY = "cryptobrokerwallet-swap/";
     private static final String CRYPTO_BROKER_WALLET_FILE_NAME = "walletsIds";
     private Database database;
-    private Map<String, UUID> wallet= new HashMap<>();
+    private Map<String, UUID> wallet = new HashMap<>();
     private UUID pluginId;
     private ErrorManager errorManager;
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -67,41 +67,44 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
      * Constructor
      */
     public CryptoBrokerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, CurrencyExchangeProviderFilterManager providerFilter) {
-        this.errorManager         = errorManager;
+        this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginFileSystem     = pluginFileSystem;
-        this.pluginId             = pluginId;
-        this.providerFilter       = providerFilter;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
+        this.providerFilter = providerFilter;
     }
 
     /**
      * This method load the instance the StockBalance
+     *
      * @return StockBalance
-     * @exception CantGetStockCryptoBrokerWalletException
+     * @throws CantGetStockCryptoBrokerWalletException
      */
     @Override
     public StockBalance getStockBalance() throws CantGetStockCryptoBrokerWalletException {
-        return new StockBalanceImpl(database,pluginId, pluginFileSystem);
+        return new StockBalanceImpl(database, pluginId, pluginFileSystem);
     }
 
     /**
      * This method load the instance the CryptoBrokerWalletSetting
+     *
      * @return StockBalance
-     * @exception CantGetCryptoBrokerWalletSettingException
+     * @throws CantGetCryptoBrokerWalletSettingException
      */
     @Override
     public CryptoBrokerWalletSetting getCryptoWalletSetting() throws CantGetCryptoBrokerWalletSettingException {
-        return new CryptoBrokerWalletSettingImpl(database,pluginId, pluginFileSystem);
+        return new CryptoBrokerWalletSettingImpl(database, pluginId, pluginFileSystem);
     }
 
     /**
      * This method load the list CryptoBrokerStockTransaction
+     *
      * @param merchandise
      * @param currencyType
      * @param transactionType
      * @param balanceType
      * @return List<CryptoBrokerStockTransaction>
-     * @exception CantGetCryptoBrokerStockTransactionException
+     * @throws CantGetCryptoBrokerStockTransactionException
      */
     @Override
     public List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException {
@@ -139,14 +142,20 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
      * @throws CantGetCryptoBrokerQuoteException
      */
     @Override
-    public Quote getQuote(Currency merchandise, float quantity, FiatCurrency payment) throws CantGetCryptoBrokerQuoteException {
+    public Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException {
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
         cryptoBrokerWalletDatabaseDao.setProviderFilter(this.providerFilter);
-        return cryptoBrokerWalletDatabaseDao.getQuote(merchandise, quantity,payment);
+        return cryptoBrokerWalletDatabaseDao.getQuote(merchandise, quantity, payment);
     }
 
+    /**
+     * This method initializes the crypto broker wallet
+     *
+     * @param walletId
+     * @throws CryptoBrokerWalletNotFoundException
+     */
     public void initialize(UUID walletId) throws CryptoBrokerWalletNotFoundException {
         if (walletId == null)
             throw new CryptoBrokerWalletNotFoundException("InternalId is null", null, "Parameter walletId is null", "loadWallet didn't find the asociated id");
@@ -162,6 +171,13 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         }
     }
 
+    /**
+     * This method creates the crypto broker wallet
+     *
+     * @param walletId
+     * @return an UUID of the created wallet
+     * @throws CantCreateCryptoBrokerWalletException
+     */
     public UUID create(String walletId) throws CantCreateCryptoBrokerWalletException {
         try {
             // TODO: Until the Wallet MAnager create the wallets, we will use this internal id
@@ -180,8 +196,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         }
     }
 
-    private PluginTextFile  createWalletFile() throws CantCreateCryptoBrokerWalletException
-    {
+    private PluginTextFile createWalletFile() throws CantCreateCryptoBrokerWalletException {
         try {
             return pluginFileSystem.getTextFile(pluginId, "", CRYPTO_BROKER_WALLET_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         } catch (CantCreateFileException cantCreateFileException) {
@@ -191,8 +206,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         }
     }
 
-    private void loadWalletMap(final PluginTextFile loadWalletMap) throws CantCreateNewCryptoBrokerWalletException
-    {
+    private void loadWalletMap(final PluginTextFile loadWalletMap) throws CantCreateNewCryptoBrokerWalletException {
         try {
             loadWalletMap.loadFromMedia();
             String[] stringWallet = loadWalletMap.getContent().split(";", -1);
@@ -209,8 +223,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         }
     }
 
-    private void createWalletDatabase(final UUID internalWalletId) throws CantCreateNewCryptoBrokerWalletException
-    {
+    private void createWalletDatabase(final UUID internalWalletId) throws CantCreateNewCryptoBrokerWalletException {
         try {
             CryptoBrokerWalletDatabaseFactory databaseFactory = new CryptoBrokerWalletDatabaseFactory();
             databaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
@@ -220,8 +233,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         }
     }
 
-    private void persistWallet(final PluginTextFile pluginTextFile) throws CantCreateNewCryptoBrokerWalletException
-    {
+    private void persistWallet(final PluginTextFile pluginTextFile) throws CantCreateNewCryptoBrokerWalletException {
         StringBuilder stringBuilder = new StringBuilder(wallet.size() * 72);
         Iterator iterator = wallet.entrySet().iterator();
 

@@ -42,8 +42,6 @@ public class CryptoBrokerConnectionRequestUpdatesEventHandler implements FermatE
 
             if (fermatEvent instanceof CryptoBrokerConnectionRequestUpdatesEvent) {
 
-                System.out.println("************* EVENT RECEIVED *************"+fermatEvent);
-
                 actorConnectionEventActions.handleCryptoBrokerUpdateEvent();
 
             } else {
