@@ -4,18 +4,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AlphabetIndexer;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
@@ -490,7 +486,7 @@ public List<Contact> contacts;
             return true;
         }
         if (item.getItemId() == R.id.menu_del_contact) {
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
             builder1.setMessage("Do you want to delete this contact?");
             builder1.setCancelable(true);
 
