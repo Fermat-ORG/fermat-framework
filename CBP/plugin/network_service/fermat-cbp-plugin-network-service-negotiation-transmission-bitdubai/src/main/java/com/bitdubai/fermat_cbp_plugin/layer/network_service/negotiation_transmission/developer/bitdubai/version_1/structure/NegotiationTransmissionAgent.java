@@ -213,9 +213,10 @@ public class NegotiationTransmissionAgent {
 
             for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
 
+                String senderPublickey = identity.getPublicKey();
+                String receiverPublicKey = "04E670900EC6DED47E0F633BB692C4AB866E392EAB5684BC09002F001F939F3782A81402AD209AEB396183D848170B7A3C8AC35EE250A85612F70581C98550F9D4";
 //                String receiverPublicKey= negotiationTransmission.getPublicKeyActorReceive();
 //                String receiverPublicKey = "04E670900EC6DED47E0F633BB692C4AB866E392EAB5684BC09002F001F939F3782A81402AD209AEB396183D848170B7A3C8AC35EE250A85612F70581C98550F9D4";
-                  String receiverPublicKey = "04E670900EC6DED47E0F633BB692C4AB866E392EAB5684BC09002F001F939F3782A81402AD209AEB396183D848170B7A3C8AC35EE250A85612F70581C98550F9D4";
 
 
 
