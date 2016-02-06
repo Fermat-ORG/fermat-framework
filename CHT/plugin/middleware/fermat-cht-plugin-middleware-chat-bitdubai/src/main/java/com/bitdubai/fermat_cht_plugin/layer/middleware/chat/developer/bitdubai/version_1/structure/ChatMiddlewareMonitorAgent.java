@@ -270,10 +270,11 @@ public class ChatMiddlewareMonitorAgent implements
                 /**
                  * Discover contact
                  */
+                List<Contact> contactList;
                 if(discoverIteration==0){
                     //increase counter
                     System.out.println("Chat Middleware discovery contact process "+discoverIteration+":");
-                    List<Contact> contactList=chatMiddlewareManager.discoverActorsRegistered();
+                    contactList=chatMiddlewareManager.discoverActorsRegistered();
                     if(!contactList.isEmpty()){
                         for(Contact contact : contactList){
                             saveContact(contact);
