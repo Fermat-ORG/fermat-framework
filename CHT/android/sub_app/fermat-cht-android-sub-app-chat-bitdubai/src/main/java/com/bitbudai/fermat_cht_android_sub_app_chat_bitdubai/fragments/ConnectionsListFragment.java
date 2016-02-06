@@ -137,8 +137,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
             errorManager=appSession.getErrorManager();
         }catch (Exception e)
         {
-            //if(errorManager!=null)
-            //errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT);
+            if(errorManager!=null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
         }
     }
 
@@ -196,9 +196,11 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                     Toast.makeText(getActivity(), "Contact Added", Toast.LENGTH_SHORT).show();
                     changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
                 } catch (CantGetContactException e) {
-                    e.printStackTrace();
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (CantSaveContactException e) {
-                e.printStackTrace();
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (Exception e){
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
             }
         });
@@ -226,10 +228,10 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                 Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
                             }
                         } catch (CantGetContactException e) {
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
                             //TODO: fix this
-                            e.printStackTrace();
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
                     }

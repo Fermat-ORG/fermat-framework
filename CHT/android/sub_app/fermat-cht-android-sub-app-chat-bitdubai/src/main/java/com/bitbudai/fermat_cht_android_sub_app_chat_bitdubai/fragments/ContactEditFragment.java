@@ -147,6 +147,8 @@ public List<Contact> contacts;
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
+            if(errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
@@ -257,7 +259,7 @@ public List<Contact> contacts;
                     Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
 
                 } catch (CantSaveContactException e) {
-                    e.printStackTrace();
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
             }
         });
