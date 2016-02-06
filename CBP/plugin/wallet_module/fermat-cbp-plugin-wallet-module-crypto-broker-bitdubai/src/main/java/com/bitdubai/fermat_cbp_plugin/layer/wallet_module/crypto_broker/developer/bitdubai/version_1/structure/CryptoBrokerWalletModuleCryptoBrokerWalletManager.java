@@ -119,6 +119,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -474,35 +475,46 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies(String brokerWalletPublicKey) throws CantGetCurrentIndexSummaryForStockCurrenciesException {
-        try {
-            Collection<IndexInfoSummary> summaryList = new ArrayList<>();
+    public Collection<ExchangeRate> getDailyExchangeRatesFromCurrentDate(IndexInfoSummary indexInfo, int numberOfDays) throws CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
-            String publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest"; //TODO: Quitar este hardcode luego que se implemente la instalacion de la wallet
-            CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall);
-            CryptoBrokerWalletSetting cryptoWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
-            List<CryptoBrokerWalletProviderSetting> providerSettings = cryptoWalletSetting.getCryptoBrokerWalletProviderSettings();
+        CurrencyExchangeRateProviderManager providerReference = currencyExchangeProviderFilterManager.getProviderReference(indexInfo.getProviderId());
 
-            for (CryptoBrokerWalletProviderSetting providerSetting : providerSettings) {
-                CurrencyExchangeRateProviderManager providerReference = currencyExchangeProviderFilterManager.getProviderReference(providerSetting.getPlugin());
-                Currency from = getCurrencyFromCode(providerSetting.getCurrencyFrom());
-                Currency to = getCurrencyFromCode(providerSetting.getCurrencyTo());
+        Calendar calendar = Calendar.getInstance();
+        long endTimestamp = calendar.getTimeInMillis();
 
-                ExchangeRate currentExchangeRate = providerReference.getCurrentExchangeRate(new CurrencyPairImpl(from, to));
+        calendar.add(Calendar.DATE, -numberOfDays);
+        long startTimestamp = calendar.getTimeInMillis();
 
-                summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(currentExchangeRate));
-            }
 
-//            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, 240.62, 235.87));
-//            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.VENEZUELAN_BOLIVAR, CryptoCurrency.BITCOIN, 245000, 240000));
-//            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, 840, 800));
-//            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.US_DOLLAR, FiatCurrency.EURO, 1.2, 1.1));
+        ExchangeRate exchangeRateData = indexInfo.getExchangeRateData();
+        CurrencyPairImpl currencyPair = new CurrencyPairImpl(exchangeRateData.getFromCurrency(), exchangeRateData.getToCurrency());
 
-            return summaryList;
+        return providerReference.getDailyExchangeRatesForPeriod(currencyPair, startTimestamp, endTimestamp);
+    }
 
-        } catch (Exception ex) {
-            throw new CantGetCurrentIndexSummaryForStockCurrenciesException(ex);
+    @Override
+    public Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String brokerWalletPublicKey) throws CantGetCurrentIndexSummaryForStockCurrenciesException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, InvalidParameterException {
+        final String publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest"; //TODO: Quitar este hardcode luego que se implemente la instalacion de la wallet
+
+        final Collection<IndexInfoSummary> summaryList = new ArrayList<>();
+
+        final CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall);
+        final CryptoBrokerWalletSetting cryptoWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
+        final List<CryptoBrokerWalletProviderSetting> providerSettings = cryptoWalletSetting.getCryptoBrokerWalletProviderSettings();
+
+        for (CryptoBrokerWalletProviderSetting providerSetting : providerSettings) {
+            UUID providerId = providerSetting.getPlugin();
+
+            CurrencyExchangeRateProviderManager providerReference = currencyExchangeProviderFilterManager.getProviderReference(providerId);
+            Currency from = getCurrencyFromCode(providerSetting.getCurrencyFrom());
+            Currency to = getCurrencyFromCode(providerSetting.getCurrencyTo());
+
+            ExchangeRate currentExchangeRate = providerReference.getCurrentExchangeRate(new CurrencyPairImpl(from, to));
+
+            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(currentExchangeRate, providerId));
         }
+
+        return summaryList;
     }
 
     private Currency getCurrencyFromCode(String currencyCode) throws InvalidParameterException {

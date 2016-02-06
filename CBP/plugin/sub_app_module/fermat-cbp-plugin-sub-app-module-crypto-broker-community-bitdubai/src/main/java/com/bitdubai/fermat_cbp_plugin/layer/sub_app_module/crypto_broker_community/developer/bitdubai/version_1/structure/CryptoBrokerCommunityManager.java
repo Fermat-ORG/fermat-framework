@@ -24,16 +24,11 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfac
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantPublishIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
@@ -112,7 +107,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             for (final CryptoBrokerIdentity cbi : cryptoBrokerIdentities)
                 selectableIdentities.add(new SelectableIdentity(cbi));
 
-            final List<CryptoCustomerIdentity> cryptoCustomerIdentities = cryptoCustomerIdentityManager.getAllCryptoCustomerFromCurrentDeviceUser();
+            final List<CryptoCustomerIdentity> cryptoCustomerIdentities = cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
 
             for (final CryptoCustomerIdentity cci : cryptoCustomerIdentities)
                 selectableIdentities.add(new SelectableIdentity(cci));
@@ -446,8 +441,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
         //Get all customer identities on local device
         List<CryptoCustomerIdentity> identitiesInDevice = null;
         try{
-            identitiesInDevice = cryptoCustomerIdentityManager.getAllCryptoCustomerFromCurrentDeviceUser();
-        } catch(CantGetCryptoCustomerIdentityException e) { /*Do nothing*/ }
+            identitiesInDevice = cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
+        } catch(CantListCryptoCustomerIdentityException e) { /*Do nothing*/ }
 
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property

@@ -64,7 +64,7 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new CryptoBrokerWalletHeaderPainter();
+        return new CryptoBrokerWalletHeaderPainter(getActivity(), getFullyLoadedSession());
     }
 
     @Override
