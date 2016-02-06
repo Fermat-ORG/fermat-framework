@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -24,21 +25,29 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.CryptoCustomerIdentityPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantChangeExposureLevelException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetCryptoCustomerIdentityPrivateKeyException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetCryptoCustomerIdentityProfileImageException;
+import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetIdentityException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerIdentityDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantListCryptoCustomerIdentitiesException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityImpl;
-import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.*;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME;
 
 /**
  * Created by Yordin Alayn on 09.10.15.
@@ -135,6 +144,61 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
             throw new CantListCryptoCustomerIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Crypto Customer Identity", "Cant get Crypto Customer Identity list, unknown failure.");
         }
         return list;
+    }
+
+    public final void changeExposureLevel(final String        publicKey    ,
+                                          final boolean       exposureLevel) throws CantChangeExposureLevelException, IdentityNotFoundException {
+
+        try {
+
+            final DatabaseTable table = this.database.getTable (CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME);
+
+            table.addStringFilter(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                record.setStringValue(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_IS_PUBLISHED_COLUMN_NAME, Boolean.toString(exposureLevel));
+
+                table.updateRecord(record);
+
+            } else
+                throw new IdentityNotFoundException("publicKey: "+publicKey, "Cannot find an Identity with that publicKey.");
+
+        } catch (final CantUpdateRecordException e) {
+
+            throw new CantChangeExposureLevelException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantChangeExposureLevelException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
+    public final CryptoCustomerIdentity getIdentity(final String publicKey) throws CantGetIdentityException, IdentityNotFoundException {
+
+        try {
+
+            final DatabaseTable table = this.database.getTable (CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_TABLE_NAME);
+
+            table.addStringFilter(CryptoCustomerIdentityDatabaseConstants.CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            if (!records.isEmpty())
+                return getIdentityFromRecord(records.get(0));
+            else
+                throw new IdentityNotFoundException("publicKey: "+publicKey, "Cannot find an Identity with that publicKey.");
+
+        } catch (final CantGetCryptoCustomerIdentityProfileImageException |
+                CantGetCryptoCustomerIdentityPrivateKeyException e) {
+
+            throw new CantGetIdentityException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantGetIdentityException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
     }
 
 

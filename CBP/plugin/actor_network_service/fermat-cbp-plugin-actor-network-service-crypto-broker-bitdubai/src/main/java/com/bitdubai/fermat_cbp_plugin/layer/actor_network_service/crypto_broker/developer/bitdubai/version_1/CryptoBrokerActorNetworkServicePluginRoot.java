@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -39,11 +38,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionLooseNotificationEventHandler;
@@ -794,28 +791,28 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
             String jsonMessage = fermatMessage.getContent();
 
-            NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, NetworkServiceMessage.class);
+            NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
 
             switch (networkServiceMessage.getMessageType()) {
 
                 case CONNECTION_INFORMATION:
-                    InformationMessage informationMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, InformationMessage.class);
+                    InformationMessage informationMessage = InformationMessage.fromJson(jsonMessage);
                     receiveConnectionInformation(informationMessage);
 
                     String destinationPublicKey = connectionNewsDao.getDestinationPublicKey(informationMessage.getRequestId());
-/*
+
                     communicationNetworkServiceConnectionManager.closeConnection(destinationPublicKey);
                     //remove from the waiting pool
-                    cryptoBrokerExecutorAgent.connectionFailure(destinationPublicKey);*/
+                    cryptoBrokerExecutorAgent.connectionFailure(destinationPublicKey);
                     break;
 
                 case CONNECTION_REQUEST:
                     // update the request to processing receive state with the given action.
-                    RequestMessage requestMessage = NetworkServiceMessage.customGson.fromJson(jsonMessage, RequestMessage.class);
+                    RequestMessage requestMessage = RequestMessage.fromJson(jsonMessage);
                     receiveRequest(requestMessage);
-                    /*communicationNetworkServiceConnectionManager.closeConnection(requestMessage.getSenderPublicKey());
+                    communicationNetworkServiceConnectionManager.closeConnection(requestMessage.getSenderPublicKey());
                     //remove from the waiting pool
-                    cryptoBrokerExecutorAgent.connectionFailure(requestMessage.getSenderPublicKey());*/
+                    cryptoBrokerExecutorAgent.connectionFailure(requestMessage.getSenderPublicKey());
                     break;
 
                 default:
@@ -847,12 +844,12 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                             state
                     );
                     break;
-               /* case DENY:
+                case DENY:
                     connectionNewsDao.denyConnection(
                             informationMessage.getRequestId(),
                             state
                     );
-                    break;*/
+                    break;
                 default:
                     throw new CantHandleNewMessagesException(
                             "action not supported: " +informationMessage.getAction(),

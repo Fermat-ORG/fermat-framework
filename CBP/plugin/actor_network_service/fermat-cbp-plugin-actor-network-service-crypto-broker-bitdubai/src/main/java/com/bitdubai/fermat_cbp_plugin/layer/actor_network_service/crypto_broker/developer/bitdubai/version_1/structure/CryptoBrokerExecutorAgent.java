@@ -171,7 +171,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
                         break;
 
-                  /*   case DENY:
+                     case DENY:
 
                         System.out.println("********* Crypto Broker: Executor Agent -> Sending DENIAL. "+cbcr);
 
@@ -185,7 +185,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                              confirmRequest(cbcr.getRequestId());
                         }
 
-                        break;*/
+                        break;
 
                     case REQUEST:
 
@@ -278,15 +278,20 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                 if (cryptoBrokerActorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
 
                     PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                            .constructBasicPlatformComponentProfileFactory(
+                            .constructPlatformComponentProfileFactory(
                                     identityPublicKey,
+                                    "no_matter",
+                                    "no_matter",
                                     NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(identityType));
+                                    platformComponentTypeSelectorByActorType(identityType), "");
+
                     PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                            .constructBasicPlatformComponentProfileFactory(
+                            .constructPlatformComponentProfileFactory(
                                     actorPublicKey,
+                                    "no_matter",
+                                    "no_matter",
                                     NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(actorType));
+                                    platformComponentTypeSelectorByActorType(actorType), "");
 
                     cryptoBrokerActorNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(
                             applicantParticipant,
@@ -331,8 +336,6 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                     actorPublicKey,
                     jsonMessage
             );
-
-            poolConnectionsWaitingForResponse.remove(actorPublicKey);
 
             return true;
         }
