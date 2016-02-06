@@ -337,8 +337,6 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                     jsonMessage
             );
 
-            poolConnectionsWaitingForResponse.remove(actorPublicKey);
-
             return true;
         }
 
