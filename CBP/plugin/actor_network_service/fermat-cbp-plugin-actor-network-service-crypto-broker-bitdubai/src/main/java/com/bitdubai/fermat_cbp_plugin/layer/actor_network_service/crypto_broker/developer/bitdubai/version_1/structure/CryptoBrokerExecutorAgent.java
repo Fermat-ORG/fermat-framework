@@ -171,7 +171,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
                         break;
 
-                  /*   case DENY:
+                     case DENY:
 
                         System.out.println("********* Crypto Broker: Executor Agent -> Sending DENIAL. "+cbcr);
 
@@ -185,7 +185,7 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
                              confirmRequest(cbcr.getRequestId());
                         }
 
-                        break;*/
+                        break;
 
                     case REQUEST:
 
