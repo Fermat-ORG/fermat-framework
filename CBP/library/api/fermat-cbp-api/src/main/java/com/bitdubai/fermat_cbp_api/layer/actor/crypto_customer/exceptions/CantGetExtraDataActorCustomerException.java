@@ -3,11 +3,11 @@ package com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions;
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by Yordin Alayn on 15.11.2015.
+ * Created by Angel on 04/02/2016
  */
-public class CantUpdateCustomerIdentiyWalletRelationshipException extends FermatException {
+public class CantGetExtraDataActorCustomerException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE CRYPTO CUSTOMER ACTOR IDENTITY WALLET RELATIONSHIP";
+    public static final String DEFAULT_MESSAGE = "CAN'T GET EXTRA DATA ACTOR";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,7 @@ public class CantUpdateCustomerIdentiyWalletRelationshipException extends Fermat
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantUpdateCustomerIdentiyWalletRelationshipException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetExtraDataActorCustomerException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

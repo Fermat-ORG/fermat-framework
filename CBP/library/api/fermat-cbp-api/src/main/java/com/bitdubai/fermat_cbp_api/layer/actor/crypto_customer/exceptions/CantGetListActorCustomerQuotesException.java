@@ -1,13 +1,14 @@
-package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by Yordin Alayn on 21.11.15.
+ * Created by Angel on 19-10-2015.
  */
-public class CantGetCryptoCustomerActorProfileImageException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T GET PROFILE IMAGE EXCEPTION";
+public class CantGetListActorCustomerQuotesException extends FermatException {
+
+    public static final String DEFAULT_MESSAGE = "CAN'T GET LIST ACTOR QUOTES EXCEPTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +18,9 @@ public class CantGetCryptoCustomerActorProfileImageException extends FermatExcep
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetCryptoCustomerActorProfileImageException(String message, Exception cause, String context, String possibleReason) {
+
+    public CantGetListActorCustomerQuotesException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
 }
