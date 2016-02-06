@@ -50,7 +50,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.NewSentMessageNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.VPNConnectionCloseNotificationEventHandler;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.ConnectionNewsDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
@@ -121,7 +121,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      */
     private CryptoBrokerExecutorAgent cryptoBrokerExecutorAgent;
 
-    private ConnectionNewsDao connectionNewsDao;
+    private CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao;
 
     private  boolean beforeRegistered;
 
@@ -217,15 +217,15 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         try {
 
-            connectionNewsDao = new ConnectionNewsDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+            cryptoBrokerActorNetworkServiceDao = new CryptoBrokerActorNetworkServiceDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
 
-            connectionNewsDao.initialize();
+            cryptoBrokerActorNetworkServiceDao.initialize();
 
             final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
             fermatManager = new CryptoBrokerActorNetworkServiceManager(
                     communicationsClientConnection         ,
-                    connectionNewsDao                      ,
+                    cryptoBrokerActorNetworkServiceDao,
                     errorManager                           ,
                     getPluginVersionReference()
             );
@@ -605,7 +605,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     this                              ,
                     errorManager                      ,
                     eventManager                      ,
-                    connectionNewsDao                 ,
+                    cryptoBrokerActorNetworkServiceDao,
                     wsCommunicationsCloudClientManager
             );
 
@@ -799,7 +799,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     InformationMessage informationMessage = InformationMessage.fromJson(jsonMessage);
                     receiveConnectionInformation(informationMessage);
 
-                    String destinationPublicKey = connectionNewsDao.getDestinationPublicKey(informationMessage.getRequestId());
+                    String destinationPublicKey = cryptoBrokerActorNetworkServiceDao.getDestinationPublicKey(informationMessage.getRequestId());
 
                     communicationNetworkServiceConnectionManager.closeConnection(destinationPublicKey);
                     //remove from the waiting pool
@@ -839,13 +839,13 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
             switch (informationMessage.getAction()) {
                 case ACCEPT:
-                    connectionNewsDao.acceptConnection(
+                    cryptoBrokerActorNetworkServiceDao.acceptConnection(
                             informationMessage.getRequestId(),
                             state
                     );
                     break;
                 case DENY:
-                    connectionNewsDao.denyConnection(
+                    cryptoBrokerActorNetworkServiceDao.denyConnection(
                             informationMessage.getRequestId(),
                             state
                     );
@@ -877,7 +877,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         try {
 
-            if (connectionNewsDao.existsConnectionRequest(requestMessage.getRequestId()))
+            if (cryptoBrokerActorNetworkServiceDao.existsConnectionRequest(requestMessage.getRequestId()))
                 return;
 
 
@@ -894,7 +894,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     requestMessage.getSentTime()
             );
 
-            connectionNewsDao.createConnectionRequest(
+            cryptoBrokerActorNetworkServiceDao.createConnectionRequest(
                     requestMessage.getRequestId(),
                     connectionInformation,
                     state,
