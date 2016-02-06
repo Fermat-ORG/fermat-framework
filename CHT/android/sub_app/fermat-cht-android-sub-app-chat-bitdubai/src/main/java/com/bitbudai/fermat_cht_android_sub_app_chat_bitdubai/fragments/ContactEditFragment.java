@@ -135,8 +135,10 @@ public List<Contact> contacts;
             errorManager=appSession.getErrorManager();
 
         } catch (Exception e) {
-            CommonLogger.exception(TAG + "onCreate()", e.getMessage(), e);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+            CommonLogger.exception(TAG + "oncreate", e.getMessage(), e);
+            if(errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
         }
 
@@ -248,8 +250,8 @@ public List<Contact> contacts;
                     Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
 
                 } catch (CantSaveContactException e) {
-                    CommonLogger.exception(TAG + "savebtnclick()", e.getMessage(), e);
-                    Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
                 }
             }

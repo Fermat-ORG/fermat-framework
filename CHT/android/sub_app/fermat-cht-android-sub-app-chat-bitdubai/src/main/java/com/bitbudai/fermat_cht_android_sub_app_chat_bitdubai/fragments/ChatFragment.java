@@ -20,7 +20,6 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapte
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -128,12 +127,11 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     chatid = chatManager.getMessages().get(i).getChatId();
                 }
             }
-       /* }catch (CantGetContactException e) {
-            e.printStackTrace();
-        }*/
+
         }catch (CantGetMessageException e) {
-            CommonLogger.exception(TAG+"findvalues()", e.getMessage(), e);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }catch(Exception e){
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
         }
 
@@ -145,7 +143,9 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             Contact con = chatSession.getSelectedContact();
             contactid = con.getContactId();
             if (appSession.getData("whocallme").equals("chatlist")) {
+
                 contactid = (UUID) appSession.getData("contactid");
+
                 findvalues(con);//findvalues(contactid);
                 chatwascreate = true;
             } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
@@ -156,9 +156,9 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     chatwascreate = false;
                 }
             }
-        }catch (NullPointerException e){
-            CommonLogger.exception(TAG+"whattodo()", e.getMessage(), e);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+        }catch(Exception e){
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
         }
     }
@@ -184,8 +184,9 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
         }catch (CantGetMessageException e) {
 
-            CommonLogger.exception(TAG+"findmessage()", e.getMessage(), e);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }catch (Exception e){
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
         }
 
@@ -292,14 +293,14 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
                    }
                 } catch (CantSaveMessageException e) {
-                    CommonLogger.exception(TAG+"sendclick", e.getMessage(), e);
-                    Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-                }catch (CantSaveChatException e) {
-                    CommonLogger.exception(TAG+"sendclick", e.getMessage(), e);
-                    Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (CantSaveChatException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (CantGetNetworkServicePublicKeyException e) {
-                    CommonLogger.exception(TAG+"sendclick", e.getMessage(), e);
-                    Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (Exception e){
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
                 }
             }
@@ -319,8 +320,9 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                                 findmessage();
                                 adaptador.refreshEvents(historialmensaje);
                         } catch (Exception e) {
-                            CommonLogger.exception(TAG+"swipedownrefresh()", e.getMessage(), e);
-                            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+                            //TODO: fix this
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
                         }
                         mSwipeRefreshLayout.setRefreshing(false);
