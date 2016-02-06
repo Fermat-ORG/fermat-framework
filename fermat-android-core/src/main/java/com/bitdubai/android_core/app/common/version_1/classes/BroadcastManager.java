@@ -8,10 +8,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationEvent;
 
 import java.lang.ref.WeakReference;
-import java.util.Queue;
 
 /**
  * Created by mati on 2016.02.04..
@@ -20,7 +18,6 @@ public class BroadcastManager implements BroadcasterInterface {
 
     private static final String TAG = "broadcaster-manager";
     WeakReference<FermatActivity> fermatActivity;
-    Queue<NotificationEvent> queue;
 
     public BroadcastManager(FermatActivity fermatActivity) {
         this.fermatActivity = new WeakReference<FermatActivity>(fermatActivity);
