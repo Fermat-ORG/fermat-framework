@@ -91,11 +91,11 @@ public class ActorConnectionEventActions {
                         break;
                    /* case CANCEL:
                         this.handleCancelConnection(request.getRequestId());
-                        break;
+                        break;*/
                     case DENY:
                         this.handleDenyConnection(request.getRequestId());
                         break;
-                    case DISCONNECT:
+                  /*  case DISCONNECT:
                         this.handleDisconnect(request.getRequestId());
                         break;*/
 
@@ -107,9 +107,9 @@ public class ActorConnectionEventActions {
                 ActorConnectionNotFoundException           |
                 UnexpectedConnectionStateException         |
                 CantAcceptActorConnectionRequestException /* |
-                CantCancelActorConnectionRequestException  |
-                CantDenyActorConnectionRequestException    |
-                CantDisconnectFromActorException        */   e) {
+                CantCancelActorConnectionRequestException */ |
+                CantDenyActorConnectionRequestException   /* |
+                CantDisconnectFromActorException          */ e) {
 
             throw new CantHandleNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
         }
