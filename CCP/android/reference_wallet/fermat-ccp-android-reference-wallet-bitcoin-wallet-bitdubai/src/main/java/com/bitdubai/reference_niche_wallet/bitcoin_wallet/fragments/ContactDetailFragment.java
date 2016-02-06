@@ -26,6 +26,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -100,6 +102,8 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             addressIsTouch = false;
         }
     };
+    SettingsManager<BitcoinWalletSettings> settingsManager;
+    BlockchainNetworkType blockchainNetworkType;
 
 
     public static ContactDetailFragment newInstance() {
@@ -122,6 +126,23 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             cryptoWalletManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
+            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+
+            BitcoinWalletSettings bitcoinWalletSettings = null;
+
+            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+
+            if(bitcoinWalletSettings != null) {
+
+                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                }
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+
+            }
+
+            blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+
         } catch (CantGetCryptoWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
@@ -239,7 +260,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                                     referenceWalletSession.getIntraUserModuleManager().getPublicKey()
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
-                                    BlockchainNetworkType.getDefaultBlockchainNetworkType()
+                                    blockchainNetworkType
                             );
 
                             delayHandler.postDelayed(delay, TimeUnit.MINUTES.toMillis(DELAY_TIME));

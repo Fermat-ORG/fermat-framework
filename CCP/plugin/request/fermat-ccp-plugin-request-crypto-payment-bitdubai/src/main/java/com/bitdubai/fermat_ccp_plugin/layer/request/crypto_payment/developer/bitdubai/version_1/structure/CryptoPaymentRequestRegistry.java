@@ -337,7 +337,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     cryptoPayment.getIdentityType(),
                     cryptoPayment.getActorType(),
                     cryptoPayment.getReferenceWallet(),
-                    BlockchainNetworkType.REG_TEST
+                    cryptoPayment.getNetworkType()
             );
 
             cryptoPaymentRequestDao.changeState(

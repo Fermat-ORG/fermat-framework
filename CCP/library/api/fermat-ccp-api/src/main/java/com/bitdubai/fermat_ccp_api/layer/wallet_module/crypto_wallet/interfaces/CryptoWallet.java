@@ -20,6 +20,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.BlockingDeque;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.CryptoWallet</code>
@@ -279,7 +280,8 @@ public interface CryptoWallet extends Serializable {
               Actors deliveredByActorType,
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
-              ReferenceWallet referenceWallet) throws CantSendCryptoException, InsufficientFundsException;
+              ReferenceWallet referenceWallet,
+              BlockchainNetworkType blockchainNetworkType) throws CantSendCryptoException, InsufficientFundsException;
 
 
     /**
@@ -366,6 +368,7 @@ public interface CryptoWallet extends Serializable {
                                                                              TransactionType transactionType,
                                                                              String walletPublicKey,
                                                                              String actorPublicKey,
+                                                                             BlockchainNetworkType blockchainNetworkType,
                                                                              int max,
                                                                              int offset) throws CantListTransactionsException;
 
@@ -388,6 +391,7 @@ public interface CryptoWallet extends Serializable {
                                                                  String walletPublicKey,
                                                                  String actorPublicKey,
                                                                  String intraUserLoggedInPublicKey,
+                                                                 BlockchainNetworkType blockchainNetworkType,
                                                                  int max,
                                                                  int offset) throws CantListTransactionsException;
 
