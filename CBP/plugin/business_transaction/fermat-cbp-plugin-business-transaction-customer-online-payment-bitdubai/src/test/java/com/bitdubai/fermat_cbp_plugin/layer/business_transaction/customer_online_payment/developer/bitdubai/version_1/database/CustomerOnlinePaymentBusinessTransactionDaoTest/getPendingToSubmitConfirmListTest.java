@@ -13,10 +13,13 @@ import org.powermock.api.mockito.PowerMockito;
 
 import java.util.UUID;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
 /**
- * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 03/02/16.
+ * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 05/02/16.
  */
-public class isContractHashInDatabaseTest {
+public class getPendingToSubmitConfirmListTest {
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
     @Mock
@@ -36,13 +39,12 @@ public class isContractHashInDatabaseTest {
         MockitoAnnotations.initMocks(this);
         PowerMockito.doReturn(databaseTable).when(customerOnlinePaymentBusinessTransactionDaoSpy, "getDatabaseContractTable");
     }
-
     @Test
-    public void isContractHashInDatabaseTest_Should_()throws Exception{
-        customerOnlinePaymentBusinessTransactionDaoSpy.isContractHashInDatabase("65ef1c685c7a5502eef44a5f8552801d9cb4ca87");
+    public void getPendingToSubmitConfirmListTest_Should_Return_Not_Null()throws Exception{
+        assertNotNull(customerOnlinePaymentBusinessTransactionDaoSpy.getPendingToSubmitConfirmList());
     }
     @Test(expected = Exception.class)
-    public void isContractHashInDatabaseTest_Should_Throw_Exception()throws Exception{
-        customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(null);
+    public void getPendingToSubmitConfirmListTest_Should_Throw_Exception()throws Exception{
+        customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitConfirmList();
     }
 }
