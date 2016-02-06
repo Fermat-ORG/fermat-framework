@@ -1,9 +1,12 @@
-package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDaoTest;
+package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,19 +17,18 @@ import org.powermock.api.mockito.PowerMockito;
 import java.util.UUID;
 
 /**
- * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 03/02/16.
+ * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 04/02/16.
  */
-public class isContractHashInDatabaseTest {
+public class CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseExceptionTest {
     @Mock
     private PluginDatabaseSystem mockPluginDatabaseSystem;
-    @Mock
+
     private Database mockDatabase;
     @Mock
-    DatabaseTable databaseTable;
+    private DatabaseTable databaseTable;
     private UUID testId;
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDaoSpy;
-
 
     @Before
     public void setup()throws Exception{
@@ -36,13 +38,9 @@ public class isContractHashInDatabaseTest {
         MockitoAnnotations.initMocks(this);
         PowerMockito.doReturn(databaseTable).when(customerOnlinePaymentBusinessTransactionDaoSpy, "getDatabaseContractTable");
     }
-
-    @Test
-    public void isContractHashInDatabaseTest_Should_()throws Exception{
-        customerOnlinePaymentBusinessTransactionDaoSpy.isContractHashInDatabase("65ef1c685c7a5502eef44a5f8552801d9cb4ca87");
-    }
-    @Test(expected = Exception.class)
-    public void isContractHashInDatabaseTest_Should_Throw_Exception()throws Exception{
-        customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(null);
+    @Test(expected = CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.class)
+    public void CustomerOnlinePaymentBusinessTransactionDaoInitTest()throws Exception{
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,null,mockDatabase);
+        customerOnlinePaymentBusinessTransactionDao.initialize();
     }
 }
