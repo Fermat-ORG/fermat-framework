@@ -844,12 +844,12 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                             state
                     );
                     break;
-               /* case DENY:
+                case DENY:
                     connectionNewsDao.denyConnection(
                             informationMessage.getRequestId(),
                             state
                     );
-                    break;*/
+                    break;
                 default:
                     throw new CantHandleNewMessagesException(
                             "action not supported: " +informationMessage.getAction(),
