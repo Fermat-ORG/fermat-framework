@@ -123,6 +123,7 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME);
         /*
          * Asset User Actor database addition.
          */
@@ -146,6 +147,7 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME);
 
         /**
          * Asset User Actor Registered database addition.
@@ -162,6 +164,7 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
         assetUserGroupColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME);
         assetUserGroupColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME);
 
+
         /**
          * Asset User Group database addition.
          */
@@ -175,6 +178,7 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
 
         assetUserGroupMemberColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME);
         assetUserGroupMemberColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME);
+
 
         /**
          * Asset User Group Member database addition.

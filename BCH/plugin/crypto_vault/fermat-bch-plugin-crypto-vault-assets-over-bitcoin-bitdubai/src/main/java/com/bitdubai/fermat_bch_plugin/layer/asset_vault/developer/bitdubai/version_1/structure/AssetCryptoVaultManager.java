@@ -375,7 +375,9 @@ public class AssetCryptoVaultManager  {
          * if the network parameters calculated is different that the Default network I will double check
          */
         if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
-            return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            //return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            // implement a new way to double check we are getting the right network parameter
+            return networkParameters;
         } else
         return networkParameters;
     }
@@ -604,12 +606,21 @@ public class AssetCryptoVaultManager  {
         }
 
         /**
-         * Will derive all keys and return them
+         * Will derive all keys and return them. With the keys, I will generate address for all active networks.
          */
         List<CryptoAddress> cryptoAddresses = new ArrayList<>();
         for (int i=1; i<generatedKeys; i++){
             try {
-                cryptoAddresses.add(this.getCryptoAddressFromRedemPoint(hierarchyAccount, i));
+                try {
+                    // I derive the key and generate the address on each network type I'm listening to.
+                    for (BlockchainNetworkType blockchainNetworkType : this.getDao().getActiveNetworkTypes()){
+                        cryptoAddresses.add(this.getCryptoAddressFromRedemPoint(hierarchyAccount, i, blockchainNetworkType));
+                    }
+                } catch (CantExecuteDatabaseOperationException e) {
+                    // if there was an error, I will only get address from the default network
+                    cryptoAddresses.add(this.getCryptoAddressFromRedemPoint(hierarchyAccount, i, BlockchainNetworkType.getDefaultBlockchainNetworkType()));
+                }
+
             } catch (GetNewCryptoAddressException e) {
                 return cryptoAddresses;
             }
@@ -625,8 +636,8 @@ public class AssetCryptoVaultManager  {
      * @param position
      * @return
      */
-    private CryptoAddress getCryptoAddressFromRedemPoint(HierarchyAccount hierarchyAccount, int position) throws GetNewCryptoAddressException {
-        return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getRedeemPointBitcoinAddress(hierarchyAccount, position);
+    private CryptoAddress getCryptoAddressFromRedemPoint(HierarchyAccount hierarchyAccount, int position, BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
+        return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getRedeemPointBitcoinAddress(hierarchyAccount, position, blockchainNetworkType);
 
     }
 
