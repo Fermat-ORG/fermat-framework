@@ -315,7 +315,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
 
-            entityRecord = buildDatabaseRecord(entityRecord, connectionNew);
+            entityRecord = buildConnectionNewDatabaseRecord(entityRecord, connectionNew);
 
             addressExchangeRequestTable.insertRecord(entityRecord);
 
@@ -612,8 +612,8 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    private DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord       record       ,
-                                                    final CryptoBrokerConnectionRequest connectionNew) {
+    private DatabaseTableRecord buildConnectionNewDatabaseRecord(final DatabaseTableRecord           record       ,
+                                                                 final CryptoBrokerConnectionRequest connectionNew) {
 
         try {
 
