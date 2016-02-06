@@ -369,13 +369,44 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
 
     @Override
-    public void requestQuotes(String requesterPublicKey, Actors requesterActorType, String cryptoBrokerPublicKey, long updateTime, List<CryptoBrokerQuote> quotes) throws CantRequestQuotesException {
+    public void requestQuotes(final String                  requesterPublicKey   ,
+                              final Actors                  requesterActorType   ,
+                              final String                  cryptoBrokerPublicKey,
+                              final long                    updateTime           ,
+                              final List<CryptoBrokerQuote> quotes               ) throws CantRequestQuotesException {
 
+        try {
+
+            final UUID newId = UUID.randomUUID();
+
+            final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
+            final RequestType             type   = RequestType            .SENT           ;
+
+            cryptoBrokerActorNetworkServiceDao.createQuotesRequest(
+                    newId                ,
+                    requesterPublicKey   ,
+                    requesterActorType   ,
+                    cryptoBrokerPublicKey,
+                    updateTime           ,
+                    quotes               ,
+                    state                ,
+                    type
+            );
+
+        } catch (final CantRequestQuotesException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRequestQuotesException(e, null, "Unhandled Exception.");
+        }
     }
 
     @Override
     public List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(RequestType requestType) throws CantListPendingConnectionRequestsException {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override

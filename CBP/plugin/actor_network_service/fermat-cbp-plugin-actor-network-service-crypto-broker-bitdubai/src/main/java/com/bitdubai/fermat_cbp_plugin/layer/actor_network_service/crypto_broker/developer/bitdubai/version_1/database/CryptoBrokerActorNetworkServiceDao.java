@@ -32,15 +32,19 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceQuotesRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -612,6 +616,44 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
+    public final void createQuotesRequest(final UUID                    requestId            ,
+                                          final String                  requesterPublicKey   ,
+                                          final Actors                  requesterActorType   ,
+                                          final String                  cryptoBrokerPublicKey,
+                                          final long                    updateTime           ,
+                                          final List<CryptoBrokerQuote> quotes               ,
+                                          final ProtocolState           state                ,
+                                          final RequestType             type                 ) throws CantRequestQuotesException {
+
+        try {
+
+            final DatabaseTable addressExchangeRequestTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_TABLE_NAME);
+
+            DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
+
+            CryptoBrokerExtraData<CryptoBrokerQuote> quotesRequest = new CryptoBrokerActorNetworkServiceQuotesRequest(
+                    requestId,
+                    requesterPublicKey,
+                    requesterActorType,
+                    cryptoBrokerPublicKey,
+                    updateTime,
+                    quotes
+            );
+
+            entityRecord.setUUIDValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME                      , quotesRequest.getRequestId())            ;
+            entityRecord.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME    , quotesRequest.getRequesterPublicKey())   ;
+            entityRecord.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME    , quotesRequest.getRequesterActorType())   ;
+            entityRecord.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, quotesRequest.getCryptoBrokerPublicKey());
+            entityRecord.setLongValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_UPDATE_TIME_COLUMN_NAME             , quotesRequest.getUpdateTime())           ;
+
+            addressExchangeRequestTable.insertRecord(entityRecord);
+
+        } catch (final CantInsertRecordException e) {
+
+            throw new CantRequestQuotesException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        }
+    }
+
     private DatabaseTableRecord buildConnectionNewDatabaseRecord(final DatabaseTableRecord           record       ,
                                                                  final CryptoBrokerConnectionRequest connectionNew) {
 
@@ -622,10 +664,10 @@ public final class CryptoBrokerActorNetworkServiceDao {
             record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     , connectionNew.getSenderActorType())     ;
             record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          , connectionNew.getSenderAlias())         ;
             record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME, connectionNew.getDestinationPublicKey());
-            record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , connectionNew.getRequestType())         ;
-            record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , connectionNew.getProtocolState())       ;
+            record.setFermatEnum(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME, connectionNew.getRequestType())         ;
+            record.setFermatEnum(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, connectionNew.getProtocolState())       ;
             record.setFermatEnum (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , connectionNew.getRequestAction())       ;
-            record.setLongValue  (CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             , connectionNew.getSentTime())            ;
+            record.setLongValue(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME, connectionNew.getSentTime())            ;
 
             if (connectionNew.getSenderImage() != null && connectionNew.getSenderImage().length > 0)
                 persistNewUserProfileImage(connectionNew.getSenderPublicKey(), connectionNew.getSenderImage());
