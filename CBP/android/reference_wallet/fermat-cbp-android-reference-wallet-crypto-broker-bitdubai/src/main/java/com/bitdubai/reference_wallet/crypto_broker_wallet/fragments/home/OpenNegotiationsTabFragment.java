@@ -19,7 +19,9 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -46,6 +48,7 @@ import com.viewpagerindicator.LinePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
@@ -90,8 +93,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         }
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        marketExchangeRateSummaryList = getMarketExchangeRateSummaryData();
-
     }
 
 
@@ -102,7 +103,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         Activity activity = getActivity();
         LayoutInflater layoutInflater = activity.getLayoutInflater();
-        configureActivityHeader(layoutInflater);
+        getMarketExchangeRateSummaryData(layoutInflater);
         configureToolbar();
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.cbw_divider_shape);
@@ -245,27 +246,39 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         return data;
     }
 
-    private List<IndexInfoSummary> getMarketExchangeRateSummaryData() {
-        List<IndexInfoSummary> data = new ArrayList<>();
+    private void getMarketExchangeRateSummaryData(final LayoutInflater layoutInflater) {
 
-        if (moduleManager != null) {
-            try {
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                List<IndexInfoSummary> data = new ArrayList<>();
                 CryptoBrokerWalletManager wallet = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
                 data.addAll(wallet.getCurrentIndexSummaryForStockCurrencies(appSession.getAppPublicKey()));
 
-            } catch (FermatException ex) {
-                if (errorManager != null) {
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                } else {
-                    Log.e(TAG, ex.getMessage(), ex);
+                return data;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+                    marketExchangeRateSummaryList = (List<IndexInfoSummary>) result[0];
+                    configureActivityHeader(layoutInflater);
                 }
             }
-        } else {
-            Toast.makeText(getActivity(), "Sorry, an error happened OpenNegotiationsTabFragment (Module == null)", Toast.LENGTH_SHORT).show();
-        }
 
-        return data;
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                else
+                    Log.e(TAG, ex.getMessage(), ex);
+            }
+        });
+
+        Executors.newSingleThreadExecutor().execute(fermatWorker);
     }
 
     @Override
