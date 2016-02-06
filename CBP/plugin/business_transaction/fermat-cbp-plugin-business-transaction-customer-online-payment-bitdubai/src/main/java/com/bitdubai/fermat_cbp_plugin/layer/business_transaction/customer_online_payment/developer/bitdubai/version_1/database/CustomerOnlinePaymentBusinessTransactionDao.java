@@ -132,7 +132,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @return DatabaseTable
      */
-    private DatabaseTable getDatabaseEventsTable() {
+    /**
+     * Access modifier was changed from private to protected to enhance
+     * testability
+     */
+    // private
+    protected DatabaseTable getDatabaseEventsTable() {
         return getDataBase().getTable(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME);
     }
@@ -163,6 +168,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseEventsTable();
             List<String> eventTypeList=new ArrayList<>();
             String eventId;
+
             databaseTable.addStringFilter(
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     EventStatus.PENDING.getCode(),
@@ -291,7 +297,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }
     }
 
-        public List<BusinessTransactionRecord> getOnCryptoNetworkCryptoStatusList() throws
+    public List<BusinessTransactionRecord> getOnCryptoNetworkCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         try{
@@ -530,7 +536,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     public BusinessTransactionRecord getCustomerOnlinePaymentRecord(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
 
         try{
-            System.out.println("1");
             DatabaseTable databaseTable=getDatabaseContractTable();
             ContractTransactionStatus contractTransactionStatus;
             CryptoAddress brokerCryptoAddress;
@@ -816,7 +821,6 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
         try{
-            System.out.println("123");
             updateRecordStatus(contractHash,
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractTransactionStatus.getCode());
