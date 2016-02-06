@@ -76,10 +76,12 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by nelson on 22/09/15.
+ * Created by nelson
+ * on 22/09/15.
  */
 public interface CryptoBrokerWalletManager extends WalletManager {
     //TODO: Documentar
+
     /**
      * associate an Identity to this wallet
      *
@@ -88,10 +90,29 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     boolean associateIdentity(ActorIdentity brokerPublicKey, String brokerWalletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException;
 
     /**
-     * @return a summary of the current market rate for the different currencies the broker have as stock
+     * Return a list of exchange rates for the desired provider and currency pair, from the current date to the desired number of days back
+     *
+     * @param indexInfo    object with the necessary info: the currency pair, the provider ID
+     * @param numberOfDays the number of days the list will cover
+     * @return The list of Exchange Rates
+     * @throws CantGetProviderException         Cant get the provider from the CER platform
+     * @throws UnsupportedCurrencyPairException The Currency pair fot the selected provider is not supported
+     * @throws CantGetExchangeRateException     Cant get current the exchange rate for the currency pair in the provider
      */
-    //TODO: Implementar CER provider seleccionado en la wallet
-    Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies(String brokerWalletPublicKey) throws CantGetCurrentIndexSummaryForStockCurrenciesException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, InvalidParameterException;
+    Collection<ExchangeRate> getDailyExchangeRatesFromCurrentDate(IndexInfoSummary indexInfo, int numberOfDays) throws CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException;
+
+    /**
+     * @param brokerWalletPublicKey the wallet public key
+     * @return A summary of the current market rate for the different selected providers
+     * @throws CantGetCurrentIndexSummaryForStockCurrenciesException Cant get current Index Summary for the selected providers
+     * @throws CryptoBrokerWalletNotFoundException                   Cant find the installed wallet data
+     * @throws CantGetCryptoBrokerWalletSettingException             Cant find the settings for the wallet with the public key
+     * @throws CantGetProviderException                              Cant get the provider from the CER platform
+     * @throws UnsupportedCurrencyPairException                      The Currency pair fot the selected provider is not supported
+     * @throws CantGetExchangeRateException                          Cant get current the exchange rate for the currency pair in the provider
+     * @throws InvalidParameterException                             Invalid parameters
+     */
+    Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String brokerWalletPublicKey) throws CantGetCurrentIndexSummaryForStockCurrenciesException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, InvalidParameterException;
 
     /**
      * @return list of identities associated with this wallet
@@ -108,10 +129,10 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     CustomerBrokerNegotiationInformation sendNegotiationSteps(CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet);
 
-     /**
+    /**
      * This method list all wallet installed in device, start the transaction
      */
-    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()  throws CantListWalletsException;
+    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
     CryptoBrokerWalletSettingSpread newEmptyCryptoBrokerWalletSetting() throws CantNewEmptyCryptoBrokerWalletSettingException;
 
@@ -135,15 +156,13 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     /**
      * Through the method <code>createCryptoBrokerIdentity</code> you can create a new crypto broker identity.
      *
-     * @param alias  the alias of the crypto broker that we want to create.
-     * @param image  an image that represents the crypto broker. it will be shown to other actors when they try to connect.
-     *
+     * @param alias the alias of the crypto broker that we want to create.
+     * @param image an image that represents the crypto broker. it will be shown to other actors when they try to connect.
      * @return an instance of the recent created crypto broker identity.
-     *
      * @throws CantCreateCryptoBrokerIdentityException if something goes wrong.
      */
     CryptoBrokerIdentity createCryptoBrokerIdentity(final String alias,
-                                                    final byte[] image) throws CantCreateCryptoBrokerIdentityException   ,
+                                                    final byte[] image) throws CantCreateCryptoBrokerIdentityException,
             CryptoBrokerIdentityAlreadyExistsException;
 
     void saveWalletSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread, String publicKeyWalletCryptoBrokerInstall) throws CantSaveCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
@@ -153,7 +172,6 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
     /**
-     *
      * @param location
      * @param uri
      * @throws CantCreateLocationSaleException
@@ -161,14 +179,12 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     void createNewLocation(String location, String uri) throws CantCreateLocationSaleException;
 
     /**
-     *
      * @param location
      * @throws CantUpdateLocationSaleException
      */
     void updateLocation(NegotiationLocations location) throws CantUpdateLocationSaleException;
 
     /**
-     *
      * @param location
      * @throws CantDeleteLocationSaleException
      */
@@ -196,19 +212,18 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @param memo
      * @param priceReference
      * @param originTransaction
-     *
      * @throws CantCreateBankMoneyRestockException
      */
 
     void createTransactionRestockBank(
-            String       publicKeyActor,
+            String publicKeyActor,
             FiatCurrency fiatCurrency,
-            String       cbpWalletPublicKey,
-            String       bankWalletPublicKey,
-            String       bankAccount,
+            String cbpWalletPublicKey,
+            String bankWalletPublicKey,
+            String bankAccount,
             BigDecimal amount,
-            String       memo,
-            BigDecimal   priceReference,
+            String memo,
+            BigDecimal priceReference,
             OriginTransaction originTransaction
     ) throws com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
 
@@ -225,7 +240,6 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @param memo
      * @param priceReference
      * @param originTransaction
-     *
      * @throws CantCreateBankMoneyDestockException
      */
     void createTransactionDestockBank(
@@ -252,7 +266,6 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @param memo
      * @param priceReference
      * @param originTransaction
-     *
      * @throws CantCreateCashMoneyRestockException
      */
     void createTransactionRestockCash(
@@ -279,7 +292,6 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @param memo
      * @param priceReference
      * @param originTransaction
-     *
      * @throws CantCreateCashMoneyDestockException
      */
     void createTransactionDestockCash(
@@ -305,7 +317,6 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @param memo
      * @param priceReference
      * @param originTransaction
-     *
      * @throws CantCreateCryptoMoneyRestockException
      */
     void createTransactionRestockCrypto(
@@ -331,7 +342,6 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @param memo
      * @param priceReference
      * @param originTransaction
-     *
      * @throws CantCreateCryptoMoneyDestockException
      */
     void createTransactionDestockCrypto(
@@ -347,18 +357,18 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * This method load the list CryptoBrokerStockTransaction
+     *
      * @param merchandise
      * @param fiatCurrency
      * @param currencyType
      * @return FiatIndex
-     * @exception CantGetCryptoBrokerMarketRateException
+     * @throws CantGetCryptoBrokerMarketRateException
      */
     FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType, String walletPublicKey) throws CantGetCryptoBrokerMarketRateException, CryptoBrokerWalletNotFoundException;
 
-   CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);
+    CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);
 
     /**
-     *
      * @param ContractId
      * @return a CustomerBrokerContractSale with information of contract with ContractId
      * @throws CantGetListCustomerBrokerContractSaleException
@@ -367,9 +377,10 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * This method load the list CryptoBrokerWalletProviderSetting
+     *
      * @param
      * @return List<CryptoBrokerWalletProviderSetting>
-     * @exception CantGetCryptoBrokerWalletSettingException
+     * @throws CantGetCryptoBrokerWalletSettingException
      */
     List<CryptoBrokerWalletProviderSetting> getCryptoBrokerWalletProviderSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
@@ -382,9 +393,10 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * This method load the list CryptoBrokerWalletProviderSetting
+     *
      * @param
      * @return List<CryptoBrokerWalletAssociatedSetting>
-     * @exception CantGetCryptoBrokerWalletSettingException
+     * @throws CantGetCryptoBrokerWalletSettingException
      */
     List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
@@ -404,12 +416,13 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * This method load the list CryptoBrokerStockTransaction
+     *
      * @param merchandise
      * @param currencyType
      * @param offset
      * @param timeStamp
      * @return List<CryptoBrokerStockTransaction>
-     * @exception CantGetCryptoBrokerStockTransactionException
+     * @throws CantGetCryptoBrokerStockTransactionException
      */
     List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, CurrencyType currencyType, int offset, long timeStamp, String walletPublicKey) throws CantGetCryptoBrokerStockTransactionException;
 
@@ -417,28 +430,29 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
+     *
      * @param currencyFrom
      * @param currencyTo
      * @return a Collection of provider reference pairs
-     * */
+     */
     Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException;
+
     /**
      * This method save the instance CryptoBrokerWalletProviderSetting
+     *
      * @param cryptoBrokerWalletProviderSetting
      * @return
-     * @exception CantSaveCryptoBrokerWalletSettingException
+     * @throws CantSaveCryptoBrokerWalletSettingException
      */
     void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting cryptoBrokerWalletProviderSetting, String walletPublicKey) throws CantSaveCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
 
     /**
-     *
      * @param bankAccount
      * @throws CantCreateBankAccountSaleException
      */
     void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountSaleException;
 
     /**
-     *
      * @param bankAccount
      * @throws CantDeleteBankAccountSaleException
      */
