@@ -36,4 +36,13 @@ public final class CryptoBrokerQuote implements CryptoBrokerInfo {
         return price;
     }
 
+    @Override
+    public String toString() {
+        return "CryptoBrokerQuote{" +
+                "merchandise=" + merchandise +
+                ", paymentCurrency=" + paymentCurrency +
+                ", price=" + price +
+                '}';
+    }
+
 }

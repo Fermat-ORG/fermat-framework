@@ -143,14 +143,16 @@ public interface CryptoBrokerManager extends FermatManager {
      * @param requesterActorType
      * @param cryptoBrokerPublicKey
      * @param updateTime
+     * @param quotes
      *
      * @throws CantRequestQuotesException if something goes wrong.
      */
-    void requestQuotes(UUID   requestId            ,
-                       String requesterPublicKey   ,
-                       Actors requesterActorType   ,
-                       String cryptoBrokerPublicKey,
-                       long   updateTime           ) throws CantRequestQuotesException;
+    void requestQuotes(UUID                    requestId            ,
+                       String                  requesterPublicKey   ,
+                       Actors                  requesterActorType   ,
+                       String                  cryptoBrokerPublicKey,
+                       long                    updateTime           ,
+                       List<CryptoBrokerQuote> quotes               ) throws CantRequestQuotesException;
 
     /**
      * Through the method <code>listPendingQuotesRequests</code> we can list all the pending quotes requests.
