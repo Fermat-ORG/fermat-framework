@@ -134,6 +134,8 @@ public List<Contact> contacts;
             errorManager=appSession.getErrorManager();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
+            if(errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
         //mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
@@ -480,7 +482,9 @@ public List<Contact> contacts;
               appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(con.getContactId()));
               changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
             } catch (CantGetContactException e) {
-              e.printStackTrace();
+              errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+          } catch(Exception e){
+              errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
           }
             return true;
         }
@@ -509,9 +513,9 @@ public List<Contact> contacts;
                                     adaptador.refreshEvents(contactname, contacticon, contactid);
                                 }
                             } catch (CantGetContactException e) {
-                                e.printStackTrace();
+                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                             } catch (Exception e) {
-                                e.printStackTrace();
+                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                             }
                             changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                         }
