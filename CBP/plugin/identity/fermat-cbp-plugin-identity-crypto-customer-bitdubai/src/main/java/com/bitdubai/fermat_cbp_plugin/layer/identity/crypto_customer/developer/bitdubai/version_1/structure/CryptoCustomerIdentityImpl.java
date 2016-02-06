@@ -6,6 +6,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSi
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 
+import java.util.Arrays;
+
 /**
  * Created by jorge on 28-09-2015.
  */
@@ -87,5 +89,16 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity {
         c += privateKey.hashCode();
         c += publicKey.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
+
+    @Override
+    public String toString() {
+        return "CryptoCustomerIdentityImpl{" +
+                "alias='" + alias + '\'' +
+                ", privateKey='" + privateKey + '\'' +
+                ", publicKey='" + publicKey + '\'' +
+                ", profileImage=" + (profileImage != null) +
+                ", published=" + published +
+                '}';
     }
 }

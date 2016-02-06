@@ -114,12 +114,16 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         } catch (Exception e) {
             settings = null;
         }
+
         if (settings == null) {
             settings = new AssetUserSettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+
             try {
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }

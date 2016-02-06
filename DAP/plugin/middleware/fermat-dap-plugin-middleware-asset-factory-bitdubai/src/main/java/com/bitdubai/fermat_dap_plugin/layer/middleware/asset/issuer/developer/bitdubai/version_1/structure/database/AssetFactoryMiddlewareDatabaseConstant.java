@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.b
 /**
  * Created by franklin on 08/09/15.
  */
-public class AssertFactoryMiddlewareDatabaseConstant {
+public class AssetFactoryMiddlewareDatabaseConstant {
     /**
      * Database name definition
      */
@@ -33,6 +33,7 @@ public class AssertFactoryMiddlewareDatabaseConstant {
     public static final String ASSET_FACTORY_IS_REDEEMABLE = "is_redeemable";
     public static final String ASSET_FACTORY_EXPIRATION_DATE = "expiration_date";
     public static final String ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY = "wallet_public_key";
+    public static final String ASSET_FACTORY_NETWORK_TYPE = "networkType";
 
     public static final String ASSET_FACTORY_FIRST_KEY_COLUMN = ASSET_FACTORY_ID_COLUMN;
 

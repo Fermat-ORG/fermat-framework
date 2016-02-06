@@ -1236,7 +1236,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet) throws CantRequestOrRegisterCryptoAddressException {
         switch (referenceWallet){
             case BASIC_WALLET_BITCOIN_WALLET:
-                return cryptoVaultManager.getAddress();
+                return cryptoVaultManager.getAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             default:
                 throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");
         }
