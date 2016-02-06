@@ -4,24 +4,21 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AlphabetIndexer;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -97,7 +94,7 @@ public List<Contact> contacts;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
-    private static final String TAG = "ContactFragment";
+    String TAG = "CHT_ContactFragment";
 
 
     ArrayList<String> contactname=new ArrayList<String>();
@@ -133,9 +130,9 @@ public List<Contact> contacts;
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-            if(errorManager != null)
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            CommonLogger.exception(TAG + "onCreate()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
         }
         //mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
@@ -482,14 +479,14 @@ public List<Contact> contacts;
               appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(con.getContactId()));
               changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
             } catch (CantGetContactException e) {
-              errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-          } catch(Exception e){
-              errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+              CommonLogger.exception(TAG + "onOptionItemSelected", e.getMessage(), e);
+              Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
           }
             return true;
         }
         if (item.getItemId() == R.id.menu_del_contact) {
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
             builder1.setMessage("Do you want to delete this contact?");
             builder1.setCancelable(true);
 
@@ -513,9 +510,12 @@ public List<Contact> contacts;
                                     adaptador.refreshEvents(contactname, contacticon, contactid);
                                 }
                             } catch (CantGetContactException e) {
-                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                CommonLogger.exception(TAG + "clickYes", e.getMessage(), e);
+                                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
                             } catch (Exception e) {
-                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                CommonLogger.exception(TAG + "clickYes", e.getMessage(), e);
+                                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
                             }
                             changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                         }
