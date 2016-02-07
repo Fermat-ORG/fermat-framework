@@ -14,6 +14,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 //import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
 
@@ -28,15 +29,17 @@ import java.util.List;
 //public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 public class ContactListAdapter extends ArrayAdapter<String> {
 
+
     List<ContactList> contactsList = new ArrayList<>();
-    private final String[] contactinfo;
-    private final Integer[] contacticon;
+    ArrayList<String> contactinfo=new ArrayList<String>();
+    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<UUID> contactid=new ArrayList<UUID>();
 
-
-    public ContactListAdapter(Context context, String[] contactinfo, Integer[] contacticon) {
+    public ContactListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
         super(context, R.layout.contact_list_item, contactinfo);
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
+        this.contactid = contactid;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -44,11 +47,19 @@ public class ContactListAdapter extends ArrayAdapter<String> {
         View item = inflater.inflate(R.layout.contact_list_item, null, true);
 
         ImageView imagen = (ImageView) item.findViewById(R.id.icon);
-        imagen.setImageResource(contacticon[position]);
+        imagen.setImageResource(contacticon.get(position));//contacticon[position]);
 
         TextView contactname = (TextView) item.findViewById(R.id.text1);
-        contactname.setText(contactinfo[position]);
+        contactname.setText(contactinfo.get(position));
+
         return item;
+    }
+
+    public void refreshEvents(ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
+        this.contactinfo=contactinfo;
+        this.contacticon=contacticon;
+        this.contacticon=contacticon;
+        notifyDataSetChanged();
     }
      /*public void refreshEvents(Parameters[] datos) {
 

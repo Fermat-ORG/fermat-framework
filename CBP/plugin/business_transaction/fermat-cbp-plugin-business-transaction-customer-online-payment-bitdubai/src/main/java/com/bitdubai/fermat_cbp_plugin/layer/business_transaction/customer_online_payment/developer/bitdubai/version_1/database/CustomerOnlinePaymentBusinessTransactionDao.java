@@ -106,6 +106,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @return Database
      */
+
     private Database getDataBase() {
         return database;
     }
@@ -115,8 +116,14 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @return DatabaseTable
      */
-    private DatabaseTable getDatabaseContractTable() {
-        return getDataBase().getTable(
+    /**
+     * Access modifier was changed from private to protected to enhance
+     * testability
+     */
+    // private
+    protected DatabaseTable getDatabaseContractTable() {
+
+        return  getDataBase().getTable(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME);
     }
 
@@ -125,7 +132,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @return DatabaseTable
      */
-    private DatabaseTable getDatabaseEventsTable() {
+    /**
+     * Access modifier was changed from private to protected to enhance
+     * testability
+     */
+    // private
+    protected DatabaseTable getDatabaseEventsTable() {
         return getDataBase().getTable(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME);
     }
@@ -156,6 +168,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             DatabaseTable databaseTable=getDatabaseEventsTable();
             List<String> eventTypeList=new ArrayList<>();
             String eventId;
+
             databaseTable.addStringFilter(
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     EventStatus.PENDING.getCode(),
@@ -284,7 +297,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }
     }
 
-        public List<BusinessTransactionRecord> getOnCryptoNetworkCryptoStatusList() throws
+    public List<BusinessTransactionRecord> getOnCryptoNetworkCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         try{
@@ -306,10 +319,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         UnexpectedResultReturnedFromDatabaseException,
                 CantGetContractListException {
         try{
+
             List<BusinessTransactionRecord> customerOnlinePaymentRecordList = getCustomerOnlinePaymentRecordList(
                     CryptoStatus.ON_BLOCKCHAIN.getCode(),
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+
             return customerOnlinePaymentRecordList;
         }catch(CantGetContractListException exception){
             throw exception;
@@ -334,10 +349,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException, UnexpectedResultReturnedFromDatabaseException {
+
         List<String> pendingContractHash= getStringList(
                 key,
                 keyColumn,
                 valueColumn);
+
         List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
         for(String contractHash : pendingContractHash){
@@ -391,6 +408,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
+
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             if(records.isEmpty()){

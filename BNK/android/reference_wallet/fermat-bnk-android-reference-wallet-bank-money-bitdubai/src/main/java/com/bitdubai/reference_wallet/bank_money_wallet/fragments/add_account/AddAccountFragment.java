@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.add_account;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -91,7 +92,11 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     }
 
     private void configureToolbar() {
-        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background,null));
+        else
+            getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background));
+        getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
     }
 
     @Override

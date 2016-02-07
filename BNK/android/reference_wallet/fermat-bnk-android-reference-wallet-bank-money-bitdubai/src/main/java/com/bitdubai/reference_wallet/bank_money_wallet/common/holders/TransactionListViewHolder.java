@@ -3,9 +3,11 @@ package com.bitdubai.reference_wallet.bank_money_wallet.common.holders;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 
@@ -41,6 +43,9 @@ public class TransactionListViewHolder extends FermatViewHolder {
     public FermatTextView withdrawalDate;
     public FermatTextView withdrawalMemo;
 
+
+    private ProgressBar progressBar;
+
     public TransactionListViewHolder(View itemView) {
         super(itemView);
         this.itemView = itemView;
@@ -60,17 +65,19 @@ public class TransactionListViewHolder extends FermatViewHolder {
         withdrawalAmount = (FermatTextView) itemView.findViewById(R.id.textView_withdrawal_amount);
         withdrawalDate = (FermatTextView) itemView.findViewById(R.id.textView_withdrawal_date);
         withdrawalMemo = (FermatTextView) itemView.findViewById(R.id.textView_withdrawal_memo);
+
+        progressBar = (ProgressBar) itemView.findViewById(R.id.bw_transaction_progress_bar);
     }
 
     public void bind(BankMoneyTransactionRecord itemInfo){
-        /*itemView.setBackgroundColor(335);
-        transactionAmount.setText(String.valueOf(itemInfo.getAmount()));
-        currency.setText(itemInfo.getCurrencyType().getCode());
-        transactionType.setText(itemInfo.getTransactionType().getCode());
-        //transactionTimestamp.setText(String.valueOf(convertTime(itemInfo.getTimestamp())));
-        transactionTimestamp.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()));
-        memo.setText(itemInfo.getMemo());*/
+
         resetVisibility();
+
+        if(itemInfo.getStatus()== BankTransactionStatus.PENDING){
+            progressBar.setVisibility(View.VISIBLE);
+        }else{
+            progressBar.setVisibility(View.GONE);
+        }
 
         if(itemInfo.getTransactionType() == TransactionType.CREDIT) {
 

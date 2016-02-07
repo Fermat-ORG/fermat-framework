@@ -76,13 +76,11 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_DATABASE_NAME);
 
-            //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             System.out.println("******* Init Cash Money Restock ******");
 
             startMonitorAgent();
 
-            database.closeDatabase();
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e) {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
             try {
                 StockTransactionsCashMoneyRestockDatabaseFactory stockTransactionsCashMoneyRestockDatabaseFactory = new StockTransactionsCashMoneyRestockDatabaseFactory(this.pluginDatabaseSystem);
                 stockTransactionsCashMoneyRestockDatabaseFactory.createDatabase(this.pluginId, StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_DATABASE_NAME);
@@ -92,6 +90,8 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
             } catch (Exception exception) {
                 throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin plugin.", FermatException.wrapException(exception), null, null);
             }
+        } catch (CantStartAgentException e) {
+            throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin Agent.", FermatException.wrapException(e), null, null);
         }
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -139,7 +139,7 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        if (stockTransactionsCashMoneyRestockMonitorAgent == null) {
+        //if (stockTransactionsCashMoneyRestockMonitorAgent == null) {
             stockTransactionsCashMoneyRestockMonitorAgent = new StockTransactionsCashMoneyRestockMonitorAgent(
                     errorManager,
                     stockTransactionCashMoneyRestockManager,
@@ -150,7 +150,12 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
             );
 
             stockTransactionsCashMoneyRestockMonitorAgent.start();
-        } else stockTransactionsCashMoneyRestockMonitorAgent.start();
+            serviceStatus = ServiceStatus.STARTED;
+        //}
+        //else {
+        //    stockTransactionsCashMoneyRestockMonitorAgent.start();
+        //    serviceStatus = ServiceStatus.STARTED;
+        //}
     }
 
 }

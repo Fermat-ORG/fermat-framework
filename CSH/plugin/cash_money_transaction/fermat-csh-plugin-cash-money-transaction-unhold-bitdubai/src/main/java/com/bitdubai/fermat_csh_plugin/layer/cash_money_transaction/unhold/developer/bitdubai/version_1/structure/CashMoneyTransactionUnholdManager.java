@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantCreateUnholdTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransaction;
@@ -32,7 +33,7 @@ public class CashMoneyTransactionUnholdManager implements CashUnholdTransactionM
     private UnholdCashMoneyTransactionDao dao;
 
     public CashMoneyTransactionUnholdManager(final CashMoneyWalletManager cashMoneyWalletManager, final PluginDatabaseSystem pluginDatabaseSystem,
-                                           final UUID pluginId, final ErrorManager errorManager) throws CantStartPluginException {
+                                             final UUID pluginId, final ErrorManager errorManager) throws CantStartPluginException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
@@ -50,23 +51,24 @@ public class CashMoneyTransactionUnholdManager implements CashUnholdTransactionM
     }
 
 
-
     /*
      * Methods to be used by the ProcessorAgent
      */
     public List<CashUnholdTransaction> getAcknowledgedTransactionList() throws CantGetUnholdTransactionException {
         return dao.getAcknowledgedTransactionList();
     }
+
     public void setTransactionStatusToPending(UUID transactionId) throws CantUpdateUnholdTransactionException {
         dao.updateCashUnholdTransactionStatus(transactionId, CashTransactionStatus.PENDING);
     }
+
     public void setTransactionStatusToConfirmed(UUID transactionId) throws CantUpdateUnholdTransactionException {
         dao.updateCashUnholdTransactionStatus(transactionId, CashTransactionStatus.CONFIRMED);
     }
+
     public void setTransactionStatusToRejected(UUID transactionId) throws CantUpdateUnholdTransactionException {
         dao.updateCashUnholdTransactionStatus(transactionId, CashTransactionStatus.REJECTED);
     }
-
 
 
     /*
@@ -80,6 +82,17 @@ public class CashMoneyTransactionUnholdManager implements CashUnholdTransactionM
     @Override
     public CashTransactionStatus getCashUnholdTransactionStatus(UUID transactionId) throws CantGetUnholdTransactionException {
         return dao.getCashUnholdTransaction(transactionId).getStatus();
+    }
+
+
+    @Override
+    public boolean isTransactionRegistered(UUID transactionId) {
+        try {
+            CashUnholdTransaction transaction = dao.getCashUnholdTransaction(transactionId);
+            if (transaction.equals(transaction.getTransactionId()))
+                return true;
+        } catch (Exception e) {}
+        return false;
     }
 
 }

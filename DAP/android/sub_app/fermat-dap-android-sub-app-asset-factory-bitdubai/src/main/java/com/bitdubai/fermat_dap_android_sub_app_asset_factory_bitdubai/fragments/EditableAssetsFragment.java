@@ -30,7 +30,6 @@ import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -54,20 +53,23 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.NotAvailableKeysToPublishAssetsException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.software.shell.fab.ActionButton;
 
-import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
-import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
-import static com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats.*;
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
+import static com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT;
 
 /**
  * Main Fragment
@@ -118,7 +120,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             manager = ((AssetFactorySession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            settingsManager = appSession.getModuleManager().getSettingsManager();
+//            settingsManager = appSession.getModuleManager().getSettingsManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
 
             satoshisWalletBalance = manager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(manager));
@@ -254,8 +256,11 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             settings = new AssetFactorySettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+
             try {
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                manager.setAppPublicKey(appSession.getAppPublicKey());
+
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -472,6 +477,10 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                 Toast.makeText(getActivity(), "Invalid Quantity of Assets", Toast.LENGTH_SHORT).show();
                 return false;
             }
+            if (assetFactory.getExpirationDate() != null && assetFactory.getExpirationDate().before(new Date())) {
+                Toast.makeText(getActivity(), "Expiration date can't be in the past. Please modify the expiration date.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
             return true;
         } catch (NumberFormatException ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -496,7 +505,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                             selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
                             break;
                         }
-                        manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.TEST);
+                        manager.publishAsset(getAssetForEdit());
                         selectedAsset = null;
                         return true;
                     }
@@ -518,14 +527,27 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                     public void onErrorOccurred(Exception ex) {
                         dialog.dismiss();
                         selectedAsset = null;
-                        if (getActivity() != null) {
-                            Toast.makeText(getActivity(), "You need to define all mandatory properties in your asset before publishing it.", Toast.LENGTH_LONG).show();
-                            onRefresh();
+
+                        /**
+                         * If there was an exception, I will search first if I ran out of keys
+                         * to show the appropiated message
+                         */
+                        Throwable rootException = ExceptionUtils.getRootCause(ex);
+                        if (rootException instanceof NotAvailableKeysToPublishAssetsException) {
+                            if (getActivity() != null) {
+                                Toast.makeText(getActivity(), rootException.getMessage(), Toast.LENGTH_LONG).show();
+                                onRefresh();
+                            }
+                        } else {
+                            if (getActivity() != null) {
+                                Toast.makeText(getActivity(), "You need to define all mandatory properties in your asset before publishing it.", Toast.LENGTH_LONG).show();
+                                onRefresh();
+                            }
                         }
                         ex.printStackTrace();
                     }
                 });
-                worker.execute();
+                    worker.execute();
             }
         } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
             cantPublishAssetFactoy.printStackTrace();

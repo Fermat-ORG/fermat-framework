@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.world.interfaces.CurrencyPair;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
@@ -22,8 +22,11 @@ public class EarningsCurrencyPairsViewHolder extends FermatViewHolder {
     }
 
     public void bind(EarningsPair data, boolean selected) {
-        CurrencyPair currencyPair = data.getCurrencyPair();
-        currencyPairButton.setText(currencyPair.getCode());
+        Currency linkedCurrency = data.getLinkedCurrency();
+        Currency earningCurrency = data.getEarningCurrency();
+        currencyPairButton.setText(String.format("%s / %s", linkedCurrency.getCode(), earningCurrency.getCode()));
+
+        // TODO commented due to change of the behavior of the earning pair.
 
         if (selected) {
             currencyPairButton.setBackgroundColor(Color.WHITE);

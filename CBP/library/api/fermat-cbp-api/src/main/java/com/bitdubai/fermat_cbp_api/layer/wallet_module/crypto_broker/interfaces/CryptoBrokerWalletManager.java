@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAddNewAccountException;
@@ -12,8 +12,10 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
@@ -83,12 +85,13 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      *
      * @param brokerPublicKey the Public Key of the Crypto Broker who is going to be associated with this wallet
      */
-    boolean associateIdentity(String brokerPublicKey);
+    boolean associateIdentity(ActorIdentity brokerPublicKey, String brokerWalletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException;
 
     /**
      * @return a summary of the current market rate for the different currencies the broker have as stock
      */
-    Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies() throws CantGetCurrentIndexSummaryForStockCurrenciesException;
+    //TODO: Implementar CER provider seleccionado en la wallet
+    Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies(String brokerWalletPublicKey) throws CantGetCurrentIndexSummaryForStockCurrenciesException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, InvalidParameterException;
 
     /**
      * @return list of identities associated with this wallet
@@ -350,7 +353,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @return FiatIndex
      * @exception CantGetCryptoBrokerMarketRateException
      */
-    FiatIndex getMarketRate(FermatEnum merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType, String walletPublicKey) throws CantGetCryptoBrokerMarketRateException, CryptoBrokerWalletNotFoundException;
+    FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType, String walletPublicKey) throws CantGetCryptoBrokerMarketRateException, CryptoBrokerWalletNotFoundException;
 
    CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);
 
@@ -408,9 +411,9 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @return List<CryptoBrokerStockTransaction>
      * @exception CantGetCryptoBrokerStockTransactionException
      */
-    List<CryptoBrokerStockTransaction> getStockHistory(FermatEnum merchandise, CurrencyType currencyType, int offset, long timeStamp, String walletPublicKey) throws CantGetCryptoBrokerStockTransactionException;
+    List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, CurrencyType currencyType, int offset, long timeStamp, String walletPublicKey) throws CantGetCryptoBrokerStockTransactionException;
 
-    float getAvailableBalance(FermatEnum merchandise, String walletPublicKey) throws CantGetAvailableBalanceCryptoBrokerWalletException, CryptoBrokerWalletNotFoundException, CantGetStockCryptoBrokerWalletException;
+    float getAvailableBalance(Currency merchandise, String walletPublicKey) throws CantGetAvailableBalanceCryptoBrokerWalletException, CryptoBrokerWalletNotFoundException, CantGetStockCryptoBrokerWalletException;
 
     /**
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair

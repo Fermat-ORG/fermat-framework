@@ -4,6 +4,7 @@ package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_re
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDao;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -32,6 +33,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -139,10 +141,13 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                 boolean notify = true;
                 switch (issuerRedemptionDao.getEventTypeById(eventId)) {
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION: {
-                        AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet);
-                        for (DigitalAssetMetadata digitalAssetMetadata : wallet.getAllUnusedAssets()) {
+                        List<DigitalAssetMetadata> allUsedAssets = new ArrayList<>();
+                        allUsedAssets.addAll(assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, BlockchainNetworkType.TEST_NET).getAllUnusedAssets());
+                        allUsedAssets.addAll(assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, BlockchainNetworkType.PRODUCTION).getAllUnusedAssets());
+                        allUsedAssets.addAll(assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, BlockchainNetworkType.REG_TEST).getAllUnusedAssets());
+                        for (DigitalAssetMetadata digitalAssetMetadata : allUsedAssets) {
                             List<CryptoTransaction> allChildTx = bitcoinNetworkManager.getChildTransactionsFromParent(digitalAssetMetadata.getLastTransactionHash());
-                            if(allChildTx.isEmpty()){
+                            if (allChildTx.isEmpty()) {
                                 notify = false;
                                 continue;
                             }
@@ -153,20 +158,21 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                                 notify = false;
                                 continue; //NOT TODAY KID.
                             }
+                            AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, cryptoTransactionOnCryptoNetwork.getBlockchainNetworkType());
                             String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getMetadataId());
                             String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
                             AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork, publicKeyFrom, publicKeyTo);
-                            issuerRedemptionDao.assetReceived(digitalAssetMetadata);
+                            issuerRedemptionDao.assetReceived(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork.getBlockchainNetworkType());
                             wallet.getBalance().credit(recordWrapper, BalanceType.BOOK);
                             notify = true;
                         }
                         break;
                     }
                     case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION: {
-                        AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet);
-                        for (String genesisTx : issuerRedemptionDao.getToBeAppliedGenesisTransaction()) {
-                            DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata(genesisTx);
-                            CryptoTransaction cryptoTransactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata, CryptoStatus.ON_CRYPTO_NETWORK);
+                        for (Map.Entry<BlockchainNetworkType, String> genesisTx : issuerRedemptionDao.getToBeAppliedGenesisTransaction().entrySet()) {
+                            AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, genesisTx.getKey());
+                            DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata(genesisTx.getValue());
+                            CryptoTransaction cryptoTransactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata, CryptoStatus.ON_BLOCKCHAIN);
                             if (cryptoTransactionOnBlockChain == null) {
                                 notify = false;
                                 continue;
@@ -174,15 +180,16 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                             CryptoAddressBookRecord bookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransactionOnBlockChain.getAddressTo());
                             String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getMetadataId());
                             String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
-                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnBlockChain, publicKeyFrom, publicKeyTo);
                             wallet.assetRedeemed(digitalAssetMetadata.getMetadataId(), null, bookRecord.getDeliveredToActorPublicKey());
                             digitalAssetMetadata.getDigitalAsset().setGenesisAmount(cryptoTransactionOnBlockChain.getCryptoAmount());
                             digitalAssetMetadata.setMetadataId(UUID.randomUUID());
                             digitalAssetMetadata.addNewTransaction(cryptoTransactionOnBlockChain.getTransactionHash(), cryptoTransactionOnBlockChain.getBlockHash());
+                            wallet.createdNewAsset(digitalAssetMetadata);
                             /**
                              * Notifies the Asset Vault that the address of this Redeem Point, has been used.
                              */
                             assetVaultManager.notifyUsedRedeemPointAddress(bookRecord.getCryptoAddress(), bookRecord.getDeliveredToActorPublicKey());
+                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnBlockChain, publicKeyFrom, publicKeyTo);
                             wallet.getBalance().credit(recordWrapper, BalanceType.AVAILABLE);
                             issuerRedemptionDao.redemptionFinished(digitalAssetMetadata);
                             if (cryptoTransactionOnBlockChain.getCryptoAmount() < DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT) {
@@ -190,7 +197,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                                 issuerAppropriationManager.appropriateAsset(digitalAssetMetadata, issuerPublicKeyWallet, btcWallet);
                             }
                             notify = true;
-                         }
+                        }
                     }
                     break;
                     case INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION:

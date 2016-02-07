@@ -4,22 +4,18 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.Parcelable;
 import android.support.v13.app.FragmentStatePagerAdapter;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,67 +23,21 @@ import java.util.List;
      */
     public class TabsPagerAdapter extends FragmentStatePagerAdapter {
 
+    private List<AbstractFermatFragment> lstCurrentFragments;
 
     private String onlyFragment;
     private String[] titles;
 
-        private Context context;
-        private FermatFragmentFactory fragmentFactory;
-        private TabStrip tabStrip;
-        private FermatSession fermatSession;
-        private ResourceProviderManager resourcesProviderManager;
+    private Context context;
+    private FermatFragmentFactory fragmentFactory;
+    private TabStrip tabStrip;
+    private FermatSession fermatSession;
+    private ResourceProviderManager resourcesProviderManager;
 
 
 
 
-    public TabsPagerAdapter(FragmentManager fm,Context context,Activity activity,FermatSession subAppSession,ErrorManager errorManager,FermatFragmentFactory subAppFragmentFactory,SubAppResourcesProviderManager subAppResourcesProviderManager) {
-            super(fm);
-            this.context=context;
-            this.fermatSession = subAppSession;
-            tabStrip=activity.getTabStrip();
-            this.fragmentFactory =subAppFragmentFactory;
-            this.resourcesProviderManager = subAppResourcesProviderManager;
-            if(activity.getTabStrip() != null){
-                List<Tab> titleTabs = activity.getTabStrip().getTabs();
-                titles = new String[titleTabs.size()];
-                for (int i = 0; i < titleTabs.size(); i++) {
-                    Tab tab = titleTabs.get(i);
-                    titles[i] = tab.getLabel();
-                }
-            }
-
-        }
-
-    public TabsPagerAdapter(FragmentManager fragmentManager, Context applicationContext, FermatFragmentFactory subAppFragmentFactory, String fragment, FermatSession subAppsSession, SubAppResourcesProviderManager subAppResourcesProviderManager) {
-        super(fragmentManager);
-        this.context=applicationContext;
-        this.fragmentFactory =subAppFragmentFactory;
-        this.fermatSession = subAppsSession;
-        this.onlyFragment = fragment;
-        this.resourcesProviderManager = subAppResourcesProviderManager;
-
-
-    }
-
-        public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,TabStrip tabStrip,FermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
-            super(fm);
-            this.context=context;
-            this.fermatSession=walletSession;
-            this.fragmentFactory = walletFragmentFactory;
-            this.tabStrip=tabStrip;
-            this.resourcesProviderManager =walletResourcesProviderManager;
-            if(tabStrip != null){
-                List<Tab> titleTabs = tabStrip.getTabs();
-                titles = new String[titleTabs.size()];
-                for (int i = 0; i < titleTabs.size(); i++) {
-                    Tab tab = titleTabs.get(i);
-                    titles[i] = tab.getLabel();
-                }
-            }
-
-        }
-
-    public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,String fragment ,FermatSession walletSession,WalletResourcesProviderManager walletResourcesProviderManager) {
+    public TabsPagerAdapter(FragmentManager fm,Context context,FermatFragmentFactory walletFragmentFactory,String fragment ,FermatSession walletSession,ResourceProviderManager walletResourcesProviderManager) {
         super(fm);
         this.context=context;
         this.fermatSession=walletSession;
@@ -95,6 +45,7 @@ import java.util.List;
         this.tabStrip=null;
         this.onlyFragment = fragment;
         this.resourcesProviderManager =walletResourcesProviderManager;
+        lstCurrentFragments = new ArrayList<>();
 
     }
 
@@ -110,6 +61,7 @@ import java.util.List;
         this.fragmentFactory = fermatFragmentFactory;
         this.tabStrip=tabStrip;
         this.resourcesProviderManager =resourceProviderManager;
+        lstCurrentFragments = new ArrayList<>();
 
         if(tabStrip != null){
             List<Tab> titleTabs = tabStrip.getTabs();
@@ -159,7 +111,7 @@ import java.util.List;
         @Override
         public Fragment getItem(int position) {
             String fragmentCodeType = null;
-            Fragment currentFragment = null;
+            AbstractFermatFragment currentFragment = null;
             if(tabStrip!=null) {
                 List<Tab> titleTabs = tabStrip.getTabs();
                 for (int j = 0; j < titleTabs.size(); j++) {
@@ -175,6 +127,7 @@ import java.util.List;
             try {
                 if(fragmentFactory !=null){
                     currentFragment= fragmentFactory.getFragment(fragmentCodeType, fermatSession, resourcesProviderManager);
+                    lstCurrentFragments.add(currentFragment);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
@@ -188,4 +141,23 @@ import java.util.List;
         return null;
     }
 
+
+    public List<AbstractFermatFragment> getLstCurrentFragments() {
+        return lstCurrentFragments;
+    }
+
+    public void destroyCurrentFragments(){
+        for(Fragment fragment : lstCurrentFragments){
+            FragmentManager manager = fragment.getFragmentManager();
+            if(manager != null) {
+                FragmentTransaction trans = manager.beginTransaction();
+                trans.detach(fragment);
+                trans.remove(fragment);
+                trans.commit();
+
+
+            }
+        }
+        lstCurrentFragments.clear();
+    }
 }

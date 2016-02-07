@@ -113,7 +113,7 @@ public class ProvisoryData {
         item1.setIconResource(R.drawable.asset_user_comunity);
         item1.setPosition(2);
         lstCommunities.add(item1);
-        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Redeem Points", "public_key_dap_reedem_point_community", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
+        installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT, null, null, "sub-app-asset-community-redeem-point", "Redeem Points", "public_key_dap_redeem_point_community", "sub-app-asset-community-redeem-point", new Version(1, 0, 0));
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.reddem_point_community);
         item1.setPosition(3);
@@ -142,7 +142,7 @@ public class ProvisoryData {
                 null,
                 "sub_app_crypto_customer_community",
                 "Customers",
-                "sub_app_crypto_customer_community",
+                "public_key_crypto_customer_community",
                 "sub_app_crypto_customer_community",
                 new Version(1, 0, 0));
 

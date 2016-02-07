@@ -54,6 +54,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -116,7 +117,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             brokerCurrencyQuotation = new BrokerCurrencyQuotation(brokerCurrencyQuotationlist);
 
             //REMOVE CURRENCY TO PAY OF CURRENCY LIST
-            removeCurrency();
+//            removeCurrency();
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -322,8 +323,8 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             negotiationInfo.putClause(ClauseType.CUSTOMER_CURRENCY_QUANTITY, "0.0");
             negotiationInfo.putClause(ClauseType.BROKER_CURRENCY_QUANTITY, "0.0");
             negotiationInfo.putClause(ClauseType.EXCHANGE_RATE, "0.0");
-            negotiationInfo.putClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethods.get(0));
-            negotiationInfo.putClause(ClauseType.BROKER_PAYMENT_METHOD, paymentMethods.get(0));
+//            negotiationInfo.putClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethods.get(0));
+//            negotiationInfo.putClause(ClauseType.BROKER_PAYMENT_METHOD, paymentMethods.get(0));
 
             final ActorIdentity brokerIdentity = appSession.getSelectedBrokerIdentity();
             if (brokerIdentity != null)
@@ -407,16 +408,16 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
-        if ((clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue()) != (clauses.get(ClauseType.BROKER_CURRENCY).getValue())) {
+        String payment = selectedItem.getCode();
+        String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+
+        if (merchandise != payment) {
 
             //ASIGNAMENT NEW VALUE
-            negotiationInfo.putClause(clause, selectedItem.getCode());
+            negotiationInfo.putClause(clause, payment);
 
             //GET MARKET RATE
-            String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
-                    clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
-                    clauses.get(ClauseType.BROKER_CURRENCY).getValue()
-            );
+            String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(merchandise,payment);
 
             if (brokerMarketRate != null) {
 
@@ -540,16 +541,23 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     }
 
         //REMOVE CURRENCY TO PAY
-        private void removeCurrency(){
+        /*private void removeCurrency() {
 
             final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
             String currencyPay = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
 
-            for (Currency item: currencies)
-                if(currencyPay.equals(item.getCode())) currencies.remove(item);
+            if (currencies != null){
+                Iterator<Currency> iterator = currencies.iterator();
+                while(iterator.hasNext()){
+                    Currency item = iterator.next();
+                    if (currencyPay.equals(item.getCode())) currencies.remove(item);
+                }
+//                for (Currency item : currencies)
+//                    if (currencyPay.equals(item.getCode())) currencies.remove(item);
+            }
 
-        }
+        }*/
 
     private BigDecimal getBigDecimal(String value){
         return new BigDecimal(value.replace(",", ""));
