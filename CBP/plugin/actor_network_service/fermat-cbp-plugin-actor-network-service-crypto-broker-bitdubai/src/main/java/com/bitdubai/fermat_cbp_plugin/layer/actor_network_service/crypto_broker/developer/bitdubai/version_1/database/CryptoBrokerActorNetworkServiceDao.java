@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.ConnectionNewsDao</code>
+ * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDao</code>
  * contains all the methods that interact with the database.
  * Manages the actor connection requests by storing them on a Database Table.
  * <p/>
@@ -55,7 +55,7 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-public final class ConnectionNewsDao {
+public final class CryptoBrokerActorNetworkServiceDao {
 
     private static final String PROFILE_IMAGE_DIRECTORY_NAME   = DeviceDirectory.LOCAL_USERS.getName() + "/CBP/cryptoBrokerActorNS";
     private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
@@ -66,9 +66,9 @@ public final class ConnectionNewsDao {
 
     private Database database;
 
-    public ConnectionNewsDao(final PluginDatabaseSystem pluginDatabaseSystem,
-                             final PluginFileSystem     pluginFileSystem    ,
-                             final UUID                 pluginId            ) {
+    public CryptoBrokerActorNetworkServiceDao(final PluginDatabaseSystem pluginDatabaseSystem,
+                                              final PluginFileSystem pluginFileSystem,
+                                              final UUID pluginId) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem     = pluginFileSystem    ;
@@ -315,7 +315,7 @@ public final class ConnectionNewsDao {
 
             DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
 
-            entityRecord = buildDatabaseRecord(entityRecord, connectionNew);
+            entityRecord = buildConnectionNewDatabaseRecord(entityRecord, connectionNew);
 
             addressExchangeRequestTable.insertRecord(entityRecord);
 
@@ -612,8 +612,8 @@ public final class ConnectionNewsDao {
         }
     }
 
-    private DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord       record       ,
-                                                    final CryptoBrokerConnectionRequest connectionNew) {
+    private DatabaseTableRecord buildConnectionNewDatabaseRecord(final DatabaseTableRecord           record       ,
+                                                                 final CryptoBrokerConnectionRequest connectionNew) {
 
         try {
 
@@ -636,7 +636,7 @@ public final class ConnectionNewsDao {
             // TODO add better error management, "throws CantBuildDatabaseRecordException".
 
             System.err.println("error trying to persist image:"+e.getMessage());
-            return null;
+            return record;
         }
     }
 

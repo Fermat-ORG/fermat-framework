@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -86,4 +87,11 @@ public interface ActorAssetUser extends DAPActor {
      * @return CryptoAddress instance.
      */
     CryptoAddress getCryptoAddress();
+
+    /**
+     * The method <code>getNetworkType</code> returns the network type which it belongs
+     *
+     * @return BlockchainNetworkType instance with the network type.
+     */
+    BlockchainNetworkType getBlockchainNetworkType();
 }

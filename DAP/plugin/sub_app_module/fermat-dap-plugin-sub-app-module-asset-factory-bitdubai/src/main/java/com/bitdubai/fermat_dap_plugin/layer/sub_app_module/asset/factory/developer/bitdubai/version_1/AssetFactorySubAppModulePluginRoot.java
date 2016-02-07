@@ -37,13 +37,16 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.bitdubai.version_1.structure.AssetFactorySupAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO explain here the main functionality of the plug-in.
@@ -68,9 +71,11 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
     BitcoinWalletManager bitcoinWalletManager;
 
-    private SettingsManager<AssetIssuerSettings> settingsManager;
+    private SettingsManager<AssetFactorySettings> settingsManager;
     private BlockchainNetworkType selectedNetwork;
 
+    AssetFactorySettings settings = null;
+    String publicKeyApp;
     // TODO ADDED ERROR MANAGER REFERENCE, PLEASE MAKE USE OF THE ERROR MANAGER.
 
     public AssetFactorySubAppModulePluginRoot() {
@@ -109,8 +114,9 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public void publishAsset(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException {
-        assetFactorySupAppModuleManager.publishAssetFactory(assetFactory, selectedNetwork);
+    public void publishAsset(AssetFactory assetFactory) throws CantSaveAssetFactoryException {
+        assetFactory.setNetworkType(selectedNetwork);
+        assetFactorySupAppModuleManager.publishAssetFactory(assetFactory);
     }
 
     @Override
@@ -130,12 +136,12 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException {
-        return assetFactorySupAppModuleManager.getAssetsFactoryByState(state);
+        return assetFactorySupAppModuleManager.getAssetsFactoryByState(state, selectedNetwork);
     }
 
     @Override
     public List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
-        return assetFactorySupAppModuleManager.getAssetsFactoryAll();
+        return assetFactorySupAppModuleManager.getAssetsFactoryAll(selectedNetwork);
     }
 
     @Override
@@ -212,7 +218,31 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public void setAppPublicKey(String publicKey) {
+        this.publicKeyApp = publicKey;
 
+        try {
+            settings = settingsManager.loadAndGetSettings(publicKeyApp);
+        } catch (Exception e) {
+            settings = null;
+        }
+
+        if(settings != null && settings.getBlockchainNetwork() != null) {
+            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
+        } else {
+            int position = 0;
+            List<BlockchainNetworkType> list = Arrays.asList(BlockchainNetworkType.values());
+
+            for (BlockchainNetworkType networkType : list) {
+
+                if(Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    settings.setBlockchainNetworkPosition(position);
+                    break;
+                } else {
+                    position++;
+                }
+            }
+            settings.setBlockchainNetwork(list);
+        }
     }
 
     @Override

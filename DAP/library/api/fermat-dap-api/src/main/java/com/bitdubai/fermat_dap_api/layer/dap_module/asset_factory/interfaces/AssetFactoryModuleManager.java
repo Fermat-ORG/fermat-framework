@@ -44,9 +44,7 @@ public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSett
     /**
      * TThis method publishes the asset digital object with the number and amount of Asset, start the transaction
      */
-    void publishAsset(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException;
-
-    ;
+    void publishAsset(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
 
     /**
      * This method create an empty object AssetFactory
