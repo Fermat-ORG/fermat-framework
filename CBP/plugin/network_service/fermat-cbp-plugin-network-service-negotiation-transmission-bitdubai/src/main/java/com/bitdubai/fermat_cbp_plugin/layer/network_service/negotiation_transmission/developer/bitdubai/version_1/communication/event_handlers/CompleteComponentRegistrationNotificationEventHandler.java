@@ -48,7 +48,7 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
-        System.out.println("Negotiation Transmission - CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent = "+fermatEvent.toString()+" end NT\n" );
+//        System.out.println("Negotiation Transmission - CompleteComponentRegistrationNotificationEventHandler - handleEvent platformEvent = "+fermatEvent.toString()+" end NT\n" );
 
         if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
 
