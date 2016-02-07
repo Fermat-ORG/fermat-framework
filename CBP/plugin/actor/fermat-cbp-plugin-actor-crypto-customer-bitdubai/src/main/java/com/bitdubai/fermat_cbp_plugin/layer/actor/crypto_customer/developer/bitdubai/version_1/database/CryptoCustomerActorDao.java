@@ -92,7 +92,7 @@ public class CryptoCustomerActorDao {
             new pruebaExtraData(this);
         }
 
-        public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewCustomerIdentityWalletRelationshipException {
+        public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
 
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
@@ -102,7 +102,7 @@ public class CryptoCustomerActorDao {
                         recordToInsert,
                         relationshipId,
                         identity.getPublicKey(),
-                        wallet
+                        walletPublicKey
                 );
                 RelationshipTable.insertRecord(recordToInsert);
                 return constructCryptoCustomerActorRelationshipFromRecord(recordToInsert);
@@ -155,10 +155,10 @@ public class CryptoCustomerActorDao {
             }
         }
 
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListCustomerIdentityWalletRelationshipException {
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
-                RelationshipTable.addUUIDFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, wallet, DatabaseFilterType.EQUAL);
+                RelationshipTable.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
                 RelationshipTable.loadToMemory();
                 List<DatabaseTableRecord> records = RelationshipTable.getRecords();
                 RelationshipTable.clearAllFilters();
@@ -183,11 +183,11 @@ public class CryptoCustomerActorDao {
                 DatabaseTableRecord databaseTableRecord,
                 UUID   relationshipId,
                 String publicKeyCustomer,
-                UUID   walletId
+                String walletPublicKey
         ) {
             databaseTableRecord.setUUIDValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME, relationshipId);
             databaseTableRecord.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKeyCustomer);
-            databaseTableRecord.setUUIDValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, walletId);
+            databaseTableRecord.setStringValue(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, walletPublicKey);
         }
 
         private CustomerIdentityWalletRelationship newCryptoCustomerActorRelationship(

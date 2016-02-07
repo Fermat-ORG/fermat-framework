@@ -25,7 +25,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
  *
  * @since 2015.12.17
  */
-public class CryptoCustomerWalletFermatAppConnection extends AppConnections {
+public class CryptoCustomerWalletFermatAppConnection extends AppConnections<CryptoCustomerWalletSession> {
 
     public CryptoCustomerWalletFermatAppConnection(Activity activity) {
         super(activity);
@@ -55,7 +55,7 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CustomerNavigationViewPainter(getActivity(), getActiveIdentity());
+        return new CustomerNavigationViewPainter(getActivity(), getFullyLoadedSession());
     }
 
     @Override

@@ -504,16 +504,36 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
+    public boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoBrokerIdentitiesException, CantGetListBrokerIdentityWalletRelationshipException {
+        List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        BrokerIdentityWalletRelationship relationship = cryptoBrokerActorManager.getBrokerIdentityWalletRelationshipByWallet(walletPublicKey);
+
+        if (relationship != null && cryptoBrokerIdentities != null) {
+            for (CryptoBrokerIdentity identity : cryptoBrokerIdentities) {
+                String identityPublicKey = identity.getPublicKey();
+                String associatedCryptoBrokerPublicKey = relationship.getCryptoBroker();
+
+                if (identityPublicKey.equals(associatedCryptoBrokerPublicKey))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
     public CryptoBrokerIdentity getAssociatedIdentity(String walletPublicKey) throws CantListCryptoBrokerIdentitiesException, CantGetListBrokerIdentityWalletRelationshipException, CantGetAssociatedIdentity {
         List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
         BrokerIdentityWalletRelationship relationship = cryptoBrokerActorManager.getBrokerIdentityWalletRelationshipByWallet(walletPublicKey);
 
-        for(CryptoBrokerIdentity identity : cryptoBrokerIdentities){
-            String identityPublicKey = identity.getPublicKey();
-            String associatedCryptoBrokerPublicKey = relationship.getCryptoBroker();
+        if (relationship != null && cryptoBrokerIdentities != null) {
+            for (CryptoBrokerIdentity identity : cryptoBrokerIdentities) {
+                String identityPublicKey = identity.getPublicKey();
+                String associatedCryptoBrokerPublicKey = relationship.getCryptoBroker();
 
-            if(identityPublicKey.equals(associatedCryptoBrokerPublicKey))
-                return identity;
+                if (identityPublicKey.equals(associatedCryptoBrokerPublicKey))
+                    return identity;
+            }
         }
 
         throw new CantGetAssociatedIdentity();

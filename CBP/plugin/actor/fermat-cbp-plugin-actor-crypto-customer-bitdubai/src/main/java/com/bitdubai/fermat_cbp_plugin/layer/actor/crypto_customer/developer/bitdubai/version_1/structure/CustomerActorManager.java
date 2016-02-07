@@ -39,8 +39,8 @@ public class CustomerActorManager implements ActorExtraDataManager {
 
 
         @Override
-        public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewCustomerIdentityWalletRelationshipException {
-            return this.dao.createNewCustomerIdentityWalletRelationship(identity, wallet);
+        public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
+            return this.dao.createNewCustomerIdentityWalletRelationship(identity, walletPublicKey);
         }
 
         @Override
@@ -54,8 +54,8 @@ public class CustomerActorManager implements ActorExtraDataManager {
         }
 
         @Override
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListCustomerIdentityWalletRelationshipException {
-            return this.dao.getCustomerIdentityWalletRelationshipByWallet(wallet);
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+            return this.dao.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
         }
 
     /*==============================================================================================
