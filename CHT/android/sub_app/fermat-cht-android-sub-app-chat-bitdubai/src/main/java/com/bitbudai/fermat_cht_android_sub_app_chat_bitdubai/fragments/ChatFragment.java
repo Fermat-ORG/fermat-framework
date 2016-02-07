@@ -140,15 +140,16 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     void whattodo(){
         try {
-            Contact con = chatSession.getSelectedContact();
+            Contact con;
 
             if (appSession.getData("whocallme").equals("chatlist")) {
-
-                contactid = (UUID) appSession.getData("contactid");
+                con=(Contact)appSession.getData("contactid");
+                contactid = con.getContactId();
 
                 findvalues(con);//findvalues(contactid);
                 chatwascreate = true;
             } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
+                con = chatSession.getSelectedContact();
                 contactid = con.getContactId();
                 findvalues(con);
                 if (chatid != null) {
