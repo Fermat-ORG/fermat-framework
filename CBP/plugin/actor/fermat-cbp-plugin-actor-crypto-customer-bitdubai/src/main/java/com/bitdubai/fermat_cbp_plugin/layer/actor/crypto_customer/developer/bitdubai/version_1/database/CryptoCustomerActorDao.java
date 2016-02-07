@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -216,7 +217,7 @@ public class CryptoCustomerActorDao {
             try {
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
                 DatabaseTableRecord record   = table.getEmptyRecord();
-                record.setStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
+                record.setStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
                 record.setStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME, actorExtraData.getBrokerIdentity().getAlias());
                 table.insertRecord(record);
                 if(actorExtraData.getBrokerIdentity().getProfileImage() != null) {
@@ -226,21 +227,19 @@ public class CryptoCustomerActorDao {
                         // TODO: manejar las excepciones
                     }
                 }
-                createActorQoutes(actorExtraData);
-                //createActorPlasforms(actorExtraData);
             } catch (CantInsertRecordException e) {
                 throw new CantCreateNewActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        private void createActorQoutes(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
+        public void createActorQoutes(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
             try {
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
                 DatabaseTableRecord record;
                 for(QuotesExtraData quote : actorExtraData.getQuotes()){
                     record = table.getEmptyRecord();
                     record.setUUIDValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME, UUID.randomUUID());
-                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
+                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, quote.getMerchandise().getCode());
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPaymentCurrency().getCode());
                     record.setFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME, quote.getPrice());
@@ -255,7 +254,7 @@ public class CryptoCustomerActorDao {
             try {
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
-                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey(), DatabaseFilterType.EQUAL);
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey(), DatabaseFilterType.EQUAL);
                 record.setStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME, actorExtraData.getBrokerIdentity().getAlias());
                 table.updateRecord(record);
                 updateQuotes(actorExtraData);
@@ -271,21 +270,19 @@ public class CryptoCustomerActorDao {
             }
         }
 
-        private  void updateQuotes(ActorExtraData actorExtraData) throws CantUpdateActorExtraDataException {
+        public void updateQuotes(ActorExtraData actorExtraData) throws CantUpdateActorExtraDataException {
             try {
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey(), DatabaseFilterType.EQUAL);
+
                 DatabaseTableRecord record = table.getEmptyRecord();
-                for(QuotesExtraData quote : actorExtraData.getQuotes()){
-                    table.clearAllFilters();;
-                    table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey(), DatabaseFilterType.EQUAL);
-                    table.addUUIDFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME, quote.getQuoteId(), DatabaseFilterType.EQUAL);
-                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
-                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, quote.getMerchandise().getCode());
-                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPaymentCurrency().getCode());
-                    record.setFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPrice());
-                    table.updateRecord(record);
-                }
-            } catch (CantUpdateRecordException e) {
+                record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
+                table.deleteRecord(record);
+
+                this.createActorQoutes(actorExtraData);
+            } catch (CantDeleteRecordException e) {
+                throw new CantUpdateActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantCreateNewActorExtraDataException e) {
                 throw new CantUpdateActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
@@ -302,7 +299,7 @@ public class CryptoCustomerActorDao {
                     Collection<ActorExtraData> actoresExtraDatas = new ArrayList<ActorExtraData>();
                     for (DatabaseTableRecord record : records) {
                         String alias = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
-                        String publicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+                        String publicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
                         byte[] image = null;
                         try {
                             image = getCryptoCustomerIdentityProfileImagePrivateKey(publicKey);
@@ -329,7 +326,7 @@ public class CryptoCustomerActorDao {
         public ActorExtraData getActorExtraDataByPublicKey(String _publicKey) throws CantGetListActorExtraDataException {
             try {
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
-                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, _publicKey, DatabaseFilterType.EQUAL);
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, _publicKey, DatabaseFilterType.EQUAL);
                 table.loadToMemory();
                 List<DatabaseTableRecord> records = table.getRecords();
                 table.clearAllFilters();
@@ -338,7 +335,7 @@ public class CryptoCustomerActorDao {
                 }else {
                     for (DatabaseTableRecord record : records) {
                         String alias = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
-                        String publicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+                        String publicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
                         byte[] image = null;
                         try {
                             image = getCryptoCustomerIdentityProfileImagePrivateKey(publicKey);
@@ -364,7 +361,7 @@ public class CryptoCustomerActorDao {
 
         private Collection<QuotesExtraData> getQuotesByIdentity(String publicKey) throws CantGetListActorExtraDataException {
             DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
-            table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             try {
                 table.loadToMemory();
             } catch (CantLoadTableToMemoryException e) {
@@ -408,7 +405,24 @@ public class CryptoCustomerActorDao {
         public boolean existBrokerExtraData(String publicKey){
             try {
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
-                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+                table.loadToMemory();
+                List<DatabaseTableRecord> records = table.getRecords();
+                table.clearAllFilters();
+                if (records.isEmpty() ){
+                    return false;
+                }else {
+                    return true;
+                }
+            } catch (CantLoadTableToMemoryException e) {
+                return false;
+            }
+        }
+
+        public boolean existBrokerExtraDataQuotes(String publicKey){
+            try {
+                DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
                 table.loadToMemory();
                 List<DatabaseTableRecord> records = table.getRecords();
                 table.clearAllFilters();
