@@ -180,6 +180,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                      */
                     FermatMessage message = communicationsVPNConnection.readNextMessage();
 
+
                     /*
                      * Validate the message signature
                      */
@@ -221,7 +222,6 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
             }
 
         } catch (InterruptedException e) {
-            running = false;
             toReceive.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         } catch (CantInsertRecordDataBaseException e) {

@@ -22,9 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager</code>
- * <p/>
- * Created by lnacosta (laion.cj91@gmail.com) on 02/11/2015.
+ *
+ * Create Yordin Alayn 06.02.16
  *
  * @version 1.0
  * @since Java JDK 1.7
