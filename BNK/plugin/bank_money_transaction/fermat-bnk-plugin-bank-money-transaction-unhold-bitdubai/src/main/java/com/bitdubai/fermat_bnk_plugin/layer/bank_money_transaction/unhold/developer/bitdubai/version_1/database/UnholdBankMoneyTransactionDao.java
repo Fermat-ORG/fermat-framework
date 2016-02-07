@@ -126,7 +126,7 @@ public class UnholdBankMoneyTransactionDao {
             if (status == BankTransactionStatus.CONFIRMED || status == BankTransactionStatus.REJECTED)
                 record.setLongValue(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, new Date().getTime());
 
-            DatabaseTable table = database.getTable(pluginId.toString());
+            DatabaseTable table = database.getTable(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TABLE_NAME);
             table.updateRecord(record);
 
         } catch (CantUpdateRecordException e) {
