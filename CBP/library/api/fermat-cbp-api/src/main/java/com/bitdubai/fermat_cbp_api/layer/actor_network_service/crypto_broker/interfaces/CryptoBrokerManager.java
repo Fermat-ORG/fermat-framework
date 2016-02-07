@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
@@ -147,13 +148,15 @@ public interface CryptoBrokerManager extends FermatManager {
      * @param updateTime
      * @param quotes
      *
+     * @return the created request.
+     *
      * @throws CantRequestQuotesException if something goes wrong.
      */
-    void requestQuotes(String                  requesterPublicKey   ,
-                       Actors                  requesterActorType   ,
-                       String                  cryptoBrokerPublicKey,
-                       long                    updateTime           ,
-                       List<CryptoBrokerQuote> quotes               ) throws CantRequestQuotesException;
+    CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(String                  requesterPublicKey   ,
+                                                           Actors                  requesterActorType   ,
+                                                           String                  cryptoBrokerPublicKey,
+                                                           long                    updateTime           ,
+                                                           List<CryptoBrokerQuote> quotes               ) throws CantRequestQuotesException;
 
     /**
      * Through the method <code>listPendingQuotesRequests</code> we can list all the pending quotes requests.
@@ -167,7 +170,7 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
-    List<CryptoBrokerExtraData<com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote>> listPendingQuotesRequests(RequestType requestType) throws CantListPendingConnectionRequestsException;
+    List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(RequestType requestType) throws CantListPendingQuotesRequestsException;
 
     /**
      * Through the method <code>confirm</code> we can mark as done and confirmed a pending connection new or update.

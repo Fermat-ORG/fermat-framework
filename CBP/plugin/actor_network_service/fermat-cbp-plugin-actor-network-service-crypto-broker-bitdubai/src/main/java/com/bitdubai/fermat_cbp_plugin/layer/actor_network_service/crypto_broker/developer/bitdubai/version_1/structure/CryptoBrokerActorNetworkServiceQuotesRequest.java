@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 
@@ -21,13 +23,17 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest implements CryptoBroke
     private final String                  cryptoBrokerPublicKey;
     private final long                    updateTime           ;
     private final List<CryptoBrokerQuote> quotes               ;
+    private final RequestType             type                 ;
+    private final ProtocolState           state                ;
 
     public CryptoBrokerActorNetworkServiceQuotesRequest(final UUID                    requestId            ,
                                                         final String                  requesterPublicKey   ,
                                                         final Actors                  requesterActorType   ,
                                                         final String                  cryptoBrokerPublicKey,
                                                         final long                    updateTime           ,
-                                                        final List<CryptoBrokerQuote> quotes               ) {
+                                                        final List<CryptoBrokerQuote> quotes               ,
+                                                        final RequestType             type                 ,
+                                                        final ProtocolState           state                ) {
 
         this.requestId             = requestId            ;
         this.requesterPublicKey    = requesterPublicKey   ;
@@ -35,6 +41,8 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest implements CryptoBroke
         this.cryptoBrokerPublicKey = cryptoBrokerPublicKey;
         this.updateTime            = updateTime           ;
         this.quotes                = quotes               ;
+        this.type                  = type                 ;
+        this.state                 = state                ;
     }
 
     @Override
@@ -67,6 +75,14 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest implements CryptoBroke
         return quotes;
     }
 
+    public RequestType getType() {
+        return type;
+    }
+
+    public ProtocolState getState() {
+        return state;
+    }
+
     @Override
     public String toString() {
         return "CryptoBrokerActorNetworkServiceQuotesRequest{" +
@@ -76,6 +92,8 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest implements CryptoBroke
                 ", cryptoBrokerPublicKey='" + cryptoBrokerPublicKey + '\'' +
                 ", updateTime=" + updateTime +
                 ", quotes=" + quotes +
+                ", type=" + type +
+                ", state=" + state +
                 '}';
     }
 }

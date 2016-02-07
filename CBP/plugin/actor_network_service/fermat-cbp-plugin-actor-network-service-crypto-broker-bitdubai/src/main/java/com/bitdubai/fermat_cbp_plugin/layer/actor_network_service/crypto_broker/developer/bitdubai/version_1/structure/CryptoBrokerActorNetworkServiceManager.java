@@ -18,6 +18,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
@@ -369,11 +370,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
 
     @Override
-    public void requestQuotes(final String                  requesterPublicKey   ,
-                              final Actors                  requesterActorType   ,
-                              final String                  cryptoBrokerPublicKey,
-                              final long                    updateTime           ,
-                              final List<CryptoBrokerQuote> quotes               ) throws CantRequestQuotesException {
+    public CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(final String                  requesterPublicKey   ,
+                                                                  final Actors                  requesterActorType   ,
+                                                                  final String                  cryptoBrokerPublicKey,
+                                                                  final long                    updateTime           ,
+                                                                  final List<CryptoBrokerQuote> quotes               ) throws CantRequestQuotesException {
 
         try {
 
@@ -382,7 +383,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
             final RequestType             type   = RequestType            .SENT           ;
 
-            cryptoBrokerActorNetworkServiceDao.createQuotesRequest(
+            return cryptoBrokerActorNetworkServiceDao.createQuotesRequest(
                     newId                ,
                     requesterPublicKey   ,
                     requesterActorType   ,
@@ -405,8 +406,21 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     }
 
     @Override
-    public List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(RequestType requestType) throws CantListPendingConnectionRequestsException {
-        return new ArrayList<>();
+    public List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(final RequestType requestType) throws CantListPendingQuotesRequestsException {
+
+        try {
+
+            return cryptoBrokerActorNetworkServiceDao.listPendingQuotesRequests(requestType);
+
+        } catch (final CantListPendingQuotesRequestsException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListPendingQuotesRequestsException(e, null, "Unhandled Exception.");
+        }
     }
 
     @Override
