@@ -1510,21 +1510,34 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             }
 
             //Create a thread to save intra user cache list
+//
+//            Thread thread = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try
+//                    {
+//                        intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+//                    } catch (CantAddIntraWalletCacheUserException e) {
+//                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//
+//                    }
+//                }
+//            },"Thread Cache");
+//
+//            thread.start();
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try
-                    {
-                        intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
-                    } catch (CantAddIntraWalletCacheUserException e) {
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            if(lstIntraUser!= null && lstIntraUser.size() > 0){
+                try
+                {
+                    intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+                } catch (CantAddIntraWalletCacheUserException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
-                    }
                 }
-            },"Thread Cache");
+            }
 
-            thread.start();
+
+
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

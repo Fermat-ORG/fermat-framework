@@ -43,10 +43,6 @@
                     android:singleLine="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?android:attr/textColorSecondary"/>
-
-
-
         </RelativeLayout>
-
 
 </LinearLayout>
