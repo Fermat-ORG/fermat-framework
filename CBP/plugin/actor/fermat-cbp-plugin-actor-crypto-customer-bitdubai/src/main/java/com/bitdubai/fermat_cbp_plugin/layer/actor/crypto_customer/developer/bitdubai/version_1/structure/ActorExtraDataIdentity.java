@@ -11,10 +11,12 @@ public class ActorExtraDataIdentity implements ActorIdentity {
 
     private String alias;
     private String publicKey;
+    private byte[] image;
 
-    public ActorExtraDataIdentity(String alias, String publicKey){
+    public ActorExtraDataIdentity(String alias, String publicKey, byte[] image){
         this.alias = alias;
         this.publicKey = publicKey;
+        this.image = image;
     }
 
     @Override
@@ -29,7 +31,7 @@ public class ActorExtraDataIdentity implements ActorIdentity {
 
     @Override
     public byte[] getProfileImage() {
-        return new byte[0];
+        return this.image;
     }
 
     @Override

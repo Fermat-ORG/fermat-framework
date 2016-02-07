@@ -21,12 +21,12 @@ import java.util.UUID;
 /**
  * Created by angel on 5/1/16.
  */
-public class ActorManager implements ActorExtraDataManager {
+public class CustomerActorManager implements ActorExtraDataManager {
 
     private CryptoCustomerActorDao dao;
     private CryptoBrokerManager cryptoBrokerANSManager;
 
-    public ActorManager(CryptoCustomerActorDao dao, CryptoBrokerManager cryptoBrokerANSManager){
+    public CustomerActorManager(CryptoCustomerActorDao dao, CryptoBrokerManager cryptoBrokerANSManager){
         this.dao = dao;
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
     }
@@ -71,7 +71,7 @@ public class ActorManager implements ActorExtraDataManager {
 
         @Override
         public void updateCustomerExtraData(ActorExtraData actorExtraData) throws CantUpdateActorExtraDataException {
-
+            this.dao.updateCustomerExtraData(actorExtraData);
         }
 
         @Override
@@ -90,12 +90,12 @@ public class ActorManager implements ActorExtraDataManager {
         }
 
         @Override
-        public ActorExtraData getActorExtraDataLocalActor() throws CantGetListActorExtraDataException {
-            return null;
+        public ActorIdentity getActorInformationByPublicKey(String publicKeyBroker) throws CantGetListActorExtraDataException {
+            return this.dao.getActorInformationByPublicKey(publicKeyBroker);
         }
 
         @Override
         public Collection<Platforms> getPlatformsSupport(String CustomerPublicKey, Currency currency) throws CantGetListPlatformsException {
-            return this.dao.getPlatformsSupport(CustomerPublicKey, currency);
+            return null;
         }
 }
