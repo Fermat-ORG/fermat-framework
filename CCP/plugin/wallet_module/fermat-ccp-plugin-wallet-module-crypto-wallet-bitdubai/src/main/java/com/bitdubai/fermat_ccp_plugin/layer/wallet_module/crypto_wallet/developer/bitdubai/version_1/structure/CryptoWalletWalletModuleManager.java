@@ -113,6 +113,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.BlockingDeque;
 
 /**
  * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager</code>
@@ -782,15 +783,30 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     @Override
     public List<CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                         TransactionType transactionType,
-                                                                 String walletPublicKey,
-                                                                 String actorPublicKey,
-                                                                 String intraUserLoggedInPublicKey,
-                                                                 int max,
-                                                                 int offset) throws CantListTransactionsException {
+                                                                        String walletPublicKey,
+                                                                        String actorPublicKey, String intraUserLoggedInPublicKey,
+                                                                        BlockchainNetworkType blockchainNetworkType,
+                                                                        int max,
+                                                                        int offset) throws CantListTransactionsException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
             List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
+
+            //
+//                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+//
+//                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+//
+//                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
+//                        bitcoinWalletTransactionList1.add(bwt);
+//                    }
+//                }
+
+
+
+
+
 
             for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
@@ -826,6 +842,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                                                                     final TransactionType transactionType,
                                                                                     String walletPublicKey,
                                                                                     String intraUserLoggedInPublicKey,
+                                                                                    BlockchainNetworkType blockchainNetworkType,
                                                                                     int max,
                                                                                     int offset) throws CantListTransactionsException {
 
@@ -840,6 +857,17 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         max,
                         offset
                 );
+//
+//                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+//
+//                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+//
+//                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
+//                        bitcoinWalletTransactionList1.add(bwt);
+//                    }
+//                }
+
+
 
                 for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
@@ -878,18 +906,18 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet) throws CantSendCryptoException, InsufficientFundsException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendCryptoException, InsufficientFundsException {
         try {
 
             switch (deliveredToActorType) {
                 case EXTRA_USER:
                     System.out.println("Sending throw outgoing Extra User ...");
-                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, BlockchainNetworkType.REG_TEST);
+                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, blockchainNetworkType);
 
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
-                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,BlockchainNetworkType.REG_TEST);
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType);
 
                     break;
             }
@@ -1088,7 +1116,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                             intraUserLoggedInPublicKey,
                             paymentRequest.getWalletPublicKey() ,
                             CryptoCurrency.BITCOIN,
-                            BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            paymentRequest.getNetworkType());
                 }
                 catch (Exception e1)
                 {

@@ -11,8 +11,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum MessageTypes implements FermatEnum {
 
-    CONNECTION_INFORMATION("INF"),
-    CONNECTION_REQUEST("REQ")
+    CONNECTION_INFORMATION ("INF"),
+    CONNECTION_REQUEST     ("REQ"),
+    QUOTES_REQUEST         ("QRE"),
 
     ;
 
@@ -27,7 +28,8 @@ public enum MessageTypes implements FermatEnum {
         switch (code) {
 
             case "INF": return CONNECTION_INFORMATION;
-            case "REQ": return CONNECTION_REQUEST;
+            case "REQ": return CONNECTION_REQUEST    ;
+            case "QRE": return QUOTES_REQUEST        ;
 
             default:
                 throw new InvalidParameterException(

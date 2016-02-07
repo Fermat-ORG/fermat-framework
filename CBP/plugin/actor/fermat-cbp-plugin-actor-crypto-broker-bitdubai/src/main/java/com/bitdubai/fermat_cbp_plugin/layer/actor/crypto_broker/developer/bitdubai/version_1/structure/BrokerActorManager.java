@@ -10,7 +10,10 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetE
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantSendExtraDataActorException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.*;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAnswerQuotesRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
@@ -91,16 +94,18 @@ public class BrokerActorManager implements CryptoBrokerActorExtraDataManager {
                         }
                     }
                 }
-                cryptoBrokerANSManager.requestQuotes(publicKeyCustomer, Actors.CBP_CRYPTO_CUSTOMER, publicKeyBroker, System.currentTimeMillis(), quotes);
+                CryptoBrokerExtraData<CryptoBrokerQuote> request = cryptoBrokerANSManager.requestQuotes(publicKeyCustomer, Actors.CBP_CRYPTO_CUSTOMER, publicKeyBroker);
+                cryptoBrokerANSManager.answerQuotesRequest(request.getRequestId(), System.currentTimeMillis(), quotes);
+
             } catch (CantGetCryptoBrokerWalletSettingException e) {
-                throw new CantSendExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantSendExtraDataActorException(CantGetCryptoBrokerWalletSettingException.DEFAULT_MESSAGE, e, "", "");
             } catch (CryptoBrokerWalletNotFoundException e) {
-                throw new CantSendExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantSendExtraDataActorException(CryptoBrokerWalletNotFoundException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListBrokerIdentityWalletRelationshipException e) {
-                throw new CantSendExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantSendExtraDataActorException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetCryptoBrokerQuoteException e) {
-                throw new CantSendExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
-            } catch (CantRequestQuotesException e) {
+                throw new CantSendExtraDataActorException(CantGetCryptoBrokerQuoteException.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantRequestQuotesException | CantAnswerQuotesRequestException | QuotesRequestNotFoundException e) {
                 throw new CantSendExtraDataActorException(e.getMessage(), e, "", "");
             }
         }

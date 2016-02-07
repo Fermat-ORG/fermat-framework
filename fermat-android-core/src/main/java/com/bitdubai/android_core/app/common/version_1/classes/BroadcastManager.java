@@ -31,6 +31,10 @@ public class BroadcastManager implements BroadcasterInterface {
         fermatActivity.clear();
     }
 
+    public void resume(FermatActivity fermatActivity) {
+        this.fermatActivity = new WeakReference<FermatActivity>(fermatActivity);
+    }
+
 
     @Override
     public void publish(BroadcasterType broadcasterType, String code) {
@@ -40,6 +44,7 @@ public class BroadcastManager implements BroadcasterInterface {
                     updateView(code);
                     break;
                 case NOTIFICATION_SERVICE:
+                    fermatActivity.get().notificateBroadcast(null,code);
                     break;
             }
         }catch (Exception e){
@@ -56,7 +61,7 @@ public class BroadcastManager implements BroadcasterInterface {
                     updateView(code);
                     break;
                 case NOTIFICATION_SERVICE:
-
+                    fermatActivity.get().notificateBroadcast(null,code);
                     break;
             }
         }catch (Exception e){
@@ -73,7 +78,8 @@ public class BroadcastManager implements BroadcasterInterface {
                     updateView(code);
                     break;
                 case NOTIFICATION_SERVICE:
-
+                    String publicKey = fermatActivity.get().searchAppFromPlatformIdentifier(fermatApps);
+                    fermatActivity.get().notificateBroadcast(publicKey,code);
                     break;
             }
         }catch (Exception e){
@@ -89,8 +95,7 @@ public class BroadcastManager implements BroadcasterInterface {
         }
     }
 
-    private void notificate(){
 
-    }
+
 
 }
