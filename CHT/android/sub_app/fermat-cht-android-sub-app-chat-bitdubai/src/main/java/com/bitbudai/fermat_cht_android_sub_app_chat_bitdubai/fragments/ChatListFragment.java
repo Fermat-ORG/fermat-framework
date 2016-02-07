@@ -274,20 +274,17 @@ public class ChatListFragment extends AbstractFermatFragment{
                 List<String> converter = new ArrayList<String>();
                 converter.addAll(Arrays.asList(values.split("@#@#")));
                 Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
-         /*  try{
-                for (int i=0;i<chatManager.getContacts().size();i++){
-                    Contact con;
-                    if(chatManager.getContacts().get(i).getContactId().equals(converter.get(4))){
-                        con=chatManager.getContacts().get(i);
-                    }
-                }
-            } catch (CantGetContactException e) {
-                e.printStackTrace();
-            }*/
-
+            try{
                 appSession.setData("whocallme", "chatlist");
-                appSession.setData("contactid", UUID.fromString(converter.get(4)));
+                appSession.setData("contactid", chatManager.getContactByContactId(UUID.fromString(converter.get(4))));
                 changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+            } catch (CantGetContactException e) {
+                CommonLogger.exception(TAG+"clickoncontact", e.getMessage(), e);
+                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+            }
+
+
             }
         });
 
