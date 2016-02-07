@@ -64,8 +64,8 @@ public class BrokerActorManager implements CryptoBrokerActorExtraDataManager {
         }
 
         @Override
-        public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException {
-            return this.dao.getBrokerIdentityWalletRelationshipByWallet(wallet);
+        public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListBrokerIdentityWalletRelationshipException {
+            return this.dao.getBrokerIdentityWalletRelationshipByWallet(walletPublicKey);
         }
 
         @Override
