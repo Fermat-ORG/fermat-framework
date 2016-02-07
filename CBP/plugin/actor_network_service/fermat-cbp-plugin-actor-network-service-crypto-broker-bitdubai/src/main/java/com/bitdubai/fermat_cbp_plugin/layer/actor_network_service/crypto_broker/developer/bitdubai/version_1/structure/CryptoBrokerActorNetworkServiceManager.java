@@ -19,9 +19,12 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.UnexpectedProtocolStateException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
@@ -78,9 +81,6 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                 addCryptoBrokerToExpose(cryptoBroker);
 
             } else {
-
-                System.out.println("**************** I'm being exposed: "+cryptoBroker);
-                System.out.println("**************** Do i have profile image?: "+(cryptoBroker.getImage() != null)  );
 
                 final String imageString = Base64.encodeToString(cryptoBroker.getImage(), Base64.DEFAULT);
 
@@ -174,8 +174,6 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     public final void requestConnection(final CryptoBrokerConnectionInformation brokerInformation) throws CantRequestConnectionException {
 
         try {
-
-            System.out.println("************* I'm the crypto broker connection information created: "+brokerInformation);
 
             final UUID newId = UUID.randomUUID();
 
@@ -320,17 +318,15 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * @throws CantListPendingConnectionRequestsException  if something goes wrong.
      */
     @Override
-    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException {
+    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews(Actors actorType) throws CantListPendingConnectionRequestsException {
 
         try {
 
             List<ConnectionRequestAction> actions = new ArrayList<>();
 
-            actions.add(ConnectionRequestAction.CANCEL    );
-            actions.add(ConnectionRequestAction.DISCONNECT);
             actions.add(ConnectionRequestAction.REQUEST   );
 
-            return connectionNewsDao.listAllPendingRequests(actions);
+            return connectionNewsDao.listAllPendingRequestsByActorType(actorType, actions);
 
         } catch (final CantListPendingConnectionRequestsException e){
 
@@ -370,6 +366,16 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingConnectionRequestsException(e, null, "Unhandled Exception.");
         }
+    }
+
+    @Override
+    public void requestQuotes(UUID requestId, String requesterPublicKey, Actors requesterActorType, String cryptoBrokerPublicKey, long updateTime) throws CantRequestQuotesException {
+
+    }
+
+    @Override
+    public List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(RequestType requestType) throws CantListPendingConnectionRequestsException {
+        return null;
     }
 
     @Override

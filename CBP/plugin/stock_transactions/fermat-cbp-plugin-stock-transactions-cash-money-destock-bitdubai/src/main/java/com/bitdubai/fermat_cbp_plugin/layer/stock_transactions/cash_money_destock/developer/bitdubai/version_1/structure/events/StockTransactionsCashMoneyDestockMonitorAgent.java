@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_desto
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -37,7 +39,7 @@ import java.util.logging.Logger;
  * contains the logic for handling agent transactional
  * Created by franklin on 17/11/15.
  */
-public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
+public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
     //TODO: Manejo de Eventos
 
     private Thread agentThread;
@@ -48,6 +50,9 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
     private final CashUnholdTransactionManager cashUnholdTransactionManager;
     private final StockTransactionCashMoneyDestockFactory stockTransactionCashMoneyDestockFactory;
     private UUID pluginId;
+    public final int SLEEP_TIME = 5000;
+    int iterationNumber = 0;
+    boolean threadWorking;
 
     public StockTransactionsCashMoneyDestockMonitorAgent(ErrorManager errorManager,
                                                          StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager,
@@ -62,65 +67,94 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
         this.cashUnholdTransactionManager = cashUnholdTransactionManager;
         stockTransactionCashMoneyDestockFactory = new StockTransactionCashMoneyDestockFactory(pluginDatabaseSystem, pluginId);
         this.pluginId = pluginId;
+
+        this.agentThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isRunning())
+                    process();
+            }
+        });
     }
 
     @Override
     public void start() throws CantStartAgentException {
         Logger LOG = Logger.getGlobal();
-        LOG.info("Bank Money Restock Transaction monitor agent starting");
+        LOG.info("Cash Money Destock Transaction monitor agent starting");
 
-        final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
+        //final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
 
-        this.agentThread = new Thread(monitorAgent);
+        //this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
     }
 
     @Override
     public void stop() {
-        this.agentThread.interrupt();
+        if (isRunning())
+            this.agentThread.interrupt();
+        this.status = AgentStatus.STOPPED;
     }
 
+    public void process() {
+
+        while (isRunning()) {
+
+            try {
+                Thread.sleep(SLEEP_TIME);
+            } catch (InterruptedException interruptedException) {
+                cleanResources();
+                return;
+            }
+
+            doTheMainTask();
+
+            if (agentThread.isInterrupted()) {
+                cleanResources();
+                return;
+            }
+        }
+    }
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private final class MonitorAgent implements Runnable {
-
-        private final ErrorManager errorManager;
-        public final int SLEEP_TIME = 5000;
-        int iterationNumber = 0;
-        boolean threadWorking;
-
-        public MonitorAgent(final ErrorManager errorManager) {
-
-            this.errorManager = errorManager;
-        }
-
-        @Override
-        public void run() {
-            threadWorking = true;
-            while (threadWorking) {
-                /**
-                 * Increase the iteration counter
-                 */
-                iterationNumber++;
-                try {
-                    Thread.sleep(SLEEP_TIME);
-
-                    /**
-                     * now I will check if there are pending transactions to raise the event
-                     */
-
-                    doTheMainTask();
-                } catch (InterruptedException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-
-            }
-        }
-    }
+//    private final class MonitorAgent implements Runnable {
+//
+//        private final ErrorManager errorManager;
+//        public final int SLEEP_TIME = 5000;
+//        int iterationNumber = 0;
+//        boolean threadWorking;
+//
+//        public MonitorAgent(final ErrorManager errorManager) {
+//
+//            this.errorManager = errorManager;
+//        }
+//
+//        @Override
+//        public void run() {
+//            threadWorking = true;
+//            while (threadWorking) {
+//                /**
+//                 * Increase the iteration counter
+//                 */
+//                iterationNumber++;
+//                try {
+//                    Thread.sleep(SLEEP_TIME);
+//
+//                    /**
+//                     * now I will check if there are pending transactions to raise the event
+//                     */
+//
+//                    doTheMainTask();
+//                } catch (InterruptedException e) {
+//                    errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                } catch (Exception e) {
+//                    errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                }
+//
+//            }
+//        }
+//    }
 
     private void doTheMainTask() {
         try {
@@ -188,7 +222,14 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
                                 //cashMoneyTransaction.getCashReference(),
                                 cashMoneyTransaction.getMemo(),
                                 pluginId.toString());
-                        cashUnholdTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
+
+                        if (!cashUnholdTransactionManager.isTransactionRegistered(cashMoneyTransaction.getTransactionId()))
+                            cashUnholdTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
+
+                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+                        break;
+                    case IN_EJECUTION:
                         CashTransactionStatus castTransactionStatus = cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
                         if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
@@ -218,5 +259,11 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent {
         } catch (CantGetUnholdTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+    private void cleanResources() {
+        /**
+         * Disconnect from database and explicitly set all references to null.
+         */
     }
 }

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.in
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
@@ -11,6 +12,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.UnexpectedProtocolStateException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
@@ -116,11 +118,13 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * This method is exposed for the crypto broker actor connection plug-in. Here we'll return all the new requests that arrive to him.
      *
+     * @param actorType type of the actor whom wants to be new notifications
+     *
      * @return a list of instance of CryptoBrokerConnectionNews
      *
      * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
-    List<CryptoBrokerConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException;
+    List<CryptoBrokerConnectionRequest> listPendingConnectionNews(Actors actorType) throws CantListPendingConnectionRequestsException;
 
     /**
      * Through the method <code>listPendingConnectionUpdates</code> we can list all the connection news
@@ -133,6 +137,37 @@ public interface CryptoBrokerManager extends FermatManager {
      * @throws CantListPendingConnectionRequestsException if something goes wrong.
      */
     List<CryptoBrokerConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException;
+
+    /**
+     * Through the method <code>listPendingQuotesRequests</code> we can list all the pending quotes requests.
+     *
+     * @param requestId
+     * @param requesterPublicKey
+     * @param requesterActorType
+     * @param cryptoBrokerPublicKey
+     * @param updateTime
+     *
+     * @throws CantRequestQuotesException if something goes wrong.
+     */
+    void requestQuotes(UUID   requestId            ,
+                       String requesterPublicKey   ,
+                       Actors requesterActorType   ,
+                       String cryptoBrokerPublicKey,
+                       long   updateTime           ) throws CantRequestQuotesException;
+
+    /**
+     * Through the method <code>listPendingQuotesRequests</code> we can list all the pending quotes requests.
+     * We have to set a request type indicating:
+     * SENT    : All the Sent requests with a response.
+     * RECEIVED: All the Received request without a response.
+     *
+     * @param requestType SENT or RECEIVED
+     *
+     * @return a list of the pending quotes requests
+     *
+     * @throws CantListPendingConnectionRequestsException if something goes wrong.
+     */
+    List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(RequestType requestType) throws CantListPendingConnectionRequestsException;
 
     /**
      * Through the method <code>confirm</code> we can mark as done and confirmed a pending connection new or update.

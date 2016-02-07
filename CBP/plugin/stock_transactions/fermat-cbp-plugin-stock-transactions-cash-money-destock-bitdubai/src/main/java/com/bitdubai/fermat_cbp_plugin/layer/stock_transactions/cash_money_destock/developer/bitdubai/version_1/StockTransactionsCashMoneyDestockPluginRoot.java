@@ -139,7 +139,7 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        if (stockTransactionsCashMoneyDestockMonitorAgent == null) {
+        //if (stockTransactionsCashMoneyDestockMonitorAgent == null) {
             stockTransactionsCashMoneyDestockMonitorAgent = new StockTransactionsCashMoneyDestockMonitorAgent(
                     errorManager,
                     stockTransactionCashMoneyDestockManager,
@@ -150,7 +150,8 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
             );
 
             stockTransactionsCashMoneyDestockMonitorAgent.start();
-        } else stockTransactionsCashMoneyDestockMonitorAgent.start();
+        serviceStatus = ServiceStatus.STARTED;
+        //} else stockTransactionsCashMoneyDestockMonitorAgent.start();
     }
 
 }

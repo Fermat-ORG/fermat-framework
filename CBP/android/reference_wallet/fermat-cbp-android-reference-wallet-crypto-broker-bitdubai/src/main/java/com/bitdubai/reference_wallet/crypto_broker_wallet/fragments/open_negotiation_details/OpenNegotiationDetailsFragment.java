@@ -63,6 +63,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
     private ErrorManager errorManager;
 
 
+    private NegotiationDetailsAdapter  nda;
     public static OpenNegotiationDetailsFragment newInstance() {
         return new OpenNegotiationDetailsFragment();
     }
@@ -70,6 +71,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         try {
             CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
@@ -155,7 +157,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
 
     @Override
     public void onAddNoteButtonClicked() {
-        Toast.makeText(getActivity(), "Click on add_a_note_card_view", Toast.LENGTH_SHORT).show();
+       // Toast.makeText(getActivity(), "Click on add_a_note_card_view", Toast.LENGTH_SHORT).show();
+
+       /// NegotiationDetailsAdapter adapter = new NegotiationDetailsAdapter(getActivity(), appSession, walletManager, negotiationInfo, negotiationSteps);
+
     }
 
     @Override
@@ -167,4 +172,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
             changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
         }
     }
+
+
+
 }

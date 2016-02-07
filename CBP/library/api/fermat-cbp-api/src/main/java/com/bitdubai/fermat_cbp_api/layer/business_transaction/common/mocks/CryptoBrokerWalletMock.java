@@ -44,7 +44,7 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
     }
 
     @Override
-    public Quote getQuote(Currency merchandise, float quantity, FiatCurrency payment) throws CantGetCryptoBrokerQuoteException {
+    public Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException {
         return null;
     }
 }

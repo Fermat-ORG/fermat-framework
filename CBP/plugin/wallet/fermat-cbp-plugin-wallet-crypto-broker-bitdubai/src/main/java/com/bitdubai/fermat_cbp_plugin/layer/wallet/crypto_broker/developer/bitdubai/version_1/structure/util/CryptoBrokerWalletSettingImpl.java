@@ -36,31 +36,49 @@ public class CryptoBrokerWalletSettingImpl implements CryptoBrokerWalletSetting 
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void saveCryptoBrokerWalletSpreadSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread) throws CantSaveCryptoBrokerWalletSettingException {
         cryptoBrokerWalletDatabaseDao.saveCryptoBrokerWalletSpreadSetting(cryptoBrokerWalletSettingSpread);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting() throws CantGetCryptoBrokerWalletSettingException {
         return cryptoBrokerWalletDatabaseDao.getCryptoBrokerWalletSpreadSetting();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void saveCryptoBrokerWalletAssociatedSetting(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting) throws CantSaveCryptoBrokerWalletSettingException {
         cryptoBrokerWalletDatabaseDao.saveCryptoBrokerWalletAssociatedSetting(cryptoBrokerWalletAssociatedSetting);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings() throws CantGetCryptoBrokerWalletSettingException {
         return cryptoBrokerWalletDatabaseDao.getCryptoBrokerWalletAssociatedSettings();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting cryptoBrokerWalletProviderSetting) throws CantSaveCryptoBrokerWalletSettingException {
         cryptoBrokerWalletDatabaseDao.saveCryptoBrokerWalletProviderSetting(cryptoBrokerWalletProviderSetting);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<CryptoBrokerWalletProviderSetting> getCryptoBrokerWalletProviderSettings() throws CantGetCryptoBrokerWalletSettingException {
         return cryptoBrokerWalletDatabaseDao.getCryptoBrokerWalletProviderSettings();

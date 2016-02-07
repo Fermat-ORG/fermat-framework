@@ -296,7 +296,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onAddNoteButtonClicked() {
-        Toast.makeText(getActivity(), "ADD NOTE", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), "ADD NOTE", Toast.LENGTH_LONG).show();
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_ADD_NOTE, this.appSession.getAppPublicKey());
     }
 
@@ -354,12 +354,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         receptionMethods = getPaymentMethod(merchandise);
 
         //VALUE DEFAULT CUSTOMER PAYMENT METHOD
-        if(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD) == null)
+        if(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD) == null){
             putClause(ClauseType.CUSTOMER_PAYMENT_METHOD,paymentMethods.get(0));
+        }
 
         //VALUE DEFAULT BROKER PAYMENT METHOD
-        if(clauses.get(ClauseType.BROKER_PAYMENT_METHOD) == null)
-            putClause(ClauseType.BROKER_PAYMENT_METHOD,receptionMethods.get(0));
+        if(clauses.get(ClauseType.BROKER_PAYMENT_METHOD) == null) {
+            putClause(ClauseType.BROKER_PAYMENT_METHOD, receptionMethods.get(0));
+        }
 
         //VALUE DEFAULT INFO PAYMENT
         putPaymentInfo(clauses);
@@ -372,7 +374,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         if(clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER) == null)
             putClause(ClauseType.BROKER_DATE_TIME_TO_DELIVER,timeInMillisStr);
-
 
         brokerImage.setImageDrawable(brokerImg);
         brokerName.setText(broker.getAlias());
@@ -549,9 +550,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void validateChange(String oldValue, String newValue) {
         valuesHasChanged = false;
 
-        Toast.makeText(getActivity(), "VALIDATE CHAGE: " + oldValue + " != " + newValue, Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), "VALIDATE CHAGE: " + oldValue + " != " + newValue, Toast.LENGTH_LONG).show();
         if (oldValue != newValue) {
-            Toast.makeText(getActivity(), "CHANGE VALUE", Toast.LENGTH_LONG).show();
+//            Toast.makeText(getActivity(), "CHANGE VALUE", Toast.LENGTH_LONG).show();
             valuesHasChanged = true;
         }
     }
@@ -652,19 +653,22 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void putPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
 
         String currencyType = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
-//        Toast.makeText(getActivity(), "PutPaymentInfo.", Toast.LENGTH_LONG).show();
+//        Toast.makeText(getActivity(), "PutPaymentInfo. "+currencyType, Toast.LENGTH_LONG).show();
         if(currencyType != null) {
             if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyName())) {
-                if (clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null)
+                if (clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null) {
                     putClause(ClauseType.BROKER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+                }
 
             } else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyName())) {
-                if (clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null)
+                if (clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null) {
                     putClause(ClauseType.BROKER_BANK_ACCOUNT, "Insert Info Bank");
+                }
 
             } else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyName()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyName()))) {
-                if (clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null)
+                if (clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null) {
                     putClause(ClauseType.BROKER_PLACE_TO_DELIVER, "Insert Place To Delivery");
+                }
             }
         }
 
@@ -674,19 +678,22 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void putReceptionInfo(Map<ClauseType, ClauseInformation> clauses){
 
         String currencyType = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
-
+//        Toast.makeText(getActivity(), "PutReceptionInfo. "+currencyType, Toast.LENGTH_LONG).show();
         if(currencyType != null) {
             if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyName())) {
-                if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null)
+                if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null) {
                     putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
+                }
 
             } else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyName())) {
-                if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null)
+                if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
                     putClause(ClauseType.CUSTOMER_BANK_ACCOUNT, "Insert Info Bank");
+                }
 
             } else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyName()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyName()))) {
-                if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null)
+                if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) {
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, "Insert Place To Delivery");
+                }
             }
         }
 
