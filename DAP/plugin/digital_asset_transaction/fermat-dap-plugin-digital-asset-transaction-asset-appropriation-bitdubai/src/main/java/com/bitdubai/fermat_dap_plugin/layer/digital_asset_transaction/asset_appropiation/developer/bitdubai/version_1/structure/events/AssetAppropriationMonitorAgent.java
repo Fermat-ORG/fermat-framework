@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_app
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -251,7 +252,8 @@ public class AssetAppropriationMonitorAgent implements Agent {
                 switch (record.status()) {
                     case APPROPRIATION_STARTED:
                         AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("getting crypto address and saving it..." + record.transactionRecordId());
-                        CryptoAddress cryptoAddress = cryptoVaultManager.getAddress();
+                        //todo Victor corregir network type
+                        CryptoAddress cryptoAddress = cryptoVaultManager.getAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                         AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Address: " + cryptoAddress.getAddress());
                         dao.updateCryptoAddress(cryptoAddress, record.transactionRecordId());
                         dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());

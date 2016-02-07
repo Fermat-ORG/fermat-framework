@@ -114,6 +114,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
             try {
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }

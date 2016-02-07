@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -31,10 +32,10 @@ public interface ActorAssetIssuerManager extends FermatManager {
      *
      * @param assetIssuerActorPublicKey                 Referred to the Identity publicKey
      * @param assetIssuerActorName                      Referred to the Identity Alias
-     * @param assetIssuerActorprofileImage              Referred to the Identity profileImage
+     * @param assetIssuerImage              Referred to the Identity profileImage
      * @throws CantCreateActorAssetIssuerException
      */
-    void createActorAssetIssuerFactory(String assetIssuerActorPublicKey, String assetIssuerActorName, byte[] assetIssuerActorprofileImage) throws CantCreateActorAssetIssuerException;
+    void createActorAssetIssuerFactory(String assetIssuerActorPublicKey, String assetIssuerActorName, byte[] assetIssuerImage) throws CantCreateActorAssetIssuerException;
 
     /**
      * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service

@@ -7,7 +7,6 @@
     android:background="#ffffff"
     android:orientation="vertical">
 
-
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/txt_view_notification_title"
         android:layout_width="match_parent"
@@ -31,7 +30,6 @@
         android:orientation="horizontal"
         android:padding="20dp">
 
-
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/txt_view_notification_item"
             android:layout_width="0dp"
@@ -46,7 +44,6 @@
             android:id="@+id/switch_notification"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
 
     </LinearLayout>
 

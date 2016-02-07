@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
@@ -50,9 +51,9 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
         this.assetReceptionDao = assetReceptionDao;
     }
 
-    public void receiveDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantReceiveDigitalAssetException {
+    public void receiveDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, String senderId, PlatformComponentType senderType) throws CantReceiveDigitalAssetException {
         try {
-            persistDigitalAsset(digitalAssetMetadata, senderId);
+            persistDigitalAsset(digitalAssetMetadata, senderId, senderType);
             verifyAsset(digitalAssetMetadata);
         } catch (CantPersistDigitalAssetException exception) {
             throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot persist Digital Asset Metadata");
@@ -91,13 +92,14 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
         }
     }
 
-    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
+    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId, PlatformComponentType senderType) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
         setDigitalAssetLocalFilePath(digitalAssetMetadata);
         this.assetReceptionDao.persistDigitalAsset(
                 digitalAssetMetadata.getGenesisTransaction(),
                 this.digitalAssetFileStoragePath,
                 digitalAssetMetadata.getDigitalAssetHash(),
-                senderId);
+                senderId,
+                senderType);
     }
 
     /**

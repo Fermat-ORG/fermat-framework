@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 
 /**
- * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.ClientSuccessfullReconnectNotificationEventHandler</code>
+ * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.communication.ClientSuccessfulReconnectNotificationEventHandler</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 08/01/16.
  *

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -20,7 +21,9 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.sessions.AssetFactorySession;
@@ -38,16 +41,17 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Nerio on 01/02/16.
  */
-public class SettingsFactoryNetworkFragment extends AbstractFermatFragment {
+public class SettingsFactoryNetworkFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener {
 
     private View rootView;
     private Spinner spinner;
+    List<BlockchainNetworkType> listElementSpinner;
 
     // Fermat Managers
     private AssetFactoryModuleManager manager;
     private ErrorManager errorManager;
     SettingsManager<AssetFactorySettings> settingsManager;
-
+    AssetFactorySettings settings = null;
     public static SettingsFactoryNetworkFragment newInstance() {
         return new SettingsFactoryNetworkFragment();
     }
@@ -74,6 +78,16 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.dap_factory_settings_main_network, container, false);
+
+            try {
+                settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                settings = null;
+            }
+            if (settings != null) {
+                listElementSpinner = settings.getBlockchainNetwork();
+            }
+
             setUpUi();
             configureToolbar();
 
@@ -144,14 +158,42 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment {
 
     public void setUpUi() {
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
-        List<String> list = new ArrayList<String>();
-        list.add("MainNet");
-        list.add("TestNet");
-        list.add("RegTest");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
-                R.layout.dap_factory_list_item_spinner, list);
+//        listElementSpinner = new ArrayList<String>();
+//        listElementSpinner.add("MainNet");
+//        listElementSpinner.add("TestNet");
+//        listElementSpinner.add("RegTest");
+        ArrayAdapter<BlockchainNetworkType> dataAdapter = new ArrayAdapter<>(getActivity(),
+                R.layout.dap_factory_list_item_spinner, listElementSpinner);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dataAdapter.notifyDataSetChanged();
         spinner.setAdapter(dataAdapter);
+        spinner.setOnItemSelectedListener(this);
+        spinner.setSelection(settings.getBlockchainNetworkPosition());
     }
 
+    private void managerSettings(BlockchainNetworkType dataSet, int position) {
+        try {
+            settings.setBlockchainNetworkPosition(position);
+
+            settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+            manager.changeNetworkType(dataSet);
+        } catch (CantPersistSettingsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        BlockchainNetworkType network;
+
+        network = listElementSpinner.get(i);
+        adapterView.setSelection(i);
+
+        managerSettings(network, i);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }
