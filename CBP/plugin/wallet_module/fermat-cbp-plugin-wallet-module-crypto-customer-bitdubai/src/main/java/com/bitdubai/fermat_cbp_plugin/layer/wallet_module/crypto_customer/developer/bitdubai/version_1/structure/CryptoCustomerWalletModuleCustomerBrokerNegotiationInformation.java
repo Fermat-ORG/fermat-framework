@@ -78,7 +78,9 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     }
 
     public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
+            String customerPublicKey,
             String customerAlias,
+            String brokerPublicKey,
             String brokerAlias,
             NegotiationStatus status,
             Map<ClauseType, ClauseInformation> clauses,
@@ -86,8 +88,8 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
             long lastUpdateDate
     ) {
 
-        this.customerIdentity   = new CryptoCustomerWalletModuleActorIdentityImpl(customerAlias, new byte[0]);
-        this.brokerIdentity     = new CryptoCustomerWalletModuleActorIdentityImpl(brokerAlias, new byte[0]);
+        this.customerIdentity   = new CryptoCustomerWalletModuleActorIdentityImpl(customerPublicKey, customerAlias, new byte[0]);
+        this.brokerIdentity     = new CryptoCustomerWalletModuleActorIdentityImpl(brokerPublicKey, brokerAlias, new byte[0]);
 
         String currencyQty      = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue()));
         String exchangeRate     = getDecimalFormat(getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue()));

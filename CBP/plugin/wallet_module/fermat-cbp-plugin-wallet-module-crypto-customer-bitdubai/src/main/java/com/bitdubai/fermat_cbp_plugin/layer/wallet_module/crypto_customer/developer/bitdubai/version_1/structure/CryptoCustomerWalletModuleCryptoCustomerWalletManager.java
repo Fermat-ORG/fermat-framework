@@ -1277,18 +1277,27 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             Collection<Clause> negotiationClause = customerBrokerSaleNegotiation.getClauses();
             Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
-            String customerPublickey= customerBrokerSaleNegotiation.getCustomerPublicKey();
-            String customerAlias    = customerBrokerSaleNegotiation.getCustomerPublicKey();
-            String brokerPublickey  = customerBrokerSaleNegotiation.getBrokerPublicKey();
-            String brokerAlias      = customerBrokerSaleNegotiation.getBrokerPublicKey();
             long lastUpdateDate     = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate();
+            String customerPublickey= customerBrokerSaleNegotiation.getCustomerPublicKey();
+            String customerAlias    = "Not Alias";
+            String brokerPublickey  = customerBrokerSaleNegotiation.getBrokerPublicKey();
+            String brokerAlias      = "Not Alias";
             String note             = "";
+
+            if (cryptoCustomerIdentityManager.getCryptoCustomerIdentity(customerPublickey) != null)
+                customerAlias    = cryptoCustomerIdentityManager.getCryptoCustomerIdentity(customerPublickey).getAlias();
+
+            if(actorExtraDataManager.getActorInformationByPublicKey(brokerPublickey) != null)
+                brokerAlias      = actorExtraDataManager.getActorInformationByPublicKey(brokerPublickey).getAlias();
+
             if(customerBrokerSaleNegotiation.getMemo() != null)
                 note = customerBrokerSaleNegotiation.getMemo();
 
 
             cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
+                    customerPublickey,
                     customerAlias,
+                    brokerPublickey,
                     brokerAlias,
                     status,
                     clauses,
