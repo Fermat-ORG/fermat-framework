@@ -20,7 +20,7 @@ public interface WalletRuntimeManager extends RuntimeManager {
 
     public boolean removeNavigationStructure(String publicKey) throws CantRemoveWalletNavigationStructureException;
 
-    public WalletNavigationStructure getNavigationStructureFromWallet(String publicKey);
+    public WalletNavigationStructure getNavigationStructureFromWallet(String publicKey) throws WalletRuntimeExceptions;
 
 
 

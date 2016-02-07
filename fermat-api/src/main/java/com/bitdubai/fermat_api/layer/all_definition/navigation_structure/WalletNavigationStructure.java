@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet;
 import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
 
@@ -73,6 +75,16 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
         this.activities = activities;
     }
 
+
+    @Override
+    public FermatApps getFermatApp() {
+        return null;
+    }
+
+    @Override
+    public FermatAppType getFermatAppType() {
+        return FermatAppType.WALLET;
+    }
 
     /**
      * WalletNavigationStructure interface implementation.
