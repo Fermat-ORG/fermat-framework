@@ -1,17 +1,17 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-android:background="@drawable/background_tabs_diagonal_rotated"
+    android:background="@drawable/background_tabs_diagonal_rotated"
     >
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btn_expand_receive_form"
-        android:text="receive"/>
+        android:text="@string/receive_text"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,7 +50,7 @@ android:background="@drawable/background_tabs_diagonal_rotated"
                         android:id="@+id/contact_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="name"
+                        android:text="@string/name_text"
                         android:textColor="#72af9c"
                         android:textColorHint="#BDBDBD"
                         android:textSize="22sp"
@@ -63,9 +63,7 @@ android:background="@drawable/background_tabs_diagonal_rotated"
                         android:layout_weight="0.2"
                         android:background="@null"
                         android:gravity="center"
-
                         />
-
 
                 </LinearLayout>
 
@@ -87,9 +85,8 @@ android:background="@drawable/background_tabs_diagonal_rotated"
                         android:src="@drawable/ic_action_send_now_grey"
                         android:padding="3dp"
                         android:clickable="true"
-                        android:text="Give me an Address!"
+                        android:text="@string/give_me_an_address_address_text"
                         android:layout_weight="0.5"
-
                         />
 
                     <Button
@@ -100,9 +97,8 @@ android:background="@drawable/background_tabs_diagonal_rotated"
                         android:src="@drawable/ic_action_send_now_grey"
                         android:padding="3dp"
                         android:clickable="true"
-                        android:text="Share"
+                        android:text="@string/action_share"
                         android:layout_weight="0.5"
-
                         />
                 </LinearLayout>
 
@@ -111,17 +107,13 @@ android:background="@drawable/background_tabs_diagonal_rotated"
         </RelativeLayout>
     </LinearLayout>
 
-<ExpandableListView
-    android:id="@+id/expListView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_weight="0.14"
-    android:layout_below="@+id/send_form"
-    android:headerDividersEnabled="false"
-    android:divider="#00000000"
-    >
-</ExpandableListView>
-
-
+    <ExpandableListView
+        android:id="@+id/expListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.14"
+        android:layout_below="@+id/send_form"
+        android:headerDividersEnabled="false"
+        android:divider="#00000000"/>
 
 </LinearLayout>

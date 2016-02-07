@@ -6,8 +6,6 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal</code>
  * <p/>
@@ -27,6 +25,4 @@ public interface NetworkServiceLocal {
      */
     public void sendMessage(final String senderIdentityPublicKey,final String receiverPublicKey ,final String messageContent);
 
-
-    //public FermatMessage getLastMessageReceived();
 }

@@ -34,7 +34,6 @@
         app:typeface="ROBOTO_REGULAR"
         tools:ignore="HardcodedText" />
 
-
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/notification_action"
         android:layout_width="match_parent"
