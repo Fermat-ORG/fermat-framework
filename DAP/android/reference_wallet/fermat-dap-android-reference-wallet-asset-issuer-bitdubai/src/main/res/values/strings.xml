@@ -2,7 +2,14 @@
     <string name="app_name">Asset Issuer Wallet</string>
     <string name="action_publish">Distribute</string>
     <string name="dap_identity_alias_default_text">Asset Issuer</string>
+
+    <!-- toolbar -->
     <string name="help">Help</string>
+    <string name="dap_issuer_wallet_search">Search</string>
+    <string name="dap_issuer_wallet_search_hint">Asset name</string>
+    <!-- -->
+
+    <!-- empty list views -->
     <string name="no_assets_issuer">No Assets?</string>
     <string name="no_assets_issuer_message">Don\'t worry, as an Asset Issuer you are able to create them using the Asset Factory. All the assets you published there, will be stored at this wallet.</string>
     <string name="no_assets_user">No Assets?</string>
@@ -11,6 +18,7 @@
     <string name="no_assets_redeem_point_message">Don\'t worry, as a redeem point you need to connect your device to other Assets Issuers using the Asset Issuer Community application. Once you are connected, you will be eligible to redeem assets from any user!</string>
     <string name="no_users">No Users</string>
     <string name="no_groups">No Groups</string>
+    <!-- -->
 
     <!-- error messages -->
     <string name="dap_issuer_wallet_system_error">Asset Issuer system error</string>
