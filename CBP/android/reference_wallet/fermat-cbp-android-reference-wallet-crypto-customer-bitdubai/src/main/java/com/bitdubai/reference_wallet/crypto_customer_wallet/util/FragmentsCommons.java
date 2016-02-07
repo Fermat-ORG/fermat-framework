@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.squareup.picasso.Picasso;
@@ -42,14 +43,14 @@ public class FragmentsCommons {
         }
     }
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, ActiveActorIdentityInformation identity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Activity activity, CryptoCustomerIdentity identity) throws CantGetActiveLoginIdentityException {
         View view = inflater.inflate(R.layout.ccw_navigation_view_header, null, true);
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.ccw_image_view_profile);
             if (identity != null) {
-                if (identity.getImage() != null) {
-                    if (identity.getImage().length > 0) {
-                        imageView.setImageBitmap((BitmapFactory.decodeByteArray(identity.getImage(), 0, identity.getImage().length)));
+                if (identity.getProfileImage() != null) {
+                    if (identity.getProfileImage().length > 0) {
+                        imageView.setImageBitmap((BitmapFactory.decodeByteArray(identity.getProfileImage(), 0, identity.getProfileImage().length)));
                     } else
                         Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
                 }
