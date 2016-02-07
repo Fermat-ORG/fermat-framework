@@ -54,7 +54,7 @@ public class TransactionCompleteInformation {
                     cryptoTransaction         .getCryptoAmount()             ,
                     timestamp                                                ,
                     memo,
-                    BlockchainNetworkType.REG_TEST
+                    cryptoTransaction.getBlockchainNetworkType()
 
             );
 
