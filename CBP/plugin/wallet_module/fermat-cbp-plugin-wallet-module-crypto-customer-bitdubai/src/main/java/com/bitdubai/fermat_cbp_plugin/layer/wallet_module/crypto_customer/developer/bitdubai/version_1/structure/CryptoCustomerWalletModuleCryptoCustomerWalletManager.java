@@ -1277,7 +1277,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             Collection<Clause> negotiationClause = customerBrokerSaleNegotiation.getClauses();
             Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
+            String customerPublickey= customerBrokerSaleNegotiation.getCustomerPublicKey();
             String customerAlias    = customerBrokerSaleNegotiation.getCustomerPublicKey();
+            String brokerPublickey  = customerBrokerSaleNegotiation.getBrokerPublicKey();
             String brokerAlias      = customerBrokerSaleNegotiation.getBrokerPublicKey();
             long lastUpdateDate     = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate();
             String note             = "";
