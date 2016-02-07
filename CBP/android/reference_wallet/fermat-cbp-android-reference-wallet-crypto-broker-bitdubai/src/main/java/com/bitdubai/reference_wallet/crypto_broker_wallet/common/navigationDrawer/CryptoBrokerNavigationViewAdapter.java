@@ -39,7 +39,7 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
         earningsItems.add(new NavViewFooterItem("Bolivar", "350,251.87"));
     }
 
-    public CryptoBrokerNavigationViewAdapter(Context context, List<NavViewFooterItem> earnings, List<NavViewFooterItem> stock) {
+    public CryptoBrokerNavigationViewAdapter(Context context, List<NavViewFooterItem> stock, List<NavViewFooterItem> earnings) {
         super(context);
 
         stockItems = stock;
