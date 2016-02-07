@@ -12,18 +12,18 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home.StockStatisticsData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
@@ -33,18 +33,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by mati on 2015.11.24..
+ * Created by Nelson Ramirez
+ * on 2015.11.24
  */
 public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter {
 
-    private CryptoBrokerWalletSession session;
-    private final ActiveActorIdentityInformation actorIdentity;
-    private Activity activity;
+    private static final String TAG = "BrokerNavigationView";
 
-    public CryptoBrokerNavigationViewPainter(Activity activity, CryptoBrokerWalletSession session, ActiveActorIdentityInformation actorIdentity) {
+    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletSession session;
+    private CryptoBrokerIdentity actorIdentity;
+    private Activity activity;
+    private ErrorManager errorManager;
+
+    public CryptoBrokerNavigationViewPainter(Activity activity, CryptoBrokerWalletSession session) {
         this.activity = activity;
         this.session = session;
-        this.actorIdentity = actorIdentity;
+
+        errorManager = session.getErrorManager();
+
+        try {
+            final CryptoBrokerWalletModuleManager moduleManager = session.getModuleManager();
+            walletManager = moduleManager.getCryptoBrokerWallet(session.getAppPublicKey());
+            actorIdentity = walletManager.getAssociatedIdentity(session.getAppPublicKey());
+
+        } catch (FermatException ex) {
+            if (errorManager == null)
+                Log.e(TAG, ex.getMessage(), ex);
+            else
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+        }
     }
 
     @Override
@@ -112,10 +131,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     private List<NavViewFooterItem> getStockData() {
         List<NavViewFooterItem> stockItems = new ArrayList<>();
 
-        ErrorManager errorManager = session.getErrorManager();
-
         try {
-            CryptoBrokerWalletManager walletManager = session.getModuleManager().getCryptoBrokerWallet(session.getAppPublicKey());
             List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
             NumberFormat numberFormat = DecimalFormat.getInstance();
 
@@ -133,7 +149,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             stockItems.add(new NavViewFooterItem("Bolivar", "350,400.25"));
 
             if (errorManager == null)
-                Log.e("BrokerWalletFooter", ex.getMessage(), ex);
+                Log.e(TAG, ex.getMessage(), ex);
             else
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);

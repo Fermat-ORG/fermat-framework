@@ -42,7 +42,7 @@ public class pruebaExtraData {
 
 
         KeyPair key = new ECCKeyPair();
-        Customer = new ActorExtraDataIdentity("Pedro", key.getPublicKey());
+        Customer = new ActorExtraDataIdentity("Pedro", key.getPublicKey(), null);
         quotes = new ArrayList<>();
         quote = new QuotesExtraDataInformation(UUID.randomUUID(), CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR, 348000f); quotes.add(quote);
         quote = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.VENEZUELAN_BOLIVAR, CryptoCurrency.BITCOIN, 0.00034f); quotes.add(quote);
@@ -63,7 +63,7 @@ public class pruebaExtraData {
 
         // ===========================================================================================================================================================
 
-        Customer = new ActorExtraDataIdentity("Juan", key.getPublicKey());
+        Customer = new ActorExtraDataIdentity("Juan", key.getPublicKey(), null);
         quotes = new ArrayList<>();
         quote = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR, 1000f); quotes.add(quote);
         quote = new QuotesExtraDataInformation(UUID.randomUUID(), FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, 0.001f); quotes.add(quote);
