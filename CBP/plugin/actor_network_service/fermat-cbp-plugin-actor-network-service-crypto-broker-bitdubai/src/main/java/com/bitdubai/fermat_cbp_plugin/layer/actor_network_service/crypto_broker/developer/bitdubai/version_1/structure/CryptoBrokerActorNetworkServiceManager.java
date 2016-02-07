@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enu
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAnswerQuotesRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
@@ -372,9 +374,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     @Override
     public CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(final String                  requesterPublicKey   ,
                                                                   final Actors                  requesterActorType   ,
-                                                                  final String                  cryptoBrokerPublicKey,
-                                                                  final long                    updateTime           ,
-                                                                  final List<CryptoBrokerQuote> quotes               ) throws CantRequestQuotesException {
+                                                                  final String                  cryptoBrokerPublicKey) throws CantRequestQuotesException {
 
         try {
 
@@ -388,8 +388,6 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     requesterPublicKey   ,
                     requesterActorType   ,
                     cryptoBrokerPublicKey,
-                    updateTime           ,
-                    quotes               ,
                     state                ,
                     type
             );
@@ -410,7 +408,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
         try {
 
-            return cryptoBrokerActorNetworkServiceDao.listPendingQuotesRequests(requestType);
+            return cryptoBrokerActorNetworkServiceDao.listPendingQuotesRequests(ProtocolState.PENDING_LOCAL_ACTION, requestType);
 
         } catch (final CantListPendingQuotesRequestsException e){
 
@@ -420,6 +418,32 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingQuotesRequestsException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void answerQuotesRequest(final UUID                    requestId ,
+                                    final long                    updateTime,
+                                    final List<CryptoBrokerQuote> quotes    ) throws CantAnswerQuotesRequestException,
+                                                                                     QuotesRequestNotFoundException  {
+
+        try {
+
+            cryptoBrokerActorNetworkServiceDao.answerQuotesRequest(
+                    requestId                    ,
+                    updateTime                   ,
+                    quotes                       ,
+                    ProtocolState.PROCESSING_SEND
+            );
+
+        } catch (final QuotesRequestNotFoundException | CantAnswerQuotesRequestException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantAnswerQuotesRequestException(e, null, "Unhandled Exception.");
         }
     }
 

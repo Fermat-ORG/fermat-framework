@@ -8,13 +8,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 25/11/15.
  */
-public class AbstractCBPFermatEvent implements FermatEvent {
+public class GenericCBPFermatEvent implements FermatEvent {
 
     private EventType eventType;
 
     private EventSource eventSource;
 
-    public AbstractCBPFermatEvent(EventType eventType){
+    public GenericCBPFermatEvent(EventType eventType){
         this.eventType=eventType;
     }
 
@@ -31,5 +31,13 @@ public class AbstractCBPFermatEvent implements FermatEvent {
     @Override
     public EventSource getSource() {
         return this.eventSource;
+    }
+
+    @Override
+    public String toString() {
+        return "GenericCBPFermatEvent{" +
+                "eventType=" + eventType +
+                ", eventSource=" + eventSource +
+                '}';
     }
 }
