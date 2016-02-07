@@ -74,4 +74,19 @@ public class HoldBankMoneyTransactionManager implements HoldManager {
     public BankTransactionStatus getHoldTransactionsStatus(UUID transactionId) throws CantGetHoldTransactionException {
             return holdBankMoneyTransactionDao.getHoldTransaction(transactionId).getBankTransactionStatus();
     }
+
+    @Override
+    public boolean isTransactionRegistered(UUID transactionId) {
+        BankTransactionStatus status= null;
+        try {
+            status = holdBankMoneyTransactionDao.getHoldTransaction(transactionId).getBankTransactionStatus();
+            if (status!=null){
+                return true;
+            } else {
+                return false;
+            }
+        }catch (FermatException e){
+            return false;
+        }
+    }
 }

@@ -1,5 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcceptActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
@@ -8,40 +14,38 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantLoginCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerCancellingFailedException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerConnectionRejectionFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySearch;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.LinkedCryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunityManager</code>
- * bla bla bla.
- * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/12/2015.
+ * Created by Alejandro Bicelis on 2/2/2016.
  */
+
 public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySubAppModuleManager {
 
     private final CryptoBrokerIdentityManager          cryptoBrokerIdentityManager              ;
@@ -82,7 +86,7 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
 
     @Override
     public CryptoCustomerCommunitySearch searchNewCryptoCustomer(CryptoCustomerCommunitySelectableIdentity cryptoCustomerCommunitySelectableIdentity) {
-        return null;
+        return new CryptoCustomerCommunitySubAppModuleCommunitySearch(cryptoCustomerActorNetworkServiceManager);
     }
 
     @Override
@@ -91,12 +95,24 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     }
 
     @Override
-    public void acceptCryptoCustomer(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException {
-
+    public void acceptCryptoCustomer(UUID connectionId) throws CantAcceptRequestException {
+        try {
+            System.out.println("************* im accepting in module the request: "+connectionId);
+            this.cryptoCustomerActorConnectionManager.acceptConnection(connectionId);
+        } catch (CantAcceptActorConnectionRequestException | ActorConnectionNotFoundException | UnexpectedConnectionStateException e)
+        {
+            throw new CantAcceptRequestException("", e, "", "");
+        }
     }
 
     @Override
-    public void denyConnection(String cryptoCustomerToRejectPublicKey) throws CryptoCustomerConnectionRejectionFailedException {
+    public void denyConnection(UUID connectionId) throws CantDenyActorConnectionRequestException {
+        try {
+            this.cryptoCustomerActorConnectionManager.denyConnection(connectionId);
+        } catch (CantDenyActorConnectionRequestException | ActorConnectionNotFoundException | UnexpectedConnectionStateException e)
+        {
+            throw new CantDenyActorConnectionRequestException("", e, "", "");
+        }
 
     }
 
@@ -113,6 +129,77 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     @Override
     public List<CryptoCustomerCommunityInformation> getAllCryptoCustomers(int max, int offset) throws CantGetCryptoCustomerListException {
         return null;
+    }
+
+
+    @Override
+    public List<LinkedCryptoCustomerIdentity> listCryptoCustomersPendingLocalAction(final CryptoCustomerCommunitySelectableIdentity selectedIdentity,
+                                                                                      final int max,
+                                                                                      final int offset) throws CantGetCryptoCustomerListException {
+
+        try {
+
+            final CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType()
+            );
+
+            final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
+
+            search.addConnectionState(ConnectionState.PENDING_LOCALLY_ACCEPTANCE);
+
+            final List<CryptoCustomerActorConnection> actorConnections = search.getResult(max, offset);
+
+            final List<LinkedCryptoCustomerIdentity> linkedCryptoCustomerIdentityList = new ArrayList<>();
+
+            for (CryptoCustomerActorConnection ccac : actorConnections)
+                linkedCryptoCustomerIdentityList.add(new LinkedCryptoCustomerIdentityImpl(ccac));
+
+            return linkedCryptoCustomerIdentityList;
+
+        } catch (final CantListActorConnectionsException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCryptoCustomerListException("", e, "", "Error trying to list actor connections.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCryptoCustomerListException("", e, "", "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public List<CryptoCustomerCommunityInformation> listAllConnectedCryptoCustomers(CryptoCustomerCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantGetCryptoCustomerListException {
+
+        try {
+
+            final CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType()
+            );
+
+            final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
+
+            search.addConnectionState(ConnectionState.CONNECTED);
+
+            final List<CryptoCustomerActorConnection> actorConnections = search.getResult(max, offset);
+
+            final List<CryptoCustomerCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+
+            for (CryptoCustomerActorConnection ccac : actorConnections)
+                cryptoCustomerCommunityInformationList.add(new CryptoCustomerCommunitySubAppModuleInformation(ccac));
+
+            return cryptoCustomerCommunityInformationList;
+
+        } catch (final CantListActorConnectionsException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCryptoCustomerListException("", e, "", "Error trying to list actor connections.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetCryptoCustomerListException("", e, "", "Unhandled Exception.");
+        }
     }
 
     @Override
@@ -156,6 +243,12 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
         }catch (Exception e){appSettings = null;}
 
 
+        //Get all broker identities on local device
+        List<CryptoBrokerIdentity> identitiesInDevice = null;
+        try{
+            identitiesInDevice = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        } catch(CantListCryptoBrokerIdentitiesException e) { /*Do nothing*/ }
+
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property
         if(appSettings != null)
@@ -164,23 +257,50 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
 
             if (lastSelectedIdentityPublicKey != null){
 
-                //Get Broker identity from local device
-                CryptoBrokerIdentity bi = null;
-                try{
-                    bi = cryptoBrokerIdentityManager.getCryptoBrokerIdentity(lastSelectedIdentityPublicKey);
-                } catch(CantGetCryptoBrokerIdentityException | IdentityNotFoundException e) {
-                    return null;
+                CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity = null;
+
+                for(CryptoBrokerIdentity i : identitiesInDevice) {
+                    if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                        selectedIdentity = new CryptoCustomerCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage());
                 }
 
-                if(bi == null)
+                if(selectedIdentity == null)
                     return null;
 
-                return new CryptoCustomerCommunitySelectableIdentityImpl(bi.getPublicKey(), Actors.CBP_CRYPTO_BROKER, bi.getAlias(), bi.getProfileImage());
+                //System.out.println("Good");
+                return selectedIdentity;
             }
+            //Check if at least one local broker identity has been created
+            else
+            {
+
+                if(identitiesInDevice.size() > 0)
+                {
+                    CryptoCustomerCommunitySelectableIdentityImpl selectedIdentity
+                            = new CryptoCustomerCommunitySelectableIdentityImpl(identitiesInDevice.get(0).getPublicKey(),
+                                                                              Actors.CBP_CRYPTO_BROKER,
+                                                                              identitiesInDevice.get(0).getAlias(),
+                                                                              identitiesInDevice.get(0).getProfileImage());
+
+                    appSettings.setLastSelectedIdentityPublicKey(selectedIdentity.getPublicKey());
+
+                    try {
+                        this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                    }catch (CantPersistSettingsException e){
+                        this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    }
+
+                    //System.out.println("Good");
+                    return selectedIdentity;
+                }
+
+            }
+
         }
 
         //System.out.println("Nope.. ");
         return null;
+
     }
 
     @Override

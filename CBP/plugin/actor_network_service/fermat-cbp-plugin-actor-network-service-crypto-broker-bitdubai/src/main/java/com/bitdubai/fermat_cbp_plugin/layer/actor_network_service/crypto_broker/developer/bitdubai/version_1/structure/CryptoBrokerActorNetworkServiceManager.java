@@ -19,14 +19,16 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.UnexpectedProtocolStateException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.ConnectionNewsDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
@@ -48,7 +50,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class CryptoBrokerActorNetworkServiceManager implements CryptoBrokerManager {
 
     private final CommunicationsClientConnection communicationsClientConnection;
-    private final ConnectionNewsDao              connectionNewsDao             ;
+    private final CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao;
     private final ErrorManager                   errorManager                  ;
     private final PluginVersionReference         pluginVersionReference        ;
 
@@ -56,12 +58,12 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     private PlatformComponentProfile platformComponentProfile;
 
     public CryptoBrokerActorNetworkServiceManager(final CommunicationsClientConnection communicationsClientConnection,
-                                                  final ConnectionNewsDao              connectionNewsDao             ,
+                                                  final CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao,
                                                   final ErrorManager                   errorManager                  ,
                                                   final PluginVersionReference         pluginVersionReference        ) {
 
         this.communicationsClientConnection = communicationsClientConnection;
-        this.connectionNewsDao              = connectionNewsDao             ;
+        this.cryptoBrokerActorNetworkServiceDao = cryptoBrokerActorNetworkServiceDao;
         this.errorManager                   = errorManager                  ;
         this.pluginVersionReference         = pluginVersionReference        ;
     }
@@ -78,9 +80,6 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                 addCryptoBrokerToExpose(cryptoBroker);
 
             } else {
-
-                System.out.println("**************** I'm being exposed: "+cryptoBroker);
-                System.out.println("**************** Do i have profile image?: "+(cryptoBroker.getImage() != null)  );
 
                 final String imageString = Base64.encodeToString(cryptoBroker.getImage(), Base64.DEFAULT);
 
@@ -181,7 +180,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             final RequestType             type   = RequestType            .SENT           ;
             final ConnectionRequestAction action = ConnectionRequestAction.REQUEST        ;
 
-            connectionNewsDao.createConnectionRequest(
+            cryptoBrokerActorNetworkServiceDao.createConnectionRequest(
                     newId            ,
                     brokerInformation,
                     state            ,
@@ -218,7 +217,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             final RequestType             type   = RequestType            .SENT           ;
             final ConnectionRequestAction action = ConnectionRequestAction.DISCONNECT     ;
 
-            connectionNewsDao.createDisconnectionRequest(
+            cryptoBrokerActorNetworkServiceDao.createDisconnectionRequest(
                     newId,
                     identityPublicKey,
                     identityActorType,
@@ -253,7 +252,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             final ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
 
-            connectionNewsDao.denyConnection(
+            cryptoBrokerActorNetworkServiceDao.denyConnection(
                     requestId,
                     protocolState
             );
@@ -295,7 +294,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             final ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
 
-            connectionNewsDao.acceptConnection(
+            cryptoBrokerActorNetworkServiceDao.acceptConnection(
                     requestId,
                     protocolState
             );
@@ -318,17 +317,15 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * @throws CantListPendingConnectionRequestsException  if something goes wrong.
      */
     @Override
-    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException {
+    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews(Actors actorType) throws CantListPendingConnectionRequestsException {
 
         try {
 
             List<ConnectionRequestAction> actions = new ArrayList<>();
 
-            actions.add(ConnectionRequestAction.CANCEL    );
-            actions.add(ConnectionRequestAction.DISCONNECT);
             actions.add(ConnectionRequestAction.REQUEST   );
 
-            return connectionNewsDao.listAllPendingRequests(actions);
+            return cryptoBrokerActorNetworkServiceDao.listAllPendingRequestsByActorType(actorType, actions);
 
         } catch (final CantListPendingConnectionRequestsException e){
 
@@ -357,7 +354,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             actions.add(ConnectionRequestAction.ACCEPT);
             actions.add(ConnectionRequestAction.DENY  );
 
-            return connectionNewsDao.listAllPendingRequests(actions);
+            return cryptoBrokerActorNetworkServiceDao.listAllPendingRequests(actions);
 
         } catch (final CantListPendingConnectionRequestsException e){
 
@@ -370,12 +367,23 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
         }
     }
 
+
+    @Override
+    public void requestQuotes(String requesterPublicKey, Actors requesterActorType, String cryptoBrokerPublicKey, long updateTime, List<CryptoBrokerQuote> quotes) throws CantRequestQuotesException {
+
+    }
+
+    @Override
+    public List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(RequestType requestType) throws CantListPendingConnectionRequestsException {
+        return null;
+    }
+
     @Override
     public void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException {
 
         try {
 
-            connectionNewsDao.confirmActorConnectionRequest(requestId);
+            cryptoBrokerActorNetworkServiceDao.confirmActorConnectionRequest(requestId);
 
         } catch (final ConnectionRequestNotFoundException e){
 

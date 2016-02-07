@@ -109,6 +109,11 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         }
 
         @Override
+        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListPurchaseNegotiationsException {
+            return this.customerBrokerPurchaseNegotiationDao.getNegotiationsBySendAndWaiting();
+        }
+
+        @Override
         public ClauseType getNextClauseType(ClauseType type) throws CantGetNextClauseTypeException {
             switch (type) {
                 case CUSTOMER_CURRENCY:

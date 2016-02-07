@@ -7,19 +7,33 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorConnectionDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorConnectionDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestNewsEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestUpdatesEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.structure.ActorConnectionEventActions;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.structure.ActorConnectionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorConnectionPluginRoot</code>
@@ -27,7 +41,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
  */
-public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin {
+public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
 
     @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons .ERROR_MANAGER         )
@@ -48,9 +62,13 @@ public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin {
 
     public CryptoBrokerActorConnectionPluginRoot() {
         super(new PluginVersionReference(new Version()));
+
+        listenersAdded = new ArrayList<>();
     }
 
     private ActorConnectionManager fermatManager;
+
+    private List<FermatEventListener> listenersAdded;
 
     @Override
     public FermatManager getManager() {
@@ -69,6 +87,23 @@ public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin {
             );
 
             dao.initializeDatabase();
+
+            final ActorConnectionEventActions eventActions = new ActorConnectionEventActions(
+                    cryptoBrokerManagerNetworkService,
+                    dao,
+                    errorManager,
+                    this.getPluginVersionReference()
+            );
+
+           /* FermatEventListener newsListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
+            newsListener.setEventHandler(new CryptoBrokerConnectionRequestNewsEventHandler(eventActions, this));
+            eventManager.addListener(newsListener);
+            listenersAdded.add(newsListener);*/
+
+            FermatEventListener updatesListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES);
+            updatesListener.setEventHandler(new CryptoBrokerConnectionRequestUpdatesEventHandler(eventActions, this));
+            eventManager.addListener(updatesListener);
+            listenersAdded.add(updatesListener);
 
             fermatManager = new ActorConnectionManager(
                     cryptoBrokerManagerNetworkService,
@@ -95,4 +130,32 @@ public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin {
         }
     }
 
+    @Override
+    public void stop() {
+
+        // remove all listeners from the event manager and from the plugin.
+        for (FermatEventListener listener : listenersAdded)
+            eventManager.removeListener(listener);
+
+        listenersAdded.clear();
+
+        super.stop();
+
+    }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return new CryptoBrokerActorConnectionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return new CryptoBrokerActorConnectionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return new CryptoBrokerActorConnectionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory,  developerDatabaseTable);
+    }
 }

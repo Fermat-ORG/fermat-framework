@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -58,7 +59,9 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO explain here the main functionality of the plug-in.
@@ -99,11 +102,15 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
 
     private List<ActorAssetUser> selectedUsersToDeliver;
 
-    private SettingsManager<AssetIssuerSettings> settingsManager;
-
     {
         selectedUsersToDeliver = new ArrayList<>();
     }
+
+    private BlockchainNetworkType selectedNetwork;
+
+    private SettingsManager<AssetIssuerSettings> settingsManager;
+    AssetIssuerSettings settings = null;
+    String publicKeyApp;
 
     private boolean showUsersOutsideGroup;
 
@@ -132,6 +139,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
                     pluginId,
                     pluginFileSystem
             );
+            selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
             //getTransactionsAssetAll("", "");
             System.out.println("******* Asset Issuer Wallet Module Init ******");
 
@@ -145,7 +153,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<AssetIssuerWalletList> getAssetIssuerWalletBalances(String publicKey) throws CantLoadWalletException {
         try {
-            return assetIssuerWalletModuleManager.getAssetIssuerWalletBalances(publicKey);
+            return assetIssuerWalletModuleManager.getAssetIssuerWalletBalances(publicKey, selectedNetwork);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantLoadWalletException(e);
@@ -264,7 +272,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public void distributionAssets(String assetPublicKey, String walletPublicKey, int assetsAmount) throws
             CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
-        assetIssuerWalletModuleManager.distributionAssets(assetPublicKey, walletPublicKey, selectedUsersToDeliver, assetsAmount);
+        assetIssuerWalletModuleManager.distributionAssets(assetPublicKey, walletPublicKey, selectedUsersToDeliver, assetsAmount, selectedNetwork);
     }
 
     @Override
@@ -277,7 +285,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
             }
             //TODO REMOVE HARDCODE
             InstalledWallet installedWallet = installedWallets.get(0);
-            assetIssuerWalletModuleManager.appropriateAsset(digitalAssetPublicKey, installedWallet.getWalletPublicKey());
+            assetIssuerWalletModuleManager.appropriateAsset(digitalAssetPublicKey, installedWallet.getWalletPublicKey(), selectedNetwork);
         } catch (CantListWalletsException e) {
             e.printStackTrace();
         }
@@ -286,13 +294,13 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public AssetIssuerWallet loadAssetIssuerWallet(String walletPublicKey) throws
             CantLoadWalletException {
-        wallet = assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey);
+        wallet = assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey, selectedNetwork);
         return wallet;
     }
 
     @Override
     public void createWalletAssetIssuer(String walletPublicKey) throws CantCreateWalletException {
-        assetIssuerWalletManager.createWalletAssetIssuer(walletPublicKey);
+        assetIssuerWalletManager.createWalletAssetIssuer(walletPublicKey, selectedNetwork);
     }
 
     @Override
@@ -313,6 +321,12 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<AssetStatistic> getWalletStatisticsByAsset(String walletPublicKey, String assetName) throws CantLoadWalletException, CantGetAssetStatisticException {
         return loadAssetIssuerWallet(walletPublicKey).getAllStatisticForGivenAsset(assetName);
+    }
+
+    @Override
+    public void changeNetworkType(BlockchainNetworkType networkType) {
+        if (selectedNetwork == null) return; //NOPE.
+        selectedNetwork = networkType;
     }
 
     @Override
@@ -345,8 +359,37 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void setAppPublicKey(String publicKey) {
+    public BlockchainNetworkType getSelectedNetwork() {
+        return selectedNetwork;
+    }
 
+    @Override
+    public void setAppPublicKey(String publicKey) {
+        this.publicKeyApp = publicKey;
+
+        try {
+            settings = settingsManager.loadAndGetSettings(publicKeyApp);
+        } catch (Exception e) {
+            settings = null;
+        }
+
+        if(settings != null && settings.getBlockchainNetwork() != null) {
+            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
+        } else {
+            int position = 0;
+            List<BlockchainNetworkType> list = Arrays.asList(BlockchainNetworkType.values());
+
+            for (BlockchainNetworkType networkType : list) {
+
+                if(Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    settings.setBlockchainNetworkPosition(position);
+                    break;
+                } else {
+                    position++;
+                }
+            }
+            settings.setBlockchainNetwork(list);
+        }
     }
 
     @Override

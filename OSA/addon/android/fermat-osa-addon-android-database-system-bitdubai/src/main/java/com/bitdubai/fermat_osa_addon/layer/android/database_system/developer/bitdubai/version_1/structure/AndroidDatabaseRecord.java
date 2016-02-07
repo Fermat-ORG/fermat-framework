@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -29,7 +29,7 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
 
     public AndroidDatabaseRecord() {
 
-        values = new HashMap<>();
+        values = new LinkedHashMap<>();
     }
 
     /**
