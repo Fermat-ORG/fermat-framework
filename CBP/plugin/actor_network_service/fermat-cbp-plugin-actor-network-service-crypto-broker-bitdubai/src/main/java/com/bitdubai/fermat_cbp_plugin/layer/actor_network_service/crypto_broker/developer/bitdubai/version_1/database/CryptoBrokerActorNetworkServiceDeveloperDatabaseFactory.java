@@ -168,6 +168,9 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
                 quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME    );
                 quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
                 quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_UPDATE_TIME_COLUMN_NAME             );
+                quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_TYPE_COLUMN_NAME                    );
+                quotesRequestColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_STATE_COLUMN_NAME                   );
+
                 /**
                  * Table Quotes Request addition.
                  */
@@ -179,10 +182,13 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
                  */
                 List<String> quotesColumns = new ArrayList<>();
 
-                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME      );
-                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME     );
-                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME);
-                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME           );
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME           );
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          );
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     );
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     );
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                );
+
                 /**
                  * Table Quotes addition.
                  */

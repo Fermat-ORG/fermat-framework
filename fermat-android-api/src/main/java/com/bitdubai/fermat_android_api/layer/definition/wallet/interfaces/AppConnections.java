@@ -2,6 +2,7 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
 import android.app.Activity;
 
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -62,5 +63,10 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
 
     public void setActivity(WeakReference<Activity> activity) {
         this.activity = activity;
+    }
+
+
+    public NotificationPainter getNotificationPainter(String code){
+        return null;
     }
 }

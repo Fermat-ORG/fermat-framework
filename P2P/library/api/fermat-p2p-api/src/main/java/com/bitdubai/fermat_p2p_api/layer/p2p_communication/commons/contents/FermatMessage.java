@@ -9,7 +9,6 @@ package com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
-
 import java.sql.Timestamp;
 import java.util.UUID;
 

@@ -12,9 +12,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.google.gson.Gson;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
