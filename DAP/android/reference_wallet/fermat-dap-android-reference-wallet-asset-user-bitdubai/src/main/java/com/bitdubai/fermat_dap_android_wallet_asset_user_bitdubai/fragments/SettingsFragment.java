@@ -3,15 +3,23 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments;
 import android.annotation.TargetApi;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -19,7 +27,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 
 import static android.widget.Toast.makeText;
@@ -48,6 +60,12 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
     private FermatTextView networkAction;
     private FermatTextView notificationAction;
 
+    private AssetUserWalletSubAppModuleManager moduleManager;
+
+    SettingsManager<AssetUserSettings> settingsManager;
+    private ErrorManager errorManager;
+    AssetUserSettings settings = null;
+
 
     public static SettingsFragment newInstance() {
         return new SettingsFragment();
@@ -56,6 +74,11 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
+        moduleManager = ((AssetUserSession) appSession).getModuleManager();
+        errorManager = appSession.getErrorManager();
+        settingsManager = appSession.getModuleManager().getSettingsManager();
         assetUserSession = (AssetUserSession) appSession;
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
@@ -70,6 +93,7 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
             setUpUI();
             setUpActions();
             setUpUIData();
+            configureToolbar();
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), R.string.dap_user_wallet_opps_system_error, Toast.LENGTH_SHORT).show();
@@ -133,34 +157,67 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
         } else if (id == R.id.imageView_contact) {
             // if user press the profile image
         }*/
-
-
     }
 
-    private ColorStateList getSwitchTrackColorStateList() {
-        if (mSwitchTrackStateList == null) {
-            final int[][] states = new int[3][];
-            final int[] colors = new int[3];
-            int i = 0;
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_SETTINGS, 0, "help").setIcon(R.drawable.dap_asset_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
 
-            // Disabled state
-            states[i] = new int[]{-android.R.attr.state_enabled};
-            colors[i] = Color.RED;
-            i++;
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
 
-            states[i] = new int[]{android.R.attr.state_checked};
-            colors[i] = Color.BLUE;
-            i++;
+            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_SETTINGS) {
+                setUpSettings(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                return true;
+            }
 
-            // Default enabled state
-            states[i] = new int[0];
-            colors[i] = Color.YELLOW;
-            i++;
-
-            mSwitchTrackStateList = new ColorStateList(states, colors);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), R.string.dap_user_wallet_system_error,
+                    Toast.LENGTH_SHORT).show();
         }
-        return mSwitchTrackStateList;
+        return super.onOptionsItemSelected(item);
     }
+
+    private void setUpSettings(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_asset_user_wallet)
+                    .setIconRes(R.drawable.asset_user_wallet)
+                    .setVIewColor(R.color.dap_user_view_color)
+                    .setTitleTextColor(R.color.dap_user_view_color)
+                    .setSubTitle(R.string.dap_user_wallet_detail_subTitle)
+                    .setBody(R.string.dap_user_wallet_detail_body)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (toolbar != null) {
+            toolbar.setTitleTextColor(Color.WHITE);
+            Drawable drawable = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_user_action_bar_gradient_colors, null);
+                toolbar.setElevation(0);
+            } else {
+                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_user_action_bar_gradient_colors);
+            }
+            toolbar.setBackground(drawable);
+        }
+    }
+
 
 
 }

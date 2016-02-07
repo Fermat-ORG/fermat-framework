@@ -53,7 +53,9 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO ADD A LITTLE EXPLANATION ABOUT THE MAIN FUNCTIONALITY OF THE PLUG-IN
@@ -99,6 +101,8 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     private AssetUserWalletModule assetUserWalletModule;
 
     private SettingsManager<AssetUserSettings> settingsManager;
+    AssetUserSettings settings = null;
+    String publicKeyApp;
 
     public AssetUserWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -241,7 +245,31 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public void setAppPublicKey(String publicKey) {
+        this.publicKeyApp = publicKey;
 
+        try {
+            settings = settingsManager.loadAndGetSettings(publicKeyApp);
+        } catch (Exception e) {
+            settings = null;
+        }
+
+        if(settings != null && settings.getBlockchainNetwork() != null) {
+            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
+        } else {
+            int position = 0;
+            List<BlockchainNetworkType> list = Arrays.asList(BlockchainNetworkType.values());
+
+            for (BlockchainNetworkType networkType : list) {
+
+                if(Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    settings.setBlockchainNetworkPosition(position);
+                    break;
+                } else {
+                    position++;
+                }
+            }
+            settings.setBlockchainNetwork(list);
+        }
     }
 
     @Override
