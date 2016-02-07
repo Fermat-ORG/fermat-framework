@@ -24,7 +24,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.int
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.ActorManager;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.CustomerActorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -81,7 +81,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
 
             @Override
             public FermatManager getManager() {
-                return new ActorManager(this.cryptoCustomerActorDao, cryptoBrokerANSManager);
+                return new CustomerActorManager(this.cryptoCustomerActorDao, cryptoBrokerANSManager);
             }
 
         /*

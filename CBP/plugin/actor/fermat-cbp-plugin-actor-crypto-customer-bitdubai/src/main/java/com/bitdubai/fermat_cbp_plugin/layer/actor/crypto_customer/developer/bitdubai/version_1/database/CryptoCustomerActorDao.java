@@ -359,6 +359,34 @@ public class CryptoCustomerActorDao {
             }
         }
 
+        public ActorIdentity getActorInformationByPublicKey(String _publicKey) throws CantGetListActorExtraDataException {
+            try {
+                DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, _publicKey, DatabaseFilterType.EQUAL);
+                table.loadToMemory();
+                List<DatabaseTableRecord> records = table.getRecords();
+                table.clearAllFilters();
+                if (records.isEmpty() ){
+                    return null;
+                }else {
+                    for (DatabaseTableRecord record : records) {
+                        String alias = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
+                        String publicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
+                        byte[] image = null;
+                        try {
+                            image = getCryptoCustomerIdentityProfileImagePrivateKey(publicKey);
+                        } catch (CantGetCryptoCustomerActorProfileImageException e) {
+                            // TODO: manejar las excepciones
+                        }
+                        return new ActorExtraDataIdentity(alias, publicKey, image);
+                    }
+                    return null;
+                }
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
         private Collection<QuotesExtraData> getQuotesByIdentity(String publicKey) throws CantGetListActorExtraDataException {
             DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
             table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);

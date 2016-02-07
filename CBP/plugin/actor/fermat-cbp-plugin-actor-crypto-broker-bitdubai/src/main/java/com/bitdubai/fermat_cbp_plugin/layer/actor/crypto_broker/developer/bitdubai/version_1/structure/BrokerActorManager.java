@@ -30,13 +30,13 @@ import java.util.UUID;
 /**
  * Created by angel on 5/1/16.
  */
-public class ActorManager implements CryptoBrokerActorExtraDataManager {
+public class BrokerActorManager implements CryptoBrokerActorExtraDataManager {
 
     private CryptoBrokerActorDao dao;
     private CryptoBrokerManager cryptoBrokerANSManager;
     private CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
-    public ActorManager(CryptoBrokerActorDao dao, CryptoBrokerManager cryptoBrokerANSManager, CryptoBrokerWalletManager cryptoBrokerWalletManager){
+    public BrokerActorManager(CryptoBrokerActorDao dao, CryptoBrokerManager cryptoBrokerANSManager, CryptoBrokerWalletManager cryptoBrokerWalletManager){
         this.dao = dao;
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
