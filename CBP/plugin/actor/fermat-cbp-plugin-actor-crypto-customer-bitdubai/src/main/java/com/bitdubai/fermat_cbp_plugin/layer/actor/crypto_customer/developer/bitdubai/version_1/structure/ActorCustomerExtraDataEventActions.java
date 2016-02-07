@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.Quotes
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
@@ -43,7 +44,7 @@ public class ActorCustomerExtraDataEventActions {
     }
 
     public void setExtraData() throws CantGetExtraDataActorException {
-        List<CryptoBrokerExtraData<CryptoBrokerQuote>> dataNS = null;
+        List<CryptoBrokerExtraData<CryptoBrokerQuote>> dataNS;
         try {
             dataNS = cryptoBrokerANSManager.listPendingQuotesRequests(RequestType.RECEIVED);
             if(dataNS != null) {
@@ -62,12 +63,7 @@ public class ActorCustomerExtraDataEventActions {
                     }
                 }
             }
-        } catch (CantListPendingConnectionRequestsException e) {
-
-        } catch (CantUpdateActorExtraDataException e) {
-
-        } catch (CantCreateNewActorExtraDataException e) {
-
+        } catch (CantUpdateActorExtraDataException | CantCreateNewActorExtraDataException | CantListPendingQuotesRequestsException ignore) {
         }
     }
 }
