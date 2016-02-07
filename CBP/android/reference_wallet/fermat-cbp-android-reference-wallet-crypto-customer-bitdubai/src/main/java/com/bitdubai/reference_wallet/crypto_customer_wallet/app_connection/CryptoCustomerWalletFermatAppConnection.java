@@ -27,11 +27,8 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
  */
 public class CryptoCustomerWalletFermatAppConnection extends AppConnections {
 
-    ActorIdentity identity;
-
-    public CryptoCustomerWalletFermatAppConnection(Activity activity, ActorIdentity identity) {
+    public CryptoCustomerWalletFermatAppConnection(Activity activity) {
         super(activity);
-        this.identity = identity;
     }
 
     @Override
@@ -58,7 +55,7 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CustomerNavigationViewPainter(getActivity(), identity);
+        return new CustomerNavigationViewPainter(getActivity(), getActiveIdentity());
     }
 
     @Override

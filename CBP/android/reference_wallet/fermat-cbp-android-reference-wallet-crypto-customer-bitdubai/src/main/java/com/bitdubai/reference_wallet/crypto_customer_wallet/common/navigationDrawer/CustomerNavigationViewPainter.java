@@ -23,10 +23,10 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
  */
 public class CustomerNavigationViewPainter implements NavigationViewPainter {
 
-    private final ActorIdentity actorIdentity;
+    private final ActiveActorIdentityInformation actorIdentity;
     private Activity activity;
 
-    public CustomerNavigationViewPainter(Activity activity, ActorIdentity actorIdentity) {
+    public CustomerNavigationViewPainter(Activity activity, ActiveActorIdentityInformation actorIdentity) {
         this.activity = activity;
         this.actorIdentity = actorIdentity;
     }
