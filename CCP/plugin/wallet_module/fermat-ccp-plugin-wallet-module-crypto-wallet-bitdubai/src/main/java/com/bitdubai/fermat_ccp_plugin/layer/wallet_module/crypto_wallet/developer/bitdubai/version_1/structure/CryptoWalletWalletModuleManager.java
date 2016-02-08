@@ -408,7 +408,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         "",
                         "",
                         actorConnectedType,
-                        walletPublicKey
+                        walletPublicKey,
+                        blockchainNetworkType
                 );
 
                 //get to Crypto Address NS the intra user actor address
@@ -472,7 +473,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                                                   String        actorLastName,
                                                                   Actors        actorType,
                                                                   String        walletPublicKey,
-                                                                  byte[]        photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
+                                                                  byte[]        photo,
+                                                                  BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
         try{
             try {
                 walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
@@ -480,8 +482,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
                 String actorPublicKey = createActor(actorAlias, actorType, photo);
-                List<CryptoAddress> cryptoAddresses = new ArrayList<>();
-                cryptoAddresses.add(receivedCryptoAddress);
+                HashMap<BlockchainNetworkType,CryptoAddress>  cryptoAddresses = new HashMap<>();
+                cryptoAddresses.put(blockchainNetworkType,receivedCryptoAddress);
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
                         actorPublicKey,
                         actorAlias,
@@ -513,7 +515,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                                          String        actorFirstName,
                                                          String        actorLastName,
                                                          Actors        actorType,
-                                                         String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
+                                                         String        walletPublicKey,
+                                                         BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
         try{
             try {
                 walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
@@ -522,8 +525,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
 
                 String actorPublicKey = createActor(actorAlias, actorType);
-                List<CryptoAddress> cryptoAddresses = new ArrayList<>();
-                cryptoAddresses.add(receivedCryptoAddress);
+                HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses = new HashMap<>();
+                cryptoAddresses.put(blockchainNetworkType, receivedCryptoAddress);
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
                         actorPublicKey,
                         actorAlias,
@@ -689,10 +692,10 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
-    public void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) throws CantUpdateWalletContactException {
+    public void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName, BlockchainNetworkType blockchainNetworkType) throws CantUpdateWalletContactException {
         try {
-            List<CryptoAddress> cryptoAddresses = new ArrayList<>();
-            cryptoAddresses.add(receivedCryptoAddress);
+            HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses = new HashMap<>();
+            cryptoAddresses.put(blockchainNetworkType,receivedCryptoAddress);
             walletContactsRegistry.updateWalletContact(
                     contactId,
                     actorName,
