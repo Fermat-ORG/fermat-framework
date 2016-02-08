@@ -48,6 +48,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CryptoHoldTransactionManager cryptoHoldTransactionManager;
     private final StockTransactionCryptoMoneyDestockFactory stockTransactionCryptoMoneyDestockFactory;
+    private UUID pluginId;
 
     public StockTransactionsCryptoMoneyDestockMonitorAgent(ErrorManager errorManager,
                                                            StockTransactionCryptoMoneyDestockManager stockTransactionCryptoMoneyDestockManager,
@@ -62,6 +63,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
         this.cryptoBrokerWalletManager                 = cryptoBrokerWalletManager;
         this.cryptoHoldTransactionManager              = cryptoHoldTransactionManager;
         this.stockTransactionCryptoMoneyDestockFactory = new StockTransactionCryptoMoneyDestockFactory(pluginDatabaseSystem, pluginId);
+        this.pluginId                                  = pluginId;
     }
     @Override
     public void start() throws CantStartAgentException {
@@ -175,8 +177,12 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
                                 cryptoMoneyTransaction.getActorPublicKey(),
                                 cryptoMoneyTransaction.getAmount(),
                                 cryptoMoneyTransaction.getMemo(),
-                                "pluginId");
+                                pluginId.toString());
                         cryptoHoldTransactionManager.createCryptoHoldTransaction(cryptoTransactionParametersWrapper);
+                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
+                        break;
+                    case IN_EJECUTION:
                         CryptoTransactionStatus cryptoTransactionStatus = cryptoHoldTransactionManager.getCryptoHoldTransactionStatus(cryptoMoneyTransaction.getTransactionId());
                         if (CryptoTransactionStatus.CONFIRMED.getCode() == cryptoTransactionStatus.getCode()) {
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
