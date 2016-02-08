@@ -159,7 +159,8 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
       Skype:   yayotron
       Github:  https://github.com/yayotron
 
- 
+<br>
+
 ### Coin Diggers Team:
 -----------------------------------
 <br>
@@ -310,6 +311,7 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
 We are also amateur philosophers, passionate about esoteric topics and video games.
 
 <br>
+
 ### Skynet Team:
 -----------------------------------
 ### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/b3d2a45ba6cff999accae76ae30fdd41f160b90d/Logotype/FermatTeams/logo_skynet_team.jpg "Logo Skynet Team")
@@ -346,17 +348,18 @@ We are responsible of only one thing, making fermat a successfully project, shar
 
 #### Team Members:
 
+* **Victor Mars [New Team Leader]** <br/>
+---
+      Email:   marsvicam@gmail.com
+      Skype:   yayotron
+      Github:  https://github.com/yayotron
+      
 * **Frank Contreras [New Developer]** <br/>
 ---
       Email:   contrerasfrank@gmail.com
       Skype:   fcontreras1234
       Github:  https://github.com/javafrank
 
-* **Victor Mars [New Team Leader]** <br/>
----
-      Email:   marsvicam@gmail.com
-      Skype:   yayotron
-      Github:  https://github.com/yayotron
 <br>
 We don't mean to make fun of everything, just about the serious things.
 <br>
