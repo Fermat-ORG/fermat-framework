@@ -331,7 +331,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             Actors.CBP_CRYPTO_CUSTOMER,
                             Actors.CBP_CRYPTO_BROKER,
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                            BlockchainNetworkType.REG_TEST
+                            BlockchainNetworkType.getDefaultBlockchainNetworkType()
                     );
                     customerOnlinePaymentBusinessTransactionDao.persistsCryptoTransactionUUID(
                             pendingContractHash,

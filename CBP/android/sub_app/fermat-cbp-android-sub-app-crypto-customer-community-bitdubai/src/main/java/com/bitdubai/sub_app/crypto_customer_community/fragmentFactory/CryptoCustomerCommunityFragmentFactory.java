@@ -6,6 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionNotificationsFragment;
+import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionsWorldFragment;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 
@@ -40,7 +41,7 @@ public class CryptoCustomerCommunityFragmentFactory extends FermatFragmentFactor
                 currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
             case CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST:
-                //currentFragment = ConnectionsListFragment.newInstance();
+                currentFragment = ConnectionsListFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException(

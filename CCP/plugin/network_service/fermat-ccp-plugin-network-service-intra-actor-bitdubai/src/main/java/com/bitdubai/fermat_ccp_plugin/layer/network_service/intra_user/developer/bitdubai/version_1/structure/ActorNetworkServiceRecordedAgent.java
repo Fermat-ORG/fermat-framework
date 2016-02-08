@@ -219,8 +219,6 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                         //toWaitingResponse(cpr.getId(),actorNetworkServicePluginRoot.getOutgoingNotificationDao());
                         break;
 
-
-
                 }
 
             }

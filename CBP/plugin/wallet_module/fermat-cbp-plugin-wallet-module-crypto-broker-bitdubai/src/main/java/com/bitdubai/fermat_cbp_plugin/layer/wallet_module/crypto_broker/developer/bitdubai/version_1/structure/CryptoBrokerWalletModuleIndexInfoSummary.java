@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Index;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -38,6 +39,17 @@ public class CryptoBrokerWalletModuleIndexInfoSummary implements IndexInfoSummar
 
         numberFormat = DecimalFormat.getInstance();
         salePriceAndCurrency = currency.getCode() + " " + numberFormat.format(salePrice);
+    }
+
+    public CryptoBrokerWalletModuleIndexInfoSummary(ExchangeRate exchangeRate) {
+        Currency fromCurrency = exchangeRate.getFromCurrency();
+        currencyAndReferenceCurrency = fromCurrency.getCode() + " / " + exchangeRate.getToCurrency().getCode();
+
+        NumberFormat numberFormat = DecimalFormat.getInstance();
+        purchasePriceAndCurrency = fromCurrency.getCode() + " " + numberFormat.format(exchangeRate.getPurchasePrice());
+
+        numberFormat = DecimalFormat.getInstance();
+        salePriceAndCurrency = fromCurrency.getCode() + " " + numberFormat.format(exchangeRate.getSalePrice());
     }
 
     @Override

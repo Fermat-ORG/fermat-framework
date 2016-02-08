@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 
 /**

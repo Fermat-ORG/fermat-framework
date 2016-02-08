@@ -119,7 +119,7 @@ public class BitcoinBasicWalletTransactionExecutor implements com.bitdubai.ferma
             bitcoinWalletTransactionRecord.setActorFromType(cryptoAddressBookRecord.getDeliveredByActorType());
             bitcoinWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
             bitcoinWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
-            bitcoinWalletTransactionRecord.setBlockchainNetworkType(BlockchainNetworkType.REG_TEST);
+            bitcoinWalletTransactionRecord.setBlockchainNetworkType(cryptoTransaction.getBlockchainNetworkType());
             return bitcoinWalletTransactionRecord;
 
         } catch (CantGetCryptoAddressBookRecordException e) {
