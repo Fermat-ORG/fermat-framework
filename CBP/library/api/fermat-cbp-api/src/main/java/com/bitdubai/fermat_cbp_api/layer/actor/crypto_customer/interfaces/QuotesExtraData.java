@@ -10,6 +10,6 @@ import java.util.UUID;
 public interface QuotesExtraData {
     UUID getQuoteId();
     Currency getMerchandise();
-    Currency getPaymentMethod();
+    Currency getPaymentCurrency();
     Float getPrice();
 }

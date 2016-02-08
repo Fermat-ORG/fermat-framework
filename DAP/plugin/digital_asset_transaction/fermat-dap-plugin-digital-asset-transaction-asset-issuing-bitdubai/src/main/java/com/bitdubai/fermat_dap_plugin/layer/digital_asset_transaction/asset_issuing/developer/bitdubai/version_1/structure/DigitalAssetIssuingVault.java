@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -94,7 +95,7 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
                     throw new CantDeliverDigitalAssetToAssetWalletException("Incorrect AssetBalanceType");
             }
             System.out.println("ASSET ISSUING - DELIVER TO WALLET TEST - "+balanceType+"\nHash: "+genesisTransaction.getTransactionHash());
-            creditIssuerWallet(digitalAssetMetadataToDeliver, genesisTransaction, balanceType);
+            creditIssuerWallet(digitalAssetMetadataToDeliver, genesisTransaction, balanceType, genesisTransaction.getBlockchainNetworkType());
         } catch (CantGetDigitalAssetFromLocalStorageException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception,"Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
         } catch (CantGetTransactionsException exception) {
@@ -110,13 +111,13 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
         }
     }
 
-    private void creditIssuerWallet(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantGetAssetIssuerActorsException {
+    private void creditIssuerWallet(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, BlockchainNetworkType networkType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantGetAssetIssuerActorsException {
         /////////////////////////////////////////////
         // TODO: Coloque esto porque es la wallet que tengo hardcore para la wallet y para hacer las pruebas
         this.walletPublicKey = "walletPublicKeyTest";
         /////////////////////////////////////////////
         System.out.println("ASSET ISSUING Before delivering - Wallet public key is:"+this.walletPublicKey);
-        AssetIssuerWallet assetIssuerWallet=this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
+        AssetIssuerWallet assetIssuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey, networkType);
         AssetIssuerWalletBalance assetIssuerWalletBalance = assetIssuerWallet.getBalance();
         String actorToPublicKey=this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
         System.out.println("ASSET ISSUING Actor Issuer public key:"+actorToPublicKey);

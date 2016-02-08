@@ -8,6 +8,9 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.Re
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointHistoryActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointMainActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.RedeemPointStadisticsActivityFragment;
+import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.SettingsFragment;
+import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.SettingsMainNetworkFragment;
+import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.fragments.SettingsNotificationsFragment;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.RedeemPointSession;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
@@ -41,6 +44,15 @@ public class WalletRedeemPointFragmentFactory extends FermatFragmentFactory<Rede
                     break;
                 case DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY:
                     currentFragment = new RedeemPointDetailActivityFragment();
+                    break;
+                case DAP_WALLET_REDEEM_POINT_SETTINGS_MAIN_NETWORK:
+                    currentFragment = new SettingsMainNetworkFragment();
+                    break;
+                case DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_ACTIVITY:
+                    currentFragment = new SettingsFragment();
+                    break;
+                case DAP_WALLET_REDEEM_POINT_ASSET_SETTINGS_NOTIFICATIONS:
+                    currentFragment = new SettingsNotificationsFragment();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragment.getKey(), "Swith failed");

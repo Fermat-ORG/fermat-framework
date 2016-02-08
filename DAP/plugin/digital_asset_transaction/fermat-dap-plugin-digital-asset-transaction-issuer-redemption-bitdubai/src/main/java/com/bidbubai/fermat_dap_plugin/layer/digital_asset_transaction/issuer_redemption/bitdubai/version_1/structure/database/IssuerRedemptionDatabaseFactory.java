@@ -68,6 +68,7 @@ public class IssuerRedemptionDatabaseFactory implements DealsWithPluginDatabaseS
 
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_DIGITAL_ASSET_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_NETWORK_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_ACTOR_ASSET_USER_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_CRYPTO_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_PROTOCOL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);

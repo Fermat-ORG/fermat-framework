@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -282,11 +283,11 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                     case IRREVERSIBLE:
                         CryptoTransaction transactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.getDigitalAssetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
                         if (transactionOnBlockChain == null) break; //Not yet....
-                        DigitalAssetMetadata digitalAssetMetadata = digitalAssetDistributionVault.updateMetadataTransactionChain(record.getGenesisTransaction(), transactionOnBlockChain.getTransactionHash(), transactionOnBlockChain.getBlockHash());
+                        DigitalAssetMetadata digitalAssetMetadata = digitalAssetDistributionVault.updateMetadataTransactionChain(record.getGenesisTransaction(), transactionOnBlockChain);
                         digitalAssetDistributionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, digitalAssetMetadata, AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, record.getActorAssetUserPublicKey());
                         assetDistributionDao.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.DISTRIBUTION_FINISHED);
                         updateDistributionStatus(DistributionStatus.DISTRIBUTION_FINISHED, record.getGenesisTransaction());
-                        digitalAssetDistributionVault.getIssuerWallet().assetDistributed(record.getDigitalAssetMetadata().getMetadataId(), record.getActorAssetUserPublicKey());
+                        digitalAssetDistributionVault.getIssuerWallet(transactionOnBlockChain.getBlockchainNetworkType()).assetDistributed(record.getDigitalAssetMetadata().getMetadataId(), record.getActorAssetUserPublicKey());
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
                         assetDistributionDao.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.DISTRIBUTION_FINISHED);
@@ -369,9 +370,10 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                 //For now, I set the cryptoAddress for Bitcoins
                 CryptoAddress cryptoAddressTo = new CryptoAddress(actorUserCryptoAddress, CryptoCurrency.BITCOIN);
                 System.out.println("ASSET DISTRIBUTION cryptoAddressTo: " + cryptoAddressTo);
-                DigitalAssetMetadata digitalAsset = digitalAssetDistributionVault.getDigitalAssetMetadataFromLocalStorage(assetAcceptedGenesisTransaction);
-                switch (assetDistributionDao.getLastDelivering(assetAcceptedGenesisTransaction).getState()) {
+                DeliverRecord record = assetDistributionDao.getLastDelivering(assetAcceptedGenesisTransaction);
+                switch (record.getState()) {
                     case DELIVERING:
+                        DigitalAssetMetadata digitalAsset = digitalAssetDistributionVault.getDigitalAssetMetadataFromWallet(assetAcceptedGenesisTransaction, record.getNetworkType());
                         updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
                         assetDistributionDao.sendingBitcoins(assetAcceptedGenesisTransaction, digitalAsset.getLastTransactionHash());
                         sendCryptoAmountToRemoteActor(digitalAsset);
@@ -386,9 +388,10 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
             }
 
             //ASSET REJECTED BY USER
+            //TODO MODIFY THIS!!!!
             List<String> assetRejectedByContractGenesisTransactionList = assetDistributionDao.getGenesisTransactionByAssetRejectedByContractStatus();
             for (String assetRejectedGenesisTransaction : assetRejectedByContractGenesisTransactionList) {
-                DigitalAssetMetadata digitalAssetMetadata = digitalAssetDistributionVault.getIssuerWallet().getDigitalAssetMetadata(assetRejectedGenesisTransaction);
+                DigitalAssetMetadata digitalAssetMetadata = digitalAssetDistributionVault.getIssuerWallet(BlockchainNetworkType.getDefaultBlockchainNetworkType()).getDigitalAssetMetadata(assetRejectedGenesisTransaction);
                 String internalId = assetDistributionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
                 List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(digitalAssetMetadata.getLastTransactionHash());
                 if (genesisTransactionList == null || genesisTransactionList.isEmpty()) {
@@ -401,7 +404,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
 
             List<String> assetRejectedByHashGenesisTransactionList = assetDistributionDao.getGenesisTransactionByAssetRejectedByHashStatus();
             for (String assetRejectedGenesisTransaction : assetRejectedByHashGenesisTransactionList) {
-                DigitalAssetMetadata digitalAssetMetadata = digitalAssetDistributionVault.getIssuerWallet().getDigitalAssetMetadata(assetRejectedGenesisTransaction);
+                DigitalAssetMetadata digitalAssetMetadata = digitalAssetDistributionVault.getIssuerWallet(BlockchainNetworkType.getDefaultBlockchainNetworkType()).getDigitalAssetMetadata(assetRejectedGenesisTransaction);
                 String internalId = assetDistributionDao.getTransactionIdByGenesisTransaction(assetRejectedGenesisTransaction);
                 List<CryptoTransaction> genesisTransactionList = bitcoinNetworkManager.getCryptoTransactions(digitalAssetMetadata.getLastTransactionHash());
                 if (genesisTransactionList == null || genesisTransactionList.isEmpty()) {

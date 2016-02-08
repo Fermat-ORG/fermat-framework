@@ -65,7 +65,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
 
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -87,7 +87,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
                   /*
                    * We create the new database
                    */
-                database = assetFactoryMiddlewareDatabaseFactory.createDatabase(pluginId, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
+                database = assetFactoryMiddlewareDatabaseFactory.createDatabase(pluginId, AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
@@ -103,7 +103,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME, AssertFactoryMiddlewareDatabaseConstant.DATABASE_NAME));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME, AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME));
 
         return databases;
     }
@@ -119,25 +119,26 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * Table Asset Factory addition.
          */
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TOTAL_QUANTITY_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_SIGNATURE_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE);
-        assetFactoryColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY);
-        DeveloperDatabaseTable assetFactoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME, assetFactoryColumns);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_QUANTITY_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TOTAL_QUANTITY_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_AMOUNT_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_FEE_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_DESCRIPTION_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_ALIAS_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_SIGNATURE_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CREATION_TIME_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IS_REDEEMABLE);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_EXPIRATION_DATE);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY);
+        assetFactoryColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE);
+        DeveloperDatabaseTable assetFactoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_TABLE_NAME, assetFactoryColumns);
         tables.add(assetFactoryTable);
 
         /**
@@ -147,14 +148,14 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * Table Asset Factory Resource addition.
          */
-        assetFactoryResourceColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN);
-        assetFactoryResourceColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ASSET_PUBLIC_KEY_COLUMN);
-        assetFactoryResourceColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_FILE_NAME_COLUMN);
-        assetFactoryResourceColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN);
-        assetFactoryResourceColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_DENSITY_COLUMN);
-        assetFactoryResourceColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_TYPE_COLUMN);
-        assetFactoryResourceColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_NAME_COLUMN);
-        DeveloperDatabaseTable assetResourceTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME, assetFactoryResourceColumns);
+        assetFactoryResourceColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ID_COLUMN);
+        assetFactoryResourceColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_ASSET_PUBLIC_KEY_COLUMN);
+        assetFactoryResourceColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_FILE_NAME_COLUMN);
+        assetFactoryResourceColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_PATH_COLUMN);
+        assetFactoryResourceColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_DENSITY_COLUMN);
+        assetFactoryResourceColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_RESOURCE_TYPE_COLUMN);
+        assetFactoryResourceColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_NAME_COLUMN);
+        DeveloperDatabaseTable assetResourceTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_RESOURCE_TABLE_NAME, assetFactoryResourceColumns);
         tables.add(assetResourceTable);
 
         /**
@@ -164,10 +165,10 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * Table Asset Factory Contract properties addition.
          */
-        assetFactoryContractColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN);
-        assetFactoryContractColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN);
-        assetFactoryContractColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN);
-        DeveloperDatabaseTable assetContractTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME, assetFactoryContractColumns);
+        assetFactoryContractColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN);
+        assetFactoryContractColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN);
+        assetFactoryContractColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN);
+        DeveloperDatabaseTable assetContractTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME, assetFactoryContractColumns);
         tables.add(assetContractTable);
 
         /**
@@ -177,11 +178,11 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * Table Asset Factory Identity Issuer properties addition.
          */
-        assetFactoryIdentityColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN);
-        assetFactoryIdentityColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN);
-        assetFactoryIdentityColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN);
-        assetFactoryIdentityColumns.add(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_SIGNATURE_COLUMN);
-        DeveloperDatabaseTable assetIdentityIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME, assetFactoryIdentityColumns);
+        assetFactoryIdentityColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN);
+        assetFactoryIdentityColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN);
+        assetFactoryIdentityColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN);
+        assetFactoryIdentityColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_SIGNATURE_COLUMN);
+        DeveloperDatabaseTable assetIdentityIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME, assetFactoryIdentityColumns);
         tables.add(assetIdentityIssuerTable);
 
         return tables;

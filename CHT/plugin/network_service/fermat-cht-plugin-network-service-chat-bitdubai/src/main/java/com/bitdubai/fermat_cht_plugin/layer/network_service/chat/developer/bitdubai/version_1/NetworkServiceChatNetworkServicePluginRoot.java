@@ -558,8 +558,8 @@ public class NetworkServiceChatNetworkServicePluginRoot extends AbstractNetworkS
     }
 
     @Override
-    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfile) {
-        this.platformComponentProfile = platformComponentProfile;
+    public void setPlatformComponentProfilePluginRoot(PlatformComponentProfile platformComponentProfilePluginRoot) {
+        this.platformComponentProfile = platformComponentProfilePluginRoot;
     }
 
     /**

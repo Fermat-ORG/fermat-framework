@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication;
 
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudConnectionAddress;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 
 public class CommunicationChannelAddressFactory {
 

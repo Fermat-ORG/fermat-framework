@@ -18,10 +18,9 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotCreateCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
@@ -83,11 +82,11 @@ public class CryptoCustomerIdentitySubAppModulePluginRoot extends AbstractPlugin
     public List<CryptoCustomerIdentityInformation> getAllCryptoCustomersIdentities(int max, int offset) throws CantGetCryptoCustomerListException {
         try {
             List<CryptoCustomerIdentityInformation> cryptoCustomers = new ArrayList<>();
-            for(CryptoCustomerIdentity identity : this.identityManager.getAllCryptoCustomerFromCurrentDeviceUser()){
+            for(CryptoCustomerIdentity identity : this.identityManager.listAllCryptoCustomerFromCurrentDeviceUser()){
                 cryptoCustomers.add(converIdentityToInformation(identity));
             }
             return cryptoCustomers;
-        } catch (CantGetCryptoCustomerIdentityException e) {
+        } catch (CantListCryptoCustomerIdentityException e) {
             throw new CantGetCryptoCustomerListException(CantGetCryptoCustomerListException.DEFAULT_MESSAGE, e, "","");
         }
     }

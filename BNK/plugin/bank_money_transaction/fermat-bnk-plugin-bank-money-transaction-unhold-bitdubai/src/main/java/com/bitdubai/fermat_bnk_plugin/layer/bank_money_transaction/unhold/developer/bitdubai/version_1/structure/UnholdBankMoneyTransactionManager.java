@@ -77,4 +77,19 @@ public class UnholdBankMoneyTransactionManager implements UnholdManager {
     public BankTransactionStatus getUnholdTransactionsStatus(UUID transactionId) throws CantGetUnholdTransactionException {
         return unholdBankMoneyTransactionDao.getUnholdTransaction(transactionId).getBankTransactionStatus();
     }
+
+    @Override
+    public boolean isTransactionRegistered(UUID transactionId) {
+        BankTransactionStatus status= null;
+        try {
+            status = unholdBankMoneyTransactionDao.getUnholdTransaction(transactionId).getBankTransactionStatus();
+            if (status!=null){
+                return true;
+            } else {
+                return false;
+            }
+        }catch (FermatException e){
+            return false;
+        }
+    }
 }

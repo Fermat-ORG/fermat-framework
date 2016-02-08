@@ -34,7 +34,7 @@ public class AppSelectableIdentitiesListAdapter extends FermatAdapter<CryptoBrok
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_connection_list;
+        return R.layout.cbc_row_connection_list;
     }
 
     @Override
@@ -79,8 +79,8 @@ public class AppSelectableIdentitiesListAdapter extends FermatAdapter<CryptoBrok
         public AppSelectableIdentityHolder(View itemView) {
             super(itemView);
 
-            friendName = (FermatTextView) itemView.findViewById(R.id.selectable_identity_username);
-            friendAvatar = (ImageView) itemView.findViewById(R.id.selectable_identity_user_avatar);
+            friendName = (FermatTextView) itemView.findViewById(R.id.cbc_selectable_identity_username);
+            friendAvatar = (ImageView) itemView.findViewById(R.id.cbc_selectable_identity_user_avatar);
         }
     }
 

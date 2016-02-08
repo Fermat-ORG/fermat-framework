@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -161,11 +162,11 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransaction);
             cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
             String newTx = assetVaultManager.createBitcoinTransaction(digitalAssetMetadata.getLastTransactionHash(), actorAssetUser.getCryptoAddress());
-            digitalAssetMetadata = digitalAssetDistributionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null);
+            digitalAssetMetadata = digitalAssetDistributionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null, cryptoTransaction.getBlockchainNetworkType());
             System.out.println("ASSET DISTRIBUTION set debit in asset issuer wallet:" + genesisTransaction);
             digitalAssetDistributionVault.updateWalletBalance(digitalAssetMetadata, cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, actorAssetUser.getActorPublicKey());
             System.out.println("ASSET DISTRIBUTION Begins the deliver to an remote actor");
-            deliverToRemoteActor(digitalAssetMetadata, actorAssetUser);
+            deliverToRemoteActor(digitalAssetMetadata, actorAssetUser, cryptoTransaction.getBlockchainNetworkType());
         } catch (CantPersistDigitalAssetException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into database");
         } catch (CantCreateDigitalAssetFileException exception) {
@@ -190,7 +191,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     }
 
 
-    private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser remoteActorAssetUser) throws CantSendDigitalAssetMetadataException {
+    private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser remoteActorAssetUser, BlockchainNetworkType networkType) throws CantSendDigitalAssetMetadataException {
         String genesisTransaction;
         try {
             System.out.println("ASSET DISTRIBUTION Preparing delivering to remote actor");
@@ -199,7 +200,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING, genesisTransaction);
             System.out.println("ASSET DISTRIBUTION Sender Actor name: " + actorAssetIssuerManager.getActorAssetIssuer().getName());
             System.out.println("ASSET DISTRIBUTION Before deliver - remote asset user ");
-            assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), remoteActorAssetUser.getActorPublicKey());
+            assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), remoteActorAssetUser.getActorPublicKey(), networkType);
             this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(actorAssetIssuerManager.getActorAssetIssuer(), remoteActorAssetUser, digitalAssetMetadata);
         } catch (CantExecuteQueryException | CantStartDeliveringException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
@@ -229,12 +230,6 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                 actorAddress);
         System.out.println("ASSET DISTRIBUTION registered in database");
     }
-
-    @Override
-    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
-        //To implement
-    }
-
 
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
         System.out.println("ASSET DISTRIBUTION Internal Id: " + digitalAssetMetadata.getGenesisTransaction());

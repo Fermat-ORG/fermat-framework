@@ -29,11 +29,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
  */
 public class CryptoBrokerWalletFermatAppConnection extends AppConnections<CryptoBrokerWalletSession> {
 
-    ActorIdentity identity;
-
-    public CryptoBrokerWalletFermatAppConnection(Activity activity, ActorIdentity identity) {
+    public CryptoBrokerWalletFermatAppConnection(Activity activity) {
         super(activity);
-        this.identity = identity;
     }
 
     @Override
@@ -52,6 +49,7 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
         );
 
     }
+
     @Override
     protected CryptoBrokerWalletSession getSession() {
         return new CryptoBrokerWalletSession();
@@ -59,12 +57,12 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new CryptoBrokerNavigationViewPainter(getActivity(), identity);
+        return new CryptoBrokerNavigationViewPainter(getActivity(), getFullyLoadedSession());
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new CryptoBrokerWalletHeaderPainter();
+        return new CryptoBrokerWalletHeaderPainter(getActivity(), getFullyLoadedSession());
     }
 
     @Override
