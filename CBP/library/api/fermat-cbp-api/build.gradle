@@ -20,7 +20,8 @@ configurations {
 
 dependencies {
     compile project(':fermat-api')
-    compile project(':fermat-pip-api')
+    compile project(':fermat-wpd-api')
+
     compile project(':fermat-bnk-api')
     compile project(':fermat-csh-api')
     compile project(':fermat-cer-api')

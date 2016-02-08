@@ -105,6 +105,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException {
+        assetFactory.setNetworkType(getSelectedNetwork());
         assetFactorySupAppModuleManager.saveAssetFactory(assetFactory);
     }
 
@@ -115,7 +116,6 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public void publishAsset(AssetFactory assetFactory) throws CantSaveAssetFactoryException {
-        assetFactory.setNetworkType(selectedNetwork);
         assetFactorySupAppModuleManager.publishAssetFactory(assetFactory);
     }
 
