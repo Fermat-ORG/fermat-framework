@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
@@ -8,10 +9,12 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCr
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListPlatformsException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantSendActorNetworkServiceException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraDataManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDao;
 
@@ -21,12 +24,12 @@ import java.util.UUID;
 /**
  * Created by angel on 5/1/16.
  */
-public class ActorManager implements ActorExtraDataManager {
+public class CustomerActorManager implements ActorExtraDataManager {
 
     private CryptoCustomerActorDao dao;
     private CryptoBrokerManager cryptoBrokerANSManager;
 
-    public ActorManager(CryptoCustomerActorDao dao, CryptoBrokerManager cryptoBrokerANSManager){
+    public CustomerActorManager(CryptoCustomerActorDao dao, CryptoBrokerManager cryptoBrokerANSManager){
         this.dao = dao;
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
     }
@@ -39,8 +42,8 @@ public class ActorManager implements ActorExtraDataManager {
 
 
         @Override
-        public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewCustomerIdentityWalletRelationshipException {
-            return this.dao.createNewCustomerIdentityWalletRelationship(identity, wallet);
+        public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
+            return this.dao.createNewCustomerIdentityWalletRelationship(identity, walletPublicKey);
         }
 
         @Override
@@ -54,8 +57,8 @@ public class ActorManager implements ActorExtraDataManager {
         }
 
         @Override
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListCustomerIdentityWalletRelationshipException {
-            return this.dao.getCustomerIdentityWalletRelationshipByWallet(wallet);
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+            return this.dao.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
         }
 
     /*==============================================================================================
@@ -71,7 +74,7 @@ public class ActorManager implements ActorExtraDataManager {
 
         @Override
         public void updateCustomerExtraData(ActorExtraData actorExtraData) throws CantUpdateActorExtraDataException {
-
+            this.dao.updateCustomerExtraData(actorExtraData);
         }
 
         @Override
@@ -90,12 +93,26 @@ public class ActorManager implements ActorExtraDataManager {
         }
 
         @Override
-        public ActorExtraData getActorExtraDataLocalActor() throws CantGetListActorExtraDataException {
-            return null;
+        public ActorIdentity getActorInformationByPublicKey(String publicKeyBroker) throws CantGetListActorExtraDataException {
+            return this.dao.getActorInformationByPublicKey(publicKeyBroker);
         }
 
         @Override
         public Collection<Platforms> getPlatformsSupport(String CustomerPublicKey, Currency currency) throws CantGetListPlatformsException {
-            return this.dao.getPlatformsSupport(CustomerPublicKey, currency);
+            return null;
+        }
+
+        @Override
+        public void requestBrokerExtraData(ActorExtraData actorExtraData) throws CantSendActorNetworkServiceException {
+            try {
+                this.createCustomerExtraData(actorExtraData);
+            } catch (CantCreateNewActorExtraDataException e) {
+                throw new CantSendActorNetworkServiceException(e.getMessage(), e, "", "");
+            }
+            try {
+                this.cryptoBrokerANSManager.requestQuotes(actorExtraData.getCustomerPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, actorExtraData.getBrokerIdentity().getPublicKey());
+            } catch (CantRequestQuotesException e) {
+                throw new CantSendActorNetworkServiceException(e.getMessage(), e, "", "");
+            }
         }
 }

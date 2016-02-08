@@ -97,10 +97,10 @@ public class FermatAppConnectionManager {
 
             //CBP WALLETS
             case "crypto_broker_wallet":
-                fermatAppConnection = new CryptoBrokerWalletFermatAppConnection(activity, null);
+                fermatAppConnection = new CryptoBrokerWalletFermatAppConnection(activity);
                 break;
             case "crypto_customer_wallet":
-                fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity, null);
+                fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity);
                 break;
             //CBP Sub Apps
             case "public_key_crypto_broker_community":
