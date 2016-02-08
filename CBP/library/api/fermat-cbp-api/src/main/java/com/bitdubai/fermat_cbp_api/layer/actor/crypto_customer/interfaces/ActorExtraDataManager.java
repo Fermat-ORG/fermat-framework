@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListPlatformsException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantSendActorNetworkServiceException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateActorExtraDataException;
 
 import java.util.Collection;
@@ -64,5 +65,12 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
      * @return all currencies handled with platforms that support them
      */
     Collection<Platforms> getPlatformsSupport(String CustomerPublicKey, Currency currency) throws CantGetListPlatformsException;
+
+    /**
+     *
+     * @param actorExtraData este parametro debe ser una clase que implemente ActorExtraData pero solo la parte de la identidad Ej: new ActorExtraDataImpl(ActorIdentity);
+     * @throws CantSendActorNetworkServiceException
+     */
+    void requestBrokerExtraData(ActorExtraData actorExtraData) throws CantSendActorNetworkServiceException;
 
 }
