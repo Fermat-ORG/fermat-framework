@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -94,10 +93,10 @@ public class CryptoCustomerActorConnectionPluginRoot extends AbstractPlugin impl
                     this.getPluginVersionReference()
             );
 
-            FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
-            fermatEventListener.setEventHandler(new CryptoBrokerConnectionRequestNewsEventHandler(eventActions, this));
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+            FermatEventListener updatesListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
+            updatesListener.setEventHandler(new CryptoBrokerConnectionRequestNewsEventHandler(eventActions, this));
+            eventManager.addListener(updatesListener);
+            listenersAdded.add(updatesListener);
 
             fermatManager = new ActorConnectionManager(
                     cryptoBrokerManagerNetworkService,

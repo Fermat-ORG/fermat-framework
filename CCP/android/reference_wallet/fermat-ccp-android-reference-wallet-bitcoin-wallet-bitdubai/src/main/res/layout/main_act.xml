@@ -8,7 +8,6 @@
     android:background="@drawable/background_gradient"
     android:orientation="vertical">
 
-
     <LinearLayout
         android:id="@+id/fragment_container2"
         android:layout_width="match_parent"
@@ -55,16 +54,13 @@
             android:contentDescription="@string/clear_text_button"
             android:src="@drawable/ic_action_cancel_grey"
             android:visibility="gone" />
-
     </LinearLayout>
-
 
     <FrameLayout
         android:id="@+id/contacts_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical">
-
 
         <include layout="@layout/loading_empty_view" />
 
@@ -78,7 +74,6 @@
                 android:layout_height="match_parent"
                 android:drawSelectorOnTop="true"
                 android:scrollingCache="false" />
-
 
             <LinearLayout
                 android:id="@+id/empty_view"
@@ -94,25 +89,20 @@
                     android:layout_height="125dp"
                     android:src="@drawable/contacts_empty_icon" />
 
-
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:padding="15dp"
-                    android:text="Click me to\nsearch contacts!"
+                    android:text="@string/click_me_to_search_text"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="#fff"
                     app:typeface="ROBOTO_REGULAR" />
 
             </LinearLayout>
 
-
         </FrameLayout>
 
-
     </FrameLayout>
-
 
 </LinearLayout>

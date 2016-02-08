@@ -33,7 +33,7 @@ public class QuotesExtraDataInformation implements QuotesExtraData {
     }
 
     @Override
-    public Currency getPaymentMethod() {
+    public Currency getPaymentCurrency() {
         return this.paymentCurrency;
     }
 

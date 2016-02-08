@@ -17,9 +17,9 @@ public class CustomerIdentityWalletRelationshipInformation implements CustomerId
 
     private final UUID      relationshipId;
     private final String    identity;
-    private final UUID      wallet;
+    private final String      wallet;
 
-    public CustomerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final UUID Wallet){
+    public CustomerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final String Wallet){
         this.identity = identity;
         this.wallet = Wallet;
         this.relationshipId = relationshipId;
@@ -36,7 +36,7 @@ public class CustomerIdentityWalletRelationshipInformation implements CustomerId
     }
 
     @Override
-    public UUID getWallet() {
+    public String getWallet() {
         return this.wallet;
     }
 
