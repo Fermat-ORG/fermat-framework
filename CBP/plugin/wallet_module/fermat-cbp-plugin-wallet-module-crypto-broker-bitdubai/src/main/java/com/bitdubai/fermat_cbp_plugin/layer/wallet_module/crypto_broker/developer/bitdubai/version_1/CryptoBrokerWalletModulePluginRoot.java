@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
@@ -118,6 +119,9 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
     BitcoinWalletManager bitcoinWalletManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.CRYPTO_BROKER_ACTOR)
+    private CryptoBrokerActorManager cryptoBrokerActorManager;
+
     public CryptoBrokerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -149,7 +153,8 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
                         currencyExchangeProviderFilterManager,
                         cryptoBrokerIdentityManager,
                         customerBrokerUpdateManager,
-                        bitcoinWalletManager);
+                        bitcoinWalletManager,
+                        cryptoBrokerActorManager);
 
             return walletManager;
         } catch (Exception e) {

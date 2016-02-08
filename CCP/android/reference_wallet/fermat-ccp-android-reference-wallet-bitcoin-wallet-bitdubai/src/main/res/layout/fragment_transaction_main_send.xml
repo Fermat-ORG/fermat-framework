@@ -8,16 +8,15 @@
     >
 
     <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/views_container"
-    android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/views_container"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/transacion_form">
-
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -32,13 +31,14 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <ImageView
                         android:id="@+id/frame_tx_record"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:scaleType="centerCrop"
-                        android:layout_gravity="center"
-                        />
+                        android:layout_gravity="center" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -52,37 +52,31 @@
                             android:orientation="horizontal">
 
 
-                                <AutoCompleteTextView
-                                    android:id="@+id/contact_name"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:hint="name"
-                                    android:textColor="#72af9c"
-                                    android:textColorHint="#BDBDBD"
-                                    android:textSize="22sp"
-                                    android:textStyle="normal"
-                                    android:paddingTop="20dip"
-                                    android:paddingLeft="21dip"
-                                    android:paddingRight="14dip"
-                                    android:paddingBottom="7dip"
-                                    android:ems="10"
-                                    android:layout_weight="0.2"
-                                    android:background="@null"
+                            <AutoCompleteTextView
+                                android:id="@+id/contact_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="@string/name_text"
+                                android:textColor="#72af9c"
+                                android:textColorHint="#BDBDBD"
+                                android:textSize="22sp"
+                                android:textStyle="normal"
+                                android:paddingTop="20dip"
+                                android:paddingLeft="21dip"
+                                android:paddingRight="14dip"
+                                android:paddingBottom="7dip"
+                                android:ems="10"
+                                android:layout_weight="0.2"
+                                android:background="@null"
+                                />
 
-                                    />
-
-                                <ImageView
-                                    android:layout_width="30dp"
-                                    android:layout_height="30dp"
-                                    android:id="@+id/imageView_new_contact"
-                                    android:src="@drawable/btn_send_adduser_normal"
-                                    android:layout_marginTop="10dp"
-                                    />
-
-
-
-
-
+                            <ImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:id="@+id/imageView_new_contact"
+                                android:src="@drawable/btn_send_adduser_normal"
+                                android:layout_marginTop="10dp"
+                                />
                         </LinearLayout>
 
                         <LinearLayout
@@ -96,13 +90,14 @@
                             android:paddingRight="7dip"
                             android:visibility="gone"
                             >
+
                             <EditText android:id="@+id/address"
                                 android:layout_width="match_parent"
                                 android:layout_height="40dp"
                                 android:gravity="center_vertical"
                                 android:textSize="20sp"
                                 android:textStyle="normal"
-                                android:hint="address"
+                                android:text="@string/address_text"
                                 android:textColor="#72af9c"
                                 android:textColorHint="#BDBDBD"
                                 android:paddingTop="7dip"
@@ -112,6 +107,7 @@
                                 android:layout_gravity="end"
                                 android:layout_weight="1"
                                 android:background="@null"/>
+
                             <ImageView
                                 android:id="@+id/paste_from_clipboard_btn"
                                 android:layout_width="wrap_content"
@@ -130,7 +126,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
-                            android:background="#bbccc7"></View>
+                            android:background="#bbccc7"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -153,7 +149,7 @@
                                 android:textColorHint="#BDBDBD"
                                 android:textSize="20sp"
                                 android:textStyle="normal"
-                                android:hint="0 bits"
+                                android:text="@string/balance_amount_0_bits_text"
                                 android:layout_weight="0.54"
                                 android:inputType="numberDecimal"
                                 android:state_selected = "true"
@@ -164,7 +160,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
-                            android:background="#bbccc7"></View>
+                            android:background="#bbccc7"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -174,6 +170,7 @@
                             android:paddingTop="3dip"
                             android:paddingRight="7dip"
                             android:id="@+id/linear_notes">
+
                             <EditText
                                 android:id="@+id/notes"
                                 android:layout_width="match_parent"
@@ -181,7 +178,7 @@
                                 android:gravity="center_vertical"
                                 android:textSize="20sp"
                                 android:textStyle="normal"
-                                android:hint="notes"
+                                android:text="@string/notes_text"
                                 android:textColor="#72af9c"
                                 android:textColorHint="#BDBDBD"
                                 android:paddingTop="7dip"
@@ -192,6 +189,7 @@
                                 android:state_selected = "false"
                                 android:background="@null"/>
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -201,6 +199,7 @@
                             android:paddingRight="7dip"
                             android:id="@+id/linear_send"
                             >
+
                             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                                 android:id="@+id/send_button"
                                 android:layout_width="match_parent"
@@ -209,37 +208,36 @@
                                 android:src="@drawable/ic_action_send_now_grey"
                                 android:padding="3dp"
                                 android:clickable="true"
-                                android:text="Send"
+                                android:text="@string/send_text"
                                 android:background="#1172aa"
                                 android:textColor="#fff"
                                 />
                         </LinearLayout>
 
-
                     </LinearLayout>
+
                 </RelativeLayout>
+
             </LinearLayout>
 
         </RelativeLayout>
 
-
-
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/transactions_recycler_view"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp" />
+            android:layout_height="match_parent">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/transactions_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp" />
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
@@ -264,13 +262,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="You don t have\n any transaction sent"
+            android:text="@string/you_dont_have_transactions_sent_text"
             android:textColor="#000"
             android:textSize="20sp" />
 
     </LinearLayout>
-
-
-
 
 </FrameLayout>

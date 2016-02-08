@@ -16,8 +16,11 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
@@ -39,16 +42,15 @@ import java.util.UUID;
  */
 public class ActorConnectionEventActions {
 
-
     private final CryptoBrokerManager              cryptoBrokerNetworkService;
     private final CryptoCustomerActorConnectionDao dao                       ;
     private final ErrorManager                     errorManager              ;
     private final PluginVersionReference           pluginVersionReference    ;
 
-    public ActorConnectionEventActions(final CryptoBrokerManager              cryptoBrokerNetworkService,
-                                       final CryptoCustomerActorConnectionDao dao                       ,
-                                       final ErrorManager                     errorManager              ,
-                                       final PluginVersionReference           pluginVersionReference    ) {
+    public ActorConnectionEventActions(final CryptoBrokerManager                     cryptoBrokerNetworkService,
+                                       final CryptoCustomerActorConnectionDao        dao                       ,
+                                       final ErrorManager                            errorManager              ,
+                                       final PluginVersionReference                  pluginVersionReference    ) {
 
         this.cryptoBrokerNetworkService = cryptoBrokerNetworkService;
         this.dao                        = dao                       ;
@@ -60,19 +62,13 @@ public class ActorConnectionEventActions {
 
         try {
 
-            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews();
+            System.out.println("******** CRYPTO BROKER NEWS -> CUSTOMER ACTOR CONNECTION");
 
-            for (final CryptoBrokerConnectionRequest request : list) {
+            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews(Actors.CBP_CRYPTO_CUSTOMER);
 
-                switch (request.getRequestAction()) {
-
-                    case REQUEST:
-                        this.handleCryptoBrokerRequestConnection(request);;
-                        break;
-
-                }
-
-            }
+            System.out.println("******** CRYPTO BROKER NEWS -> CUSTOMER ACTOR CONNECTION -> there is "+list.size() + " request from customers.");
+            for (final CryptoBrokerConnectionRequest request : list)
+                this.handleRequestConnection(request, Actors.CBP_CRYPTO_BROKER);
 
         } catch(CantListPendingConnectionRequestsException |
                 CantRequestActorConnectionException |
@@ -84,15 +80,15 @@ public class ActorConnectionEventActions {
 
     }
 
-    public void handleCryptoBrokerRequestConnection(final CryptoBrokerConnectionRequest request) throws CantRequestActorConnectionException ,
-                                                                                                        UnsupportedActorTypeException       ,
-                                                                                                        ConnectionAlreadyRequestedException {
+    public void handleRequestConnection(final CryptoBrokerConnectionRequest request, Actors actorType) throws CantRequestActorConnectionException ,
+                                                                                                              UnsupportedActorTypeException       ,
+                                                                                                              ConnectionAlreadyRequestedException {
 
         try {
 
             final CryptoCustomerLinkedActorIdentity linkedIdentity = new CryptoCustomerLinkedActorIdentity(
                     request.getDestinationPublicKey(),
-                    Actors.CBP_CRYPTO_CUSTOMER
+                    actorType
             );
             final ConnectionState connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
 
@@ -113,9 +109,15 @@ public class ActorConnectionEventActions {
 
         } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, actorConnectionAlreadyExistsException);
-            throw new ConnectionAlreadyRequestedException(actorConnectionAlreadyExistsException, "request: "+request, "The connection was already requested or exists.");
-        } catch (final CantRegisterActorConnectionException cantRegisterActorConnectionException) {
+            try {
+                cryptoBrokerNetworkService.confirm(request.getRequestId());
+            } catch (Exception e) {
+
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, actorConnectionAlreadyExistsException);
+                throw new ConnectionAlreadyRequestedException(actorConnectionAlreadyExistsException, "request: "+request, "The connection was already requested or exists.");
+            }
+
+         } catch (final CantRegisterActorConnectionException cantRegisterActorConnectionException) {
 
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRegisterActorConnectionException);
             throw new CantRequestActorConnectionException(cantRegisterActorConnectionException, "request: "+request, "Problem registering the actor connection in DAO.");
@@ -135,26 +137,26 @@ public class ActorConnectionEventActions {
 
         try {
 
-            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews();
+            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionUpdates();
 
 
             for (final CryptoBrokerConnectionRequest request : list) {
 
-                switch (request.getRequestAction()) {
+                if (request.getRequestType() == RequestType.SENT  && request.getSenderActorType() == Actors.CBP_CRYPTO_CUSTOMER) {
 
-                    case ACCEPT:
-                        this.handleAcceptConnection(request.getRequestId());
-                        break;
-                    case CANCEL:
-                        this.handleCancelConnection(request.getRequestId());
-                        break;
-                    case DENY:
-                        this.handleDenyConnection(request.getRequestId());
-                        break;
-                    case DISCONNECT:
-                        this.handleDisconnect(request.getRequestId());
-                        break;
+                    switch (request.getRequestAction()) {
 
+                        case ACCEPT:
+                            this.handleAcceptConnection(request.getRequestId());
+                            break;
+                        case DENY:
+                            this.handleDenyConnection(request.getRequestId());
+                            break;
+                        case DISCONNECT:
+                            this.handleDisconnect(request.getRequestId());
+                            break;
+
+                    }
                 }
             }
 
@@ -162,7 +164,6 @@ public class ActorConnectionEventActions {
                 ActorConnectionNotFoundException           |
                 UnexpectedConnectionStateException         |
                 CantAcceptActorConnectionRequestException  |
-                CantCancelActorConnectionRequestException  |
                 CantDenyActorConnectionRequestException    |
                 CantDisconnectFromActorException           e) {
 

@@ -8,12 +8,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.NetworkServiceMessage</code>
@@ -53,6 +56,21 @@ public class NetworkServiceMessage {
     public MessageTypes getMessageType() {
         return messageType;
     }
+
+    private NetworkServiceMessage(JsonObject jsonObject, Gson gson) {
+
+        this.messageType = gson.fromJson(jsonObject.get("messageType").getAsString(), MessageTypes.class);
+
+    }
+
+    public static NetworkServiceMessage fromJson(String jsonString){
+
+        Gson gson = new Gson();
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
+        return new NetworkServiceMessage(jsonObject, gson);
+    }
+
 
     @Override
     public String toString() {

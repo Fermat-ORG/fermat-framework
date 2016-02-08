@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -154,6 +155,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             @Override
             public String getCode() {
                 return CurrencyType.CRYPTO_MONEY.getCode();
+            }
+
+            @Override
+            public CurrencyTypes getType() {
+                return null;
             }
         };
         //Negotiation Summary

@@ -39,5 +39,6 @@ public class WalletContactsMiddlewareDatabaseConstants {
     public static final String WALLET_CONTACT_ADDRESSES_TIME_STAMP_COLUMN_NAME      = "time_stamp"              ;
 
     public static final String WALLET_CONTACT_ADDRESSES_FIRST_KEY_COLUMN            = "crypto_address"          ;
+    public static final String WALLET_CONTACT_ADDRESSES_NETWORK_TYPE                = "network_type"            ;
 
 }

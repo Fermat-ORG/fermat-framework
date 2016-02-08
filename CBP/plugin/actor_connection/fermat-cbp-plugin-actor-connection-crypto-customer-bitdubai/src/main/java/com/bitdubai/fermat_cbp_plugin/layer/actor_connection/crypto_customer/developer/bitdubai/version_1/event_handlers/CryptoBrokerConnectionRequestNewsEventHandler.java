@@ -15,14 +15,14 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.dev
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestNewsEventHandler</code>
  * bla bla bla.
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 03/02/2016.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 04/02/2016.
  */
 public class CryptoBrokerConnectionRequestNewsEventHandler implements FermatEventHandler {
 
     private final ActorConnectionEventActions actorConnectionEventActions          ;
     private final CryptoCustomerActorConnectionPluginRoot cryptoCustomerActorConnectionPluginRoot;
 
-    public CryptoBrokerConnectionRequestNewsEventHandler(final ActorConnectionEventActions             actorConnectionEventActions            ,
+    public CryptoBrokerConnectionRequestNewsEventHandler(final ActorConnectionEventActions actorConnectionEventActions,
                                                          final CryptoCustomerActorConnectionPluginRoot cryptoCustomerActorConnectionPluginRoot) {
 
         this.actorConnectionEventActions             = actorConnectionEventActions            ;
