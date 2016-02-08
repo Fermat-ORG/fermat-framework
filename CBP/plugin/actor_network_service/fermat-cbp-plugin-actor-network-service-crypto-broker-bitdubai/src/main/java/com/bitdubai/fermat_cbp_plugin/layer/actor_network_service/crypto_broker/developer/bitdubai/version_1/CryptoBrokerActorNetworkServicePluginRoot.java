@@ -42,7 +42,6 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enu
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionLooseNotificationEventHandler;
@@ -115,7 +114,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
      * Network Service Implementation Variables.
      */
     private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
-    private CommunicationNetworkServiceConnectionManager_V2        communicationNetworkServiceConnectionManager;
+    private CommunicationNetworkServiceConnectionManager_V2     communicationNetworkServiceConnectionManager;
     private CopyOnWriteArrayList<PlatformComponentProfile>      remoteNetworkServicesRegisteredList;
     private List<FermatEventListener>                           listenersAdded;
     private Database                                            dataBase;
@@ -126,8 +125,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     private CryptoBrokerExecutorAgent cryptoBrokerExecutorAgent;
 
     private CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao;
-
-    private  boolean beforeRegistered;
 
     /**
      * Constructor of the Network Service.
@@ -145,7 +142,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         );
 
         this.listenersAdded = new ArrayList<>();
-        beforeRegistered= Boolean.FALSE;
     }
 
     /**
@@ -251,11 +247,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
     private void initializeClientIdentity() throws CantStartPluginException {
 
-        System.out.println("Calling the method - initializeClientIdentity() ");
-
         try {
-
-            System.out.println("Loading clientIdentity");
 
              /*
               * Load the file with the clientIdentity
@@ -274,8 +266,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
              * We need to create the new clientIdentity
              */
             try {
-
-                System.out.println("No previous clientIdentity finder - Proceed to create new one");
 
                 /*
                  * Create the new clientIdentity
@@ -605,16 +595,19 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         try {
 
-            cryptoBrokerExecutorAgent = new CryptoBrokerExecutorAgent(
-                    this                              ,
-                    errorManager                      ,
-                    eventManager                      ,
-                    cryptoBrokerActorNetworkServiceDao,
-                    wsCommunicationsCloudClientManager
-            );
+            if (cryptoBrokerExecutorAgent == null) {
 
-            cryptoBrokerExecutorAgent.start();
-            System.out.println("********** IM initialized  NOW (agent)....");
+                cryptoBrokerExecutorAgent = new CryptoBrokerExecutorAgent(
+                        this,
+                        errorManager,
+                        eventManager,
+                        cryptoBrokerActorNetworkServiceDao,
+                        wsCommunicationsCloudClientManager
+                );
+            }
+
+            if (!cryptoBrokerExecutorAgent.isRunning())
+                cryptoBrokerExecutorAgent.start();
 
         } catch(final CantStartAgentException e) {
 
@@ -623,9 +616,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     }
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
-
-        System.out.println("*********** IM HANDLING A CompleteComponentRegistrationNotificationEvent");
-        System.out.println("*********** platfomcomponentprofile: " + platformComponentProfileRegistered);
 
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
@@ -668,8 +658,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
              */
             this.register = Boolean.TRUE;
 
-            System.out.println("********** IM REGISTERED NOW....");
-
             initializeAgent();
 
             fermatManager.setPlatformComponentProfile(this.getPlatformComponentProfilePluginRoot());
@@ -681,9 +669,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {
-        System.out.println("----------------------------------\n" +
-                "FAILED CONNECTION WITH "+remoteParticipant.getAlias()+"\n" +
-                "--------------------------------------------------------");
         cryptoBrokerExecutorAgent.connectionFailure(remoteParticipant.getIdentityPublicKey());
 
     }
@@ -759,8 +744,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        System.out.println("crypto broker actor network service - handleClientSuccessfullReconnectNotificationEvent");
-
         try {
 
             if (communicationNetworkServiceConnectionManager != null){
@@ -784,9 +767,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
     @Override
     public final void handleNewSentMessageNotificationEvent(final FermatMessage fermatMessage) {
-
-        System.out.println("****************** Ya se envio el mensaje: "+fermatMessage);
-
+        System.out.println("************ Mensaje supuestamente enviado crypto customer actor network service");
     }
 
     @Override
