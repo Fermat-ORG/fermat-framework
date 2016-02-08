@@ -30,7 +30,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure.CryptoBrokerIdentityInformationImpl;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
@@ -255,10 +255,9 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             imgInBytes = profileImage;
         }
         if(mBrokerName != null && imgInBytes != null && cryptoBrokerPublicKey != null) {
-            //TODO: esta clase tiene que ir en la api
-//            CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
-//            EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
-//            executor = EditIdentityWorker.execute();
+            CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
+            EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
+            executor = EditIdentityWorker.execute();
         }
     }
 
@@ -280,8 +279,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             imgInBytes = profileImage;
         }
         if(mBrokerName != null && imgInBytes != null && cryptoBrokerPublicKey != null) {
-            //TODO: esta clase tiene que ir en la api
-
             CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(
                 brokerNameText,
                 cryptoBrokerPublicKey,

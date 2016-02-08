@@ -7,5 +7,4 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantSend
  */
 public interface CryptoBrokerActorExtraDataManager extends CryptoBrokerActorManager {
 
-    void sendExtraData(String publicKeyBroker, String publicKeyCustomer) throws CantSendExtraDataActorException;
 }
