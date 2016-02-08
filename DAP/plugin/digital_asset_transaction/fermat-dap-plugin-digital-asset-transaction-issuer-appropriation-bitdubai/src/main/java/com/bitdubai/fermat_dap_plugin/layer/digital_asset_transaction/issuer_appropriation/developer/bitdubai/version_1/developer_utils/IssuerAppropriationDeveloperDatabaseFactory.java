@@ -112,6 +112,7 @@ public class IssuerAppropriationDeveloperDatabaseFactory implements DealsWithPlu
 
 
         transactionMetadataColumns.add(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME);
+        transactionMetadataColumns.add(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_NETWORK_TYPE);
         transactionMetadataColumns.add(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME);
         transactionMetadataColumns.add(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME);
         transactionMetadataColumns.add(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME);
