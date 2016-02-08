@@ -6,7 +6,15 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetL
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorQuotes;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAnswerQuotesRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
@@ -23,32 +31,47 @@ import java.util.List;
 /**
  * Created by angel on 4/02/16.
  */
-public class ActorExtraDataEventActions {
+
+public class ActorBrokerExtraDataEventActions {
 
     private CryptoBrokerManager cryptoBrokerANSManager;
     private CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private CryptoBrokerActorDao cryptoBrokerActorDao;
 
-    public ActorExtraDataEventActions(CryptoBrokerManager cryptoBrokerANSManager, CryptoBrokerWalletManager cryptoBrokerWalletManager, CryptoBrokerActorDao cryptoBrokerActorDao){
+    public ActorBrokerExtraDataEventActions(CryptoBrokerManager cryptoBrokerANSManager, CryptoBrokerWalletManager cryptoBrokerWalletManager, CryptoBrokerActorDao cryptoBrokerActorDao){
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.cryptoBrokerActorDao = cryptoBrokerActorDao;
     }
 
     public void handleNewsEvent(){
-        // TODO: obtener la brokerPublicKey desde el network service
-        String brokerPublicKey = "";
+        List<CryptoBrokerExtraData<CryptoBrokerQuote>> dataNS;
         try {
-            CryptoBrokerActorExtraData data = getExtraData(brokerPublicKey);
-            // TODO: enviar el objeto data a traves del NS
+            dataNS = cryptoBrokerANSManager.listPendingQuotesRequests(RequestType.RECEIVED);
+            if(dataNS != null) {
+                for (CryptoBrokerExtraData<CryptoBrokerQuote> extraDate : dataNS) {
+                    String brokerPublicKey = extraDate.getCryptoBrokerPublicKey();
+                    cryptoBrokerANSManager.answerQuotesRequest(
+                        extraDate.getRequestId(),
+                        System.currentTimeMillis(),
+                        getExtraData(brokerPublicKey)
+                    );
+                }
+            }
+        } catch (CantListPendingQuotesRequestsException ignore) {
+
         } catch (CantGetExtraDataActorException e) {
-            new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
+
+        } catch (CantAnswerQuotesRequestException e) {
+
+        } catch (QuotesRequestNotFoundException e) {
+
         }
     }
 
-    public CryptoBrokerActorExtraData getExtraData(String brokerPublicKey) throws CantGetExtraDataActorException {
+    public List<CryptoBrokerQuote> getExtraData(String brokerPublicKey) throws CantGetExtraDataActorException {
         try {
-            Collection<CryptoBrokerActorQuotes> quotes = new ArrayList<>();
+            List<CryptoBrokerQuote> quotes = new ArrayList<>();
             BrokerIdentityWalletRelationship relationship = this.cryptoBrokerActorDao.getBrokerIdentityWalletRelationshipByIdentity(brokerPublicKey);
             String wallerPublicKey = relationship.getWallet();
             CryptoBrokerWallet wallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(wallerPublicKey);
@@ -59,16 +82,17 @@ public class ActorExtraDataEventActions {
                     Currency currencyPayment = setting_2.getMerchandise();
                     if(merchandise != currencyPayment){
                         Quote quote = wallet.getQuote(merchandise, 1f, currencyPayment);
-                        CryptoBrokerActorQuotes qou = new CryptoBrokerActorQuotesInformation(
-                            (Currency) quote.getMerchandise(),
-                            quote.getFiatCurrency(),
-                            quote.getPriceReference()
+                        quotes.add(
+                            new CryptoBrokerQuote(
+                                (Currency) quote.getMerchandise(),
+                                quote.getFiatCurrency(),
+                                quote.getPriceReference()
+                            )
                         );
-                        quotes.add(qou);
                     }
                 }
             }
-            return new CryptoBrokerActorExtraDataInformation(quotes);
+            return quotes;
         } catch (CantGetCryptoBrokerWalletSettingException e) {
             throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
         } catch (CryptoBrokerWalletNotFoundException e) {

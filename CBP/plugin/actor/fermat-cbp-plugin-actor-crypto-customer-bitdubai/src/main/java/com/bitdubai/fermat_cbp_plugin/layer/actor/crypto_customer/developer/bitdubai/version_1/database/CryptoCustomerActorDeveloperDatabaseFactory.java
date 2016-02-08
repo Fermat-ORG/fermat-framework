@@ -133,8 +133,10 @@ public class CryptoCustomerActorDeveloperDatabaseFactory implements DealsWithPlu
          */
         List<String> actorExtraDataColumns = new ArrayList<String>();
 
+        actorExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ID_COLUMN_NAME);
         actorExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
         actorExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
+        actorExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         /**
          * Table Actor Extra Data addition.
          */
@@ -148,6 +150,7 @@ public class CryptoCustomerActorDeveloperDatabaseFactory implements DealsWithPlu
 
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME);
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME);
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME);
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);
