@@ -722,80 +722,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              * End of community intra user CCP
              */
 
-            // DAP
-            String dapFactoryPublicKey = "public_key_dap_factory";
-            RuntimeSubApp dapFactory = new RuntimeSubApp();
-            dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
-            dapFactory.addPosibleStartActivity(Activities.DAP_MAIN);
-            dapFactory.setPublicKey(dapFactoryPublicKey);
-
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_MAIN);
-            runtimeActivity.setColor("#1d1d25");
-            runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-
-            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#1d1d25");
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Asset Factory");
-            runtimeTitleBar.setColor("#1d1d25");
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-
-            runtimeTabStrip = new TabStrip();
-            runtimeTabStrip.setTabsColor("#1d1d25");
-            runtimeTabStrip.setTabsIndicateColor("#ffffff");
-            runtimeTabStrip.setTabsTextColor("#ffffff");
-
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Draft");
-            runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT);
-            runtimeTabStrip.addTab(runtimeTab);
-
-            runtimeTab = new Tab();
-            runtimeTab.setLabel("Issued");
-            runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT);
-            runtimeTabStrip.addTab(runtimeTab);
-
-            runtimeActivity.setTabStrip(runtimeTabStrip);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey(), runtimeFragment);
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey(), runtimeFragment);
-
-            dapFactory.addActivity(runtimeActivity);
-
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.DAP_ASSET_EDITOR_ACTIVITY);
-            runtimeActivity.setBackActivity(Activities.DAP_MAIN);
-            runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
-            runtimeActivity.setColor("#1d1d25");
-
-            statusBar = new com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar();
-            statusBar.setColor("#1d1d25");
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Draft Asset");
-            runtimeTitleBar.setColor("#1d1d25");
-
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-            runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
-            runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey(), runtimeFragment);
-
-            dapFactory.addActivity(runtimeActivity);
-
-            listSubApp.put(dapFactory.getPublicKey(), dapFactory);
             /**
-             * End of DAP
+             * Start DAP
              */
 
+            /**
+             * DAP ASSET FACTORY
+             */
+            createAssetFactorySubAppNavigationStructure();
             /**
              * DAP ASSET ISSUER COMMUNITY
              */
@@ -810,6 +744,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              * DAP REDEEM POINT COMMUNITY
              */
             createRedeemPointCommunitySubAppNavigationStructure();
+
+            /**
+             * End DAP
+             */
 
             /**
              * CRYPTO BROKER IDENTITY
@@ -1186,6 +1124,194 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
     }
 
+    private void createAssetFactorySubAppNavigationStructure() {
+        RuntimeSubApp dapFactory;
+        Activity runtimeActivity;
+        Tab runtimeTab;
+        TabStrip runtimeTabStrip;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        Fragment runtimeFragment;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+
+        String dapFactoryPublicKey = "public_key_dap_factory";
+
+        dapFactory = new RuntimeSubApp();
+        dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
+        dapFactory.addPosibleStartActivity(Activities.DAP_MAIN);
+        dapFactory.setPublicKey(dapFactoryPublicKey);
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_MAIN);
+        runtimeActivity.setColor("#1d1d25");
+        runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1d1d25");
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Asset Factory");
+        runtimeTitleBar.setColor("#1d1d25");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeTabStrip = new TabStrip();
+        runtimeTabStrip.setTabsColor("#1d1d25");
+        runtimeTabStrip.setTabsIndicateColor("#ffffff");
+        runtimeTabStrip.setTabsTextColor("#ffffff");
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Draft");
+        runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Issued");
+        runtimeTab.setFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_EDITABLE_TAB_FRAGMENT.getKey(), runtimeFragment);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_PUBLISHED_TAB_FRAGMENT.getKey(), runtimeFragment);
+
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#1d1d25");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        dapFactory.addActivity(runtimeActivity);
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_ASSET_EDITOR_ACTIVITY);
+        runtimeActivity.setBackActivity(Activities.DAP_MAIN);
+        runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+        runtimeActivity.setColor("#1d1d25");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1d1d25");
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Draft Asset");
+        runtimeTitleBar.setColor("#1d1d25");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_EDITOR_ACTIVITY.getKey(), runtimeFragment);
+
+        dapFactory.addActivity(runtimeActivity);
+
+        //DAP FACTORY SETTINGS
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+            runtimeActivity.setBackActivity(Activities.DAP_MAIN);
+            runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+        runtimeActivity.setColor("#1d1d25");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1d1d25");
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Settings");
+        runtimeTitleBar.setColor("#1d1d25");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS.getKey(), runtimeFragment);
+
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#1d1d25");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Home");
+        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Settings");
+        runtimeMenuItem.setAppLinkPublicKey(dapFactoryPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        dapFactory.addActivity(runtimeActivity);
+
+        //DAP FACTORY SETTINGS_NETWORK
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN);
+        runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+        runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+        runtimeActivity.setColor("#1d1d25");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1d1d25");
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Network");
+        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN.getKey(), runtimeFragment);
+
+        dapFactory.addActivity(runtimeActivity);
+
+        //DAP FACTORY SETTINGS_NOTIFICATIONS
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS);
+        runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS);
+        runtimeActivity.setBackPublicKey(dapFactoryPublicKey);
+        runtimeActivity.setColor("#1d1d25");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#1d1d25");
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Notifications");
+        runtimeTitleBar.setColor("#1d1d25");
+        runtimeTitleBar.setIconName("Back");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS.getKey(), runtimeFragment);
+
+        dapFactory.addActivity(runtimeActivity);
+
+        listSubApp.put(dapFactory.getPublicKey(), dapFactory);
+    }
+
     private void createAssetIssuerCommunitySubAppNavigationStructure() {
         RuntimeSubApp dapAssetIssuerCommunity;
         Activity runtimeActivity;
@@ -1195,9 +1321,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
+        String communityIssuerPublicKey = "public_key_dap_issuer_community";
+
         dapAssetIssuerCommunity = new RuntimeSubApp();
         dapAssetIssuerCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_ISSUER);
-        String communityIssuerPublicKey = "public_key_dap_issuer_community";
         dapAssetIssuerCommunity.setPublicKey(communityIssuerPublicKey);
         dapAssetIssuerCommunity.addPosibleStartActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
 
@@ -1259,9 +1386,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
+        String communityUserPublicKey = "public_key_dap_user_community";
+
         dapAssetUserCommunity = new RuntimeSubApp();
         dapAssetUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
-        String communityUserPublicKey = "public_key_dap_user_community";
         dapAssetUserCommunity.setPublicKey(communityUserPublicKey);
         dapAssetUserCommunity.addPosibleStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
 
@@ -1507,9 +1635,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
+        String communityRedeemPointPublicKey = "public_key_dap_redeem_point_community";
+
         dapAssetRedeemPointCommunity = new RuntimeSubApp();
         dapAssetRedeemPointCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT);
-        String communityRedeemPointPublicKey = "public_key_dap_reedem_point_community";
         dapAssetRedeemPointCommunity.setPublicKey(communityRedeemPointPublicKey);
         dapAssetRedeemPointCommunity.addPosibleStartActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
 
@@ -1682,7 +1811,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#1189a5");
-        runtimeTitleBar.setIconName("Back");
+        //runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -2092,6 +2221,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_SUB_APP_ALL_DEVELOPER);
+        runtimeActivity.setActivityType(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
         runtimeActivity.setColor("#b46a54");
 
         statusBar = new StatusBar();
@@ -2105,58 +2235,118 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabel("Developer");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
-        runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#d07b62");
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-        runtimeTabStrip.setTabsIndicateColor("#b46a54");
-        runtimeActivity.setTabStrip(runtimeTabStrip);
+//        runtimeTabStrip = new TabStrip();
+//        runtimeTabStrip.setTabsColor("#d07b62");
+//        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+//        runtimeTabStrip.setTabsIndicateColor("#b46a54");
+//        runtimeActivity.setTabStrip(runtimeTabStrip);
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("DataBase Tools");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT);
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+//        runtimeTabStrip.addTab(runtimeTab);
+//
+//        runtimeTab = new Tab();
+//        runtimeTab.setLabel("Log Tools");
+//        runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT);
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey(), runtimeFragment);
+//        runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("DataBase Tools");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT);
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
-        runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTab = new Tab();
-        runtimeTab.setLabel("Log Tools");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT);
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey(), runtimeFragment);
-        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE);
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE.getCode());
+        runtimeActivity.setBackActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
+        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
+        runtimeActivity.setColor("#b46a54");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Developer");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST);
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST.getCode());
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE);
+        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
+        runtimeActivity.setColor("#b46a54");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Developer");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST);
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST.getCode());
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST);
+        runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
+        runtimeActivity.setColor("#b46a54");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#d07b62");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Developer");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(), runtimeFragment);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), runtimeFragment);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(), runtimeFragment);
-
-        runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
-        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey(), runtimeFragment);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_1_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey(), runtimeFragment);
+//
+//        runtimeFragment = new Fragment();
+//        runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey());
+//        runtimeFragment.setBack(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_2_FRAGMENT.getKey());
+//        runtimeActivity.addFragment(Fragments.CWP_WALLET_DEVELOPER_TOOL_LOG_LEVEL_3_FRAGMENT.getKey(), runtimeFragment);
 
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }

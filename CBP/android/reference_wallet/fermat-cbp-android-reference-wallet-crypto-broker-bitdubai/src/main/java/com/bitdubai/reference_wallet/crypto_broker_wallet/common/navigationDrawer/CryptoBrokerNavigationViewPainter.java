@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,23 +12,58 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.FragmentsCommons;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Created by mati on 2015.11.24..
+ * Created by Nelson Ramirez
+ * on 2015.11.24
  */
 public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter {
 
-    private final ActorIdentity actorIdentity;
-    private Activity activity;
+    private static final String TAG = "BrokerNavigationView";
 
-    public CryptoBrokerNavigationViewPainter(Activity activity, ActorIdentity actorIdentity) {
+    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletSession session;
+    private CryptoBrokerIdentity actorIdentity;
+    private Activity activity;
+    private ErrorManager errorManager;
+
+    public CryptoBrokerNavigationViewPainter(Activity activity, CryptoBrokerWalletSession session) {
         this.activity = activity;
-        this.actorIdentity = actorIdentity;
+        this.session = session;
+
+        errorManager = session.getErrorManager();
+
+        try {
+            final CryptoBrokerWalletModuleManager moduleManager = session.getModuleManager();
+            walletManager = moduleManager.getCryptoBrokerWallet(session.getAppPublicKey());
+            actorIdentity = walletManager.getAssociatedIdentity(session.getAppPublicKey());
+
+        } catch (FermatException ex) {
+            if (errorManager == null)
+                Log.e(TAG, ex.getMessage(), ex);
+            else
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+        }
     }
 
     @Override
@@ -43,7 +79,10 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new CryptoBrokerNavigationViewAdapter(activity);
+            List<NavViewFooterItem> stockData = getStockData();
+            List<NavViewFooterItem> earningsData = getEarningsData();
+
+            return new CryptoBrokerNavigationViewAdapter(activity, stockData, earningsData);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,8 +101,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = true;
             options.inSampleSize = 5;
-            drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
+            drawable = BitmapFactory.decodeResource(activity.getResources(), R.drawable.cbw_navigation_drawer_background, options);
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }
@@ -88,5 +126,44 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
     @Override
     public boolean hasClickListener() {
         return false;
+    }
+
+    private List<NavViewFooterItem> getStockData() {
+        List<NavViewFooterItem> stockItems = new ArrayList<>();
+
+        try {
+            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
+            NumberFormat numberFormat = DecimalFormat.getInstance();
+
+            for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
+                Currency currency = associatedWallet.getMerchandise();
+                float balance = walletManager.getAvailableBalance(currency, session.getAppPublicKey());
+
+                stockItems.add(new NavViewFooterItem(currency.getFriendlyName(), numberFormat.format(balance)));
+            }
+
+        } catch (Exception ex) {
+
+            stockItems.add(new NavViewFooterItem("Bitcoin", "145.32"));
+            stockItems.add(new NavViewFooterItem("US Dollar", "14.04"));
+            stockItems.add(new NavViewFooterItem("Bolivar", "350,400.25"));
+
+            if (errorManager == null)
+                Log.e(TAG, ex.getMessage(), ex);
+            else
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+        }
+
+        return stockItems;
+    }
+
+    private List<NavViewFooterItem> getEarningsData() {
+        ArrayList<NavViewFooterItem> earningsItems = new ArrayList<>();
+
+        earningsItems.add(new NavViewFooterItem("US Dollar", "1,400.01"));
+        earningsItems.add(new NavViewFooterItem("Bolivar", "350,251.87"));
+
+        return earningsItems;
     }
 }

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.ut
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation</code>
@@ -12,6 +13,7 @@ import java.util.Arrays;
  */
 public final class CryptoBrokerConnectionInformation {
 
+    private final UUID   connectionId        ;
     private final String senderPublicKey     ;
     private final Actors senderActorType     ;
     private final String senderAlias         ;
@@ -19,13 +21,15 @@ public final class CryptoBrokerConnectionInformation {
     private final String destinationPublicKey;
     private final long   sendingTime         ;
 
-    public CryptoBrokerConnectionInformation(final String senderPublicKey     ,
+    public CryptoBrokerConnectionInformation(final UUID   connectionId        ,
+                                             final String senderPublicKey     ,
                                              final Actors senderActorType     ,
                                              final String senderAlias         ,
                                              final byte[] senderImage         ,
                                              final String destinationPublicKey,
                                              final long   sendingTime         ) {
 
+        this.connectionId         = connectionId        ;
         this.senderPublicKey      = senderPublicKey     ;
         this.senderActorType      = senderActorType     ;
         this.senderAlias          = senderAlias         ;
@@ -76,10 +80,15 @@ public final class CryptoBrokerConnectionInformation {
         return sendingTime;
     }
 
+    public UUID getConnectionId() {
+        return connectionId;
+    }
+
     @Override
     public String toString() {
         return "CryptoBrokerConnectionInformation{" +
-                "senderPublicKey='" + senderPublicKey + '\'' +
+                "connectionId=" + connectionId +
+                ", senderPublicKey='" + senderPublicKey + '\'' +
                 ", senderActorType=" + senderActorType +
                 ", senderAlias='" + senderAlias + '\'' +
                 ", senderImage=" + Arrays.toString(senderImage) +
@@ -87,5 +96,4 @@ public final class CryptoBrokerConnectionInformation {
                 ", sendingTime=" + sendingTime +
                 '}';
     }
-
 }

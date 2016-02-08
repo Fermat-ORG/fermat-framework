@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -32,6 +33,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionSummary;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
@@ -47,10 +49,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -64,9 +63,11 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
      * AssetIssuerWallet member variables.
      */
     private Database database;
+    private List<UUID> createdWallets;
 
-    private Map<String, UUID> walletAssetIssuer = new HashMap<>();
-
+    {
+        createdWallets = new ArrayList<>();
+    }
     private AssetIssuerWalletDao assetIssuerWalletDao;
     private ErrorManager errorManager;
 
@@ -113,15 +114,15 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         }
     }
 
-    public UUID create(String walletId) throws CantCreateWalletException {
+    public UUID create(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
             // TODO: Until the Wallet MAnager create the wallets, we will use this internal id
             //       We need to change this in the near future
-            UUID internalWalletId = UUID.randomUUID();
+            UUID internalWalletId = WalletUtilities.constructWalletId(walletPublicKey, networkType);
             createWalletDatabase(internalWalletId);
             PluginTextFile walletAssetIssuerFile = createAssetIssuerWalletFile();
-            loadAssetIssuerWalletMap(walletAssetIssuerFile);
-            walletAssetIssuer.put(walletId, internalWalletId);
+            loadAssetIssuerWalletList(walletAssetIssuerFile);
+            createdWallets.add(internalWalletId);
             persistAssetIssuerWallet(walletAssetIssuerFile);
             return internalWalletId;
         } catch (CantCreateWalletException exception) {
@@ -142,16 +143,12 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         }
     }
 
-    private void loadAssetIssuerWalletMap(final PluginTextFile loadAssetIssuerWalletMap) throws CantCreateWalletException {
+    private void loadAssetIssuerWalletList(final PluginTextFile walletListFile) throws CantCreateWalletException {
         try {
-            loadAssetIssuerWalletMap.loadFromMedia();
-            String[] stringAssetIssuerWallet = loadAssetIssuerWalletMap.getContent().split(";", -1);
-
-            for (String stringWalletId : stringAssetIssuerWallet) {
-
-                if (!stringWalletId.equals("")) {
-                    String[] idPair = stringWalletId.split(",", -1);
-                    walletAssetIssuer.put(idPair[0], UUID.fromString(idPair[1]));
+            walletListFile.loadFromMedia();
+            for (String stringWalletId : walletListFile.getContent().split(";")) {
+                if (!stringWalletId.isEmpty()) {
+                    createdWallets.add(UUID.fromString(stringWalletId));
                 }
             }
         } catch (CantLoadFileException exception) {
@@ -170,23 +167,11 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     private void persistAssetIssuerWallet(final PluginTextFile pluginTextFile) throws CantCreateWalletException {
-        StringBuilder stringBuilder = new StringBuilder(walletAssetIssuer.size() * 72);
-        Iterator iterator = walletAssetIssuer.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry pair = (Map.Entry) iterator.next();
-
-            stringBuilder
-                    .append(pair.getKey().toString())
-                    .append(",")
-                    .append(pair.getValue().toString())
-                    .append(";");
-
-            iterator.remove();
+        StringBuilder stringBuilder = new StringBuilder(createdWallets.size() * 72);
+        for (UUID walletId : createdWallets) {
+            stringBuilder.append(walletId).append(";");
         }
-
         pluginTextFile.setContent(stringBuilder.toString());
-
         try {
             pluginTextFile.persistToMedia();
         } catch (CantPersistFileException cantPersistFileException) {

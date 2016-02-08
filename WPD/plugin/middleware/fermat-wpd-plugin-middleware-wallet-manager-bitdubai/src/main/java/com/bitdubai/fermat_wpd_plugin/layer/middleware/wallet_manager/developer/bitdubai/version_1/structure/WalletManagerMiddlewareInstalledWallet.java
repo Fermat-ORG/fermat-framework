@@ -2,6 +2,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -44,6 +45,7 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
 
     private List<InstalledSkin>     skinsId;
     private List<InstalledLanguage> languagesId;
+    private BlockchainNetworkType blockchainNetworkType;
 
     public WalletManagerMiddlewareInstalledWallet(WalletCategory walletCategory,
                                                   List<InstalledSkin> skinsId,
@@ -57,7 +59,8 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
                                                   String navigationStructureVersion,
                                                   UUID walletCatalogId,
                                                   String walletDeveloper,
-                                                  String deviceUserPublicKey)
+                                                  String deviceUserPublicKey,
+                                                  BlockchainNetworkType blockchainNetworkType)
     {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
@@ -73,6 +76,7 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
         this.walletCatalogId = walletCatalogId;
         this.walletDeveloper =  walletDeveloper;
         this.deviceUserPublicKey = deviceUserPublicKey;
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 
 
@@ -88,7 +92,8 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
                                                   String navigationStructureVersion,
                                                   UUID walletCatalogId,
                                                   String walletDeveloper,
-                                                  String deviceUserPublicKey,Platforms platforms)
+                                                  String deviceUserPublicKey,Platforms platforms,
+                                                  BlockchainNetworkType blockchainNetworkType)
     {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
@@ -105,6 +110,7 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
         this.walletDeveloper =  walletDeveloper;
         this.deviceUserPublicKey = deviceUserPublicKey;
         this.platforms = platforms;
+        this.blockchainNetworkType = blockchainNetworkType;
     }
     /**
      * InstalledWallet Interface implementation.
@@ -249,5 +255,13 @@ public class WalletManagerMiddlewareInstalledWallet implements InstalledWallet, 
     public CryptoCurrency getCryptoCurrency() {
         // TODO NOW IS BY DEFECT
         return CryptoCurrency.BITCOIN;
+    }
+
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockchainNetworkType;
+    }
+
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 }

@@ -22,4 +22,8 @@
 
     <color name="dap_wallet_asset_user_gradient_start_color">#381a5e</color>
     <color name="dap_wallet_asset_user_gradient_end_color">#381a5e</color>
+
+    <!-- dap asset user wallet colors -->
+    <color name="dap_user_wallet_principal">#381a5e</color>
+    <!-- -->
 </resources>

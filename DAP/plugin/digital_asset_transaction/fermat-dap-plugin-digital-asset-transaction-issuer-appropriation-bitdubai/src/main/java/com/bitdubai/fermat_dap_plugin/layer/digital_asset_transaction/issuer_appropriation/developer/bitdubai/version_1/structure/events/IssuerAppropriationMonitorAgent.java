@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_ap
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -206,7 +207,8 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                 switch (record.status()) {
                     case APPROPRIATION_STARTED:
                         IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("getting crypto address and saving it..." + record.transactionRecordId());
-                        CryptoAddress cryptoAddress = cryptoVaultManager.getAddress();
+                        //todo Victor corregir network type
+                        CryptoAddress cryptoAddress = cryptoVaultManager.getAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                         IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Address: " + cryptoAddress.getAddress());
                         dao.updateCryptoAddress(cryptoAddress, record.transactionRecordId());
                         dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());
@@ -236,7 +238,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                             dao.updateTransactionStatusAppropriationStarted(record.transactionRecordId());
                         } else {
                             String newTx = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getLastTransactionHash(), record.assetMetadata().getLastTransactionBlock(), record.addressTo());
-                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), newTx, null);
+                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), newTx, null, null);
                             dao.updateTransactionStatusBitcoinsSent(record.transactionRecordId());
                             IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Bitcoins sent!");
                         }
@@ -244,7 +246,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                     case BITCOINS_SENT: {
                         CryptoTransaction cryptoTransaction = AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.assetMetadata());
                         if (cryptoTransaction == null) continue;
-                        AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey());
+                        AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey(), cryptoTransaction.getBlockchainNetworkType());
                         AssetIssuerWalletBalance balance = issuerWallet.getBalance();
                         AssetIssuerWalletTransactionRecordWrapper walletRecord = new AssetIssuerWalletTransactionRecordWrapper(record.assetMetadata(),
                                 cryptoTransaction,
@@ -260,7 +262,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                             case IRREVERSIBLE:
                                 CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
                                 if (cryptoTransaction == null) continue;
-                                AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey());
+                                AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey(), cryptoTransaction.getBlockchainNetworkType());
                                 AssetIssuerWalletBalance balance = issuerWallet.getBalance();
                                 AssetIssuerWalletTransactionRecordWrapper walletRecord = new AssetIssuerWalletTransactionRecordWrapper(record.assetMetadata(),
                                         cryptoTransaction,

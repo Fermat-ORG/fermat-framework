@@ -39,14 +39,13 @@
             android:layout_height="125dp"
             android:src="@drawable/contacts_empty_icon" />
 
-
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:padding="15dp"
-            android:text="Click me to\nsearch contacts!"
+            android:text="@string/click_me_to_search_text"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="#fff"
             fab:typeface="ROBOTO_REGULAR" />

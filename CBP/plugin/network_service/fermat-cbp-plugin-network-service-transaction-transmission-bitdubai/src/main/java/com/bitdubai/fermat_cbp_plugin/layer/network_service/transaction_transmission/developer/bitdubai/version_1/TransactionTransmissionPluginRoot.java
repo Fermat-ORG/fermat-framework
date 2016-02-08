@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -77,6 +78,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
@@ -913,6 +915,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             //System.out.println("TransactionTransmissionPluginRoot - Public Key:"+getIdentityPublicKey());
             //launchNotificationTest();
             //sendMetadataTest();
+            //sendMetadataThreadTest();
+            //sendNTimesTest(10);
         } catch (CantInitializeDatabaseException exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -1114,22 +1118,6 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     @Override
     public void handleNewMessages(FermatMessage fermatMessage) {
         Gson gson = new Gson();
@@ -1177,8 +1165,49 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
     }
 
     @Override
-    public void handleNewSentMessageNotificationEvent(FermatMessage data) {
+    public void handleNewSentMessageNotificationEvent(FermatMessage fermatMessage) {
+        Gson gson = new Gson();
+        System.out.println("Transaction Transmission gets a new message");
+        try{
+            BusinessTransactionMetadata businessTransactionMetadataReceived =gson.fromJson(fermatMessage.getContent(), BusinessTransactionMetadataRecord.class);
+            if(businessTransactionMetadataReceived.getContractHash()!=null){
+                businessTransactionMetadataReceived.setBusinessTransactionTransactionType(BusinessTransactionTransactionType.TRANSACTION_HASH);
+                transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadataReceived);
+            }else{
 
+                TransactionTransmissionResponseMessage transactionTransmissionResponseMessage =  gson.fromJson(fermatMessage.getContent(), TransactionTransmissionResponseMessage.class);
+                FermatEvent fermatEvent;
+                switch (transactionTransmissionResponseMessage.getTransactionTransmissionStates()){
+                    case CONFIRM_CONTRACT:
+                        transactionTransmissionContractHashDao.changeState(transactionTransmissionResponseMessage.getTransactionId(), TransactionTransmissionStates.CONFIRM_CONTRACT);
+                        System.out.print("-----------------------\n" +
+                                "TRANSACTION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
+                                "-----------------------\n STATE: " + TransactionTransmissionStates.CONFIRM_CONTRACT);
+                        fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT);
+                        IncomingConfirmBusinessTransactionContract incomingConfirmBusinessTransactionContract = (IncomingConfirmBusinessTransactionContract) fermatEvent;
+                        incomingConfirmBusinessTransactionContract.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+                        incomingConfirmBusinessTransactionContract.setDestinationPlatformComponentType(businessTransactionMetadataReceived.getReceiverType());
+                        eventManager.raiseEvent(incomingConfirmBusinessTransactionContract);
+                        break;
+                    case CONFIRM_RESPONSE:
+                        transactionTransmissionContractHashDao.changeState(transactionTransmissionResponseMessage.getTransactionId(), TransactionTransmissionStates.CONFIRM_RESPONSE);
+                        System.out.print("-----------------------\n" +
+                                "TRANSACTION TRANSMISSION IS GETTING AN ANSWER -----------------------\n" +
+                                "-----------------------\n STATE: " + TransactionTransmissionStates.CONFIRM_RESPONSE);
+                        fermatEvent = eventManager.getNewEvent(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE);
+                        IncomingConfirmBusinessTransactionResponse incomingConfirmBusinessTransactionResponse = (IncomingConfirmBusinessTransactionResponse) fermatEvent;
+                        incomingConfirmBusinessTransactionResponse.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+                        incomingConfirmBusinessTransactionResponse.setDestinationPlatformComponentType(businessTransactionMetadataReceived.getReceiverType());
+                        eventManager.raiseEvent(incomingConfirmBusinessTransactionResponse);
+                        break;
+                }
+
+            }
+        } catch (CantInsertRecordDataBaseException | CantUpdateRecordDataBaseException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        } catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        }
     }
 
     private void launchNotificationTest(){
@@ -1188,11 +1217,87 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
         eventManager.raiseEvent(incomingNewContractStatusUpdate);
     }
 
+    private void sendNTimesTest(int n){
+        for (int i=0; i<10; i++){
+            System.out.println("TTNS time "+i);
+            sendMetadataThreadTest();
+        }
+    }
+
+    private void sendMetadataThreadTest(){
+        try {
+            DiscoveryQueryParametersCommunication discoveryQueryParameters;
+            discoveryQueryParameters = new DiscoveryQueryParametersCommunication(
+                    "TransactionTransmissionNetworkService",
+                    this.identity.getPublicKey(),
+                    new DeviceLocation(),
+                    0.0,
+                    "Transaction Transmission Network Service",
+                    NetworkServiceType.TRANSACTION_TRANSMISSION,
+                    PlatformComponentType.NETWORK_SERVICE,
+                    "extra data",
+                    1, 100,
+                    PlatformComponentType.NETWORK_SERVICE,
+                    NetworkServiceType.TRANSACTION_TRANSMISSION);
+            List<PlatformComponentProfile> list=this.wsCommunicationsCloudClientManager.
+                    getCommunicationsCloudClientConnection().
+                    requestListComponentRegisteredSocket(discoveryQueryParameters);
+            if(!list.isEmpty()){
+                System.out.println("TTNS I found "+list.size());
+                System.out.println("TTNS PK local"+getIdentityPublicKey());
+                for(PlatformComponentProfile platformComponentProfile: list){
+                    System.out.println("TTNS PK remote"+platformComponentProfile.getIdentityPublicKey());
+                    String contractHash="888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2";
+                    ContractTransactionStatus contractTransactionStatus=ContractTransactionStatus.CONTRACT_OPENED;
+                    String receiverId=platformComponentProfile.getIdentityPublicKey();
+                    PlatformComponentType receiverType=PlatformComponentType.NETWORK_SERVICE;
+                    String senderId=getIdentityPublicKey();
+                    PlatformComponentType senderType=PlatformComponentType.NETWORK_SERVICE;
+                    String contractId="888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2";
+                    String negotiationId="550e8400-e29b-41d4-a716-446655440000";
+                    BusinessTransactionTransactionType transactionType=BusinessTransactionTransactionType.TRANSACTION_HASH;
+                    Long timestamp=2016l;
+                    UUID transactionId=UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
+                    TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.SENDING_HASH;
+                    BusinessTransactionMetadata businessTransactionMetadata=new
+                            BusinessTransactionMetadataRecord(
+                            contractHash,
+                            contractTransactionStatus,
+                            receiverId,
+                            receiverType,
+                            senderId,
+                            senderType,
+                            contractId,
+                            negotiationId,
+                            transactionType,
+                            timestamp,
+                            transactionId,
+                            transactionTransmissionStates
+                    );
+                    transactionTransmissionNetworkServiceManager.sendContractHash(
+                            transactionId,
+                            senderId,
+                            receiverId,
+                            contractHash,
+                            negotiationId
+                    );
+                }
+            }
+        } catch(Exception e){
+            System.out.println("Exception in Transaction transmission test");
+            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.TRANSACTION_TRANSMISSION,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    e);
+        }
+    }
+
     private void sendMetadataTest(){
         try{
             String contractHash="888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2";
             ContractTransactionStatus contractTransactionStatus=ContractTransactionStatus.CONTRACT_OPENED;
-            String receiverId="047B6EC24563A5E8BFDFBDB70CC36DE73C42E95E90EE6E8D2A52347A59D38AF5D13BCBBE7C8BBE643A463F8F2F1F0BFF384F56B15F95A292AEAEF7F8F55A5C787E";
+            String receiverId="048F9D8855505220F850315C793FAA53A1768B9BF2D3A1A7189936A8F6AE8815EEDBA0137FF9CC65BEE19806F7AB4FC4CEEB5034500EAAF08507D373CFEBE16718";
             PlatformComponentType receiverType=PlatformComponentType.NETWORK_SERVICE;
             String senderId=getIdentityPublicKey();
             PlatformComponentType senderType=PlatformComponentType.NETWORK_SERVICE;

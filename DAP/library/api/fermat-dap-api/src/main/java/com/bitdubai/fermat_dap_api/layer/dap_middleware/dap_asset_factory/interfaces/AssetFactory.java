@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
-
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -71,4 +71,8 @@ public interface AssetFactory {
 
     IdentityAssetIssuer getIdentyAssetIssuer();
     void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer);
+
+    BlockchainNetworkType getNetworkType();
+
+    void setNetworkType(BlockchainNetworkType networkType);
 }

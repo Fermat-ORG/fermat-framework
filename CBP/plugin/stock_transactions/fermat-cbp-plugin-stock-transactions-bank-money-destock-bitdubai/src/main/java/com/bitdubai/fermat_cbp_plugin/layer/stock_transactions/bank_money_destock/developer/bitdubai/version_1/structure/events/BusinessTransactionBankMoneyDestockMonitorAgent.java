@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_desto
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -37,7 +39,7 @@ import java.util.logging.Logger;
  * contains the logic for handling agent transactional
  * Created by franklin on 17/11/15.
  */
-public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
+public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent {
     //TODO: Documentar y manejo de excepciones.
 
     private Thread agentThread;
@@ -47,6 +49,11 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final UnholdManager unHoldManager;
     StockTransactionBankMoneyDestockFactory stockTransactionBankMoneyDestockFactory;
+    private UUID pluginId;
+    public final int SLEEP_TIME = 5000;
+    int iterationNumber = 0;
+    boolean threadWorking;
+
 
     /**
      * Constructor for BusinessTransactionBankMoneyDestockMonitorAgent
@@ -70,6 +77,15 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.unHoldManager = unHoldManager;
         this.stockTransactionBankMoneyDestockFactory = new StockTransactionBankMoneyDestockFactory(pluginDatabaseSystem, pluginId);
+        this.pluginId = pluginId;
+
+        this.agentThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isRunning())
+                    process();
+            }
+        });
     }
 
     /**
@@ -80,60 +96,79 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         Logger LOG = Logger.getGlobal();
-        LOG.info("Bank Money Restock Transaction monitor agent starting");
+        LOG.info("Bank Money Destock Transaction monitor agent starting");
 
-        final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
+        //final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
 
-        this.agentThread = new Thread(monitorAgent);
+        //this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
+        this.status = AgentStatus.STARTED;
     }
 
-    /**
-     * Stops the agent
-     */
     @Override
     public void stop() {
-        this.agentThread.interrupt();
+        if (isRunning())
+            this.agentThread.interrupt();
+        this.status = AgentStatus.STOPPED;
     }
 
+    public void process() {
+
+        while (isRunning()) {
+
+            try {
+                Thread.sleep(SLEEP_TIME);
+            } catch (InterruptedException interruptedException) {
+                cleanResources();
+                return;
+            }
+
+            doTheMainTask();
+
+            if (agentThread.isInterrupted()) {
+                cleanResources();
+                return;
+            }
+        }
+    }
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private final class MonitorAgent implements Runnable {
-
-        private final ErrorManager errorManager;
-        public final int SLEEP_TIME = 5000;
-        int iterationNumber = 0;
-        boolean threadWorking;
-
-        public MonitorAgent(final ErrorManager errorManager) {
-
-            this.errorManager = errorManager;
-        }
-
-        @Override
-        public void run() {
-            threadWorking = true;
-            while (threadWorking) {
-                /**
-                 * Increase the iteration counter
-                 */
-                iterationNumber++;
-                try {
-                    Thread.sleep(SLEEP_TIME);
-
-                    /**
-                     * now I will check if there are pending transactions to raise the event
-                     */
-                    doTheMainTask();
-                } catch (InterruptedException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-
-            }
-        }
-    }
+//    private final class MonitorAgent implements Runnable {
+//
+//        private final ErrorManager errorManager;
+//        public final int SLEEP_TIME = 5000;
+//        int iterationNumber = 0;
+//        boolean threadWorking;
+//
+//        public MonitorAgent(final ErrorManager errorManager) {
+//
+//            this.errorManager = errorManager;
+//        }
+//
+//        @Override
+//        public void run() {
+//            threadWorking = true;
+//            while (threadWorking) {
+//                /**
+//                 * Increase the iteration counter
+//                 */
+//                iterationNumber++;
+//                try {
+//                    Thread.sleep(SLEEP_TIME);
+//
+//                    /**
+//                     * now I will check if there are pending transactions to raise the event
+//                     */
+//                    doTheMainTask();
+//                } catch (InterruptedException e) {
+//                    errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                }
+//
+//            }
+//        }
+//    }
 
     private void doTheMainTask() {
         try {
@@ -151,10 +186,10 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
-                        WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
+                        WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
                                 bankMoneyTransaction.getTransactionId(),
-                                null,
-                                BalanceType.AVAILABLE,
+                                bankMoneyTransaction.getFiatCurrency(),
+                                BalanceType.BOOK,
                                 TransactionType.DEBIT,
                                 CurrencyType.BANK_MONEY,
                                 bankMoneyTransaction.getCbpWalletPublicKey(),
@@ -165,10 +200,23 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
                                 bankMoneyTransaction.getPriceReference(),
                                 bankMoneyTransaction.getOriginTransaction());
 
+                        WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
+                                bankMoneyTransaction.getTransactionId(),
+                                bankMoneyTransaction.getFiatCurrency(),
+                                BalanceType.AVAILABLE,
+                                TransactionType.DEBIT,
+                                CurrencyType.BANK_MONEY,
+                                bankMoneyTransaction.getCbpWalletPublicKey(),
+                                bankMoneyTransaction.getActorPublicKey(),
+                                bankMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                bankMoneyTransaction.getConcept(),
+                                bankMoneyTransaction.getPriceReference(),
+                                bankMoneyTransaction.getOriginTransaction());
                         //TODO:Solo para testear
                         bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordBook, BalanceType.BOOK);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
                         bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
 
@@ -186,8 +234,15 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
                                 bankMoneyTransaction.getBankAccount(),
                                 bankMoneyTransaction.getAmount(),
                                 bankMoneyTransaction.getMemo(),
-                                "pluginId");
-                        unHoldManager.unHold(bankTransactionParametersWrapper);
+                                pluginId.toString());
+
+                        if (!unHoldManager.isTransactionRegistered(bankMoneyTransaction.getTransactionId()))
+                            unHoldManager.unHold(bankTransactionParametersWrapper);
+
+                        bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
+                        break;
+                    case IN_EJECUTION:
                         BankTransactionStatus bankTransactionStatus = unHoldManager.getUnholdTransactionsStatus(bankMoneyTransaction.getTransactionId());
                         if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode()) {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
@@ -217,5 +272,11 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent implements Agent {
         } catch (CantMakeUnholdTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+    private void cleanResources() {
+        /**
+         * Disconnect from database and explicitly set all references to null.
+         */
     }
 }

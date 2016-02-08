@@ -92,6 +92,47 @@ public final class CryptoBrokerActorNetworkServiceDatabaseFactory {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
+            /**
+             * Create Quotes Request table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_TABLE_NAME);
+
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUEST_ID_COLUMN_NAME              , DatabaseDataType.STRING      , 100, Boolean.TRUE );
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME    , DatabaseDataType.STRING      , 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME    , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 100, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_UPDATE_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_TYPE_COLUMN_NAME                    , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_STATE_COLUMN_NAME                   , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+
+            table.addIndex (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }           /**
+             * Create Quotes table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_TABLE_NAME);
+
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME           , DatabaseDataType.STRING, 100, Boolean.TRUE );
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                , DatabaseDataType.MONEY ,   0, Boolean.FALSE);
+
+            table.addIndex (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
             return database;
 
         } catch (InvalidOwnerIdException invalidOwnerId) {

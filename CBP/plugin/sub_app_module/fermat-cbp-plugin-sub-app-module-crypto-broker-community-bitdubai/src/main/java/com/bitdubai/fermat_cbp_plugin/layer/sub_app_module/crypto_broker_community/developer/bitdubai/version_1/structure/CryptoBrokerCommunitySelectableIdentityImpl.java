@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantSelectIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 
+import java.util.Arrays;
+
 /**
  * Created by Alejandro Bicelis on 26/1/2016.
  */
@@ -22,7 +24,9 @@ public class CryptoBrokerCommunitySelectableIdentityImpl implements CryptoBroker
     }
 
     @Override
-    public void select() throws CantSelectIdentityException {}
+    public void select() throws CantSelectIdentityException {
+
+    }
 
     @Override
     public String getPublicKey() {
@@ -42,5 +46,15 @@ public class CryptoBrokerCommunitySelectableIdentityImpl implements CryptoBroker
     @Override
     public byte[] getImage() {
         return this.image;
+    }
+
+    @Override
+    public String toString() {
+        return "CryptoBrokerCommunitySelectableIdentityImpl{" +
+                "publicKey='" + publicKey + '\'' +
+                ", actorType=" + actorType +
+                ", alias='" + alias + '\'' +
+                ", image=" + (image != null) +
+                '}';
     }
 }
