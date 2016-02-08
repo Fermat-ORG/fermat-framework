@@ -656,8 +656,8 @@ public class ChatMiddlewareMonitorAgent implements
             }
             try{
                 UUID chatId=chatMetadata.getChatId();
-                //When I send a chat
-                String contactLocalPublicKey=chatMetadata.getLocalActorPublicKey();
+                Chat chatFromDatabase=chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+                String contactLocalPublicKey=chatFromDatabase.getRemoteActorPublicKey();
                 Contact contact=chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
                 if(contact==null){
                     contact = createUnregisteredContact(chatMetadata);
@@ -682,6 +682,10 @@ public class ChatMiddlewareMonitorAgent implements
                 throw new CantGetMessageException(e,
                         "Getting message from ChatMetadata",
                         "Cannot save the contact");
+            } catch (CantGetChatException e) {
+                throw new CantGetMessageException(e,
+                        "Getting message from ChatMetadata",
+                        "Cannot get the chat");
             }
 
         }
