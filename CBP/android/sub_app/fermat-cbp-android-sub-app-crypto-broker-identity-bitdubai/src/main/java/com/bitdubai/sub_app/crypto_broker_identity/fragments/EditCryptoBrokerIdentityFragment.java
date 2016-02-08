@@ -77,6 +77,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
     private Switch publishIdentityCheckBox;
 
+    InputMethodManager imm;
+
     public static EditCryptoBrokerIdentityFragment newInstance() {
         return new EditCryptoBrokerIdentityFragment();
     }
@@ -100,7 +102,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         actualizable = true;
         Button mUpdateButton = (Button) layout.findViewById(R.id.update_crypto_broker_button);
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
@@ -179,6 +180,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
                 }
             }
         });
+
+        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     @Override
@@ -188,6 +191,12 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             editIdentityInfoInBackDevice();
             actualizable = false;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     @Override
@@ -216,6 +225,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
                 pictureView.setImageBitmap(cryptoBrokerBitmap);
             }
         }
+        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     @Override
@@ -291,6 +301,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     }
 
     private void dispatchTakePictureIntent() {
+        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, InputMethodManager.HIDE_IMPLICIT_ONLY);
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -298,6 +309,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     }
 
     private void loadImageFromGallery() {
+        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS, InputMethodManager.HIDE_IMPLICIT_ONLY);
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
