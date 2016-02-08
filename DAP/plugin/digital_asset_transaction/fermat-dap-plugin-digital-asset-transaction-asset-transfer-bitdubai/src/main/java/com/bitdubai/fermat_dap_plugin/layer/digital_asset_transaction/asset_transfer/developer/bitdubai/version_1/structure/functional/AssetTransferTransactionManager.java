@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/09/15.
+ * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class AssetTransferTransactionManager implements AssetTransferManager {
 

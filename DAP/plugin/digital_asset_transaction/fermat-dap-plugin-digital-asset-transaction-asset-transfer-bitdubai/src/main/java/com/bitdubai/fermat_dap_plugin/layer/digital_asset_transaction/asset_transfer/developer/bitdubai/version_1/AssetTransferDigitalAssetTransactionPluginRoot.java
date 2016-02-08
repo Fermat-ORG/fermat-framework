@@ -61,7 +61,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
- * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/2016.
+ * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
         AssetTransferManager,

@@ -17,7 +17,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import java.util.UUID;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/10/15.
+ * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class DigitalAssetTransferVault extends AbstractDigitalAssetVault {
     ErrorManager errorManager;

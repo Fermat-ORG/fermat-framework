@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.AssetTransferDigitalAssetTransactionPluginRoot;
 
 /**
- * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/2016.
+ * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 

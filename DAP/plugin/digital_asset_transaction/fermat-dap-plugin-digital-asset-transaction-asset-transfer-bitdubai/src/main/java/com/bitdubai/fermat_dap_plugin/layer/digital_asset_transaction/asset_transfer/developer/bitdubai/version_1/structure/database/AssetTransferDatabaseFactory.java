@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/09/15.
+ * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class AssetTransferDatabaseFactory implements DealsWithPluginDatabaseSystem {
     /**

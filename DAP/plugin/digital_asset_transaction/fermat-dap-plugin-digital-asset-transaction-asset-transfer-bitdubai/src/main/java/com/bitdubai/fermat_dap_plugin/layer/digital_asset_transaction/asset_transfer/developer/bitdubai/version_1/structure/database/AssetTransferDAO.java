@@ -42,8 +42,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 24/09/15.
- * Updated by Víctor Mars (marsvicam@gmail.com) on 22/12/15.
+ * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class AssetTransferDAO {
 

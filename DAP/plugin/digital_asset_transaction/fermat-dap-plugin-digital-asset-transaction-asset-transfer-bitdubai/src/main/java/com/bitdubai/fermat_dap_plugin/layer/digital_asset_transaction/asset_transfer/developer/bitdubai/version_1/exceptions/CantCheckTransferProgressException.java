@@ -3,7 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_tra
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/10/15.
+ * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class CantCheckTransferProgressException extends DAPException {
     public static final String DEFAULT_MESSAGE = "There was an error checking the Assets Distribution progress.";

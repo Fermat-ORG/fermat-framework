@@ -7,7 +7,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus
 import java.util.Date;
 
 /**
- * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 22/12/15.
+ * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class DeliverRecord {
 

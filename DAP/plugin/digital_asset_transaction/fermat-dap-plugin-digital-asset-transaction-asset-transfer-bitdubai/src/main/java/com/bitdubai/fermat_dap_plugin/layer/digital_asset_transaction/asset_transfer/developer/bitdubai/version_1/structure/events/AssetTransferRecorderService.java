@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/10/15.
+ * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class AssetTransferRecorderService implements DealsWithEvents, AssetTransactionService {
     /**

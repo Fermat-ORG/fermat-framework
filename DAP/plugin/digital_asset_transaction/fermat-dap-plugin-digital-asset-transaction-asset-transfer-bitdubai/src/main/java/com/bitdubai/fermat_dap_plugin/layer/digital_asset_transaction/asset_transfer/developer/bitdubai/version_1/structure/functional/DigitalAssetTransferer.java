@@ -50,7 +50,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/09/15.
+ * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
 
