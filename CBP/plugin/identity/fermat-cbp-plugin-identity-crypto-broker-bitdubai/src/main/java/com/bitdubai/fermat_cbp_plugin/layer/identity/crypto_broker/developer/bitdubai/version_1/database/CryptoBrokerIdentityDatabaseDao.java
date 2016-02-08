@@ -347,13 +347,11 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             e.printStackTrace();
         } catch (CantPersistProfileImageException e) {
             // TODO: manejar las excepciones
-            e.printStackTrace();
         }
     }
 
     private void updateCryptoBrokerIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
         try {
-
             this.pluginFileSystem.deleteBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
                     CryptoBrokerIdentityPluginRoot.CRYPTO_BROKER_IDENTITY_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
@@ -376,8 +374,5 @@ public class CryptoBrokerIdentityDatabaseDao implements DealsWithPluginDatabaseS
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error removing file.", null);
         }
     }
-
-
-
 
 }
