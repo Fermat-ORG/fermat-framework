@@ -85,9 +85,9 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
    // static void initchatinfo(){
    // }
 
-    public static ContactsListFragment newInstance() {
+    public static ConnectionsListFragment newInstance() {
     //    initchatinfo();
-        return new ContactsListFragment();}
+        return new ConnectionsListFragment();}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +104,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
             if(errorManager!=null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
         }
-
+        setHasOptionsMenu(false);
     }
 
     @Override
@@ -157,14 +157,14 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                 try {
                     appSession.setData(ChatSession.CONNECTION_DATA, chatManager.getContactByContactId(contactid.get(position)));
                     Contact conn = chatSession.getSelectedConnection();
-                    chatManager.saveContact(conn);
-                    Toast.makeText(getActivity(), "ItemClink", Toast.LENGTH_SHORT).show();
-                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-                } catch (CantGetContactException e) {
+                    //chatManager.saveContact(conn);
+                    Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
+                    //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
 
+                } catch (CantGetContactException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                } catch (CantSaveContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                //} catch (CantSaveContactException e) {
+                   // errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (Exception e){
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
@@ -191,6 +191,9 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                 final ConnectionListAdapter adaptador =
                                         new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid);
                                 adaptador.refreshEvents(contactname, contacticon, contactid);
+                                adaptador.notifyDataSetChanged();
+                                list.invalidateViews();
+                                list.requestLayout();
                             }else{
                                 Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
                             }

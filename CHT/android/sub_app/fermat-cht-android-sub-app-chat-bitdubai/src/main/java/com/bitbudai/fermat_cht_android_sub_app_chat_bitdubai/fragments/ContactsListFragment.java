@@ -222,7 +222,6 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 try{
                     appSession.setData("whocallme", "contact");
                     appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
-                   // appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 }catch(CantGetContactException e) {
 
@@ -258,9 +257,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
-
                         try {
+                            Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
                             List <Contact> con=  chatManager.getContacts();
                             if (con.size() > 0) {
                                 for (int i=0;i<con.size();i++){
@@ -271,6 +269,9 @@ public class ContactsListFragment extends AbstractFermatFragment {
                                 final ContactListAdapter adaptador =
                                         new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
                                 adaptador.refreshEvents(contactname, contacticon, contactid);
+                                adaptador.notifyDataSetChanged();
+                                list.invalidateViews();
+                                list.requestLayout();
                             }else{
                                 Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
                             }
@@ -465,15 +466,15 @@ public class ContactsListFragment extends AbstractFermatFragment {
         // Inflate the menu items
         inflater.inflate(R.menu.contact_list_menu, menu);
         // Locate the search item
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        //MenuItem searchItem = menu.findItem(R.id.menu_search);
 
         // In versions prior to Android 3.0, hides the search item to prevent additional
         // searches. In Android 3.0 and later, searching is done via a SearchView in the ActionBar.
         // Since the search doesn't create a new Activity to do the searching, the menu item
         // doesn't need to be turned off.
-        if (mIsSearchResultView) {
-            searchItem.setVisible(false);
-        }
+       // if (mIsSearchResultView) {
+        //    searchItem.setVisible(false);
+        //}
 
         // Retrieves the system search manager service
 /*        final SearchManager searchManager =
