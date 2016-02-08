@@ -56,7 +56,7 @@
                                 android:id="@+id/contact_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:hint="name"
+                                android:text="@string/name_text"
                                 android:textColor="#72af9c"
                                 android:textColorHint="#BDBDBD"
                                 android:textSize="22sp"
@@ -78,11 +78,6 @@
                                 android:src="@drawable/btn_send_adduser_normal"
                                 android:layout_marginTop="10dp"
                                 />
-
-
-
-
-
                         </LinearLayout>
 
                         <LinearLayout
@@ -102,7 +97,7 @@
                                 android:gravity="center_vertical"
                                 android:textSize="20sp"
                                 android:textStyle="normal"
-                                android:hint="address"
+                                android:text="@string/address_text"
                                 android:textColor="#72af9c"
                                 android:textColorHint="#BDBDBD"
                                 android:paddingTop="7dip"
@@ -130,7 +125,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
-                            android:background="#bbccc7"></View>
+                            android:background="#bbccc7"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -153,7 +148,7 @@
                                 android:textColorHint="#BDBDBD"
                                 android:textSize="20sp"
                                 android:textStyle="normal"
-                                android:hint="0 bits"
+                                android:text="@string/balance_amount_0_bits_text"
                                 android:layout_weight="0.54"
                                 android:inputType="numberDecimal"
                                 android:state_selected = "true"
@@ -165,7 +160,7 @@
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="0.5dp"
-                            android:background="#bbccc7"></View>
+                            android:background="#bbccc7"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -175,6 +170,7 @@
                             android:paddingTop="3dip"
                             android:paddingRight="7dip"
                             android:id="@+id/linear_notes">
+
                             <EditText
                                 android:id="@+id/notes"
                                 android:layout_width="match_parent"
@@ -182,7 +178,7 @@
                                 android:gravity="center_vertical"
                                 android:textSize="20sp"
                                 android:textStyle="normal"
-                                android:hint="reason"
+                                android:text="@string/reason_text"
                                 android:textColor="#72af9c"
                                 android:textColorHint="#BDBDBD"
                                 android:paddingTop="7dip"
@@ -194,6 +190,7 @@
                                 android:background="@null"
                                 android:fontFamily="roboto"/>
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -203,6 +200,7 @@
                             android:paddingRight="7dip"
                             android:id="@+id/linear_send"
                             >
+
                             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                                 android:id="@+id/send_button"
                                 android:layout_width="match_parent"
@@ -211,20 +209,16 @@
                                 android:src="@drawable/ic_action_send_now_grey"
                                 android:padding="3dp"
                                 android:clickable="true"
-                                android:text="Send request"
+                                android:text="@string/send_request_text"
                                 android:background="#1172aa"
                                 android:textColor="#fff"
                                 />
                         </LinearLayout>
 
-
                     </LinearLayout>
                 </RelativeLayout>
             </LinearLayout>
-
         </RelativeLayout>
-
-
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
@@ -266,14 +260,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="You don t have\n request"
+            android:text="@string/you_dont_have_requests_text"
             android:textColor="#000"
             android:textSize="20sp"
             android:fontFamily="roboto"/>
-
     </LinearLayout>
-
-
-
-
 </FrameLayout>

@@ -13,6 +13,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -46,6 +47,7 @@ public class ConstructionTest {
 
     @Mock
     private UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao databaseConnectionsDao;
+    private UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager;
 
     @Mock
     private UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot pluginRoot;
@@ -58,6 +60,8 @@ public class ConstructionTest {
     private PluginDatabaseSystem pluginDatabaseSystem;
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
+
+
     @Test
     public void Construction_ValidParameters_NewObjectCreated() {
         ECCKeyPair identity = new ECCKeyPair();
@@ -70,7 +74,9 @@ public class ConstructionTest {
                 closeContractManager,
                 customerBrokerContractPurchaseManager,
                 fiatIndexManager,
-                notificationManagerMiddleware
+                notificationManagerMiddleware,
+                userLevelBusinessTransactionCustomerBrokerPurchaseManager
+
         );
         assertThat(testMonitorAgent).isNotNull();
     }
