@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pa
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -89,9 +88,27 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        selectedProviders = new ArrayList<>();
+        currencies = getCurrenciesList();
         moduleManager = appSession.getModuleManager();
 
         try {
+            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            errorManager = appSession.getErrorManager();
+            bitcoinWallets = getBitcoinWallets(walletManager);
+
+            // Verify if wallet configured, if it is, show this fragment, else show the home fragment (the second start fragment)
+            boolean walletConfigured;
+            try {
+                walletConfigured = walletManager.isWalletConfigured(appSession.getAppPublicKey());
+            } catch (Exception ex) {
+                Object data = appSession.getData(CryptoCustomerWalletSession.CONFIGURED_DATA);
+                walletConfigured = (data != null);
+            }
+
+            if (walletConfigured) {
+                getRuntimeManager().changeStartActivity(1);
+            }
 
             //Obtain walletSettings or create new wallet settings if first time opening wallet
             CryptoCustomerWalletPreferenceSettings walletSettings;
@@ -107,18 +124,12 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                 moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
             }
 
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
-            errorManager = appSession.getErrorManager();
-
-            selectedProviders = new ArrayList<>();
-            currencies = getCurrenciesList();
-            bitcoinWallets = getBitcoinWallets();
-
         } catch (Exception ex) {
-            Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+            else
+                Log.e(TAG, ex.getMessage(), ex);
         }
 
     }
@@ -172,36 +183,9 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             }
         });
 
-        verifyIfWalletConfigured();
+        showHelpDialog();
 
         return layout;
-    }
-
-    private void verifyIfWalletConfigured() {
-        new Handler().postDelayed(new Runnable() {
-            boolean walletConfigured;
-
-            @Override
-            public void run() {
-                try {
-                    walletConfigured = walletManager.isWalletConfigured(appSession.getAppPublicKey());
-
-                } catch (Exception ex) {
-                    Object data = appSession.getData(CryptoCustomerWalletSession.CONFIGURED_DATA);
-                    walletConfigured = (data != null);
-
-                    if (errorManager != null)
-                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                }
-
-                if (walletConfigured)
-                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
-                else
-                    showHelpDialog();
-            }
-
-        }, 500);
     }
 
     private void showHelpDialog() {
@@ -431,7 +415,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         return data;
     }
 
-    private List<InstalledWallet> getBitcoinWallets() {
+    private List<InstalledWallet> getBitcoinWallets(CryptoCustomerWalletManager walletManager) {
         ArrayList<InstalledWallet> data = new ArrayList<>();
 
         try {
