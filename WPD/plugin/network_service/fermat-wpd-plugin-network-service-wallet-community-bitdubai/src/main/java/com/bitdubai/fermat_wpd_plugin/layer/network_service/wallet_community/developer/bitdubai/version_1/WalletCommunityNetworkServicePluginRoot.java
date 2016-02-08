@@ -109,7 +109,7 @@ public class WalletCommunityNetworkServicePluginRoot extends AbstractPlugin impl
          * Listen and handle Client Connection Success Reconnect Notification Event
          */
 //        fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
-//        fermatEventListener.setEventHandler(new ClientSuccessfullReconnectNotificationEventHandler(this));
+//        fermatEventListener.setEventHandler(new ClientSuccessfulReconnectNotificationEventHandler(this));
 //        eventManager.addListener(fermatEventListener);
 //        listenersAdded.add(fermatEventListener);
 

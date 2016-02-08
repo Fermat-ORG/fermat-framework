@@ -53,10 +53,11 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
 
     /**
      *
+     * @param publicKeyBroker
      * @return
      * @throws CantGetListActorExtraDataException
      */
-    ActorExtraData getActorExtraDataLocalActor() throws CantGetListActorExtraDataException;
+    ActorIdentity getActorInformationByPublicKey(String publicKeyBroker) throws CantGetListActorExtraDataException;
 
     /**
      *

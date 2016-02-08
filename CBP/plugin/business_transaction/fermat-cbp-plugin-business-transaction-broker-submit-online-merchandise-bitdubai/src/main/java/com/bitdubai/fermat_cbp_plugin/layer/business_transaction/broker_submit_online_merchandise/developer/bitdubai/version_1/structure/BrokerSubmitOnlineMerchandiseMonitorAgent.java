@@ -336,7 +336,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             Actors.CBP_CRYPTO_BROKER,
                             Actors.CBP_CRYPTO_CUSTOMER,
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                            BlockchainNetworkType.REG_TEST
+                            BlockchainNetworkType.getDefaultBlockchainNetworkType()
                     );
                     //Updating the business transaction record
                     businessTransactionRecord.setTransactionId(
