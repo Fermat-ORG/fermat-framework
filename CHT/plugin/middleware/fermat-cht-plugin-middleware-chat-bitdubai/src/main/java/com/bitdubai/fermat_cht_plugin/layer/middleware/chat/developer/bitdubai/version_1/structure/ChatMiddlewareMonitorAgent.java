@@ -421,8 +421,8 @@ public class ChatMiddlewareMonitorAgent implements
                     incomingChatMetadata=pendingTransaction.getInformation();
                     incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
-                        //If message exists in database, this message will be update
                         saveChat(incomingChatMetadata);
+                        //If message exists in database, this message will be update
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
@@ -655,6 +655,8 @@ public class ChatMiddlewareMonitorAgent implements
                 throw new CantGetMessageException("The chat metadata from network service is null");
             }
             try{
+                UUID chatId=chatMetadata.getChatId();
+                //When I send a chat
                 String contactLocalPublicKey=chatMetadata.getLocalActorPublicKey();
                 Contact contact=chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
                 if(contact==null){
