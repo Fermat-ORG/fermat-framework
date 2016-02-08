@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 
 
@@ -36,5 +36,5 @@ public interface SubAppRuntimeManager extends RuntimeManager {
     public SubApp getSubAppByPublicKey(String subAppPublicKey);
 
 
-
+    void recordNAvigationStructure(FermatStructure fermatStructure);
 }
