@@ -26,12 +26,10 @@ import java.util.UUID;
 public class ActorCustomerExtraDataEventActions {
 
     private CryptoBrokerManager cryptoBrokerANSManager;
-    private CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
     private CryptoCustomerActorDao cryptoCustomerActorDao;
 
-    public ActorCustomerExtraDataEventActions(CryptoBrokerManager cryptoBrokerANSManager, CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager, CryptoCustomerActorDao cryptoCustomerActorDao){
+    public ActorCustomerExtraDataEventActions(CryptoBrokerManager cryptoBrokerANSManager, CryptoCustomerActorDao cryptoCustomerActorDao){
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
-        this.cryptoCustomerActorConnectionManager = cryptoCustomerActorConnectionManager;
         this.cryptoCustomerActorDao = cryptoCustomerActorDao;
     }
 
@@ -46,7 +44,7 @@ public class ActorCustomerExtraDataEventActions {
     public void setExtraData() throws CantGetExtraDataActorException {
         List<CryptoBrokerExtraData<CryptoBrokerQuote>> dataNS;
         try {
-            dataNS = cryptoBrokerANSManager.listPendingQuotesRequests(RequestType.RECEIVED);
+            dataNS = cryptoBrokerANSManager.listPendingQuotesRequests(RequestType.SENT);
             if(dataNS != null) {
                 for (CryptoBrokerExtraData<CryptoBrokerQuote> extraDate : dataNS) {
                     Collection<QuotesExtraData> quotes = new ArrayList<>();
@@ -55,8 +53,8 @@ public class ActorCustomerExtraDataEventActions {
                         QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), quo.getMerchandise(), quo.getPaymentCurrency(), quo.getPrice());
                         quotes.add(quote);
                     }
-                    ActorExtraData actorExtraData = new ActorExtraDataInformation(identity, quotes, null);
-                    if( this.cryptoCustomerActorDao.existBrokerExtraDataQuotes(identity.getPublicKey()) ){
+                    ActorExtraData actorExtraData = new ActorExtraDataInformation(extraDate.getRequesterPublicKey(), identity, quotes, null);
+                    if( this.cryptoCustomerActorDao.existBrokerExtraDataQuotes(identity.getPublicKey(), extraDate.getRequesterPublicKey()) ){
                         this.cryptoCustomerActorDao.updateQuotes(actorExtraData);
                     }else{
                         this.cryptoCustomerActorDao.createCustomerExtraData(actorExtraData);
