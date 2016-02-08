@@ -1,9 +1,10 @@
-package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerInfo;
 
 /**
- * The class <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerQuote</code>
+ * The class <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote</code>
  * contain the information about quotes.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 06/02/2016.
@@ -33,6 +34,15 @@ public final class CryptoBrokerQuote implements CryptoBrokerInfo {
 
     public final Float getPrice() {
         return price;
+    }
+
+    @Override
+    public String toString() {
+        return "CryptoBrokerQuote{" +
+                "merchandise=" + merchandise +
+                ", paymentCurrency=" + paymentCurrency +
+                ", price=" + price +
+                '}';
     }
 
 }
