@@ -183,8 +183,6 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
             public void run() {
                 try {
 
-                    System.out.println("************* voy al module manager publicar la identidad");
-
                     appSession.getModuleManager().publishCryptoCustomerIdentity(executor.getIdentity().getPublicKey());
 
                 } catch(CouldNotPublishCryptoCustomerException e) {
