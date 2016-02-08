@@ -79,7 +79,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         stockWallets = new ArrayList<>();
         bankCurrencies = new HashMap<>();
         bankAccounts = new HashMap<>();
@@ -88,6 +87,19 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
             moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
+
+            // Verify if wallet configured, if it is, show this fragment, else show the home fragment (the second start fragment)
+            boolean walletConfigured;
+            try {
+                walletConfigured = walletManager.isWalletConfigured(appSession.getAppPublicKey());
+            } catch (Exception ex) {
+                Object data = appSession.getData(CryptoBrokerWalletSession.CONFIGURED_DATA);
+                walletConfigured = (data != null);
+            }
+
+            if (walletConfigured){
+                getRuntimeManager().changeStartActivity(1);
+            }
 
             //Obtain walletSettings or create new wallet settings if first time opening wallet
             CryptoBrokerWalletPreferenceSettings walletSettings;
@@ -109,6 +121,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
+
 
     }
 
@@ -161,37 +174,9 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
             }
         });
 
-        verifyIfWalletConfigured();
+        showHelpDialog();
 
         return layout;
-    }
-
-    private void verifyIfWalletConfigured() {
-
-        new Handler().postDelayed(new Runnable() {
-            boolean walletConfigured;
-
-            @Override
-            public void run() {
-                try {
-                    walletConfigured = walletManager.isWalletConfigured(appSession.getAppPublicKey());
-
-                } catch (Exception ex) {
-                    Object data = appSession.getData(CryptoBrokerWalletSession.CONFIGURED_DATA);
-                    walletConfigured = (data != null);
-
-                    if (errorManager != null)
-                        errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                }
-
-                if (walletConfigured)
-                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
-                else
-                    showHelpDialog();
-            }
-
-        }, 500);
     }
 
     private void showHelpDialog() {
