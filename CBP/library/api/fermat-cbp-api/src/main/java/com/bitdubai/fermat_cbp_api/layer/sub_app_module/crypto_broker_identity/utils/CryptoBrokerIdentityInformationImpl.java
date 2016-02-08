@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils;
 
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
@@ -17,9 +17,9 @@ public class CryptoBrokerIdentityInformationImpl implements CryptoBrokerIdentity
     private final byte[]        profileImage;
     private final ExposureLevel exposureLevel;
 
-    public CryptoBrokerIdentityInformationImpl(final String        alias        ,
-                                               final String        publicKey    ,
-                                               final byte[]        profileImage ,
+    public CryptoBrokerIdentityInformationImpl(final String alias,
+                                               final String publicKey,
+                                               final byte[] profileImage,
                                                final ExposureLevel exposureLevel){
         this.alias = alias;
         this.publicKey = publicKey;

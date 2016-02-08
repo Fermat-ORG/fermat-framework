@@ -106,11 +106,9 @@ public class CustomerActorManager implements ActorExtraDataManager {
         public void requestBrokerExtraData(ActorExtraData actorExtraData) throws CantSendActorNetworkServiceException {
             try {
                 this.createCustomerExtraData(actorExtraData);
+                this.cryptoBrokerANSManager.requestQuotes(actorExtraData.getCustomerPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, actorExtraData.getBrokerIdentity().getPublicKey());
             } catch (CantCreateNewActorExtraDataException e) {
                 throw new CantSendActorNetworkServiceException(e.getMessage(), e, "", "");
-            }
-            try {
-                this.cryptoBrokerANSManager.requestQuotes(actorExtraData.getCustomerPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, actorExtraData.getBrokerIdentity().getPublicKey());
             } catch (CantRequestQuotesException e) {
                 throw new CantSendActorNetworkServiceException(e.getMessage(), e, "", "");
             }

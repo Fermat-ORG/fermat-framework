@@ -83,9 +83,6 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
             @Override
             public void start() throws CantStartPluginException {
                 try {
-                    this.cryptoCustomerActorDao = new CryptoCustomerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
-                    this.cryptoCustomerActorDao.initializeDatabase();
-
                     FermatEventListener fermatEventListener;
                     FermatEventHandler fermatEventHandler;
                     ActorCustomerExtraDataEventActions handlerAction = new ActorCustomerExtraDataEventActions(cryptoBrokerANSManager, cryptoCustomerActorDao);
@@ -97,12 +94,17 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
 
                     agente = new CryptoBrokerExtraDataUpdateAgent(cryptoBrokerANSManager, cryptoCustomerActorDao);
                     agente.start();
+                } catch (CantStartAgentException e) {
+                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                    throw new CantStartPluginException(e, this.getPluginVersionReference());
+                }
+
+                try {
+                    this.cryptoCustomerActorDao = new CryptoCustomerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+                    this.cryptoCustomerActorDao.initializeDatabase();
 
                     this.serviceStatus = ServiceStatus.STARTED;
                 } catch (CantInitializeCryptoCustomerActorDatabaseException e) {
-                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                    throw new CantStartPluginException(e, this.getPluginVersionReference());
-                } catch (CantStartAgentException e) {
                     errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                     throw new CantStartPluginException(e, this.getPluginVersionReference());
                 }
