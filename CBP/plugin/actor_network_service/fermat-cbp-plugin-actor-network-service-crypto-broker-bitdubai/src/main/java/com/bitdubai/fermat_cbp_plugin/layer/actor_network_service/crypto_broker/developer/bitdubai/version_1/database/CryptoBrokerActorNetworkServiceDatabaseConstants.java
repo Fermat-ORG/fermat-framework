@@ -45,6 +45,8 @@ public final class CryptoBrokerActorNetworkServiceDatabaseConstants {
     public static final String QUOTES_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME     = "requester_actor_type"    ;
     public static final String QUOTES_REQUEST_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME = "crypto_broker_public_key";
     public static final String QUOTES_REQUEST_UPDATE_TIME_COLUMN_NAME              = "update_time"             ;
+    public static final String QUOTES_REQUEST_TYPE_COLUMN_NAME                     = "type"                    ;
+    public static final String QUOTES_REQUEST_STATE_COLUMN_NAME                    = "state"                   ;
 
     public static final String QUOTES_REQUEST_FIRST_KEY_COLUMN                     = "request_id"              ;
 
@@ -53,10 +55,13 @@ public final class CryptoBrokerActorNetworkServiceDatabaseConstants {
      */
     public static final String QUOTES_TABLE_NAME                                   = "quotes"                  ;
 
-    public static final String QUOTES_REQUEST_ID_COLUMN_NAME                       = "request_id"              ;
+    public static final String QUOTES_REQUEST_ID_COLUMN_NAME                       = "request_id"              ; // RELATION WITH QUOTES REQUEST TABLE.
     public static final String QUOTES_MERCHANDISE_COLUMN_NAME                      = "merchandise"             ;
+    public static final String QUOTES_MERCHANDISE_TYPE_COLUMN_NAME                 = "merchandise_type"        ;
     public static final String QUOTES_PAYMENT_CURRENCY_COLUMN_NAME                 = "payment_currency"        ;
+    public static final String QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME            = "payment_currency_type"   ;
     public static final String QUOTES_PRICE_COLUMN_NAME                            = "price"                   ;
+
     public static final String QUOTES_FIRST_KEY_COLUMN                             = "request_id"              ;
 
 }

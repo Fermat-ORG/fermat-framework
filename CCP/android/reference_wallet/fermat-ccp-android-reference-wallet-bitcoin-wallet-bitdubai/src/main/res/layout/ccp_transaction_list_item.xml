@@ -7,15 +7,12 @@
     android:id="@+id/container_sub_item"
     >
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/container_data"
         android:paddingTop="15dp"
         >
-
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,36 +26,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_amount"
-                android:text="1.4 BTC"
-                android:textSize="18dp"
+                android:text="@string/txt_amount_btc_text"
+                android:textSize="18sp"
                 android:textColor="#ffffff"
                 android:fontFamily="roboto"
                 android:layout_gravity="right"
                 app:typeface="ROBOTO_REGULAR"
                 />
 
-
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_notes"
-                android:text="Conference ticket"
-                android:textSize="14dp"
+                android:text="@string/txt_conference_ticket_text"
+                android:textSize="14sp"
                 android:textColor="#80ffffff"
                 android:fontFamily="roboto"
                 android:layout_gravity="right"
                 app:typeface="ROBOTO_REGULAR"
-
-
                 />
-
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_time"
-                android:text="03 Feb 2014"
-                android:textSize="12dp"
+                android:text="@string/txt_time_date_text"
+                android:textSize="12sp"
                 android:textColor="#ffffff"
                 android:fontFamily="roboto"
                 android:layout_gravity="right"
@@ -66,13 +59,5 @@
                 />
 
         </LinearLayout>
-
-
-
-
-
-
     </RelativeLayout>
-
-
 </LinearLayout>
