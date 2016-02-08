@@ -108,7 +108,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS_NETWORK, 0, "help").setIcon(R.drawable.dap_asset_redeem_help_icon)
+        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS_NOTIFICATIONS, 0, "help").setIcon(R.drawable.dap_asset_redeem_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -117,7 +117,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS_NETWORK) {
+            if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS_NOTIFICATIONS) {
                 setUpSettingsNetwork(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
@@ -150,17 +150,17 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
     }
 
     private void configureToolbar() {
-
-        toolbar = getToolbar();
+        Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-
-            toolbar.setBackgroundColor(Color.parseColor("#015581"));
             toolbar.setTitleTextColor(Color.WHITE);
-            toolbar.setBottom(Color.WHITE);
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-                Window window = getActivity().getWindow();
-                window.setStatusBarColor(Color.parseColor("#015581"));
+            Drawable drawable = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_redeem_point_action_bar_gradient_colors, null);
+                toolbar.setElevation(0);
+            } else {
+                drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_redeem_point_action_bar_gradient_colors);
             }
+            toolbar.setBackground(drawable);
         }
     }
 
