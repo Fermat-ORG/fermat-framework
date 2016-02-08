@@ -159,6 +159,8 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
       Skype:   yayotron
       Github:  https://github.com/yayotron
 
+<br>
+
 ### Coin Diggers Team:
 -----------------------------------
 <br>

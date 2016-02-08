@@ -60,7 +60,7 @@ public class ActorConnectionEventActions {
 
         try {
 
-            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews();
+            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews(Actors.CBP_CRYPTO_BROKER);
 
 
             for (final CryptoBrokerConnectionRequest request : list)
@@ -76,12 +76,11 @@ public class ActorConnectionEventActions {
 
     }
 
-    public void handleUpdateEvent() throws CantHandleNewsEventException {
+    public void handleCryptoBrokerUpdateEvent() throws CantHandleNewsEventException {
 
         try {
 
-            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews();
-
+            final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionUpdates();
 
             for (final CryptoBrokerConnectionRequest request : list) {
 
@@ -90,26 +89,27 @@ public class ActorConnectionEventActions {
                     case ACCEPT:
                         this.handleAcceptConnection(request.getRequestId());
                         break;
-                    case CANCEL:
+                   /* case CANCEL:
                         this.handleCancelConnection(request.getRequestId());
-                        break;
+                        break;*/
                     case DENY:
                         this.handleDenyConnection(request.getRequestId());
                         break;
-                    case DISCONNECT:
+                  /*  case DISCONNECT:
                         this.handleDisconnect(request.getRequestId());
-                        break;
+                        break;*/
 
                 }
+
             }
 
         } catch(CantListPendingConnectionRequestsException |
                 ActorConnectionNotFoundException           |
                 UnexpectedConnectionStateException         |
-                CantAcceptActorConnectionRequestException  |
-                CantCancelActorConnectionRequestException  |
-                CantDenyActorConnectionRequestException    |
-                CantDisconnectFromActorException           e) {
+                CantAcceptActorConnectionRequestException /* |
+                CantCancelActorConnectionRequestException */ |
+                CantDenyActorConnectionRequestException   /* |
+                CantDisconnectFromActorException          */ e) {
 
             throw new CantHandleNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
         }

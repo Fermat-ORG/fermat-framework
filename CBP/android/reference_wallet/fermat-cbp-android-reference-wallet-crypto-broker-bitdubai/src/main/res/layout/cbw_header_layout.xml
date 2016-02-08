@@ -20,7 +20,7 @@
         android:id="@+id/cbw_market_rate_view_pager_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,4 +51,12 @@
             app:strokeWidth="4dp"
             app:unselectedColor="#052331"/>
     </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/cbw_header_progress_bar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:indeterminate="true"
+        android:layout_gravity="center"/>
+
 </FrameLayout>

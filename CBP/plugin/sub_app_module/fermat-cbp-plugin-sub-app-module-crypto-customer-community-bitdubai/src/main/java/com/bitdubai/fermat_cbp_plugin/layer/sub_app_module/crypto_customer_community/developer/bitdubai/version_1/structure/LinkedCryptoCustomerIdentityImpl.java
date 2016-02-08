@@ -38,7 +38,7 @@ public class LinkedCryptoCustomerIdentityImpl implements LinkedCryptoCustomerIde
 
     @Override
     public UUID getConnectionId() {
-        return null;
+        return this.connectionId;
     }
 
     @Override

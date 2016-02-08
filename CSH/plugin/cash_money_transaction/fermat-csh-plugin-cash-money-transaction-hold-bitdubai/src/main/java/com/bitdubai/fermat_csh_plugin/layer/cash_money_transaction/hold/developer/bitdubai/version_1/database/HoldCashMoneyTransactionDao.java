@@ -172,9 +172,8 @@ public class HoldCashMoneyTransactionDao {
         table.loadToMemory();
         records = table.getRecords();
 
-        //TODO:Revisar Franklin Marcano
-        //if (records.size() != 1)
-        //    throw new HoldCashMoneyTransactionInconsistentTableStateException("Inconsistent ("+ records.size() +") number of fetched records, should be between 0 and 1.", null, "The id is: " + transactionId.toString(), "");
+        if (records.size() != 1)
+            throw new HoldCashMoneyTransactionInconsistentTableStateException("Inconsistent ("+ records.size() +") number of fetched records, should be between 0 and 1.", null, "The id is: " + transactionId.toString(), "");
 
         return records.get(0);
     }

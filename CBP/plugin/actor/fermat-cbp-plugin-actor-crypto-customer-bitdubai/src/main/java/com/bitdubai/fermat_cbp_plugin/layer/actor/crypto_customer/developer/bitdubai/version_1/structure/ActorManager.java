@@ -49,8 +49,8 @@ public class ActorManager implements ActorExtraDataManager {
         }
 
         @Override
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListCustomerIdentityWalletRelationshipException {
-            return this.dao.getCustomerIdentityWalletRelationshipByIdentity(identity);
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+            return this.dao.getCustomerIdentityWalletRelationshipByIdentity(publicKey);
         }
 
         @Override
@@ -81,12 +81,7 @@ public class ActorManager implements ActorExtraDataManager {
 
         @Override
         public Collection<ActorExtraData> getAllActorExtraDataConnected() throws CantGetListActorExtraDataException {
-
-            // TODO: buscar la lista de actores conectados y luego usar el metodo
-            // TODO: getActorExtraDataByPublicKey(String _publicKey) para obtener la informacion de cada uno
-            // TODO: y poder retornarla
-
-            return null;
+            return this.dao.getAllActorExtraData();
         }
 
         @Override
@@ -96,7 +91,6 @@ public class ActorManager implements ActorExtraDataManager {
 
         @Override
         public ActorExtraData getActorExtraDataLocalActor() throws CantGetListActorExtraDataException {
-            // TODO: buscar la informacion local del Customer para pasarla al NS
             return null;
         }
 
