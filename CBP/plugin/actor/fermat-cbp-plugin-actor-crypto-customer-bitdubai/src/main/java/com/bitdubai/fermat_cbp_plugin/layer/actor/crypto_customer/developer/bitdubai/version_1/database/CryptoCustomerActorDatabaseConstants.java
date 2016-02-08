@@ -28,10 +28,12 @@ public class CryptoCustomerActorDatabaseConstants {
      */
     static final String ACTOR_EXTRA_DATA_TABLE_NAME = "actor_extra_data";
 
-    static final String ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME = "customer_public_key";
+    static final String ACTOR_EXTRA_DATA_ID_COLUMN_NAME = "extra_data_id";
+    static final String ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
     static final String ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME = "alias";
+    static final String ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME = "customer_public_key";
 
-    static final String ACTOR_EXTRA_DATA_FIRST_KEY_COLUMN = "customer_public_key";
+    static final String ACTOR_EXTRA_DATA_FIRST_KEY_COLUMN = "extra_data_id";
 
     /**
      * Quote Extra Data database table definition.
@@ -39,7 +41,8 @@ public class CryptoCustomerActorDatabaseConstants {
     static final String QUOTE_EXTRA_DATA_TABLE_NAME = "quote_extra_data";
 
     static final String QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME = "quote_id";
-    static final String QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME = "customer_public_key";
+    static final String QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME = "broker_public_key";
+    static final String QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME = "customer_public_key";
     static final String QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME = "merchandise";
     static final String QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME = "payment_currency";
     static final String QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME = "price";

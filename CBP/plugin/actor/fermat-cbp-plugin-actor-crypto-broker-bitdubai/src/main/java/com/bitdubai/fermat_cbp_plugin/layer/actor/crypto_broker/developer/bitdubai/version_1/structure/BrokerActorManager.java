@@ -70,43 +70,4 @@ public class BrokerActorManager implements CryptoBrokerActorExtraDataManager {
         public BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListBrokerIdentityWalletRelationshipException {
             return this.dao.getBrokerIdentityWalletRelationshipByWallet(walletPublicKey);
         }
-
-        @Override
-        public void sendExtraData(String publicKeyBroker, String publicKeyCustomer) throws CantSendExtraDataActorException {
-            try {
-                BrokerIdentityWalletRelationship relationship = this.dao.getBrokerIdentityWalletRelationshipByIdentity(publicKeyBroker);
-                String wallerPublicKey = relationship.getWallet();
-                CryptoBrokerWallet wallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(wallerPublicKey);
-                List<CryptoBrokerWalletAssociatedSetting> settings = wallet.getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings();
-                List<CryptoBrokerQuote> quotes = new ArrayList<>();
-                for(CryptoBrokerWalletAssociatedSetting setting_1 : settings){
-                    Currency merchandise = setting_1.getMerchandise();
-                    for(CryptoBrokerWalletAssociatedSetting setting_2 : settings) {
-                        Currency currencyPayment = setting_2.getMerchandise();
-                        if(merchandise != currencyPayment){
-                            Quote quote = wallet.getQuote(merchandise, 1f, currencyPayment);
-                            CryptoBrokerQuote qou = new CryptoBrokerQuote(
-                                    (Currency) quote.getMerchandise(),
-                                    quote.getFiatCurrency(),
-                                    quote.getPriceReference()
-                            );
-                            quotes.add(qou);
-                        }
-                    }
-                }
-                CryptoBrokerExtraData<CryptoBrokerQuote> request = cryptoBrokerANSManager.requestQuotes(publicKeyCustomer, Actors.CBP_CRYPTO_CUSTOMER, publicKeyBroker);
-                cryptoBrokerANSManager.answerQuotesRequest(request.getRequestId(), System.currentTimeMillis(), quotes);
-
-            } catch (CantGetCryptoBrokerWalletSettingException e) {
-                throw new CantSendExtraDataActorException(CantGetCryptoBrokerWalletSettingException.DEFAULT_MESSAGE, e, "", "");
-            } catch (CryptoBrokerWalletNotFoundException e) {
-                throw new CantSendExtraDataActorException(CryptoBrokerWalletNotFoundException.DEFAULT_MESSAGE, e, "", "");
-            } catch (CantGetListBrokerIdentityWalletRelationshipException e) {
-                throw new CantSendExtraDataActorException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
-            } catch (CantGetCryptoBrokerQuoteException e) {
-                throw new CantSendExtraDataActorException(CantGetCryptoBrokerQuoteException.DEFAULT_MESSAGE, e, "", "");
-            } catch (CantRequestQuotesException | CantAnswerQuotesRequestException | QuotesRequestNotFoundException e) {
-                throw new CantSendExtraDataActorException(e.getMessage(), e, "", "");
-            }
-        }
 }
