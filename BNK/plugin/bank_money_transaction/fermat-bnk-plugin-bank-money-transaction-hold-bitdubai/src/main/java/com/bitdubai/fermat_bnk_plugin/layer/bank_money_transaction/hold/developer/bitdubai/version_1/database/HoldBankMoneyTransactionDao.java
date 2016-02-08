@@ -91,8 +91,9 @@ public class HoldBankMoneyTransactionDao {
             throw new CantGetHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Inconsistent number of fetched records, should be between 0 and 1.");
         } catch (CantCreateHoldTransactionException e) {
             throw new CantGetHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Failed while constructing transaction from record.");
+        } catch (Exception e) {
+            throw new CantGetHoldTransactionException(e.getMessage(), e, "Hold Transaction", "Cant get record in table. Failed while constructing transaction from record.");
         }
-
         return HoldTransaction;
     }
 
@@ -131,7 +132,7 @@ public class HoldBankMoneyTransactionDao {
             if(status == BankTransactionStatus.CONFIRMED || status == BankTransactionStatus.REJECTED)
                 record.setLongValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, new Date().getTime());
 
-            DatabaseTable table = database.getTable(pluginId.toString());
+            DatabaseTable table = database.getTable(HoldBankMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
             table.updateRecord(record);
 
         } catch (CantUpdateRecordException e){
