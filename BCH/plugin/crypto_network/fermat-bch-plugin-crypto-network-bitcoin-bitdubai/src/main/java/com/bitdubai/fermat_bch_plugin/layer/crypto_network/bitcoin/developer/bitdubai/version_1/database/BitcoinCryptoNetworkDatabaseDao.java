@@ -1461,5 +1461,26 @@ public class BitcoinCryptoNetworkDatabaseDao {
         return record;
     }
 
+    /**
+     * Gets the active network types that we are monitoring
+     * @return
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public List<BlockchainNetworkType> getActiveBlockchainNetworkTypes() throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_TABLE_NAME);
+        List<BlockchainNetworkType> blockchainNetworkTypes = new ArrayList<>();
 
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            blockchainNetworkTypes.add(BlockchainNetworkType.getByCode(record.getStringValue(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE)));
+        }
+
+        return blockchainNetworkTypes;
+
+    }
 }
