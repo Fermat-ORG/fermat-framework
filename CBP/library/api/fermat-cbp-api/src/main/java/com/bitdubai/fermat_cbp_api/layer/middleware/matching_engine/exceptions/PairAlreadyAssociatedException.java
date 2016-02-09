@@ -20,4 +20,8 @@ public class PairAlreadyAssociatedException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public PairAlreadyAssociatedException(String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
+    }
+
 }

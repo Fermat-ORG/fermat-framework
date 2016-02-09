@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantInitializeMatchingEngineMiddlewareDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +54,9 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeMatchingEngineMiddlewareDatabaseException
+     * @throws CantInitializeDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeMatchingEngineMiddlewareDatabaseException {
+    public void initializeDatabase() throws CantInitializeDatabaseException {
 
         try {
 
@@ -70,7 +70,7 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeMatchingEngineMiddlewareDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -89,7 +89,7 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeMatchingEngineMiddlewareDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }

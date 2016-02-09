@@ -24,7 +24,6 @@ import java.util.List;
 /**
  * Created by Leon Acosta (lnacosta) - (laion.cj91@gmail.com) on 16/01/2015.
  */
-
 public class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons.ERROR_MANAGER         )
