@@ -374,7 +374,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                         }
                     } else {
                         if (cryptoWalletWalletContact != null)
-                            walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                            walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                     }
                     if (cryptoWalletWalletContact != null) {
                         walletContact.contactId = cryptoWalletWalletContact.getContactId();
@@ -664,7 +664,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
 
                 String contactAddress = "";
                 if (wcr.getReceivedCryptoAddress().size() > 0)
-                    contactAddress = wcr.getReceivedCryptoAddress().get(0).getAddress();
+                    contactAddress = wcr.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
         } catch (CantGetAllWalletContactsException e) {

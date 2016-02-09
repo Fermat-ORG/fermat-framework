@@ -192,7 +192,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
                 }else{
-                    Toast.makeText(getActivity(),"You dont have address to send\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"You don't have address to send\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
                 }
             }
             else if( id == R.id.receive_button){
@@ -201,7 +201,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
                 }else{
-                    Toast.makeText(getActivity(),"You dont have address to request\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"You don't have address to request\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
                 }
             }
             else if ( id == R.id.linear_layout_extra_user_receive){
