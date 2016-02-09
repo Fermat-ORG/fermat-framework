@@ -47,9 +47,9 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Home Fragment
+ * UserCommuinityHomeFragment
  */
-public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserCommuinityHomeFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static AssetUserCommunitySubAppModuleManager manager;
     private static final int MAX = 20;
@@ -73,8 +73,8 @@ public class UserCmmuinityHomeFragment extends AbstractFermatFragment implements
      */
     private boolean isRefreshing = false;
 
-    public static UserCmmuinityHomeFragment newInstance() {
-        return new UserCmmuinityHomeFragment();
+    public static UserCommuinityHomeFragment newInstance() {
+        return new UserCommuinityHomeFragment();
     }
 
     @Override

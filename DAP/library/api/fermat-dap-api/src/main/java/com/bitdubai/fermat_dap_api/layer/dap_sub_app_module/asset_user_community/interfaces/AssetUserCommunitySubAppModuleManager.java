@@ -26,6 +26,8 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager {
 
     List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;
 
+    List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupName) throws CantGetAssetUserActorsException;
+
     void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException;
 
 //    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException;

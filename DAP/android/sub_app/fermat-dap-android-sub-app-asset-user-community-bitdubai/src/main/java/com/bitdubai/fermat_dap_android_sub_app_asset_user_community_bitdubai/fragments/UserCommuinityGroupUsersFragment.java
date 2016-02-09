@@ -53,7 +53,8 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Home Fragment
+ * UserCommuinityGroupUsersFragment, Show all the users in the selected group
+ *
  */
 public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 

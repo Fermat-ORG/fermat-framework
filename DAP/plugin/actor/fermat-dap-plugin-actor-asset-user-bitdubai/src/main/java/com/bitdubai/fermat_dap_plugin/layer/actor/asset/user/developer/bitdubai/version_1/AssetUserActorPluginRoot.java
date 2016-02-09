@@ -276,6 +276,18 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
+    @Override
+    public List<ActorAssetUser> getAllAssetUserActorInTableRegistered(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException {
+        List<ActorAssetUser> list;
+        try {
+            list = this.assetUserActorDao.getAllAssetUserActorRegistered(blockchainNetworkType);
+        } catch (CantGetAssetUsersListException e) {
+            throw new CantGetAssetUserActorsException("CAN'T GET ASSET USER REGISTERED ACTOR", e, "", "");
+        }
+
+        return list;
+    }
+
     /**
      * Method getAllAssetUserActorConnected usado para obtener la lista de ActorAssetUser
      * que tienen CryptoAddress en table REGISTERED

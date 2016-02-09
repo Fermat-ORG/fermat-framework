@@ -110,15 +110,12 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             assetUserActorRecords = new ArrayList<>();
 
             try {
-                for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered()) {
-                    blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+                BlockchainNetworkType blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+                for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered(blockchainNetworkType)) {
 
                     AssetUserActorRecord assetUserActorRecord = (AssetUserActorRecord) actorAssetUser;
-                    if (assetUserActorRecord.getCryptoAddress() == null) {
-                        assetUserActorRecords.add(assetUserActorRecord);
-                    } else if (Objects.equals(assetUserActorRecord.getBlockchainNetworkType().getCode(), blockchainNetworkType.getCode())) {
-                        assetUserActorRecords.add(assetUserActorRecord);
-                    }
+                    assetUserActorRecords.add(assetUserActorRecord);
+
                 }
 
             } catch (CantGetAssetUserActorsException e) {
@@ -127,6 +124,32 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             }
         }
         return assetUserActorRecords;
+    }
+
+    @Override
+    public List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupName) throws CantGetAssetUserActorsException {
+        List<AssetUserActorRecord> allUserRegistered = this.getAllActorAssetUserRegistered();
+        List<ActorAssetUser> allUserRegisteredInGroup = this.getListActorAssetUserByGroups(groupName);
+        List<AssetUserActorRecord> allUserRegisteredFiltered = new ArrayList<>();
+        for (AssetUserActorRecord record : allUserRegistered)
+        {
+            if (record.getCryptoAddress() != null && (!userInGroup(record.getActorPublicKey(), allUserRegisteredInGroup)))
+            {
+                allUserRegisteredFiltered.add(record);
+            }
+        }
+
+        return allUserRegisteredFiltered;
+    }
+
+    private boolean userInGroup(String actorPublicKey, List<ActorAssetUser> usersInGroup) {
+        for (ActorAssetUser record : usersInGroup) {
+            if (record.getActorPublicKey().equals(actorPublicKey))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
