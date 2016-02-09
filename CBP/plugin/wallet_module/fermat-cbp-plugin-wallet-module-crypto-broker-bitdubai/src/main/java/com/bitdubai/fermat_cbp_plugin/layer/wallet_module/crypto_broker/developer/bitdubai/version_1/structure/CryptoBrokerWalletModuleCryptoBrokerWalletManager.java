@@ -16,6 +16,8 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -23,6 +25,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
@@ -31,6 +34,9 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCrea
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleManagerMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
@@ -1356,5 +1362,127 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+    /**
+     * This method returns the CustomerBrokerContractSale associated to a negotiationId
+     *
+     * @param negotiationId
+     * @return
+     * @throws CantGetListCustomerBrokerContractSaleException
+     */
+    public CustomerBrokerContractSale getCustomerBrokerContractSaleByNegotiationId(
+            String negotiationId) throws CantGetListCustomerBrokerContractSaleException {
+        Collection<CustomerBrokerContractSale> customerBrokerContractSales =
+                customerBrokerContractSaleManager.getAllCustomerBrokerContractSale();
+        String negotiationIdFromCollection;
+        //This line is only for testing
+        return new CustomerBrokerContractSaleMock();
+        /*for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSale){
+            negotiationIdFromCollection=customerBrokerContractSale.getNegotiatiotId();
+            if(negotiationIdFromCollection.equals(negotiationId)){
+                return customerBrokerContractSale;
+            }
+        }
+        throw new CantGetListCustomerBrokerContractSaleException(
+                "Cannot find the contract associated to negotiation "+negotiationId);*/
+    }
+
+    /**
+     * This method returns the currency type from a contract
+     *
+     * @param customerBrokerContractSale
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListSaleNegotiationsException
+     */
+    public CurrencyType getCurrencyTypeFromContract(
+            CustomerBrokerContractSale customerBrokerContractSale,
+            ContractDetailType contractDetailType) throws
+            CantGetListSaleNegotiationsException {
+        try {
+            String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
+                    customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+            ClauseType clauseType;
+            for (Clause clause : clauses) {
+                clauseType = clause.getType();
+
+                switch (contractDetailType) {
+                    case BROKER_DETAIL:
+                        if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                            return CurrencyType.getByCode(clause.getValue());
+                        }
+                    case CUSTOMER_DETAIL:
+                        if (clauseType.equals(ClauseType.CUSTOMER_PAYMENT_METHOD)) {
+                            return CurrencyType.getByCode(clause.getValue());
+                        }
+                }
+            }
+            throw new CantGetListSaleNegotiationsException("Cannot find the proper clause");
+        } catch (InvalidParameterException e) {
+            throw new CantGetListSaleNegotiationsException("Cannot get the negotiation list", e);
+        } catch (CantGetListClauseException e) {
+            throw new CantGetListSaleNegotiationsException("Cannot find clauses list");
+        }
+
+    }
+    /**
+     * This method return the ContractClauseType included in a CustomerBrokerSaleNegotiation clauses
+     *
+     * @param customerBrokerSaleNegotiation
+     * @return
+     * @throws CantGetListClauseException
+     */
+    private ContractClauseType getContractClauseType(
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws
+            CantGetListClauseException {
+        try {
+            //I will check if customerBrokerSaleNegotiation is null
+            ObjectChecker.checkArgument(
+                    customerBrokerSaleNegotiation,
+                    "The customerBrokerSaleNegotiation is null");
+            Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+            ClauseType clauseType;
+            for (Clause clause : clauses) {
+                clauseType = clause.getType();
+                if (clauseType.equals(ClauseType.CUSTOMER_PAYMENT_METHOD)) {
+                    return ContractClauseType.getByCode(clause.getValue());
+                }
+            }
+            throw new CantGetListClauseException("Cannot find the proper clause");
+        } catch (InvalidParameterException e) {
+            throw new CantGetListClauseException(
+                    "An invalid parameter is found in ContractClauseType enum");
+        } catch (ObjectNotSetException e) {
+            throw new CantGetListClauseException(
+                    "The CustomerBrokerSaleNegotiation is null");
+        }
+
+    }
+
+    /**
+     * This method returns the ContractStatus by contractHash/Id
+     *
+     * @param contractHash
+     * @return
+     */
+    public ContractStatus getContractStatus(String contractHash) throws
+            CantGetListCustomerBrokerContractSaleException {
+
+        CustomerBrokerContractSale customerBrokerContractSale;
+        //TODO: This is the real implementation
+        /*customerBrokerContractSale =
+                this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);*/
+        //TODO: for testing
+        CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock =
+                new CustomerBrokerContractSaleManagerMock();
+        customerBrokerContractSale =
+                customerBrokerContractSaleManagerMock.
+                        getCustomerBrokerContractSaleForContractId(contractHash);
+        //End of testing
+        return customerBrokerContractSale.getStatus();
+
     }
 }
