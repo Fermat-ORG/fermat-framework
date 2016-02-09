@@ -495,24 +495,29 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         Collection<ActorExtraData> actorExtraDataList = actorExtraDataManager.getAllActorExtraDataConnected();
         Collection<BrokerIdentityBusinessInfo> brokersBusinessInfo = new ArrayList<>();
 
+        if (actorExtraDataList != null) {
+            for (ActorExtraData actorExtraData : actorExtraDataList) {
 
-        for (ActorExtraData actorExtraData : actorExtraDataList) {
-            Map<Currency, BrokerIdentityBusinessInfo> map = new HashMap<>();
+                if (actorExtraData.getQuotes() != null) {
+                    Map<Currency, BrokerIdentityBusinessInfo> map = new HashMap<>();
 
-            for (QuotesExtraData quotesExtraData : actorExtraData.getQuotes()) {
-                final ActorIdentity brokerIdentity = actorExtraData.getBrokerIdentity();
-                final Currency merchandise = quotesExtraData.getMerchandise();
+                    for (QuotesExtraData quotesExtraData : actorExtraData.getQuotes()) {
+                        final ActorIdentity brokerIdentity = actorExtraData.getBrokerIdentity();
+                        final Currency merchandise = quotesExtraData.getMerchandise();
 
-                BrokerIdentityBusinessInfo businessInfo = map.get(merchandise);
-                if (businessInfo == null) {
-                    businessInfo = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(brokerIdentity, merchandise);
-                    brokersBusinessInfo.add(businessInfo);
+                        BrokerIdentityBusinessInfo businessInfo = map.get(merchandise);
+                        if (businessInfo == null) {
+                            businessInfo = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(brokerIdentity, merchandise);
+                            brokersBusinessInfo.add(businessInfo);
 
-                    map.put(merchandise, businessInfo);
+                            map.put(merchandise, businessInfo);
+                        }
+
+                        List<MerchandiseExchangeRate> quotes = businessInfo.getQuotes();
+                        quotes.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(quotesExtraData));
+                    }
                 }
 
-                List<MerchandiseExchangeRate> quotes = businessInfo.getQuotes();
-                quotes.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(quotesExtraData));
             }
         }
 
