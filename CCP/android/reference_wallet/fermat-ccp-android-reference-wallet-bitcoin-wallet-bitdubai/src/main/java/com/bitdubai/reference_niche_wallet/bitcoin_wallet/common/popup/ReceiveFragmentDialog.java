@@ -101,7 +101,7 @@ public class ReceiveFragmentDialog extends Dialog implements
      */
 
 
-    public ReceiveFragmentDialog(Activity a,CryptoWallet cryptoWallet,ErrorManager errorManager,CryptoWalletWalletContact walletContact,String identityPublicKey,String walletPublcKey) {
+    public ReceiveFragmentDialog(Activity a,CryptoWallet cryptoWallet,ErrorManager errorManager,CryptoWalletWalletContact walletContact,String identityPublicKey,String walletPublcKey, BlockchainNetworkType blockchainNetworkType) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
@@ -110,6 +110,7 @@ public class ReceiveFragmentDialog extends Dialog implements
         this.errorManager=errorManager;
         this.identityPublicKey = identityPublicKey;
         this.walletPublicKey = walletPublcKey;
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 
 
@@ -121,38 +122,6 @@ public class ReceiveFragmentDialog extends Dialog implements
         user_address_wallet= getWalletAddress(walletContact.getActorPublicKey());
 
         showQRCodeAndAddress();
-
-        BitcoinWalletSettings bitcoinWalletSettings = null;
-        try {
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(walletPublicKey);
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        if(bitcoinWalletSettings != null) {
-
-            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-            }
-            try {
-                settingsManager.persistSettings(walletPublicKey, bitcoinWalletSettings);
-            } catch (CantPersistSettingsException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-        try {
-            blockchainNetworkType = settingsManager.loadAndGetSettings(walletPublicKey).getBlockchainNetworkType();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Network Type" + blockchainNetworkType);
-
     }
 
     private void setUpScreenComponents(){
