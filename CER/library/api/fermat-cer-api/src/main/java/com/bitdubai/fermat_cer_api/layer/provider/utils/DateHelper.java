@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cer_api.layer.provider.utils;
 
+import org.apache.commons.lang.time.DateUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -36,7 +38,7 @@ public class DateHelper {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        return (cal.getTimeInMillis() / 1000L);
+        return (cal.getTimeInMillis());
     }
 
     public static String getDateStringFromTimestamp(long timestamp) {
@@ -53,7 +55,7 @@ public class DateHelper {
 
         //Calculate the difference
         int daysBetween = (int) ((startDay.getTime() - endDay.getTime()) / (1000 * 60 * 60 * 24));
-        return Math.abs(daysBetween) + 1;
+        return (Math.abs(daysBetween) + 1) / 1000;
     }
 
     public static boolean timestampIsInTheFuture(long timestamp) {
@@ -71,7 +73,7 @@ public class DateHelper {
 
     }
 
-    public static long addDayToTimestamp(long timestamp){
+    public static long addDayToTimestamp(long timestamp) {
         return timestamp + 86400; //20*60*60
     }
 }

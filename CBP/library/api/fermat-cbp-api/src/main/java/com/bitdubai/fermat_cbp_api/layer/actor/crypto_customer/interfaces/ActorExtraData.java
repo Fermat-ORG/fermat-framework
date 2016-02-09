@@ -17,6 +17,12 @@ public interface ActorExtraData {
      *
      * @return basic information Customer
      */
+    String getCustomerPublicKey();
+
+    /**
+     *
+     * @return basic information Customer
+     */
     ActorIdentity getBrokerIdentity();
 
     /**
