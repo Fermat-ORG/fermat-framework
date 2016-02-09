@@ -8,13 +8,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -26,7 +23,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -45,7 +41,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by nelson on 22/12/15.
@@ -61,7 +56,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     private Map<String, FiatCurrency> bankCurrencies;
     private Map<String, String> bankAccounts;
     private CreateRestockDestockFragmentDialog dialog;
-    private List<CryptoBrokerWalletAssociatedSetting> settings;
+    private List<CryptoBrokerWalletAssociatedSetting> associatedSettings;
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
@@ -78,7 +73,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
         spreadValue = 0;
         automaticRestock = false;
-        settings = new ArrayList<>();
+        associatedSettings = new ArrayList<>();
         stockWallets = new ArrayList<>();
         bankCurrencies = new HashMap<>();
         bankAccounts = new HashMap<>();
@@ -95,9 +90,10 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
         try {
-            System.out.println("settings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            settings = walletManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
-            System.out.println("settings ["+settings.size()+"]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            System.out.println("associatedSettings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            associatedSettings = walletManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
+            System.out.println("associatedSettings ["+ associatedSettings.size()+"]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
         } catch (FermatException ex) {
             Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
@@ -117,6 +113,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         super.initViews(layout);
         configureToolbar();
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
+
 
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
         spreadTextView.setText(String.format("%1$s %%", spreadValue));
@@ -151,7 +148,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         nextStepButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //saveSettingAndGoNextStep();
+                saveSettingAndGoNextStep();
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
             }
         });
@@ -328,11 +325,6 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
     private void saveSettingAndGoNextStep() {
 
-        if (stockWallets.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.cbw_select_stock_wallets_warning_msg, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         try {
             CryptoBrokerWalletSettingSpread walletSetting = walletManager.newEmptyCryptoBrokerWalletSetting();
             walletSetting.setId(null);
@@ -342,7 +334,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             walletManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
 
 
-            for (InstalledWallet wallet : stockWallets) {
+            /*for (InstalledWallet wallet : stockWallets) {
                 String walletPublicKey = wallet.getWalletPublicKey();
                 Platforms platform = wallet.getPlatform();
 
@@ -368,7 +360,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                 }
 
                 walletManager.saveWalletSettingAssociated(associatedSetting, appSession.getAppPublicKey());
-            }
+            }*/
 
         } catch (FermatException ex) {
             Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
@@ -388,9 +380,9 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
     /*private void getSettings(){
         try {
-            List<CryptoBrokerWalletAssociatedSetting> settings = walletManager.getCryptoBrokerWalletAssociatedSettings(this.appSession.getAppPublicKey());
+            List<CryptoBrokerWalletAssociatedSetting> associatedSettings = walletManager.getCryptoBrokerWalletAssociatedSettings(this.appSession.getAppPublicKey());
 
-            for(CryptoBrokerWalletAssociatedSetting setting:settings){
+            for(CryptoBrokerWalletAssociatedSetting setting:associatedSettings){
                 InstalledWallet installedWallet;
                 setting.getPlatform();
                 setting.get
@@ -433,7 +425,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     }*/
 
     private void showOrHideNoSelectedWalletsView() {
-        if (settings.isEmpty()) {
+        if (associatedSettings.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
@@ -466,7 +458,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     @Override
     public FermatAdapter getAdapter() {
         if(adapter == null){
-            adapter = new StockDestockAdapter(getActivity(), settings);
+            adapter = new StockDestockAdapter(getActivity(), associatedSettings);
             adapter.setFermatListEventListener(this);
         }
         return adapter;
@@ -515,9 +507,9 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     @Override
     public void onPostExecute(Object... result) {
         /*if (result != null && result.length > 0) {
-            settings = (ArrayList) result[0];
+            associatedSettings = (ArrayList) result[0];
             if (adapter != null)
-                adapter.changeDataSet(settings);
+                adapter.changeDataSet(associatedSettings);
         }*/
     }
 
