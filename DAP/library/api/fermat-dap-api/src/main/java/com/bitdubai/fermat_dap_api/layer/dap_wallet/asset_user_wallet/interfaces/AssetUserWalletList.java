@@ -9,6 +9,14 @@ public interface AssetUserWalletList {
 
     DigitalAsset getDigitalAsset();
 
+    long getAvailableBalance();
+
+    void setAvailableBalance(long availableBalance);
+
+    long getBookBalance();
+
+    void setBookBalance(long bookBalance);
+
     void setDigitalAsset(DigitalAsset digitalAsset);
 
     long getQuantityBookBalance();

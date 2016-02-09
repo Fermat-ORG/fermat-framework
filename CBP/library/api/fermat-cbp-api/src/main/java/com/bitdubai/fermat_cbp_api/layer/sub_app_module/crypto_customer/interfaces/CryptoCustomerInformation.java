@@ -5,7 +5,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer.interfa
  */
 
 /**
- * The interface <code>CryptoCustomerInformation</code>
+ * The interface <code>CryptoCustomerCommunityInformation</code>
  * provides the method to extract information about an crypto customer.
  */
 public interface CryptoCustomerInformation {

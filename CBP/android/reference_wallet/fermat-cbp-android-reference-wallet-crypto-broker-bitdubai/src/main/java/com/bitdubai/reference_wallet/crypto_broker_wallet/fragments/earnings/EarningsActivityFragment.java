@@ -5,27 +5,20 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
@@ -43,7 +36,6 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -72,8 +64,6 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
     private FermatTextView currentValue;
     private FermatTextView previousValue;
     private ImageView sortByButton;
-    private MenuItem monthMenuItem;
-    private MenuItem dayMenuItem;
     private PopupMenu popupMenu;
     private FermatTextView timeFieldTextView;
 
@@ -122,7 +112,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         currencyPairsRecyclerView.setAdapter(currencyPairsAdapter);
 
         final EarningsPair earningsPair = earningsPairs.get(0);
-        final Currency earningCurrency = earningsPair.getSelectedEarningCurrency();
+        final Currency earningCurrency = earningsPair.getEarningCurrency();
         final List<EarningTestData> dataSet = TestData.getEarnings(earningCurrency, Calendar.MONTH);
         earningsOverviewAdapter = new EarningsOverviewAdapter(getActivity(), dataSet);
         earningsOverviewRecyclerView = (RecyclerView) layout.findViewById(R.id.earning_overview_recycler_view);
@@ -173,7 +163,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
 
     @Override
     public void onItemClickListener(EarningsPair data, int position) {
-        selectedCurrency = data.getSelectedEarningCurrency();
+        selectedCurrency = data.getEarningCurrency();
 
         List<EarningTestData> earnings = TestData.getEarnings(selectedCurrency, Calendar.MONTH);
         earningsOverviewAdapter.changeDataSet(earnings);

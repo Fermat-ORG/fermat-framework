@@ -56,6 +56,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.Agent.AssetUserActorMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
@@ -188,6 +189,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         null,
                         System.currentTimeMillis(),
                         System.currentTimeMillis(),
+                        null,
                         assetUserActorprofileImage);
 
                 this.assetUserActorDao.createNewAssetUser(record);
@@ -215,6 +217,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         actorAssetUser.getCryptoAddress(),
                         actorAssetUser.getRegistrationDate(),
                         System.currentTimeMillis(),
+                        null,
                         assetUserActorprofileImage);
 
                 this.assetUserActorDao.updateAssetUser(record);
@@ -294,7 +297,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException {
+    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetUserException {
         try {
             for (ActorAssetUser actorAssetUser : actorAssetUsers) {
                 try {
@@ -306,7 +309,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                             requester.getActorPublicKey(),
                             actorAssetUser.getActorPublicKey(),
                             CryptoAddressDealers.DAP_ASSET,
-                            BlockchainNetworkType.DEFAULT);
+                            blockchainNetworkType);
+//                            BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
                     this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworkService(actorAssetUser, DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
                 } catch (CantUpdateAssetUserConnectionException e) {
@@ -331,7 +335,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         requester.getActorPublicKey(),
                         actorAssetRedeemPoint.getActorPublicKey(),
                         CryptoAddressDealers.DAP_WATCH_ONLY,
-                        BlockchainNetworkType.DEFAULT);
+                        BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
 //                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
 //                } catch (CantUpdateAssetUserConnectionException e) {
@@ -499,7 +503,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             if (request.getCryptoAddress() != null) {
                 System.out.println("*****Actor Asset User Recibiendo Crypto Localmente*****");
 
-                this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress());
+                this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress(), request.getBlockchainNetworkType());
 
                 List<ActorAssetUser> actorAssetUser = this.assetUserActorDao.getAssetUserRegistered(request.getIdentityPublicKeyResponding());
 

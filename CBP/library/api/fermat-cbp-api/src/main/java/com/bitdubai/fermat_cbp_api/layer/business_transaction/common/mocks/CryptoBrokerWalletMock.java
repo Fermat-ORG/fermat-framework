@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
@@ -34,17 +34,17 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
     }
 
     @Override
-    public List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(FermatEnum merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException {
+    public List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException {
         return null;
     }
 
     @Override
-    public FiatIndex getMarketRate(FermatEnum merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException {
+    public FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException {
         return null;
     }
 
     @Override
-    public Quote getQuote(FermatEnum merchandise, float quantity, FiatCurrency payment) throws CantGetCryptoBrokerQuoteException {
+    public Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException {
         return null;
     }
 }

@@ -18,7 +18,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/green"
-            android:text="Cancel"
+            android:text="@string/cancel_text"
             android:textColor="#FFFFFF" />
 
         <Button
@@ -27,7 +27,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/green"
-            android:text="Save"
+            android:text="@string/save_text"
             android:textColor="#FFFFFF" />
     </LinearLayout>
 
@@ -71,7 +71,7 @@
                 android:elevation="2dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:hint="name prefix"
+                android:hint="@string/name_prefix_text"
                 android:inputType="textCapWords"
                 android:paddingBottom="7dip"
                 android:paddingLeft="7dip"
@@ -95,7 +95,7 @@
                 android:elevation="2dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:hint="name"
+                android:hint="@string/name_text"
                 android:inputType="textCapWords"
                 android:paddingBottom="7dip"
                 android:paddingLeft="7dip"
@@ -119,7 +119,7 @@
                 android:elevation="2dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:hint="middle name"
+                android:hint="@string/middle_name_text"
                 android:inputType="textCapWords"
                 android:paddingBottom="7dip"
                 android:paddingLeft="7dip"
@@ -143,7 +143,7 @@
                 android:elevation="2dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:hint="last name"
+                android:hint="@string/last_name_text"
                 android:inputType="textCapWords"
                 android:paddingBottom="7dip"
                 android:paddingLeft="7dip"
@@ -167,7 +167,7 @@
                 android:elevation="2dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:hint="name sufix"
+                android:hint="@string/name_suffix_text"
                 android:inputType="textCapWords"
                 android:paddingBottom="7dip"
                 android:paddingLeft="7dip"
@@ -191,7 +191,7 @@
                 android:elevation="2dp"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:hint="alias"
+                android:hint="@string/alias_text"
                 android:inputType="textCapWords"
                 android:paddingBottom="7dip"
                 android:paddingLeft="7dip"
@@ -216,7 +216,6 @@
             android:src="@drawable/ic_arrow_down_grey" />
     </LinearLayout>
 
-
     <LinearLayout
         android:id="@+id/linear_address_tittle"
         android:layout_width="match_parent"
@@ -227,7 +226,6 @@
         android:paddingRight="7dip"
         android:paddingTop="3dip">
 
-
         <TextView
             android:id="@+id/address_title"
             android:layout_width="match_parent"
@@ -235,7 +233,7 @@
             android:layout_gravity="center_vertical|left"
             android:layout_marginLeft="7dip"
             android:layout_weight="1"
-            android:text="ADDRESS"
+            android:text="@string/address_text"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@color/color_black_light"
             android:textStyle="bold" />
@@ -271,7 +269,7 @@
             android:elevation="2dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:hint="address"
+            android:hint="@string/address_text"
             android:paddingBottom="7dip"
             android:paddingLeft="7dip"
             android:paddingRight="7dip"
@@ -292,7 +290,7 @@
             android:elevation="2dp"
             android:ellipsize="end"
             android:gravity="center_vertical"
-            android:hint="type"
+            android:hint="@string/type_text"
             android:paddingBottom="7dip"
             android:paddingLeft="7dip"
             android:paddingRight="7dip"
@@ -316,6 +314,5 @@
             android:padding="3dp"
             android:src="@drawable/ic_action_camera_grey" />
     </LinearLayout>
-
 
 </LinearLayout>

@@ -201,7 +201,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                                     //PERSIST METADATA
                                     debug("persisting metadata");
-                                    dao.persistTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
+                                    dao.newTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
                                     persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
                                     //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
 
@@ -265,7 +265,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading redeem point wallet, public key is hardcoded");
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType());
 
                                 String userPublicKey = dao.getSenderPublicKeyById(transactionId);
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
@@ -299,7 +299,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading wallet, public key is hardcoded");
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest");
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType());
 
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
                                 assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
@@ -308,7 +308,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                         userPublicKey,
                                         actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
 
-                                updateMetadataTransactionChain(transactionId, cryptoTransaction.getTransactionHash(), cryptoTransaction.getBlockHash());
+                                updateMetadataTransactionChain(transactionId, cryptoTransaction);
                                 List<ActorAssetUser> userToAdd = new ArrayList<>();
                                 userToAdd.add((ActorAssetUser) metadata.getLastOwner());
                                 actorAssetUserManager.createActorAssetUserRegisterInNetworkService(userToAdd);
@@ -316,7 +316,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 debug("adding credit on available balance");
                                 AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
                                 walletBalance.credit(assetRedeemPointWalletTransactionRecord, BalanceType.AVAILABLE);
-                                wallet.newAssetRedeemed(userPublicKey, metadata.getDigitalAsset().getPublicKey());
+                                wallet.newAssetRedeemed(metadata, userPublicKey);
                                 //I GOT IT, EVERYTHING WENT OK!
                                 debug("update status");
                                 dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);

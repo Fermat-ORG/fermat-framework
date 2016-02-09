@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -23,7 +23,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private TransactionType transactionType;
     private BigDecimal amount;
     private CurrencyType currencyType;
-    private FermatEnum merchandise;
+    private Currency merchandise;
     private BigDecimal runningBookBalance;
     private BigDecimal runningAvailableBalance;
     private long timeStamp;
@@ -31,6 +31,24 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private OriginTransaction originTransaction;
     private BigDecimal priceReference;
 
+    /**
+     * Constructor for CryptoBrokerStockTransactionRecordImpl
+     *
+     * @param transactionId
+     * @param walletKeyPair
+     * @param ownerPublicKey
+     * @param balanceType
+     * @param transactionType
+     * @param currencyType
+     * @param merchandise
+     * @param amount
+     * @param runningBookBalance
+     * @param runningAvailableBalance
+     * @param timeStamp
+     * @param memo
+     * @param originTransaction
+     * @param priceReference
+     */
     public CryptoBrokerStockTransactionRecordImpl(
             UUID transactionId,
             KeyPair walletKeyPair,
@@ -38,7 +56,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             BalanceType balanceType,
             TransactionType transactionType,
             CurrencyType currencyType,
-            FermatEnum merchandise,
+            Currency merchandise,
             BigDecimal amount,
             BigDecimal runningBookBalance,
             BigDecimal runningAvailableBalance,
@@ -46,7 +64,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             String memo,
             OriginTransaction originTransaction,
             BigDecimal priceReference
-    ){
+    ) {
         this.transactionId = transactionId;
         this.walletKeyPair = walletKeyPair;
         this.ownerPublicKey = ownerPublicKey;
@@ -63,47 +81,113 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         this.originTransaction = originTransaction;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public UUID getTransactionId() { return this.transactionId; }
+    public UUID getTransactionId() {
+        return this.transactionId;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public BalanceType getBalanceType() { return this.balanceType; }
+    public BalanceType getBalanceType() {
+        return this.balanceType;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public TransactionType getTransactionType() { return this.transactionType; }
+    public TransactionType getTransactionType() {
+        return this.transactionType;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getWalletPublicKey() { return this.walletKeyPair.getPublicKey(); }
+    public String getWalletPublicKey() {
+        return this.walletKeyPair.getPublicKey();
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getBrokerPublicKey() { return this.ownerPublicKey; }
+    public String getBrokerPublicKey() {
+        return this.ownerPublicKey;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public CurrencyType getCurrencyType() { return this.currencyType; }
+    public CurrencyType getCurrencyType() {
+        return this.currencyType;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public FermatEnum getMerchandise() { return this.merchandise; }
+    public Currency getMerchandise() {
+        return this.merchandise;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public BigDecimal getAmount() { return this.amount; }
+    public BigDecimal getAmount() {
+        return this.amount;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public BigDecimal getRunningBookBalance() { return this.runningBookBalance; }
+    public BigDecimal getRunningBookBalance() {
+        return this.runningBookBalance;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public BigDecimal getRunningAvailableBalance() { return this.runningAvailableBalance; }
+    public BigDecimal getRunningAvailableBalance() {
+        return this.runningAvailableBalance;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public long getTimestamp() { return this.timeStamp; }
+    public long getTimestamp() {
+        return this.timeStamp;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public String getMemo() { return this.memo; }
+    public String getMemo() {
+        return this.memo;
+    }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BigDecimal getPriceReference() {
         return this.priceReference;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public OriginTransaction getOriginTransaction() {
         return this.originTransaction;

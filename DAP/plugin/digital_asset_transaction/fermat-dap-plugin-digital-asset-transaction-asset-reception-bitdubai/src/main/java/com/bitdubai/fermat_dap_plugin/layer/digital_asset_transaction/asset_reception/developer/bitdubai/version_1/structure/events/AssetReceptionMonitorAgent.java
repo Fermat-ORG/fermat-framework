@@ -181,7 +181,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                                         digitalAssetReceptor.verifyAsset(digitalAssetMetadataReceived);
                                     } else {
                                         System.out.println("ASSET RECEPTION Digital Asset Metadata Received: " + digitalAssetMetadataReceived);
-                                        digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, senderId);
+                                        digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, senderId, transaction.getInformation().getSenderType());
                                     }
                                     break;
                                 case TRANSACTION_STATUS_UPDATE:
@@ -287,7 +287,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                             System.out.println("ASSET DISTRIBUTION crypto transaction on crypto network " + cryptoGenesisTransaction.getTransactionHash());
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
 
-                            digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, genesisTransaction, AssetBalanceType.BOOK, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
+                            digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, metadata, AssetBalanceType.BOOK, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
                         }
                     }
@@ -307,8 +307,8 @@ public class AssetReceptionMonitorAgent implements Agent {
                             System.out.println("ASSET RECEPTION crypto transaction on blockchain " + cryptoGenesisTransaction.getTransactionHash());
                             assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CRYPTO_RECEIVED, genesisTransaction);
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
-                            digitalAssetReceptionVault.updateMetadataTransactionChain(genesisTransaction, cryptoGenesisTransaction.getTransactionHash(), cryptoGenesisTransaction.getBlockHash());
-                            digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, genesisTransaction, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
+                            metadata = digitalAssetReceptionVault.updateMetadataTransactionChain(genesisTransaction, cryptoGenesisTransaction);
+                            digitalAssetReceptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(cryptoGenesisTransaction, metadata, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
                         }
                     }
@@ -321,7 +321,6 @@ public class AssetReceptionMonitorAgent implements Agent {
             DistributionStatus distributionStatus = DistributionStatus.ASSET_REJECTED_BY_CONTRACT;
 
             List<String> genesisTransactionList;
-            String issuerPublicKey;
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser();
             if (receptionStatus.getCode().equals(ReceptionStatus.ASSET_ACCEPTED.getCode())) {
                 distributionStatus = DistributionStatus.ASSET_ACCEPTED;
@@ -334,15 +333,16 @@ public class AssetReceptionMonitorAgent implements Agent {
             }
             genesisTransactionList = assetReceptionDao.getGenesisTransactionByReceptionStatus(receptionStatus);
             for (String genesisTransaction : genesisTransactionList) {
+                String senderPublicKey = assetReceptionDao.getSenderIdByGenesisTransaction(genesisTransaction);
+                PlatformComponentType senderType = assetReceptionDao.getSenderTypeByGenesisTransaction(genesisTransaction);
                 System.out.println("ASSET RECEPTION Genesis transaction " + receptionStatus + ":" + genesisTransaction);
-                issuerPublicKey = assetReceptionDao.getSenderIdByGenesisTransaction(genesisTransaction);
-                System.out.println("ASSET RECEPTION sender id  " + issuerPublicKey);
+                System.out.println("ASSET RECEPTION sender id  " + senderPublicKey + " - Type: " + senderType);
 
                 assetTransmissionManager.sendTransactionNewStatusNotification(
                         actorAssetUser.getActorPublicKey(),
                         PlatformComponentType.ACTOR_ASSET_USER,
-                        issuerPublicKey,
-                        PlatformComponentType.ACTOR_ASSET_ISSUER,
+                        senderPublicKey,
+                        senderType,
                         genesisTransaction,
                         distributionStatus);
                 assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.RECEPTION_FINISHED, genesisTransaction);

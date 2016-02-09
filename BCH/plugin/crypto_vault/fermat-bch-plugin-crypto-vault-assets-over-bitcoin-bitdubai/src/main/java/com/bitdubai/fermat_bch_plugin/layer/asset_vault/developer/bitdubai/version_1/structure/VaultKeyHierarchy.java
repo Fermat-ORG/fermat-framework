@@ -133,7 +133,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * BlockchainNetworkType has MainNet, RegTest and TestNet. The default value is the one used for the platform.
          * If the address generated is for a network different than default, I need to update the database so we start monitoring this network
          */
-        if (BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType) != BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT)){
+        if (BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType) != BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType())){
             setActiveNetwork(blockchainNetworkType);
         }
 
@@ -284,7 +284,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         return childKeys;
     }
 
-    public CryptoAddress getRedeemPointBitcoinAddress(HierarchyAccount hierarchyAccount, int position) throws GetNewCryptoAddressException {
+    public CryptoAddress getRedeemPointBitcoinAddress(HierarchyAccount hierarchyAccount, int position, BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
         /**
          * I get the available key for this account at the given position
          */
@@ -295,9 +295,9 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
             throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "There was an error getting the actual unused Key depth to derive a new key.", "database problem.");
         }
         /**
-         * I will create the CryptoAddress with the key I just got
+         * I will create the CryptoAddress with the key I just got in all active networks
          */
-        String address = ecKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT)).toString();
+        String address = ecKey.toAddress(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType)).toString();
         CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.BITCOIN);
 
         return cryptoAddress;

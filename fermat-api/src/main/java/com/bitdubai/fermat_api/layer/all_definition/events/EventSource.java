@@ -69,7 +69,8 @@ public enum EventSource implements FermatEnum {
     USER_INTRA_USER_PLUGIN                  ("UIU"),
     WORLD_BLOCKCHAIN_INFO_PLUGIN            ("WBI"),
     WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN    ("WSCCLCL"),
-
+    USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER ("ULCBPM"),
+    USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER ("ULCBSM")
     ;
 
     private final String code;
@@ -134,6 +135,8 @@ public enum EventSource implements FermatEnum {
             case "UIU":    return USER_INTRA_USER_PLUGIN;
             case "WBI":    return WORLD_BLOCKCHAIN_INFO_PLUGIN;
             case "WSCCC" : return WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN;
+            case "ULCBPM" : return USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER;
+            case "ULCBSM" : return USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER;
 
             default: throw new InvalidParameterException(
                     "Code Received: " + code,

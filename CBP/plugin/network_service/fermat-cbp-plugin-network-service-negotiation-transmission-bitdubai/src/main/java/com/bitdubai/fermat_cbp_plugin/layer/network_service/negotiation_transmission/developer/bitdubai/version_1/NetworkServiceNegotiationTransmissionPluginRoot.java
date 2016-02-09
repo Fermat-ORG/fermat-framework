@@ -17,21 +17,15 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -52,7 +46,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
@@ -68,30 +61,28 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.PurchaseNegotiationMock;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks.SaleNegotiationMock;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
+import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantHandleNotificationEventException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantInitializeCommunicationNetworkServiceConnectionManagerException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
-import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.ClientConnectionLooseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.ClientSuccessfullReconnectNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteComponentRegistrationNotificationEventHandler;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.CompleteRequestListComponentRegisteredNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.FailureComponentConnectionRequestNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.NewReceiveMessagesNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers.VPNConnectionCloseNotificationEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceConnectionsDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceConnectionsDatabaseDao;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantConstructNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServiceDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.ConfirmMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.messages.NegotiationTransmissionMessage;
@@ -99,16 +90,16 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionManagerImpl;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.Gson;
 
@@ -128,60 +119,59 @@ import java.util.regex.Pattern;
  */
 
 public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNetworkService implements
-//        NegotiationTransmissionManager,
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_FILE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API,    layer = Layers.SYSTEM,              addon = Addons.LOG_MANAGER)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION,       plugin = Plugins.WS_CLOUD_CLIENT)
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     /*Represent the dataBase*/
     private Database dataBase;
 
     /*Connections arrived*/
-    private AtomicBoolean                                                   connectionArrived;
+    private AtomicBoolean connectionArrived;
 
     /*Represent DAO Database Transmission*/
-    private NegotiationTransmissionNetworkServiceDatabaseDao                databaseDao;
+    private NegotiationTransmissionNetworkServiceDatabaseDao databaseDao;
 
     /*Represent DAO Database Connections*/
-    private NegotiationTransmissionNetworkServiceConnectionsDatabaseDao     databaseConnectionsDao;
+    private NegotiationTransmissionNetworkServiceConnectionsDatabaseDao databaseConnectionsDao;
 
     /*Represent the listeners*/
-    private List<FermatEventListener>                                       listenersAdded;
+    private List<FermatEventListener> listenersAdded;
 
     /*Represent the remoteNetworkServicesRegisteredList*/
-    private List<PlatformComponentProfile>                                  remoteNetworkServicesRegisteredList;
+    private List<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
-    /*Represent the cryptoPaymentRequestNetworkServiceConnectionManager*/
-    private CommunicationNetworkServiceConnectionManager                    communicationNetworkServiceConnectionManager;
+    /*Represent the communicationNetworkServiceConnectionManager*/
+    private CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager;
 
     /*Represent CommunicationRegistrationProcessNetworkServiceAgent*/
-    private CommunicationRegistrationProcessNetworkServiceAgent             communicationRegistrationProcessNetworkServiceAgent;
+    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
 
     //Represent the negotiationTransmissionNetworkServiceDeveloperDatabaseFactory
-    private NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory   negotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
+    private NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory negotiationTransmissionNetworkServiceDeveloperDatabaseFactory;
 
     //Represent the Negotation Transmission agent
-    private NegotiationTransmissionAgent                                    negotiationTransmissionAgent;
+    private NegotiationTransmissionAgent negotiationTransmissionAgent;
 
     //Represent the Negotiation Transmission Manager
-    private NegotiationTransmissionManagerImpl                              negotiationTransmissionManagerImpl;
+    private NegotiationTransmissionManagerImpl negotiationTransmissionManagerImpl;
 
     //Represent the newLoggingLevel
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
@@ -198,20 +188,20 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 null,
                 EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION
         );
-        this.listenersAdded=new ArrayList<>();
+        this.listenersAdded = new ArrayList<>();
         beforeRegistered = false;
     }
 
     /*IMPLEMENTATION Service*/
     @Override
-    public void start() throws CantStartPluginException{
+    public void start() throws CantStartPluginException {
 
         logManager.log(NetworkServiceNegotiationTransmissionPluginRoot.getLogLevelByClass(this.getClass().getName()), "NetworkServiceNegotiationTransmissionPluginRoot - Starting", "NetworkServiceNegotiationTransmissionPluginRoot - Starting", "NetworkServiceNegotiationTransmissionPluginRoot - Starting");
 
         //Validate required resources
         validateInjectedResources();
 
-        try{
+        try {
             //Create a new key pair for this execution
             //identity = new ECCKeyPair();
             initializeClientIdentity();
@@ -232,12 +222,12 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             initializeCommunicationNetworkServiceConnectionManager();
 
             //Verify if the communication cloud client is active
-            if (!wsCommunicationsCloudClientManager.isDisable()){
+            if (!wsCommunicationsCloudClientManager.isDisable()) {
 
                  /*
                   * Construct my profile and register me
                   */
-                PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                PlatformComponentProfile platformComponentProfilePluginRoot = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
                         getAlias().toLowerCase(),
                         getName(),
                         getNetworkServiceType(),
@@ -321,7 +311,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
         }
@@ -390,6 +380,41 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     }
 
     @Override
+    public void initializeCommunicationNetworkServiceConnectionManager() {
+        try{
+            this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
+                    this.getPlatformComponentProfilePluginRoot(),
+                    identity,
+                    wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
+                    dataBase,
+                    errorManager,
+                    eventManager,
+                    this.getEventSource(),
+                    getPluginVersionReference(),
+                    this
+            );
+        }catch(Exception ex){
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantInitializeCommunicationNetworkServiceConnectionManagerException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantInitializeCommunicationNetworkServiceConnectionManagerException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantInitializeCommunicationNetworkServiceConnectionManagerException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantInitializeCommunicationNetworkServiceConnectionManagerException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "BAD ARGUMENTS";
+
+            CantInitializeCommunicationNetworkServiceConnectionManagerException communicationNetworkServiceConnectionManagerException = new CantInitializeCommunicationNetworkServiceConnectionManagerException(CantInitializeCommunicationNetworkServiceConnectionManagerException.DEFAULT_MESSAGE, ex, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, communicationNetworkServiceConnectionManagerException);
+
+        }
+    }
+
+    @Override
     public void pause() {
 
         // pause connections manager.
@@ -409,7 +434,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     public void stop() {
 
         // remove all listeners from the event manager and from the plugin.
-        for (FermatEventListener listener: listenersAdded)
+        for (FermatEventListener listener : listenersAdded)
             eventManager.removeListener(listener);
         listenersAdded.clear();
         // close all connections.
@@ -429,18 +454,18 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*IMPLEMENTATION DatabaseManagerForDevelopers.*/
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+        return negotiationTransmissionNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        return negotiationTransmissionNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try{
-            return new NegotiationTransmissionNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        try {
+            return negotiationTransmissionNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception e) {
             System.out.println(e);
             return new ArrayList<>();
@@ -471,12 +496,12 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     }
 
     //Static method to get the logging level from any class under root.*/
-    public static LogLevel getLogLevelByClass(String className){
-        try{
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
             //sometimes the classname may be passed dinamically with an $moretext I need to ignore whats after this.
             String[] correctedClass = className.split((Pattern.quote("$")));
             return NetworkServiceNegotiationTransmissionPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
+        } catch (Exception e) {
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
@@ -488,24 +513,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*PUBLIC METHOD*/
     @Override
     public String getIdentityPublicKey() {
-//        return this.identity.getPublicKey();
-        return "23C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
-//        return "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
-    }
-
-    @Override
-    public void initializeCommunicationNetworkServiceConnectionManager() {
-        this.communicationNetworkServiceConnectionManager = new CommunicationNetworkServiceConnectionManager(
-            this.getPlatformComponentProfilePluginRoot(),
-            identity,
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(),
-            dataBase,
-            errorManager,
-            eventManager,
-            this.getEventSource(),
-            getPluginVersionReference(),
-                this
-        );
+        return this.identity.getPublicKey();
     }
 
     @Override
@@ -516,7 +524,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void requestRemoteNetworkServicesRegisteredList(DiscoveryQueryParameters discoveryQueryParameters) {
         System.out.println("-----------------------\nTemplateNetworkServiceRoot - requestRemoteNetworkServicesRegisteredList\n-----------------------\n");
-         //Request the list of component registers
+        //Request the list of component registers
         try {
 
             wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(this.getPlatformComponentProfilePluginRoot(), discoveryQueryParameters);
@@ -580,9 +588,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered) {
 
-        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
+        if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register) {
 
-            if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
+            if (communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()) {
                 communicationRegistrationProcessNetworkServiceAgent.stop();
                 communicationRegistrationProcessNetworkServiceAgent = null;
             }
@@ -591,7 +599,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                               /*
                  * Construct my profile and register me
                  */
-            PlatformComponentProfile platformComponentProfileToReconnect =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
+            PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
                     this.getAlias().toLowerCase(),
                     this.getName(),
                     this.getNetworkServiceType(),
@@ -602,6 +610,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                     /*
                      * Register me
                      */
+                System.out.println("NegotiationTransmissionNetworkServiceConnectionManager - Construct my profile and register me");
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
 
             } catch (CantRegisterComponentException e) {
@@ -611,43 +620,85 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         }
 
         //If the component registered have my profile and my identity public key
-        if (platformComponentProfileRegistered.getPlatformComponentType()  == PlatformComponentType.NETWORK_SERVICE &&
-                platformComponentProfileRegistered.getNetworkServiceType()  == NetworkServiceType.NEGOTIATION_TRANSMISSION &&
-                platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())){
+        try {
+            if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
+                    platformComponentProfileRegistered.getNetworkServiceType() == NetworkServiceType.NEGOTIATION_TRANSMISSION &&
+                    platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
-            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION REGISTERED \n-----------------------\n TO: " + getName());
-
-            //Mark as register
-            this.register = Boolean.TRUE;
-
-            if(!beforeRegistered) {
-                //Negotiation Transmission Agent
-                negotiationTransmissionAgent = new NegotiationTransmissionAgent(
-                        this,
-                        databaseConnectionsDao,
-                        databaseDao,
-                        communicationNetworkServiceConnectionManager,
-                        wsCommunicationsCloudClientManager,
-                        platformComponentProfileRegistered,
-                        errorManager,
-                        new ArrayList<PlatformComponentProfile>(),
-                        identity,
-                        eventManager
+                System.out.print("-----------------------\n NEGOTIATION TRANSMISSION REGISTERED \n-----------------------\n TO: " + getName()
+                                    +"\nIDENTITY: "+identity.getPublicKey()
                 );
 
-                System.out.print("-----------------------\n NEGOTIATION TRANSMISSION CALL AGENT \n-----------------------\n TO: " + getName());
-                //Start agent
-                negotiationTransmissionAgent.start();
+                //Mark as register
+                this.register = Boolean.TRUE;
+
+                if (!beforeRegistered) {
+                    //Negotiation Transmission Agent
+                    negotiationTransmissionAgent = new NegotiationTransmissionAgent(
+                            this,
+                            databaseConnectionsDao,
+                            databaseDao,
+                            communicationNetworkServiceConnectionManager,
+                            wsCommunicationsCloudClientManager,
+                            platformComponentProfileRegistered,
+                            errorManager,
+                            new ArrayList<PlatformComponentProfile>(),
+                            identity,
+                            eventManager
+                    );
+
+                    System.out.print("-----------------------\n NEGOTIATION TRANSMISSION CALL AGENT \n-----------------------\n TO: " + getName());
+                    //Start agent
+                    negotiationTransmissionAgent.start();
+                }
             }
+        } catch (Exception e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "UNABLE TO HANDLE COMPLETE COMPONENT REGISTRATION NOTIFICATION EVENT";
+
+            CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
+
         }
     }
 
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteNetworkService) {
 
-        System.out.print("-----------------------\n FAILED CONNECTION WITH " + remoteNetworkService.getAlias() + "\n-----------------------\n");
-        negotiationTransmissionAgent.connectionFailure(remoteNetworkService.getIdentityPublicKey());
+        try {
 
+            System.out.print("-----------------------\n FAILED CONNECTION WITH " + remoteNetworkService.getAlias() + "\n-----------------------\n");
+            negotiationTransmissionAgent.connectionFailure(remoteNetworkService.getIdentityPublicKey());
+
+        } catch (Exception e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "UNABLE TO HANDLE COMPLETE COMPONENT REGISTRATION NOTIFICATION EVENT";
+
+            CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
+        }
     }
 
     @Override
@@ -655,10 +706,29 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
         System.out.print("-----------------------\n NegotiationTransmissionNetworkServiceConnectionManager - Starting method handleCompleteRequestListComponentRegisteredNotificationEvent \n-----------------------\n");
         System.out.print("-----------------------\n NEGOTIATION TRANSMISSION: SUCCESSFUL CONNECTION! \n A: \n" + getName() + "\n-----------------------\n");
-        //save into the cache
-        remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
-        //Add remote network service register List
-        negotiationTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
+        try {
+            //save into the cache
+            remoteNetworkServicesRegisteredList.addAll(platformComponentProfileRegisteredList);
+            //Add remote network service register List
+            negotiationTransmissionAgent.addRemoteNetworkServicesRegisteredList(platformComponentProfileRegisteredList);
+        } catch (Exception e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "UNABLE TO HANDLE COMPLETE COMPONENT REGISTRATION NOTIFICATION EVENT";
+
+            CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
+        }
 
     }
 
@@ -668,9 +738,31 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         //Tell the manager to handler the new connection established
         communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(remoteComponentProfile);
         System.out.print("-----------------------\n NEGOTIATION TRANSMISSION INCOMING CONNECTION \n A: " + remoteComponentProfile.getAlias() + "\n-----------------------\n");
-        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()){
-            remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
-            System.out.print("-----------------------\n NEGOTIATION TRANSMISSION INCOMING CONNECTION \n-----------------------\n A: " + remoteComponentProfile.getAlias());
+        if (remoteNetworkServicesRegisteredList != null && !remoteNetworkServicesRegisteredList.isEmpty()) {
+
+            try {
+
+                remoteNetworkServicesRegisteredList.add(remoteComponentProfile);
+                System.out.print("-----------------------\n NEGOTIATION TRANSMISSION INCOMING CONNECTION \n-----------------------\n A: " + remoteComponentProfile.getAlias());
+
+            } catch (Exception e) {
+                StringBuffer contextBuffer = new StringBuffer();
+                contextBuffer.append("Plugin ID: " + pluginId);
+                contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+                contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+                contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("errorManager: " + errorManager);
+                contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("eventManager: " + eventManager);
+
+                String context = contextBuffer.toString();
+                String possibleCause = "UNABLE TO HANDLE COMPLETE COMPONENT REGISTRATION NOTIFICATION EVENT";
+
+                CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+                errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
+            }
         }
 
     }
@@ -678,14 +770,35 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleVpnConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if((fermatEvent instanceof ClientConnectionCloseNotificationEvent) && (communicationNetworkServiceConnectionManager != null)){
-            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
-            if(vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()){
+        try {
 
-                if(communicationNetworkServiceConnectionManager != null)
-                    communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+            if ((fermatEvent instanceof ClientConnectionCloseNotificationEvent) && (communicationNetworkServiceConnectionManager != null)) {
+                VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
+                if (vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == getNetworkServiceType()) {
+
+                    if (communicationNetworkServiceConnectionManager != null)
+                        communicationNetworkServiceConnectionManager.closeConnection(vpnConnectionCloseNotificationEvent.getRemoteParticipant().getIdentityPublicKey());
+                }
+
             }
 
+        } catch (Exception e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "UNABLE TO HANDLE COMPLETE COMPONENT REGISTRATION NOTIFICATION EVENT";
+
+            CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
         }
 
     }
@@ -693,17 +806,28 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleClientConnectionCloseNotificationEvent(FermatEvent fermatEvent) {
 
-        if((fermatEvent instanceof ClientConnectionCloseNotificationEvent) && (communicationNetworkServiceConnectionManager != null)){
-
-            this.register = Boolean.FALSE;
-
-            if(communicationNetworkServiceConnectionManager != null) {
+        try {
+            if (communicationNetworkServiceConnectionManager != null)
                 communicationNetworkServiceConnectionManager.closeAllConnection();
-                communicationNetworkServiceConnectionManager.stop();
-            }
 
+        } catch (Exception e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("communicationNetworkServiceConnectionManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantHandleNotificationEventException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "UNABLE TO HANDLE COMPLETE COMPONENT REGISTRATION NOTIFICATION EVENT";
+
+            CantHandleNotificationEventException registrationNotificationException = new CantHandleNotificationEventException(CantHandleNotificationEventException.DEFAULT_MESSAGE, e, context, possibleCause);
+            errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, registrationNotificationException);
         }
-
     }
 
     /*
@@ -712,7 +836,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
 
-        if(communicationNetworkServiceConnectionManager != null)
+        if (communicationNetworkServiceConnectionManager != null)
             communicationNetworkServiceConnectionManager.stop();
 
         this.register = Boolean.FALSE;
@@ -725,9 +849,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if (communicationNetworkServiceConnectionManager == null){
+        if (communicationNetworkServiceConnectionManager == null) {
             this.initializeCommunicationNetworkServiceConnectionManager();
-        }else{
+        } else {
             communicationNetworkServiceConnectionManager.restart();
         }
 
@@ -740,29 +864,29 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     }
 
 
-    public void handleNewMessages(final FermatMessage fermatMessage){
+    public void handleNewMessages(final FermatMessage fermatMessage) {
 
-        try{
+        try {
 
             Gson gson = new Gson();
             NegotiationTransmissionMessage negotiationTransmissionMessage = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionMessage.class);
 
-            switch (negotiationTransmissionMessage.getMessageType()){
+            switch (negotiationTransmissionMessage.getMessageType()) {
                 case TRANSMISSION_NEGOTIATION:
-                    NegotiationMessage negotiationMessage =  gson.fromJson(fermatMessage.getContent(), NegotiationMessage.class);
+                    NegotiationMessage negotiationMessage = gson.fromJson(fermatMessage.getContent(), NegotiationMessage.class);
                     receiveNegotiation(negotiationMessage);
                     break;
 
                 case TRANSMISSION_CONFIRM:
-                    ConfirmMessage confirmMessage =  gson.fromJson(fermatMessage.getContent(), ConfirmMessage.class);
+                    ConfirmMessage confirmMessage = gson.fromJson(fermatMessage.getContent(), ConfirmMessage.class);
                     receiveConfirm(confirmMessage);
                     break;
 
                 default:
-                    throw new CantHandleNewMessagesException("message type: " +negotiationTransmissionMessage.getMessageType().name(),"Message type not handled.");
+                    throw new CantHandleNewMessagesException("message type: " + negotiationTransmissionMessage.getMessageType().name(), "Message type not handled.");
             }
 
-        } catch(Exception exception){
+        } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.NEGOTIATION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
     }
@@ -774,7 +898,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*END PUBLIC METHOD*/
 
     /*PRIVATE METHOD*/
-    private void receiveNegotiation(NegotiationMessage negotiationMessage) throws CantHandleNewMessagesException{
+    private void receiveNegotiation(NegotiationMessage negotiationMessage) throws CantHandleNewMessagesException {
 
         try {
 
@@ -782,31 +906,31 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
             NegotiationType negotiationType;
 
-            if(negotiationMessage.getNegotiationType().getCode().equals(NegotiationType.PURCHASE.getCode())){
+            if (negotiationMessage.getNegotiationType().getCode().equals(NegotiationType.PURCHASE.getCode())) {
                 negotiationType = NegotiationType.SALE;
-            }else{
+            } else {
                 negotiationType = NegotiationType.PURCHASE;
             }
 
             NegotiationTransmission negotiationTransmission = new NegotiationTransmissionImpl(
-                negotiationMessage.getTransmissionId(),
-                negotiationMessage.getTransactionId(),
-                negotiationMessage.getNegotiationId(),
-                negotiationMessage.getNegotiationTransactionType(),
-                negotiationMessage.getPublicKeyActorSend(),
-                negotiationMessage.getActorSendType(),
-                negotiationMessage.getPublicKeyActorReceive(),
-                negotiationMessage.getActorReceiveType(),
-                negotiationMessage.getTransmissionType(),
-                negotiationMessage.getTransmissionState(),
-                negotiationType,
-                negotiationMessage.getNegotiationXML(),
-                negotiationMessage.getTimestamp()
+                    negotiationMessage.getTransmissionId(),
+                    negotiationMessage.getTransactionId(),
+                    negotiationMessage.getNegotiationId(),
+                    negotiationMessage.getNegotiationTransactionType(),
+                    negotiationMessage.getPublicKeyActorSend(),
+                    negotiationMessage.getActorSendType(),
+                    negotiationMessage.getPublicKeyActorReceive(),
+                    negotiationMessage.getActorReceiveType(),
+                    negotiationMessage.getTransmissionType(),
+                    negotiationMessage.getTransmissionState(),
+                    negotiationType,
+                    negotiationMessage.getNegotiationXML(),
+                    negotiationMessage.getTimestamp()
             );
 
             System.out.print("\n**** 12) MOCK NEGOTIATION TRANSMISSION - NEGOTIATION TRANSMISSION - PLUGIN ROOT - RECEIVE NEGOTIATION DATE: ****\n" +
-                            "- ActorReceive = "+ negotiationTransmission.getPublicKeyActorReceive() +
-                            "- ActorSend = "+ negotiationTransmission.getPublicKeyActorSend()
+                            "- ActorReceive = " + negotiationTransmission.getPublicKeyActorReceive() +
+                            "- ActorSend = " + negotiationTransmission.getPublicKeyActorSend()
             );
 
             databaseDao.registerSendNegotiatioTransmission(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
@@ -838,15 +962,15 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     private void validateInjectedResources() throws CantStartPluginException {
         //If all resources are inject
         if (wsCommunicationsCloudClientManager == null ||
-            pluginDatabaseSystem               == null ||
-            errorManager                       == null ||
-            eventManager                       == null ) {
+                pluginDatabaseSystem == null ||
+                errorManager == null ||
+                eventManager == null) {
             String context =
-                    "Plugin ID:                          " + pluginId                           + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
-                    "wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
-                    "pluginDatabaseSystem:               " + pluginDatabaseSystem               + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
-                    "errorManager:                       " + errorManager                       + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
-                    "eventManager:                       " + eventManager;
+                    "Plugin ID:                          " + pluginId + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                            "wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                            "pluginDatabaseSystem:               " + pluginDatabaseSystem + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                            "errorManager:                       " + errorManager + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR +
+                            "eventManager:                       " + eventManager;
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
@@ -873,9 +997,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     }
 
     //This method initialize the listener
-    private void initializeListener(){
+    private void initializeListener() {
 
-         //Listen and handle Complete Component Registration Notification Event
+        //Listen and handle Complete Component Registration Notification Event
         FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
         fermatEventListener.setEventHandler(new CompleteComponentRegistrationNotificationEventHandler(this));
         eventManager.addListener(fermatEventListener);
@@ -887,7 +1011,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-         //Listen and handle Complete Request List Component Registered Notification Event
+        //Listen and handle Complete Request List Component Registered Notification Event
         fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION);
 //        fermatEventListener.setEventHandler(new CompleteRequestListComponentRegisteredNotificationEventHandler(this));
 //        eventManager.addListener(fermatEventListener);
@@ -942,29 +1066,29 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             PlatformComponentType actorSendType,
             NegotiationTransactionType transactionType,
             NegotiationTransmissionType transmissionType
-    ) throws CantConstructNegotiationTransmissionException{
+    ) throws CantConstructNegotiationTransmissionException {
 
         NegotiationTransmission negotiationTransmission = null;
-        try{
-            String                  publicKeyActorSend      = null;
-            String                  publicKeyActorReceive   = null;
-            PlatformComponentType   actorReceiveType        = null;
-            Date                    time                    = new Date();
+        try {
+            String publicKeyActorSend = null;
+            String publicKeyActorReceive = null;
+            PlatformComponentType actorReceiveType = null;
+            Date time = new Date();
 
-            UUID            transmissionId  = UUID.randomUUID();
-            UUID            transactionId   = negotiationTransaction.getTransactionId();
-            UUID            negotiationId   = negotiationTransaction.getTransactionId();
+            UUID transmissionId = UUID.randomUUID();
+            UUID transactionId = negotiationTransaction.getTransactionId();
+            UUID negotiationId = negotiationTransaction.getTransactionId();
             NegotiationType negotiationType = negotiationTransaction.getNegotiationType();
-            String          negotiationXML  = negotiationTransaction.getNegotiationXML();
+            String negotiationXML = negotiationTransaction.getNegotiationXML();
 
-            if(actorSendType == PlatformComponentType.ACTOR_CRYPTO_CUSTOMER){
-                publicKeyActorSend      = negotiationTransaction.getPublicKeyCustomer();
-                publicKeyActorReceive   = negotiationTransaction.getPublicKeyBroker();
-                actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_BROKER;
-            }else{
-                publicKeyActorSend      = negotiationTransaction.getPublicKeyBroker();
-                publicKeyActorReceive   = negotiationTransaction.getPublicKeyCustomer();
-                actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+            if (actorSendType == PlatformComponentType.ACTOR_CRYPTO_CUSTOMER) {
+                publicKeyActorSend = negotiationTransaction.getPublicKeyCustomer();
+                publicKeyActorReceive = negotiationTransaction.getPublicKeyBroker();
+                actorReceiveType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
+            } else {
+                publicKeyActorSend = negotiationTransaction.getPublicKeyBroker();
+                publicKeyActorReceive = negotiationTransaction.getPublicKeyCustomer();
+                actorReceiveType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
             }
 
             long timestamp = time.getTime();
@@ -995,7 +1119,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     /*END PRIVATE METHOD*/
 
     /*TEST NEGOTIATION TRANSMISSION*/
-    private void getAllNegotiationTransactionTest(){
+    private void getAllNegotiationTransactionTest() {
 
         try {
 
@@ -1059,32 +1183,32 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             } else {
                 System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. GET LIST ALL TRANSMISSION ERROR LIST IS EMPTY . ****\n");
             }
-            
+
         } catch (CantReadRecordDataBaseException e) {
             System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. GET LIST ALL TRANSMISSION, ERROR. ****\n");
         }
-        
+
     }
 
-    private void updateAllTransmissionTest(){
-        try{
+    private void updateAllTransmissionTest() {
+        try {
             System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. UPDATE ALL TRANSMISSION ****\n");
             databaseDao.updateTransmissionTest();
-        }catch (CantRegisterSendNegotiationTransmissionException e){
+        } catch (CantRegisterSendNegotiationTransmissionException e) {
             System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. UPDATE ALL TRANSMISSION, ERROR. ****\n");
         }
     }
 
-    private void deleteAllTransmissionTest(){
-        try{
+    private void deleteAllTransmissionTest() {
+        try {
             System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. DELETE ALL TRANSMISSION ****\n");
             databaseDao.deleteTransmissionTest();
-        }catch (CantRegisterSendNegotiationTransmissionException e){
+        } catch (CantRegisterSendNegotiationTransmissionException e) {
             System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. delete ALL TRANSMISSION, ERROR. ****\n");
         }
     }
 
-    private void eventTest(){
+    private void eventTest() {
         System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. EVENT TEST RAISE METHOD****\n");
 
         FermatEvent eventToRaise = eventManager.getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW2);
@@ -1128,17 +1252,17 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             NegotiationTransactionType negotiationTransactionType,
             NegotiationTransmissionType negotiationTransmissionType,
             NegotiationType negotiationType
-    ){
+    ) {
         try {
             System.out.print("\n**** 11) MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST ****\n");
 
             Negotiation negotiation = null;
             PlatformComponentType actorSendType = null;
 
-            if(negotiationType.getCode().equals(NegotiationType.PURCHASE.getCode())){
+            if (negotiationType.getCode().equals(NegotiationType.PURCHASE.getCode())) {
                 negotiation = purchaseNegotiationMockTest();
                 actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
-            }else{
+            } else {
                 negotiation = saleNegotiationMockTest();
                 actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
             }
@@ -1153,13 +1277,13 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             );
 
             System.out.print("\n**** 11) MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST DATE: ****\n" +
-                            "- ActorReceive = "+ negotiationMessage.getPublicKeyActorReceive() +
-                            "- ActorSend = "+ negotiationMessage.getPublicKeyActorSend()
+                            "- ActorReceive = " + negotiationMessage.getPublicKeyActorReceive() +
+                            "- ActorSend = " + negotiationMessage.getPublicKeyActorSend()
             );
 
             receiveNegotiation(negotiationMessage);
 
-        } catch (CantHandleNewMessagesException e){
+        } catch (CantHandleNewMessagesException e) {
             System.out.print("\n**** MOCK NEGOTIATION TRANSMISSION. RECEIVE MESSAGE TEST, ERROR, NOT FOUNT ****\n");
         }
 
@@ -1173,30 +1297,30 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
             NegotiationTransmissionType negotiationTransmissionType,
             NegotiationTransmissionState negotiationTransmissionState,
             NegotiationType negotiationType
-    ){
+    ) {
 
 
-        String                  publicKeyActorSend      = null;
-        String                  publicKeyActorReceive   = null;
-        PlatformComponentType   actorReceiveType        = null;
-        Date                    time                    = new Date();
+        String publicKeyActorSend = null;
+        String publicKeyActorReceive = null;
+        PlatformComponentType actorReceiveType = null;
+        Date time = new Date();
 
-        UUID transmissionId     = UUID.randomUUID();
-        UUID transactionId      = UUID.randomUUID();
-        String negotiationXML   = XMLParser.parseObject(negotiation);
+        UUID transmissionId = UUID.randomUUID();
+        UUID transactionId = UUID.randomUUID();
+        String negotiationXML = XMLParser.parseObject(negotiation);
 
-        if(actorSendType.getCode().equals(PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode())){
-            publicKeyActorSend      = negotiation.getCustomerPublicKey();
-            publicKeyActorReceive   = negotiation.getBrokerPublicKey();
-            actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_BROKER;
-        }else{
-            publicKeyActorSend      = negotiation.getBrokerPublicKey();
-            publicKeyActorReceive   = negotiation.getCustomerPublicKey();
-            actorReceiveType        = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+        if (actorSendType.getCode().equals(PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode())) {
+            publicKeyActorSend = negotiation.getCustomerPublicKey();
+            publicKeyActorReceive = negotiation.getBrokerPublicKey();
+            actorReceiveType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
+        } else {
+            publicKeyActorSend = negotiation.getBrokerPublicKey();
+            publicKeyActorReceive = negotiation.getCustomerPublicKey();
+            actorReceiveType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
         }
 
         return new NegotiationMessage(
-            transmissionId,
+                transmissionId,
                 transactionId,
                 negotiation.getNegotiationId(),
                 negotiationTransactionType,
@@ -1213,18 +1337,18 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
 
     }
 
-    private CustomerBrokerPurchaseNegotiation purchaseNegotiationMockTest(){
+    private CustomerBrokerPurchaseNegotiation purchaseNegotiationMockTest() {
 
         Date time = new Date();
-        UUID                negotiationId               = UUID.randomUUID();
-        String              publicKeyCustomer           = "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
-        String              publicKeyBroker             = "041FCC359F748B5074D5554FA4DBCCCC7981D6776E57B5465DB297775FB23DBBF064FCB11EDE1979FC6E02307E4D593A81D2347006109F40B21B969E0E290C3B84";
-        long                startDataTime               = 0;
-        long                negotiationExpirationDate   = time.getTime();
-        NegotiationStatus statusNegotiation             = NegotiationStatus.SENT_TO_BROKER;
-        Collection<Clause> clauses                      = getClausesTest();
-        Boolean             nearExpirationDatetime      = Boolean.FALSE;
-    
+        UUID negotiationId = UUID.randomUUID();
+        String publicKeyCustomer = "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
+        String publicKeyBroker = "041FCC359F748B5074D5554FA4DBCCCC7981D6776E57B5465DB297775FB23DBBF064FCB11EDE1979FC6E02307E4D593A81D2347006109F40B21B969E0E290C3B84";
+        long startDataTime = 0;
+        long negotiationExpirationDate = time.getTime();
+        NegotiationStatus statusNegotiation = NegotiationStatus.SENT_TO_BROKER;
+        Collection<Clause> clauses = getClausesTest();
+        Boolean nearExpirationDatetime = Boolean.FALSE;
+
         return new PurchaseNegotiationMock(
                 negotiationId,
                 publicKeyCustomer,
@@ -1238,18 +1362,18 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
     }
 
 
-    private CustomerBrokerSaleNegotiation saleNegotiationMockTest(){
+    private CustomerBrokerSaleNegotiation saleNegotiationMockTest() {
 
         Date time = new Date();
         long timestamp = time.getTime();
-        UUID                negotiationId               = UUID.randomUUID();
-        String              publicKeyCustomer           = "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
-        String              publicKeyBroker             = "041FCC359F748B5074D5554FA4DBCCCC7981D6776E57B5465DB297775FB23DBBF064FCB11EDE1979FC6E02307E4D593A81D2347006109F40B21B969E0E290C3B84";
-        long                startDataTime               = 0;
-        long                negotiationExpirationDate   = timestamp;
-        NegotiationStatus statusNegotiation             = NegotiationStatus.SENT_TO_CUSTOMER;
-        Collection<Clause> clauses                      = getClausesTest();
-        Boolean             nearExpirationDatetime      = Boolean.FALSE;
+        UUID negotiationId = UUID.randomUUID();
+        String publicKeyCustomer = "30C5580D5A807CA38771A7365FC2141A6450556D5233DD4D5D14D4D9CEE7B9715B98951C2F28F820D858898AE0CBCE7B43055AB3C506A804B793E230610E711AEA";
+        String publicKeyBroker = "041FCC359F748B5074D5554FA4DBCCCC7981D6776E57B5465DB297775FB23DBBF064FCB11EDE1979FC6E02307E4D593A81D2347006109F40B21B969E0E290C3B84";
+        long startDataTime = 0;
+        long negotiationExpirationDate = timestamp;
+        NegotiationStatus statusNegotiation = NegotiationStatus.SENT_TO_CUSTOMER;
+        Collection<Clause> clauses = getClausesTest();
+        Boolean nearExpirationDatetime = Boolean.FALSE;
 
         return new SaleNegotiationMock(
                 negotiationId,
@@ -1263,7 +1387,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         );
     }
 
-    private Collection<Clause> getClausesTest(){
+    private Collection<Clause> getClausesTest() {
         Collection<Clause> clauses = new ArrayList<>();
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY,

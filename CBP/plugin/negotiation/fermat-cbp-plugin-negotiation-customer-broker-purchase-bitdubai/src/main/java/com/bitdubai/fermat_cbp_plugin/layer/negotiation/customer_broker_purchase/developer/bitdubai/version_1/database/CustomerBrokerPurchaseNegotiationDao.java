@@ -17,11 +17,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationClauseManager;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateCustomerBrokerPurchaseNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
@@ -304,6 +306,40 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
         }
     }
 
+    public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListPurchaseNegotiationsException {
+        try {
+            DatabaseTable table = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME);
+
+            String Query = "SELECT * FROM " +
+                    CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME +
+                    " WHERE " +
+                    CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME +
+                    " = '" +
+                    NegotiationStatus.SENT_TO_BROKER.getCode() +
+                    "' OR " +
+                    CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME +
+                    " = '" +
+                    NegotiationStatus.WAITING_FOR_BROKER.getCode() +
+                    "' ORDER BY " +
+                    CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_START_DATE_TIME_COLUMN_NAME +
+                    " DESC";
+
+            Collection<DatabaseTableRecord> res = table.customQuery(Query, true);
+            Collection<CustomerBrokerPurchaseNegotiation> negs = new ArrayList<>();
+            for (DatabaseTableRecord record : res) {
+                negs.add(constructCustomerBrokerPurchaseFromRecordByQuery(record));
+            }
+
+            return negs;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetListPurchaseNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+        } catch (InvalidParameterException e) {
+            throw new CantGetListPurchaseNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+        } catch (CantGetListClauseException e) {
+            throw new CantGetListPurchaseNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
+
     /*
     *   Methods of Clauses
     * */
@@ -381,6 +417,7 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
     }
 
     private CustomerBrokerPurchaseNegotiation constructCustomerBrokerPurchaseFromRecord(DatabaseTableRecord record) throws InvalidParameterException, CantGetListClauseException {
+
         UUID    negotiationId     = record.getUUIDValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME);
         String  publicKeyCustomer = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         String  publicKeyBroker   = record.getStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_CRYPTO_BROKER_PUBLIC_KEY_COLUMN_NAME);
@@ -410,6 +447,39 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
             memo,
             cancel,
             lastNegotiationUpdateDate
+        );
+    }
+
+    private CustomerBrokerPurchaseNegotiation constructCustomerBrokerPurchaseFromRecordByQuery(DatabaseTableRecord record) throws InvalidParameterException, CantGetListClauseException {
+
+        UUID    negotiationId     = record.getUUIDValue("Column0");
+        String  publicKeyCustomer = record.getStringValue("Column1");
+        String  publicKeyBroker   = record.getStringValue("Column2");
+        Long    startDataTime     = record.getLongValue("Column3");
+        Long    negotiationExpirationDate = record.getLongValue("Column4");
+        NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue("Column5"));
+        String  nearExpirationDatetime = record.getStringValue("Column6");
+        String  memo = record.getStringValue("Column7");
+        String  cancel = record.getStringValue("Column8");
+        Long    lastNegotiationUpdateDate = record.getLongValue("Column9");
+
+        Boolean _NearExpirationDatetime = true;
+        if(nearExpirationDatetime.equals("0")){
+            _NearExpirationDatetime = false;
+        }
+
+        return newCustomerBrokerPurchaseNegotiation(
+                negotiationId,
+                publicKeyCustomer,
+                publicKeyBroker,
+                startDataTime,
+                negotiationExpirationDate,
+                statusNegotiation,
+                getClauses(negotiationId),
+                _NearExpirationDatetime,
+                memo,
+                cancel,
+                lastNegotiationUpdateDate
         );
     }
 

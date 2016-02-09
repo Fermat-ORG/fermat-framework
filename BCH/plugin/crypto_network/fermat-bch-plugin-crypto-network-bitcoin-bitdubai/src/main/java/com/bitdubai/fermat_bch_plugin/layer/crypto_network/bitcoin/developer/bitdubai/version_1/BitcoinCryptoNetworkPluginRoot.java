@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
@@ -67,6 +68,9 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
     /**
      * Default Constructor
      */
@@ -111,7 +115,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         /**
          * instantiate the network Manager
          */
-        bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager, this.pluginDatabaseSystem, this.pluginId);
+        bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager, this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
 
         /**
          * Start the agent that will search for pending transactions to be notified.
@@ -232,11 +236,12 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @param blockchainNetworkType
      * @param tx
      * @param transactionId
+     * @param commit
      * @throws CantStoreBitcoinTransactionException
      */
     @Override
-    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId) throws CantStoreBitcoinTransactionException {
-        bitcoinCryptoNetworkManager.storeBitcoinTransaction(blockchainNetworkType, tx, transactionId);
+    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException {
+        bitcoinCryptoNetworkManager.storeBitcoinTransaction(blockchainNetworkType, tx, transactionId, commit);
     }
 
     /**

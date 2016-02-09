@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_customer_community.navigationDrawer.CustomerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
@@ -27,11 +28,8 @@ import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerComm
  */
 public class CryptoCustomerCommunityFermatAppConnection extends AppConnections{
 
-    ActorIdentity identity;
-
     public CryptoCustomerCommunityFermatAppConnection(Activity activity) {
         super(activity);
-        this.identity = identity;
     }
 
     @Override
@@ -52,16 +50,16 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections{
 
     @Override
     public AbstractFermatSession getSession() {
-        //TODO:
-        return null;
-        //return new CryptoCustomerCommunitySubAppSession();
+        return new CryptoCustomerCommunitySubAppSession();
     }
 
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
 
-        return new CustomerCommunityNavigationViewPainter(getActivity(), getActiveIdentity());
+
+        return new CustomerCommunityNavigationViewPainter(getActivity(), getActiveIdentity(),
+                (CryptoCustomerCommunitySubAppModuleManager) getFullyLoadedSession().getModuleManager());
 
     }
 

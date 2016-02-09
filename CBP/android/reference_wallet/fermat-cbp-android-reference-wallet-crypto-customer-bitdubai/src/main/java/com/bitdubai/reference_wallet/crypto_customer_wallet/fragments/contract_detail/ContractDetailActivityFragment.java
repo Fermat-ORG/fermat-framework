@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -23,29 +22,23 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyContractInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
@@ -54,11 +47,12 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
@@ -101,6 +95,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             errorManager = appSession.getErrorManager();
             //TODO: load contract here
             data=(ContractBasicInformation) appSession.getData("contract_data");
+            appSession.setData("ContractDetailFragment", this);
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -161,6 +156,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             public String getCode() {
                 return CurrencyType.CRYPTO_MONEY.getCode();
             }
+
+            @Override
+            public CurrencyTypes getType() {
+                return null;
+            }
         };
         //Negotiation Summary
         /*Drawable brokerImg = getImgDrawable(broker.getProfileImage());
@@ -182,8 +182,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
         detailDate.setText("Date:\n"+formatter.format(date));
         //detailRate.setText("1 BTC @ 254 USD");
+        double exchangeRateAmount= getFormattedNumber(data.getExchangeRateAmount());
+        double amount= getFormattedNumber(data.getAmount());
         detailRate.setText(
-                data.getExchangeRateAmount()+" "+paymentCurrency+" @ "+data.getAmount()+" "+data.getMerchandise()
+                exchangeRateAmount+" "+paymentCurrency+" @ "+amount+" "+data.getMerchandise()
         );
 
 
@@ -197,6 +199,13 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //adapter.setClauseListener(this);
 
         recyclerView.setAdapter(adapter);
+    }
+
+    private double getFormattedNumber(float number){
+        int decimalPlaces=2;
+        BigDecimal bigDecimalNumber = new BigDecimal(number);
+        bigDecimalNumber=bigDecimalNumber.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
+        return bigDecimalNumber.doubleValue();
     }
 
     private List<ContractDetail> createContractDetails(){
@@ -215,7 +224,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 "BTC Customer",
                 getByteArrayFromImageView(brokerImage),
                 1961,
-                2016);
+                2016,
+                UUID.randomUUID());
         //contractDetails.add(contractDetail);
         //Testing Broker
         contractDetail=new ContractDetail(
@@ -227,7 +237,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 "BTC Broker",
                 getByteArrayFromImageView(brokerImage),
                 1961,
-                2016);
+                2016,
+                UUID.randomUUID());
         //contractDetails.add(contractDetail);
         /**
          * Get the wallet module manager
@@ -257,7 +268,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getCryptoCustomerAlias(),
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
-                        data.getExchangeRateAmount());
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
                 contractDetails.add(contractDetail);
                 //Broker
                 contractDetail=new ContractDetail(
@@ -269,7 +281,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getCryptoCustomerAlias(),
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
-                        data.getExchangeRateAmount());
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

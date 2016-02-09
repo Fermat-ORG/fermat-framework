@@ -163,13 +163,13 @@ public class AssetCryptoVaultManager  {
      * * Sends bitcoins to the specified address. It will create a new wallet object from the Keys generated from the
      * VaultKeyHierarchyGenerator and set an UTXO provider from the CryptoNetwork. Using my UTXO, I will create a new
      * transaction and broadcast it on the corresponding network.
-     * @param genesisTransactionHash
+     * @param inputTransaction
      * @param genesisBlockHash
      * @param addressTo
      * @return the Transaction hash
      * @throws CantSendAssetBitcoinsToUserException
      */
-    public String sendAssetBitcoins(String genesisTransactionHash, String genesisBlockHash, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException{
+    public String sendAssetBitcoins(String inputTransaction, String genesisBlockHash, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException{
         /**
          * I get the network for this address.
          */
@@ -177,40 +177,25 @@ public class AssetCryptoVaultManager  {
         try {
             networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
         } catch (CantValidateActiveNetworkException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "network not active for this addres.", "wrong address");
+            throw new CantSendAssetBitcoinsToUserException (CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Network is not active for this address.", "wrong address");
         }
+
         final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
 
         /**
-         * I will get the genesis transaction  I will use to form the input from the CryptoNetwork
+         * I will get the input transaction  I will use to form the input from the CryptoNetwork
          */
-        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, genesisTransactionHash);
+        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, inputTransaction);
 
+        /**
+         * If I couldn't get it I can't go on.
+         */
         if (genesisTransaction  == null){
-            /**
-             * Transaction might be null because we are sending from the user to appropiate or redeem an asset, and we don't have the GenesisTransaction
-             * stored in our wallet. If this is the case I will find a child that uses the GenesisTransaction as an input and use the child transaction
-             * to send the bitcoins.
-             */
-            List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
-            for (Transaction transaction : transactions){
-                for (TransactionInput input : transaction.getInputs()){
-                    if (input.getOutpoint().getHash().toString().contentEquals(genesisTransactionHash))
-                        genesisTransaction = transaction;
-                }
-            }
-
-
-            /**
-             * If I still couldn't find it, I cant go on.
-             */
-            if (genesisTransaction  == null){
-                StringBuilder output = new StringBuilder("The specified transaction hash ");
-                output.append(genesisTransactionHash);
-                output.append(System.lineSeparator());
-                output.append("doesn't exists in the CryptoNetwork.");
-                throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
-            }
+            StringBuilder output = new StringBuilder("The specified transaction hash ");
+            output.append(inputTransaction);
+            output.append(System.lineSeparator());
+            output.append("doesn't exists in the CryptoNetwork.");
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
         }
 
         /**
@@ -223,12 +208,21 @@ public class AssetCryptoVaultManager  {
             throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
         }
 
-
         /**
-         * Create the bitcoinj wallet from the keys of this account
+         * Create the bitcoinj wallet from the keys of all accounts
          */
-        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Asset Vault account", HierarchyAccountType.MASTER_ACCOUNT);
-        final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
+        final Wallet wallet;
+        try {
+            wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
+        } catch (InvalidSeedException e) {
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
+        }
+
+        try {
+            wallet.importKeys(getKeysForAllAccounts(networkParameters));
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+        }
 
         /**
          * Adds the Genesis Transaction as a UTXO
@@ -254,7 +248,6 @@ public class AssetCryptoVaultManager  {
             throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
         }
 
-
         /**
          * creates the send request and broadcast it on the network.
          */
@@ -265,6 +258,10 @@ public class AssetCryptoVaultManager  {
         sendRequest.fee = fee;
         sendRequest.feePerKb = Coin.ZERO;
 
+
+        /**
+         * I'm ready so will complete the transaction.
+         */
         try {
             wallet.completeTx(sendRequest);
         } catch (InsufficientMoneyException e) {
@@ -278,19 +275,16 @@ public class AssetCryptoVaultManager  {
 
         try {
             /**
-             * Once I formed the transaction, I will store it and ask the CryptoNEtwork to broadcast it.
+             * Once I formed the transaction, I will store it in the CryptoNetwork so that is ready for broadcasting.
              */
-            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID());
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID(), true);
             bitcoinNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
         } catch (CantStoreBitcoinTransactionException e) {
-            e.printStackTrace();
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "There was an error storing the created transaction in the CryptoNetwork", "Crypto Network issue");
         } catch (CantBroadcastTransactionException e) {
-            e.printStackTrace();
+            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "There was an error broadcasting in the CryptoNetwork", "Crypto Network issue");
         }
 
-        /**
-         * returns the generated transaction hash
-         */
         return sendRequest.tx.getHashAsString();
     }
 
@@ -359,7 +353,7 @@ public class AssetCryptoVaultManager  {
              * If I can't validate this. I will continue because I may be listening to this network already.
              */
             e.printStackTrace();
-            return BlockchainNetworkType.DEFAULT;
+            return BlockchainNetworkType.getDefaultBlockchainNetworkType();
         } catch (AddressFormatException e) {
             /**
              * If the passed address doesn't have the correct format, I can't go on.
@@ -380,8 +374,10 @@ public class AssetCryptoVaultManager  {
         /**
          * if the network parameters calculated is different that the Default network I will double check
          */
-        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.DEFAULT){
-            return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
+            //return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            // implement a new way to double check we are getting the right network parameter
+            return networkParameters;
         } else
         return networkParameters;
     }
@@ -610,12 +606,21 @@ public class AssetCryptoVaultManager  {
         }
 
         /**
-         * Will derive all keys and return them
+         * Will derive all keys and return them. With the keys, I will generate address for all active networks.
          */
         List<CryptoAddress> cryptoAddresses = new ArrayList<>();
         for (int i=1; i<generatedKeys; i++){
             try {
-                cryptoAddresses.add(this.getCryptoAddressFromRedemPoint(hierarchyAccount, i));
+                try {
+                    // I derive the key and generate the address on each network type I'm listening to.
+                    for (BlockchainNetworkType blockchainNetworkType : this.getDao().getActiveNetworkTypes()){
+                        cryptoAddresses.add(this.getCryptoAddressFromRedemPoint(hierarchyAccount, i, blockchainNetworkType));
+                    }
+                } catch (CantExecuteDatabaseOperationException e) {
+                    // if there was an error, I will only get address from the default network
+                    cryptoAddresses.add(this.getCryptoAddressFromRedemPoint(hierarchyAccount, i, BlockchainNetworkType.getDefaultBlockchainNetworkType()));
+                }
+
             } catch (GetNewCryptoAddressException e) {
                 return cryptoAddresses;
             }
@@ -631,8 +636,8 @@ public class AssetCryptoVaultManager  {
      * @param position
      * @return
      */
-    private CryptoAddress getCryptoAddressFromRedemPoint(HierarchyAccount hierarchyAccount, int position) throws GetNewCryptoAddressException {
-        return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getRedeemPointBitcoinAddress(hierarchyAccount, position);
+    private CryptoAddress getCryptoAddressFromRedemPoint(HierarchyAccount hierarchyAccount, int position, BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
+        return vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getRedeemPointBitcoinAddress(hierarchyAccount, position, blockchainNetworkType);
 
     }
 
@@ -668,7 +673,7 @@ public class AssetCryptoVaultManager  {
         try {
             networkParameters = Address.getParametersFromAddress(cryptoAddress.getAddress());
         } catch (AddressFormatException e) {
-            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         }
 
         /**
@@ -851,7 +856,7 @@ public class AssetCryptoVaultManager  {
             /**
              * Once I formed the transaction, I will store it in the CryptoNetwork so that is ready for broadcasting.
              */
-            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID());
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID(), false);
         } catch (CantStoreBitcoinTransactionException e) {
             throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the created transaction in the CryptoNetwork", "Crypto Network issue");
         }

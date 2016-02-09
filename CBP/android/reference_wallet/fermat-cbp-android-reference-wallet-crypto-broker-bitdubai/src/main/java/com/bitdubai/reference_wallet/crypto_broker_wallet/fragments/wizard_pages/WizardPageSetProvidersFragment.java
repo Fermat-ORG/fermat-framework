@@ -37,6 +37,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ProvidersAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.CurrencyPairAndProvider;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -57,10 +58,8 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     private static final String TAG = "WizardPageSetEarning";
 
     // Data
-    private List<CurrencyExchangeRateProviderManager> selectedProviders;
+    private List<CurrencyPairAndProvider> selectedProviders;
     private List<Currency> currencies;
-    private Currency currencyFrom;
-    private Currency currencyTo;
 
     // UI
     private RecyclerView recyclerView;
@@ -114,13 +113,13 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.cbw_spinner_item, getFormattedCurrencies(currencies));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        final Spinner currencyFromSpinner = (Spinner) layout.findViewById(R.id.currency_from_spinner);
-        currencyFromSpinner.setOnItemSelectedListener(this);
-        currencyFromSpinner.setAdapter(adapter);
+//        final Spinner currencyFromSpinner = (Spinner) layout.findViewById(R.id.currency_from_spinner);
+//        currencyFromSpinner.setOnItemSelectedListener(this);
+//        currencyFromSpinner.setAdapter(adapter);
 
-        final Spinner currencyToSpinner = (Spinner) layout.findViewById(R.id.currency_to_spinner);
-        currencyToSpinner.setOnItemSelectedListener(this);
-        currencyToSpinner.setAdapter(adapter);
+//        final Spinner currencyToSpinner = (Spinner) layout.findViewById(R.id.currency_to_spinner);
+//        currencyToSpinner.setOnItemSelectedListener(this);
+//        currencyToSpinner.setAdapter(adapter);
 
         final View selectProvidersButton = layout.findViewById(R.id.cbw_select_providers_button);
         selectProvidersButton.setOnClickListener(new View.OnClickListener() {
@@ -138,11 +137,10 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
             }
         });
 
-        // todo SE COMENTA PORQ YA NO EXISTEN LOS MÉTODOS
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                //.setBody("Custom text support for dialog in the wizard Providers help")
-               // .setSubTitle("Subtitle text of Merchandises dialog help")
-               // .setTextFooter("Text footer Merchandises dialog help")
+                .setBody(R.string.cbw_wizard_providers_dialog_body)
+                .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
+                .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setBannerRes(R.drawable.banner_crypto_broker)
                 .setIconRes(R.drawable.crypto_broker)
@@ -155,12 +153,12 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.currency_from_spinner) {
-            currencyFrom = currencies.get(position);
-
-        } else if (parent.getId() == R.id.currency_to_spinner) {
-            currencyTo = currencies.get(position);
-        }
+//        if (parent.getId() == R.id.currency_from_spinner) {
+//            currencyFrom = currencies.get(position);
+//
+//        } else if (parent.getId() == R.id.currency_to_spinner) {
+//            currencyTo = currencies.get(position);
+//        }
     }
 
     @Override
@@ -171,27 +169,27 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     private void showProvidersDialog() {
 
         try {
-            List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>();
+            List<CurrencyPairAndProvider> providers = new ArrayList<>();
 
             Map<String, CurrencyPair> map = walletManager.getWalletProviderAssociatedCurrencyPairs(null, appSession.getAppPublicKey());
 
-            Collection<CurrencyExchangeRateProviderManager> providerManagers;
 
-            for (Map.Entry<String, CurrencyPair> e: map.entrySet()) {
+            for (Map.Entry<String, CurrencyPair> e : map.entrySet()) {
 
-                currencyFrom = e.getValue().getFrom();
-                currencyTo   = e.getValue().getTo();
+                Currency currencyFrom = e.getValue().getFrom();
+                Currency currencyTo = e.getValue().getTo();
 
-                providerManagers = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
+                Collection<CurrencyExchangeRateProviderManager> providerManagers = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
                 if (providerManagers != null)
-                    providers.addAll(providerManagers);
+                    for (CurrencyExchangeRateProviderManager providerManager : providerManagers)
+                        providers.add(new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager));
             }
 
-            final SimpleListDialogFragment<CurrencyExchangeRateProviderManager> dialogFragment = new SimpleListDialogFragment<>();
+            final SimpleListDialogFragment<CurrencyPairAndProvider> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("Select a Provider", providers);
-            dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<CurrencyExchangeRateProviderManager>() {
+            dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<CurrencyPairAndProvider>() {
                 @Override
-                public void onItemSelected(CurrencyExchangeRateProviderManager selectedItem) {
+                public void onItemSelected(CurrencyPairAndProvider selectedItem) {
                     if (!containProvider(selectedItem)) {
                         selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
@@ -202,24 +200,12 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
 
             dialogFragment.show(getFragmentManager(), "ProvidersDialog");
 
-        } catch (CantGetProviderException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-        } catch (CantGetCryptoBrokerWalletSettingException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-        } catch (CryptoBrokerWalletNotFoundException ex) {
+        } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
-
-
     }
 
     private void saveSettingAndGoNextStep() {
@@ -230,12 +216,16 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         }
 
         try {
-            for (CurrencyExchangeRateProviderManager provider : selectedProviders) {
+            for (CurrencyPairAndProvider currencyPairAndProvider : selectedProviders) {
                 CryptoBrokerWalletProviderSetting setting = walletManager.newEmptyCryptoBrokerWalletProviderSetting();
                 setting.setBrokerPublicKey(appSession.getAppPublicKey());
+
+                CurrencyExchangeRateProviderManager provider = currencyPairAndProvider.getProvider();
                 setting.setDescription(provider.getProviderName());
                 setting.setId(provider.getProviderId());
                 setting.setPlugin(provider.getProviderId());
+                setting.setCurrencyFrom(currencyPairAndProvider.getCurrencyFrom().getCode());
+                setting.setCurrencyTo(currencyPairAndProvider.getCurrencyTo().getCode());
 
                 walletManager.saveCryptoBrokerWalletProviderSetting(setting, appSession.getAppPublicKey());
             }
@@ -283,14 +273,14 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         }
     }
 
-    private boolean containProvider(CurrencyExchangeRateProviderManager selectedProvider) {
+    private boolean containProvider(CurrencyPairAndProvider selectedProvider) {
         if (selectedProviders.isEmpty())
             return false;
 
         try {
-            for (CurrencyExchangeRateProviderManager provider : selectedProviders) {
-                UUID providerId = provider.getProviderId();
-                UUID selectedProviderId = selectedProvider.getProviderId();
+            for (CurrencyPairAndProvider provider : selectedProviders) {
+                UUID providerId = provider.getProvider().getProviderId();
+                UUID selectedProviderId = selectedProvider.getProvider().getProviderId();
 
                 if (providerId.equals(selectedProviderId))
                     return true;

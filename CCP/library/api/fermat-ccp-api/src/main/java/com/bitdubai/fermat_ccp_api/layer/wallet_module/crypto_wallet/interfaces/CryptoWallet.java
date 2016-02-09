@@ -20,6 +20,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.BlockingDeque;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.CryptoWallet</code>
@@ -279,7 +280,8 @@ public interface CryptoWallet extends Serializable {
               Actors deliveredByActorType,
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
-              ReferenceWallet referenceWallet) throws CantSendCryptoException, InsufficientFundsException;
+              ReferenceWallet referenceWallet,
+              BlockchainNetworkType blockchainNetworkType) throws CantSendCryptoException, InsufficientFundsException;
 
 
     /**
@@ -363,11 +365,12 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListTransactionsException if something goes wrong.
      */
     List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
-                                                                                                                                        TransactionType transactionType,
-                                                                                                                                        String walletPublicKey,
+                                                                             TransactionType transactionType,
+                                                                             String walletPublicKey,
                                                                              String actorPublicKey,
-                                                                                                                                        int max,
-                                                                                                                                        int offset) throws CantListTransactionsException;
+                                                                             BlockchainNetworkType blockchainNetworkType,
+                                                                             int max,
+                                                                             int offset) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>listTransactionsByActorAndType</code> you can get the transactions for each actor
@@ -388,6 +391,7 @@ public interface CryptoWallet extends Serializable {
                                                                  String walletPublicKey,
                                                                  String actorPublicKey,
                                                                  String intraUserLoggedInPublicKey,
+                                                                 BlockchainNetworkType blockchainNetworkType,
                                                                  int max,
                                                                  int offset) throws CantListTransactionsException;
 

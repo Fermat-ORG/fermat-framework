@@ -1,12 +1,11 @@
 package unit.com.bitdubai.fermat_p2p_api.layer.all_definition.communication.util.DataCompressor;
 
-import static org.fest.assertions.api.Assertions.*;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.util.DataCompressor;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.util.DataCompressor;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 public class EncodeDecodeTest {
 	

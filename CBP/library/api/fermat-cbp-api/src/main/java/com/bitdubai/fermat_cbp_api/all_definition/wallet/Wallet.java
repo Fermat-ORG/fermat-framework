@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.all_definition.wallet;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
@@ -43,7 +43,7 @@ public interface Wallet {
      * @return List<CryptoBrokerStockTransaction>
      * @exception CantGetCryptoBrokerStockTransactionException
      */
-    List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(FermatEnum merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException;
+    List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
@@ -53,7 +53,7 @@ public interface Wallet {
      * @return FiatIndex
      * @exception CantGetCryptoBrokerMarketRateException
      */
-    FiatIndex getMarketRate(FermatEnum merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException;
+    FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
@@ -63,5 +63,5 @@ public interface Wallet {
      * @return Quote
      * @exception CantGetCryptoBrokerQuoteException
      */
-    Quote getQuote(FermatEnum merchandise, float quantity, FiatCurrency payment) throws CantGetCryptoBrokerQuoteException;
+    Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException;
 }
