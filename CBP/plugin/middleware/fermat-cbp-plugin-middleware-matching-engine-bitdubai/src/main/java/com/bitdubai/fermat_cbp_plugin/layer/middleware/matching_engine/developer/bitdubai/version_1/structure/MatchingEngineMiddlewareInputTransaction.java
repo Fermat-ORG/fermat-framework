@@ -1,17 +1,21 @@
-package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils;
+package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.InputTransactionState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.InputTransaction</code>
+ * The class <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction</code>
  * contains all the information about an InputTransaction.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/02/2016.
+ *
+ * @author lnacosta
+ * @version 1.0
  */
-public final class InputTransaction {
+public final class MatchingEngineMiddlewareInputTransaction implements InputTransaction {
 
     private final UUID                  id               ;
     private final Currency              currencyGiving   ;
@@ -20,12 +24,12 @@ public final class InputTransaction {
     private final float                 amountReceiving  ;
     private final InputTransactionState state            ;
 
-    public InputTransaction(final UUID                   id               ,
-                            final Currency               currencyGiving   ,
-                            final float                  amountGiving     ,
-                            final Currency               currencyReceiving,
-                            final float                  amountReceiving  ,
-                            final InputTransactionState  state            ) {
+    public MatchingEngineMiddlewareInputTransaction(final UUID                   id               ,
+                                                    final Currency               currencyGiving   ,
+                                                    final float                  amountGiving     ,
+                                                    final Currency               currencyReceiving,
+                                                    final float                  amountReceiving  ,
+                                                    final InputTransactionState  state            ) {
 
         this.id                = id               ;
         this.currencyGiving    = currencyGiving   ;
@@ -70,4 +74,5 @@ public final class InputTransaction {
                 ", state=" + state +
                 '}';
     }
+
 }

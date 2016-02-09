@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.InputTransaction;
 
 import java.util.List;
 import java.util.UUID;
