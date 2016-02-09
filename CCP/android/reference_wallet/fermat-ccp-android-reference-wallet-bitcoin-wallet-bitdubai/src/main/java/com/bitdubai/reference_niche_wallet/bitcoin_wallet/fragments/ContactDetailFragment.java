@@ -211,7 +211,8 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                         referenceWalletSession.getErrorManager(),
                         cryptoWalletWalletContact,
                         referenceWalletSession.getIntraUserModuleManager().getPublicKey(),
-                        referenceWalletSession.getAppPublicKey());
+                        referenceWalletSession.getAppPublicKey(),
+                        blockchainNetworkType);
                 receiveFragmentDialog.show();
             }
 
