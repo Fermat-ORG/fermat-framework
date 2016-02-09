@@ -28,23 +28,35 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import java.util.List;
 
 /**
- * Created by Leon Acosta (lnacosta) - (laion.cj91@gmail.com) on 16/01/2015.
+ * Matching Engine Middleware CBP Plug-In;
+ *
+ * Description:
+ *   This plug-in has the mission of:
+ *     - Calculation of the earnings between a pair of currencies.
+ *     - Extraction of this calculated earning from the specified wallet, and deposited in another specified wallet.
+ *
+ *   To accomplish this task it contains a series of features:
+ *     - CRUD of Earning Settings (pairs of currencies related with a wallet, and the specified wallet to deposit the earnings).
+ *     - An agent with the responsibility of getting all the new confirmed transactions in the wallet where we will extract the earnings.
+ *     - An agent with the responsibility of calculate the earnings between pair of currencies and to execute the respective extract and deposit actions.
+ *
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/01/2015.
  *
  * @author lnacosta
  * @version 1.0
  */
-public class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
+public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM      , layer = Layers.PLATFORM_SERVICE, addon  = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons .EVENT_MANAGER         )
+    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons .PLUGIN_FILE_SYSTEM    )
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons.PLUGIN_FILE_SYSTEM    )
     protected PluginFileSystem pluginFileSystem        ;
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons .PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
 
