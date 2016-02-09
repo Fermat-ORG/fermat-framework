@@ -3,6 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
@@ -16,6 +17,7 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
 
     public static final String CONTACT_DATA = "CONTACT_DATA";
     public static final String CONNECTION_DATA = "CONNECTION_DATA";
+    public static final String CHAT_DATA = "CHAT_DATA";
     public static final String whocallme = "whocallme";
     public static final String chatvalues = "chatvalues";
 
@@ -29,6 +31,11 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
     public Contact getSelectedConnection() {
         Object data = getData(CONNECTION_DATA);
         return (data != null) ? (Contact) data : null;
+    }
+
+    public Chat getSelectedChat() {
+        Object data = getData(CHAT_DATA);
+        return (data != null) ? (Chat) data : null;
     }
 
 }

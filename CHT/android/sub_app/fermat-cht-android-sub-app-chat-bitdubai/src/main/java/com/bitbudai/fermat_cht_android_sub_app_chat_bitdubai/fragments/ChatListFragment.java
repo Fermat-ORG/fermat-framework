@@ -237,13 +237,15 @@ public class ChatListFragment extends AbstractFermatFragment{
             if(!chatManager.getMessages().isEmpty()) {
                 chatlistview();
             }else{
-                Toast.makeText(getActivity(), "Right now theirs no chat swipe to create with contact table", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "No chats, swipe to create with contact table", Toast.LENGTH_SHORT).show();
             }
         } catch (CantGetMessageException e) {
             CommonLogger.exception(TAG+"updatevalues()", e.getMessage(), e);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+         //   errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            if (errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
@@ -259,6 +261,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         final ChatListAdapter adapter=new ChatListAdapter(getActivity(), infochat, imgid);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -269,14 +272,18 @@ public class ChatListFragment extends AbstractFermatFragment{
                 List<String> converter = new ArrayList<String>();
                 converter.addAll(Arrays.asList(values.split("@#@#")));
                 Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
-            try{
-                appSession.setData("whocallme", "chatlist");
-                appSession.setData("contactid", chatManager.getContactByContactId(UUID.fromString(converter.get(4))));
-                changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-            } catch (CantGetContactException e) {
-                CommonLogger.exception(TAG+"clickoncontact", e.getMessage(), e);
-                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            }
+                try{
+                    appSession.setData("whocallme", "chatlist");
+                    appSession.setData("contactid", chatManager.getContactByContactId(UUID.fromString(converter.get(4))));//esto no es necesario, haces click a un chat
+                    appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(UUID.fromString(converter.get(3))));//este si hace falta
+                    changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+                } catch (CantGetContactException e) {
+                    CommonLogger.exception(TAG+"clickoncontact", e.getMessage(), e);
+                    Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+                } catch (CantGetChatException e) {
+                    CommonLogger.exception(TAG+"clickonchat", e.getMessage(), e);
+                    Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -286,7 +293,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                       // System.out.println("LEAN ON");
+                        // System.out.println("LEAN ON");
                         //       Toast.makeText(getActivity(), "Wake up Kakaroto", Toast.LENGTH_SHORT).show();
                         try {
                             //System.out.println("Threar UI corriendo");
