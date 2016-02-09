@@ -413,7 +413,35 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     @Override
-    public void connectWithOtherApp(Engine emgine, String fermatAppPublicKey,Object[] objectses) {
+    public void connectWithOtherApp(Engine engine, String fermatAppPublicKey,Object[] objectses) {
+        WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
+        SubApp installedSubApp = getSubAppRuntimeMiddleware().getSubAppByPublicKey(fermatAppPublicKey);
+        switch (engine){
+            case BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY:
+
+                //subApp runtime
+                try {
+                    connectWithSubApp(engine,objectses,installedSubApp);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            case BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY:
+
+                try {
+
+                    connectWithSubApp(engine,objectses,installedSubApp);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -552,4 +580,15 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     }
 
 
+    private void connectWithSubApp(Engine engine, Object[] objects,SubApp subApp){
+        Intent intent = new Intent(this, SubAppActivity.class);
+        intent.putExtra(ConnectionConstants.ENGINE_CONNECTION, engine);
+        intent.putExtra(ConnectionConstants.SEARCH_NAME,objects);
+        intent.putExtra(ConnectionConstants.SUB_APP_CONNECTION,subApp.getAppPublicKey());
+        intent.putExtra(ConnectionConstants.SUB_APP_CONNECTION_TYPE,subApp.getType());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        startActivity(intent);
+    }
 }
