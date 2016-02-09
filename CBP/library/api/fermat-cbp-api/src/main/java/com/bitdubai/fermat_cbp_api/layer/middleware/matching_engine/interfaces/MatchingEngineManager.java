@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager</code>
@@ -14,7 +15,7 @@ public interface MatchingEngineManager {
      * Through the method <code>loadEarningsSettings</code> you can get an earnings settings instance with which you can
      * manage the earnings settings of a specific wallet.
      *
-     * @param walletPublicKey public key of the referenced wallet.
+     * @param walletReference information of the referenced wallet.
      *
      * @return an instance of the earnings settings object related with the given wallet information.
      *
@@ -22,8 +23,7 @@ public interface MatchingEngineManager {
      */
     EarningsSettings loadEarningsSettings(
 
-            String walletPublicKey
-            // TODO ADD THE PARAMETERS FOR ALL THE NECESSARY WALLET INFORMATION
+            WalletReference walletReference
 
     ) throws CantLoadEarningSettingsException;
 
