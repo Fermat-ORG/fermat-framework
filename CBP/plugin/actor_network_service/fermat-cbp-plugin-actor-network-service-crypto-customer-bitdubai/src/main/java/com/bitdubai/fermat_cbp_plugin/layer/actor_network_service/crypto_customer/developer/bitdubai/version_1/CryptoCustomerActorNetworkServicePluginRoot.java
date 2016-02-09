@@ -219,11 +219,7 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
 
     private void initializeClientIdentity() throws CantStartPluginException {
 
-        System.out.println("Calling the method - initializeClientIdentity() ");
-
         try {
-
-            System.out.println("Loading clientIdentity");
 
              /*
               * Load the file with the clientIdentity
@@ -569,9 +565,6 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
 
     public void handleCompleteComponentRegistrationNotificationEvent(PlatformComponentProfile platformComponentProfileRegistered){
 
-        System.out.println("*********** Crypto customer network service IM HANDLING A CompleteComponentRegistrationNotificationEvent");
-        System.out.println("*********** platfomcomponentprofile: "+platformComponentProfileRegistered);
-
         if (platformComponentProfileRegistered.getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && !this.register){
 
             if(communicationRegistrationProcessNetworkServiceAgent != null && communicationRegistrationProcessNetworkServiceAgent.getActive()){
@@ -612,8 +605,6 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
              * Mark as register
              */
             this.register = Boolean.TRUE;
-
-            System.out.println("********** IM REGISTERED NOW....");
 
             fermatManager.setPlatformComponentProfile(this.getPlatformComponentProfilePluginRoot());
 
@@ -660,19 +651,26 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
     @Override
     public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
 
-        if (communicationNetworkServiceConnectionManager == null){
-            this.initializeCommunicationNetworkServiceConnectionManager();
-        }else{
-            communicationNetworkServiceConnectionManager.restart();
+        System.out.println("crypto customer actor network service - handleClientSuccessfullReconnectNotificationEvent");
+
+        try {
+
+            if (communicationNetworkServiceConnectionManager != null){
+                communicationNetworkServiceConnectionManager.restart();
+            }else{
+                this.initializeCommunicationNetworkServiceConnectionManager();
+            }
+
+            /*
+             * Mark as register
+             */
+            this.register = Boolean.TRUE;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-       /*
-        * Mark as register
-        */
-        this.register = Boolean.TRUE;
-
     }
-
 
     @Override
     public void handleFailureComponentRegistrationNotificationEvent(PlatformComponentProfile networkServiceApplicant, PlatformComponentProfile remoteParticipant) {

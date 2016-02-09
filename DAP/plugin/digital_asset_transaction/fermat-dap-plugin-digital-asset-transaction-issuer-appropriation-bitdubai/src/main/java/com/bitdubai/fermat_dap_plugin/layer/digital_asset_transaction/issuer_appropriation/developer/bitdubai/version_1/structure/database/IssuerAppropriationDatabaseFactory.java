@@ -78,6 +78,7 @@ public class IssuerAppropriationDatabaseFactory implements DealsWithPluginDataba
             DatabaseTableFactory transactionMetadataTable = databaseFactory.newTableFactory(ownerId, IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_TABLE_NAME);
 
             transactionMetadataTable.addColumn(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
+            transactionMetadataTable.addColumn(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_NETWORK_TYPE, DatabaseDataType.STRING, 255, Boolean.FALSE);
             transactionMetadataTable.addColumn(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
             transactionMetadataTable.addColumn(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
             transactionMetadataTable.addColumn(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
