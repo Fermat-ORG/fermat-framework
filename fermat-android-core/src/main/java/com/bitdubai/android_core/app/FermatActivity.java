@@ -1577,7 +1577,18 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void changeStartActivity(int optionActivity){
-        getAppInUse().changeActualStartActivity(optionActivity);
+        FermatStructure fermatStructure = getAppInUse();
+        fermatStructure.changeActualStartActivity(optionActivity);
+        switch (activityType){
+            case ACTIVITY_TYPE_WALLET:
+                getWalletRuntimeManager().recordNAvigationStructure(fermatStructure);
+                break;
+            case ACTIVITY_TYPE_SUB_APP:
+                getSubAppRuntimeMiddleware().recordNAvigationStructure(fermatStructure);
+                break;
+            case ACTIVITY_TYPE_DESKTOP:
+                break;
+        }
     }
 
 

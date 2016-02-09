@@ -19,7 +19,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="120dp">
+            android:layout_height="wrap_content">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetDetailNameText"
@@ -32,6 +32,7 @@
                 android:textColor="#ffffff"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/assetDetailExpDateText"
                 android:paddingTop="15dp"
                 android:paddingLeft="15dp"/>
 
@@ -70,7 +71,8 @@
                 android:text="(2 pending confirmation)"
                 android:layout_below="@+id/assetAvailable1"
                 android:paddingLeft="15dp"
-                android:paddingTop="0dp"/>
+                android:paddingTop="0dp"
+                android:paddingBottom="15dp"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/textView7"

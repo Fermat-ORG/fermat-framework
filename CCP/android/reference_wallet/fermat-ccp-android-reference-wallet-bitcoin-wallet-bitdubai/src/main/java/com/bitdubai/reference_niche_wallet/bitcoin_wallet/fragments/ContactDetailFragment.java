@@ -302,7 +302,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 edit_text_name.setText(cryptoWalletWalletContact.getActorName());
             if (text_view_address != null) {
                 if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
-                    String address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                    String address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                     //TODO: si la address es nula hay que ver porqué es
                     text_view_address.setText((address!=null)?address:"mnK7DuBQT3REr9bmfYcufTwjiAWfjwRwMf");
                     img_update.setVisibility(View.GONE);

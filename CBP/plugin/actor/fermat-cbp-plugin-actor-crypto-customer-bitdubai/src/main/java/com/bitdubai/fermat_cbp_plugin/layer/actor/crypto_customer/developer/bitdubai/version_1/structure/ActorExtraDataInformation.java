@@ -15,19 +15,26 @@ import java.util.Map;
 
 public class ActorExtraDataInformation implements ActorExtraData {
 
-    private ActorIdentity customer;
+    private String customer;
+    private ActorIdentity broker;
     private Collection<QuotesExtraData> quotes;
     private Map<Currency, Collection<Platforms>> currencies;
 
-    public ActorExtraDataInformation(ActorIdentity broker, Collection<QuotesExtraData> quotes, Map<Currency, Collection<Platforms>> currencies){
-        this.customer = broker;
+    public ActorExtraDataInformation(String customer, ActorIdentity broker, Collection<QuotesExtraData> quotes, Map<Currency, Collection<Platforms>> currencies){
+        this.customer = customer;
+        this.broker = broker;
         this.quotes = quotes;
         this.currencies = currencies;
     }
 
     @Override
-    public ActorIdentity getBrokerIdentity() {
+    public String getCustomerPublicKey() {
         return this.customer;
+    }
+
+    @Override
+    public ActorIdentity getBrokerIdentity() {
+        return this.broker;
     }
 
     @Override

@@ -40,10 +40,10 @@ public interface CryptoBrokerActorManager extends FermatManager {
 
     /**
      *
-     * @param wallet
+     * @param walletPublicKey
      * @return
      * @throws CantGetListBrokerIdentityWalletRelationshipException
      */
-    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException;
+    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListBrokerIdentityWalletRelationshipException;
 
 }
