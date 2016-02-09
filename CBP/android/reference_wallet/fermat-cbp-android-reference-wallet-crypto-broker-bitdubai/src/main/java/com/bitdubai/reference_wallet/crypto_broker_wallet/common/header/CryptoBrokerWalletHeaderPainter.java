@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.header;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -38,11 +40,18 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
 
     private final CryptoBrokerWalletSession session;
     private final Activity activity;
+    private CryptoBrokerWalletManager walletManager;
 
 
     public CryptoBrokerWalletHeaderPainter(Activity activity, CryptoBrokerWalletSession fullyLoadedSession) {
         this.activity = activity;
         session = fullyLoadedSession;
+
+        try {
+            walletManager = session.getModuleManager().getCryptoBrokerWallet(session.getAppPublicKey());
+        } catch (CantGetCryptoBrokerWalletException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -55,14 +64,12 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
     }
 
     private void getAndShowMarketExchangeRateData(final View container, final ProgressBar progressBar) {
-        final CryptoBrokerWalletModuleManager moduleManager = session.getModuleManager();
 
         FermatWorker fermatWorker = new FermatWorker(activity) {
             @Override
             protected Object doInBackground() throws Exception {
                 List<IndexInfoSummary> data = new ArrayList<>();
-                CryptoBrokerWalletManager wallet = moduleManager.getCryptoBrokerWallet(session.getAppPublicKey());
-                data.addAll(wallet.getCurrentIndexSummaryForStockCurrencies(session.getAppPublicKey()));
+                data.addAll(walletManager.getProvidersCurrentExchangeRates(session.getAppPublicKey()));
 
                 return data;
             }
@@ -84,9 +91,11 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
                         View marketRateViewPagerContainer = container.findViewById(R.id.cbw_market_rate_view_pager_container);
                         marketRateViewPagerContainer.setVisibility(View.VISIBLE);
 
+                        final FragmentManager fragmentManager = activity.getFragmentManager();
+                        MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(activity, session, summaries);
+
                         ViewPager viewPager = (ViewPager) container.findViewById(R.id.cbw_exchange_rate_view_pager);
                         viewPager.setOffscreenPageLimit(3);
-                        MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(activity.getFragmentManager(), summaries);
                         viewPager.setAdapter(pageAdapter);
 
                         LinePageIndicator indicator = (LinePageIndicator) container.findViewById(R.id.cbw_exchange_rate_view_pager_indicator);

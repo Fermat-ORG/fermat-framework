@@ -6,11 +6,15 @@ android {
     }
 
     compileSdkVersion 23
+<<<<<<< HEAD
     buildToolsVersion '21.1.2'
+=======
+    buildToolsVersion "21.1.2"
+>>>>>>> b8996e2e12f15d35fa825393f2ff126479e293c0
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -35,10 +39,20 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
     compile project(':fermat-android-api')
+<<<<<<< HEAD
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:support-v13:21.0.3'
+=======
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:support-v13:23.1.1'
+
+>>>>>>> b8996e2e12f15d35fa825393f2ff126479e293c0
 }
 
 repositories {

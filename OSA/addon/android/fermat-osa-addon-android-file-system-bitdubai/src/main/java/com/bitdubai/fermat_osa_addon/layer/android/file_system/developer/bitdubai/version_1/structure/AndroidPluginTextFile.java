@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
 
-import android.content.Context;
 import android.os.Environment;
 import android.util.Base64;
 
@@ -23,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.UUID;
@@ -172,7 +170,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
             OutputStream outputStream =  new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(encryptedContent.getBytes(CHARSET_NAME));
             outputStream.close();
-            return;
 
         } catch(CantEncryptException ex){
             String message = CantPersistFileException.DEFAULT_MESSAGE;

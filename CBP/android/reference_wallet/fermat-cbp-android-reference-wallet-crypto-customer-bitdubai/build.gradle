@@ -4,10 +4,12 @@ apply plugin: 'jacoco'
 android {
 
     compileSdkVersion 23
+
     buildToolsVersion '21.1.2'
 
+
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"

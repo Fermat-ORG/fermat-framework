@@ -9,8 +9,8 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -35,15 +35,23 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
     compile project(':fermat-android-api')
+<<<<<<< HEAD
     compile fileTree(dir: 'libs', include: ['*.jar'])
+=======
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+>>>>>>> b8996e2e12f15d35fa825393f2ff126479e293c0
     compile 'com.melnykov:floatingactionbutton:1.3.0'
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:support-v13:21.0.2'
-    compile 'com.android.support:support-v4:21.0.2'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:support-v13:23.1.1'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+
     compile 'com.google.zxing:core:3.2.0'
     compile 'com.google.zxing:android-integration:3.2.0'
     compile 'org.apache.commons:commons-collections4:4.0'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
+
     testCompile 'org.robolectric:robolectric:3.0-rc3'
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'

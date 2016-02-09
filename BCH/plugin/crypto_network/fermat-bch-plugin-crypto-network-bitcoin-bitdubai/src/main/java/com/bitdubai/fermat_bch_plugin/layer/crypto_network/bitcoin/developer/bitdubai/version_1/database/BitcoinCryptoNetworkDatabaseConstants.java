@@ -87,4 +87,15 @@ class BitcoinCryptoNetworkDatabaseConstants {
 
     static final String BRTOADCAST_FIRST_KEY_COLUMN = "hash";
 
+    /**
+     * ActiveNetworks database table definition.
+     */
+    static final String ACTIVENETWORKS_TABLE_NAME = "activeNetworkTypes";
+
+    static final String ACTIVENETWORKS_NETWORKTYPE= "networkType";
+    static final String ACTIVENETWORKS_KEYS = "keys";
+    static final String ACTIVENETWORKS_LAST_UPDATE = "last_update";
+
+    static final String ACTIVENETWORKS_FIRST_KEY_COLUMN = "networkType";
+
 }

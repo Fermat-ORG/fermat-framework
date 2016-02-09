@@ -10,11 +10,15 @@ version = '1.0.0'
 
 android {
     compileSdkVersion 23
+<<<<<<< HEAD
     buildToolsVersion '21.1.2'
+=======
+    buildToolsVersion "21.1.2"
+>>>>>>> b8996e2e12f15d35fa825393f2ff126479e293c0
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -50,14 +54,22 @@ dependencies {
     compile project(':fermat-osa-addon-android-device-location-bitdubai')
     compile project(':fermat-osa-addon-android-logger-bitdubai')
     compile project(':fermat-osa-addon-android-broadcaster-system-bitdubai')
+<<<<<<< HEAD
     compile 'com.android.support:support-v4:23.0.1'
     compile 'com.android.support:support-v13:23.0.1'
     compile 'com.android.support:appcompat-v7:23.0.1'
     testCompile 'org.robolectric:robolectric:3.0+'
     testCompile 'junit:junit:4.11+'
+=======
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:support-v13:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    testCompile 'org.robolectric:robolectric:3.0'
+    testCompile 'junit:junit:4.11'
+>>>>>>> b8996e2e12f15d35fa825393f2ff126479e293c0
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
-    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:design:23.1.1'
 }
 
 // Configuracion de PMD
