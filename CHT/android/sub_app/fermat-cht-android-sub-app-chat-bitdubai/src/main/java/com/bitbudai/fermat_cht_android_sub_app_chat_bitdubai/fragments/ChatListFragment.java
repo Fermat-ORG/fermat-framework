@@ -393,7 +393,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                              dato = new ChatImpl(chatid,
                                      UUID.randomUUID(),
                                      PlatformComponentType.ACTOR_ASSET_ISSUER,
-                                     appSession.getAppPublicKey(),
+                                     chatManager.getNetworkServicePublicKey(),
                                      chatManager.getContacts().get(i).getRemoteActorType(),
                                      chatManager.getContacts().get(i).getRemoteActorPublicKey(),
                                      "Nuevo",
