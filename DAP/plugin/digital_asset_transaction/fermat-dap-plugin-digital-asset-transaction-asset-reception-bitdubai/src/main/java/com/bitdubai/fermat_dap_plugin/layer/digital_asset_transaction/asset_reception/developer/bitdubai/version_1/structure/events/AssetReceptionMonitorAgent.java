@@ -95,7 +95,7 @@ public class AssetReceptionMonitorAgent implements Agent {
             MonitorAgent monitorAgent = new MonitorAgent();
             monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             monitorAgent.setErrorManager(this.errorManager);
-            this.agentThread = new Thread(monitorAgent);
+            this.agentThread = new Thread(monitorAgent, "Asset Reception MonitorAgent");
             this.agentThread.start();
         } catch (Exception e) {
             throw new CantStartAgentException(e, null, null);

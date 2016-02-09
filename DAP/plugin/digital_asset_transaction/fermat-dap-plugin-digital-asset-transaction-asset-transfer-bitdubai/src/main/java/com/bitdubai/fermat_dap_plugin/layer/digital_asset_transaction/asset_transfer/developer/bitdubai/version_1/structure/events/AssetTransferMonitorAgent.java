@@ -144,7 +144,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
             monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             monitorAgent.setErrorManager(this.errorManager);
             monitorAgent.setAssetTransferDAO(new AssetTransferDAO(pluginDatabaseSystem, pluginId, digitalAssetTransferVault));
-            this.agentThread = new Thread(monitorAgent);
+            this.agentThread = new Thread(monitorAgent, "Asset Transfer MonitorAgent");
             this.agentThread.start();
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
