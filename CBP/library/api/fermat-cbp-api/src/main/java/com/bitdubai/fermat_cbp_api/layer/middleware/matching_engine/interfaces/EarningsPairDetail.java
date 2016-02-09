@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
+import java.util.List;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPairDetail</code>
@@ -10,12 +10,24 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
  */
 public interface EarningsPairDetail {
 
+    /**
+     * @return a list of the earning transactions related with the earnings pair detail.
+     */
+    List<EarningTransaction> listEarningTransactions();
+
+    /**
+     * @return the amount of earning in the period (sum of the value of the earning transactions).
+     */
     double getAmount();
 
+    /**
+     * @return time since we're calculating.
+     */
     long getFromTimestamp();
 
+    /**
+     * @return time until we're calculating.
+     */
     long getToTimestamp();
-
-    TimeFrequency getTimeFrequency();
 
 }

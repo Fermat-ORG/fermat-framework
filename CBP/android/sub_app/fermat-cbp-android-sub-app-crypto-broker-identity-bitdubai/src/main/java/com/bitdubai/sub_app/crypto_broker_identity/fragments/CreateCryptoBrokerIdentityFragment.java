@@ -86,7 +86,6 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.fragment_create_crypto_broker_identity, container, false);
         initViews(rootLayout);
-        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         return rootLayout;
     }
 
@@ -126,6 +125,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
         });
         mBrokerImage = (ImageView) layout.findViewById(R.id.crypto_broker_image);
         mBrokerImage.setImageResource(R.drawable.img_new_user_camera);
+        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     @Override
@@ -169,6 +169,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
                 pictureView.setImageBitmap(cryptoBrokerBitmap);
             }
         }
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     @Override
@@ -244,6 +245,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     }
 
     private void dispatchTakePictureIntent() {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -251,6 +253,7 @@ public class CreateCryptoBrokerIdentityFragment extends AbstractFermatFragment {
     }
 
     private void loadImageFromGallery() {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
