@@ -588,7 +588,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     VaultType.CRYPTO_CURRENCY_VAULT,
                     "BITV",
                     appSession.getAppPublicKey(),
-                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                    blockchainNetworkType
             );
             walletAddres = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {

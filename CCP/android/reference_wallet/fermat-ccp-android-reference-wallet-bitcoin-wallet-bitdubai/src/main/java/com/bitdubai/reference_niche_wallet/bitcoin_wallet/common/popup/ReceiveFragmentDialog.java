@@ -19,11 +19,17 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.GeneratorQR;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
@@ -43,6 +49,10 @@ public class ReceiveFragmentDialog extends Dialog implements
     private final String walletPublicKey;
     public Activity activity;
     public Dialog d;
+
+
+    SettingsManager<BitcoinWalletSettings> settingsManager;
+    BlockchainNetworkType blockchainNetworkType;
 
     /**
      *  Deals with crypto wallet interface
@@ -112,6 +122,37 @@ public class ReceiveFragmentDialog extends Dialog implements
 
         showQRCodeAndAddress();
 
+        BitcoinWalletSettings bitcoinWalletSettings = null;
+        try {
+            bitcoinWalletSettings = settingsManager.loadAndGetSettings(walletPublicKey);
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if(bitcoinWalletSettings != null) {
+
+            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            }
+            try {
+                settingsManager.persistSettings(walletPublicKey, bitcoinWalletSettings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        try {
+            blockchainNetworkType = settingsManager.loadAndGetSettings(walletPublicKey).getBlockchainNetworkType();
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Network Type" + blockchainNetworkType);
+
     }
 
     private void setUpScreenComponents(){
@@ -143,7 +184,8 @@ public class ReceiveFragmentDialog extends Dialog implements
                     VaultType.CRYPTO_CURRENCY_VAULT,
                     "BITV",
                     walletPublicKey,
-                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                    blockchainNetworkType
             );
             walletAddres = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {
