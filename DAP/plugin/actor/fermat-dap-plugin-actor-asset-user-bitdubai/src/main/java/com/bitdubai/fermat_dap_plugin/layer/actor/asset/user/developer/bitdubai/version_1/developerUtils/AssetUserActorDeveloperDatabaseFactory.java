@@ -217,7 +217,9 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
 
         cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME);
         cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME);
+        cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME);
         cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME);
+
 
         /**
          * Crypto Address  database addition.
