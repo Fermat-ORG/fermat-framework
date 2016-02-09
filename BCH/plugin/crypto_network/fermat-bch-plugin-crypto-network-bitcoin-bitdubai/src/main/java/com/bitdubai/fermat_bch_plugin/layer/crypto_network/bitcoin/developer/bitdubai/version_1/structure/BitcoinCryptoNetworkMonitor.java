@@ -282,6 +282,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
          transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
 
+        transactionBroadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
+            @Override
+            public void onBroadcastProgress(double progress) {
+                System.out.println("***CryptoNetwork*** Broadcast progress for transaction " + txHash + ": " + progress * 100 + " %");
+            }
+        });
+
+
          ListenableFuture<Transaction> future = transactionBroadcast.future();
         /**
          * I add the future that will get the broadcast result into a call back to respond to it.
@@ -336,7 +344,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 //            } catch (CantExecuteDatabaseOperationException e1) {
 //                e1.printStackTrace();
 //            }
-//        } catch (ExecutionException e) { a
+//        } catch (ExecutionException e) {
 //            try {
 //                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
 //            } catch (CantExecuteDatabaseOperationException e1) {
