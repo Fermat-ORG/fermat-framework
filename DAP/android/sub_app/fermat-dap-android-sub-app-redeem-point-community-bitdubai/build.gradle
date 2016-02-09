@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-
 android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
@@ -15,8 +14,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    dexOptions {
+        incremental true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
 }
-
 dependencies {
     /* fermat dependencies */
     compile project(':fermat-api')
@@ -39,3 +44,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.3.2'
 }
 
+repositories {
+    maven { url 'https://jitpack.io' }
+}
