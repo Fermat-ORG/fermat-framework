@@ -3624,9 +3624,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         try {
             String navigationStructureXml = parseNavigationStructureXml(walletNavigationStructure);
             String navigationStructureName = publiKey + ".xml";
-            if (!pluginFileSystem.isTextFileExist(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)){
+            //if (!pluginFileSystem.isTextFileExist(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)){
                 setNavigationStructureXml(walletNavigationStructure);
-            }
+            //}
         }catch (Exception e){
             e.printStackTrace();
         }
