@@ -124,6 +124,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory {
         walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME     );
         walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME );
         walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME);
+        walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_NETWORK_TYPE               );
 
         /**
          * Table Wallet Contact Addresses addition.

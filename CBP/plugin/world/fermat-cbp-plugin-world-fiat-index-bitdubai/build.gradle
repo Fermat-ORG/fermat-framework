@@ -29,7 +29,7 @@ dependencies {
     testCompile 'info.cukes:cucumber-java:1.2.4'
     testCompile 'info.cukes:cucumber-junit:1.2.4'
 
-    compile 'org.json:json:20141113'
+//    compile 'org.json:json:20141113'
 }
 
 pmd {
