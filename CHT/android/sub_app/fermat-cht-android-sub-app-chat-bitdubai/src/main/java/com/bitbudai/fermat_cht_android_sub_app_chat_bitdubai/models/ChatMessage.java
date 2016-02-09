@@ -10,7 +10,7 @@ public class ChatMessage {
     private String id;
     private boolean isMe;
     private String message;
-    private String userId;
+    private Long userId;
     private String dateTime;
 
     public ChatMessage(/*String idm, boolean isMem, String messagem, String userIdm, String dateTimem*/) {
@@ -24,26 +24,32 @@ public class ChatMessage {
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
+
     public boolean getIsme() {
         return isMe;
     }
+
     public void setMe(boolean isMe) {
         this.isMe = isMe;
     }
+
     public String getMessage() {
         return message;
     }
+
     public void setMessage(String message) {
         this.message = message;
     }
-    public String getUserId() {
+
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

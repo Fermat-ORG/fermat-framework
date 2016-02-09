@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
@@ -25,15 +26,20 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatExceptio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
@@ -56,6 +62,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -160,7 +167,7 @@ public class ChatMiddlewareMonitorAgent implements
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000;
-        public final int DISCOVER_ITERATION_LIMIT = 1000;
+        public final int DISCOVER_ITERATION_LIMIT = 1;
         int discoverIteration = 0;
         int iterationNumber = 0;
         ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
@@ -263,13 +270,14 @@ public class ChatMiddlewareMonitorAgent implements
                 /**
                  * Discover contact
                  */
+                List<Contact> contactList;
                 if(discoverIteration==0){
                     //increase counter
                     System.out.println("Chat Middleware discovery contact process "+discoverIteration+":");
-                    List<Contact> contactList=chatMiddlewareManager.discoverActorsRegistered();
+                    contactList=chatMiddlewareManager.discoverActorsRegistered();
                     if(!contactList.isEmpty()){
                         for(Contact contact : contactList){
-                            chatMiddlewareDatabaseDao.saveContact(contact);
+                            saveContact(contact);
                         }
                     }
                 }
@@ -352,6 +360,41 @@ public class ChatMiddlewareMonitorAgent implements
         }
 
         /**
+         * This method saves a contact in database.
+         * Also it checks if the Public key is already registered in database, in this case, updates
+         *
+         * @param contact
+         * @throws CantSaveContactException
+         * @throws DatabaseOperationException
+         */
+        private void saveContact(Contact contact) throws
+                CantSaveContactException,
+                DatabaseOperationException {
+            try{
+                ObjectChecker.checkArgument(contact, "The contact is null");
+                String actorPublicKey=contact.getRemoteActorPublicKey();
+                Contact contactFromDatabase=
+                        chatMiddlewareDatabaseDao.getContactByLocalPublicKey(
+                                actorPublicKey);
+                if(contactFromDatabase!=null){
+                    //This contact already exists, so, I don't gonna save in database.
+                    //TODO: I need to study if the contact must be updated.
+                    return;
+                }
+                chatMiddlewareDatabaseDao.saveContact(contact);
+            } catch (ObjectNotSetException e) {
+                throw new CantSaveContactException(
+                        e,
+                        "Saving the remote contact",
+                        "The contact object is null");
+            } catch (CantGetContactException e) {
+                throw new CantSaveContactException(
+                        e,
+                        "Saving the remote contact",
+                        "Unexpected error in database");
+            }
+        }
+        /**
          * This method checks the incoming chat event and acts according to this.
          * @param eventChatId
          * @throws CantGetPendingTransactionException
@@ -379,6 +422,7 @@ public class ChatMiddlewareMonitorAgent implements
                     incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         //If message exists in database, this message will be update
+                        saveChat(incomingChatMetadata);
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
@@ -439,6 +483,18 @@ public class ChatMiddlewareMonitorAgent implements
 //                        "Checking the incoming chat pending transactions",
 //                        "Cannot send Notification to PIP"
 //                );
+            } catch (CantGetChatException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Cannot get chat"
+                );
+            } catch (CantSaveChatException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Cannot save chat"
+                );
             }
 
         }
@@ -567,8 +623,24 @@ public class ChatMiddlewareMonitorAgent implements
                 messageRecorded=getMessageFromChatMetadata(
                         chatMetadata);
             }
+
             messageRecorded.setStatus(MessageStatus.RECEIVE);
             chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
+        }
+
+        /**
+         * This method saves the new chat in database
+         * @param chatMetadata
+         * @throws DatabaseOperationException
+         */
+        private void saveChat(ChatMetadata chatMetadata) throws DatabaseOperationException, CantGetChatException, CantSaveChatException {
+
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
+            if(chat == null){
+                chat = getChatFromChatMetadata(chatMetadata);
+            }
+            chat.setStatus(ChatStatus.VISSIBLE);
+            chatMiddlewareDatabaseDao.saveChat(chat);
         }
 
         /**
@@ -576,14 +648,85 @@ public class ChatMiddlewareMonitorAgent implements
          * @param chatMetadata
          * @return
          */
-        private Message getMessageFromChatMetadata(ChatMetadata chatMetadata){
-            Message message=new MessageImpl(
-                    chatMetadata,
-                    MessageStatus.CREATED,
-                    TypeMessage.INCOMMING);
-            return message;
+        private Message getMessageFromChatMetadata(ChatMetadata chatMetadata)
+                throws
+                CantGetMessageException{
+            if(chatMetadata==null){
+                throw new CantGetMessageException("The chat metadata from network service is null");
+            }
+            try{
+                String contactLocalPublicKey=chatMetadata.getLocalActorPublicKey();
+                Contact contact=chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
+                if(contact==null){
+                    contact = createUnregisteredContact(chatMetadata);
+                }
+                UUID contactId=contact.getContactId();
+                Message message=new MessageImpl(
+                        chatMetadata,
+                        MessageStatus.CREATED,
+                        TypeMessage.INCOMMING,
+                        contactId
+                        );
+                return message;
+            } catch (DatabaseOperationException e) {
+                throw new CantGetMessageException(e,
+                        "Getting message from ChatMetadata",
+                        "Unexpected exception in database");
+            } catch (CantGetContactException e) {
+                throw new CantGetMessageException(e,
+                        "Getting message from ChatMetadata",
+                        "Cannot get the contact");
+            } catch (CantSaveContactException e) {
+                throw new CantGetMessageException(e,
+                        "Getting message from ChatMetadata",
+                        "Cannot save the contact");
+            }
+
         }
 
+        /**
+         * This method creates and saves a new contact.
+         * @param chatMetadata
+         * @return
+         * @throws CantSaveContactException
+         * @throws DatabaseOperationException
+         */
+        private Contact createUnregisteredContact(
+                ChatMetadata chatMetadata) throws
+                CantSaveContactException,
+                DatabaseOperationException {
+            Date date=new Date();
+            Contact contact=new ContactImpl(
+                    UUID.randomUUID(),
+                    "Not registered contact",
+                    "Not registered contact",
+                    chatMetadata.getLocalActorType(),
+                    chatMetadata.getLocalActorPublicKey(),
+                    date.getTime()
+            );
+            chatMiddlewareDatabaseDao.saveContact(contact);
+            return contact;
+        }
+
+        /**
+         * THis Method creates a new Chat from incoming Metadata
+         * @param chatMetadata
+         * @return
+         */
+        private Chat getChatFromChatMetadata(ChatMetadata chatMetadata){
+            return new ChatImpl(
+                    chatMetadata.getChatId(),
+                    chatMetadata.getObjectId(),
+                    chatMetadata.getLocalActorType(),
+                    chatMetadata.getLocalActorPublicKey(),
+                    chatMetadata.getRemoteActorType(),
+                    chatMetadata.getRemoteActorPublicKey(),
+                    chatMetadata.getChatName(),
+                    ChatStatus.VISSIBLE,
+                    chatMetadata.getDate(),
+                    chatMetadata.getDate()
+            );
+        }
         /**
          * This method updates a message record in database.
          * @param chatMetadata

@@ -22,7 +22,6 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
@@ -48,9 +47,6 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -140,6 +136,50 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    /**
+     * This method returns the contact id by local public key.
+     * @param localPublicKey
+     * @return
+     * @throws CantGetContactException
+     * @throws DatabaseOperationException
+     */
+    public Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException, DatabaseOperationException
+    {
+        Database database = null;
+        try {
+            database = openDatabase();
+            List<Contact> contacts = new ArrayList<>();
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CONTACTS_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(localPublicKey.toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CONTACTS_REMOTE_ACTOR_PUB_KEY_COLUMN_NAME);
+            // I will add the contact information from the database
+            for (DatabaseTableRecord record : getContactData(filter)) {
+                final Contact contact = getContactTransaction(record);
+
+                contacts.add(contact);
+            }
+
+            database.closeDatabase();
+
+            if(contacts.isEmpty()){
+                return null;
+            }
+
+            return contacts.get(0);
+        }
+        catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "error trying to get Contact from the database with filter: " + localPublicKey,
+                    null);
+        }
+    }
+
     public Contact newEmptyInstanceContact() throws CantNewEmptyContactException
     {
         ContactImpl contact = new ContactImpl();
@@ -224,7 +264,7 @@ public class ChatMiddlewareDatabaseDao {
             database = openDatabase();
             List<Chat> chats = new ArrayList<>();
             // I will add the contact information from the database
-            List<DatabaseTableRecord> records=getContactData(filter);
+            List<DatabaseTableRecord> records=getChatData(filter);
             if(records==null|| records.isEmpty()){
                 return chats;
             }
@@ -404,7 +444,7 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
+    public List<Message> getMessageByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
     {
         Database database = null;
         try {
@@ -432,7 +472,7 @@ public class ChatMiddlewareDatabaseDao {
                 return null;
             }
 
-            return messages.get(0);
+            return messages;
         }
         catch (Exception e) {
             if (database != null)
@@ -610,6 +650,7 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME, message.getStatus().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME, message.getType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, message.getMessageDate().toString());
+        record.setUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID, message.getContactId());
 
         return record;
     }
@@ -677,6 +718,8 @@ public class ChatMiddlewareDatabaseDao {
         message.setMessageDate(Timestamp.valueOf(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME)));
         message.setStatus(MessageStatus.getByCode(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME)));
         message.setType(TypeMessage.getByCode(messageTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME)));
+
+
 
         return message;
     }

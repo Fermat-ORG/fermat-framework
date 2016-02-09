@@ -325,12 +325,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     exception,
                     "Starting open contract plugin",
                     "Cannot set an object");
-        } catch (CantStartAgentException exception) {
-            throw new CantStartPluginException(
-                    CantStartPluginException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(exception),
-                    "Starting open contract plugin",
-                    "Cannot start the monitor agent");
+//        } catch (CantStartAgentException exception) {
+//            throw new CantStartPluginException(
+//                    CantStartPluginException.DEFAULT_MESSAGE,
+//                    FermatException.wrapException(exception),
+//                    "Starting open contract plugin",
+//                    "Cannot start the monitor agent");
         } catch (Exception exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -410,8 +410,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         try{
             Chat testChat=new ChatMock();
             testChat.setLocalActorPublicKey(networkServiceChatManager.getNetWorkServicePublicKey());
-            List<String> remotePublicKey = networkServiceChatManager.getRegisteredPubliKey();
-            testChat.setRemoteActorPublicKey(remotePublicKey.get(0));
+           // List<String> remotePublicKey = networkServiceChatManager.getRegisteredPubliKey();
+            testChat.setRemoteActorPublicKey("04500233060C68AD5ADD20AB786BC0BA1335F1D92786F65FD3685469AADCA9282563864F50827C1F1DF6F778BEAECE80964550701A9B78B220DD215CF434E9D8CA");
             Message testMessage=new MessageMock(UUID.fromString("52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"));
             this.chatMiddlewareManager.saveChat(testChat);
             this.chatMiddlewareManager.saveMessage(testMessage);
