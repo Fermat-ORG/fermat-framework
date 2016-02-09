@@ -8,8 +8,6 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.p
 
 import com.google.gson.Gson;
 
-import java.sql.Timestamp;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile</code>
  * <p/>

@@ -149,8 +149,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                 selectedIdentity = walletManager.getListOfIdentities().get(0);
                 //Llamar a este metodo getListOfIdentities y trarse el valor de la posicion 0 y asiganrlo a selectedIdentity
                 if (selectedIdentity != null) {
-                    walletManager.associateIdentity(selectedIdentity.getPublicKey());
-                    //changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES, appSession.getAppPublicKey());
+                    walletManager.associateIdentity(selectedIdentity, appSession.getAppPublicKey());
                 } else {
                     Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), R.string.cbw_select_identity_warning_msg, Toast.LENGTH_LONG).show();
                 }
@@ -160,8 +159,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                 selectedIdentity = walletManager.getListOfIdentities().get(0);
                 //Llamar a este metodo getListOfIdentities y trarse el valor de la posicion 0 y asiganrlo a selectedIdentity
                 if (selectedIdentity != null) {
-                    walletManager.associateIdentity(selectedIdentity.getPublicKey());
-                    //changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES, appSession.getAppPublicKey());
+                    walletManager.associateIdentity(selectedIdentity, appSession.getAppPublicKey());
                 } else {
                     Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), R.string.cbw_select_identity_warning_msg, Toast.LENGTH_LONG).show();
                 }

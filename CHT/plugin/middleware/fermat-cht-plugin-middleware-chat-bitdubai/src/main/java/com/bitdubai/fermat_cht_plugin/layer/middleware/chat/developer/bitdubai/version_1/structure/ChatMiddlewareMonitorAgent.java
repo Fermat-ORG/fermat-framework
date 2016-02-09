@@ -62,6 +62,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -421,8 +422,8 @@ public class ChatMiddlewareMonitorAgent implements
                     incomingChatMetadata=pendingTransaction.getInformation();
                     incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
-                        //If message exists in database, this message will be update
                         saveChat(incomingChatMetadata);
+                        //If message exists in database, this message will be update
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
@@ -644,6 +645,30 @@ public class ChatMiddlewareMonitorAgent implements
         }
 
         /**
+         * This method add a new contact to the incoming chat
+         * @param chat
+         * @param contact
+         * @return
+         */
+        private Chat addContactToChat(
+                Chat chat,
+                Contact contact){
+            List<Contact> contactList=chat.getContactAssociated();
+            if(contactList==null){
+                contactList=new ArrayList<>();
+                contactList.add(contact);
+            }else {
+                int contactIndex=contactList.indexOf(contact);
+                if(contactIndex==-1){
+                    contactList.add(contact);
+                }
+                //If the contact exists in chat object, I'll pass to include in chat
+            }
+            chat.setContactAssociated(contactList);
+            return chat;
+        }
+
+        /**
          * This method creates a new Message from incoming metadata
          * @param chatMetadata
          * @return
@@ -655,11 +680,15 @@ public class ChatMiddlewareMonitorAgent implements
                 throw new CantGetMessageException("The chat metadata from network service is null");
             }
             try{
-                String contactLocalPublicKey=chatMetadata.getLocalActorPublicKey();
+                UUID chatId=chatMetadata.getChatId();
+                Chat chatFromDatabase=chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+                String contactLocalPublicKey=chatFromDatabase.getRemoteActorPublicKey();
                 Contact contact=chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
                 if(contact==null){
                     contact = createUnregisteredContact(chatMetadata);
                 }
+                //I'll associated the contact, message and chat with the following method
+                addContactToChat(chatFromDatabase, contact);
                 UUID contactId=contact.getContactId();
                 Message message=new MessageImpl(
                         chatMetadata,
@@ -680,6 +709,10 @@ public class ChatMiddlewareMonitorAgent implements
                 throw new CantGetMessageException(e,
                         "Getting message from ChatMetadata",
                         "Cannot save the contact");
+            } catch (CantGetChatException e) {
+                throw new CantGetMessageException(e,
+                        "Getting message from ChatMetadata",
+                        "Cannot get the chat");
             }
 
         }

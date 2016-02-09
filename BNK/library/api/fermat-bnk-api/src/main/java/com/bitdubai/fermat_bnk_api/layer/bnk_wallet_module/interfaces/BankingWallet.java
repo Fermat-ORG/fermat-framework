@@ -22,6 +22,7 @@ public interface BankingWallet {
     List<BankAccountNumber> getAccounts()throws CantLoadBankMoneyWalletException;
     void addNewAccount(BankAccountType bankAccountType, String alias,String account,FiatCurrency fiatCurrency);
     List<BankMoneyTransactionRecord> getTransactions(String account)throws CantLoadBankMoneyWalletException;
+    List<BankMoneyTransactionRecord> getPendingTransactions();
     void makeDeposit(BankTransactionParameters bankTransactionParameters) throws CantMakeDepositTransactionException;
     void makeWithdraw(BankTransactionParameters bankTransactionParameters)throws CantMakeWithdrawTransactionException;
     void makeAsyncDeposit(BankTransactionParameters bankTransactionParameters);
@@ -30,4 +31,5 @@ public interface BankingWallet {
     float getAvailableBalance(String account);
     void createBankName(String bankName);
     String getBankName();
+    void cancelAsyncBankTransaction(BankMoneyTransactionRecord transaction);
 }

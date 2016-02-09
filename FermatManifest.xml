@@ -2378,6 +2378,15 @@
                         <maintainers> </maintainers>
                         <certifications> </certifications>
                     </plugin>
+                    <plugin name="Asset Transfer" description="" difficulty="3" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
                 </plugins>
             </layer>
             <layer name="Wallet" language="java">
@@ -4380,6 +4389,19 @@
                             <maintainer name="nattyco"></maintainer>
                         </maintainers>
                         <certifications> </certifications>
+                    </addon>
+                    <addon name="Broadcaster" description="Is the connection between the platform and the outside world" difficulty="7" code-level="production">
+                        <authors>
+                            <author name="furszy" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications>
+                            <certification type="implementation" signed-by="furszy"></certification>
+                        </certifications>
                     </addon>
                     <addon name="Device Connectivity" description="" difficulty="0" code-level="concept">
                         <authors>

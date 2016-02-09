@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.home;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -80,7 +81,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         configureToolbar();
         this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
-        header.setText("Accounts:   "+moduleManager.getBankingWallet().getBankName());
+        header.setText(moduleManager.getBankingWallet().getBankName());
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.bw_banner)
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
@@ -107,7 +108,11 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     }
 
     private void configureToolbar() {
-        getToolbar().setBackgroundColor(getResources().getColor(R.color.background_header_navy));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background,null));
+        else
+            getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background));
     }
 
     @Override

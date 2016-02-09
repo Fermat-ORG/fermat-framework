@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -34,10 +35,20 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * @throws CantGetCryptoCustomerListException if something goes wrong.
      */
     List<LinkedCryptoCustomerIdentity> listCryptoCustomersPendingLocalAction(final CryptoCustomerCommunitySelectableIdentity selectedIdentity,
-                                                                               final int max,
-                                                                               final int offset) throws CantGetCryptoCustomerListException;
+                                                                             final int max,
+                                                                             final int offset) throws CantGetCryptoCustomerListException;
 
-
+    /**
+     * The method <code>listAllConnectedCryptoCustomers</code> returns the list of all crypto customers registered by the
+     * logged in user
+     *
+     * @return the list of crypto customers connected to the logged in user
+     *
+     * @throws CantGetCryptoCustomerListException if something goes wrong.
+     */
+    List<CryptoCustomerCommunityInformation> listAllConnectedCryptoCustomers(final CryptoCustomerCommunitySelectableIdentity selectedIdentity,
+                                                                             final int max,
+                                                                             final int offset) throws CantGetCryptoCustomerListException;
 
     /**
      * The method <code>acceptCryptoCustomer</code> takes the information of a connection request, accepts
@@ -47,6 +58,17 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * @throws CantAcceptRequestException
      */
     public void acceptCryptoCustomer(UUID connectionId) throws CantAcceptRequestException;
+
+
+    /**
+     * The method <code>denyConnection</code> denies a connection request from other crypto Customer
+     *
+     * @param connectionId the connection id of the user to deny its connection request
+     * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerConnectionRejectionFailedException
+     */
+    public void denyConnection(UUID connectionId) throws CantDenyActorConnectionRequestException;
+
+
 
 
 
@@ -85,13 +107,6 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
 
 
 
-    /**
-     * The method <code>denyConnection</code> denies a connection request from other crypto Customer
-     *
-     * @param cryptoCustomerToRejectPublicKey the public key of the user to deny its connection request
-     * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerConnectionRejectionFailedException
-     */
-    public void denyConnection(String cryptoCustomerToRejectPublicKey) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerConnectionRejectionFailedException;
 
     /**
      * The method <code>disconnectCryptoCustomerr</code> disconnect an crypto Customer from the list managed by this

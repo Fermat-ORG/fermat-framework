@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -61,6 +62,9 @@ public class BankMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     BankingWallet bankingWallet;
@@ -75,7 +79,7 @@ public class BankMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     @Override
     public BankingWallet getBankingWallet() {
         if(bankingWallet == null)
-            bankingWallet = new BankingWalletModuleImpl(bankMoneyWalletManager,depositManager,withdrawManager,holdManager,unholdManager,pluginFileSystem,pluginId);
+            bankingWallet = new BankingWalletModuleImpl(bankMoneyWalletManager,depositManager,withdrawManager,holdManager,unholdManager,pluginFileSystem,pluginId,broadcaster);
         return bankingWallet;
     }
 

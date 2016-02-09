@@ -2457,7 +2457,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0e738b");
+        statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2465,7 +2465,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a5");
+        runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -2482,7 +2482,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0e738b");
+        statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2490,7 +2490,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a5");
+        runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -2507,7 +2507,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0e738b");
+        statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2515,7 +2515,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a5");
+        runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -2532,7 +2532,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         chtChat.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0e738b");
+        statusBar.setColor("#0072bb");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2540,7 +2540,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a5");
+        runtimeTitleBar.setColor("#0072bb");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();

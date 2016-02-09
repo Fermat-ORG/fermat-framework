@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -108,6 +109,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
     UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
+    public static EventSource EVENT_SOURCE = EventSource.USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER;
 
     @Override
     public List<String> getClassesFullPath() {
@@ -230,8 +233,13 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
                     bankMoneyRestockManager,
                     cashMoneyRestockManager,
                     cryptoMoneyRestockManager,
-                    notificationManagerMiddleware);
+                    notificationManagerMiddleware,
+                    customerBrokerSaleManager);
             userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
         }else userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
     }
 }

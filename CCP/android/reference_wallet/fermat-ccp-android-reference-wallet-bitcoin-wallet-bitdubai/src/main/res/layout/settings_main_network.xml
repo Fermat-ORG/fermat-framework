@@ -44,7 +44,6 @@
         android:layout_marginTop="16dp"
         android:background="#e7f7f5" />
 
-
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
