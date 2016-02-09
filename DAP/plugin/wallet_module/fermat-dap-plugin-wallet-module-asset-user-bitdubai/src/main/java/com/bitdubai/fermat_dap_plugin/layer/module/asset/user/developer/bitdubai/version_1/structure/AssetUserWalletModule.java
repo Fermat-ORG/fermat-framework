@@ -96,7 +96,7 @@ public class AssetUserWalletModule {
                 throw new NotEnoughAcceptsException(null, context, "There are no assets available to appropriate!!");
             for (AssetUserWalletTransaction transaction : transactions) {
                 DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transaction.getGenesisTransaction());
-                assetAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey);
+                assetAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey, networkType);
             }
         } catch (CantGetDigitalAssetFromLocalStorageException | CantGetTransactionsException | CantLoadWalletException e) {
             throw new CantExecuteAppropriationTransactionException(e, context, null);

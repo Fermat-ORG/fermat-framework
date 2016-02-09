@@ -121,9 +121,9 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
             // TODO BY DEFAULT THE CUSTOMER IS PUBLISHED
             CryptoCustomerIdentity cryptoCustomer = new CryptoCustomerIdentityImpl(alias, keyPair.getPrivateKey(), keyPair.getPublicKey(), profileImage, true);
             cryptoCustomerIdentityDatabaseDao.createNewCryptoCustomerIdentity(cryptoCustomer, keyPair.getPrivateKey(), loggedUser);
-            System.out.println("***********************I CREATED THE NEW IDENTITY");
-            exposeIdentity(cryptoCustomer);
+
             return cryptoCustomer;
+
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateCryptoCustomerIdentityException("CAN'T CREATE NEW CRYPTO CUSTOMER IDENTITY", e, "Error getting current logged in device user", "");
         } catch (CantCreateNewDeveloperException e) {
@@ -198,8 +198,6 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
 
             for (final CryptoCustomerIdentity identity : listAllCryptoCustomerFromCurrentDeviceUser()) {
 
-                System.out.println("************** available identities: "+identity);
-
                 if (identity.isPublished()) {
                     cryptoBrokerExposingDataList.add(
                             new CryptoCustomerExposingData(
@@ -228,11 +226,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
 
         try {
 
-            System.out.println("***********************I WILL EXPOSE THE IDENTITY");
-
             cryptoCustomerANSManager.exposeIdentity(new CryptoCustomerExposingData(identity.getPublicKey(), identity.getAlias(), identity.getProfileImage()));
-
-            System.out.println("***********************I M ALREADY BACK I SUPOSE TO BE EXPOSED");
 
         } catch (final CantExposeIdentityException e) {
 
@@ -281,7 +275,6 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
         }
 
         try {
-            System.out.println("************** NOW I WILL EXPOSE ALL THE CUSTOMER IDENTITIES....");
 
             exposeIdentities();
 

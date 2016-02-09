@@ -27,6 +27,7 @@
                 android:textColor="#ffffff"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/assetDetailExpDateText"
                 android:paddingTop="15dp"
                 android:paddingLeft="15dp"/>
 

@@ -16,4 +16,6 @@ public class SessionConstantsRedeemPoint {
     public static final int IC_ACTION_REDEEM_HELP_HISTORY = 302;
     public static final int IC_ACTION_REDEEM_HELP_STATISTICS = 303;
     public static final int IC_ACTION_REDEEM_SETTINGS_NETWORK = 304;
+    public static final int IC_ACTION_REDEEM_SETTINGS = 305;
+    public static final int IC_ACTION_REDEEM_SETTINGS_NOTIFICATIONS = 306;
 }

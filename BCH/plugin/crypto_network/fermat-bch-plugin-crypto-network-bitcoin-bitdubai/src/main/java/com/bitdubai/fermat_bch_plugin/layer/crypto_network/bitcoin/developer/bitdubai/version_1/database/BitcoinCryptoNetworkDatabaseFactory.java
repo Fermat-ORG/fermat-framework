@@ -182,6 +182,26 @@ class BitcoinCryptoNetworkDatabaseFactory implements DealsWithPluginDatabaseSyst
             }
 
 
+            /**
+             * Create ACTIVENETWORKS table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_TABLE_NAME);
+
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE, DatabaseDataType.STRING, 20, Boolean.TRUE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_KEYS, DatabaseDataType.INTEGER, 0, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_LAST_UPDATE, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+
+
+            table.addIndex(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
