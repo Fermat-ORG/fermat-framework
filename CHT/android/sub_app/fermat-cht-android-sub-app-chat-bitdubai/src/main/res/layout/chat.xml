@@ -17,9 +17,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_toStartOf="@+id/chatSendButton"
-            android:textColor="@color/black"
             android:autoText="true"
-            android:hint="type message" />
+            android:hint="type message"
+            android:backgroundTint="#acaaaa"
+            android:inputType="textAutoComplete"
+            android:textColor="#000000" />
 
         <Button
             android:id="@+id/chatSendButton"

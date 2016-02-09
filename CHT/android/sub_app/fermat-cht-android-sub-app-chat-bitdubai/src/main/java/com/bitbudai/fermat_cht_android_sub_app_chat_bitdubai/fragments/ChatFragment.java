@@ -208,7 +208,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         return new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addLeftName("Probando")
-//                .setBackground(R.color.holo_blue)
+                .setBackground(R.color.holo_blue)
                 .build();
 
 

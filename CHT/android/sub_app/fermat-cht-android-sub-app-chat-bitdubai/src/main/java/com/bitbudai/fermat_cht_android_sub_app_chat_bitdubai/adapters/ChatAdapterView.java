@@ -36,6 +36,8 @@ public class ChatAdapterView extends LinearLayout {
     private EditText messageET;
     private ViewGroup rootView;
     private String leftName;
+    private String rightName;
+    private int background = -1;
     private boolean loadDummyData = false;
 
     public ChatAdapterView(Context context) {
@@ -59,7 +61,7 @@ public class ChatAdapterView extends LinearLayout {
     }
 
 
-    private void initControls() {
+    public void initControls() {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         messageET = (EditText) findViewById(R.id.messageEdit);
@@ -68,8 +70,23 @@ public class ChatAdapterView extends LinearLayout {
         TextView meLabel = (TextView) findViewById(R.id.meLbl);
         TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
         RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
-        meLabel.setText("Yo");
-        companionLabel.setText(leftName);// Hard Coded
+
+        if (rightName != null) {
+            meLabel.setText(rightName);
+        } else {
+            meLabel.setText("Yo");
+        }
+
+        if (leftName != null ) {
+            companionLabel.setText(leftName);// Hard Coded
+        } else {
+            companionLabel.setText("Remoto");
+        }
+
+        if (background != -1) {
+            container.setBackgroundColor(background);
+        }
+
         loadDummyHistory();
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +161,14 @@ public class ChatAdapterView extends LinearLayout {
         this.leftName = leftName;
     }
 
+    public void addRightName(String rightName) {
+        this.rightName = rightName;
+    }
+
+    public void setBackground(int background) {
+        this.background = background;
+    }
+
     private void setChatHistory(ArrayList<ChatMessage> chatHistory) {
         this.chatHistory = chatHistory;
     }
@@ -152,14 +177,13 @@ public class ChatAdapterView extends LinearLayout {
         this.loadDummyData = loadDummyData;
     }
 
-
     public static class Builder {
 
         private Context context;
         private ViewGroup rootView;
         private ArrayList<ChatMessage> chatHistory;
         private boolean loadDummyData = false;
-        private Drawable background;
+        private int background = -1;
         private float chatTextSize;
         private int chatTextColor;
         private float dateTextSize;
@@ -169,18 +193,18 @@ public class ChatAdapterView extends LinearLayout {
         Button customButtom;
         EditText editText;
 
-
         public Builder(Context context) {
             this.context = context;
         }
 
-        public Builder insertInto(ViewGroup view) {
-            rootView = view;
+        public Builder insertInto(ViewGroup rootView) {
+            this.rootView = rootView;
             return this;
         }
 
-        public void addRightName(String rightName) {
+        public Builder addRightName(String rightName) {
             this.rightName = rightName;
+            return this;
         }
 
         public Builder addLeftName(String leftName) {
@@ -196,8 +220,9 @@ public class ChatAdapterView extends LinearLayout {
             this.editText = customEditText;
         }
 
-        public void setBackground(Drawable background) {
+        public Builder setBackground(int background) {
             this.background = background;
+            return this;
         }
 
         public void addChatHistory(ArrayList<ChatMessage> chatHistory) {
@@ -219,7 +244,16 @@ public class ChatAdapterView extends LinearLayout {
             if (leftName != null) {
                 chatView.addLeftName(leftName);
             }
+            if (rightName != null) {
+                chatView.addRightName(rightName);
+            }
+            if (background != -1) {
+                chatView.setBackground(background);
+            }
             chatView.loadDummyHistory(loadDummyData);
+
+//            chatView.initControls();
+
             return chatView;
         }
 
