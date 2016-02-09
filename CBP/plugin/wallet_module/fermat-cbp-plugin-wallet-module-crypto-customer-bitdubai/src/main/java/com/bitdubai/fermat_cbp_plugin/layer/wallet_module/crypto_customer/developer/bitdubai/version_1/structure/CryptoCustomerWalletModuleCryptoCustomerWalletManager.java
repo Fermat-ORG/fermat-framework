@@ -129,7 +129,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private final CustomerOfflinePaymentManager customerOfflinePaymentManager;
     private final CustomerAckOnlineMerchandiseManager customerAckOnlineMerchandiseManager;
     private final CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager;
-    private final CryptoCustomerActorManager cryptoCustomerActorManager;
+//    private final CryptoCustomerActorManager cryptoCustomerActorManager;
 
     /*
     *Constructor with Parameters
@@ -146,8 +146,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                                                  CustomerOnlinePaymentManager customerOnlinePaymentManager,
                                                                  CustomerOfflinePaymentManager customerOfflinePaymentManager,
                                                                  CustomerAckOnlineMerchandiseManager customerAckOnlineMerchandiseManager,
-                                                                 CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager,
-                                                                 CryptoCustomerActorManager cryptoCustomerActorManager) {
+                                                                 CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager/*,
+                                                                 CryptoCustomerActorManager cryptoCustomerActorManager*/) {
         this.walletManagerManager = walletManagerManager;
         this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
         this.pluginId = pluginId;
@@ -161,7 +161,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         this.customerOfflinePaymentManager = customerOfflinePaymentManager;
         this.customerAckOnlineMerchandiseManager = customerAckOnlineMerchandiseManager;
         this.customerAckOfflineMerchandiseManager = customerAckOfflineMerchandiseManager;
-        this.cryptoCustomerActorManager = cryptoCustomerActorManager;
+//        this.cryptoCustomerActorManager = cryptoCustomerActorManager;
     }
 
     private List<ContractBasicInformation> contractsHistory;
@@ -349,47 +349,14 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         }
     }
 
-    /*@Override
-    public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) throws CantGetNegotiationsWaitingForBrokerException {
-        try {
-            CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
-
-            Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
-<<<<<<< HEAD
-            for (CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_BROKER))
-            {
-//                cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(customerBrokerSaleNegotiation.getCustomerPublicKey(), "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
-                cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(customerBrokerSaleNegotiation);
-=======
-            for (CustomerBrokerPurchaseNegotiation customerBrokerSaleNegotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_BROKER)) {
-                cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(customerBrokerSaleNegotiation.getCustomerPublicKey(), "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
->>>>>>> 7d921e1863e084e40627b781b9d06b5fe94d9d1d
-                waitingForBroker.add(cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation);
-            }
-            //TODO:Eliminar solo para que se terminen las pantallas
-//            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation("publicKeyCustomer", "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
-//            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation("publicKeyCustomer", "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
-//            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation("publicKeyCustomer", "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
-//            waitingForBroker.add(cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation);
-            return waitingForBroker;
-
-        } catch (Exception ex) {
-            throw new CantGetNegotiationsWaitingForBrokerException("Cant get negotiations waiting for the broker", ex, "", "");
-        }
-    }*/
-
-    @Override
     //Modified by Yordin Alayn 03.02.16
+    @Override
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) throws CantGetNegotiationsWaitingForBrokerException {
         try {
 
-            CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
-
             Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
-            for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.SENT_TO_BROKER))
-                waitingForBroker.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_BROKER));
 
-            for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_BROKER))
+            for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsBySendAndWaiting())
                 waitingForBroker.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_BROKER));
 
             return waitingForBroker;
@@ -399,22 +366,17 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         }
     }
 
-    @Override
+
     //Modified by Yordin Alayn 03.02.16
+    @Override
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset) throws CantGetNegotiationsWaitingForCustomerException {
         try {
-            CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
 
             Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
 
             for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_CUSTOMER))
                 waitingForBroker.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_CUSTOMER));
 
-            //TODO:Eliminar solo para que se terminen las pantallas
-//            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation("publicKeyCustomer", "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
-//            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation("publicKeyCustomer", "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
-//            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation("publicKeyCustomer", "merchandise", "paymentMethod", "paymentCurrency", NegotiationStatus.WAITING_FOR_BROKER);
-//            waitingForBroker.add(cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation);
             return waitingForBroker;
 
         } catch (Exception ex) {
@@ -445,14 +407,18 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public boolean associateIdentity(ActorIdentity customer, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
-        CustomerIdentityWalletRelationship relationship = cryptoCustomerActorManager.createNewCustomerIdentityWalletRelationship(customer, walletPublicKey);
+        //TODO CHANGE FOR actorExtraData
+//        CustomerIdentityWalletRelationship relationship = cryptoCustomerActorManager.createNewCustomerIdentityWalletRelationship(customer, walletPublicKey);
+        CustomerIdentityWalletRelationship relationship = actorExtraDataManager.createNewCustomerIdentityWalletRelationship(customer, walletPublicKey);
         return relationship != null;
     }
 
     @Override
     public boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetListCustomerIdentityWalletRelationshipException {
         List<CryptoCustomerIdentity> identities = cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
-        CustomerIdentityWalletRelationship relationship = cryptoCustomerActorManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
+        //TODO CHANGE FOR actorExtraData
+        //CustomerIdentityWalletRelationship relationship = cryptoCustomerActorManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);*/
+        CustomerIdentityWalletRelationship relationship = actorExtraDataManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
 
         if (relationship != null && identities != null) {
             for (CryptoCustomerIdentity identity : identities) {
@@ -470,7 +436,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     @Override
     public CryptoCustomerIdentity getAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetListCustomerIdentityWalletRelationshipException, CantGetAssociatedIdentity {
         List<CryptoCustomerIdentity> identities = cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
-        CustomerIdentityWalletRelationship relationship = cryptoCustomerActorManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
+        //TODO CHANGE FOR actorExtraData
+        /*CustomerIdentityWalletRelationship relationship = cryptoCustomerActorManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);*/
+        CustomerIdentityWalletRelationship relationship = actorExtraDataManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
 
         if (relationship != null && identities != null) {
             for (CryptoCustomerIdentity identity : identities) {
@@ -527,24 +495,29 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         Collection<ActorExtraData> actorExtraDataList = actorExtraDataManager.getAllActorExtraDataConnected();
         Collection<BrokerIdentityBusinessInfo> brokersBusinessInfo = new ArrayList<>();
 
+        if (actorExtraDataList != null) {
+            for (ActorExtraData actorExtraData : actorExtraDataList) {
 
-        for (ActorExtraData actorExtraData : actorExtraDataList) {
-            Map<Currency, BrokerIdentityBusinessInfo> map = new HashMap<>();
+                if (actorExtraData.getQuotes() != null) {
+                    Map<Currency, BrokerIdentityBusinessInfo> map = new HashMap<>();
 
-            for (QuotesExtraData quotesExtraData : actorExtraData.getQuotes()) {
-                final ActorIdentity brokerIdentity = actorExtraData.getBrokerIdentity();
-                final Currency merchandise = quotesExtraData.getMerchandise();
+                    for (QuotesExtraData quotesExtraData : actorExtraData.getQuotes()) {
+                        final ActorIdentity brokerIdentity = actorExtraData.getBrokerIdentity();
+                        final Currency merchandise = quotesExtraData.getMerchandise();
 
-                BrokerIdentityBusinessInfo businessInfo = map.get(merchandise);
-                if (businessInfo == null) {
-                    businessInfo = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(brokerIdentity, merchandise);
-                    brokersBusinessInfo.add(businessInfo);
+                        BrokerIdentityBusinessInfo businessInfo = map.get(merchandise);
+                        if (businessInfo == null) {
+                            businessInfo = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(brokerIdentity, merchandise);
+                            brokersBusinessInfo.add(businessInfo);
 
-                    map.put(merchandise, businessInfo);
+                            map.put(merchandise, businessInfo);
+                        }
+
+                        List<MerchandiseExchangeRate> quotes = businessInfo.getQuotes();
+                        quotes.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(quotesExtraData));
+                    }
                 }
 
-                List<MerchandiseExchangeRate> quotes = businessInfo.getQuotes();
-                quotes.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(quotesExtraData));
             }
         }
 
@@ -561,17 +534,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         return false;
     }
 
+    //Modified by Yordin Alayn 22.01.16
     @Override
     public boolean startNegotiation(String customerPublicKey, String brokerPublicKey, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
         try {
-            /*
-            CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = new CustomerBrokerPurchaseNegotiationImpl();
-            customerBrokerPurchaseNegotiation.setClauses(getClause(clauses));
-            customerBrokerPurchaseNegotiation.setBrokerPublicKey(brokerPublicKey);
-            customerBrokerPurchaseNegotiation.setCustomerPublicKey(customerPublicKey);
-            customerBrokerNewManager.createCustomerBrokerNewPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
-            return true; //CustomerBrokerNewManager con la data minima
-            */
+
             System.out.print("\n**** 1) MOCK MODULE CRYPTO CUSTOMER - PURCHASE NEGOTIATION****\n" +
                     "\n-CUSTOMER: " + customerPublicKey +
                     "\n-BROKER: " + brokerPublicKey);
@@ -1317,19 +1284,27 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = null;
 
-            Collection<Clause> negotiationClause = customerBrokerSaleNegotiation.getClauses();
-            Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
-            String customerAlias = customerBrokerSaleNegotiation.getCustomerPublicKey();
-            String brokerAlias = customerBrokerSaleNegotiation.getBrokerPublicKey();
-            long lastUpdateDate = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate();
-            String note = "";
+            Collection<Clause>                  negotiationClause   = customerBrokerSaleNegotiation.getClauses();
+            Map<ClauseType, ClauseInformation>  clauses             = getNegotiationClause(negotiationClause);
+            long                                lastUpdateDate      = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate();
+            String                              customerPublickey   = customerBrokerSaleNegotiation.getCustomerPublicKey();
+            ActorIdentity                       customerIdentity    = new CryptoCustomerWalletModuleActorIdentityImpl(customerPublickey, "Not Alias", new byte[0]);;
+            String                              brokerPublickey     = customerBrokerSaleNegotiation.getBrokerPublicKey();
+            ActorIdentity                       brokerIdentity      = new CryptoCustomerWalletModuleActorIdentityImpl(brokerPublickey, "Not Alias", new byte[0]);
+            String                              note                = "";
+
+            if (cryptoCustomerIdentityManager.getCryptoCustomerIdentity(customerPublickey) != null)
+                customerIdentity = cryptoCustomerIdentityManager.getCryptoCustomerIdentity(customerPublickey);
+
+            if (this.actorExtraDataManager.getActorInformationByPublicKey(brokerPublickey) != null)
+                brokerIdentity = this.actorExtraDataManager.getActorInformationByPublicKey(brokerPublickey);
+
             if (customerBrokerSaleNegotiation.getMemo() != null)
                 note = customerBrokerSaleNegotiation.getMemo();
 
-
             cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
-                    customerAlias,
-                    brokerAlias,
+                    customerIdentity,
+                    brokerIdentity,
                     status,
                     clauses,
                     note,
@@ -1338,6 +1313,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             return cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation;
 
+        } catch (CantGetListActorExtraDataException ex){
+            throw new CantGetNegotiationsWaitingForBrokerException(ex.DEFAULT_MESSAGE, ex, "Not Get actorExtraData, Identity", "");
         } catch (Exception ex) {
             throw new CantGetNegotiationsWaitingForBrokerException("Cant get negotiations waiting for the broker", ex, "", "");
         }

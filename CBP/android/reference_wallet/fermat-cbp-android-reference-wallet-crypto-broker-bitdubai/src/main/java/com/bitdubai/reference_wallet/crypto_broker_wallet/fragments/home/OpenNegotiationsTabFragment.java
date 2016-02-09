@@ -124,7 +124,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     @Override
     public RecyclerView.LayoutManager getLayoutManager() {
         if (layoutManager == null)
-            layoutManager = new LinearLayoutManager(getActivity());
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
 
         return layoutManager;
     }

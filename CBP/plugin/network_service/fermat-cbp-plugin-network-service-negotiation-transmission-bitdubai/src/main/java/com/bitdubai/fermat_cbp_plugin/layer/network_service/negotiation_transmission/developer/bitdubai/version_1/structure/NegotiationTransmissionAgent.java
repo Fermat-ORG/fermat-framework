@@ -213,48 +213,10 @@ public class NegotiationTransmissionAgent {
 
             for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
 
+                String senderPublickey = identity.getPublicKey();
+                String receiverPublicKey = "04497671DC89AF4DD8C73441E9973A4699F8C57188912D2AB141DBC2A1B0CB5D56B742019505EEDE86045EF7C322EB089B32AA812FD2435A5A27ED4D86A1A281C2";
 //                String receiverPublicKey= negotiationTransmission.getPublicKeyActorReceive();
 //                String receiverPublicKey = "04E670900EC6DED47E0F633BB692C4AB866E392EAB5684BC09002F001F939F3782A81402AD209AEB396183D848170B7A3C8AC35EE250A85612F70581C98550F9D4";
-                  String receiverPublicKey = "04E670900EC6DED47E0F633BB692C4AB866E392EAB5684BC09002F001F939F3782A81402AD209AEB396183D848170B7A3C8AC35EE250A85612F70581C98550F9D4";
-
-
-
-                //TEST
-                /*String jsonNegotiationTransmissionTest = new NegotiationMessage(
-                        negotiationTransmission.getTransmissionId(),
-                        negotiationTransmission.getTransactionId(),
-                        negotiationTransmission.getNegotiationId(),
-                        negotiationTransmission.getNegotiationTransactionType(),
-                        negotiationTransmission.getPublicKeyActorSend(),
-                        negotiationTransmission.getActorSendType(),
-                        negotiationTransmission.getPublicKeyActorReceive(),
-                        negotiationTransmission.getActorReceiveType(),
-                        negotiationTransmission.getTransmissionType(),
-                        negotiationTransmission.getTransmissionState(),
-                        negotiationTransmission.getNegotiationType(),
-                        negotiationTransmission.getNegotiationXML(),
-                        negotiationTransmission.getTimestamp()
-                ).toJson();
-
-                if(negotiationTransmission.getTransmissionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode() ){
-                    System.out.print("\n\n**** 11-Test) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND NEGOTIATION TO : " + receiverPublicKey + "****\n");
-                    System.out.print("*** SEND DATES: " +
-                                    "\n - Sender Id = " + identity.getPublicKey() +
-                                    "\n - Receiver Id = " + receiverPublicKey +
-                                    "\n - JsonNegotiationTransmission " + jsonNegotiationTransmissionTest
-                    );
-
-//                    negotiationTransmission.setTransmissionState(NegotiationTransmissionState.PENDING_REMOTE_ACTION);
-                }else{
-                    System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - SEND CONFIRMATION TO : " + receiverPublicKey + "****\n");
-//                    negotiationTransmission.setTransmissionState(NegotiationTransmissionState.DONE);
-                }
-//                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - PENDING FOR SEND TO : " + receiverPublicKey + "****\n");
-*/
-                //END TEST
-
-
-
 
                 if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
                     System.out.print("\n\n**** X-1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
@@ -265,12 +227,14 @@ public class NegotiationTransmissionAgent {
                             System.out.print("\n\n**** X-3) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
                             if (platformComponentProfile != null) {
                                 System.out.print("\n\n**** X-4) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - POOL****\n");
+
                                 PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
-                                        negotiationTransmission.getPublicKeyActorSend(),
+                                        senderPublickey,
                                         NetworkServiceType.NEGOTIATION_TRANSMISSION,
                                         PlatformComponentType.NETWORK_SERVICE);
+
                                 PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(
-                                        negotiationTransmission.getPublicKeyActorReceive(),
+                                        receiverPublicKey,
                                         NetworkServiceType.NEGOTIATION_TRANSMISSION,
                                         PlatformComponentType.NETWORK_SERVICE);
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
@@ -282,8 +246,8 @@ public class NegotiationTransmissionAgent {
                     }
                 }else{
 //                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - AGENT - FOR SEND****\n");
-                    NetworkServiceLocal communicationNetworkServiceLocal = networkServiceNegotiationTransmissionPluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(receiverPublicKey);
-//                    NetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey);
+//                    NetworkServiceLocal communicationNetworkServiceLocal = networkServiceNegotiationTransmissionPluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(receiverPublicKey);
+                    NetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(receiverPublicKey);
                     if (communicationNetworkServiceLocal != null) {
                         try {
 
@@ -303,7 +267,7 @@ public class NegotiationTransmissionAgent {
                                     negotiationTransmission.getTimestamp()
                             ).toJson();
 
-                            communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(), receiverPublicKey, jsonNegotiationTransmission);
+                            communicationNetworkServiceLocal.sendMessage(senderPublickey, receiverPublicKey, jsonNegotiationTransmission);
 
 
                             if(negotiationTransmission.getTransmissionType().getCode() == NegotiationTransmissionType.TRANSMISSION_NEGOTIATION.getCode() ){

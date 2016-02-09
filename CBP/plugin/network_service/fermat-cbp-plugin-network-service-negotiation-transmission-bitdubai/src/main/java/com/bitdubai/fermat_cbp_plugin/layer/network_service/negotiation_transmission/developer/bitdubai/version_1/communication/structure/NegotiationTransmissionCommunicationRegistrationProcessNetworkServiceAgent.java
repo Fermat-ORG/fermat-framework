@@ -1,9 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.structure;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.AbstractCommunicationRegistrationProcessNetworkServiceAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.*;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 
 /**
  * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.structure.CommunicationRegistrationProcessNetworkServiceAgent</code>
@@ -13,10 +14,11 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationRegistrationProcessNetworkServiceAgent extends AbstractCommunicationRegistrationProcessNetworkServiceAgent {
+public class NegotiationTransmissionCommunicationRegistrationProcessNetworkServiceAgent extends CommunicationRegistrationProcessNetworkServiceAgent {
 
-    public CommunicationRegistrationProcessNetworkServiceAgent(final AbstractNetworkService networkServicePluginRoot,
-                                                               final WsCommunicationsCloudClientManager communicationsClientConnection) {
+    public NegotiationTransmissionCommunicationRegistrationProcessNetworkServiceAgent(
+            final AbstractNetworkService networkServicePluginRoot,
+           final WsCommunicationsCloudClientManager communicationsClientConnection) {
 
         super(networkServicePluginRoot, communicationsClientConnection);
     }
