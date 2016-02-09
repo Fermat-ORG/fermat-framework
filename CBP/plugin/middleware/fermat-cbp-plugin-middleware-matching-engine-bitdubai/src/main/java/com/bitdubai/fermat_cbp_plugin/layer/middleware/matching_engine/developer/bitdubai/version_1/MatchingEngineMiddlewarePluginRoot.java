@@ -50,19 +50,41 @@ public class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return new MatchingEngineMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+    public List<DeveloperDatabase> getDatabaseList(final DeveloperObjectFactory developerObjectFactory) {
+
+        return new MatchingEngineMiddlewareDeveloperDatabaseFactory(
+                pluginDatabaseSystem,
+                pluginId
+        ).getDatabaseList(
+                developerObjectFactory
+        );
 
     }
 
     @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new MatchingEngineMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+    public List<DeveloperDatabaseTable> getDatabaseTableList(final DeveloperObjectFactory developerObjectFactory,
+                                                             final DeveloperDatabase      developerDatabase     ) {
+
+        return new MatchingEngineMiddlewareDeveloperDatabaseFactory(
+                pluginDatabaseSystem,
+                pluginId
+        ).getDatabaseTableList(
+                developerObjectFactory
+        );
     }
 
     @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return new MatchingEngineMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabase      developerDatabase     ,
+                                                                      final DeveloperDatabaseTable developerDatabaseTable) {
+
+        return new MatchingEngineMiddlewareDeveloperDatabaseFactory(
+                pluginDatabaseSystem,
+                pluginId
+        ).getDatabaseTableContent(
+                developerObjectFactory,
+                developerDatabaseTable
+        );
     }
 
 }
