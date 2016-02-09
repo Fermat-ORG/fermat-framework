@@ -127,6 +127,32 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
+    public List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupName) throws CantGetAssetUserActorsException {
+        List<AssetUserActorRecord> allUserRegistered = this.getAllActorAssetUserRegistered();
+        List<ActorAssetUser> allUserRegisteredInGroup = this.getListActorAssetUserByGroups(groupName);
+        List<AssetUserActorRecord> allUserRegisteredFiltered = new ArrayList<>();
+        for (AssetUserActorRecord record : allUserRegistered)
+        {
+            if (record.getCryptoAddress() != null && (!userInGroup(record.getActorPublicKey(), allUserRegisteredInGroup)))
+            {
+                allUserRegisteredFiltered.add(record);
+            }
+        }
+
+        return allUserRegisteredFiltered;
+    }
+
+    private boolean userInGroup(String actorPublicKey, List<ActorAssetUser> usersInGroup) {
+        for (ActorAssetUser record : usersInGroup) {
+            if (record.getActorPublicKey().equals(actorPublicKey))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException {
         blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
         ActorAssetIssuer actorAssetIssuer;
