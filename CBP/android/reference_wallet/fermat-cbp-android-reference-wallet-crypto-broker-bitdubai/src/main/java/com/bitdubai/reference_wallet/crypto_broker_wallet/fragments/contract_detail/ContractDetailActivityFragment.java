@@ -179,19 +179,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
          * TODO: this contract details is only for testing, please, implement this date from database.
          */
         ContractDetail contractDetail;
-        //Customer Broker
-        contractDetail=new ContractDetail(
-                ContractDetailType.CUSTOMER_DETAIL,
-                CurrencyType.BANK_MONEY.getCode(),
-                FiatCurrency.CHINESE_YUAN.getFriendlyName(),
-                12,
-                ContractStatus.PAYMENT_SUBMIT,
-                "BTC Customer",
-                getByteArrayFromImageView(customerImage),
-                1961,
-                2016,
-                UUID.randomUUID());
-        contractDetails.add(contractDetail);
         //Testing Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.BROKER_DETAIL,
@@ -205,6 +192,20 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 2016,
                 UUID.randomUUID());
         contractDetails.add(contractDetail);
+        //Customer Broker
+        contractDetail=new ContractDetail(
+                ContractDetailType.CUSTOMER_DETAIL,
+                CurrencyType.BANK_MONEY.getCode(),
+                FiatCurrency.CHINESE_YUAN.getFriendlyName(),
+                12,
+                ContractStatus.PAYMENT_SUBMIT,
+                "BTC Customer",
+                getByteArrayFromImageView(customerImage),
+                1961,
+                2016,
+                UUID.randomUUID());
+        contractDetails.add(contractDetail);
+
         /**
          * Get the wallet module manager
          */

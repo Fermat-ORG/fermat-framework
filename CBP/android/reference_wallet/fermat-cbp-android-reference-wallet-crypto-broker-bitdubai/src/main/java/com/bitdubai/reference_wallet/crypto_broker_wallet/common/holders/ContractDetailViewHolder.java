@@ -175,12 +175,12 @@ public class ContractDetailViewHolder extends FermatViewHolder {
             case CUSTOMER_DETAIL:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 textDescription.setText("Customer");
-                confirmButton.setText("SEND");
+                confirmButton.setText("CONFIRM");
                 break;
             case BROKER_DETAIL:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 textDescription.setText("Broker");
-                confirmButton.setText("CONFIRM");
+                confirmButton.setText("SEND");
                 break;
 
         }
