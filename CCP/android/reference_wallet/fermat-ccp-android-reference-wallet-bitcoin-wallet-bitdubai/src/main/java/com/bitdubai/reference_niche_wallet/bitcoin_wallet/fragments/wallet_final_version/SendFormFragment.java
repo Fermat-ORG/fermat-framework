@@ -485,7 +485,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 VaultType.CRYPTO_CURRENCY_VAULT,
                                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                 appSession.getAppPublicKey(),
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                blockchainNetworkType
                         );
                     } else {
                         walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
@@ -502,7 +503,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                         VaultType.CRYPTO_CURRENCY_VAULT,
                                         CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                         appSession.getAppPublicKey(),
-                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                        blockchainNetworkType
                                 );
                             } else {
                                 walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
