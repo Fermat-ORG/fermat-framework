@@ -15,6 +15,9 @@ import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer
  * contains all the functionality to return plug-ins related with Developer BitDubai.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/01/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
  */
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
 

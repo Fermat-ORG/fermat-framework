@@ -29,6 +29,9 @@ import java.util.List;
 
 /**
  * Created by Leon Acosta (lnacosta) - (laion.cj91@gmail.com) on 16/01/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
  */
 public class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
