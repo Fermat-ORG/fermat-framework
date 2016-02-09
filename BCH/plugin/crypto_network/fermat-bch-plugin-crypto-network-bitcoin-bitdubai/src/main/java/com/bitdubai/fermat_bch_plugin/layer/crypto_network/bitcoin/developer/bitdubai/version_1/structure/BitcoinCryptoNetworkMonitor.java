@@ -466,7 +466,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @return
      */
     private CryptoTransaction getCryptoTransactionFromBitcoinTransaction(Transaction transaction) {
-        return CryptoTransaction.getCryptoTransaction(transaction);
+        return CryptoTransaction.getCryptoTransaction(BitcoinNetworkSelector.getBlockchainNetworkType(transaction.getParams()), transaction);
     }
 
     /**
