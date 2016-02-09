@@ -275,7 +275,7 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
 
-        result = manager.getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(group.getGroupName());
+        result = manager.getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(group.getGroupId());
 
         if (result != null && result.size() > 0) {
             for (AssetUserActorRecord record : result) {

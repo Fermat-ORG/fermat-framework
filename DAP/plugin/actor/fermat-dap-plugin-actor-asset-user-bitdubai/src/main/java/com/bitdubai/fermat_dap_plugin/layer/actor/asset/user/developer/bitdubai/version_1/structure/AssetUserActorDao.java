@@ -925,8 +925,9 @@ public class AssetUserActorDao implements Serializable {
         return list;
     }
 
-    public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUsersListException {
         List<ActorAssetUser> list = new ArrayList<>(); // Asset User Actor list.
+        List<ActorAssetUser> auxList = new ArrayList<>();
         DatabaseTable table;
         // Get Asset Users identities list.
         try {
@@ -943,8 +944,14 @@ public class AssetUserActorDao implements Serializable {
 
             table.loadToMemory();
 
-            this.addRecordsTableRegisteredToList(list, table.getRecords(), null);
+            this.addRecordsTableRegisteredToList(list, table.getRecords(), blockchainNetworkType);
 
+
+            for (ActorAssetUser record : list)
+            {
+                if (record.getCryptoAddress()!=null)
+                    auxList.add(record);
+            }
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
@@ -954,7 +961,7 @@ public class AssetUserActorDao implements Serializable {
             throw new CantGetAssetUsersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         }
         // Return the list values.
-        return list;
+        return auxList;
     }
 
     /**
@@ -1432,27 +1439,13 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUsersListException {
-        DatabaseTable tableGroup;
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUsersListException {
         DatabaseTable tableGroupMember;
-        String groupId = "";
+
         String actorAssetUserPublicKey = "";
         List<ActorAssetUser> actorAssetUserList = new ArrayList<ActorAssetUser>();
 
         try {
-            /**
-             * 1) Get the table.
-             */
-            tableGroup = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME);
-
-            if (tableGroup == null) {
-                throw new CantGetAssetUserGroupTableExcepcion("CANT GET ASSET USER GROUP MEMBER, TABLE NOT FOUND.", " ASSET USER GROUP MEMBER", "");
-            }
-            tableGroup.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, groupName, DatabaseFilterType.EQUAL);
-            tableGroup.loadToMemory();
-            for (DatabaseTableRecord record : tableGroup.getRecords()) {
-                groupId = record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME);
-            }
 
             tableGroupMember = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_TABLE_NAME);
 

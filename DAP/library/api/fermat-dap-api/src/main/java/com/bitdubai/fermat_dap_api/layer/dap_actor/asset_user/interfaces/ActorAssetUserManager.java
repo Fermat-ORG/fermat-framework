@@ -96,7 +96,7 @@ public interface ActorAssetUserManager extends FermatManager {
      *
      * @throws CantGetAssetUserActorsException
      */
-    List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
 
     /**
      * The method <code>connectToActorAssetUser</code> Enable Connection
@@ -159,11 +159,11 @@ public interface ActorAssetUserManager extends FermatManager {
 
     /**
      * The method <code>getListActorAssetUserByGroups</code> Returns a list of groups by name
-     * @param groupName
+     * @param groupId
      * @return
      * @throws CantGetAssetUserActorsException
      */
-    List<ActorAssetUser> getListActorAssetUserByGroups (String groupName) throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getListActorAssetUserByGroups (String groupId) throws CantGetAssetUserActorsException;
 
     /**
      * The method <code>getListAssetUserGroupsByActorAssetUser</code> Returns a list of groups by asset user
