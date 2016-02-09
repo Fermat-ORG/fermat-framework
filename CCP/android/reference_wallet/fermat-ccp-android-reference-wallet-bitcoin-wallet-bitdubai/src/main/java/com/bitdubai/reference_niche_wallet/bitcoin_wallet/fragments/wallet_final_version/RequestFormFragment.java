@@ -585,10 +585,12 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
 
                 String amount = editTextAmount.getText().toString();
 
-                BigDecimal money = new BigDecimal("0");
+                BigDecimal money;
 
                 if (!amount.equals(""))
                     money = new BigDecimal("0");
+                else
+                    money = new BigDecimal(amount);
 
                 if (!amount.equals("") && amount != null && !money.equals(0)) {
 
