@@ -84,6 +84,14 @@ public interface ActorAssetUserManager extends FermatManager {
     List<ActorAssetUser> getAllAssetUserActorInTableRegistered() throws CantGetAssetUserActorsException;
 
     /**
+     * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service
+     * and used in Sub App Community, Filtering the NetworkType they belong
+     *
+     * @throws CantGetAssetUserActorsException
+     */
+    List<ActorAssetUser> getAllAssetUserActorInTableRegistered(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
+
+    /**
      * The method <code>getAllAssetUserActorConnected</code> receives All Actors with have CryptoAddress in BD
      *
      * @throws CantGetAssetUserActorsException
