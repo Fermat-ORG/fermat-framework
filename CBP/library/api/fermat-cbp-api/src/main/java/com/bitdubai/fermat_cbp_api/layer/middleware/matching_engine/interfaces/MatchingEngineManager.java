@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 
@@ -9,7 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.Wallet
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/01/2016.
  */
-public interface MatchingEngineManager {
+public interface MatchingEngineManager extends FermatManager {
 
     /**
      * Through the method <code>loadEarningsSettings</code> you can get an earnings settings instance with which you can

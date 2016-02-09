@@ -86,11 +86,11 @@ public final class MatchingEngineMiddlewareDao {
         }
     }
 
-    public final void associateEarningsPair(final UUID            id             ,
-                                            final Currency        earningCurrency,
-                                            final Currency        linkedCurrency ,
-                                            final WalletReference walletReference) throws CantAssociatePairException     ,
-                                                                                          PairAlreadyAssociatedException {
+    public final EarningsPair associateEarningsPair(final UUID            id             ,
+                                                    final Currency        earningCurrency,
+                                                    final Currency        linkedCurrency ,
+                                                    final WalletReference walletReference) throws CantAssociatePairException     ,
+                                                                                                  PairAlreadyAssociatedException {
 
         try {
 
@@ -111,6 +111,8 @@ public final class MatchingEngineMiddlewareDao {
             entityRecord = buildEarningsPairDatabaseRecord(entityRecord, earningsPair);
 
             earningsPairTable.insertRecord(entityRecord);
+
+            return earningsPair;
 
         } catch (final CantInsertRecordException e) {
 

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
@@ -15,7 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -43,9 +49,47 @@ public class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin implement
         super(new PluginVersionReference(new Version()));
     }
 
+    private MatchingEngineManager fermatManager;
+
     @Override
     public FermatManager getManager() {
-        return null;
+        return fermatManager;
+    }
+
+    @Override
+    public void start() throws CantStartPluginException {
+
+        try {
+
+            final MatchingEngineMiddlewareDao dao = new MatchingEngineMiddlewareDao(
+                    pluginDatabaseSystem,
+                    pluginId
+            );
+
+            dao.initialize();
+
+            fermatManager = new MatchingEngineMiddlewareManager(
+                    dao,
+                    errorManager,
+                    this.getPluginVersionReference()
+            );
+
+            super.start();
+
+        } catch (final CantInitializeDatabaseException cantInitializeActorConnectionDatabaseException) {
+
+            errorManager.reportUnexpectedPluginException(
+                    getPluginVersionReference()                           ,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    cantInitializeActorConnectionDatabaseException
+            );
+
+            throw new CantStartPluginException(
+                    cantInitializeActorConnectionDatabaseException,
+                    "Matching Engine Middleware.",
+                    "Problem initializing database of the plug-in."
+            );
+        }
     }
 
     @Override

@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
@@ -27,14 +25,14 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     @Override
     public void start() throws CantStartPluginDeveloperException {
 
-//        try {
-//
-//            this.registerVersion(new MatchingEngineMiddlewarePluginRoot());
-//
-//        } catch (CantRegisterVersionException e) {
-//
-//            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
-//        }
+        try {
+
+            this.registerVersion(new MatchingEngineMiddlewarePluginRoot());
+
+        } catch (CantRegisterVersionException e) {
+
+            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+        }
     }
 
 
