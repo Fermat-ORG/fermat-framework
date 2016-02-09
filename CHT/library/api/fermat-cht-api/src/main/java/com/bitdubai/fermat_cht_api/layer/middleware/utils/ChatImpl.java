@@ -31,8 +31,26 @@ public class ChatImpl implements Chat {
     private Timestamp                   lastMessageDate;
     private List<Contact>               contactAssociated;
 
-    public ChatImpl(){};
+    /**
+     * Constructor without arguments
+     */
+    public ChatImpl(){}
 
+    /**
+     * Construct with parameters. In this version we not included the List<Contact> contactAssociated
+     * as a constructor argument because we get the contact from a remote device, this parameter
+     * can be set later.
+     * @param chatId
+     * @param objectId
+     * @param localActorType
+     * @param localActorPublicKey
+     * @param remoteActorType
+     * @param remoteActorPublicKey
+     * @param chatName
+     * @param status
+     * @param date
+     * @param lastMessageDate
+     */
     public ChatImpl(UUID chatId,
                     UUID objectId,
                     PlatformComponentType localActorType,
