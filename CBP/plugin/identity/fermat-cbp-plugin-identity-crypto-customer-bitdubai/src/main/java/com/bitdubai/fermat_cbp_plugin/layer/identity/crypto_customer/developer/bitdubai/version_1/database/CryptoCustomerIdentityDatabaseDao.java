@@ -189,7 +189,8 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
             if (!records.isEmpty())
                 return getIdentityFromRecord(records.get(0));
             else
-                throw new IdentityNotFoundException("publicKey: "+publicKey, "Cannot find an Identity with that publicKey.");
+                return null;
+//                throw new IdentityNotFoundException("publicKey: "+publicKey, "Cannot find an Identity with that publicKey.");
 
         } catch (final CantGetCryptoCustomerIdentityProfileImageException |
                 CantGetCryptoCustomerIdentityPrivateKeyException e) {

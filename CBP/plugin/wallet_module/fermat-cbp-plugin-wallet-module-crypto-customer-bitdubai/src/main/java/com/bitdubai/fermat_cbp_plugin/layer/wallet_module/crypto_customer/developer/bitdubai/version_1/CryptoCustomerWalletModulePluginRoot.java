@@ -97,8 +97,9 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE)
     CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.CRYPTO_CUSTOMER_ACTOR)
-    CryptoCustomerActorManager cryptoCustomerActorManager;
+    //TODO Change for actorExtraDataManager
+//    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.CRYPTO_CUSTOMER_ACTOR)
+//    CryptoCustomerActorManager cryptoCustomerActorManager;
 
     private CryptoCustomerWalletModuleCryptoCustomerWalletManager walletManager;
 
@@ -130,8 +131,8 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
                         customerOnlinePaymentManager,
                         customerOfflinePaymentManager,
                         customerAckOnlineMerchandiseManager,
-                        customerAckOfflineMerchandiseManager,
-                        cryptoCustomerActorManager);
+                        customerAckOfflineMerchandiseManager/*,
+                        cryptoCustomerActorManager*/);
             return walletManager;
 
         } catch (Exception e) {
