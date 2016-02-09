@@ -34,7 +34,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
@@ -106,8 +105,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
             whattodo();
-            Chat chat=chatSession.getSelectedChat();
-            if(chat.getChatId()!=null)
+       //     Chat chat=chatSession.getSelectedChat();
+            if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
                 setHasOptionsMenu(true);
         } catch (Exception e) {
             if (errorManager != null)
@@ -116,7 +115,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     }
 
-    void findvalues(Contact contact, Chat chat, String whatlist){ //With contact Id find chatid,pkremote,actortype
+    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
 
         try {
             if (contact != null){
@@ -129,16 +128,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     }
                 }
             }
-           /* for (int i=0; i<chatManager.getContacts().size();i++){
-                if(contactid.equals(chatManager.getContacts().get(i).getContactId())){
-                    remotepk=chatManager.getContacts().get(i).getRemoteActorPublicKey();
-                    remotepct=chatManager.getContacts().get(i).getRemoteActorType();
-                }
-            }*/
-            if (chat != null){
-                chatid= chat.getChatId();
-                //contactid=chatmanager.
-            }
+
         }catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch(Exception e){
@@ -150,15 +140,10 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     void whattodo(){
         try {
             if (appSession.getData("whocallme").equals("chatlist")) {
-                //con=(Contact)appSession.getData("contactid");
-                //contactid = con.getContactId();
-                Chat chat=chatSession.getSelectedChat();
-                findvalues(null, chat, "chatlist");//if I choose a chat, this will retrieve the chatid
+                findvalues((Contact)appSession.getData("contactid"));//if I choose a chat, this will retrieve the chatid
                 chatwascreate = true;
             } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
-                Contact con = chatSession.getSelectedContact();
-                contactid = con.getContactId();
-                findvalues(con, null, "contact");//if I choose a contact, this will search the chat previously created with this contact
+                findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
                 if (chatid != null) {//Here it is define if we need to create a new chat or just add the message to chat created previously
                     chatwascreate = true;
                 } else {
@@ -354,6 +339,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             con.setRemoteActorPublicKey("CONTACTTOUPDATE_DATA");
             con.setContactId(contactid);
             appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, con);
+            appSession.setData("chatid", chatid);
             changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
             return true;
         }

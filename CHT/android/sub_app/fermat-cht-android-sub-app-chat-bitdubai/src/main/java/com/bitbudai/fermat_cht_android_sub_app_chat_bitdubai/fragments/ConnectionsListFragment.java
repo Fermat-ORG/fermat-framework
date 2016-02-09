@@ -163,7 +163,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                         if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")){
                             UUID contactidnew = contactexist.getContactId();
                             contactexist=chatManager.getContactByContactId(contactid.get(position));
-                            Chat chat=chatSession.getSelectedChat();
+                            Chat chat=chatManager.getChatByChatId((UUID)appSession.getData("chatid"));
                             chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
                             chatManager.saveChat(chat);
                             Contact contactnew = new ContactImpl();
