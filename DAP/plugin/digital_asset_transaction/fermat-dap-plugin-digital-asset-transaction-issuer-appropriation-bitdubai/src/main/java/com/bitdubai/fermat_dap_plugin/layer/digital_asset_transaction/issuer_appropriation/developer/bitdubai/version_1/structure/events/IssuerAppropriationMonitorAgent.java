@@ -125,7 +125,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
             latch = new CountDownLatch(1);
 
             appropriationAgent = new AppropriationAgent();
-            Thread eventThread = new Thread(appropriationAgent);
+            Thread eventThread = new Thread(appropriationAgent, "Issuer Appropriation MonitorAgent");
             eventThread.start();
         } catch (Exception e) {
             throw new CantStartAgentException();
@@ -200,6 +200,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
+
         private void statusMonitoring(IssuerAppropriationDAO dao) throws Exception {
             for (AppropriationTransactionRecord record : dao.getUnsendedTransactions()) {
                 IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation(dao.getUnsendedTransactions().size() + " unsended transactions were found.");

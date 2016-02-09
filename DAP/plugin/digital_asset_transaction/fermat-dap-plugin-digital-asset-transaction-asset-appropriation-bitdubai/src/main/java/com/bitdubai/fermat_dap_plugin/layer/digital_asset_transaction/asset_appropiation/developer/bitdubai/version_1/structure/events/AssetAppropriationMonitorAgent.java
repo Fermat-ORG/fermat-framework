@@ -146,7 +146,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
             latch = new CountDownLatch(1);
 
             appropriationAgent = new AppropriationAgent();
-            Thread eventThread = new Thread(appropriationAgent);
+            Thread eventThread = new Thread(appropriationAgent, "Asset Appropriation MonitorAgent");
             eventThread.start();
         } catch (Exception e) {
             throw new CantStartAgentException();
