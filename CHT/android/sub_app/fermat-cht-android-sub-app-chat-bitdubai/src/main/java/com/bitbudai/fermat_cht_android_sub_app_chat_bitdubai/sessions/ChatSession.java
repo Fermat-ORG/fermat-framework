@@ -16,6 +16,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModuleManager,SubAppResourcesProviderManager> {
 
     public static final String CONTACT_DATA = "CONTACT_DATA";
+    public static final String CONTACTTOUPDATE_DATA = "CONTACTTOUPDATE_DATA";
     public static final String CONNECTION_DATA = "CONNECTION_DATA";
     public static final String CHAT_DATA = "CHAT_DATA";
     public static final String whocallme = "whocallme";
@@ -36,6 +37,11 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
     public Chat getSelectedChat() {
         Object data = getData(CHAT_DATA);
         return (data != null) ? (Chat) data : null;
+    }
+
+    public Contact getSelectedContactToUpdate() {
+        Object data = getData(CONTACTTOUPDATE_DATA);
+        return (data != null) ? (Contact) data : null;
     }
 
 }

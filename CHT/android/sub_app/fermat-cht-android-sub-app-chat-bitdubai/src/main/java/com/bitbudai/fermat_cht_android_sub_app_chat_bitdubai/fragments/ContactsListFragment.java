@@ -23,8 +23,13 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -119,10 +124,8 @@ public class ContactsListFragment extends AbstractFermatFragment {
             errorManager=appSession.getErrorManager();
         }catch (Exception e)
         {
-
             if(errorManager!=null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
-
         }
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
@@ -220,15 +223,43 @@ public class ContactsListFragment extends AbstractFermatFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try{
-                    appSession.setData("whocallme", "contact");
-                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
-                    changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+                    Contact contactexist= chatSession.getSelectedContactToUpdate();
+                    if(contactexist!=null) {
+                        if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")){
+                            UUID contactidnew = contactexist.getContactId();
+                            contactexist=chatManager.getContactByContactId(contactid.get(position));
+                            Chat chat=chatSession.getSelectedChat();
+                            chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
+                            chatManager.saveChat(chat);
+                            Contact contactnew = new ContactImpl();
+                            contactnew=chatManager.getContactByContactId(contactidnew);
+                            contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
+                            contactnew.setAlias(contactexist.getAlias());
+                            contactnew.setRemoteName(contactexist.getRemoteName());
+                            contactnew.setRemoteActorType(contactexist.getRemoteActorType());
+                            chatManager.saveContact(contactnew);
+                            chatManager.deleteContact(contactexist);
+                            appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, null);
+                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+                            appSession.setData("whocallme", "contact");
+                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
+                            changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+                        }
+                    }else {
+                        appSession.setData("whocallme", "contact");
+                        appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                        changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+                    }
+                }catch(CantSaveChatException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }catch(CantDeleteContactException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }catch(CantSaveContactException e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }catch(CantGetContactException e) {
-
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }catch (Exception e){
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
                 }
             }
         });

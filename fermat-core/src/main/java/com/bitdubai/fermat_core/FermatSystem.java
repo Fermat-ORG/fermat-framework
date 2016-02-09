@@ -24,8 +24,6 @@ import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
-
-
 import com.bitdubai.fermat_bnk_core.BNKPlatform;
 import com.bitdubai.fermat_cbp_core.CBPPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
@@ -168,6 +166,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(osaPlatform);
         else
             throw new CantRegisterPlatformException(osaPlatform.getPlatformReference().toString(), "Is not referenced like an OSA specific Platform.");
+
     }
 
     /**

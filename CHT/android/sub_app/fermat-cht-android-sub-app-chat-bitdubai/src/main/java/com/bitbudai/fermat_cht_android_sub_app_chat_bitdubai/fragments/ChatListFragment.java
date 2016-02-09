@@ -320,6 +320,7 @@ public class ChatListFragment extends AbstractFermatFragment{
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
         // Inflate the menu items
         inflater.inflate(R.menu.chat_list_menu, menu);
         // Locate the search item

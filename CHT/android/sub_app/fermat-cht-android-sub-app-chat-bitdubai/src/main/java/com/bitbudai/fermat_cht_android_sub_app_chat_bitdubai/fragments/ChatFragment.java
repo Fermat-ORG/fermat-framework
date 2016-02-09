@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,6 +23,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -35,6 +37,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageExce
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
@@ -92,8 +95,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private ChatAdapter adapter;
     public ArrayList<ChatMessage> chatHistory;
 
-
-
     public static ChatFragment newInstance() { return new ChatFragment(); }
 
     @Override
@@ -104,11 +105,15 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             moduleManager = chatSession.getModuleManager();
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
-            //whattodo();
+            whattodo();
+            Chat chat=chatSession.getSelectedChat();
+            if(chat.getChatId()!=null)
+                setHasOptionsMenu(true);
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
+
     }
 
     void findvalues(Contact contact, Chat chat, String whatlist){ //With contact Id find chatid,pkremote,actortype
@@ -138,9 +143,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch(Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
         }
-
     }
 
 
@@ -180,7 +183,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
                 inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
                 historialmensaje.add(inorout+"@#@#"+message);
-
             }
             }else{
                     Toast.makeText(getActivity(),"chatid null", Toast.LENGTH_SHORT).show();
@@ -227,7 +229,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 if (TextUtils.isEmpty(messageText)) {
                     return;
                 }
-                whattodo();
+                //whattodo();
                 try {
                     ChatImpl chat=new ChatImpl();
                     MessageImpl message=new MessageImpl();
@@ -341,6 +343,21 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
+        // Inflate the menu items
+        inflater.inflate(R.menu.chat_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_update_contact) {
+            Contact con = new ContactImpl();
+            con.setRemoteActorPublicKey("CONTACTTOUPDATE_DATA");
+            con.setContactId(contactid);
+            appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, con);
+            changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }
