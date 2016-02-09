@@ -248,7 +248,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
 
             blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
-
+            System.out.println("Network Type"+blockchainNetworkType);
             final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
 

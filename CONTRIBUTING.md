@@ -9,7 +9,7 @@ Fermat is a community driven open source project, so you are welcome to contribu
 ## Developers
 =======
 
-Just choose one of the possibilites we have thought in our [Contribution Program](https://github.com/bitDubai/contribution-program/blob/master/README.md) or contact us to propose your own [here](https://bitdubai.com/wp/#GETINVOLVED)
+Just choose one of the possibilities we have come up with in our [Contribution Program](https://github.com/bitDubai/contribution-program/blob/master/README.md) or contact us to propose your own [here](https://bitdubai.com/wp/#GETINVOLVED)
 
 If you have a Developer Team (or can easily gather one) you will probably like to get an assigned task in our development program to get the corresponding bounty. Please visit our [Bounty Program](https://github.com/bitDubai/bounty-program/blob/master/README.md). 
 
