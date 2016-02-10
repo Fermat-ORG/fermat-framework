@@ -26,6 +26,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
@@ -33,12 +38,27 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCre
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
+import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletCurrencyException;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
+import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletModuleManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -49,6 +69,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.Wallet
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.InputDialogCBP;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -76,14 +97,13 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     private CryptoBrokerWalletPreferenceSettings walletSettings;
 
     // Fermat Managers
-    private CryptoBrokerWalletManager walletManager;
+    CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
     private WalletsAdapter adapter;
     private RecyclerView recyclerView;
     private FermatTextView emptyView;
     private LinearLayout container;
 
-    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
     String walletPublicKey = "banking_wallet";
 
     public static WizardPageSetMerchandisesFragment newInstance() {
@@ -93,6 +113,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
 
         stockWallets = new ArrayList<>();
@@ -205,7 +226,9 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
         cryptoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showWalletsDialog(Platforms.CRYPTO_CURRENCY_PLATFORM);
+
+                    showWalletsDialog(Platforms.CRYPTO_CURRENCY_PLATFORM);
+
             }
         });
 
@@ -221,7 +244,15 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
         cashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showWalletsDialog(Platforms.CASH_PLATFORM);
+
+                if ( == false)
+                {
+                    InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
+                    inputDialogCBP.DialogType(2);
+                    inputDialogCBP.show();
+                }else {
+                    showWalletsDialog(Platforms.CASH_PLATFORM);
+                }
             }
         });
 
@@ -240,67 +271,45 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
     }
 
     private void showWalletsDialog(final Platforms platform) {
-        try {
-            List<InstalledWallet> installedWallets = walletManager.getInstallWallets();
-            List<InstalledWallet> filteredList = new ArrayList<>();
 
-            for (InstalledWallet wallet : installedWallets) {
-                if (wallet.getPlatform().equals(platform))
-                    filteredList.add(wallet);
-            }
+            try {
+                List<InstalledWallet> installedWallets = walletManager.getInstallWallets();
+                List<InstalledWallet> filteredList = new ArrayList<>();
 
-            final SimpleListDialogFragment<InstalledWallet> dialogFragment = new SimpleListDialogFragment<>();
-            dialogFragment.configure("Select a Wallet", filteredList);
-            dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<InstalledWallet>() {
-                @Override
-                public void onItemSelected(InstalledWallet selectedItem) {
-                    if (!platform.equals(Platforms.BANKING_PLATFORM) ) {
-                        if(Platforms.CRYPTO_BROKER_PLATFORM.getCode() != platform.getCode()) {
-                            try {
-                                walletPublicKey = "cash_wallet";
-                                if (walletManager.getCashCurrency(walletPublicKey) == null) {
-                                    InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
-                                    inputDialogCBP.DialogType(2);
-                                    inputDialogCBP.show();
-                                }
-                            } catch (CantGetCashMoneyWalletCurrencyException e) {
-                                Log.e(TAG, e.getMessage(), e);
-                                if (errorManager != null)
-                                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                            UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
-                            } catch (CantLoadCashMoneyWalletException e) {
-                                Log.e(TAG, e.getMessage(), e);
-                                if (errorManager != null)
-                                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                            UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
-                            }
-                        }
-                        if (!containWallet(selectedItem)) {
-                            stockWallets.add(selectedItem);
-                            adapter.changeDataSet(stockWallets);
-                            showOrHideNoSelectedWalletsView();
-                        }
+                for (InstalledWallet wallet : installedWallets) {
+                    if (wallet.getPlatform().equals(platform))
+                        filteredList.add(wallet);
 
-                    } else {
-                        showBankAccountsDialog(selectedItem);
-                    }
                 }
-            });
 
-            dialogFragment.show(getFragmentManager(), "WalletsDialog");
+                final SimpleListDialogFragment<InstalledWallet> dialogFragment = new SimpleListDialogFragment<>();
+                dialogFragment.configure("Select a Wallet", filteredList);
+                dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<InstalledWallet>() {
 
-        } catch (CantListWalletsException ex) {
-            Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onItemSelected(InstalledWallet selectedItem) {
+                        if (!platform.equals(Platforms.BANKING_PLATFORM)) {
+                            if (Platforms.CRYPTO_BROKER_PLATFORM.getCode() != platform.getCode()) {
 
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                        ex);
+                            }
+                            if (!containWallet(selectedItem)) {
+                                stockWallets.add(selectedItem);
+                                adapter.changeDataSet(stockWallets);
+                                showOrHideNoSelectedWalletsView();
+                            }
+                        } else {
+                            showBankAccountsDialog(selectedItem);
+                        }
+                    }
+                });
+
+                dialogFragment.show(getFragmentManager(), "WalletsDialog");
+
+            } catch (CantListWalletsException e) {
+                e.printStackTrace();
             }
         }
-    }
+
 
     private void verifyIfWalletConfigured() {
 
@@ -333,7 +342,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
         try {
             List<BankAccountNumber> accounts = walletManager.getAccounts("banking_wallet");
             if (!accounts.isEmpty()) {
-
                 SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
                 accountsDialog.configure("Select an Account", accounts);
                 accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
@@ -341,21 +349,10 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment
                     @Override
                     public void onItemSelected(BankAccountNumber selectedAccount) {
                         FiatCurrency currency = selectedAccount.getCurrencyType();
-                        if (currency == null) {
-                            InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
-                            inputDialogCBP.DialogType(1);
-                            inputDialogCBP.show();
-
-                        }
                         String account = selectedAccount.getAccount();
                         bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
                         bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
-                        if (!
-
-                                containWallet(selectedWallet)
-
-                                )
-
+                        if (!containWallet(selectedWallet))
                         {
                             stockWallets.add(selectedWallet);
                             adapter.changeDataSet(stockWallets);
