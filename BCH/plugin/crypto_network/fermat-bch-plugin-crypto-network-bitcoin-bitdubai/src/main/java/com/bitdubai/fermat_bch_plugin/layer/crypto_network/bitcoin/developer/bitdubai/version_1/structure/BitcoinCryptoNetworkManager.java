@@ -496,8 +496,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return
      */
     public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
-        Wallet wallet = getWallet(blockchainNetworkType, null);
-        return wallet.getTransactionsByTime();
+        return runningAgents.get(blockchainNetworkType).wallet.getTransactionsByTime();
     }
 
 
