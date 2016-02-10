@@ -1,6 +1,6 @@
 package unit.CryptoBrokerStockTransactionImpl;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerStockTransactionImpl;
 
 import org.junit.Test;
@@ -15,13 +15,13 @@ import static org.mockito.Mockito.when;
  * Created by José Vilchez on 21/01/16.
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GetCurrencyTypeTest {
+public class GetMoneyTypeTest {
 
     @Test
     public void getCurrencyType(){
         CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = mock(CryptoBrokerStockTransactionImpl.class);
-        when(cryptoBrokerStockTransaction.getCurrencyType()).thenReturn(CurrencyType.CRYPTO_MONEY);
-        assertThat(cryptoBrokerStockTransaction.getCurrencyType()).isNotNull();
+        when(cryptoBrokerStockTransaction.getMoneyType()).thenReturn(MoneyType.CRYPTO);
+        assertThat(cryptoBrokerStockTransaction.getMoneyType()).isNotNull();
     }
 
 }

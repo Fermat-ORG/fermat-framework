@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCreateCryptoBrokerWalletException;
@@ -100,19 +100,19 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
      * This method load the list CryptoBrokerStockTransaction
      *
      * @param merchandise
-     * @param currencyType
+     * @param moneyType
      * @param transactionType
      * @param balanceType
      * @return List<CryptoBrokerStockTransaction>
      * @throws CantGetCryptoBrokerStockTransactionException
      */
     @Override
-    public List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException {
+    public List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, MoneyType moneyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException {
 
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
-        return cryptoBrokerWalletDatabaseDao.getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, transactionType, balanceType);
+        return cryptoBrokerWalletDatabaseDao.getCryptoBrokerStockTransactionsByMerchandise(merchandise, moneyType, transactionType, balanceType);
     }
 
     /**
@@ -120,16 +120,16 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
      *
      * @param merchandise
      * @param fiatCurrency
-     * @param currencyType
+     * @param moneyType
      * @return FiatIndex
      * @throws CantGetCryptoBrokerMarketRateException
      */
     @Override
-    public FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException {
+    public FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, MoneyType moneyType) throws CantGetCryptoBrokerMarketRateException {
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
-        return cryptoBrokerWalletDatabaseDao.getMarketRate(merchandise, fiatCurrency, currencyType);
+        return cryptoBrokerWalletDatabaseDao.getMarketRate(merchandise, fiatCurrency, moneyType);
     }
 
     /**
