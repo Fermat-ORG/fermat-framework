@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.MyAssetsAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.filters.MyAssetsAdapterFilter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
@@ -74,6 +75,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     //UI
     private View noAssetsView;
     private SearchView searchView;
+    private boolean showNoBalance;
 
     public static UserMainActivityFragment newInstance() {
         return new UserMainActivityFragment();
@@ -205,7 +207,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
-                    ((MyAssetsAdapter) getAdapter()).getFilter().filter(s);
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter(s);
                 }
                 return false;
             }
@@ -222,6 +224,10 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
+            } else if (id == R.id.action_wallet_user_show_no_balance) {
+                showNoBalance = item.getTitle().equals(getResources().getString(R.string.dap_user_wallet_show_no_balance));
+                item.setTitle((showNoBalance) ? getResources().getString(R.string.dap_user_wallet_show_all) : getResources().getString(R.string.dap_user_wallet_show_no_balance));
+                ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter(searchView.getQuery());
             }
 
         } catch (Exception e) {

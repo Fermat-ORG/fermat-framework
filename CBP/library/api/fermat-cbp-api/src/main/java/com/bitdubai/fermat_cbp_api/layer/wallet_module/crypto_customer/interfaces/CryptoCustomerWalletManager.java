@@ -1,14 +1,18 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
@@ -22,6 +26,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
@@ -56,10 +61,16 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     /**
      * associate an Identity to this wallet
      *
-     * @param customerId the Crypto Customer ID who is going to be associated with this wallet
+     * @param customer        the Crypto Customer ID who is going to be associated with this wallet
+     * @param walletPublicKey the public key of the wallet to associate
      * @return true if the association was successful false otherwise
      */
-    boolean associateIdentity(String customerId);
+    boolean associateIdentity(ActorIdentity customer, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException;
+
+
+    boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetListCustomerIdentityWalletRelationshipException;
+
+    CryptoCustomerIdentity getAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetListCustomerIdentityWalletRelationshipException, CantGetAssociatedIdentity;
 
     /**
      * @return list of identities associated with this wallet
@@ -97,7 +108,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      *
      * @param customerPublicKey the crypto customer publicKey
      * @param brokerPublicKey   the crypto broker publicKey
-     * @param clauses    the initial and mandatory clauses to start a negotiation
+     * @param clauses           the initial and mandatory clauses to start a negotiation
      * @return true if the association was successful false otherwise
      */
     boolean startNegotiation(String customerPublicKey, String brokerPublicKey, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
@@ -119,6 +130,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException;
 
     CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException;
+
     /**
      * @param bankAccount
      * @throws CantCreateBankAccountPurchaseException
@@ -138,12 +150,10 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException;
 
     /**
-     *
      * @param negotiation
      * @throws CantCreateCustomerBrokerPurchaseNegotiationException
      */
     void createCustomerBrokerPurchaseNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException;
-
 
 
     CryptoCustomerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting() throws CantNewEmptyCryptoCustomerWalletAssociatedSettingException;
@@ -165,6 +175,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
 
     /**
      * This method returns the CustomerBrokerContractPurchase associated to a negotiationId
+     *
      * @param negotiationId
      * @return
      * @throws CantGetListCustomerBrokerContractPurchaseException
@@ -175,6 +186,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
 
     /**
      * This method returns the currency type from a contract
+     *
      * @param customerBrokerContractPurchase
      * @param contractDetailType
      * @return
@@ -187,12 +199,14 @@ public interface CryptoCustomerWalletManager extends WalletManager {
 
     /**
      * This method send a payment according the contract elements.
+     *
      * @param contractHash
      */
     void sendPayment(String contractHash) throws CantSendPaymentException;
 
     /**
      * This method execute a Customer Ack Merchandise Business Transaction
+     *
      * @param contractHash
      * @throws CantAckMerchandiseException
      */
@@ -200,6 +214,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
 
     /**
      * This method returns the ContractStatus by contractHash/Id
+     *
      * @param contractHash
      * @return
      */

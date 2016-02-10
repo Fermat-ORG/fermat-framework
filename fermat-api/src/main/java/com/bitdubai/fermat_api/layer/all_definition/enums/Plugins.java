@@ -279,6 +279,7 @@ public enum Plugins implements FermatPluginsEnum {
     NEGOTIATION_TRANSMISSION            ("NGTR"),
     OPEN_CONTRACT                       ("OPC"),
     TRANSACTION_TRANSMISSION            ("TRTX"),
+    MATCHING_ENGINE                     ("MAEN"),
     CLOSE_CONTRACT                      ("CLC"),
     CUSTOMER_ONLINE_PAYMENT             ("CONP"),
     CUSTOMER_OFFLINE_PAYMENT            ("COFP"),
@@ -428,6 +429,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
             case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
+            case "MAEN":    return MATCHING_ENGINE;
 
             case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;

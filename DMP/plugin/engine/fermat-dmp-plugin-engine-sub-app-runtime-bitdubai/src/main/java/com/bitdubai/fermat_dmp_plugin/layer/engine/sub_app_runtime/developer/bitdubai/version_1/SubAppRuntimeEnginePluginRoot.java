@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
@@ -140,6 +141,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         }
         //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
         return null;
+    }
+
+    @Override
+    public void recordNAvigationStructure(FermatStructure fermatStructure) {
+        System.out.println("falta hacer esto");
     }
 
 
@@ -1811,7 +1817,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#1189a5");
-        runtimeTitleBar.setIconName("Back");
+        //runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -2214,6 +2220,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
         Fragment runtimeFragment;
+        final int titleBarLabelSize = 20;
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_DEVELOPER_APP);
@@ -2233,6 +2240,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Developer");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#ffffff");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#d07b62");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
 //        runtimeTabStrip = new TabStrip();
@@ -2270,16 +2281,16 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
         runtimeActivity.setColor("#b46a54");
 
-        statusBar = new StatusBar();
-        statusBar.setColor("#d07b62");
-        runtimeActivity.setStatusBar(statusBar);
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Developer > Databases");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#ffffff");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#d07b62");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
         runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Developer");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
@@ -2294,16 +2305,20 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
         runtimeActivity.setColor("#b46a54");
 
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Developer > Tables");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#ffffff");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#d07b62");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         statusBar = new StatusBar();
         statusBar.setColor("#d07b62");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
         runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Developer");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
@@ -2317,16 +2332,20 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setBackPublicKey(runtimeSubApp.getPublicKey());
         runtimeActivity.setColor("#b46a54");
 
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Developer > Records");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#ffffff");
+//        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#d07b62");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         statusBar = new StatusBar();
         statusBar.setColor("#d07b62");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
         runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST);
-
-        runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Developer");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());

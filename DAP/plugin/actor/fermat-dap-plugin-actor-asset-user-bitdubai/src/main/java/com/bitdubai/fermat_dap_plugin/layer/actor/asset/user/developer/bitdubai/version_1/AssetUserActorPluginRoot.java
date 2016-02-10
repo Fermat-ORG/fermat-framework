@@ -286,19 +286,31 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         return list;
     }
 
+    @Override
+    public List<ActorAssetUser> getAllAssetUserActorInTableRegistered(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException {
+        List<ActorAssetUser> list;
+        try {
+            list = this.assetUserActorDao.getAllAssetUserActorRegistered(blockchainNetworkType);
+        } catch (CantGetAssetUsersListException e) {
+            throw new CantGetAssetUserActorsException("CAN'T GET ASSET USER REGISTERED ACTOR", e, "", "");
+        }
+
+        return list;
+    }
+
     /**
      * Method getAllAssetUserActorConnected usado para obtener la lista de ActorAssetUser
      * que tienen CryptoAddress en table REGISTERED
      * y ser usados en Wallet Issuer para poder enviarles BTC del Asset
      *
      * @return List<ActorAssetUser> with CryptoAddress
-     * @see #getAllAssetUserActorConnected();
+     * @see #getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType);
      */
     @Override
-    public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException {
+    public List<ActorAssetUser> getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException {
         List<ActorAssetUser> list; // Asset User Actor list.
         try {
-            list = this.assetUserActorDao.getAllAssetUserActorConnected();
+            list = this.assetUserActorDao.getAllAssetUserActorConnected(blockchainNetworkType);
         } catch (CantGetAssetUsersListException e) {
             throw new CantGetAssetUserActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
         }
@@ -415,9 +427,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException {
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUserActorsException {
         try {
-            return this.assetUserActorDao.getListActorAssetUserByGroups(groupName);
+            return this.assetUserActorDao.getListActorAssetUserByGroups(groupId);
         } catch (CantGetAssetUsersListException ex) {
             throw new CantGetAssetUserActorsException("You can not get users by group", ex, "Error", "");
         }
@@ -515,7 +527,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
                 this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(request.getIdentityPublicKeyResponding(), DAPConnectionState.CONNECTED_ONLINE, request.getCryptoAddress(), request.getBlockchainNetworkType());
 
-                List<ActorAssetUser> actorAssetUser = this.assetUserActorDao.getAssetUserRegistered(request.getIdentityPublicKeyResponding());
+                List<ActorAssetUser> actorAssetUser = this.assetUserActorDao.getAssetUserRegistered(request.getIdentityPublicKeyResponding(), request.getBlockchainNetworkType());
 
                 if (!actorAssetUser.isEmpty()) {
                     for (ActorAssetUser actorAssetUser1 : actorAssetUser) {
@@ -524,6 +536,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         if (actorAssetUser1.getCryptoAddress() != null) {
                             System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getAddress());
                             System.out.println("Actor Asset User: " + actorAssetUser1.getCryptoAddress().getCryptoCurrency());
+                            System.out.println("Actor Asset User: " + actorAssetUser1.getBlockchainNetworkType());
                             System.out.println("Actor Asset User: " + actorAssetUser1.getDapConnectionState());
                         } else {
                             System.out.println("Actor Asset User FALLO Recepcion CryptoAddress para User: " + actorAssetUser1.getName());

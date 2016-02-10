@@ -102,6 +102,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
 
         //this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
+        this.status = AgentStatus.STARTED;
     }
 
     @Override
