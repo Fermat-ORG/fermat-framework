@@ -898,17 +898,17 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
             throw new CantSendPaymentException(
                     e,
-                    "Cannot send the payment",
+                    "Sending the payment",
                     "Cannot get the contract");
         } catch (CantGetListPurchaseNegotiationsException e) {
             throw new CantSendPaymentException(
                     e,
-                    "Cannot send the payment",
+                    "Sending the payment",
                     "Cannot get the negotiation list");
         } catch (CantGetListClauseException e) {
             throw new CantSendPaymentException(
                     e,
-                    "Cannot send the payment",
+                    "Sending the payment",
                     "Cannot get the clauses list");
         }
 

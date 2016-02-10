@@ -20,6 +20,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAcc
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
@@ -520,4 +524,19 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      */
     ContractStatus getContractStatus(String contractHash) throws
             CantGetListCustomerBrokerContractSaleException;
+
+    /**
+     * This method send a merchandise according the contract elements.
+     *
+     * @param contractHash
+     */
+    void submitMerchandise(String contractHash) throws CantSubmitMerchandiseException;
+
+    /**
+     * This method execute a Broker Ack payment Business Transaction
+     *
+     * @param contractHash
+     * @throws CantAckPaymentException
+     */
+    ContractStatus ackPayment(String contractHash) throws CantAckPaymentException;
 }
