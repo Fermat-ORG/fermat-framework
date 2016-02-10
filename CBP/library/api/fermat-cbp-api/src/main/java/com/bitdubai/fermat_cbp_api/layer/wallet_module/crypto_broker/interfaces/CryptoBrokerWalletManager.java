@@ -407,6 +407,14 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
     /**
+     * This method load the instance saveCryptoBrokerWalletSpreadSetting
+     * @param
+     * @return CryptoBrokerWalletSettingSpread
+     * @exception CantSaveCryptoBrokerWalletSettingException
+     */
+    CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
+
+    /**
      * Returns an exchange rate of a given date, for a specific currencyPair
      *
      * @return an exchangeRate object
@@ -477,6 +485,12 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @return A BigDecimal, containing the balance.
      */
     BigDecimal getBalanceCashWallet(String walletPublicKey) throws CantGetCashMoneyWalletBalanceException, CantLoadCashMoneyWalletException;
+
+    /**
+     * Checks if wallet exists in wallet database
+     *
+     */
+    boolean cashMoneyWalletExists(String walletPublicKey);
 
     /**
      * Returns the Balance this BitcoinWalletBalance belongs to. (Can be available or book)
