@@ -1,6 +1,7 @@
-package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -20,6 +21,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
@@ -68,6 +71,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     {
         createdWallets = new ArrayList<>();
     }
+
     private AssetIssuerWalletDao assetIssuerWalletDao;
     private ErrorManager errorManager;
 
@@ -337,6 +341,16 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     @Override
+    public void newMovement(DAPActor actorFrom, DAPActor actorTo, UUID metadataId) throws CantSaveStatisticException {
+        String fromPk = actorFrom.getActorPublicKey();
+        Actors fromType = ActorUtils.getActorType(actorFrom);
+        String toPk = actorTo.getActorPublicKey();
+        Actors toType = ActorUtils.getActorType(actorTo);
+        assetIssuerWalletDao.newMovement(metadataId, fromPk, fromType, toPk, toType);
+    }
+
+
+    @Override
     public void assetDistributed(UUID transactionId, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException {
         assetIssuerWalletDao.assetDistributed(transactionId, actorAssetUserPublicKey);
     }
@@ -419,6 +433,13 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
                 }
             }
         }
+        try {
+            assetStatistic.setAssetMovements(assetIssuerWalletDao.getAllMovementsForMetadataId(transactionId));
+        } catch (CantGetAssetStatisticException e) {
+            e.printStackTrace();
+            //If this happen it means we couldn't get the movement list. So we'll keep it as an empty list.
+        }
+
         return assetStatistic;
     }
 }

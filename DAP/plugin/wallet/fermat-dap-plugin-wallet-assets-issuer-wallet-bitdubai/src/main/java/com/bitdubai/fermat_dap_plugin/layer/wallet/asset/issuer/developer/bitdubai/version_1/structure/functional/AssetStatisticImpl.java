@@ -1,12 +1,15 @@
-package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional;
 
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetMovement;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -49,12 +52,18 @@ public class AssetStatisticImpl implements AssetStatistic {
     }
 
     private ActorAssetUser owner;
+
+    private List<AssetMovement> assetMovements;
+
+    {
+        assetMovements = new ArrayList<>();
+    }
     //CONSTRUCTORS
 
     public AssetStatisticImpl() {
     }
 
-    public AssetStatisticImpl(UUID transactionId, String genesisTransaction, String assetPublicKey, AssetCurrentStatus status, Date distributionDate, Date usageDate, ActorAssetRedeemPoint redeemPoint, String assetName, ActorAssetUser owner) {
+    public AssetStatisticImpl(UUID transactionId, String genesisTransaction, String assetPublicKey, AssetCurrentStatus status, Date distributionDate, Date usageDate, ActorAssetRedeemPoint redeemPoint, String assetName, ActorAssetUser owner, List<AssetMovement> assetMovements) {
         this.transactionId = transactionId;
         this.genesisTransaction = genesisTransaction;
         this.assetPublicKey = assetPublicKey;
@@ -64,6 +73,7 @@ public class AssetStatisticImpl implements AssetStatistic {
         this.redeemPoint = redeemPoint;
         this.assetName = assetName;
         this.owner = owner;
+        this.assetMovements = assetMovements;
     }
 
     //PUBLIC METHODS
@@ -79,7 +89,7 @@ public class AssetStatisticImpl implements AssetStatistic {
      */
     @Override
     public UUID transactionId() {
-        return null;
+        return transactionId;
     }
 
     /**
@@ -172,6 +182,18 @@ public class AssetStatisticImpl implements AssetStatistic {
         return assetName;
     }
 
+    /**
+     * This method retrieves the list of the movements made for this asset, the actor whom send it
+     * and the actor who receives it. And probably most information will be added soon.
+     *
+     * @return {@link List <AssetMovement>} instance.
+     */
+    @Override
+    public List<AssetMovement> movementHistory() {
+        return assetMovements;
+    }
+
+
     public void setOwner(ActorAssetUser owner) {
         this.owner = owner;
     }
@@ -206,6 +228,10 @@ public class AssetStatisticImpl implements AssetStatistic {
 
     public void setGenesisTransaction(String genesisTransaction) {
         this.genesisTransaction = genesisTransaction;
+    }
+
+    public void setAssetMovements(List<AssetMovement> assetMovements) {
+        this.assetMovements = assetMovements;
     }
 
     //INNER CLASSES
