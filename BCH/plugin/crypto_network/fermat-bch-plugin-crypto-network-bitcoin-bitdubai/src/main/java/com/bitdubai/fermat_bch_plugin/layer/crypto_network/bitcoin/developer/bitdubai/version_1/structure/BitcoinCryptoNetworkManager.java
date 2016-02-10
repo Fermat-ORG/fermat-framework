@@ -500,30 +500,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         return wallet.getTransactionsByTime();
     }
 
-    public synchronized List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
-        Wallet wallet = getWallet(blockchainNetworkType, null);
-        List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(WalletTransaction.Pool.UNSPENT).values());
-        return transactions;
-    }
-
-    /**
-     * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
-     * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
-     *
-     * @param txHash    the Hash of the transaction we are going to look for.
-     * @param blockHash the Hash of block where this transaction was stored..
-     * @return a CryptoTransaction with the information of the transaction.
-     * @throws CantGetCryptoTransactionException
-     */
-
-    public CryptoTransaction getCryptoTransactionFromBlockChain(BlockchainNetworkType blockchainNetworkType, String txHash, String blockHash) throws CantGetCryptoTransactionException {
-        try {
-            Transaction transaction = this.getTransactionFromBlockChain(blockchainNetworkType, txHash, blockHash);
-            return CryptoTransaction.getCryptoTransaction(blockchainNetworkType, transaction);
-        } catch (CantGetTransactionsException e) {
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "Couldn't get the bitcoin transaction from blockchain", null);
-        }
-    }
 
     /**
      * Gets the transaction passed in the network.
