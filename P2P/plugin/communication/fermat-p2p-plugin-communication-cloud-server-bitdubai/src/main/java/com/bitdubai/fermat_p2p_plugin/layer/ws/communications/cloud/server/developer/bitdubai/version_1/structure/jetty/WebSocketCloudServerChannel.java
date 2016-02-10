@@ -57,6 +57,13 @@ public class WebSocketCloudServerChannel {
      */
     private ClientConnection activeClientConnection;
 
+    /*
+     * We use messageComplete to handle the packets that are sent in parts
+     * we set the messageComplete to empty because
+      * if we do with null the messageComplete after will concat like a word and show exception in its handle
+     */
+    private String messageComplete = "";
+
     /**
      * Constructor
      */
@@ -143,44 +150,69 @@ public class WebSocketCloudServerChannel {
     }
 
     @OnMessage
-    public void onWebSocketText(String fermatPacketEncode)
+    public void onWebSocketText(String fermatPacketEncode, boolean lastPacket, Session session)
     {
-        LOG.info(" --------------------------------------------------------------------- ");
-        LOG.info("Starting method onWebSocketText");
+
+        /*
+         *  if fermatPacketEncode is the las Packet then
+         *  the messageComplete concats the string and handle packet correctly
+         */
+        if(lastPacket) {
+
+            messageComplete = messageComplete + fermatPacketEncode;
+
+            LOG.info(" --------------------------------------------------------------------- ");
+            LOG.info("Starting method onWebSocketText");
 
         /*
          * Get the server identity for this client connection
          */
-        ECCKeyPair serverIdentity = activeClientConnection.getServerIdentity();
+            ECCKeyPair serverIdentity = activeClientConnection.getServerIdentity();
 
         /*
          * Decode the fermatPacketEncode into a fermatPacket
          */
-        FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(fermatPacketEncode, serverIdentity.getPrivateKey());
+            FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(messageComplete, serverIdentity.getPrivateKey());
 
 
-        LOG.info("fermatPacket.getFermatPacketType() = " + fermatPacketReceive.getFermatPacketType());
+            LOG.info("fermatPacket.getFermatPacketType() = " + fermatPacketReceive.getFermatPacketType());
 
 
-        //verify is packet supported
-        if (MemoryCache.getInstance().getPacketProcessorsRegister().containsKey(fermatPacketReceive.getFermatPacketType())){
+            //verify is packet supported
+            if (MemoryCache.getInstance().getPacketProcessorsRegister().containsKey(fermatPacketReceive.getFermatPacketType())) {
 
 
             /*
              * Call the processors for this packet
              */
-            for (FermatJettyPacketProcessor fermatPacketProcessor : MemoryCache.getInstance().getPacketProcessorsRegister().get(fermatPacketReceive.getFermatPacketType())) {
+                for (FermatJettyPacketProcessor fermatPacketProcessor : MemoryCache.getInstance().getPacketProcessorsRegister().get(fermatPacketReceive.getFermatPacketType())) {
 
                 /*
                  * Processor make his job
                  */
-                fermatPacketProcessor.processingPackage(activeClientConnection, fermatPacketReceive);
+                    fermatPacketProcessor.processingPackage(activeClientConnection, fermatPacketReceive);
+                }
+
+
+            } else {
+                LOG.info("Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
             }
 
+            /*
+             * we set the messageComplete to empty because if we do with null the messageComplete after will concat like a word
+             * and show exception in its handle
+             */
+            messageComplete = "";
 
-        } else {
-            LOG.info("Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
+        }else{
+
+            /*
+             * the messageComplete concats the string
+             */
+            messageComplete = messageComplete + fermatPacketEncode;
+
         }
+
     }
 
     @OnMessage
