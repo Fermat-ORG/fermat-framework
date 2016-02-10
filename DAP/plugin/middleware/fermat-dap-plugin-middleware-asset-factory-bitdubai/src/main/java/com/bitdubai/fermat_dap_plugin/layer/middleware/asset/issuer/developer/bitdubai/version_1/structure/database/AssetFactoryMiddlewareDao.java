@@ -114,7 +114,11 @@ public class AssetFactoryMiddlewareDao {
         record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_LAST_UPDATE_TIME_COLUMN, assetFactory.getLastModificationTimestamp().toString());
         record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_BEHAVIOR_COLUMN, assetFactory.getAssetBehavior().getCode());
         record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_WALLET_PUBLIC_KEY, assetFactory.getWalletPublicKey());
-        record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE, assetFactory.getNetworkType().getCode());
+
+        if (assetFactory.getNetworkType() == null)
+            record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE, BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode());
+        else
+            record.setStringValue(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE, assetFactory.getNetworkType().getCode());
 
         return record;
     }

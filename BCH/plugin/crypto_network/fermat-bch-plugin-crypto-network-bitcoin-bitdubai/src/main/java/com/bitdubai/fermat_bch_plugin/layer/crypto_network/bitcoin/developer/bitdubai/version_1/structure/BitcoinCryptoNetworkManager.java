@@ -572,7 +572,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
              */
             for (TransactionInput input : transaction.getInputs()) {
                 if (input.getOutpoint().getHash().toString().contentEquals(parentHash))
-                    cryptoTransaction = CryptoTransaction.getCryptoTransaction(transaction);
+                    cryptoTransaction = CryptoTransaction.getCryptoTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(),transaction);
             }
         }
 
@@ -821,7 +821,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
         try {
-            CryptoTransaction cryptoTransaction = CryptoTransaction.getCryptoTransaction(this.getGenesisTransaction(blockchainNetworkType, transactionChain));
+            if (blockchainNetworkType == null)
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            CryptoTransaction cryptoTransaction = CryptoTransaction.getCryptoTransaction(blockchainNetworkType, this.getGenesisTransaction(blockchainNetworkType, transactionChain));
             return cryptoTransaction;
         } catch (CantGetTransactionException e) {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, null, null);
@@ -952,8 +954,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
     public List<CryptoTransaction> getChildTransactionsFromParent(String parentTransactionHash) throws CantGetCryptoTransactionException {
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
         try {
-            for (Transaction transaction : getChildBitcoinTransactionsFromParent(parentTransactionHash)){
-                cryptoTransactions.add(CryptoTransaction.getCryptoTransaction(transaction));
+            for (Map.Entry<Transaction, BlockchainNetworkType> entry : getChildBitcoinTransactionsFromParent(parentTransactionHash).entrySet()){
+                cryptoTransactions.add(CryptoTransaction.getCryptoTransaction(entry.getValue(), entry.getKey()));
             }
         } catch (CantGetTransactionException e) {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "error getting list of Bitcoin Transactions", null);
@@ -971,21 +973,27 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return the list of Bitcoin Transactions that are a direct child of the parent.
      * @throws CantGetCryptoTransactionException
      */
-    private List<Transaction> getChildBitcoinTransactionsFromParent(String parentTransactionHash) throws CantGetTransactionException{
-        List<Transaction> transactions = new ArrayList<>();
+    private Map<Transaction, BlockchainNetworkType> getChildBitcoinTransactionsFromParent(String parentTransactionHash) throws CantGetTransactionException{
+        Map<Transaction,BlockchainNetworkType> transactions = new HashMap<>();
 
         Sha256Hash txHash = Sha256Hash.wrap(parentTransactionHash);
         /**
-         * I will get all the stored transactions
+         * I will get all the stored transactions on all active networks
          */
-        for (Transaction transaction : this.getBitcoinTransactions(BlockchainNetworkType.getDefaultBlockchainNetworkType())){
-            /**
-             * for each transaction I will search in the input the outpoint that matches the passed transactionHash
-             */
-            for (TransactionInput input : transaction.getInputs()){
-                if (input.getOutpoint().getHash().equals(txHash))
-                    transactions.add(transaction);
+        try {
+            for (BlockchainNetworkType blockchainNetworkType : this.getDao().getActiveBlockchainNetworkTypes()){
+                for (Transaction transaction : this.getBitcoinTransactions(blockchainNetworkType)){
+                    /**
+                     * for each transaction I will search in the input the outpoint that matches the passed transactionHash
+                     */
+                    for (TransactionInput input : transaction.getInputs()){
+                        if (input.getOutpoint().getHash().equals(txHash))
+                            transactions.put(transaction, blockchainNetworkType);
+                    }
+                }
             }
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
         }
         /**
          * I'm not removing duplicates

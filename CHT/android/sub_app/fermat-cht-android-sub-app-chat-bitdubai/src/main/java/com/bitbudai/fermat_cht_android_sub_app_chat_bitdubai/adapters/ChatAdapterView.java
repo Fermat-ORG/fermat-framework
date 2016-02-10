@@ -15,11 +15,15 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.MessageType;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -252,7 +256,6 @@ public class ChatAdapterView extends LinearLayout {
             }
             chatView.loadDummyHistory(loadDummyData);
 
-//            chatView.initControls();
 
             return chatView;
         }
@@ -263,29 +266,30 @@ public class ChatAdapterView extends LinearLayout {
 // extends ArrayAdapter {
 //    ArrayList<String> datos=new ArrayList<String>();
 //
-//    public ChatAdapterView(Context context,ArrayList datos) {
-//        super(context, R.layout.listviewme, datos);
-//        this.datos=datos;
-//    }
+//public ChatAdapterView(Context context,ArrayList datos) {
+//    super(context, R.layout.listviewme, datos);
+//    this.datos=datos;
 //
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//        LayoutInflater inflater = LayoutInflater.from(getContext());
-//        View item = inflater.inflate(R.layout.listviewme, null);
+//}
 //
-//        if(!datos.isEmpty()) {
-//            if (datos.get(position).split("@#@#")[0].equals("OUTGOING")) {
-//                item = inflater.inflate(R.layout.listviewme, null);
-//                TextView lblTitulo = (TextView) item.findViewById(R.id.LblTitulo);
-//     //           TextView lblSubtitulo = (TextView) item.findViewById(R.id.LblSubTitulo);
-//                System.out.println("*************DATALEFT:" + Arrays.toString(datos.toArray()));
-//                System.out.println("*************PositionLEFT:" + position);
+//            public View getView(int position, View convertView, ViewGroup parent) {
+//                LayoutInflater inflater = LayoutInflater.from(getContext());
+//                View item = inflater.inflate(R.layout.listviewme, null);
 //
-//                try {
+//                if(!datos.isEmpty()) {
+//                    if (datos.get(position).split("@#@#")[0].equals("OUTGOING")) {
+//                        item = inflater.inflate(R.layout.listviewme, null);
+//                        TextView lblTitulo = (TextView) item.findViewById(R.id.LblTitulo);
+//                        //           TextView lblSubtitulo = (TextView) item.findViewById(R.id.LblSubTitulo);
+//                        System.out.println("*************DATALEFT:" + Arrays.toString(datos.toArray()));
+//                        System.out.println("*************PositionLEFT:" + position);
 //
-//                    lblTitulo.setText(datos.get(position).split("@#@#")[1]);
+//                        try {
 //
-//                } catch (NullPointerException e) {
-//                    System.out.print("Null on position:" + position);
+//                            lblTitulo.setText(datos.get(position).split("@#@#")[1]);
+//
+//                        } catch (NullPointerException e) {
+//                            System.out.print("Null on position:" + position);
 //                }
 //            } else {
 //                item = inflater.inflate(R.layout.listviewyou, null);
@@ -294,16 +298,17 @@ public class ChatAdapterView extends LinearLayout {
 //                System.out.println("*************DATARIGHT:" + Arrays.toString(datos.toArray()));
 //                System.out.println("*************PositionRIGHT:" + position);
 //
-//                try {
+//        try {
 //
-//                    lblTitulo.setText(datos.get(position).split("@#@#")[1]);
+//        lblTitulo.setText(datos.get(position).split("@#@#")[1]);
 //
-//                } catch (NullPointerException e) {
-//                    System.out.print("Null on position:" + position);
-//                }
-//            }
+//        } catch (NullPointerException e) {
+//        System.out.print("Null on position:" + position);
+//        }
+//        }
 //        }
 //        return(item);
+
 //    }
 //
 //    public void refreshEvents(ArrayList<String> datos) {
