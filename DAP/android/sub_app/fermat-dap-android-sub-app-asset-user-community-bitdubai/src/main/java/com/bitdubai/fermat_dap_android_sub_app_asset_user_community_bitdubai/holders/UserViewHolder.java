@@ -17,7 +17,7 @@ public class UserViewHolder extends FermatViewHolder {
     public SquareImageView thumbnail;
     public FermatTextView name;
     public FermatTextView status;
-    public FermatTextView crypto;
+    //public FermatTextView crypto;
 
     /**
      * Constructor
@@ -31,7 +31,7 @@ public class UserViewHolder extends FermatViewHolder {
         connect = (CheckBox) itemView.findViewById(R.id.connect);
 
         status = (FermatTextView) itemView.findViewById(R.id.status);
-        crypto = (FermatTextView) itemView.findViewById(R.id.crypto);
+        //crypto = (FermatTextView) itemView.findViewById(R.id.crypto);
 
     }
 }
