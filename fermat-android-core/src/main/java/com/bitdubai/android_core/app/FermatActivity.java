@@ -1578,7 +1578,9 @@ public abstract class FermatActivity extends AppCompatActivity
 //        stopService(intent);
 
         //navigationDrawerFragment.onDetach();
-        appStatusListener.clear();
+        if(appStatusListener != null)
+             appStatusListener.clear();
+
         resetThisActivity();
         super.onDestroy();
     }
