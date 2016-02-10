@@ -53,7 +53,8 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Home Fragment
+ * UserCommuinityGroupUsersFragment, Show all the users in the selected group
+ *
  */
 public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -348,7 +349,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
 
-        resultAux = manager.getListActorAssetUserByGroups(group.getGroupName());
+        resultAux = manager.getListActorAssetUserByGroups(group.getGroupId());
 
 
         if (resultAux != null && resultAux.size() > 0) {
