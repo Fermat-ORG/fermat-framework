@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -557,8 +558,27 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public boolean isWalletConfigured(String customerWalletPublicKey) {
-        return false;
+    public boolean isWalletConfigured(String customerWalletPublicKey){
+
+        boolean isInstall = true;
+        CryptoCustomerWalletAssociatedSettingImpl cryptoCustomerWalletAssociatedSetting = new CryptoCustomerWalletAssociatedSettingImpl();
+
+        PluginTextFile pluginTextFile = null;
+        try {
+            pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, customerWalletPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String content = pluginTextFile.getContent();
+            cryptoCustomerWalletAssociatedSetting =  (CryptoCustomerWalletAssociatedSettingImpl) XMLParser.parseXML(content, cryptoCustomerWalletAssociatedSetting);
+            System.out.print(cryptoCustomerWalletAssociatedSetting);
+//            if (cryptoCustomerWalletAssociatedSetting == null)
+//                isInstall = false;
+
+        } catch (CantCreateFileException e) {
+            isInstall = false;
+        } catch (FileNotFoundException e) {
+            isInstall = false;
+        }
+
+        return isInstall;
     }
 
     @Override
@@ -716,13 +736,14 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException, CantCreateFileException, CantPersistFileException {
-        String settingFilename = customerWalletpublicKey;
+    public void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletPublicKey) throws CantSaveCryptoCustomerWalletSettingException, CantCreateFileException, CantPersistFileException {
+        String settingFilename = customerWalletPublicKey;
         PluginTextFile pluginTextFile = null;//pluginFileSystem.createTextFile(pluginId, PATH_DIRECTORY, customerWalletpublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         String toXml = XMLParser.parseObject(setting);
         pluginTextFile = pluginFileSystem.createTextFile(pluginId, PATH_DIRECTORY, settingFilename, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         pluginTextFile.setContent(toXml);
         pluginTextFile.persistToMedia();
+        System.out.print(toXml);
     }
 
     /**
