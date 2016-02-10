@@ -54,6 +54,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         try {
             context = (WizardConfiguration) getActivity();
             viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
