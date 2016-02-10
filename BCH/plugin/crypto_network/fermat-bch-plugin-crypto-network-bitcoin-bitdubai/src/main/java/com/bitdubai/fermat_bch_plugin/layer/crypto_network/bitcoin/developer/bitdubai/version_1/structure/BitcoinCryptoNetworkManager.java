@@ -40,6 +40,7 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.core.WalletExtension;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.WalletTransaction;
 
@@ -282,7 +283,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      *
      * @return
      */
-    private synchronized Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList) {
+    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList) {
         Wallet wallet = null;
         String fileName = WALLET_FILENAME + blockchainNetworkType.getCode();
         walletFile = new File(fileName);
@@ -303,7 +304,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             /**
              * Will set the autosave information and save it.
              */
-            wallet.autosaveToFile(walletFile, 1, TimeUnit.NANOSECONDS, null);
+            wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
             try {
                 wallet.saveToFile(walletFile);
             } catch (IOException e1) {
