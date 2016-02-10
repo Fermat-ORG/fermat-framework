@@ -42,10 +42,10 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
         try {
             if (data.getCryptoAddress() != null) {
                 holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: YES");
+
             } else {
                 holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: NO");
+
             }
 
             if (data.getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {
@@ -61,7 +61,7 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
             }
 
             holder.connect.setChecked(data.selected);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.connect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dataSet.get(position).selected = !dataSet.get(position).selected;
@@ -70,6 +70,18 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
                         adapterChangeListener.onDataSetChanged(dataSet);
                 }
             });
+            /*
+            This is for clicking all the box. I want,
+            for now, only the check, So when I click, I can display de user profile
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dataSet.get(position).selected = !dataSet.get(position).selected;
+                    notifyItemChanged(position);
+                    if (adapterChangeListener != null)
+                        adapterChangeListener.onDataSetChanged(dataSet);
+                }
+            });*/
 
             byte[] profileImage = data.getProfileImage();
 
