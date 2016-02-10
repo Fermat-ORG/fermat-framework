@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.crypto_customer_identity.fragments;
 
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.SearchView;
 
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -71,6 +74,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+
         if (getActivity().getActionBar() != null) {
             getActivity().getActionBar().setDisplayShowHomeEnabled(false);
         }
@@ -89,6 +93,8 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
                 .build();
 
         presentationDialog.show();
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override
