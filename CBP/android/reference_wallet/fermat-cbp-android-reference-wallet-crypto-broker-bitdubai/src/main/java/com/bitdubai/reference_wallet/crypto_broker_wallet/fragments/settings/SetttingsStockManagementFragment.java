@@ -93,7 +93,6 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             System.out.println("associatedSettings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             associatedSettings = walletManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
             System.out.println("associatedSettings ["+ associatedSettings.size()+"]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-
         } catch (FermatException ex) {
             Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
