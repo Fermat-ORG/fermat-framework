@@ -1338,6 +1338,16 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     /**
+     * Checks if wallet exists in wallet database
+     *
+     * @param walletPublicKey
+     */
+    @Override
+    public boolean cashMoneyWalletExists(String walletPublicKey) {
+        return cashMoneyWalletManager.cashMoneyWalletExists(walletPublicKey);
+    }
+
+    /**
      * Returns the Balance this BitcoinWalletBalance belongs to. (Can be available or book)
      *
      * @return A BigDecimal, containing the balance.
