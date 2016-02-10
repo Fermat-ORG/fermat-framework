@@ -42,9 +42,11 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
         try {
             if (data.getCryptoAddress() != null) {
                 holder.name.setText(String.format("%s", data.getName()));
+                holder.crypto.setText("CryptoAddress: YES");
 
             } else {
                 holder.name.setText(String.format("%s", data.getName()));
+                holder.crypto.setText("CryptoAddress: NO");
 
             }
 
