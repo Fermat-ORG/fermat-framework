@@ -83,11 +83,11 @@ It must be able to run in major operating systems.
 
 It must be open to anyone in the community to participate developing the system or using it as end users or business operators.
 
-## Part II: System properties in more details
+### System Properties
 
 We designed Fermat to hold all these eight properties at the same time, what originated certain designing constraints we are going to examine now.
 
-### Censorship Resistance
+#### Censorship Resistance
 
 Bitcoin is a clear example of a censorship resistant system because of its key properties:
 
@@ -104,7 +104,7 @@ Fermat extend these properties up to the stack to inherit the censorship resista
 By being Fermat censorship resistant itself, all Fermat APPs built on top of it will inherit this property and they will be shielded in hostile jurisdictions enabling each of them to reach mass adoption even in places where their competition to local currencies or business is not welcomed. 
 
  
-### All Use Cases
+#### All Use Cases
 
 Nobody knows which use case will bring mass adoption and certainly nobody can guarantee that the single one use case they are working on is going to achieve it. The only way to guarantee that mass adoption is reached (or accept it is not possible) is to implement all possible use cases. But in this industry all possible use cases have not even been imagined yet. This means that we need to think about an open ended system.
 
@@ -116,7 +116,7 @@ We must think of Fermat as a system with no visible end, so it must be designed 
 
 We define a long term master plan with everything that needs to be done, and considering all possible use cases. Then we all collaborate building the pieces of that master plan, in order, phase by phase. The master excludes duplicate functionality thus we eliminate duplicate efforts and save time and money.
 
-### Promote Collaboration
+#### Promote Collaboration
 
 Most of the startups die. That is a known fact and with this collapse, they throw away the code written most of the time. Even when their code is open source, when the maintainer leaves the project, it is trashed. That is not the most efficient way to move the industry forward, it is just the way it has been working until now. 
 
@@ -134,7 +134,7 @@ We need components to be atomic enough in order to be reused. Traditional mobile
 
 We designed an incentive model for developers around the world to produce reusable components. The core idea is that these components are owned by whoever writes their code and they are entitled to receive recurring micro payments from end users using directly or indirectly their components.
 
-### Reuse What Already Works
+#### Reuse What Already Works
 
 The industry has already produced several mature systems that can be reused as the foundations of Fermat. All of these systems can be consider back end systems, pushing Fermat itself towards the Front End. These considerations makes Fermat:
 
@@ -146,7 +146,7 @@ We designed Fermat to use any crypto currency blockchain for transporting value,
 
 We designed Fermat as a framework to create the front end of blockchain APPs. Nevertheless there is nothing to prevent Fermat to evolve into a more general purpose front-end framework.
 
-### Enable Segmentation
+#### Enable Segmentation
 
 The underlying reason for the "bitcoin is difficult to use" adoption barrier is in fact a problem of lack of segmentation and variety of options. Indeed it is difficult to most segments of the world population, but certainly not to everybody because we have witnessed a positive growth of the blockchain industry last years. To succeed in taking crypto currency to the masses we must deliver each audience custom tailored solutions that they can understand and find of value for themselves before discarding them. For these reasons Fermat must allow:
 
@@ -158,7 +158,7 @@ This means that any Fermat APP can be specialized to target an specific audience
 
 This means that any Fermat APP can have its look and feel changed without programing and still produce micro payments to the original author. We call this _Fermat Branded APPs_.
 
-### Clear Governance Model
+#### Clear Governance Model
 
 Open source projects that do not have a clear governance model either fail or take more time to reach their goal since deadlocks can occur like the "block-size debate" of 2015. Fermat governance model is:
 
@@ -166,7 +166,7 @@ Open source projects that do not have a clear governance model either fail or ta
 
 Although the industry favors decentralization and a proof-of-stake model, we believe is not the right way to do it at early stages, since a disruptive system could be high jacked just by buying all the voting power. It might work when it is big enough and there is not enough money to buy the majority of the voting power. That said, Fermat will evolve in the distant future to a proof-of-stake governance model when those conditions are met. Meanwhile it will be run with a BDFL model. 
 
-### Multi OS
+#### Multi OS
 
 Fermat is written in JAVA in order to be portable into major operating systems. Out of this requirement Fermat has a:
 
@@ -178,7 +178,7 @@ Fermat has a multi-layer architecture being the bottom most layer together with 
 
 Users interfaces in Fermat are native to the OS they are running, allowing developers to use that OS specifics in order to reach the best possible user experience without limitations.
 
-### Community Driven
+#### Community Driven
 
 Fermat is a community driven open source project with several networks of people collaborating to develop the system. This community was started in 2014 by the project founder, Luis Molina in Budapest, Hungary. Since then it spanned several countries and by the time of the last revision of this paper on Feb 2016, 50+ people were working full-time on the project plus many more were collaborating part-time or with casual contributions. 
 
@@ -196,7 +196,7 @@ Building front-end APPs requires requires tons of designers hours. Fermat has a 
 
 On top of the software layer where developers and designers are encouraged by these micro payments, business operators run real world business models, reusing the same codebase, but fine tunning their business parameters to target different audiences at different corners of the world. 
 
-### Other Design Considerations
+#### Other Design Considerations
 
 Designing a system that is going to deal with digital money and is going to run on an uncontrolled environment (end users devices) where anyone can add new components its quite challenging. Several concerns have to be addressed in order to make the system reliable. The most obvious ones are:
 
@@ -207,8 +207,6 @@ Designing a system that is going to deal with digital money and is going to run 
 Thinking carefully about each of the system requirements described above, a lot of questions similar to these arise. So far most of those questions had been addressed and a system architecture has emerged out of finding the answers to all those questions. 
 
 <br>
-## Part III: Resulting architectural design
-
 ### Architecture
 
 The Fermat System has three major architectural components:
@@ -369,12 +367,6 @@ After analyzing several use cases we found out that it was possible to create a 
 
 Each platform usually have one or more Fermat APPs on top of it, and in this way is how the Ecosystem of Fermat APPs is organized.
 
-
-
-
-
-
-
 <br>
 ### Business Model
 
@@ -404,7 +396,7 @@ NOTE: The current implementation of the Fermat p2p Network does not include the 
 
 
 
-
+## Part II - In Details
 
 
 
