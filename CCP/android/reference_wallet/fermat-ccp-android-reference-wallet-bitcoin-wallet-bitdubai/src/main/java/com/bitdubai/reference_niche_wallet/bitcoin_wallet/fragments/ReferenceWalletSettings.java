@@ -5,6 +5,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.mati.fermat_preference_settings.settings.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsDialogItem;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsSwithItem;
 
@@ -47,14 +48,25 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
             }
 
             @Override
-            public List<String> getOptionList() {
-                List<String> strings = new ArrayList<String>();
-                strings.add("opcion1");
-                strings.add("opcion2");
-                return strings;
+            public List<PreferenceSettingsDialogItem> getOptionList() {
+//                List<PreferenceSettingsDialogItem> strings = new ArrayList<String>();
+//                strings.add("opcion1");
+//                strings.add("opcion2");
+                return null;
             }
         });
         return list;
+    }
+
+    /**
+     * Cuando se elige algun settings va a pasar por acá
+     *
+     * @param preferenceSettingsItem
+     * @param position
+     */
+    @Override
+    public void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position) {
+
     }
 
 
