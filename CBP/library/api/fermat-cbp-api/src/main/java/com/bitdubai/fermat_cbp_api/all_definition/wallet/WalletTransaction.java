@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_api.all_definition.wallet;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 
 import java.util.UUID;
@@ -21,7 +21,7 @@ public interface WalletTransaction {
 
     FermatEnum getStockType();
 
-    CurrencyType getCurrencyType();
+    MoneyType getCurrencyType();
 
     String getWalletPublicKey();
 

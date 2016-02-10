@@ -272,8 +272,8 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
 //            }
 //
 //            @Override
-//            public CurrencyType getCurrencyType() {
-//                return CurrencyType.BANK_MONEY;
+//            public MoneyType getMoneyType() {
+//                return MoneyType.BANK;
 //            }
 //
 //            @Override
@@ -343,8 +343,8 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
 //            }
 //
 //            @Override
-//            public CurrencyType getCurrencyType() {
-//                return CurrencyType.BANK_MONEY;
+//            public MoneyType getMoneyType() {
+//                return MoneyType.BANK;
 //            }
 //
 //            @Override
