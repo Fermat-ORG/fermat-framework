@@ -1,13 +1,11 @@
 package com.bitdubai.sub_app.crypto_broker_community.fragments;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -20,18 +18,18 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantValidateConnectionStateException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ConnectDialog;
-import com.bitdubai.sub_app.crypto_broker_community.common.popups.DisconectDialog;
-import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
-import com.bitdubai.sub_app.crypto_broker_community.interfaces.MessageReceiver;
+import com.bitdubai.sub_app.crypto_broker_community.common.popups.DisconnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
@@ -40,7 +38,8 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionOtherProfileFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements MessageReceiver {
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager>
+        implements Dialog.OnDismissListener, Button.OnClickListener {
 
     public static final String ACTOR_SELECTED = "actor_selected";
     private Resources res;
@@ -78,14 +77,16 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_connections_other_profile, container, false);
+        rootView = inflater.inflate(R.layout.cbc_fragment_connections_other_profile, container, false);
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
         userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         connect = (Button) rootView.findViewById(R.id.btn_conect);
+        connect.setOnClickListener(this);
         disconnect = (Button) rootView.findViewById(R.id.btn_disconect);
-        connect.setVisibility(View.GONE);
-        disconnect.setVisibility(View.GONE);
+        disconnect.setOnClickListener(this);
+
+        //Show connect or disconnect button depending on actor's connection
         try{
             if(moduleManager.isActorConnected(cryptoBrokerCommunityInformation.getPublicKey())) {
                 disconnect.setVisibility(View.VISIBLE);
@@ -97,6 +98,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
         }catch (CantValidateConnectionStateException e) {
             e.printStackTrace();
         }
+
 
         try {
             userName.setText(cryptoBrokerCommunityInformation.getAlias());
@@ -119,60 +121,61 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
         } catch (Exception ex) {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-
-        connect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ConnectDialog connectDialog;
-                try {
-                    connectDialog = new ConnectDialog(getActivity(), appSession, null,
-                                                      cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
-                    connectDialog.setTitle("Connection Request");
-                    connectDialog.setDescription("Do you want to send ");
-                    connectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
-                    connectDialog.setSecondDescription("a connection request");
-                    connectDialog.show();
-                } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        disconnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                final DisconectDialog disconectDialog;
-                try {
-                    disconectDialog = new DisconectDialog(getActivity(), appSession, null, cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
-                    disconectDialog.setTitle("Disconnect");
-                    disconectDialog.setDescription("Want to disconnect from");
-                    disconectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
-                    disconectDialog.show();
-                } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
         return rootView;
     }
 
+
     @Override
-    public void onMessageReceive(Context context, Intent data) {
-        Bundle extras = data != null ? data.getExtras() : null;
-        if (extras != null && extras.containsKey(Constants.BROADCAST_CONNECTED_UPDATE)) {
-            disconnect.setVisibility(View.VISIBLE);
-            connect.setVisibility(View.GONE);
-        }
-        if(extras != null && extras.containsKey(Constants.BROADCAST_DISCONNECTED_UPDATE)){
-            disconnect.setVisibility(View.GONE);
-            connect.setVisibility(View.VISIBLE);
+    public void onClick(View v) {
+        int i = v.getId();
+
+        if(i == R.id.btn_conect) {
+            try {
+                ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, null,
+                        cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setDescription("Do you want to send ");
+                connectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
+                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setOnDismissListener(this);
+                connectDialog.show();
+            } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+                errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+            }
+        } else if(i == R.id.btn_disconect) {
+            try {
+                DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(), appSession, null,
+                        cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
+                disconnectDialog.setTitle("Disconnect");
+                disconnectDialog.setDescription("Want to disconnect from");
+                disconnectDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
+                disconnectDialog.setOnDismissListener(this);
+                disconnectDialog.show();
+            } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
+                errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
     @Override
-    public IntentFilter getBroadcastIntentChannel() {
-        return new IntentFilter(Constants.LOCAL_BROADCAST_CHANNEL);
+    public void onDismiss(DialogInterface dialog) {
+        //Get connectionresult flag, and hide/show connect/disconnect buttons
+        try {
+            Boolean connectionresult = (Boolean) appSession.getData("connectionresult");
+            appSession.removeData("connectionresult");
+            if(connectionresult) {
+                disconnect.setVisibility(View.VISIBLE);
+                connect.setVisibility(View.GONE);
+            }
+            else {
+                disconnect.setVisibility(View.GONE);
+                connect.setVisibility(View.VISIBLE);
+            }
+        }catch (Exception e) {}
+
     }
+
 
 }

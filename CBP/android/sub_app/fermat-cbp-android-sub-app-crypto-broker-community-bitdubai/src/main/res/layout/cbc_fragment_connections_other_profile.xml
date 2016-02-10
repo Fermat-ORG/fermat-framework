@@ -113,7 +113,7 @@
         android:orientation="vertical"
         android:paddingLeft="18dp"
         android:paddingRight="18dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
