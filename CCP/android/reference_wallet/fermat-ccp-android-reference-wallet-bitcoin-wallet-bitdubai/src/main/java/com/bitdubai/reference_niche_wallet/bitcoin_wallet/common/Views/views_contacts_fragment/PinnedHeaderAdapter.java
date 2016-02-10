@@ -143,7 +143,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
         int type = getItemViewType(position);
 
         try {
-            if (convertView == null) {
+//            if (convertView == null) {
                 holder = new ViewHolder();
                 switch (type) {
                     case TYPE_ITEM:
@@ -177,9 +177,9 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 holder.textView.setTypeface(tf);
 
                 convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
+//            } else {
+//                holder = (ViewHolder) convertView.getTag();
+//            }
             if (text.equals("")) {
                 Object o = mListItems.get(0);
                 if (o instanceof CryptoWalletWalletContact) {

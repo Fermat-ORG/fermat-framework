@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -60,15 +61,15 @@ public class AssetIssuerWalletModuleManager {
         this.issuerAppropriationManager = issuerAppropriationManager;
     }
 
-    public List<AssetIssuerWalletList> getAssetIssuerWalletBalances(String publicKey) throws CantLoadWalletException {
+    public List<AssetIssuerWalletList> getAssetIssuerWalletBalances(String publicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
-            return assetIssuerWalletManager.loadAssetIssuerWallet(publicKey).getBalance().getAssetIssuerWalletBalances();
+            return assetIssuerWalletManager.loadAssetIssuerWallet(publicKey, networkType).getBalance().getAssetIssuerWalletBalances();
         } catch (Exception exception) {
             throw new CantLoadWalletException("Error load Wallet Balances Book", exception, "Method: getAssetIssuerWalletBalancesBook", "Class: AssetIssuerWalletModuleManager");
         }
     }
 
-    public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers, int assetsAmount) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
+    public void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers, int assetsAmount, BlockchainNetworkType networkType) throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
         try {
             String context = "Asset PublicKey: " + assetPublicKey + " - Wallet PublicKey: " + walletPublicKey + " - Users: " + actorAssetUsers.toString();
             if (actorAssetUsers.isEmpty()) {
@@ -76,7 +77,7 @@ public class AssetIssuerWalletModuleManager {
             }
             System.out.println("******* ASSET DISTRIBUTION TEST (Init Distribution)******");
             walletPublicKey = "walletPublicKeyTest"; //TODO: Solo para la prueba del Distribution
-            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = createMapDistribution(walletPublicKey, assetPublicKey, actorAssetUsers, assetsAmount);
+            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = createMapDistribution(walletPublicKey, assetPublicKey, actorAssetUsers, assetsAmount, networkType);
             assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
 
         } catch (Exception exception) {
@@ -84,16 +85,16 @@ public class AssetIssuerWalletModuleManager {
         }
     }
 
-    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
+    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey, BlockchainNetworkType networkType) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - BTC Wallet Public Key: " + bitcoinWalletPublicKey;
         try {
-            AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest");
+            AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest", networkType);
             List<AssetIssuerWalletTransaction> transactions = wallet.getAvailableTransactions(digitalAssetPublicKey);
             if (transactions.isEmpty())
                 throw new NotEnoughAcceptsException(null, context, "We don't have any asset to appropriate.");
             for (AssetIssuerWalletTransaction transaction : transactions) {
                 DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transaction.getTransactionHash());
-                issuerAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey);
+                issuerAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey, networkType);
             }
         } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException | CantGetTransactionsException e) {
             throw new CantExecuteAppropriationTransactionException(e, context, null);
@@ -108,17 +109,17 @@ public class AssetIssuerWalletModuleManager {
         }
     }
 
-    public List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String walletPublicKey, String assetPublicKey) throws CantGetTransactionsException {
+    public List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String walletPublicKey, String assetPublicKey, BlockchainNetworkType networkType) throws CantGetTransactionsException {
         try {
-            return assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey).getTransactionsAssetAll(assetPublicKey);
+            return assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey, networkType).getTransactionsAssetAll(assetPublicKey);
         } catch (Exception exception) {
             throw new CantGetTransactionsException("Error Error load Wallet Asset Transaction", exception, "Method: getTransactionsAssetAll", "Class: AssetIssuerWalletModuleManager");
         }
     }
 
-    private HashMap<DigitalAssetMetadata, ActorAssetUser> createMapDistribution(String walletPublicKey, String assetPublicKey, List<ActorAssetUser> actorAssetUsers, int assetsAmount) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException {
+    private HashMap<DigitalAssetMetadata, ActorAssetUser> createMapDistribution(String walletPublicKey, String assetPublicKey, List<ActorAssetUser> actorAssetUsers, int assetsAmount, BlockchainNetworkType networkType) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException {
         HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
-        AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey);
+        AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey, networkType);
         List<AssetIssuerWalletTransaction> transactions = wallet.getAvailableTransactions(assetPublicKey);
         if (assetsAmount > transactions.size())
             throw new IllegalStateException("WE DON'T HAVE ENOUGH ASSETS!!");

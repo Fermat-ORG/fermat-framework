@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactRecord;
@@ -8,6 +9,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +29,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
     private final Actors              actorType            ;
     private final Compatibility       compatibility        ;
     private final UUID                contactId            ;
-    private final List<CryptoAddress> receivedCryptoAddress;
+    private final HashMap<BlockchainNetworkType,CryptoAddress> receivedCryptoAddress;
     private final byte[]              profilePicture       ;
     private final String              walletPublicKey      ;
     private boolean                   isConnection  ;
@@ -52,7 +54,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
         this.contactId             =  UUID.randomUUID()                  ;
         this.walletPublicKey       =  walletPublicKey              ;
         this.actorType             = Actors.CCM_INTRA_WALLET_USER                   ;
-        this.receivedCryptoAddress = new ArrayList<CryptoAddress>();
+        this.receivedCryptoAddress = new  HashMap<BlockchainNetworkType,CryptoAddress>();
         this.actorPublicKey        = intraUserConnection.getPublicKey()               ;
         this.actorName             = intraUserConnection.getAlias()                   ;
         this.profilePicture        = new byte[0];
@@ -86,7 +88,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
     }
 
     @Override
-    public List<CryptoAddress> getReceivedCryptoAddress() {
+    public  HashMap<BlockchainNetworkType,CryptoAddress> getReceivedCryptoAddress() {
         return receivedCryptoAddress;
     }
 

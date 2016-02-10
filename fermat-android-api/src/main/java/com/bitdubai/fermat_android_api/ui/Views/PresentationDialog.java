@@ -50,11 +50,11 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
      * Members
      */
     String title;
-    String subTitle;
-    String body;
-    String textNameLeft;
-    String textNameRight;
-    String textFooter;
+    int subTitle = -1;
+    int body = -1;
+    int textFooter = -1;
+    int textNameLeft = -1;
+    int textNameRight = -1;
     private String textColor;
     private int titleTextColor = -1;
     private int viewColor = -1;
@@ -195,7 +195,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
 
         if (id == R.id.btn_left) {
             try {
-                getSession().getModuleManager().createIdentity(textNameLeft, "Available", convertImage(resImageLeft));
+                getSession().getModuleManager().createIdentity(btn_left.getText().toString(), "Available", convertImage(resImageLeft));
                 getSession().setData(PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (Exception e) {
                 if (callback != null) callback.onError(e);
@@ -204,7 +204,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             dismiss();
         } else if (id == R.id.btn_right) {
             try {
-                getSession().getModuleManager().createIdentity(textNameRight, "Available", convertImage(resImageRight));
+                getSession().getModuleManager().createIdentity(btn_right.getText().toString(), "Available", convertImage(resImageRight));
                 getSession().setData(PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (Exception e) {
                 if (callback != null) callback.onError(e);
@@ -264,15 +264,15 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
         this.title = title;
     }
 
-    public void setSubTitle(String subTitle) {
+    public void setSubTitle(int subTitle) {
         this.subTitle = subTitle;
     }
 
-    public void setBody(String body) {
+    public void setBody(int body) {
         this.body = body;
     }
 
-    public void setTextFooter(String textFooter) {
+    public void setTextFooter(int textFooter) {
         this.textFooter = textFooter;
     }
 
@@ -288,11 +288,11 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
         this.resImageRight = resImageRight;
     }
 
-    public void setTextNameLeft(String textNameLeft) {
+    public void setTextNameLeft(int textNameLeft) {
         this.textNameLeft = textNameLeft;
     }
 
-    public void setTextNameRight(String textNameRight) {
+    public void setTextNameRight(int textNameRight) {
         this.textNameRight = textNameRight;
     }
 
@@ -323,12 +323,12 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
         private boolean isCheckEnabled = true;
         private PresentationCallback callback;
         private String title;
-        private String subTitle;
-        private String body;
-        private String textFooter;
+        private int subTitle = -1;
+        private int body = - 1;
+        private int textFooter = -1;
         private String textColor;
-        private String textNameLeft = "John Doe";
-        private String textNameRight = "Jane Doe";
+        private int textNameLeft = -1;
+        private int textNameRight = -1;
         private int imageLeft = -1;
         private int imageRight = -1;
         private int bannerRes = -1;
@@ -338,16 +338,16 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
 
         public PresentationDialog build() {
             PresentationDialog presentationDialog = new PresentationDialog(activity.get(), fermatSession.get(), null, templateType, isCheckEnabled);
-            if (body != null) {
+            if (body != -1) {
                 presentationDialog.setBody(body);
             }
             if (title != null) {
                 presentationDialog.setTitle(title);
             }
-            if (subTitle != null) {
+            if (subTitle != -1) {
                 presentationDialog.setSubTitle(subTitle);
             }
-            if (textFooter != null) {
+            if (textFooter != -1) {
                 presentationDialog.setTextFooter(textFooter);
             }
             if (bannerRes != -1) {
@@ -363,11 +363,15 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             } else {
                 presentationDialog.setResImageRight(R.drawable.img_profile_female);
             }
-            if (textNameLeft != null) {
+            if (textNameLeft != -1) {
                 presentationDialog.setTextNameLeft(textNameLeft);
+            } else {
+                presentationDialog.setTextNameLeft(R.string.name_left);
             }
-            if (textNameRight != null) {
+            if (textNameRight != -1) {
                 presentationDialog.setTextNameRight(textNameRight);
+            } else {
+                presentationDialog.setTextNameRight(R.string.name_right);
             }
             if (title != null) {
                 presentationDialog.setTitle(title);
@@ -415,12 +419,12 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             return this;
         }
 
-        public Builder setTextNameLeft(String textNameLeft) {
+        public Builder setTextNameLeft(int textNameLeft) {
             this.textNameLeft = textNameLeft;
             return this;
         }
 
-        public Builder setTextNameRight(String textNameRight) {
+        public Builder setTextNameRight(int textNameRight) {
             this.textNameRight = textNameRight;
             return this;
         }
@@ -430,17 +434,17 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             return this;
         }
 
-        public Builder setSubTitle(String subTitle) {
+        public Builder setSubTitle(int subTitle) {
             this.subTitle = subTitle;
             return this;
         }
 
-        public Builder setBody(String body) {
+        public Builder setBody(int body) {
             this.body = body;
             return this;
         }
 
-        public Builder setTextFooter(String textFooter) {
+        public Builder setTextFooter(int textFooter) {
             this.textFooter = textFooter;
             return this;
         }

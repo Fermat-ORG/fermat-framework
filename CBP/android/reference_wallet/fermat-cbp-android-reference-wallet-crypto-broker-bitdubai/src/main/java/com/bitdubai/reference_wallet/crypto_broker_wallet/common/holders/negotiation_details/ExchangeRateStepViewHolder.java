@@ -57,11 +57,13 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
     @Override
     public void beforeTextChanged(CharSequence text, int start, int count, int after) {
         // DO NOTHING..
+
     }
 
     @Override
     public void onTextChanged(CharSequence text, int start, int before, int count) {
         // DO NOTHING..
+
     }
 
     @Override
@@ -71,6 +73,11 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
             valuesHasChanged = !actualValue.equals(sourceValue);
             if (valuesHasChanged) {
                 listener.exchangeValueChanged(actualValue);
+                setStatus(NegotiationStepStatus.CHANGED);
+
+            }else{
+                listener.exchangeValueChanged(actualValue);
+                setStatus(NegotiationStepStatus.ACCEPTED);
             }
         }
     }

@@ -290,35 +290,6 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         }
     }
 
-    private void setOneFragmentInScreen(FermatFragmentFactory fermatFragmentFactory) {
-        WalletNavigationStructure walletRuntime = getWalletRuntimeManager().getLastWallet();
-        String walletPublicKey = walletRuntime.getPublicKey();
-        String walletCategory = walletRuntime.getWalletCategory();
-        String walletType = walletRuntime.getWalletType();
-
-        FermatFragmentFactory walletFragmentFactory = fermatFragmentFactory;//com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
-
-        try {
-            if (walletFragmentFactory != null) {
-                String fragment = walletRuntime.getLastActivity().getLastFragment().getType();
-                FermatSession walletSession = getWalletSessionManager().getWalletSession(walletPublicKey);
-                android.app.Fragment fragmet = walletFragmentFactory.getFragment(fragment.toString(),walletSession, getWalletResourcesProviderManager());
-                FragmentTransaction FT = getFragmentManager().beginTransaction();
-                FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                FT.replace(R.id.only_fragment_container, fragmet);
-//                FT.addToBackStack(null);
-//                FT.attach(fragmet);
-//                FT.show(fragmet);
-                FT.commit();
-
-            }
-        } catch (FragmentNotFoundException e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
-        }
-
-    }
 
     private FermatSession createOrCallWalletSession() {
         AbstractFermatSession walletSession = null;

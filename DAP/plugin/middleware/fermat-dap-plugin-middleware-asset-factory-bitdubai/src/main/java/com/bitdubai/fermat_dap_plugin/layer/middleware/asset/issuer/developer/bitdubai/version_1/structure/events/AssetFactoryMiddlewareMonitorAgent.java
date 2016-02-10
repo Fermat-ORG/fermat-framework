@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.b
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bi
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,7 +54,7 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent, "Asset Factory Middleware MonitorAgent");
         this.agentThread.start();
     }
 
@@ -177,7 +179,11 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
         }
 
         private List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
-            return assetFactoryMiddlewareManager.getAssetFactoryAll();
+            List<AssetFactory> factories = new ArrayList<>();
+            factories.addAll(assetFactoryMiddlewareManager.getAssetFactoryAll(BlockchainNetworkType.REG_TEST));
+            factories.addAll(assetFactoryMiddlewareManager.getAssetFactoryAll(BlockchainNetworkType.TEST_NET));
+            factories.addAll(assetFactoryMiddlewareManager.getAssetFactoryAll(BlockchainNetworkType.PRODUCTION));
+            return factories;
         }
 
     }

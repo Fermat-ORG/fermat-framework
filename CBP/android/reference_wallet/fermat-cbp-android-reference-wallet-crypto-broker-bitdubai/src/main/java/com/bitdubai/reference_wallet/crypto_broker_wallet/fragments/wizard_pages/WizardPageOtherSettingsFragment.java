@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -75,7 +76,16 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
         spreadTextView.setText(String.format("%1$s %%", spreadValue));
 
+         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                  .setBody(R.string.cbw_wizard_other_settings_dialog_body)
+                  .setSubTitle(R.string.cbw_wizard_other_settings_dialog_sub_title)
+                  .setTextFooter(R.string.cbw_wizard_other_settings_dialog_footer)
+                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                 .setBannerRes(R.drawable.banner_crypto_broker)
+                 .setIconRes(R.drawable.crypto_broker)
+                 .build();
 
+         presentationDialog.show();
         final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
         nextStepButton.setOnClickListener(new View.OnClickListener() {
         @Override

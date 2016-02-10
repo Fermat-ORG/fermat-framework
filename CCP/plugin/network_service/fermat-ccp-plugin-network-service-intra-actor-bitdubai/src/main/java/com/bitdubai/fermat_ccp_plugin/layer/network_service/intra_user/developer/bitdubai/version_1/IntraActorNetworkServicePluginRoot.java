@@ -37,6 +37,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -207,6 +209,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
@@ -1505,21 +1510,34 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
             }
 
             //Create a thread to save intra user cache list
+//
+//            Thread thread = new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try
+//                    {
+//                        intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+//                    } catch (CantAddIntraWalletCacheUserException e) {
+//                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//
+//                    }
+//                }
+//            },"Thread Cache");
+//
+//            thread.start();
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try
-                    {
-                        intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
-                    } catch (CantAddIntraWalletCacheUserException e) {
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            if(lstIntraUser!= null && lstIntraUser.size() > 0){
+                try
+                {
+                    intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+                } catch (CantAddIntraWalletCacheUserException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
-                    }
                 }
-            },"Thread Cache");
+            }
 
-            thread.start();
+
+
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -1531,8 +1549,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
 
     @Override
     public List<IntraUserInformation> getCacheIntraUsersSuggestions(int max, int offset) throws ErrorSearchingCacheSuggestionsException {
-        try
-        {
+        try {
             return intraActorNetworkServiceDao.listIntraUserCache(max,offset);
 
         } catch (CantListIntraWalletCacheUserException e) {

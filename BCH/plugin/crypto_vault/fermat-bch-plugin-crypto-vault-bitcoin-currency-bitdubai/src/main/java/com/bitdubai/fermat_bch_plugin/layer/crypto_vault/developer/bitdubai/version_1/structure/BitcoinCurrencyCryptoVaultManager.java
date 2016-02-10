@@ -36,6 +36,8 @@ import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.params.Networks;
+import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -208,7 +210,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
              * If I can't validate this. I will continue because I may be listening to this network already.
              */
             e.printStackTrace();
-            return BlockchainNetworkType.DEFAULT;
+            return BlockchainNetworkType.getDefaultBlockchainNetworkType();
         } catch (AddressFormatException e) {
             /**
              * If the passed address doesn't have the correct format, I can't go on.
@@ -229,8 +231,18 @@ public class BitcoinCurrencyCryptoVaultManager  {
         /**
          * if the network parameters calculated is different that the Default network I will double check
          */
-        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.DEFAULT){
-            return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
+            try {
+                // If only one network is enabled, then I will return the default
+                if (getDao().getActiveNetworkTypes().size() == 1)
+                    return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                else {
+                    // If I have TestNet and RegTest registered, I may return any of them since they share the same prefix.
+                    return networkParameters;
+                }
+            } catch (CantExecuteDatabaseOperationException e) {
+                return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            }
         } else
             return networkParameters;
     }
@@ -267,7 +279,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
             /**
              * If there is an error, I will use the default parameters.
              */
-            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         }
 
         /**
@@ -284,9 +296,9 @@ public class BitcoinCurrencyCryptoVaultManager  {
     /**
      * gets a fresh un used crypto Address from the vault
      */
-    public CryptoAddress getAddress() {
+    public CryptoAddress getAddress(BlockchainNetworkType blockchainNetworkType) {
         try {
-            return this.getNewBitcoinVaultCryptoAddress(BlockchainNetworkType.DEFAULT);
+            return this.getNewBitcoinVaultCryptoAddress(blockchainNetworkType);
         } catch (GetNewCryptoAddressException e) {
             e.printStackTrace();
             return null;
@@ -418,7 +430,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
          * I will store the transaction in the crypto network
          */
         try {
-            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, FermatTrId);
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, FermatTrId, true);
         } catch (CantStoreBitcoinTransactionException e) {
             throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
         }

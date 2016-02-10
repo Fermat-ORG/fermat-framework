@@ -13,7 +13,9 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,6 +74,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     //UI
     private View noAssetsView;
+    private SearchView searchView;
 
     public static MyAssetsActivityFragment newInstance() {
         return new MyAssetsActivityFragment();
@@ -114,6 +117,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
             try {
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -130,7 +135,6 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 }
             }
         }, 500);
-
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -141,13 +145,10 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     .setImageLeft(R.drawable.asset_issuer_identity)
                     .setVIewColor(R.color.dap_issuer_view_color)
                     .setTitleTextColor(R.color.dap_issuer_view_color)
-                    .setTextNameLeft("Asset Issuer")
-                    .setSubTitle("Welcome to the Asset Issuer Wallet.")
-                    .setBody("You will be using this wallet to store all the assets created with the Asset Factory Application. From here you will be able to " +
-                            "distribute them to whom ever uses the Asset User Wallet and get statistics of its usage.\n\n" +
-                            "Help is available on every screen!")
-                    .setTextFooter("* We will be creating an avatar for you in order to identify you in the system as an Asset Issuer.\n" +
-                            "* You will be able to edit your profile in the Asset Issuer Identity application.")
+                    .setTextNameLeft(R.string.dap_issuer_wallet_welcome_name_left)
+                    .setSubTitle(R.string.dap_issuer_wallet_welcome_subTitle)
+                    .setBody(R.string.dap_issuer_wallet_welcome_body)
+                    .setTextFooter(R.string.dap_issuer_wallet_welcome_Footer)
                     .setTemplateType((moduleManager.getActiveAssetIssuerIdentity() == null) ? PresentationDialog.TemplateType.DAP_TYPE_PRESENTATION : PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -183,9 +184,29 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);    }
+        inflater.inflate(R.menu.dap_asset_issuer_home_menu, menu);
+        searchView = (SearchView) menu.findItem(R.id.action_wallet_issuer_search).getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.dap_issuer_wallet_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.equals(searchView.getQuery().toString())) {
+                    ((MyAssetsAdapter) getAdapter()).getFilter().filter(s);
+                }
+                return false;
+            }
+        });
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+//        super.onCreateOptionsMenu(menu, inflater);
+//        searchView = (SearchView) menu.getItem(1).getActionView();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -199,7 +220,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Issuer system error",
+            makeText(getActivity(), R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -208,35 +229,12 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-//        checkIdentity();
     }
-
-//    private void checkIdentity() {
-//        ActiveActorIdentityInformation identity = null;
-//        try {
-//            identity = moduleManager.getSelectedActorIdentity();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        if (identity == null) {
-//            makeText(getActivity(), "Identity must be created",
-//                    LENGTH_SHORT).show();
-//            getActivity().onBackPressed();
-//        }
-//    }
 
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
-//            toolbar.setBackgroundColor(Color.TRANSPARENT);
-//            toolbar.setBottom(Color.WHITE);
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
-//            }
             Drawable drawable = null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors, null);
@@ -244,7 +242,6 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             } else {
                 drawable = getResources().getDrawable(R.drawable.dap_wallet_asset_issuer_action_bar_gradient_colors);
             }
-
             toolbar.setBackground(drawable);
         }
     }
@@ -377,7 +374,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).
                     show();
         }

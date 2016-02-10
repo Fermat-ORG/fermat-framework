@@ -27,7 +27,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.MyAssetsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.Data;
@@ -45,7 +44,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 
 /**
@@ -125,8 +123,8 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
                     .setTitleTextColor(R.color.dap_redeem_point_view_color)
-                    .setSubTitle("Asset User Redeem Point History.")
-                    .setBody("*GIVE ME A TEXT")
+//                    .setSubTitle("Asset User Redeem Point History.")
+//                    .setBody("*GIVE ME A TEXT")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -156,7 +154,7 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset Redeem Point system error",
+            makeText(getActivity(), R.string.dap_redeem_point_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -165,14 +163,9 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-//            toolbar.setBackgroundColor(Color.parseColor("#1d1d25"));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBackgroundColor(Color.TRANSPARENT);
             toolbar.setBottom(Color.WHITE);
-//            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//                Window window = getActivity().getWindow();
-//                window.setStatusBarColor(Color.parseColor("#1d1d25"));
-//            }
             Drawable drawable = null;
             //TODO uncomment
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -314,7 +307,7 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    R.string.dap_redeem_point_wallet_system_error,
                     Toast.LENGTH_SHORT).
                     show();
         }

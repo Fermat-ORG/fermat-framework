@@ -92,14 +92,16 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
 
             database.closeDatabase();
         }
-        catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e)
+        catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException  e)
         {
             try
             {
+                System.out.println("******* Init Bank Money Restock ****** CATCH");
+                startMonitorAgent();
                 BusinessTransactionBankMoneyRestockDatabaseFactory businessTransactionBankMoneyRestockDatabaseFactory = new BusinessTransactionBankMoneyRestockDatabaseFactory(this.pluginDatabaseSystem);
                 businessTransactionBankMoneyRestockDatabaseFactory.createDatabase(this.pluginId, BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_STOCK_DATABASE_NAME);
             }
-            catch(CantCreateDatabaseException cantCreateDatabaseException)
+            catch(CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException)
             {
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
@@ -152,7 +154,7 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        if(businessTransactionBankMoneyRestockMonitorAgent == null) {
+        //if(businessTransactionBankMoneyRestockMonitorAgent == null) {
             businessTransactionBankMoneyRestockMonitorAgent = new BusinessTransactionBankMoneyRestockMonitorAgent(
                     errorManager,
                     stockTransactionBankMoneyRestockManager,
@@ -163,7 +165,8 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
             );
 
             businessTransactionBankMoneyRestockMonitorAgent.start();
-        }else businessTransactionBankMoneyRestockMonitorAgent.start();
+        serviceStatus = ServiceStatus.STARTED;
+        //}else businessTransactionBankMoneyRestockMonitorAgent.start();
     }
 
 }

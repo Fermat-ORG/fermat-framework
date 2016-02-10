@@ -42,6 +42,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 | | Kabuto | | |
 | | Mordor | | |
 | | Skynet | | |
+| | Yayo | | |
 | Code Butchers | | | |
 | | DBZ Team | | |
 | Coin Diggers | | | |
@@ -134,18 +135,29 @@ More than a Team we are a group of highly motivated friends pursuing the goal of
     Skype:   acosta_rodrigo
     Github:  https://github.com/acostarodrigo
 
-* **Victor Mars [Veteran Developer]** <br/>
+* **Manuel Perez [Team Leader]**<br/>
+---
+    Email:   darkpriestrelative@gmail.com
+    Skype:   darkestpriest
+    Github:  https://github.com/darkestpriest
+
+* **Franklin Marcano [Team Leader]**<br/>
+---
+    Email:   franklinmarcano1970@gmail.com
+    Skype:   franklginmarcano1970
+    Github:  https://github.com/franklinmarcano1970
+
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
+---
+      Email:   nerioindriago@gmail.com
+      Skype:   nerioindriago
+      Github:  https://github.com/nindriago
+
+* **Victor Mars [New Team Leader]** <br/>
 ---
       Email:   marsvicam@gmail.com
       Skype:   yayotron
       Github:  https://github.com/yayotron
-
-* **Frank Contreras [New Developer]** <br/>
----
-      Email:   contrerasfrank@gmail.com
-      Skype:   fcontreras1234
-      Github:  https://github.com/javafrank
-
 
 <br>
 
@@ -215,6 +227,7 @@ We would be grateful for any help received, and anyone interested in joining the
 <br/>
 ### Mordor Team:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/1479ec1f2e93a1b11f0f1ac9e312099f08aa7aec/Logotype/FermatTeams/logo_mordor_team.jpg "Logo Mordor Team")
 We are putting together a team of talented developers, especially passionate about the implementation of major challenges, in order to carry out our goals and collaborate with other teams on their goals.
 
 In the Crypto Broker Platform we are responsible for a large part of business transactions, while in the Chat Platform we are developing the back end. In each platform mentioned, we are involved in the development of Network Services and transactional plugins.
@@ -229,7 +242,7 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Github:  https://github.com/darkestpriest
     
     
-* **Gabriel Araujo [New Developer]**<br/>
+* **Gabriel Araujo [Veteran Developer]**<br/>
 ---
       Email:   gabe_512@hotmail.com
       Skype:   gabee512
@@ -258,6 +271,7 @@ This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we re
 <br/>
 ### Kabuto Team:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/1479ec1f2e93a1b11f0f1ac9e312099f08aa7aec/Logotype/FermatTeams/logo_kabuto_team.jpg "Logo Kabuto Team")
 Passionate about technologies, programming for us is part of our life and virtues, using as always ethical management best practices for writing our code.
 
 In the Crypto Broker Platform we are responsible for a large part of user level business transactions, wallet and module, while in the Chat Platform we are developing the back end.
@@ -297,8 +311,10 @@ In the Crypto Broker Platform we are responsible for a large part of user level 
 We are also amateur philosophers, passionate about esoteric topics and video games.
 
 <br>
+
 ### Skynet Team:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/b3d2a45ba6cff999accae76ae30fdd41f160b90d/Logotype/FermatTeams/logo_skynet_team.jpg "Logo Skynet Team")
 From the most hidden and beautiful corner, in an unknown place of the universe, a network that gathers a group of polymaths is born. Such network combines their knowledge and artificial intelligence in order to overcome any obstacle that might try to avoid giving life to a limitless project.. that network is Team Skynet, a group of workaholics that enjoys turning challenges into fun, having a great will to help the needed and learn continuously.
 We are a team with diverse tastes and full of color making it an explosive integration. We love video games, anime, movie theaters, music and many other things. If you want to be part of our team, you will be always welcome at Skynet
 
@@ -324,6 +340,30 @@ We are a team with diverse tastes and full of color making it an explosive integ
 
 
 <br/>
+
+### Team Yayo:
+-----------------------------------
+On the Team Yayo we do believe that coding is a kind of art and should be treated like so. We don't aim to be a hardworking team but a smartworking one.
+We are responsible of only one thing, making fermat a successfully project, sharing our good ideas and developing whatever is needed without fear of what -end it is on.
+
+#### Team Members:
+
+* **Victor Mars [New Team Leader]** <br/>
+---
+      Email:   marsvicam@gmail.com
+      Skype:   yayotron
+      Github:  https://github.com/yayotron
+      
+* **Frank Contreras [New Developer]** <br/>
+---
+      Email:   contrerasfrank@gmail.com
+      Skype:   fcontreras1234
+      Github:  https://github.com/javafrank
+
+<br>
+We don't mean to make fun of everything, just about the serious things.
+<br>
+
 ### Code Butchers Team:
 -----------------------------------
 We are a team of developers of diverse nature, interested on the basis and structure of the Fermat Framework, and always looking for a better way of perfecting the system, with an innovative spirit and full of perspicacy. We work across the entire platform, trying to keep the things ordered and paying attention to collaborate with other teams.

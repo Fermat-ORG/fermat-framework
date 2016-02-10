@@ -68,9 +68,9 @@ public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransac
 
         AssetUserWalletTransactionWrapper that = (AssetUserWalletTransactionWrapper) o;
 
-        if (getTransactionId() != null ? !getTransactionId().equals(that.getTransactionId()) : that.getTransactionId() != null)
+        if (getActualTransactionHash() != null ? !getActualTransactionHash().equals(that.getActualTransactionHash()) : that.getActualTransactionHash() != null)
             return false;
-        if (getTransactionHash() != null ? !getTransactionHash().equals(that.getTransactionHash()) : that.getTransactionHash() != null)
+        if (getGenesisTransaction() != null ? !getGenesisTransaction().equals(that.getGenesisTransaction()) : that.getGenesisTransaction() != null)
             return false;
         return !(getAssetPublicKey() != null ? !getAssetPublicKey().equals(that.getAssetPublicKey()) : that.getAssetPublicKey() != null);
 
@@ -78,8 +78,8 @@ public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransac
 
     @Override
     public int hashCode() {
-        int result = getTransactionId() != null ? getTransactionId().hashCode() : 0;
-        result = 31 * result + (getTransactionHash() != null ? getTransactionHash().hashCode() : 0);
+        int result = getActualTransactionHash() != null ? getActualTransactionHash().hashCode() : 0;
+        result = 31 * result + (getGenesisTransaction() != null ? getGenesisTransaction().hashCode() : 0);
         result = 31 * result + (getAssetPublicKey() != null ? getAssetPublicKey().hashCode() : 0);
         return result;
     }
@@ -90,12 +90,12 @@ public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransac
     }
 
     @Override
-    public String getTransactionId() {
+    public String getActualTransactionHash() {
         return transactionId;
     }
 
     @Override
-    public String getTransactionHash() {
+    public String getGenesisTransaction() {
         return transactionHash;
     }
 

@@ -1,11 +1,11 @@
 package unit.com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 
-import static org.fest.assertions.api.Assertions.*;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 
 import org.junit.Test;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 
 public class StartServerTest extends CloudFMPConnectionManagerUnitTest {

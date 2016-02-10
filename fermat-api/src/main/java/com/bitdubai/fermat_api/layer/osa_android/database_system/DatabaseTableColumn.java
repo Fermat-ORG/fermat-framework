@@ -1,31 +1,24 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 /**
- *
  *  <p>The abstract class <code>DatabaseTableColumn</code> is a interface
  *     that define the methods to get and set the properties of the columns in a table in the database.
  *
+ * Created by Luis Molina on 01/02/15.
+ * Modified by Leon Acosta - (laion.cj91@gmail.com) on 03/02/2016.
  *
  *  @author  Luis
  *  @version 1.0.0
  *  @since   01/02/15.
- * */
+ */
 public interface DatabaseTableColumn {
     
-    public String getName ();
-    
-    public void setName (String name);
+    String getName ();
 
-    public DatabaseDataType getType ();
-    
-    public void setType(DatabaseDataType type);
+    DatabaseDataType getDataType();
 
-    public void setDataTypeSize (int dataTypeSize);
+    int getDataTypeSize ();
 
-    public int getDataTypeSize ();
-
-    public void setPrimaryKey (boolean primaryKey);
-
-    public boolean getPrimaryKey ();
+    boolean isPrimaryKey();
     
 }

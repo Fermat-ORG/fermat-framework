@@ -49,6 +49,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     private CashMoneyWalletSession cashMoneyWalletSession;
     private Resources resources;
     private TransactionType transactionType;
+    BigDecimal optionalAmount;
+    String optionalMemo;
 
     /**
      *  UI components
@@ -61,13 +63,16 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     Button cancelBtn;
 
 
-    public CreateTransactionFragmentDialog(Activity a, CashMoneyWalletSession cashMoneyWalletSession, Resources resources, TransactionType transactionType) {
+    public CreateTransactionFragmentDialog(Activity a, CashMoneyWalletSession cashMoneyWalletSession, Resources resources, TransactionType transactionType, BigDecimal optionalAmount, String optionalMemo) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
         this.cashMoneyWalletSession = cashMoneyWalletSession;
         this.transactionType = transactionType;
         this.resources = resources;
+
+        this.optionalAmount = (optionalAmount == null || optionalAmount == new BigDecimal(0) ? null : optionalAmount);
+        this.optionalMemo = (optionalMemo == null || optionalMemo == "" ? null : optionalMemo);
     }
 
 
@@ -99,6 +104,12 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
             cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);
+
+            if(optionalAmount != null)
+                amountText.append(optionalAmount.toPlainString());  //append places cursor at the end!
+            if(optionalMemo != null)
+                memoText.setText(optionalMemo);
+
 
         }catch (Exception e){
             e.printStackTrace();
@@ -132,6 +143,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             dismiss();
         }else if( i == R.id.csh_ctd_apply_transaction_btn){
             applyTransaction();
+            dismiss();
         }
     }
 
@@ -156,7 +168,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             if (transactionType == TransactionType.DEBIT) {
                 CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo, TransactionType.DEBIT);
                 //try {
-                    cashMoneyWalletSession.getModuleManager().createAsyncCashWithdrawalTransaction(t);
+                    cashMoneyWalletSession.getModuleManager().createAsyncCashTransaction(t);
                     //updateWalletBalances(view.getRootView());
 
 //                } catch (CantCreateWithdrawalTransactionException e) {
@@ -170,7 +182,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             else if(transactionType == TransactionType.CREDIT) {
                 CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", new BigDecimal(amount), FiatCurrency.US_DOLLAR, memo, TransactionType.CREDIT);
                 //try {
-                    cashMoneyWalletSession.getModuleManager().createAsyncCashDepositTransaction(t);
+                    cashMoneyWalletSession.getModuleManager().createAsyncCashTransaction(t);
                     //updateWalletBalances(view.getRootView());
 
 //                } catch (CantCreateDepositTransactionException e) {
@@ -181,10 +193,9 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
         } catch (Exception e) {
             cashMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" +  e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again. " +  e.getMessage(), Toast.LENGTH_SHORT).show();
             return;
         }
-        dismiss();
     }
 
 }

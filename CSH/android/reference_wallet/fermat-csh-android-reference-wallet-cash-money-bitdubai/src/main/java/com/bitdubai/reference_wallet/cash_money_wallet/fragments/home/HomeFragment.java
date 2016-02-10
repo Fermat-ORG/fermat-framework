@@ -15,11 +15,14 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+
+import com.bitdubai.fermat_csh_api.all_definition.constants.CashMoneyWalletBroadcasterConstants;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
@@ -92,7 +95,6 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         }
 
         //Get wallet transactions, balances and currency
-        //TODO: Cargar el wallet.. loadCashMonetWallet() usando walletSession.getAppPublicKey() ????
         transactionList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         getWalletBalances();
         getWalletCurrency();
@@ -246,6 +248,9 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
                 if (adapter != null)
                     adapter.changeDataSet(transactionList);
 
+                getWalletBalances();
+                updateWalletBalances();
+                handleWidhtrawalFabVisibilityAccordingToBalance();
                 showOrHideNoTransactionsView(transactionList.isEmpty());
             }
         }
@@ -262,7 +267,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
     /* MISC FUNCTIONS */
     private void lauchCreateTransactionDialog(TransactionType transactionType){
-        transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transactionType);
+        transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transactionType, null, null);
         transactionFragmentDialog.setOnDismissListener(this);
         transactionFragmentDialog.show();
     }
@@ -298,6 +303,8 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
         if (moduleManager != null) {
             try {
+                //Add un field de PENDING? para mostrarlas como pending...
+                data.addAll(moduleManager.getPendingTransactions());
                 data.addAll(moduleManager.getTransactions(walletSession.getAppPublicKey(), transactionTypes, balanceTypes, 100, 0));
 
             } catch (Exception ex) {
@@ -365,13 +372,57 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
     @Override
     public void onItemClickListener(CashMoneyWalletTransaction data, int position) {
-        appSession.setData("transaction", transactionList.get(position));
-        changeActivity(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
+        handleTransactionClick(data, position);
     }
 
     @Override
     public void onLongItemClickListener(CashMoneyWalletTransaction data, int position) {
-        appSession.setData("transaction", transactionList.get(position));
-        changeActivity(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
+        handleTransactionClick(data, position);
+    }
+
+
+    private void handleTransactionClick(CashMoneyWalletTransaction data, int position){
+
+        if(data.isPending()) {
+            //Try to cancel transaction if it is pending
+            try{
+                moduleManager.cancelAsyncCashTransaction(data);
+                Thread.sleep(100);
+            } catch (Exception e) {
+                //Ignore this error
+            }
+
+            appSession.setData("transaction", data);
+            appSession.setData("checkIfTransactionHasBeenCommitted", true);
+            changeActivity(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
+        }
+        else {
+            appSession.setData("transaction", data);
+            appSession.setData("checkIfTransactionHasBeenCommitted", false);
+            changeActivity(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
+        }
+
+    }
+
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
+                onRefresh();
+                break;
+            case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_INSUFICCIENT_FUNDS:
+                Toast.makeText(getActivity(), "Transaction failed due to insufficient funds", Toast.LENGTH_SHORT).show();
+
+                onRefresh();
+                break;
+            case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_TRANSACTION_FAILED:
+                Toast.makeText(getActivity(), "Sorry, the transaction has failed.", Toast.LENGTH_SHORT).show();
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
     }
 }
+

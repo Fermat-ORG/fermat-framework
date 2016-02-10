@@ -3,8 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_wallet_redeem_help"
-        android:icon="@drawable/dap_asset_redeem_help_icon"
-        android:title="@string/help"
-        app:showAsAction="always" />
+        android:id="@+id/action_wallet_redeem_point_search"
+        android:icon="@android:drawable/ic_menu_search"
+        android:title="@string/dap_redeem_point_wallet_search"
+        app:showAsAction="always"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+
 </menu>

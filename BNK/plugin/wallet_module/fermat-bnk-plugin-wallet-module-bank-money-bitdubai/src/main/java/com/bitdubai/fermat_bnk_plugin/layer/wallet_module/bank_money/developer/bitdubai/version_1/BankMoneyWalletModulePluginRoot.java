@@ -12,8 +12,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
@@ -21,6 +23,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfa
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.interfaces.WithdrawManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWallet;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure.BankingWalletModuleImpl;
@@ -56,7 +59,18 @@ public class BankMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION)
     UnholdManager unholdManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
+
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
+
+    BankingWallet bankingWallet;
+
+    private SettingsManager<BankMoneyWalletPreferenceSettings> settingsManager;
+
 
     public BankMoneyWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -64,7 +78,9 @@ public class BankMoneyWalletModulePluginRoot extends AbstractPlugin implements L
 
     @Override
     public BankingWallet getBankingWallet() {
-        return new BankingWalletModuleImpl(bankMoneyWalletManager,depositManager,withdrawManager,holdManager,unholdManager);
+        if(bankingWallet == null)
+            bankingWallet = new BankingWalletModuleImpl(bankMoneyWalletManager,depositManager,withdrawManager,holdManager,unholdManager,pluginFileSystem,pluginId,broadcaster);
+        return bankingWallet;
     }
 
     @Override
@@ -89,12 +105,21 @@ public class BankMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     }
 
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
+    public SettingsManager<BankMoneyWalletPreferenceSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
+
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         return null;
     }
 
@@ -105,6 +130,7 @@ public class BankMoneyWalletModulePluginRoot extends AbstractPlugin implements L
 
     @Override
     public void setAppPublicKey(String publicKey) {
+
     }
 
     @Override

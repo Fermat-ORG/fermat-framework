@@ -114,14 +114,12 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
     private void setUpHelpPublished(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-//                    .setBannerRes(R.drawable.banner_asset_factory)
+                    .setBannerRes(R.drawable.banner_asset_factory)
                     .setIconRes(R.drawable.asset_factory)
                     .setVIewColor(R.color.dap_asset_factory_view_color)
                     .setTitleTextColor(R.color.dap_asset_factory_view_color)
-                    .setSubTitle("Published Tab of Asset Factory.")
-                    .setBody("This tab shows all the Assets that you have already created and were  successfully published.\n \n" +
-                            "Published assets are read-only and cannot be changed.")
-//                    .setTextFooter("Again, give me a Text")
+                    .setSubTitle(R.string.dap_asset_factory_published_subTitle)
+                    .setBody(R.string.dap_asset_factory_published_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -356,7 +354,7 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
                                 selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
                                 break;
                             }
-                            manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.TEST);
+                            manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.getDefaultBlockchainNetworkType());
                             selectedAsset = null;
                             return true;
                         }

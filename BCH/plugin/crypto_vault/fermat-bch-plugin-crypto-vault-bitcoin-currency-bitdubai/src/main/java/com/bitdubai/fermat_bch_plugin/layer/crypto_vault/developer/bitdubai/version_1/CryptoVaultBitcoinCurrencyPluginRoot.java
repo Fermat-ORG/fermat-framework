@@ -198,8 +198,8 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      * gets a fresh un used crypto Address from the vault
      */
     @Override
-    public CryptoAddress getAddress() {
-        return bitcoinCurrencyCryptoVaultManager.getAddress();
+    public CryptoAddress getAddress(BlockchainNetworkType blockchainNetworkType) {
+        return bitcoinCurrencyCryptoVaultManager.getAddress(blockchainNetworkType);
     }
 
     @Override
@@ -219,7 +219,7 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      */
     @Override
     public CryptoAddress getCryptoAddress(@Nullable BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
-        return getAddress();
+        return getAddress(blockchainNetworkType);
     }
 
     @Override

@@ -112,13 +112,13 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             amountText = (EditText) findViewById(R.id.bnk_ctd_amount);
             memoText = (AutoCompleteTextView) findViewById(R.id.bnk_ctd_memo);
             applyBtn = (Button) findViewById(R.id.bnk_ctd_apply_transaction_btn);
-            cancelBtn = (Button) findViewById(R.id.bnk_ctd_cancel_transaction_btn);
+            //cancelBtn = (Button) findViewById(R.id.bnk_ctd_cancel_transaction_btn);
 
-            dialogTitleLayout.setBackgroundColor(getTransactionTitleColor());
+            //dialogTitleLayout.setBackgroundColor(getTransactionTitleColor());
             dialogTitle.setText(getTransactionTitleText());
             amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
 
-            cancelBtn.setOnClickListener(this);
+            //cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);
 
         }catch (Exception e){
@@ -149,9 +149,10 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.bnk_ctd_cancel_transaction_btn) {
+        /*if (i == R.id.bnk_ctd_cancel_transaction_btn) {
             dismiss();
-        }else if( i == R.id.bnk_ctd_apply_transaction_btn){
+        }*/
+        if( i == R.id.bnk_ctd_apply_transaction_btn){
             applyTransaction();
         }
     }
@@ -218,7 +219,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                         return  memoText.getText().toString();
                     }
                 };
-                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeWithdraw(t);
+                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeAsyncWithdraw(t);
             }
             if (transactionType == TransactionType.CREDIT) {
                 System.out.println("DIALOG = "+TransactionType.CREDIT.getCode());
@@ -265,7 +266,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                         return  memoText.getText().toString();
                     }
                 };
-                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeDeposit(t);
+                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeAsyncDeposit(t);
             }
         } catch (Exception e) {
             bankMoneyWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));

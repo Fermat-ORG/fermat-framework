@@ -146,7 +146,7 @@ public class NetworkServiceChatNetworkServiceDatabaseFactory implements DealsWit
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
-                System.out.println("ChatPluginRoot - table:" + table);
+              //  System.out.println("NetworkServiceChatNetworkServicePluginRoot - table:" + table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }catch(Exception e){

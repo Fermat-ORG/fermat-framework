@@ -6,26 +6,28 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventLi
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_cbp_api.all_definition.events.GenericCBPFermatEvent;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestNewsEvent;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestUpdatesEvent;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.events.NewContractClosed;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.CustomerAckMerchandiseConfirmed;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.events.CustomerOfflinePaymentConfirmed;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_payment.events.CustomerOnlinePaymentConfirmed;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.events.NewNegotiationTransactionNewEvent;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.events.NewNegotiationTransactionUpdateEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.events.CustomerOfflinePaymentConfirmed;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_payment.events.CustomerOnlinePaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionConfirmResponseEvent;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionEventTEA;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionUpdateEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingBusinessTransactionContractHash;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionContract;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.event.ReviewNegotiationNotificationEvent;
 
 /**
  * The enum <code>com.bitdubai.fermat_cbp_api.fermat_cbp_api.events.enums.EventType</code>
@@ -55,6 +57,12 @@ public enum EventType implements FermatEventEnum {
     },
     CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES("CBCRUPD") {
         public final FermatEvent getNewEvent() { return new CryptoBrokerConnectionRequestUpdatesEvent(this); }
+    },
+    CRYPTO_BROKER_QUOTES_REQUEST_NEWS("CBQRN") {
+        public final FermatEvent getNewEvent() { return new GenericCBPFermatEvent(this); }
+    },
+    CRYPTO_BROKER_QUOTES_REQUEST_UPDATES("CBQRU") {
+        public final FermatEvent getNewEvent() { return new GenericCBPFermatEvent(this); }
     },
     CUSTOMER_OFFLINE_PAYMENT_CONFIRMED("CFPC"){
         public final FermatEvent getNewEvent() { return new CustomerOfflinePaymentConfirmed(this); }
@@ -118,6 +126,9 @@ public enum EventType implements FermatEventEnum {
     NEW_CONTRACT_OPENED("NCOPENED"){
         public final FermatEvent getNewEvent() { return new NewContractOpened(this);}
     },
+    REVIEW_NEGOTIATION_NOTIFICATION("RN"){
+        public final FermatEvent getNewEvent() {  return new ReviewNegotiationNotificationEvent(this);}
+    }
     ;
 
     private final String code;

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -7,7 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
@@ -162,11 +162,11 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransaction);
             cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
             String newTx = assetVaultManager.createBitcoinTransaction(digitalAssetMetadata.getLastTransactionHash(), actorAssetUser.getCryptoAddress());
-            digitalAssetMetadata = digitalAssetDistributionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null);
+            digitalAssetMetadata = digitalAssetDistributionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null, cryptoTransaction.getBlockchainNetworkType());
             System.out.println("ASSET DISTRIBUTION set debit in asset issuer wallet:" + genesisTransaction);
             digitalAssetDistributionVault.updateWalletBalance(digitalAssetMetadata, cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, actorAssetUser.getActorPublicKey());
             System.out.println("ASSET DISTRIBUTION Begins the deliver to an remote actor");
-            deliverToRemoteActor(digitalAssetMetadata, actorAssetUser);
+            deliverToRemoteActor(digitalAssetMetadata, actorAssetUser, cryptoTransaction.getBlockchainNetworkType());
         } catch (CantPersistDigitalAssetException exception) {
             throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into database");
         } catch (CantCreateDigitalAssetFileException exception) {
@@ -191,7 +191,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     }
 
 
-    private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser remoteActorAssetUser) throws CantSendDigitalAssetMetadataException {
+    private void deliverToRemoteActor(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser remoteActorAssetUser, BlockchainNetworkType networkType) throws CantSendDigitalAssetMetadataException {
         String genesisTransaction;
         try {
             System.out.println("ASSET DISTRIBUTION Preparing delivering to remote actor");
@@ -200,7 +200,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.DELIVERING, genesisTransaction);
             System.out.println("ASSET DISTRIBUTION Sender Actor name: " + actorAssetIssuerManager.getActorAssetIssuer().getName());
             System.out.println("ASSET DISTRIBUTION Before deliver - remote asset user ");
-            assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), remoteActorAssetUser.getActorPublicKey());
+            assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), remoteActorAssetUser.getActorPublicKey(), networkType);
             this.assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(actorAssetIssuerManager.getActorAssetIssuer(), remoteActorAssetUser, digitalAssetMetadata);
         } catch (CantExecuteQueryException | CantStartDeliveringException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
@@ -229,14 +229,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                 actorAssetUser.getActorPublicKey(),
                 actorAddress);
         System.out.println("ASSET DISTRIBUTION registered in database");
-        persistInLocalStorage(digitalAssetMetadata);
     }
-
-    @Override
-    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
-        //To implement
-    }
-
 
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
         System.out.println("ASSET DISTRIBUTION Internal Id: " + digitalAssetMetadata.getGenesisTransaction());
@@ -266,12 +259,6 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                     } else {
                         System.out.println("ASSET DISTRIBUTION IS NOT FIRST TRANSACTION");
                         assetDistributionDao.updateActorAssetUser(actorAssetUser, digitalAssetMetadata.getGenesisTransaction());
-                        System.out.println("ASSET REDEMPTION IS NOT FIRST TRANSACTION");
-                        try {
-                            bitcoinNetworkManager.cancelBroadcast(digitalAssetMetadata.getLastTransactionHash());
-                        } catch (CantCancellBroadcastTransactionException e) {
-                            //Ok, maybe I don't have it.
-                        }
                     }
                 } catch (TransactionAlreadyDeliveringException | CantPersistDigitalAssetException | CantCreateDigitalAssetFileException | CantCheckAssetDistributionProgressException | RecordsNotFoundException | CantUpdateRecordException | CantLoadTableToMemoryException e) {
                     this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

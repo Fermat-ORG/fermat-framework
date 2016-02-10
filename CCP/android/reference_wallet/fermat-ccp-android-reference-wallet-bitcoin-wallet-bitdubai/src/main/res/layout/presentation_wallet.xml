@@ -24,7 +24,6 @@
         android:paddingStart="1dp"
         android:paddingTop="20dp">
 
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,12 +31,10 @@
             android:paddingLeft="12dp"
             android:paddingRight="12dp">
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/txt_title"
@@ -47,11 +44,10 @@
                     android:layout_weight="1"
                     android:gravity="left"
                     android:paddingLeft="5dp"
-                    android:text="Welcome!"
+                    android:text="@string/welcome_text"
                     android:textColor="#00a99d"
                     android:textSize="20sp"
                     app:typeface="CAVIAR_DREAMS_BOLD"
-
                     />
 
                 <ImageView
@@ -60,7 +56,6 @@
                     android:layout_weight="0.4"
                     android:paddingBottom="2dp"
                     android:src="@drawable/bitcoin_wallet_2" />
-
             </LinearLayout>
 
             <View
@@ -70,7 +65,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_line_dialog" />
-
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -85,7 +79,6 @@
                     android:src="@drawable/banner" />
             </RelativeLayout>
 
-
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,7 +88,7 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="30dp"
                 android:paddingTop="7sp"
-                android:text="This is a simple bitcoin only wallet. It's main features are:"
+                android:text="@string/this_is_a_simple_bitcoint_only_wallet_text"
                 android:textColor="#1d1d26"
                 android:textSize="14sp" />
 
@@ -106,14 +99,12 @@
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_line_dialog" />
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingBottom="7dp"
                 android:paddingTop="12dp">
-
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="match_parent"
@@ -123,11 +114,9 @@
                     android:paddingBottom="5dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
-                    android:text="* See your balance.\n* Send and receive bitcoins.\n* Request bitcoins.\n* Browse your transaction history."
+                    android:text="@string/see_your_balance_text"
                     android:textColor="#1d1d26"
                     android:textSize="12sp" />
-
-
             </LinearLayout>
 
             <View
@@ -136,7 +125,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/round_corner_line_dialog" />
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -152,11 +140,9 @@
                     android:paddingBottom="10dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="30dp"
-                    android:text="To begin, choose an avatar below. You might change it later with any picture and your own alias."
+                    android:text="@string/to_begin_choose_an_avatar_below_text"
                     android:textColor="#1d1d26"
                     android:textSize="12sp" />
-
-
             </LinearLayout>
 
             <View
@@ -185,12 +171,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginRight="32dp"
                     android:gravity="center_vertical"
-                    android:text="Don´t show this again"
+                    android:text="@string/no_id_dont_show_this_again_text"
                     android:textColor="#7c7c7c"
-                    android:textSize="12dp" />
+                    android:textSize="12sp" />
             </RelativeLayout>
-
-
         </LinearLayout>
 
 
@@ -231,8 +215,8 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Be John Doe"
-                    android:textSize="12dp" />
+                    android:text="@string/be_john_doe_text"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -267,10 +251,12 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:text="Be Jane Doe"
-                    android:textSize="12dp" />
+                    android:text="@string/be_jane_doe__text"
+                    android:textSize="12sp" />
             </LinearLayout>
 
         </LinearLayout>
+
     </LinearLayout>
+
 </RelativeLayout>

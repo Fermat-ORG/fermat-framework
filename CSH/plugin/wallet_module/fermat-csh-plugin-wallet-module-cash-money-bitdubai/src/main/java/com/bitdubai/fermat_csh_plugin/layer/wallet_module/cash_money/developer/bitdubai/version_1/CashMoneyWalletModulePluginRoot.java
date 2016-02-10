@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -29,11 +30,11 @@ import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProvi
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
-import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransactionManager;
@@ -46,12 +47,10 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPrefer
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.exceptions.CantGetCashMoneyWalletBalancesException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletModuleManagerImpl;
-import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CashTransactionParametersImpl;
 import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1.structure.CurrencyPairImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +73,8 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
 
 
     /* CASH PLUGINS */
@@ -113,7 +114,8 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
         System.out.println("CASHMONEYWALLETMODULE - PluginRoot START");
 
         try {
-            cashMoneyWalletModuleManager = new CashMoneyWalletModuleManagerImpl(cashMoneyWalletManager, pluginId, pluginFileSystem, errorManager, cashDepositTransactionManager, cashWithdrawalTransactionManager);
+            cashMoneyWalletModuleManager = new CashMoneyWalletModuleManagerImpl(cashMoneyWalletManager, pluginId, pluginFileSystem,
+                    errorManager, cashDepositTransactionManager, cashWithdrawalTransactionManager, broadcaster);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -142,13 +144,13 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     }
 
     @Override
-    public void createAsyncCashDepositTransaction(CashTransactionParameters depositParameters) {
-        cashMoneyWalletModuleManager.createAsyncCashDepositTransaction(depositParameters);
+    public void createAsyncCashTransaction(CashTransactionParameters depositParameters) {
+        cashMoneyWalletModuleManager.createAsyncCashTransaction(depositParameters);
     }
 
     @Override
-    public void createAsyncCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) {
-        cashMoneyWalletModuleManager.createAsyncCashWithdrawalTransaction(withdrawalParameters);
+    public void cancelAsyncCashTransaction(CashMoneyWalletTransaction transaction) throws Exception {
+        cashMoneyWalletModuleManager.cancelAsyncCashTransaction(transaction);
     }
 
     @Override
@@ -162,8 +164,18 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
     }
 
     @Override
+    public List<CashMoneyWalletTransaction> getPendingTransactions() {
+        return cashMoneyWalletModuleManager.getPendingTransactions();
+    }
+
+    @Override
     public List<CashMoneyWalletTransaction> getTransactions(String walletPublicKey, List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException {
         return cashMoneyWalletModuleManager.getTransactions(walletPublicKey, transactionTypes, balanceTypes, max, offset);
+    }
+
+    @Override
+    public CashMoneyWalletTransaction getTransaction(String walletPublicKey, UUID transactionId) throws CantGetCashMoneyWalletTransactionsException {
+        return cashMoneyWalletModuleManager.getTransaction(walletPublicKey, transactionId);
     }
 
     @Override

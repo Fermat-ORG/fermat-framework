@@ -37,6 +37,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -111,6 +112,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     final TransactionType transactionType = TransactionType.DEBIT;
     ReferenceWalletSession referenceWalletSession;
     SettingsManager<BitcoinWalletSettings> settingsManager;
+    BlockchainNetworkType blockchainNetworkType;
     long before = 0;
     long after = 0;
     boolean pressed = false;
@@ -232,9 +234,21 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setIsContactsHelpEnabled(true);
                 bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
 
+                if(bitcoinWalletSettings.getBlockchainNetworkType()==null){
+                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                }
+
+
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
             }
 
+            if(bitcoinWalletSettings.getBlockchainNetworkType()==null){
+                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            }
+            settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+
+            blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+            System.out.println("Network Type"+blockchainNetworkType);
             final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
 
@@ -625,7 +639,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
                             CryptoWalletWalletContact cryptoWalletWalletContact = null;
                             try {
-                                cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey());
+                                cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(),blockchainNetworkType);
                             } catch (CantCreateWalletContactException | ContactNameAlreadyExistsException e) {
                                 try {
                                     cryptoWalletWalletContact = moduleManager.findWalletContactByName("mati_bitcoins", appSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
@@ -767,7 +781,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             if(intraUserLoginIdentity!=null) {
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
 
-                List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, MAX_TRANSACTIONS, available_offset);
+                BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType().getCode());
+
+                List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, available_offset);
 
                 lstCryptoWalletTransactionsAvailable.addAll(list);
 
@@ -780,7 +796,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
 //                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);
-                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);
+                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 //                    long total = 0;
 //                    for(CryptoWalletTransaction cwt : lst){
 //                        total+= cwt.getAmount();

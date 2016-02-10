@@ -51,7 +51,7 @@ public class FermatTestNetwork {
     }
 
     /**
-     * will return a ranmon existing client.
+     * will return a randmon existing client.
      * @return
      */
     public FermatTestNetworkNode getRandomNetworkNode(){

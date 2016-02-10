@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
@@ -30,37 +29,37 @@ import java.util.UUID;
 public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity> {
 
     /**
-     * The method <code>listSelectableIdentities</code> lists the login identities that can be used
-     * to log in as an Crypto Broker for the current Device User.
+     * The method <code>listSelectableIdentities</code> lists all the Crypto Broker identities
+     * stored locally in the device.
      *
-     * @return the list of identities the current Device User can use to log in
+     * @return a list of broker identities the current device user can use to log in.
      *
      * @throws CantListIdentitiesToSelectException if something goes wrong.
      */
     List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
 
     /**
-     * The method <code>searchNewCryptoBroker</code> gives us an interface to manage a search for a particular
-     * crypto broker
+     * The method <code>searchNewCryptoBroker</code> returns an interface that allows searching for remote
+     * Crypto Brokers that are not linked to the local selectedIdentity
      *
      * @return a searching interface
      */
     CryptoBrokerCommunitySearch searchNewCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
 
     /**
-     * The method <code>searchNewCryptoBroker</code> gives us an interface to manage a search for a particular
-     * crypto broker
+     * The method <code>searchNewCryptoBroker</code> returns an interface that allows searching for remote
+     * Crypto Brokers that are linked to the local selectedIdentity
      *
      * @return a searching interface
      */
     CryptoBrokerCommunitySearch searchConnectedCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
 
     /**
-     * The method <code>requestConnectionToCryptoBroker</code> initialize the request of contact between
+     * The method <code>requestConnectionToCryptoBroker</code> initialises a contact request between
      * two crypto brokers.
      *
-     * @param selectedIdentity       The identity selected to work with.
-     * @param cryptoBrokerToContact  the information of the broker to add.
+     * @param selectedIdentity       The selected local broker identity.
+     * @param cryptoBrokerToContact  The information of the remote broker to connect to.
      *
      * @throws CantRequestConnectionException           if something goes wrong.
      * @throws ActorConnectionAlreadyRequestedException if the connection already exists.

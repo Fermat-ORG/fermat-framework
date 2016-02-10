@@ -310,22 +310,19 @@
                 android:visibility="gone" />
 
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:padding="16dp">
+                android:layout_marginTop="32dp">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/action_create"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginRight="16dp"
+                    android:layout_centerHorizontal="true"
                     android:text="Create" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 

@@ -1,8 +1,12 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
@@ -26,7 +30,24 @@ public class DigitalAssetUserRedemptionVault extends AbstractDigitalAssetVault {
         LOCAL_STORAGE_PATH = "digital-asset-user-redemption/";
     }
 
-    public AssetUserWallet getUserWallet() throws CantLoadWalletException {
-        return assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest");
+    public AssetUserWallet getUserWallet(BlockchainNetworkType networkType) throws CantLoadWalletException {
+        return assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest", networkType);
+    }
+
+
+    @Override
+    public DigitalAssetMetadata updateMetadataTransactionChain(String genesisTx, String txHash, String blockHash, BlockchainNetworkType networkType) throws CantCreateDigitalAssetFileException, CantGetDigitalAssetFromLocalStorageException {
+        DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromWallet(genesisTx, networkType);
+        digitalAssetMetadata.addNewTransaction(txHash, blockHash);
+        persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, genesisTx);
+        return digitalAssetMetadata;
+    }
+
+    public DigitalAssetMetadata getDigitalAssetMetadataFromWallet(String internalId, BlockchainNetworkType networkType) throws CantGetDigitalAssetFromLocalStorageException {
+        try {
+            return getUserWallet(networkType).getDigitalAssetMetadata(internalId);
+        } catch (CantLoadWalletException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException();
+        }
     }
 }

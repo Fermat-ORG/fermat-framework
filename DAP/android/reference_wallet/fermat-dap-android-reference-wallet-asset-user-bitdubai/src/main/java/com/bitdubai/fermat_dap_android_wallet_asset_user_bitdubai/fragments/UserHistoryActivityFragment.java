@@ -113,8 +113,8 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle("Asset User History.")
-                    .setBody("*GIVE ME A TEXT")
+//                    .setSubTitle("Asset User History.")
+//                    .setBody("*GIVE ME A TEXT")
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -144,7 +144,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Asset User system error",
+            makeText(getActivity(), R.string.dap_user_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
@@ -165,7 +165,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
             e.printStackTrace();
         }
         if (identity == null) {
-            makeText(getActivity(), "Identity must be created",
+            makeText(getActivity(), R.string.dap_user_wallet_identity,
                     LENGTH_SHORT).show();
             getActivity().onBackPressed();
         }
@@ -174,12 +174,12 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(Color.parseColor("#381a5e"));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet_principal));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(Color.parseColor("#381a5e"));
+                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet_principal));
             }
         }
     }
@@ -312,7 +312,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
             }
         } else {
             Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
+                    R.string.dap_user_wallet_system_error,
                     Toast.LENGTH_SHORT).
                     show();
         }

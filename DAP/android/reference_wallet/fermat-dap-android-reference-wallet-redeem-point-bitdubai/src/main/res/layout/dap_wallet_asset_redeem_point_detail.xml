@@ -27,6 +27,7 @@
                 android:textColor="#ffffff"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/assetDetailExpDateText"
                 android:paddingTop="15dp"
                 android:paddingLeft="15dp"/>
 
@@ -117,22 +118,24 @@
 
         </RelativeLayout>
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/assetRedeemedUserText"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Redeemed User List"
-        android:fontFamily="regular"
-        android:textSize="17sp"
-        android:textColor="#ffffff"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:paddingTop="15dp"
-        android:paddingLeft="15dp"
-        android:gravity="center_vertical"
-        android:background="#0183b8"
-        android:autoText="true" />
+        android:layout_height="30dp"
+        android:background="#0183b8">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetRedeemedUserText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Redeemed Users"
+            android:fontFamily="regular"
+            android:textSize="17sp"
+            android:textColor="#ffffff"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"/>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"

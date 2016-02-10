@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CashMoneyTransaction;
@@ -11,7 +13,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
@@ -26,8 +27,8 @@ import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantCreateUnholdTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.unhold.interfaces.CashUnholdTransactionManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Date;
 import java.util.UUID;
@@ -38,7 +39,7 @@ import java.util.logging.Logger;
  * contains the logic for handling agent transactional
  * Created by franklin on 17/11/15.
  */
-public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
+public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
     //TODO: Manejo de Eventos
 
     private Thread agentThread;
@@ -48,6 +49,10 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CashUnholdTransactionManager cashUnholdTransactionManager;
     private final StockTransactionCashMoneyDestockFactory stockTransactionCashMoneyDestockFactory;
+    private UUID pluginId;
+    public final int SLEEP_TIME = 5000;
+    int iterationNumber = 0;
+    boolean threadWorking;
 
     public StockTransactionsCashMoneyDestockMonitorAgent(ErrorManager errorManager,
                                                          StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager,
@@ -56,78 +61,108 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                                                          PluginDatabaseSystem pluginDatabaseSystem,
                                                          UUID pluginId) {
 
-        this.errorManager                            = errorManager;
+        this.errorManager = errorManager;
         this.stockTransactionCashMoneyDestockManager = stockTransactionCashMoneyDestockManager;
-        this.cryptoBrokerWalletManager               = cryptoBrokerWalletManager;
-        this.cashUnholdTransactionManager            = cashUnholdTransactionManager;
-        stockTransactionCashMoneyDestockFactory      = new StockTransactionCashMoneyDestockFactory(pluginDatabaseSystem, pluginId);
+        this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
+        this.cashUnholdTransactionManager = cashUnholdTransactionManager;
+        stockTransactionCashMoneyDestockFactory = new StockTransactionCashMoneyDestockFactory(pluginDatabaseSystem, pluginId);
+        this.pluginId = pluginId;
+
+        this.agentThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isRunning())
+                    process();
+            }
+        });
     }
+
     @Override
     public void start() throws CantStartAgentException {
         Logger LOG = Logger.getGlobal();
-        LOG.info("Bank Money Restock Transaction monitor agent starting");
+        LOG.info("Cash Money Destock Transaction monitor agent starting");
 
-        final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
+        //final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
 
-        this.agentThread = new Thread(monitorAgent);
+        //this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
+        this.status=AgentStatus.STARTED;
     }
 
     @Override
     public void stop() {
-        this.agentThread.interrupt();
+        if (isRunning())
+            this.agentThread.interrupt();
+        this.status = AgentStatus.STOPPED;
     }
 
+    public void process() {
+
+        while (isRunning()) {
+
+            try {
+                Thread.sleep(SLEEP_TIME);
+            } catch (InterruptedException interruptedException) {
+                cleanResources();
+                return;
+            }
+
+            doTheMainTask();
+
+            if (agentThread.isInterrupted()) {
+                cleanResources();
+                return;
+            }
+        }
+    }
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private final class MonitorAgent implements Runnable {
+//    private final class MonitorAgent implements Runnable {
+//
+//        private final ErrorManager errorManager;
+//        public final int SLEEP_TIME = 5000;
+//        int iterationNumber = 0;
+//        boolean threadWorking;
+//
+//        public MonitorAgent(final ErrorManager errorManager) {
+//
+//            this.errorManager = errorManager;
+//        }
+//
+//        @Override
+//        public void run() {
+//            threadWorking = true;
+//            while (threadWorking) {
+//                /**
+//                 * Increase the iteration counter
+//                 */
+//                iterationNumber++;
+//                try {
+//                    Thread.sleep(SLEEP_TIME);
+//
+//                    /**
+//                     * now I will check if there are pending transactions to raise the event
+//                     */
+//
+//                    doTheMainTask();
+//                } catch (InterruptedException e) {
+//                    errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                } catch (Exception e) {
+//                    errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                }
+//
+//            }
+//        }
+//    }
 
-        private final ErrorManager errorManager;
-        public final int SLEEP_TIME = 5000;
-        int iterationNumber = 0;
-        boolean threadWorking;
-
-        public MonitorAgent(final ErrorManager errorManager) {
-
-            this.errorManager = errorManager;
-        }
-
-        @Override
-        public void run() {
-            threadWorking = true;
-            while (threadWorking) {
-                /**
-                 * Increase the iteration counter
-                 */
-                iterationNumber++;
-                try {
-                    Thread.sleep(SLEEP_TIME);
-                } catch (InterruptedException interruptedException) {
-                    return;
-                }
-
-                /**
-                 * now I will check if there are pending transactions to raise the event
-                 */
-                try {
-                    doTheMainTask();
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-
-            }
-        }
-    }
-
-    private void doTheMainTask(){
+    private void doTheMainTask() {
         try {
             // I define the filter to null for all
             DatabaseTableFilter filter = null;
-            for(CashMoneyTransaction cashMoneyTransaction : stockTransactionCashMoneyDestockFactory.getCashMoneyTransactionList(filter))
-            {
-                switch(cashMoneyTransaction.getTransactionStatus()) {
+            for (CashMoneyTransaction cashMoneyTransaction : stockTransactionCashMoneyDestockFactory.getCashMoneyTransactionList(filter)) {
+                switch (cashMoneyTransaction.getTransactionStatus()) {
                     case INIT_TRANSACTION:
                         //Llamar al metodo de la interfaz public del manager de Bank Hold
                         //Luego cambiar el status al registro de la transaccion leido
@@ -138,35 +173,41 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
-                        try {
-                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
-                                    cashMoneyTransaction.getTransactionId(),
-                                    cashMoneyTransaction.getFiatCurrency(),
-                                    BalanceType.AVAILABLE,
-                                    TransactionType.DEBIT,
-                                    CurrencyType.CASH_DELIVERY_MONEY,
-                                    cashMoneyTransaction.getCbpWalletPublicKey(),
-                                    cashMoneyTransaction.getActorPublicKey(),
-                                    cashMoneyTransaction.getAmount(),
-                                    new Date().getTime() / 1000,
-                                    cashMoneyTransaction.getConcept(),
-                                    cashMoneyTransaction.getPriceReference(),
-                                    cashMoneyTransaction.getOriginTransaction());
+                        WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
+                                cashMoneyTransaction.getTransactionId(),
+                                cashMoneyTransaction.getFiatCurrency(),
+                                BalanceType.BOOK,
+                                TransactionType.DEBIT,
+                                CurrencyType.CASH_DELIVERY_MONEY,
+                                cashMoneyTransaction.getCbpWalletPublicKey(),
+                                cashMoneyTransaction.getActorPublicKey(),
+                                cashMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                cashMoneyTransaction.getConcept(),
+                                cashMoneyTransaction.getPriceReference(),
+                                cashMoneyTransaction.getOriginTransaction());
 
-                            //TODO:Solo para testear
-                            cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
-                            cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
-                            stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+                        WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
+                                cashMoneyTransaction.getTransactionId(),
+                                cashMoneyTransaction.getFiatCurrency(),
+                                BalanceType.AVAILABLE,
+                                TransactionType.DEBIT,
+                                CurrencyType.CASH_DELIVERY_MONEY,
+                                cashMoneyTransaction.getCbpWalletPublicKey(),
+                                cashMoneyTransaction.getActorPublicKey(),
+                                cashMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                cashMoneyTransaction.getConcept(),
+                                cashMoneyTransaction.getPriceReference(),
+                                cashMoneyTransaction.getOriginTransaction());
 
-                        } catch (CryptoBrokerWalletNotFoundException e) {
-                            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
-                        } catch (CantGetStockCryptoBrokerWalletException e) {
-                            e.printStackTrace();
-                        } catch (CantAddDebitCryptoBrokerWalletException e) {
-                            e.printStackTrace();
-                        }
+                        //TODO:Solo para testear
+                        cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordBook, BalanceType.BOOK);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
+                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
+                        stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+
                         break;
                     case IN_UNHOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
@@ -179,34 +220,51 @@ public class StockTransactionsCashMoneyDestockMonitorAgent implements Agent{
                                 cashMoneyTransaction.getCashWalletPublicKey(),
                                 cashMoneyTransaction.getActorPublicKey(),
                                 cashMoneyTransaction.getAmount(),
-                                cashMoneyTransaction.getCashReference(),
-                                cashMoneyTransaction.getMemo());
-                                //"pluginId");
-                        cashUnholdTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
-                        CashTransactionStatus castTransactionStatus =  cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
-                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode())
-                        {
+                                //cashMoneyTransaction.getCashReference(),
+                                cashMoneyTransaction.getMemo(),
+                                pluginId.toString());
+
+                        if (!cashUnholdTransactionManager.isTransactionRegistered(cashMoneyTransaction.getTransactionId()))
+                            cashUnholdTransactionManager.createCashUnholdTransaction(cashTransactionParametersWrapper);
+
+                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+                        break;
+                    case IN_EJECUTION:
+                        CashTransactionStatus castTransactionStatus = cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
+                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
                             stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         }
-                        if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode())
-                        {
+                        if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode()) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         }
                         break;
                 }
             }
+        } catch (CryptoBrokerWalletNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantGetStockCryptoBrokerWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantAddDebitCryptoBrokerWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (MissingCashMoneyDestockDataException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCreateUnholdTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetUnholdTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+    private void cleanResources() {
+        /**
+         * Disconnect from database and explicitly set all references to null.
+         */
     }
 }

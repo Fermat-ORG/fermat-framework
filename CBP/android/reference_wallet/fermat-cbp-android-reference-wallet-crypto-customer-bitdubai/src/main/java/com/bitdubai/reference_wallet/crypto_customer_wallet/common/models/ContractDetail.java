@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 21/01/16.
@@ -12,7 +13,7 @@ import java.util.Arrays;
 public class ContractDetail {
 
     ContractDetailType contractDetailType;
-    CurrencyType currencyType;
+    String currencyTypeCode;
     String currencyCode;
     float currencyAmount;
     ContractStatus contractStatus;
@@ -20,19 +21,21 @@ public class ContractDetail {
     byte[] cryptoCustomerImage;
     long lastUpdate;
     float exchangeRateAmount;
+    UUID contractId;
 
     public ContractDetail(
             ContractDetailType contractDetailType,
-            CurrencyType currencyType,
+            String currencyType,
             String currencyCode,
             float currencyAmount,
             ContractStatus contractStatus,
             String cryptoCustomerAlias,
             byte[] cryptoCustomerImage,
             long lastUpdate,
-            float exchangeRateAmount) {
+            float exchangeRateAmount,
+            UUID contractId) {
         this.contractDetailType = contractDetailType;
-        this.currencyType = currencyType;
+        this.currencyTypeCode = currencyType;
         this.currencyCode = currencyCode;
         this.currencyAmount = currencyAmount;
         this.contractStatus = contractStatus;
@@ -40,6 +43,23 @@ public class ContractDetail {
         this.cryptoCustomerImage = cryptoCustomerImage;
         this.lastUpdate = lastUpdate;
         this.exchangeRateAmount = exchangeRateAmount;
+        this.contractId = contractId;
+    }
+
+    public String getCurrencyTypeCode() {
+        return currencyTypeCode;
+    }
+
+    public void setCurrencyTypeCode(String currencyTypeCode) {
+        this.currencyTypeCode = currencyTypeCode;
+    }
+
+    public UUID getContractId() {
+        return contractId;
+    }
+
+    public void setContractId(UUID contractId) {
+        this.contractId = contractId;
     }
 
     public float getExchangeRateAmount() {
@@ -58,12 +78,12 @@ public class ContractDetail {
         this.contractDetailType = contractDetailType;
     }
 
-    public CurrencyType getCurrencyType() {
-        return currencyType;
+    public String getCurrencyType() {
+        return currencyTypeCode;
     }
 
-    public void setCurrencyType(CurrencyType currencyType) {
-        this.currencyType = currencyType;
+    public void setCurrencyType(String currencyType) {
+        this.currencyTypeCode = currencyType;
     }
 
     public String getCurrencyCode() {
@@ -118,13 +138,15 @@ public class ContractDetail {
     public String toString() {
         return "ContractDetail{" +
                 "contractDetailType=" + contractDetailType +
-                ", currencyType=" + currencyType +
+                ", currencyTypeCode='" + currencyTypeCode + '\'' +
                 ", currencyCode='" + currencyCode + '\'' +
                 ", currencyAmount=" + currencyAmount +
                 ", contractStatus=" + contractStatus +
                 ", cryptoCustomerAlias='" + cryptoCustomerAlias + '\'' +
                 ", cryptoCustomerImage=" + Arrays.toString(cryptoCustomerImage) +
                 ", lastUpdate=" + lastUpdate +
+                ", exchangeRateAmount=" + exchangeRateAmount +
+                ", contractId=" + contractId +
                 '}';
     }
 

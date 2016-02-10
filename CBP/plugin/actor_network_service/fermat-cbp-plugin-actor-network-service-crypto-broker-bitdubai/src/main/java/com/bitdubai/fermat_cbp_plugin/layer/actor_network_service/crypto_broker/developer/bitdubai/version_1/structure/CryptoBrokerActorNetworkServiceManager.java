@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enu
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAnswerQuotesRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
@@ -18,15 +19,19 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.UnexpectedProtocolStateException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
-import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.ConnectionNewsDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
@@ -48,7 +53,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class CryptoBrokerActorNetworkServiceManager implements CryptoBrokerManager {
 
     private final CommunicationsClientConnection communicationsClientConnection;
-    private final ConnectionNewsDao              connectionNewsDao             ;
+    private final CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao;
     private final ErrorManager                   errorManager                  ;
     private final PluginVersionReference         pluginVersionReference        ;
 
@@ -56,12 +61,12 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     private PlatformComponentProfile platformComponentProfile;
 
     public CryptoBrokerActorNetworkServiceManager(final CommunicationsClientConnection communicationsClientConnection,
-                                                  final ConnectionNewsDao              connectionNewsDao             ,
+                                                  final CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao,
                                                   final ErrorManager                   errorManager                  ,
                                                   final PluginVersionReference         pluginVersionReference        ) {
 
         this.communicationsClientConnection = communicationsClientConnection;
-        this.connectionNewsDao              = connectionNewsDao             ;
+        this.cryptoBrokerActorNetworkServiceDao = cryptoBrokerActorNetworkServiceDao;
         this.errorManager                   = errorManager                  ;
         this.pluginVersionReference         = pluginVersionReference        ;
     }
@@ -87,7 +92,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                         (cryptoBroker.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                        null// imageString
+                        imageString
                 );
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
@@ -178,7 +183,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             final RequestType             type   = RequestType            .SENT           ;
             final ConnectionRequestAction action = ConnectionRequestAction.REQUEST        ;
 
-            connectionNewsDao.createConnectionRequest(
+            cryptoBrokerActorNetworkServiceDao.createConnectionRequest(
                     newId            ,
                     brokerInformation,
                     state            ,
@@ -215,7 +220,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             final RequestType             type   = RequestType            .SENT           ;
             final ConnectionRequestAction action = ConnectionRequestAction.DISCONNECT     ;
 
-            connectionNewsDao.createDisconnectionRequest(
+            cryptoBrokerActorNetworkServiceDao.createDisconnectionRequest(
                     newId,
                     identityPublicKey,
                     identityActorType,
@@ -250,7 +255,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             final ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
 
-            connectionNewsDao.denyConnection(
+            cryptoBrokerActorNetworkServiceDao.denyConnection(
                     requestId,
                     protocolState
             );
@@ -292,7 +297,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             final ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
 
-            connectionNewsDao.acceptConnection(
+            cryptoBrokerActorNetworkServiceDao.acceptConnection(
                     requestId,
                     protocolState
             );
@@ -315,17 +320,15 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * @throws CantListPendingConnectionRequestsException  if something goes wrong.
      */
     @Override
-    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException {
+    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews(Actors actorType) throws CantListPendingConnectionRequestsException {
 
         try {
 
             List<ConnectionRequestAction> actions = new ArrayList<>();
 
-            actions.add(ConnectionRequestAction.CANCEL    );
-            actions.add(ConnectionRequestAction.DISCONNECT);
             actions.add(ConnectionRequestAction.REQUEST   );
 
-            return connectionNewsDao.listAllPendingRequests(actions);
+            return cryptoBrokerActorNetworkServiceDao.listAllPendingRequestsByActorType(actorType, actions);
 
         } catch (final CantListPendingConnectionRequestsException e){
 
@@ -354,7 +357,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             actions.add(ConnectionRequestAction.ACCEPT);
             actions.add(ConnectionRequestAction.DENY  );
 
-            return connectionNewsDao.listAllPendingRequests(actions);
+            return cryptoBrokerActorNetworkServiceDao.listAllPendingRequests(actions);
 
         } catch (final CantListPendingConnectionRequestsException e){
 
@@ -367,12 +370,89 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
         }
     }
 
+
+    @Override
+    public CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(final String                  requesterPublicKey   ,
+                                                                  final Actors                  requesterActorType   ,
+                                                                  final String                  cryptoBrokerPublicKey) throws CantRequestQuotesException {
+
+        try {
+
+            final UUID newId = UUID.randomUUID();
+
+            final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
+            final RequestType             type   = RequestType            .SENT           ;
+
+            return cryptoBrokerActorNetworkServiceDao.createQuotesRequest(
+                    newId                ,
+                    requesterPublicKey   ,
+                    requesterActorType   ,
+                    cryptoBrokerPublicKey,
+                    state                ,
+                    type
+            );
+
+        } catch (final CantRequestQuotesException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRequestQuotesException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(final RequestType requestType) throws CantListPendingQuotesRequestsException {
+
+        try {
+
+            return cryptoBrokerActorNetworkServiceDao.listPendingQuotesRequests(ProtocolState.PENDING_LOCAL_ACTION, requestType);
+
+        } catch (final CantListPendingQuotesRequestsException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListPendingQuotesRequestsException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void answerQuotesRequest(final UUID                    requestId ,
+                                    final long                    updateTime,
+                                    final List<CryptoBrokerQuote> quotes    ) throws CantAnswerQuotesRequestException,
+                                                                                     QuotesRequestNotFoundException  {
+
+        try {
+
+            cryptoBrokerActorNetworkServiceDao.answerQuotesRequest(
+                    requestId                    ,
+                    updateTime                   ,
+                    quotes                       ,
+                    ProtocolState.PROCESSING_SEND
+            );
+
+        } catch (final QuotesRequestNotFoundException | CantAnswerQuotesRequestException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantAnswerQuotesRequestException(e, null, "Unhandled Exception.");
+        }
+    }
+
     @Override
     public void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException {
 
         try {
 
-            connectionNewsDao.confirmActorConnectionRequest(requestId);
+            cryptoBrokerActorNetworkServiceDao.confirmActorConnectionRequest(requestId);
 
         } catch (final ConnectionRequestNotFoundException e){
 

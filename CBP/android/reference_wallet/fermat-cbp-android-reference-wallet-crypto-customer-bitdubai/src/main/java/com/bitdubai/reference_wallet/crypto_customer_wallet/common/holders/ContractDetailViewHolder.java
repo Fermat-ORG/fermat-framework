@@ -4,21 +4,32 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 21/01/16.
@@ -28,6 +39,12 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
     private Resources res;
     private View itemView;
+    /**
+     * Contract item
+     */
+    protected UUID contractId;
+    protected CryptoCustomerWalletManager walletManager;
+    private ContractDetailActivityFragment parentFragment;
 
     public ImageView customerImage;
     public ImageView stepNumber;
@@ -40,6 +57,8 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     public FermatButton textButton;
     public FermatButton confirmButton;
     protected int itemPosition;
+
+    ErrorManager errorManager;
     /**
      * Constructor
      *
@@ -56,6 +75,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         textDescription = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_text);
         textButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_text_button);
         confirmButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_confirm_button);
+        configButton();
         /*customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_sold_quantity_and_currency);
@@ -64,23 +84,105 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
     }
 
-    public void bind(ContractDetail itemInfo) {
-        ContractStatus contractStatus = itemInfo.getContractStatus();
+    private void configButton(){
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String buttonTest = confirmButton.getText().toString();
+                executeContractAction(buttonTest);
+            }
+        });
+    }
 
-        itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
-        switch (itemInfo.getContractDetailType()){
+    protected void executeContractAction(String buttonText){
+        try{
+            if(buttonText.equals("SEND")){
+                //TODO: Send Payment
+                //In this case, I will send the payment to Broker
+                this.walletManager.sendPayment(this.contractId.toString());
+                updateBackground(
+                        this.contractId.toString(),
+                        ContractDetailType.CUSTOMER_DETAIL);
+            }
+            if(buttonText.equals("CONFIRM")){
+                //TODO: Ack Merchandise
+                //In this case, I will ack the broker merchandise
+                this.walletManager.ackMerchandise(this.contractId.toString());
+                updateBackground(
+                        this.contractId.toString(),
+                        ContractDetailType.BROKER_DETAIL);
+            }
+        } catch (FermatException ex) {
+            Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+
+            Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
+        }
+
+    }
+
+    private void updateBackground(String contractHash, ContractDetailType contractDetailType){
+        try{
+            ContractStatus contractStatus=this.walletManager.getContractStatus(contractHash);
+            ContractStatus backgroundContractStatus=getContractStatusByContractDetailType(
+                    contractStatus,
+                    contractDetailType);
+            itemView.setBackgroundColor(getStatusBackgroundColor(backgroundContractStatus));
+            textButton.setText(contractStatus.getFriendlyName());
+        } catch (CantGetListCustomerBrokerContractPurchaseException ex) {
+            Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+
+            Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
+        }
+    }
+
+    public void setErrorManager(ErrorManager errorManager){
+        this.errorManager=errorManager;
+    }
+
+    public void setParentFragment(ContractDetailActivityFragment parentFragment){
+        this.parentFragment=parentFragment;
+    }
+
+    public void setWalletModuleManager(CryptoCustomerWalletManager walletManager){
+        this.walletManager=walletManager;
+    }
+
+    public void bind(ContractDetail itemInfo) {
+        this.contractId=itemInfo.getContractId();
+        ContractStatus contractStatus = itemInfo.getContractStatus();
+        ContractDetailType contractDetailType=itemInfo.getContractDetailType();
+        ContractStatus visualContractStatus=getContractStatusByContractDetailType(
+                contractStatus,
+                contractDetailType
+        );
+        itemView.setBackgroundColor(getStatusBackgroundColor(visualContractStatus));
+        switch (contractDetailType){
             case CUSTOMER_DETAIL:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 textDescription.setText("Customer");
+                confirmButton.setText("SEND");
                 break;
             case BROKER_DETAIL:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 textDescription.setText("Broker");
+                confirmButton.setText("CONFIRM");
                 break;
 
         }
         //TODO: here we can see the contract status
-        textButton.setText(contractStatus.getFriendlyName());
+        textButton.setText(visualContractStatus.getFriendlyName());
         /*customerName.setText(itemInfo.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
 
@@ -93,6 +195,58 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
         lastUpdateDate.setText(date);*/
     }
+
+    /**
+     * This method returns the friendly name from a contract status by contract detail type.
+     * @param contractStatus
+     * @param contractDetailType
+     * @return
+     */
+    private ContractStatus getContractStatusByContractDetailType(
+            ContractStatus contractStatus,
+            ContractDetailType contractDetailType){
+        switch (contractStatus){
+            case CANCELLED:
+                return ContractStatus.CANCELLED;
+            case COMPLETED:
+                return ContractStatus.COMPLETED;
+            case MERCHANDISE_SUBMIT:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.MERCHANDISE_SUBMIT;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PAYMENT_SUBMIT;
+                }
+            case PAUSED:
+                return ContractStatus.PAUSED;
+            case PENDING_MERCHANDISE:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.PENDING_MERCHANDISE;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PAYMENT_SUBMIT;
+                }
+            case PENDING_PAYMENT:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.PENDING_MERCHANDISE;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PENDING_PAYMENT;
+                }
+            case PAYMENT_SUBMIT:
+                switch (contractDetailType){
+                    case BROKER_DETAIL:
+                        return ContractStatus.PENDING_MERCHANDISE;
+                    case CUSTOMER_DETAIL:
+                        return ContractStatus.PAYMENT_SUBMIT;
+                }
+            case READY_TO_CLOSE:
+                return ContractStatus.READY_TO_CLOSE;
+            default:
+                return ContractStatus.PAUSED;
+        }
+    }
+
     @NonNull
     private String getSoldQuantityAndCurrencyText(ContractDetail itemInfo, ContractStatus contractStatus) {
         String sellingOrSoldText = getSellingOrSoldText(contractStatus);

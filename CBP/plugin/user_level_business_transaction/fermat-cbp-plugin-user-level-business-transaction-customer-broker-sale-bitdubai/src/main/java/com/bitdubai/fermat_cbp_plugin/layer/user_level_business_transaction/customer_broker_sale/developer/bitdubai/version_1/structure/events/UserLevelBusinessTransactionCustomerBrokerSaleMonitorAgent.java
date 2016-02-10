@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSendNotificationReviewNegotiation;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
@@ -48,6 +49,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.MissingCustomerBrokerSaleDataException;
+import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerSaleManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.utils.CustomerBrokerSaleImpl;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -79,6 +81,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
     private final NotificationManagerMiddleware notificationManagerMiddleware;
     private CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread;
     private CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting;
+    private UserLevelBusinessTransactionCustomerBrokerSaleManager userLevelBusinessTransactionCustomerBrokerSaleManager;
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(ErrorManager errorManager,
                                                                       CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
@@ -92,7 +95,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                                                       BankMoneyRestockManager bankMoneyRestockManager,
                                                                       CashMoneyRestockManager cashMoneyRestockManager,
                                                                       CryptoMoneyRestockManager cryptoMoneyRestockManager,
-                                                                      NotificationManagerMiddleware notificationManagerMiddleware) {
+                                                                      NotificationManagerMiddleware notificationManagerMiddleware,
+                                                                      UserLevelBusinessTransactionCustomerBrokerSaleManager userLevelBusinessTransactionCustomerBrokerSaleManager) {
 
         this.errorManager                                              = errorManager;
         this.customerBrokerSaleNegotiationManager                      = customerBrokerSaleNegotiationManager;
@@ -105,6 +109,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
         this.cashMoneyRestockManager                                   = cashMoneyRestockManager;
         this.cryptoMoneyRestockManager                                 = cryptoMoneyRestockManager;
         this.notificationManagerMiddleware                             = notificationManagerMiddleware;
+        this.userLevelBusinessTransactionCustomerBrokerSaleManager = userLevelBusinessTransactionCustomerBrokerSaleManager;
 
         this.userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao(pluginDatabaseSystem, pluginId);
         try {
@@ -238,7 +243,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                             if (timeStampToday <= DELAY_HOURS)
                             {
                                 customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
+                                userLevelBusinessTransactionCustomerBrokerSaleManager.notificationReviewNegotiation("crypto_customer_wallet", "Review negotiation", "Review negotiation");
+//                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
                             }
                         }
                     }
@@ -357,10 +363,10 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                             //Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida, se eleva un evento de notificación
                             Date date = null;
                             long timeStampToday =  ((customerBrokerContractSale.getDateTime() - date.getTime()) / 60) / 60;
-                            if (timeStampToday <= DELAY_HOURS)
-                            {
+                            if (timeStampToday <= DELAY_HOURS) {
                                 customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
+                                userLevelBusinessTransactionCustomerBrokerSaleManager.notificationReviewNegotiation("crypto_customer_wallet", "Review negotiation", "Review negotiation");
+//                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
                             }
                         }
                     }
@@ -397,6 +403,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
                     }
                 }
+            }catch (CantSendNotificationReviewNegotiation e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantGetListSaleNegotiationsException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (DatabaseOperationException e) {

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
@@ -20,6 +21,7 @@ import java.util.Map;
 public class CryptoTransaction{
     private String transactionHash;
     private String blockHash;
+    private BlockchainNetworkType blockchainNetworkType;
     private CryptoAddress addressFrom;
     private CryptoAddress addressTo;
     private CryptoCurrency cryptoCurrency;
@@ -45,8 +47,9 @@ public class CryptoTransaction{
                              CryptoCurrency cryptoCurrency,
                              long cryptoAmount,
                              CryptoStatus cryptoStatus) {
-
         this.transactionHash = transactionHash;
+        // will create by default a transaction in the DEFAULT network.
+        this.blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         this.addressFrom = addressFrom;
         this.addressTo = addressTo;
         this.cryptoCurrency = cryptoCurrency;
@@ -67,7 +70,7 @@ public class CryptoTransaction{
      * @param transaction
      * @return
      */
-    public static CryptoTransaction getCryptoTransaction(Transaction transaction){
+    public static CryptoTransaction getCryptoTransaction(BlockchainNetworkType blockchainNetworkType, Transaction transaction){
         CryptoTransaction cryptoTransaction = new CryptoTransaction();
         cryptoTransaction.setTransactionHash(transaction.getHashAsString());
         cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
@@ -76,6 +79,8 @@ public class CryptoTransaction{
         cryptoTransaction.setCryptoStatus(getTransactionCryptoStatus(transaction));
         cryptoTransaction.setAddressTo(getAddressTo(transaction));
         cryptoTransaction.setAddressFrom(getAddressFrom(transaction));
+        cryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
+
 
         return cryptoTransaction;
     }
@@ -135,7 +140,7 @@ public class CryptoTransaction{
 
 
     /**
-     * Gets the CryptoStatus of the trasaction.
+     * Gets the CryptoStatus of the transaction.
      * @param transaction
      * @return
      */
@@ -222,6 +227,10 @@ public class CryptoTransaction{
         return blockHash;
     }
 
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockchainNetworkType;
+    }
+
     public CryptoAddress getAddressFrom() {
         return addressFrom;
     }
@@ -258,6 +267,10 @@ public class CryptoTransaction{
 
     public void setBlockHash(String blockHash) {
         this.blockHash = blockHash;
+    }
+
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 
     public void setAddressFrom(CryptoAddress addressFrom) {

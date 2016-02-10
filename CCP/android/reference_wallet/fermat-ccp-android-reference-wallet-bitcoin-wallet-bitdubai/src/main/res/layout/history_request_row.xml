@@ -6,7 +6,6 @@
     android:layout_height="140dp"
     android:background="@null">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,23 +14,22 @@
         android:paddingTop="15dp"
         >
 
-            <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
-                >
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
+            >
 
-                <ImageView android:id="@+id/profile_Image"
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
-                    android:src="@drawable/kid_3"
-                    android:scaleType="centerCrop"
-                    android:layout_margin="3dip"
-                    />
-
-            </FrameLayout>
+            <ImageView android:id="@+id/profile_Image"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/kid_3"
+                android:scaleType="centerCrop"
+                android:layout_margin="3dip"
+                />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -39,7 +37,6 @@
             android:layout_marginTop="12dp"
             android:paddingLeft="20dp"
             android:orientation="vertical">
-
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
@@ -60,12 +57,7 @@
                 android:textColor="#80ffffff"
                 android:fontFamily="roboto"
                 android:layout_gravity="left"
-                android:gravity="center"
-
-                />
-
-
-
+                android:gravity="center"/>
 
         </LinearLayout>
 
@@ -97,13 +89,8 @@
                 android:textSize="11dp"
                 android:textColor="#80ffffff"
                 android:fontFamily="roboto"/>
-
         </LinearLayout>
-
-
-
     </LinearLayout>
-
 
 
     <LinearLayout
@@ -114,15 +101,13 @@
         android:paddingRight="15dp"
         android:visibility="gone"
         android:id="@+id/linear_layour_container_state"
-
         >
-
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/txt_state"
-            android:text="Accepted"
+            android:text="@string/accepted_text"
             android:textColor="#e6ffffff"
             android:textSize="13dp"
             android:background="@drawable/bullet"
@@ -130,10 +115,7 @@
             android:padding="5dp"
             android:paddingRight="7dp"
             android:paddingLeft="7dp"/>
-
-
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -150,29 +132,21 @@
             android:layout_height="25dp"
             android:id="@+id/btn_refuse_request"
             android:textSize="12dp"
-            android:text="Deny"
+            android:text="@string/deny_text"
             android:textColor="#1d1d26"
             android:layout_marginRight="7dp"
             android:background="#d3d3d3"
             />
-
 
         <Button
             android:layout_width="80dp"
             android:layout_height="25dp"
             android:id="@+id/btn_accept_request"
             android:textSize="12dp"
-            android:text="Accept"
+            android:text="@string/accept_text"
             android:layout_marginLeft="7dp"
             android:textColor="#fff"
             android:background="#1173aa"/>
-
-
-
-
     </LinearLayout>
-
-
-
 
 </LinearLayout>

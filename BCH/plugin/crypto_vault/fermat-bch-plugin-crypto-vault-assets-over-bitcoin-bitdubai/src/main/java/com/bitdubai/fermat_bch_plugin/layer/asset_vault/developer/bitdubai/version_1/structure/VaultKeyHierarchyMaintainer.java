@@ -93,6 +93,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
 
     @Override
     public void stop() {
+        System.out.println("***AssetVault*** Key maintainer stopped.");
         isSupposedToRun = false;
         vaultKeyHierarchyMaintainerAgent.interruptProcess();
         vaultKeyHierarchyMaintainerAgent = null;
@@ -112,7 +113,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * Sleep time of the agent between iterations
          */
-        final long AGENT_SLEEP_TIME = 60000; //default time is 1 minutes
+        final long AGENT_SLEEP_TIME = 10000; //default time is 1 minutes
 
 
         @Override
@@ -248,7 +249,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 /**
                  * the default network is always active, so I will add this.
                  */
-                blockchainNetworkTypes.add(BlockchainNetworkType.DEFAULT);
+                blockchainNetworkTypes.add(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
             return blockchainNetworkTypes;

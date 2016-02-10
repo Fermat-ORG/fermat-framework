@@ -134,9 +134,9 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setBannerRes(R.drawable.banner_crypto_broker)
                 .setIconRes(R.drawable.crypto_broker)
-                .setBody("Custom text support for dialog in the wizard Earnings help")
-                .setSubTitle("Subtitle text of Earnings dialog help")
-                .setTextFooter("Text footer Earnings dialog help")
+                .setSubTitle(R.string.cbw_crypto_broker_wallet_earning_subTitle)
+                .setBody(R.string.cbw_crypto_broker_wallet_earning_body)
+                .setTextFooter(R.string.cbw_crypto_broker_wallet_earning_footer)
                 .build();
         presentationDialog.show();
 

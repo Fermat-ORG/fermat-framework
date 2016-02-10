@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -23,28 +22,23 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleContractBasicInformation;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.FooterViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyContractInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
@@ -53,11 +47,12 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.io.ByteArrayOutputStream;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
@@ -100,6 +95,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             errorManager = appSession.getErrorManager();
             //TODO: load contract here
             data=(ContractBasicInformation) appSession.getData("contract_data");
+            appSession.setData("ContractDetailFragment", this);
 
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
@@ -160,6 +156,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             public String getCode() {
                 return CurrencyType.CRYPTO_MONEY.getCode();
             }
+
+            @Override
+            public CurrencyTypes getType() {
+                return null;
+            }
         };
         //Negotiation Summary
         /*Drawable brokerImg = getImgDrawable(broker.getProfileImage());
@@ -181,8 +182,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
         detailDate.setText("Date:\n"+formatter.format(date));
         //detailRate.setText("1 BTC @ 254 USD");
+        double exchangeRateAmount= getFormattedNumber(data.getExchangeRateAmount());
+        double amount= getFormattedNumber(data.getAmount());
         detailRate.setText(
-                data.getExchangeRateAmount()+" "+paymentCurrency+" @ "+data.getAmount()+" "+data.getMerchandise()
+                exchangeRateAmount+" "+paymentCurrency+" @ "+amount+" "+data.getMerchandise()
         );
 
 
@@ -198,6 +201,13 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         recyclerView.setAdapter(adapter);
     }
 
+    private double getFormattedNumber(float number){
+        int decimalPlaces=2;
+        BigDecimal bigDecimalNumber = new BigDecimal(number);
+        bigDecimalNumber=bigDecimalNumber.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
+        return bigDecimalNumber.doubleValue();
+    }
+
     private List<ContractDetail> createContractDetails(){
         List<ContractDetail> contractDetails=new ArrayList<>();
         /**
@@ -207,32 +217,34 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //Customer Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.CUSTOMER_DETAIL,
-                CurrencyType.BANK_MONEY,
+                CurrencyType.BANK_MONEY.getCode(),
                 FiatCurrency.CHINESE_YUAN.getFriendlyName(),
                 12,
                 ContractStatus.PAYMENT_SUBMIT,
                 "BTC Customer",
                 getByteArrayFromImageView(brokerImage),
                 1961,
-                2016);
-        contractDetails.add(contractDetail);
+                2016,
+                UUID.randomUUID());
+        //contractDetails.add(contractDetail);
         //Testing Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.BROKER_DETAIL,
-                CurrencyType.CRYPTO_MONEY,
+                CurrencyType.CRYPTO_MONEY.getCode(),
                 CryptoCurrency.BITCOIN.getFriendlyName(),
                 12,
                 ContractStatus.PENDING_MERCHANDISE,
                 "BTC Broker",
                 getByteArrayFromImageView(brokerImage),
                 1961,
-                2016);
-        contractDetails.add(contractDetail);
+                2016,
+                UUID.randomUUID());
+        //contractDetails.add(contractDetail);
         /**
          * Get the wallet module manager
          */
         //TODO: when the module is finished, use the followings lines to create contract details.
-        /*CryptoCustomerWalletModuleManager cryptoCustomerWalletModuleManager=
+        CryptoCustomerWalletModuleManager cryptoCustomerWalletModuleManager=
                 appSession.getModuleManager();
         if(cryptoCustomerWalletModuleManager!=null){
 
@@ -246,6 +258,32 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         cryptoCustomerWalletManager.
                                 getCustomerBrokerContractPurchaseByNegotiationId(
                                         data.getNegotiationId().toString());
+                //Customer
+                contractDetail=new ContractDetail(
+                        ContractDetailType.CUSTOMER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getPaymentCurrency(),
+                        data.getAmount(),
+                        customerBrokerContractPurchase.getStatus(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
+                contractDetails.add(contractDetail);
+                //Broker
+                contractDetail=new ContractDetail(
+                        ContractDetailType.BROKER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getMerchandise(),
+                        data.getAmount(),
+                        customerBrokerContractPurchase.getStatus(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
+                contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null) {
@@ -262,10 +300,11 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                     "Sorry, an error happened in ContractDetailActivityFragment (CryptoCustomerWalletModuleManager == null)",
                     Toast.LENGTH_SHORT)
                     .show();
-        }*/
+        }
 
         return contractDetails;
     }
+
 
     private EmptyCustomerBrokerNegotiationInformation createNewEmptyNegotiationInfo() {
         try {

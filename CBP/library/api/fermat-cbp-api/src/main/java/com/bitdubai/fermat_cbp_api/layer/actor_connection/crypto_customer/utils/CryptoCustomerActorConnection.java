@@ -33,5 +33,4 @@ public final class CryptoCustomerActorConnection extends ActorConnection<CryptoC
                 updateTime
         );
     }
-
 }

@@ -13,8 +13,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
 
 import java.util.ArrayList;
@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDeveloperDatabaseFactory</code> have
+ * The Class <code>com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_Customer.developer.bitdubai.version_1.database.CryptoCustomerActorDeveloperDatabaseFactory</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Yordin Alayn - (y.alayn@gmail.com) on 21/11/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 16/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -115,36 +115,65 @@ public class CryptoCustomerActorDeveloperDatabaseFactory implements DealsWithPlu
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
         /**
-         * Table Crypto Customer Actor columns.
+         * Table Crypto Customer Actor Relationship columns.
          */
-        List<String> cryptoCustomerActorColumns = new ArrayList<String>();
+        List<String> cryptoCustomerActorRelationshipColumns = new ArrayList<String>();
 
-        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_ACTOR_ID_COLUMN_NAME);
-        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_ACTOR_COLUMN_NAME);
-        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_PUBLIC_KEY_IDENTITY_COLUMN_NAME);
-        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_NAME_ACTOR_COLUMN_NAME);
-        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_CONNECTION_STATE_COLUMN_NAME);
-        cryptoCustomerActorColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TIMESTAMP_COLUMN_NAME);
+        cryptoCustomerActorRelationshipColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME);
+        cryptoCustomerActorRelationshipColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+        cryptoCustomerActorRelationshipColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME);
         /**
-         * Table Crypto Customer Actor addition.
+         * Table Crypto Customer Actor Relationship addition.
          */
-        DeveloperDatabaseTable cryptoCustomerActorTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_TABLE_NAME, cryptoCustomerActorColumns);
-        tables.add(cryptoCustomerActorTable);
+        DeveloperDatabaseTable cryptoCustomerActorRelationshipTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME, cryptoCustomerActorRelationshipColumns);
+        tables.add(cryptoCustomerActorRelationshipTable);
 
         /**
-         * Table Crypto Customer Identity Wallet Relationship columns.
+         * Table Actor Extra Data columns.
          */
-        List<String> cryptoCustomerIdentityWalletRelationshipColumns = new ArrayList<String>();
+        List<String> actorExtraDataColumns = new ArrayList<String>();
 
-        cryptoCustomerIdentityWalletRelationshipColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_RELATIONSHIP_ID_COLUMN_NAME);
-        cryptoCustomerIdentityWalletRelationshipColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_IDENTITY_COLUMN_NAME);
-        cryptoCustomerIdentityWalletRelationshipColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_PUBLIC_KEY_WALLET_COLUMN_NAME);
-        cryptoCustomerIdentityWalletRelationshipColumns.add(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TIMESTAMP_COLUMN_NAME);
+        actorExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ID_COLUMN_NAME);
+        actorExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        actorExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
+        actorExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         /**
-         * Table Crypto Customer Identity Wallet Relationship addition.
+         * Table Actor Extra Data addition.
          */
-        DeveloperDatabaseTable cryptoCustomerIdentityWalletRelationshipTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_IDENTITY_WALLET_RELATIONSHIP_TABLE_NAME, cryptoCustomerIdentityWalletRelationshipColumns);
-        tables.add(cryptoCustomerIdentityWalletRelationshipTable);
+        DeveloperDatabaseTable actorExtraDataTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME, actorExtraDataColumns);
+        tables.add(actorExtraDataTable);
+
+        /**
+         * Table Quote Extra Data columns.
+         */
+        List<String> quoteExtraDataColumns = new ArrayList<String>();
+
+        quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);
+        /**
+         * Table Quote Extra Data addition.
+         */
+        DeveloperDatabaseTable quoteExtraDataTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME, quoteExtraDataColumns);
+        tables.add(quoteExtraDataTable);
+
+        /**
+         * Table Platforms Extra Data columns.
+         */
+        List<String> platformsExtraDataColumns = new ArrayList<String>();
+
+        platformsExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_ID_COLUMN_NAME);
+        platformsExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
+        platformsExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME);
+        platformsExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_COLUMN_NAME);
+        /**
+         * Table Platforms Extra Data addition.
+         */
+        DeveloperDatabaseTable platformsExtraDataTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_TABLE_NAME, platformsExtraDataColumns);
+        tables.add(platformsExtraDataTable);
 
 
 
@@ -173,8 +202,8 @@ public class CryptoCustomerActorDeveloperDatabaseFactory implements DealsWithPlu
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
         for (DatabaseTableRecord row : records) {
+            List<String> developerRow = new ArrayList<String>();
             /**
              * for each row in the table list
              */

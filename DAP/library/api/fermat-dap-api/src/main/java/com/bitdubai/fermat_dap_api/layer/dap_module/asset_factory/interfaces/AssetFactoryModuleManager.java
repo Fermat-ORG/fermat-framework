@@ -44,7 +44,7 @@ public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSett
     /**
      * TThis method publishes the asset digital object with the number and amount of Asset, start the transaction
      */
-    void publishAsset(AssetFactory assetFactory,BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException;;
+    void publishAsset(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
 
     /**
      * This method create an empty object AssetFactory
@@ -79,7 +79,7 @@ public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSett
     /**
      * TThis method list all wallet installed in device, start the transaction
      */
-    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()  throws CantListWalletsException;
+    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
     /**
      * TThis method verified all value in asset factory not null, start the transaction
@@ -87,4 +87,8 @@ public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSett
     boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy;
 
     long getBitcoinWalletBalance(String walletPublicKey) throws CantLoadWalletException, CantCalculateBalanceException;
+
+    void changeNetworkType(BlockchainNetworkType networkType);
+
+    BlockchainNetworkType getSelectedNetwork();
 }
