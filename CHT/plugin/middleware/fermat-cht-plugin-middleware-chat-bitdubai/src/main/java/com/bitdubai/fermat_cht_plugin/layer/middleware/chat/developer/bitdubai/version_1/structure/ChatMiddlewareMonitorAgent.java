@@ -635,12 +635,31 @@ public class ChatMiddlewareMonitorAgent implements
          * @throws DatabaseOperationException
          */
         private void saveChat(ChatMetadata chatMetadata) throws DatabaseOperationException, CantGetChatException, CantSaveChatException {
-
+            String remotepk="";
+            String localpk="";
+            String newmessage="gone";
+            try {
+                for (int i = 0; i < chatMiddlewareDatabaseDao.getMessages().size(); i++) {
+                    if (chatMiddlewareDatabaseDao.getMessageByChatId(chatMetadata.getChatId()).get(i).getMessage().equals("troy")) {
+                        newmessage = "probe";
+                    }
+                }
+            }catch(CantGetMessageException e){
+            }
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
+            remotepk=chat.getRemoteActorPublicKey();
+            localpk=chat.getLocalActorPublicKey();
+            // change to put in the remote device in the correct place of table chat
             if(chat == null){
                 chat = getChatFromChatMetadata(chatMetadata);
+                chat.setLocalActorPublicKey(remotepk);
+                chat.setRemoteActorPublicKey(localpk);
+            }else{
+                chat.setLocalActorPublicKey(remotepk);
             }
+
             chat.setStatus(ChatStatus.VISSIBLE);
+
             chatMiddlewareDatabaseDao.saveChat(chat);
         }
 

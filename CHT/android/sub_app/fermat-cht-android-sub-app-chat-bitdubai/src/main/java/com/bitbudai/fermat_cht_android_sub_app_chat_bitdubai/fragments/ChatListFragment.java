@@ -359,7 +359,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 if(chatManager.getMessages().isEmpty()) {
                      for (int i = 0; i < chatManager.getContacts().size(); i++) {
 
-                         if(chatManager.getContacts().get(i).getRemoteName().contains("chat")) {
+                         if(chatManager.getContacts().get(i).getRemoteName().contains("chatlight")) {
                              chatid = UUID.randomUUID();
                              contactid = chatManager.getContacts().get(i).getContactId();
                              mess = new MessageImpl();

@@ -173,9 +173,18 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                             contactnew.setRemoteName(contactexist.getRemoteName());
                             contactnew.setRemoteActorType(contactexist.getRemoteActorType());
                             chatManager.saveContact(contactnew);
+                            Contact deleteContact;
+                            for (int i = 0; i < chatManager.getContacts().size(); i++) {
+                                deleteContact=chatManager.getContacts().get(i);
+                                if(deleteContact.getRemoteName().equals("Not registered contact")){
+                                    if(deleteContact.getContactId().equals(contactidnew)) {
+                                        chatManager.deleteContact(deleteContact);
+                                    }
+                                }
+
+                            }
                             chatManager.deleteContact(contactexist);
                             appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, null);
-                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                             appSession.setData("whocallme", "contact");
                             appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
                             Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();

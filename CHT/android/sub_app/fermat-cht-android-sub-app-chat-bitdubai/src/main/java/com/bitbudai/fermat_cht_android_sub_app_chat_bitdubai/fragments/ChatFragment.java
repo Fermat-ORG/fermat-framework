@@ -223,18 +223,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
                    if(chatwascreate) {
 
-                      /* chat.setChatId(chatid);
-                       chat.setObjectId(UUID.randomUUID());
-                       chat.setStatus(ChatStatus.VISSIBLE);
-                       chat.setChatName("DeathNote");
-                       chat.setDate(new Timestamp(dv));
-                       chat.setLastMessageDate(new Timestamp(dv));
-                       chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                       chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                       chat.setRemoteActorPublicKey(remotepk);
-                       chat.setRemoteActorType(remotepct);*/
-
-
                        message.setChatId(chatid);
                        message.setMessageId(UUID.randomUUID());
                        message.setMessage(messageText);
