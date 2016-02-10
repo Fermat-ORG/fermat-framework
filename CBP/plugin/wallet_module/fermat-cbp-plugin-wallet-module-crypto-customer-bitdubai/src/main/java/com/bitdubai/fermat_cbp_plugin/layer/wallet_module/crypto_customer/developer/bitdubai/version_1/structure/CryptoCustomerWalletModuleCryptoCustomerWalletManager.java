@@ -561,22 +561,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     public boolean isWalletConfigured(String customerWalletPublicKey){
 
         boolean isInstall = true;
-        CryptoCustomerWalletAssociatedSettingImpl cryptoCustomerWalletAssociatedSetting = new CryptoCustomerWalletAssociatedSettingImpl();
-
-        PluginTextFile pluginTextFile = null;
-        try {
-            pluginTextFile = pluginFileSystem.getTextFile(pluginId, PATH_DIRECTORY, customerWalletPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            String content = pluginTextFile.getContent();
-            cryptoCustomerWalletAssociatedSetting =  (CryptoCustomerWalletAssociatedSettingImpl) XMLParser.parseXML(content, cryptoCustomerWalletAssociatedSetting);
-            System.out.print(cryptoCustomerWalletAssociatedSetting);
-//            if (cryptoCustomerWalletAssociatedSetting == null)
-//                isInstall = false;
-
-        } catch (CantCreateFileException e) {
-            isInstall = false;
-        } catch (FileNotFoundException e) {
-            isInstall = false;
-        }
 
         return isInstall;
     }
