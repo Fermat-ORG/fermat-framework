@@ -142,6 +142,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             }
 
             blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+            System.out.println("Network Type"+blockchainNetworkType);
 
         } catch (CantGetCryptoWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -191,7 +192,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
                 }else{
-                    Toast.makeText(getActivity(),"You dont have address to send\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"You don't have address to send\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
                 }
             }
             else if( id == R.id.receive_button){
@@ -200,7 +201,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
                 }else{
-                    Toast.makeText(getActivity(),"You dont have address to request\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"You don't have address to request\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
                 }
             }
             else if ( id == R.id.linear_layout_extra_user_receive){
@@ -302,13 +303,76 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 edit_text_name.setText(cryptoWalletWalletContact.getActorName());
             if (text_view_address != null) {
                 if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
-                    String address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
-                    //TODO: si la address es nula hay que ver porqué es
-                    text_view_address.setText((address!=null)?address:"mnK7DuBQT3REr9bmfYcufTwjiAWfjwRwMf");
-                    img_update.setVisibility(View.GONE);
-                    receive_button.setVisibility(View.VISIBLE);
-                    send_button.setVisibility(View.VISIBLE);
-                }else{
+
+
+
+                       try {
+
+
+                           if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress()== null){
+
+
+                           referenceWalletSession.getModuleManager().getCryptoWallet().sendAddressExchangeRequest(
+                                   cryptoWalletWalletContact.getActorName(),
+                                   Actors.INTRA_USER,
+                                   cryptoWalletWalletContact.getActorPublicKey(),
+                                   cryptoWalletWalletContact.getProfilePicture(),
+                                   Actors.INTRA_USER,
+                                   referenceWalletSession.getIntraUserModuleManager().getPublicKey()
+                                   , appSession.getAppPublicKey(),
+                                   CryptoCurrency.BITCOIN,
+                                   blockchainNetworkType
+                           );
+
+                           img_update.setVisibility(View.VISIBLE);
+                           receive_button.setVisibility(View.GONE);
+                           send_button.setVisibility(View.GONE);
+
+
+                       }else{
+                           String address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
+                           //TODO: si la address es nula hay que ver porqué es
+                           text_view_address.setText((address!=null)?address:"mnK7DuBQT3REr9bmfYcufTwjiAWfjwRwMf");
+                           img_update.setVisibility(View.GONE);
+                           receive_button.setVisibility(View.VISIBLE);
+                           send_button.setVisibility(View.VISIBLE);
+                       }
+
+                       } catch (CantGetCryptoWalletException e) {
+                           e.printStackTrace();
+                       } catch (CantListCryptoWalletIntraUserIdentityException e) {
+                           e.printStackTrace();
+                       } catch (NullPointerException e) {
+
+                           try {
+                               referenceWalletSession.getModuleManager().getCryptoWallet().sendAddressExchangeRequest(
+                                       cryptoWalletWalletContact.getActorName(),
+                                       Actors.INTRA_USER,
+                                       cryptoWalletWalletContact.getActorPublicKey(),
+                                       cryptoWalletWalletContact.getProfilePicture(),
+                                       Actors.INTRA_USER,
+                                       referenceWalletSession.getIntraUserModuleManager().getPublicKey()
+                                       , appSession.getAppPublicKey(),
+                                       CryptoCurrency.BITCOIN,
+                                       blockchainNetworkType
+                               );
+                           } catch (CantGetCryptoWalletException e1) {
+                               e1.printStackTrace();
+                           } catch (CantListCryptoWalletIntraUserIdentityException e1) {
+                               e1.printStackTrace();
+                           }
+
+                           img_update.setVisibility(View.VISIBLE);
+                           receive_button.setVisibility(View.GONE);
+                           send_button.setVisibility(View.GONE);
+
+
+                       }
+
+
+
+
+            }else{
                     img_update.setVisibility(View.VISIBLE);
                     receive_button.setVisibility(View.GONE);
                     send_button.setVisibility(View.GONE);

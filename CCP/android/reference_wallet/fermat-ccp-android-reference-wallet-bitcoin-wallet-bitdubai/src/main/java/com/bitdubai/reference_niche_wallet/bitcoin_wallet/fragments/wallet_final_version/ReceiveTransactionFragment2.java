@@ -101,7 +101,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     private int[] emptyOriginalPos = new int[2];
 
     SettingsManager<BitcoinWalletSettings> settingsManager;
-
+    BlockchainNetworkType blockchainNetworkType;
 
     public static ReceiveTransactionFragment2 newInstance() {
         return new ReceiveTransactionFragment2();
@@ -146,7 +146,14 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-
+        try {
+            blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Network Type"+blockchainNetworkType);
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }

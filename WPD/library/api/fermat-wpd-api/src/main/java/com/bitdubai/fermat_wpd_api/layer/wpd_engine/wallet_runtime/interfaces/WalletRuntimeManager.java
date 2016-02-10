@@ -2,6 +2,7 @@ package com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRecordInstalledWalletNavigationStructureException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.CantRemoveWalletNavigationStructureException;
@@ -41,4 +42,5 @@ public interface WalletRuntimeManager extends RuntimeManager {
     public WalletNavigationStructure getWallet(String publicKey) throws WalletRuntimeExceptions;
 
 
+    void recordNAvigationStructure(FermatStructure fermatStructure);
 }

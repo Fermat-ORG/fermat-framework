@@ -9,7 +9,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -44,8 +44,8 @@ public class DigitalAssetTransferVault extends AbstractDigitalAssetVault {
         this.errorManager = errorManager;
     }
 
-    public AssetIssuerWallet getIssuerWallet(BlockchainNetworkType networkType) throws CantLoadWalletException {
-        return this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey, networkType);
+    public AssetUserWallet getUserWallet(BlockchainNetworkType networkType) throws CantLoadWalletException {
+        return this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey, networkType);
     }
 
     @Override
@@ -58,7 +58,7 @@ public class DigitalAssetTransferVault extends AbstractDigitalAssetVault {
 
     public DigitalAssetMetadata getDigitalAssetMetadataFromWallet(String internalId, BlockchainNetworkType networkType) throws CantGetDigitalAssetFromLocalStorageException {
         try {
-            return getIssuerWallet(networkType).getDigitalAssetMetadata(internalId);
+            return getUserWallet(networkType).getDigitalAssetMetadata(internalId);
         } catch (CantLoadWalletException e) {
             throw new CantGetDigitalAssetFromLocalStorageException();
         }
