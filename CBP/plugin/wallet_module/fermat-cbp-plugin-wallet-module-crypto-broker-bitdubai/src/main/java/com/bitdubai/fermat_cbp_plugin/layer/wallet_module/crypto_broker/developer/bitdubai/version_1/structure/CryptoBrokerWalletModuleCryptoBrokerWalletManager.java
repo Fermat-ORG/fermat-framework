@@ -1363,6 +1363,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     public int[] getMenuNotifications() {
         return new int[0];
     }
+
     /**
      * This method returns the CustomerBrokerContractSale associated to a negotiationId
      *
