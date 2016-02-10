@@ -63,6 +63,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -81,6 +82,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by mati on 2016.02.05..
@@ -111,11 +114,11 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
 
     /**
-     * Represent the dataBase
+     * Represent the intraActorDataBase
      */
     private Database dataBaseCommunication;
 
-    private Database dataBase;
+    private Database intraActorDataBase;
 
     /**
      * DAO
@@ -130,10 +133,16 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
     private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
     private ActorNetworkServiceRecordedAgent actorNetworkServiceRecordedAgent;
 
+
     /**
      * cacha identities to register
      */
     private List<PlatformComponentProfile> actorsToRegisterCache;
+
+    /**
+     * Executor
+     */
+    ExecutorService executorService;
 
     /**
      * Constructor with parameters
@@ -174,7 +183,10 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
             outgoingNotificationDao = new OutgoingNotificationDao(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
-            intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.dataBase, this.pluginFileSystem, this.pluginId);
+            intraActorNetworkServiceDao = new IntraActorNetworkServiceDao(this.intraActorDataBase, this.pluginFileSystem, this.pluginId);
+
+
+            executorService = Executors.newFixedThreadPool(3);
 
 
         }catch (Exception e){
@@ -184,6 +196,11 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
     }
 
+    @Override
+    public void stop() {
+        super.stop();
+        executorService.shutdownNow();
+    }
 
     @Override
     public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
@@ -608,7 +625,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            this.intraActorDataBase = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -631,7 +648,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
                 /*
                  * We create the new database
                  */
-                this.dataBase = intraActorNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                this.intraActorDataBase = intraActorNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -818,7 +835,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
     @Override
     public List<IntraUserInformation> getCacheIntraUsersSuggestions(int max, int offset) throws ErrorSearchingCacheSuggestionsException {
         try {
-            return intraActorNetworkServiceDao.listIntraUserCache(max,offset);
+            return intraActorNetworkServiceDao.listIntraUserCache(max, offset);
 
         } catch (CantListIntraWalletCacheUserException e) {
             throw new ErrorSearchingCacheSuggestionsException("CAN'T GET INTRA USER CACHE LIST",e,"","error get table records");
@@ -842,7 +859,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
             long currentTime = System.currentTimeMillis();
             ActorProtocolState protocolState = ActorProtocolState.PROCESSING_SEND;
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = outgoingNotificationDao.createNotification(
+            final ActorNetworkServiceRecord actorNetworkServiceRecord = outgoingNotificationDao.createNotification(
                     newNotificationID,
                     intraUserSelectedPublicKey,
                     senderType,
@@ -858,11 +875,22 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
                     null
             );
 
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(intraUserSelectedPublicKey),
+                                getProfileDestinationToRequestConnection(intraUserToAddPublicKey),
+                                actorNetworkServiceRecord.toJson());
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedError(e);
+                    }
+                }
+            });
             // Sending message to the destination
-            sendNewMessage(
-                    getProfileSenderToRequestConnection(intraUserSelectedPublicKey),
-                    getProfileDestinationToRequestConnection(intraUserToAddPublicKey),
-                    actorNetworkServiceRecord.toJson());
+
 
 
         } catch (final CantCreateNotificationException e) {
@@ -894,7 +922,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
             actorNetworkServiceRecord.changeState(ActorProtocolState.PROCESSING_SEND);
 
-            ActorNetworkServiceRecord messageToSend = outgoingNotificationDao.createNotification(
+            final ActorNetworkServiceRecord messageToSend = outgoingNotificationDao.createNotification(
                     UUID.randomUUID(),
                     actorNetworkServiceRecord.getActorSenderPublicKey(),
                     actorNetworkServiceRecord.getActorSenderType(),
@@ -912,11 +940,22 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
             );
 
 
-            // Sending message to the destination
-            sendNewMessage(
-                    getProfileSenderToRequestConnection(messageToSend.getActorSenderPublicKey()),
-                    getProfileDestinationToRequestConnection(messageToSend.getActorDestinationPublicKey()),
-                    messageToSend.toJson());
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // Sending message to the destination
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(messageToSend.getActorSenderPublicKey()),
+                                getProfileDestinationToRequestConnection(messageToSend.getActorDestinationPublicKey()),
+                                messageToSend.toJson());
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
 
 
         } catch (Exception e) {
@@ -929,7 +968,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
         try {
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToRejectPublicKey, NotificationDescriptor.DENIED, ActorProtocolState.DONE);
+            final ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToRejectPublicKey, NotificationDescriptor.DENIED, ActorProtocolState.DONE);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToRejectPublicKey);
 
@@ -941,11 +980,21 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
             outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
 
-            // Sending message to the destination
-            sendNewMessage(
-                    getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                    getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
-                    actorNetworkServiceRecord.toJson());
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    // Sending message to the destination
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
+                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                actorNetworkServiceRecord.toJson());
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
 
         } catch (Exception e) {
             throw new ErrorDenyConnectingIntraUserException("ERROR DENY CONNECTION TO INTRAUSER", e, "", "Generic Exception");
@@ -965,7 +1014,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
             long currentTime = System.currentTimeMillis();
             ActorProtocolState protocolState = ActorProtocolState.PROCESSING_SEND;
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = outgoingNotificationDao.createNotification(
+            final ActorNetworkServiceRecord actorNetworkServiceRecord = outgoingNotificationDao.createNotification(
                     newNotificationID,
                     intraUserLoggedInPublicKey,
                     Actors.INTRA_USER,
@@ -983,11 +1032,21 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
             );
 
 
-            // Sending message to the destination
-            sendNewMessage(
-                    getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                    getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
-                    actorNetworkServiceRecord.toJson());
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    // Sending message to the destination
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
+                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                actorNetworkServiceRecord.toJson());
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
 
 
 
@@ -1005,7 +1064,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
         try {
 
-            ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToCancelPublicKey, NotificationDescriptor.CANCEL, ActorProtocolState.DONE);
+            final ActorNetworkServiceRecord actorNetworkServiceRecord = incomingNotificationsDao.changeIntraUserNotificationDescriptor(intraUserToCancelPublicKey, NotificationDescriptor.CANCEL, ActorProtocolState.DONE);
 
             actorNetworkServiceRecord.setActorDestinationPublicKey(intraUserToCancelPublicKey);
 
@@ -1017,12 +1076,22 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
             outgoingNotificationDao.createNotification(actorNetworkServiceRecord);
 
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    // Sending message to the destination
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
+                                getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
+                                actorNetworkServiceRecord.toJson());
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
-            // Sending message to the destination
-            sendNewMessage(
-                    getProfileSenderToRequestConnection(actorNetworkServiceRecord.getActorSenderPublicKey()),
-                    getProfileDestinationToRequestConnection(actorNetworkServiceRecord.getActorDestinationPublicKey()),
-                    actorNetworkServiceRecord.toJson());
+
 
         } catch (Exception e) {
             throw new ErrorCancellingIntraUserException("ERROR CANCEL CONNECTION TO INTRAUSER ", e, "", "Generic Exception");
