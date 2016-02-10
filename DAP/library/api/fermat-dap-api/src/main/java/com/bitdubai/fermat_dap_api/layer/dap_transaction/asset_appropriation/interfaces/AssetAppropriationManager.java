@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
@@ -20,19 +21,20 @@ public interface AssetAppropriationManager extends FermatManager {
      * This method starts the appropriation flow. Saves the information in the database and store
      * the asset in the file system.
      *
-     * @param digitalAssetMetadata             the asset to be appropriated and its metadata
+     * @param digitalAssetMetadata     the asset to be appropriated and its metadata
      * @param assetUserWalletPublicKey the public key from the asset user wallet where this asset will be debited.
      * @param bitcoinWalletPublicKey   the bitcoin wallet public key where the bitcoins will be sent.
+     * @param networkType              the type of network where this operation will occur.
      * @throws CantExecuteAppropriationTransactionException in case something bad happen and the appropriation flow can't start.
      * @throws TransactionAlreadyStartedException           in case for some reason you try to appropriate the same asset twice.
      */
-    void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException;
+    void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey, BlockchainNetworkType networkType) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException;
 
     /**
      * Returns an {@link AppropriationTransactionRecord} instance with all its stored values,
      * or throws an exception in case it can't be done.
      *
-     * @param digitalAssetMetadata             the asset metadata associated with the appropriation.
+     * @param digitalAssetMetadata     the asset metadata associated with the appropriation.
      * @param assetUserWalletPublicKey the user asset wallet public key associated with the appropriation
      * @param bitcoinWalletPublicKey   the bitcoin wallet public key where the bitcoins were sent.
      * @return instance of {@link AppropriationTransactionRecord}

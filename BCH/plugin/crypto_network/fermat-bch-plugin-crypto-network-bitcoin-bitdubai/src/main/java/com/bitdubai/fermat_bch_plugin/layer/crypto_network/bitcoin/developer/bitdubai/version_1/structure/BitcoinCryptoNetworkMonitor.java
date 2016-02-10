@@ -192,6 +192,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             peerGroup.setUserAgent(BitcoinNetworkConfiguration.USER_AGENT_NAME, BitcoinNetworkConfiguration.USER_AGENT_VERSION);
 
             /**
+             * Update stats related active networks
+             */
+            this.getDao().updateActiveNetworks(BLOCKCHAIN_NETWORKTYPE, wallet.getImportedKeys().size());
+
+            /**
              * starts the monitoring
              */
             peerGroup.setDownloadTxDependencies(true);

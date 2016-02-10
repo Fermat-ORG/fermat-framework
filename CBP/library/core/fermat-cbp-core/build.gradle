@@ -60,6 +60,9 @@ dependencies {
     compile project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai')
     compile project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai')
 
+    //Middleware
+    compile project(':fermat-cbp-plugin-middleware-matching-engine-bitdubai')
+
     //Negotiation
     compile project(':fermat-cbp-plugin-negotiation-customer-broker-purchase-bitdubai')
     compile project(':fermat-cbp-plugin-negotiation-customer-broker-sale-bitdubai')

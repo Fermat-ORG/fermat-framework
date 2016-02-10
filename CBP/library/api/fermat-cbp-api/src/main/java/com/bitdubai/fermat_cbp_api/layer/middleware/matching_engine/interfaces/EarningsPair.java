@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 
 import java.util.UUID;
 
@@ -28,9 +29,9 @@ public interface EarningsPair {
     Currency getLinkedCurrency();
 
     /**
-     * @return the wallet public key referencing the wallet where the earnings pair belongs.
+     * @return the wallet information referencing the wallet where the plug-in will deposit the earnings.
      */
-    String walletPublicKey();
+    WalletReference getWalletReference();
 
     // TODO add all the information referencing the wallet that we have linked.
 
