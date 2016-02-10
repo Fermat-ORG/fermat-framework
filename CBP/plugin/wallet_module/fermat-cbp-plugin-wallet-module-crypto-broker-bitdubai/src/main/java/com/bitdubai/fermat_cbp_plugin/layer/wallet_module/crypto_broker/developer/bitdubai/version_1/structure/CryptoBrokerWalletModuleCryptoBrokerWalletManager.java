@@ -1175,8 +1175,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
      */
     @Override
     public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException {
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        walletPublicKey = "walletPublicKeyTest";
         return cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
     }
+
 
     /**
      * Returns an exchange rate of a given date, for a specific currencyPair
