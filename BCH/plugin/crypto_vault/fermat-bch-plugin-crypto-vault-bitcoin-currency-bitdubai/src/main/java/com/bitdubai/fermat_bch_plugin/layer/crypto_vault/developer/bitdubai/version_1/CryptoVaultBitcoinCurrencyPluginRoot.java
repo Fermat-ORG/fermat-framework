@@ -281,17 +281,6 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
         return bitcoinCurrencyCryptoVaultManager.getMnemonicCode();
     }
 
-    /**
-     * generates a final transaction based on a draft transaction passed.
-     * @param draftTransaction the completed and signed transaction
-     * @param fermatTrId the internal transaction id
-     * @return the final transactionHash
-     * @throws CouldNotGenerateTransactionException
-     */
-    @Override
-    public String generateTransaction(DraftTransaction draftTransaction, UUID fermatTrId) throws CouldNotGenerateTransactionException {
-        return null;
-    }
 
     /**
      * Signs the owned inputs of the passed Draft transaction
