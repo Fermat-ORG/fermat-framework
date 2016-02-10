@@ -42,17 +42,20 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ProvidersAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.CurrencyPairAndProvider;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by nelson on 22/12/15.
+ * Created by nelson
+ * on 22/12/15.
  */
 public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CurrencyExchangeRateProviderManager>, AdapterView.OnItemSelectedListener, DialogInterface.OnDismissListener {
@@ -61,7 +64,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private static final String TAG = "WizardPageSetBCWP";
 
     // Data
-    private List<CurrencyExchangeRateProviderManager> selectedProviders;
+    private List<CurrencyPairAndProvider> selectedProviders;
     private List<Currency> currencies;
     private Currency currencyFrom;
     private Currency currencyTo;
@@ -268,18 +271,21 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private void showProvidersDialog() {
 
         try {
-            List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>();
+            List<CurrencyPairAndProvider> providers = new ArrayList<>();
 
             Map<String, CurrencyExchangeRateProviderManager> providersMap = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
-            if (providersMap != null)
-                providers.addAll(providersMap.values());
+            if (providersMap != null) {
+                Collection<CurrencyExchangeRateProviderManager> providerManagers = providersMap.values();
+                for (CurrencyExchangeRateProviderManager providerManager : providerManagers)
+                    providers.add(new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager));
+            }
 
 
-            final SimpleListDialogFragment<CurrencyExchangeRateProviderManager> dialogFragment = new SimpleListDialogFragment<>();
+            final SimpleListDialogFragment<CurrencyPairAndProvider> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("Select a Provider", providers);
-            dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<CurrencyExchangeRateProviderManager>() {
+            dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<CurrencyPairAndProvider>() {
                 @Override
-                public void onItemSelected(CurrencyExchangeRateProviderManager selectedItem) {
+                public void onItemSelected(CurrencyPairAndProvider selectedItem) {
                     if (!containProvider(selectedItem)) {
                         selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
@@ -319,13 +325,16 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
             walletManager.saveWalletSettingAssociated(associatedWallet, appSession.getAppPublicKey());
 
-            for (CurrencyExchangeRateProviderManager provider : selectedProviders) {
+            for (CurrencyPairAndProvider provider : selectedProviders) {
+                CurrencyExchangeRateProviderManager providerManager = provider.getProvider();
 
                 CryptoCustomerWalletProviderSetting setting = walletManager.newEmptyCryptoCustomerWalletProviderSetting();
                 setting.setCustomerPublicKey(appSession.getAppPublicKey());
-                setting.setDescription(provider.getProviderName());
-                setting.setId(provider.getProviderId());
-                setting.setPlugin(provider.getProviderId());
+                setting.setDescription(providerManager.getProviderName());
+                setting.setId(providerManager.getProviderId());
+                setting.setPlugin(providerManager.getProviderId());
+                setting.setCurrencyFrom(provider.getCurrencyFrom());
+                setting.setCurrencyTo(provider.getCurrencyTo());
 
                 walletManager.saveCryptoCustomerWalletProviderSetting(setting, appSession.getAppPublicKey());
             }
@@ -372,14 +381,17 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         }
     }
 
-    private boolean containProvider(CurrencyExchangeRateProviderManager selectedProvider) {
+    private boolean containProvider(CurrencyPairAndProvider selectedProvider) {
         if (selectedProviders.isEmpty())
             return false;
 
         try {
-            for (CurrencyExchangeRateProviderManager provider : selectedProviders) {
-                UUID providerId = provider.getProviderId();
-                UUID selectedProviderId = selectedProvider.getProviderId();
+            for (CurrencyPairAndProvider provider : selectedProviders) {
+                CurrencyExchangeRateProviderManager providerManager = provider.getProvider();
+                UUID providerId = providerManager.getProviderId();
+
+                CurrencyExchangeRateProviderManager selectedProviderManager = selectedProvider.getProvider();
+                UUID selectedProviderId = selectedProviderManager.getProviderId();
 
                 if (providerId.equals(selectedProviderId))
                     return true;
