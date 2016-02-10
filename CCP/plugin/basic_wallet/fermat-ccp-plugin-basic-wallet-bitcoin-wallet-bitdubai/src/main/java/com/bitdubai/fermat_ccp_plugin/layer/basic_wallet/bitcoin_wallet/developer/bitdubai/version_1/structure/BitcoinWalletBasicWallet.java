@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionSummary;
@@ -251,6 +252,18 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     @Override
     public BitcoinWalletBalance getBalance(final BalanceType balanceType) {
 
+        switch (balanceType) {
+            case AVAILABLE:
+                return new BitcoinWalletBasicWalletAvailableBalance(database);
+            case BOOK:
+                return new BitcoinWalletBasicWalletBookBalance(database);
+            default:
+                return new BitcoinWalletBasicWalletAvailableBalance(database);
+        }
+    }
+
+    @Override
+    public BitcoinWalletBalance getBalance(BalanceType balanceType, BlockchainNetworkType blockchainNetworkType) {
         switch (balanceType) {
             case AVAILABLE:
                 return new BitcoinWalletBasicWalletAvailableBalance(database);

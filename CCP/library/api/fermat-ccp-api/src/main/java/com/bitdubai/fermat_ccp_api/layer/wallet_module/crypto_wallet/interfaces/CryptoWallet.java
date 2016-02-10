@@ -299,7 +299,8 @@ public interface CryptoWallet extends Serializable {
      * @throws CantGetBalanceException if something goes wrong
      */
     long getBalance(BalanceType balanceType,
-                    String      walletPublicKey) throws CantGetBalanceException;
+                    String      walletPublicKey,
+                    BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceException;
 
     /**
      * Throw the method <code>getTransactions</code> you cant get all the transactions for an specific balance type.
