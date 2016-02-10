@@ -171,6 +171,34 @@
                 android:src="@drawable/bg_delivery_button"/>
 
         </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/assetDetailTransferLayout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/assetDetailAppropriateLayout"
+            android:paddingTop="10dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetDetailTransferText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Transfer"
+                android:layout_centerInParent="true"
+                android:fontFamily="regular"
+                android:textSize="17sp"
+                android:textColor="#00aeef"
+                android:paddingTop="10dp"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/bg_delivery_button"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"></RelativeLayout>
 
     </RelativeLayout>
 

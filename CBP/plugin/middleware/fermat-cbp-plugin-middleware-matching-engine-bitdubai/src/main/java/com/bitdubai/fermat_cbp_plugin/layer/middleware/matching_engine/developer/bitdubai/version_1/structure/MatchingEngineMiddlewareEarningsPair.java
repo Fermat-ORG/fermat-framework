@@ -12,6 +12,9 @@ import java.util.UUID;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/02/2016.
+ *
+ * @author lnacosta
+ * @version 1.0
  */
 public final class MatchingEngineMiddlewareEarningsPair implements EarningsPair {
 
