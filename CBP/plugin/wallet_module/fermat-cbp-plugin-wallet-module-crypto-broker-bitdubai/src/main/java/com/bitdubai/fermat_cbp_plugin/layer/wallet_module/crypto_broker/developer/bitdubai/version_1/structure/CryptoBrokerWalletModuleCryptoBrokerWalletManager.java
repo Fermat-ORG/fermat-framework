@@ -1174,6 +1174,20 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     /**
+     * This method load the instance saveCryptoBrokerWalletSpreadSetting
+     *
+     * @return CryptoBrokerWalletSettingSpread
+     * @throws CantSaveCryptoBrokerWalletSettingException
+     */
+    @Override
+    public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException {
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        walletPublicKey = "walletPublicKeyTest";
+        return cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
+    }
+
+
+    /**
      * Returns an exchange rate of a given date, for a specific currencyPair
      *
      * @param currencyFrom
@@ -1327,6 +1341,16 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public BigDecimal getBalanceCashWallet(String walletPublicKey) throws CantGetCashMoneyWalletBalanceException, CantLoadCashMoneyWalletException {
         return cashMoneyWalletManager.loadCashMoneyWallet(walletPublicKey).getAvailableBalance().getBalance();
+    }
+
+    /**
+     * Checks if wallet exists in wallet database
+     *
+     * @param walletPublicKey
+     */
+    @Override
+    public boolean cashMoneyWalletExists(String walletPublicKey) {
+        return cashMoneyWalletManager.cashMoneyWalletExists(walletPublicKey);
     }
 
     /**
