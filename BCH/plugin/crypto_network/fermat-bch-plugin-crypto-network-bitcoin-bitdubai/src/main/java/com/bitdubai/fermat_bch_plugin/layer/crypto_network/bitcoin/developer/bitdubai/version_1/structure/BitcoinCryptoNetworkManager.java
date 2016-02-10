@@ -516,18 +516,13 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @throws CantGetCryptoTransactionException
      */
 
-    public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
-        /**
-         * I will get the CryptoTransaction from all agents running. Only one will return the CryptoTransaction
-         */
-        for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()) {
-            return monitor.getCryptoTransactionFromBlockChain(txHash, blockHash);
+    public CryptoTransaction getCryptoTransactionFromBlockChain(BlockchainNetworkType blockchainNetworkType, String txHash, String blockHash) throws CantGetCryptoTransactionException {
+        try {
+            Transaction transaction = this.getTransactionFromBlockChain(blockchainNetworkType, txHash, blockHash);
+            return CryptoTransaction.getCryptoTransaction(blockchainNetworkType, transaction);
+        } catch (CantGetTransactionsException e) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "Couldn't get the bitcoin transaction from blockchain", null);
         }
-
-        /**
-         * if no agents are running, then no CryptoTransaction to return.
-         */
-        return null;
     }
 
     /**
