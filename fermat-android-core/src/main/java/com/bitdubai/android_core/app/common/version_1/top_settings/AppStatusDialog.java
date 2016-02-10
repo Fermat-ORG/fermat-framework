@@ -41,53 +41,57 @@ public class AppStatusDialog extends Dialog{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.app_status_dialog_main);
 
+        RadioButton radioButton =(RadioButton) findViewById(R.id.radio_release);
+        radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                uncheckAllExcept(AppsStatus.RELEASE);
+                appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.RELEASE);
+            }
+        });
+
+        RadioButton radioButton1 =(RadioButton)findViewById(R.id.radio_beta);
+        radioButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                uncheckAllExcept(AppsStatus.BETA);
+                appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.BETA);
+
+            }
+        });
+
+        RadioButton radioButton2 =(RadioButton)findViewById(R.id.radio_alpha);
+        radioButton2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                uncheckAllExcept(AppsStatus.ALPHA);
+                appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.ALPHA);
+
+            }
+        });
+
+        RadioButton radioButton3 =(RadioButton)findViewById(R.id.radio_dev);
+        radioButton3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                uncheckAllExcept(AppsStatus.DEV);
+                appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.DEV);
+
+            }
+        });
+
         switch (appsStatus){
             case RELEASE:
-                RadioButton radioButton =(RadioButton) findViewById(R.id.radio_release);
                 radioButton.setChecked(true);
-                radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        uncheckAllExcept(AppsStatus.RELEASE);
-                        appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.RELEASE);
-                    }
-                });
                 break;
             case BETA:
-                RadioButton radioButton1 =(RadioButton)findViewById(R.id.radio_beta);
                 radioButton1.setChecked(true);
-                radioButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        uncheckAllExcept(AppsStatus.BETA);
-                        appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.BETA);
-
-                    }
-                });
                 break;
             case ALPHA:
-                RadioButton radioButton2 =(RadioButton)findViewById(R.id.radio_alpha);
                 radioButton2.setChecked(true);
-                radioButton2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        uncheckAllExcept(AppsStatus.ALPHA);
-                        appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.ALPHA);
-
-                    }
-                });
                 break;
             case DEV:
-                RadioButton radioButton3 =(RadioButton)findViewById(R.id.radio_dev);
                 radioButton3.setChecked(true);
-                radioButton3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        uncheckAllExcept(AppsStatus.DEV);
-                        appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.DEV);
-
-                    }
-                });
                 break;
         }
     }
