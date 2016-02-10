@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -22,11 +24,14 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinWalletBalance
 
     private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
 
+    private Broadcaster broadcaster;
+
     /**
      * Constructor.
      */
-    public BitcoinWalletBasicWalletBookBalance(final Database database){
+    public BitcoinWalletBasicWalletBookBalance(final Database database,final Broadcaster broadcaster){
         this.database = database;
+        this.broadcaster = broadcaster;
     }
 
     @Override
@@ -54,6 +59,8 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinWalletBalance
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK);
+            //broadcaster balance amount
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
         } catch(CantRegisterDebitException exception){
             throw exception;
         } catch(Exception exception){
@@ -66,6 +73,8 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinWalletBalance
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK);
+            //broadcaster balance amount
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
         } catch(CantRegisterCreditException exception){
             throw exception;
         } catch(Exception exception){

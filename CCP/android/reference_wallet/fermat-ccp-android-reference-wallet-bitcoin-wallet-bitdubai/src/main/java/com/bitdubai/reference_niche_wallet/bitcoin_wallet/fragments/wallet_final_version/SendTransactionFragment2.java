@@ -1164,5 +1164,24 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
 
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try {
+
+            //update balance amount
+
+            final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()),ShowMoneyType.BITCOIN.getCode());
+
+             changeBalanceType(txt_type_balance, txt_balance_amount);
+            //System.out.println(System.currentTimeMillis());
+
+            circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+            circularProgressBar.setProgressValue2(getBalanceAverage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }
 

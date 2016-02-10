@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -22,6 +24,8 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
 
     private BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
 
+    private Broadcaster broadcaster;
+
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -29,8 +33,9 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
     /**
      * Constructor.
      */
-    public BitcoinWalletBasicWalletAvailableBalance(final Database database){
+    public BitcoinWalletBasicWalletAvailableBalance(final Database database, final Broadcaster broadcaster){
         this.database = database;
+        this.broadcaster = broadcaster;
     }
     @Override
     public long getBalance() throws CantCalculateBalanceException {
@@ -55,6 +60,8 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE);
+            //broadcaster balance amount
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
         } catch(CantRegisterDebitException exception){
             throw exception;
         } catch(Exception exception){
@@ -67,6 +74,9 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction,BalanceType.AVAILABLE);
+
+            //broadcaster balance amount
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
         } catch(CantRegisterCreditException exception){
             throw exception;
         } catch(Exception exception){

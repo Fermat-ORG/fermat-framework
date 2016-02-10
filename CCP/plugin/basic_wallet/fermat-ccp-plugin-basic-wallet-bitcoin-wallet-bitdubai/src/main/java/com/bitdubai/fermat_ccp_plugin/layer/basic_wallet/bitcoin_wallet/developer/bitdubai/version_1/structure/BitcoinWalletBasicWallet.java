@@ -3,6 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.develop
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionSummary;
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
@@ -54,16 +55,19 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
+    private final Broadcaster broadcaster;
 
     public BitcoinWalletBasicWallet(final ErrorManager errorManager,
                                     final PluginDatabaseSystem pluginDatabaseSystem,
                                     final PluginFileSystem pluginFileSystem,
-                                    final UUID pluginId) {
+                                    final UUID pluginId,
+                                    final  Broadcaster broadcaster) {
 
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.broadcaster = broadcaster;
     }
 
     //metodo create para crear la base de datos
@@ -253,11 +257,11 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
 
         switch (balanceType) {
             case AVAILABLE:
-                return new BitcoinWalletBasicWalletAvailableBalance(database);
+                return new BitcoinWalletBasicWalletAvailableBalance(database,this.broadcaster);
             case BOOK:
-                return new BitcoinWalletBasicWalletBookBalance(database);
+                return new BitcoinWalletBasicWalletBookBalance(database,this.broadcaster);
             default:
-                return new BitcoinWalletBasicWalletAvailableBalance(database);
+                return new BitcoinWalletBasicWalletAvailableBalance(database,this.broadcaster);
         }
     }
 
