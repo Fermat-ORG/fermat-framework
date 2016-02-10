@@ -80,6 +80,7 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -526,7 +527,7 @@ public abstract class FermatActivity extends AppCompatActivity
         view.findViewById(R.id.img_fermat_setting_1).setOnClickListener(onClickListener);
         view.findViewById(R.id.img_fermat_setting).setOnClickListener(onClickListener);
 
-        if(appStatusListener!=null){
+        if(appStatusListener==null){
             appStatusListener = new AppStatusListener(this);
         }
 
@@ -1244,7 +1245,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             }
 
-            List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
+            List<AbstractFermatFragment> fragments = new Vector<AbstractFermatFragment>();
 
             elementsWithAnimation = new ArrayList<>();
             if(bottomNavigation!=null) {
@@ -1281,7 +1282,7 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void initialisePaging() {
 
         try {
-            List<android.app.Fragment> fragments = new Vector<>();
+            List<AbstractFermatFragment> fragments = new Vector<>();
 
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
 
@@ -2092,5 +2093,7 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
-
+    public ScreenPagerAdapter getScreenAdapter() {
+        return screenPagerAdapter;
+    }
 }

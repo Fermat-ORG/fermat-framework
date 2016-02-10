@@ -3,14 +3,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#E6E6E6">
 
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Software Status"
-        android:textSize="26sp"
+        android:textSize="25sp"
+        android:textColor="#666666"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"/>
@@ -18,7 +20,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#000"/>
+        android:background="#666666"
+        android:paddingRight="7dp"
+        android:paddingLeft="7dp"/>
         >
 
     <LinearLayout
@@ -26,64 +30,73 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/linear_relese"
-        android:paddingLeft="28dp"
+        android:paddingLeft="16dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:src="@drawable/ic_drawable_private_network"/>
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/icon_relese"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
             android:layout_weight="1"
+            android:textColor="#666666"
             android:text="Release"/>
 
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2.5"
+            android:layout_weight="2.3"
             android:id="@+id/radio_release"
             />
 
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#666666"
+        android:paddingRight="7dp"
+        android:paddingLeft="7dp"/>
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linear_beta"
         android:orientation="horizontal"
-        android:paddingLeft="28dp"
+        android:paddingLeft="16dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:src="@drawable/ic_drawable_private_network"/>
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/icons_beta"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
+            android:textColor="#666666"
             android:layout_weight="1"
             android:text="Beta"/>
 
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2.5"
+            android:layout_weight="2.3"
             android:id="@+id/radio_beta"
 
             />
@@ -91,60 +104,78 @@
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#666666"
+        android:paddingRight="7dp"
+        android:paddingLeft="7dp"/>
+    >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/linear_alpha"
         android:orientation="horizontal"
-        android:paddingLeft="28dp"
+        android:paddingLeft="16dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:src="@drawable/ic_drawable_private_network"/>
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/icons_alfa"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
+            android:textColor="#666666"
             android:layout_weight="1"
             android:text="Alpha"/>
 
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2.5"
+            android:layout_weight="2.3"
             android:id="@+id/radio_alpha"
             />
 
 
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#666666"
+        android:paddingRight="7dp"
+        android:paddingLeft="7dp"/>
+    >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:id="@+id/linear_develop"
-        android:paddingLeft="28dp"
+        android:paddingLeft="16dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
         <ImageView
-            android:layout_width="64dp"
-            android:layout_height="64dp"
-            android:src="@drawable/ic_drawable_private_network"/>
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:src="@drawable/icons_developer"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
+            android:textColor="#666666"
             android:paddingLeft="12dp"
             android:layout_weight="1"
             android:text="Dev"/>
@@ -152,7 +183,7 @@
         <RadioButton
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="2.5"
+            android:layout_weight="2.3"
             android:id="@+id/radio_dev"
             />
 
