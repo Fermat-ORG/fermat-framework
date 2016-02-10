@@ -856,7 +856,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
             System.out.println("--------------------------------------\nTransactionTransmissionPluginRoot - Transaction Transmission started\n--------------------------------------------");
             System.out.println("TransactionTransmissionPluginRoot - Public Key:"+getIdentityPublicKey());
             //launchNotificationTest();
-            sendMetadataTest();
+            //sendMetadataTest();
             //sendMetadataThreadTest();
             //sendNTimesTest(10);
         } catch (CantInitializeDatabaseException exception) {
