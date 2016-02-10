@@ -372,7 +372,7 @@ Each platform usually have one or more Fermat APPs on top of it, and in this way
 
 We had to design a business model that works fine for several different actors. On one side we need Fermat p2p Network nodes operators to provide their hardware and bandwidth to inter-connect end users. On the other side we need developers to write the code of this massive system. We also need entrepreneurs to run business on top of what developers build. And finally we need end users to find value on the Fermat APPs they use.
 
-We divided the challenge to pf creating incentives for everybody in the following way:
+We divided the challenge of creating incentives for everybody in the following way:
 
 #### Fermat Miners
 
@@ -391,7 +391,9 @@ We chose the same economic parameters than the bitcoin network itself: 21 millio
 
 NOTE: The current implementation of the Fermat p2p Network does not include the mining scheme yet, meaning that no _b-fermats_ have been mined at present time.
 
+#### Developers
 
+#### Business Operators
 
 
 
