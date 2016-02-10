@@ -293,9 +293,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             List<CryptoBrokerCommunityInformation> result = cryptoBrokerCommunitySearch.getResult();
 
             //MOCK!
-            for(int i = 1 ; i <= 5 ; i++){
-                result.add(new CryptoBrokerCommunityInformationImpl("pk-"+i, "broker"+i, new byte[0]));
-            }
+            //for(int i = 1 ; i <= 5 ; i++){
+            //    result.add(new CryptoBrokerCommunityInformationImpl("pk-"+i, "broker"+i, new byte[0]));
+            //}
 
             dataSet.addAll(result);
             offset = dataSet.size();
