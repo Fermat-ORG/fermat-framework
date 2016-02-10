@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
+
 import java.io.Serializable;
 
 /**
@@ -9,4 +11,10 @@ import java.io.Serializable;
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 25/11/15.
  */
 public interface DAPContentMessage extends Serializable {
+    /**
+     * Every content message should have a unique type associate to it.
+     *
+     * @return {@link DAPMessageType} The message type that corresponds to this content message.
+     */
+    DAPMessageType messageType();
 }
