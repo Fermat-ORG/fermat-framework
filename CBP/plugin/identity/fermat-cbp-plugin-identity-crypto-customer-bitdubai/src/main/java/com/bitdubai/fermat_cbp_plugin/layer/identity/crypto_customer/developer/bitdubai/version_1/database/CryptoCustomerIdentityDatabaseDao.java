@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.CryptoCustomerIdentityPluginRoot;
@@ -118,6 +119,23 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
             throw new CantCreateNewDeveloperException (e.getMessage(), e, "Crypto Customer Identity", "Cant create new Crypto Customer Identity,persist private key error.");
         } catch (Exception e) {
             throw new CantCreateNewDeveloperException (e.getMessage(), FermatException.wrapException(e), "Crypto Customer Identity", "Cant create new Crypto Customer Identity, unknown failure.");
+        }
+    }
+
+    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateCustomerIdentityException {
+        try {
+            DatabaseTable table = this.database.getTable(CRYPTO_CUSTOMER_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            table.addStringFilter(CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            record.setStringValue(CRYPTO_CUSTOMER_ALIAS_COLUMN_NAME, alias);
+            table.updateRecord(record);
+
+            updateCryptoCustomerIdentityProfileImage(publicKey, imageProfile);
+
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateCustomerIdentityException(e.getMessage(), e, "", "");
+        } catch (CantPersistProfileImageException e) {
+            throw new CantUpdateCustomerIdentityException(e.getMessage(), e, "", "");
         }
     }
 
@@ -326,6 +344,31 @@ public class CryptoCustomerIdentityDatabaseDao implements DealsWithPluginDatabas
                 profileImage,
                 published
         );
+    }
+
+    private void updateCryptoCustomerIdentityProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
+        try {
+            this.pluginFileSystem.deleteBinaryFile(pluginId,
+                DeviceDirectory.LOCAL_USERS.getName(),
+                CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                FilePrivacy.PRIVATE,
+                FileLifeSpan.PERMANENT);
+
+            PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
+                DeviceDirectory.LOCAL_USERS.getName(),
+                CryptoCustomerIdentityPluginRoot.CRYPTO_CUSTOMER_IDENTITY_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                FilePrivacy.PRIVATE,
+                FileLifeSpan.PERMANENT
+            );
+            file.setContent(profileImage);
+            file.persistToMedia();
+        } catch (CantPersistFileException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
+        } catch (CantCreateFileException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
+        } catch (FileNotFoundException e) {
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error removing file.", null);
+        }
     }
 
 }
