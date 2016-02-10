@@ -55,9 +55,9 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 transactionHash,
                 ContractTransactionStatus.PENDING_CONFIRMATION,
-                cryptoCustomerActorReceiverPublicKey,
-                PlatformComponentType.NETWORK_SERVICE,
                 cryptoBrokerActorSenderPublicKey,
+                PlatformComponentType.NETWORK_SERVICE,
+                cryptoCustomerActorReceiverPublicKey,
                 PlatformComponentType.NETWORK_SERVICE,
                 null,
                 negotiationId,
