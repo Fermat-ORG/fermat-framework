@@ -14,8 +14,11 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.Can
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
@@ -110,4 +113,22 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      * @throws CantCreateBitcoinTransactionException
      */
     String createBitcoinTransaction (String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException;
+
+    /**
+     * Creates a non complete, unsigned draft bitcoin transaction given the passed input and address to.
+     * @param inputTransaction the Input transaction hash used to take funds from.
+     * @param addressTo the address to whom we are giving the funds.
+     * @return a DraftTransaction class
+     * @throws CantCreateDraftTransactionException
+     */
+    DraftTransaction createDraftTransaction (String inputTransaction, CryptoAddress addressTo) throws CantCreateDraftTransactionException;
+
+
+    /**
+     * Signs the owned inputs of the passed Draft transaction
+     * @param draftTransaction the transaction to sign
+     * @return the signed Transaction
+     * @throws CantSignTransactionException
+     */
+    DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException;
 }
