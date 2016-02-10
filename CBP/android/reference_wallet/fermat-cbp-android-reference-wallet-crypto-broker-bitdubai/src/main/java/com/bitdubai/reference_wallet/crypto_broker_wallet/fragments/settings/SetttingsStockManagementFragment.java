@@ -57,6 +57,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     private Map<String, String> bankAccounts;
     private CreateRestockDestockFragmentDialog dialog;
     private List<CryptoBrokerWalletAssociatedSetting> associatedSettings;
+    private CryptoBrokerWalletSettingSpread spreadSettings;
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
@@ -93,6 +94,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             System.out.println("associatedSettings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             associatedSettings = walletManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
             System.out.println("associatedSettings ["+ associatedSettings.size()+"]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            spreadSettings = walletManager.getCryptoBrokerWalletSpreadSetting("walletPublicKeyTest");
         } catch (FermatException ex) {
             Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
@@ -112,7 +114,10 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         super.initViews(layout);
         configureToolbar();
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_stock_wallets_empty_view);
-
+        if(spreadSettings != null){
+            spreadValue = (int)spreadSettings.getSpread();
+            automaticRestock = spreadSettings.getRestockAutomatic();
+        }
 
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
         spreadTextView.setText(String.format("%1$s %%", spreadValue));
@@ -124,7 +129,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                 automaticRestock = automaticRestockCheckBox.isChecked();
             }
         });
-
+        automaticRestockCheckBox.setChecked(automaticRestock);
         final SeekBar spreadSeekBar = (SeekBar) layout.findViewById(R.id.cbw_spread_value_seek_bar);
         spreadSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -141,7 +146,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
-
+        spreadSeekBar.setProgress(spreadValue);
 
         final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
         nextStepButton.setOnClickListener(new View.OnClickListener() {
