@@ -37,6 +37,7 @@ import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/11/15.
+ * Updated by Gabriel Araujo (gabe_512@hotmail.com) on 10/02/16.
  */
 public class TransactionTransmissionContractHashDao {
 
@@ -312,8 +313,16 @@ public class TransactionTransmissionContractHashDao {
             DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
             DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord, businessTransactionMetadata);
+            DatabaseTableFilter filter = getDatabaseTable().getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(businessTransactionMetadata.getTransactionId().toString());
+            filter.setColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_FIRST_KEY_COLUMN);
 
+            /*
+             * 2.- Create a new transaction and execute
+             */
             DatabaseTransaction transaction = getDataBase().newTransaction();
+            getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
             transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 

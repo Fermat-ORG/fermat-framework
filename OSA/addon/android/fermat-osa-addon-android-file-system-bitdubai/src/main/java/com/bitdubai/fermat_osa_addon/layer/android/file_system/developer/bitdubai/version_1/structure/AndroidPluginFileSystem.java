@@ -98,6 +98,39 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     }
 
     @Override
+    public boolean isTextFileExist(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan)  throws Exception{
+
+        String content = null;
+
+        try {
+            AndroidPluginTextFile androidPluginTextFile = new AndroidPluginTextFile(
+                    ownerId                        ,
+                    context.getFilesDir().getPath(),
+                    directoryName                  ,
+                    hashFileName(fileName)         ,
+                    privacyLevel                   ,
+                    lifeSpan
+            );
+
+            androidPluginTextFile.loadFromMedia();
+
+            content = androidPluginTextFile.getContent();
+
+        } catch (CantHashFileNameException | CantLoadFileException e) {
+            throw new Exception(e);
+        }
+
+
+        if (content!=null){
+            if(!content.equals("")){
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    @Override
     public final PluginBinaryFile getBinaryFile(final UUID         ownerId      ,
                                                 final String       directoryName,
                                                 final String       fileName     ,
