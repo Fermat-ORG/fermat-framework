@@ -1168,6 +1168,17 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     /**
+     * This method load the instance saveCryptoBrokerWalletSpreadSetting
+     *
+     * @return CryptoBrokerWalletSettingSpread
+     * @throws CantSaveCryptoBrokerWalletSettingException
+     */
+    @Override
+    public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException {
+        return cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
+    }
+
+    /**
      * Returns an exchange rate of a given date, for a specific currencyPair
      *
      * @param currencyFrom
