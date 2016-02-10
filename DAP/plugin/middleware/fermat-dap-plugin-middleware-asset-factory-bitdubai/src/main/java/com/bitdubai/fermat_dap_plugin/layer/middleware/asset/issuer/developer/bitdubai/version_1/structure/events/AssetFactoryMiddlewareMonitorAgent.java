@@ -54,7 +54,7 @@ public final class AssetFactoryMiddlewareMonitorAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent, "Asset Factory Middleware MonitorAgent");
         this.agentThread.start();
     }
 

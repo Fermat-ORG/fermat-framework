@@ -289,7 +289,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
             final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
 
-            //search.addConnectionState(ConnectionState.CONNECTED);
+            search.addConnectionState(ConnectionState.CONNECTED);
 
             final List<CryptoBrokerActorConnection> actorConnections = search.getResult(max, offset);
 

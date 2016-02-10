@@ -33,6 +33,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.google.common.collect.Lists;
 
 import org.bitcoinj.core.Address;
+import org.bitcoinj.core.Context;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Sha256Hash;
@@ -120,7 +121,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param blockchainNetworkTypes
      * @param keyList
      */
-    public void monitorNetworkFromKeyList(CryptoVaults cryptoVault, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantStartAgentException {
+    public synchronized void monitorNetworkFromKeyList(CryptoVaults cryptoVault, List<BlockchainNetworkType> blockchainNetworkTypes, List<ECKey> keyList) throws CantStartAgentException {
         /**
          * This method will be called from agents from the Vaults. New keys may be added on each call or not.
          */
@@ -171,7 +172,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 }
             } else {
                 /**
-                 * regulat vault, so will try to import new keys if any
+                 * regular vault, so will try to import new keys if any
                  */
                 if (areNewKeysAdded(wallet, keyList)) {
                     wallet.importKeys(keyList);
@@ -282,7 +283,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return
      */
     private synchronized Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList) {
-        Wallet wallet;
+        Wallet wallet = null;
         String fileName = WALLET_FILENAME + blockchainNetworkType.getCode();
         walletFile = new File(fileName);
         try {
@@ -293,8 +294,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
              * I'm creating it by importing the keys sent by the vault.
              */
             //wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
+            NetworkParameters newWalletNetworkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
+            Context context = new Context(newWalletNetworkParameters);
 
-            wallet = new Wallet(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
+            wallet = new Wallet(context);
             wallet.importKeys(keyList);
 
             /**
@@ -306,6 +309,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             } catch (IOException e1) {
                 e1.printStackTrace(); // I will continue because the key addition will trigger an autosave anyway.
             }
+
         }
         return wallet;
     }
@@ -324,12 +328,15 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         /**
          * I remove from the passed list, everything is already saved in the wallet-
          */
-        keys.removeAll(walletKeys);
+        List<ECKey> tempKeyList = new ArrayList<>();
+
+        tempKeyList.addAll(keys);
+        tempKeyList.removeAll(walletKeys);
 
         /**
          * If there are still keys, then we have new ones.
          */
-        if (keys.size() > 0)
+        if (tempKeyList.size() > 0)
             return true;
         else
             return false;
@@ -565,7 +572,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
              */
             for (TransactionInput input : transaction.getInputs()) {
                 if (input.getOutpoint().getHash().toString().contentEquals(parentHash))
-                    cryptoTransaction = CryptoTransaction.getCryptoTransaction(transaction);
+                    cryptoTransaction = CryptoTransaction.getCryptoTransaction(BlockchainNetworkType.getDefaultBlockchainNetworkType(),transaction);
             }
         }
 
@@ -814,7 +821,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
         try {
-            CryptoTransaction cryptoTransaction = CryptoTransaction.getCryptoTransaction(this.getGenesisTransaction(blockchainNetworkType, transactionChain));
+            if (blockchainNetworkType == null)
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            CryptoTransaction cryptoTransaction = CryptoTransaction.getCryptoTransaction(blockchainNetworkType, this.getGenesisTransaction(blockchainNetworkType, transactionChain));
             return cryptoTransaction;
         } catch (CantGetTransactionException e) {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, null, null);
@@ -945,8 +954,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
     public List<CryptoTransaction> getChildTransactionsFromParent(String parentTransactionHash) throws CantGetCryptoTransactionException {
         List<CryptoTransaction> cryptoTransactions = new ArrayList<>();
         try {
-            for (Transaction transaction : getChildBitcoinTransactionsFromParent(parentTransactionHash)){
-                cryptoTransactions.add(CryptoTransaction.getCryptoTransaction(transaction));
+            for (Map.Entry<Transaction, BlockchainNetworkType> entry : getChildBitcoinTransactionsFromParent(parentTransactionHash).entrySet()){
+                cryptoTransactions.add(CryptoTransaction.getCryptoTransaction(entry.getValue(), entry.getKey()));
             }
         } catch (CantGetTransactionException e) {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "error getting list of Bitcoin Transactions", null);
@@ -964,21 +973,27 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return the list of Bitcoin Transactions that are a direct child of the parent.
      * @throws CantGetCryptoTransactionException
      */
-    private List<Transaction> getChildBitcoinTransactionsFromParent(String parentTransactionHash) throws CantGetTransactionException{
-        List<Transaction> transactions = new ArrayList<>();
+    private Map<Transaction, BlockchainNetworkType> getChildBitcoinTransactionsFromParent(String parentTransactionHash) throws CantGetTransactionException{
+        Map<Transaction,BlockchainNetworkType> transactions = new HashMap<>();
 
         Sha256Hash txHash = Sha256Hash.wrap(parentTransactionHash);
         /**
-         * I will get all the stored transactions
+         * I will get all the stored transactions on all active networks
          */
-        for (Transaction transaction : this.getBitcoinTransactions(BlockchainNetworkType.getDefaultBlockchainNetworkType())){
-            /**
-             * for each transaction I will search in the input the outpoint that matches the passed transactionHash
-             */
-            for (TransactionInput input : transaction.getInputs()){
-                if (input.getOutpoint().getHash().equals(txHash))
-                    transactions.add(transaction);
+        try {
+            for (BlockchainNetworkType blockchainNetworkType : this.getDao().getActiveBlockchainNetworkTypes()){
+                for (Transaction transaction : this.getBitcoinTransactions(blockchainNetworkType)){
+                    /**
+                     * for each transaction I will search in the input the outpoint that matches the passed transactionHash
+                     */
+                    for (TransactionInput input : transaction.getInputs()){
+                        if (input.getOutpoint().getHash().equals(txHash))
+                            transactions.put(transaction, blockchainNetworkType);
+                    }
+                }
             }
+        } catch (CantExecuteDatabaseOperationException e) {
+            e.printStackTrace();
         }
         /**
          * I'm not removing duplicates

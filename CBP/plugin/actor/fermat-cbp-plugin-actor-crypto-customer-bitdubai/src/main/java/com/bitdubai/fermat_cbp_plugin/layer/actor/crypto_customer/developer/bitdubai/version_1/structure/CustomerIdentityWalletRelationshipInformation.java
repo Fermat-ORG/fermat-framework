@@ -31,7 +31,7 @@ public class CustomerIdentityWalletRelationshipInformation implements CustomerId
     }
 
     @Override
-    public String getCryptoBroker() {
+    public String getCryptoCustomer() {
         return this.identity;
     }
 
