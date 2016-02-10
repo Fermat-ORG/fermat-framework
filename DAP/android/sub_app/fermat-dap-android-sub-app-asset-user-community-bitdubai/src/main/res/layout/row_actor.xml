@@ -60,16 +60,4 @@
         android:textSize="10sp"
         tools:ignore="HardcodedText,RtlSymmetry,SmallSp" />
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/crypto"
-        android:layout_width="match_parent"
-        android:layout_height="18dp"
-        android:background="#ffffff"
-        android:gravity="center_vertical"
-        android:paddingLeft="8dp"
-        android:paddingStart="8dp"
-        android:text="CryptoAddress: "
-        android:textColor="#000000"
-        android:textSize="10sp"
-        tools:ignore="HardcodedText,RtlSymmetry,SmallSp" />
 </LinearLayout>
