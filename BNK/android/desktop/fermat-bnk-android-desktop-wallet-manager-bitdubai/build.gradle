@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'jacoco'
 android {
     compileSdkVersion 23
-
     buildToolsVersion '21.1.2'
 
     defaultConfig {
@@ -50,6 +49,7 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
 
 }
+
 // Configuracion de JaCoCo
 def jacocoHtmlReport = ""
 task jacocoTestReport(type: JacocoReport, dependsOn: [assemble, "testDebug"]) {

@@ -8,9 +8,13 @@ android {
 
 
     compileSdkVersion 23
+<<<<<<< HEAD
 
     buildToolsVersion '21.1.2'
 
+=======
+    buildToolsVersion "21.1.2"
+>>>>>>> 5d50d0ffdeacd40f065d46875b5de6a3421b9e5c
 
     packagingOptions {
         exclude 'LICENSE.txt'

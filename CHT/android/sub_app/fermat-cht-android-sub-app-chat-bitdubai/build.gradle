@@ -7,11 +7,8 @@ android {
     }
 
     compileSdkVersion 23
-<<<<<<< HEAD
     buildToolsVersion '21.1.2'
-=======
-    buildToolsVersion "21.1.2"
->>>>>>> b8996e2e12f15d35fa825393f2ff126479e293c0
+
 
     defaultConfig {
         minSdkVersion 21
