@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -17,6 +18,8 @@ public class AssetAppropriationTransactionRecordImpl implements AppropriationTra
     //VARIABLE DECLARATION
 
     private String transactionId;
+
+    private BlockchainNetworkType networkType;
 
     private AppropriationStatus status;
 
@@ -38,6 +41,7 @@ public class AssetAppropriationTransactionRecordImpl implements AppropriationTra
     //CONSTRUCTORS
 
     public AssetAppropriationTransactionRecordImpl(String transactionId,
+                                                   BlockchainNetworkType networkType,
                                                    AppropriationStatus status,
                                                    DigitalAssetMetadata digitalAssetMetadata,
                                                    String bitcoinWalletPublicKey,
@@ -47,6 +51,7 @@ public class AssetAppropriationTransactionRecordImpl implements AppropriationTra
                                                    long endTime,
                                                    String genesisTransaction) {
         this.transactionId = transactionId;
+        this.networkType = networkType;
         this.status = status;
         this.digitalAssetMetadata = digitalAssetMetadata;
         this.bitcoinWalletPublicKey = bitcoinWalletPublicKey;
@@ -109,6 +114,11 @@ public class AssetAppropriationTransactionRecordImpl implements AppropriationTra
     @Override
     public String transactionRecordId() {
         return transactionId;
+    }
+
+    @Override
+    public BlockchainNetworkType networkType() {
+        return networkType;
     }
 
     @Override

@@ -206,7 +206,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                 switch (record.status()) {
                     case APPROPRIATION_STARTED:
                         IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("getting crypto address and saving it..." + record.transactionRecordId());
-                        CryptoAddress cryptoAddress = cryptoVaultManager.getAddress();
+                        CryptoAddress cryptoAddress = cryptoVaultManager.getAddress(record.networkType());
                         IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Address: " + cryptoAddress.getAddress());
                         dao.updateCryptoAddress(cryptoAddress, record.transactionRecordId());
                         dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());

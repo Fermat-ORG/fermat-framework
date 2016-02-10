@@ -199,7 +199,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
         try {
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), intraUserSubAppSession,null, data, moduleManager.getActiveIntraUserIdentity());
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {

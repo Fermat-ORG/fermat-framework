@@ -13,7 +13,9 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -72,6 +74,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     //UI
     private View noAssetsView;
+    private SearchView searchView;
 
     public static MyAssetsActivityFragment newInstance() {
         return new MyAssetsActivityFragment();
@@ -114,6 +117,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
             try {
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -130,7 +135,6 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 }
             }
         }, 500);
-
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -180,9 +184,29 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);    }
+        inflater.inflate(R.menu.dap_asset_issuer_home_menu, menu);
+        searchView = (SearchView) menu.findItem(R.id.action_wallet_issuer_search).getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.dap_issuer_wallet_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.equals(searchView.getQuery().toString())) {
+                    ((MyAssetsAdapter) getAdapter()).getFilter().filter(s);
+                }
+                return false;
+            }
+        });
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+//        super.onCreateOptionsMenu(menu, inflater);
+//        searchView = (SearchView) menu.getItem(1).getActionView();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

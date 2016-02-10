@@ -183,8 +183,8 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
 
             if (id == R.id.btn_action_cash) {
                 try {
-                    String cashWalletPublicKey = "cash_wallet"; //TODO:Revisar como podemos obtener el public key de la wallet Cash
-                    WalletManager.createCashMoneyWallet(cashWalletPublicKey, CurrencyCash);
+                    String cashWalletPublicKey = walletSession.getAppPublicKey();
+                    WalletManager.createCashMoneyWallet(cashWalletPublicKey,CurrencyCash);
                     dismiss();
                 } catch (Exception e) {
                     Log.e(TAG, "Error on:" + e + " ------------VALORES DE VARIABLES----------->" + CurrencyCash);

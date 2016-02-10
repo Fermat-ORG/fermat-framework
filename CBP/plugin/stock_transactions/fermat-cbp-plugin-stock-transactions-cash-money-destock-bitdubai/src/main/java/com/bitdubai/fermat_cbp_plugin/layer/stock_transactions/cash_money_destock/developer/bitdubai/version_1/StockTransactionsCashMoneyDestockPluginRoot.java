@@ -78,15 +78,14 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             System.out.println("******* Init Cash Money Destock ******");
-
             startMonitorAgent();
-
             database.closeDatabase();
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e) {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException  e) {
             try {
+                startMonitorAgent();
                 StockTransactionsCashMoneyDestockDatabaseFactory stockTransactionsCashMoneyDestockDatabaseFactory = new StockTransactionsCashMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
                 stockTransactionsCashMoneyDestockDatabaseFactory.createDatabase(this.pluginId, StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_DATABASE_NAME);
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            } catch (CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException ) {
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             } catch (Exception exception) {
@@ -150,7 +149,12 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
             );
 
             stockTransactionsCashMoneyDestockMonitorAgent.start();
-        } else stockTransactionsCashMoneyDestockMonitorAgent.start();
+            serviceStatus = ServiceStatus.STARTED;
+        }
+        else {
+            stockTransactionsCashMoneyDestockMonitorAgent.start();
+            serviceStatus = ServiceStatus.STARTED;
+        }
     }
 
 }

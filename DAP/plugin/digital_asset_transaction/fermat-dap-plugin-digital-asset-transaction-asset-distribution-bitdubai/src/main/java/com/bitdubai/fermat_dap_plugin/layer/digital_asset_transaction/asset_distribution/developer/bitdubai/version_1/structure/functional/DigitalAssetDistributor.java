@@ -231,12 +231,6 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
         System.out.println("ASSET DISTRIBUTION registered in database");
     }
 
-    @Override
-    public void persistDigitalAsset(DigitalAssetMetadata digitalAssetMetadata, String senderId) throws CantPersistDigitalAssetException, CantCreateDigitalAssetFileException {
-        //To implement
-    }
-
-
     public void persistInLocalStorage(DigitalAssetMetadata digitalAssetMetadata) throws CantCreateDigitalAssetFileException {
         System.out.println("ASSET DISTRIBUTION Internal Id: " + digitalAssetMetadata.getGenesisTransaction());
         this.digitalAssetDistributionVault.persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, digitalAssetMetadata.getLastTransactionHash());

@@ -211,6 +211,22 @@ public class BitcoinCryptoNetworkDeveloperDatabaseFactory implements DealsWithPl
         tables.add(broadcast_StatsTable);
 
 
+        /**
+         * Table ACTIVENETWORKS columns.
+         */
+        List<String> activeNetworksColumns = new ArrayList<String>();
+
+        activeNetworksColumns.add(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE);
+        activeNetworksColumns.add(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_KEYS);
+        activeNetworksColumns.add(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_LAST_UPDATE);
+
+        /**
+         * Table ACTIVENETWORKS addition.
+         */
+        DeveloperDatabaseTable activeNetworksTable = developerObjectFactory.getNewDeveloperDatabaseTable(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_TABLE_NAME, activeNetworksColumns);
+        tables.add(activeNetworksTable);
+
+
         return tables;
     }
 

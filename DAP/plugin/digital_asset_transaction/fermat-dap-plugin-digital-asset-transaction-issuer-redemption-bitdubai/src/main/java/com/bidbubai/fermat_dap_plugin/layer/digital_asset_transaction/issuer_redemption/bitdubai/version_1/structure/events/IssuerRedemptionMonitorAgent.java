@@ -194,7 +194,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                             issuerRedemptionDao.redemptionFinished(digitalAssetMetadata);
                             if (cryptoTransactionOnBlockChain.getCryptoAmount() < DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT) {
                                 System.out.println("ASSET AMOUNT IS NOT ENOUGH TO START ANOTHER CYCLE, AUTOMATIC APPROPRIATING IT...");
-                                issuerAppropriationManager.appropriateAsset(digitalAssetMetadata, issuerPublicKeyWallet, btcWallet);
+                                issuerAppropriationManager.appropriateAsset(digitalAssetMetadata, issuerPublicKeyWallet, btcWallet, genesisTx.getKey());
                             }
                             notify = true;
                         }

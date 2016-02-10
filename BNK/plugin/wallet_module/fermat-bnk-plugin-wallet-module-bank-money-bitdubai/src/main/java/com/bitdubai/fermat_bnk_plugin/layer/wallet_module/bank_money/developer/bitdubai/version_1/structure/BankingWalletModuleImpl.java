@@ -23,6 +23,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWallet;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,6 +47,7 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     private UUID pluginId;
 
     private String publicKey = "banking_wallet";
+    private BankTransactionParametersImpl tempLastParameter;
 
     public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager, PluginFileSystem pluginFileSystem, UUID pluginId,Broadcaster broadcaster) {
         this.bankMoneyWalletManager = bankMoneyWalletManager;
@@ -160,9 +162,8 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
                 this.makeDeposit(transaction);
             else
                 this.makeWithdraw(transaction);
-
             //TODO: Evento al GUI de actualizar la transaccion indicando que se realizo satisfactoriamente
-            //broadcaster.publish(BroadcasterType.UPDATE_VIEW, BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
         }catch(FermatException e){
             //TODO: Evento al GUI de actualizar el deposito indicando que hubo una falla y no se pudo realizar
         }
@@ -171,12 +172,14 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     @Override
     public void makeAsyncDeposit(BankTransactionParameters bankTransactionParameters)  {
         BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),bankTransactionParameters.getPublicKeyActor(),bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(),TransactionType.CREDIT);
+        tempLastParameter = parameters;
         this.queueNewTransaction(parameters);
     }
 
     @Override
     public void makeAsyncWithdraw(BankTransactionParameters bankTransactionParameters) {
         BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),bankTransactionParameters.getPublicKeyActor(),bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(),TransactionType.DEBIT);
+        tempLastParameter = parameters;
         this.queueNewTransaction(parameters);
     }
 
@@ -187,5 +190,16 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
             list.add(new BankTransactionRecordImpl(data.getAmount().floatValue(),data.getMemo(),new Date().getTime(),data.getTransactionType(), BankTransactionStatus.PENDING));
         }
         return list;
+    }
+
+    @Override
+    public void cancelAsyncBankTransaction(BankMoneyTransactionRecord transaction) {
+        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(transaction.getBankTransactionId(),tempLastParameter.getPublicKeyPlugin(),tempLastParameter.getPublicKeyWallet(),tempLastParameter.getPublicKeyActor(),new BigDecimal(transaction.getAmount()),transaction.getBankAccountNumber(),transaction.getCurrencyType(),transaction.getMemo(),TransactionType.DEBIT);
+        try{
+            this.cancelTransaction(parameters);
+        }catch (Exception e){
+            System.out.println(" exception trying to cancel async transaction");
+        }
+
     }
 }

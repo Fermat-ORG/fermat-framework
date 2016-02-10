@@ -30,7 +30,6 @@ import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -62,17 +61,15 @@ import com.software.shell.fab.ActionButton;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
-import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
-import static com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats.*;
-
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
+import static com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT;
 
 /**
  * Main Fragment
@@ -123,7 +120,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             manager = ((AssetFactorySession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            settingsManager = appSession.getModuleManager().getSettingsManager();
+//            settingsManager = appSession.getModuleManager().getSettingsManager();
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
 
             satoshisWalletBalance = manager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(manager));
@@ -259,8 +256,11 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
             settings = new AssetFactorySettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+
             try {
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                manager.setAppPublicKey(appSession.getAppPublicKey());
+
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -505,7 +505,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                             selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
                             break;
                         }
-                        manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                        manager.publishAsset(getAssetForEdit());
                         selectedAsset = null;
                         return true;
                     }

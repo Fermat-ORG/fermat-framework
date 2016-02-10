@@ -8,10 +8,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationEvent;
 
 import java.lang.ref.WeakReference;
-import java.util.Queue;
 
 /**
  * Created by mati on 2016.02.04..
@@ -20,7 +18,6 @@ public class BroadcastManager implements BroadcasterInterface {
 
     private static final String TAG = "broadcaster-manager";
     WeakReference<FermatActivity> fermatActivity;
-    Queue<NotificationEvent> queue;
 
     public BroadcastManager(FermatActivity fermatActivity) {
         this.fermatActivity = new WeakReference<FermatActivity>(fermatActivity);
@@ -34,6 +31,10 @@ public class BroadcastManager implements BroadcasterInterface {
         fermatActivity.clear();
     }
 
+    public void resume(FermatActivity fermatActivity) {
+        this.fermatActivity = new WeakReference<FermatActivity>(fermatActivity);
+    }
+
 
     @Override
     public void publish(BroadcasterType broadcasterType, String code) {
@@ -43,6 +44,7 @@ public class BroadcastManager implements BroadcasterInterface {
                     updateView(code);
                     break;
                 case NOTIFICATION_SERVICE:
+                    fermatActivity.get().notificateBroadcast(null,code);
                     break;
             }
         }catch (Exception e){
@@ -59,7 +61,7 @@ public class BroadcastManager implements BroadcasterInterface {
                     updateView(code);
                     break;
                 case NOTIFICATION_SERVICE:
-
+                    fermatActivity.get().notificateBroadcast(null,code);
                     break;
             }
         }catch (Exception e){
@@ -76,7 +78,8 @@ public class BroadcastManager implements BroadcasterInterface {
                     updateView(code);
                     break;
                 case NOTIFICATION_SERVICE:
-
+                    String publicKey = fermatActivity.get().searchAppFromPlatformIdentifier(fermatApps);
+                    fermatActivity.get().notificateBroadcast(publicKey,code);
                     break;
             }
         }catch (Exception e){
@@ -92,8 +95,7 @@ public class BroadcastManager implements BroadcasterInterface {
         }
     }
 
-    private void notificate(){
 
-    }
+
 
 }

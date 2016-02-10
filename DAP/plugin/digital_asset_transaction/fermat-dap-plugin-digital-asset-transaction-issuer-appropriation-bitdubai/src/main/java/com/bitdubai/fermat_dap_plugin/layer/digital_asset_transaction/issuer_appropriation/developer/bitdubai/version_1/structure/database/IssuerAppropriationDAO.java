@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -96,9 +97,9 @@ public class IssuerAppropriationDAO {
     *
     */
 
-    public String startAppropriation(DigitalAssetMetadata assetMetadata, String userWalletPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
+    public String startAppropriation(DigitalAssetMetadata assetMetadata, String userWalletPublicKey, String bitcoinWalletPublicKey, BlockchainNetworkType networkType) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
         String context = "Asset : " + assetMetadata.getDigitalAsset().getPublicKey() + " - Btc Wallet: " + bitcoinWalletPublicKey
-                + " - User Wallet: " + userWalletPublicKey;
+                + " - User Wallet: " + userWalletPublicKey + " - Network: " + networkType;
         try {
             if (transactionExists(assetMetadata.getGenesisTransaction(), userWalletPublicKey, bitcoinWalletPublicKey)) {
                 throw new TransactionAlreadyStartedException(null, context, "You already started the transaction for this asset.");
@@ -112,6 +113,7 @@ public class IssuerAppropriationDAO {
             vault.persistDigitalAssetMetadataInLocalStorage(assetMetadata, transactionId);
 
             transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_ID_COLUMN_NAME, transactionId);
+            transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_NETWORK_TYPE, networkType.getCode());
             transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_STATUS_COLUMN_NAME, AppropriationStatus.APPROPRIATION_STARTED.getCode());
             transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_DA_PUBLIC_KEY_COLUMN_NAME, assetMetadata.getDigitalAsset().getPublicKey());
             transactionRecord.setStringValue(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, userWalletPublicKey);
@@ -486,6 +488,7 @@ public class IssuerAppropriationDAO {
     private IssuerAppropriationTransactionRecordImpl constructRecordFromId(String transactionId) throws CantLoadAssetAppropriationTransactionListException, RecordsNotFoundException {
         String context = "TransactionId : " + transactionId;
         try {
+            BlockchainNetworkType networkType = BlockchainNetworkType.getByCode(getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_NETWORK_TYPE, transactionId));
             String bitcoinWalletPublicKey = getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_BTC_WALLET_KEY_TO_COLUMN_NAME, transactionId);
             String userWalletPublicKey = getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_USER_WALLET_KEY_TO_COLUMN_NAME, transactionId);
             String address = getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_CRYPTO_ADDRESS_TO_COLUMN_NAME, transactionId);
@@ -501,7 +504,7 @@ public class IssuerAppropriationDAO {
             long endTime = getLongFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_END_TIME_COLUMN_NAME, transactionId);
             String genesisTransaction = getStringFieldByTransactionId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_TRANSACTION_METADATA_GENESIS_COLUMN_NAME, transactionId);
 
-            return new IssuerAppropriationTransactionRecordImpl(transactionId, status, assetMetadata, bitcoinWalletPublicKey, userWalletPublicKey, cryptoAddress, startTime, endTime, genesisTransaction);
+            return new IssuerAppropriationTransactionRecordImpl(transactionId, networkType, status, assetMetadata, bitcoinWalletPublicKey, userWalletPublicKey, cryptoAddress, startTime, endTime, genesisTransaction);
         } catch (InvalidParameterException | CantGetDigitalAssetFromLocalStorageException e) {
             throw new CantLoadAssetAppropriationTransactionListException(e, context, "There was an exception while constructing the record.");
         }

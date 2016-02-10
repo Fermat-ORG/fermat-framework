@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_resto
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -37,7 +39,7 @@ import java.util.logging.Logger;
  * contains the logic for handling agent transactional
  * Created by franklin on 17/11/15.
  */
-public class BusinessTransactionBankMoneyRestockMonitorAgent implements Agent {
+public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent {
     //TODO: Documentar y manejo de excepciones
     //TODO: Manejo de Eventos
 
@@ -49,6 +51,11 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent implements Agent {
     private final HoldManager holdManager;
     StockTransactionBankMoneyRestockFactory stockTransactionBankMoneyRestockFactory;
     private UUID pluginId;
+
+    //private final ErrorManager errorManager;
+    public final int SLEEP_TIME = 5000;
+    int iterationNumber = 0;
+    boolean threadWorking;
 
     /**
      * Constructor for BusinessTransactionBankMoneyRestockMonitorAgent
@@ -73,6 +80,14 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent implements Agent {
         this.holdManager = holdManager;
         this.stockTransactionBankMoneyRestockFactory = new StockTransactionBankMoneyRestockFactory(pluginDatabaseSystem, pluginId);
         this.pluginId = pluginId;
+
+        this.agentThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isRunning())
+                    process();
+            }
+        });
     }
 
     /**
@@ -85,10 +100,11 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent implements Agent {
         Logger LOG = Logger.getGlobal();
         LOG.info("Bank Money Restock Transaction monitor agent starting");
 
-        final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
+        //final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
 
-        this.agentThread = new Thread(monitorAgent);
+        //this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
+        this.status = AgentStatus.STARTED;
     }
 
     /**
@@ -96,48 +112,70 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent implements Agent {
      */
     @Override
     public void stop() {
-        this.agentThread.interrupt();
+        if (isRunning())
+            this.agentThread.interrupt();
+        this.status = AgentStatus.STOPPED;
+    }
+
+    public void process() {
+
+        while (isRunning()) {
+
+            try {
+                Thread.sleep(SLEEP_TIME);
+            } catch (InterruptedException interruptedException) {
+                cleanResources();
+                return;
+            }
+
+            doTheMainTask();
+
+            if (agentThread.isInterrupted()) {
+                cleanResources();
+                return;
+            }
+        }
     }
 
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private final class MonitorAgent implements Runnable {
-
-        private final ErrorManager errorManager;
-        public final int SLEEP_TIME = 5000;
-        int iterationNumber = 0;
-        boolean threadWorking;
-
-        public MonitorAgent(final ErrorManager errorManager) {
-
-            this.errorManager = errorManager;
-        }
-
-        @Override
-        public void run() {
-            threadWorking = true;
-            while (threadWorking) {
-                /**
-                 * Increase the iteration counter
-                 */
-                iterationNumber++;
-                try {
-                    Thread.sleep(SLEEP_TIME);
-
-                    /**
-                     * now I will check if there are pending transactions to raise the event
-                     */
-
-                    doTheMainTask();
-                } catch (InterruptedException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-
-            }
-        }
-    }
+//    private final class MonitorAgent implements Runnable {
+//
+//        private final ErrorManager errorManager;
+//        public final int SLEEP_TIME = 5000;
+//        int iterationNumber = 0;
+//        boolean threadWorking;
+//
+//        public MonitorAgent(final ErrorManager errorManager) {
+//
+//            this.errorManager = errorManager;
+//        }
+//
+//        @Override
+//        public void run() {
+//            threadWorking = true;
+//            while (threadWorking) {
+//                /**
+//                 * Increase the iteration counter
+//                 */
+//                iterationNumber++;
+//                try {
+//                    Thread.sleep(SLEEP_TIME);
+//
+//                    /**
+//                     * now I will check if there are pending transactions to raise the event
+//                     */
+//
+//                    doTheMainTask();
+//                } catch (InterruptedException e) {
+//                    errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                }
+//
+//            }
+//        }
+//    }
 
     private void doTheMainTask() {
         try {
@@ -156,7 +194,15 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent implements Agent {
                                 bankMoneyTransaction.getAmount(),
                                 bankMoneyTransaction.getMemo(),
                                 pluginId.toString());
-                        holdManager.hold(bankTransactionParametersWrapper);
+
+                        if (!holdManager.isTransactionRegistered(bankMoneyTransaction.getTransactionId()))
+                            holdManager.hold(bankTransactionParametersWrapper);
+
+                        bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
+
+                        break;
+                    case IN_EJECUTION:
                         //Luego cambiar el status al registro de la transaccion leido
                         if (holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode() == BankTransactionStatus.CONFIRMED.getCode())
                         {
@@ -241,5 +287,11 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent implements Agent {
         } catch (CantGetHoldTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+    private void cleanResources() {
+        /**
+         * Disconnect from database and explicitly set all references to null.
+         */
     }
 }
