@@ -1447,7 +1447,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             ClauseType clauseType;
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
-                if (clauseType.equals(ClauseType.CUSTOMER_PAYMENT_METHOD)) {
+                if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
                     return ContractClauseType.getByCode(clause.getValue());
                 }
             }
