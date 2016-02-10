@@ -2378,6 +2378,15 @@
                         <maintainers> </maintainers>
                         <certifications> </certifications>
                     </plugin>
+                    <plugin name="Asset Transfer" description="" difficulty="3" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
                 </plugins>
             </layer>
             <layer name="Wallet" language="java">

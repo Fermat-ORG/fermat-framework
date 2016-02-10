@@ -119,7 +119,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
             logManager.log(RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: starting...", null, null);
             latch = new CountDownLatch(1);
             agent = new RedemptionAgent(pluginId, pluginFileSystem, actorAssetUserManager, actorAssetIssuerManager, bitcoinNetworkManager);
-            Thread agentThread = new Thread(agent);
+            Thread agentThread = new Thread(agent, "Redeem Point Redemption MonitorAgent");
             agentThread.start();
         } catch (Exception e) {
             throw new CantStartAgentException();

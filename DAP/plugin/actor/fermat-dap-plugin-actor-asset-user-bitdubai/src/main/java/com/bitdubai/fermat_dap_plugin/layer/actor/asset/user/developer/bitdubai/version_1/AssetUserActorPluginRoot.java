@@ -36,6 +36,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAssetUserGroupAlreadyExistException;
@@ -294,13 +295,13 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
      * y ser usados en Wallet Issuer para poder enviarles BTC del Asset
      *
      * @return List<ActorAssetUser> with CryptoAddress
-     * @see #getAllAssetUserActorConnected();
+     * @see #getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType);
      */
     @Override
-    public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException {
+    public List<ActorAssetUser> getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException {
         List<ActorAssetUser> list; // Asset User Actor list.
         try {
-            list = this.assetUserActorDao.getAllAssetUserActorConnected();
+            list = this.assetUserActorDao.getAllAssetUserActorConnected(blockchainNetworkType);
         } catch (CantGetAssetUsersListException e) {
             throw new CantGetAssetUserActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
         }
@@ -309,7 +310,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetUserException {
+    public void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetUserException {
         try {
             for (ActorAssetUser actorAssetUser : actorAssetUsers) {
                 try {
@@ -417,9 +418,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException {
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUserActorsException {
         try {
-            return this.assetUserActorDao.getListActorAssetUserByGroups(groupName);
+            return this.assetUserActorDao.getListActorAssetUserByGroups(groupId);
         } catch (CantGetAssetUsersListException ex) {
             throw new CantGetAssetUserActorsException("You can not get users by group", ex, "Error", "");
         }

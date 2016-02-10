@@ -70,7 +70,7 @@ public class CryptoTransaction{
      * @param transaction
      * @return
      */
-    public static CryptoTransaction getCryptoTransaction(Transaction transaction){
+    public static CryptoTransaction getCryptoTransaction(BlockchainNetworkType blockchainNetworkType, Transaction transaction){
         CryptoTransaction cryptoTransaction = new CryptoTransaction();
         cryptoTransaction.setTransactionHash(transaction.getHashAsString());
         cryptoTransaction.setCryptoCurrency(CryptoCurrency.BITCOIN);
@@ -79,6 +79,8 @@ public class CryptoTransaction{
         cryptoTransaction.setCryptoStatus(getTransactionCryptoStatus(transaction));
         cryptoTransaction.setAddressTo(getAddressTo(transaction));
         cryptoTransaction.setAddressFrom(getAddressFrom(transaction));
+        cryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
+
 
         return cryptoTransaction;
     }
