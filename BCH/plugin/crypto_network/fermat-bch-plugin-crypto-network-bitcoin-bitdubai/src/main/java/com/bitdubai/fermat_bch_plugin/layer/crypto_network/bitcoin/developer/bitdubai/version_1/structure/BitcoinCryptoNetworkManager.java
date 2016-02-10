@@ -484,9 +484,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return
      */
     public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
-        Wallet wallet = getWallet(blockchainNetworkType, null);
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
-        Transaction transaction = wallet.getTransaction(sha256Hash);
+        Transaction transaction = runningAgents.get(blockchainNetworkType).wallet.getTransaction(sha256Hash);
         return transaction;
     }
 
