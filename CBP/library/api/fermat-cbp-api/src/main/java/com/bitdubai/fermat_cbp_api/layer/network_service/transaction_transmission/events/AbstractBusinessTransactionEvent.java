@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cbp_api.all_definition.events.GenericCBPFermatEvent;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
@@ -8,9 +9,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/02/16.
  */
-public class AbstractBusinessTransactionEvent extends GenericCBPFermatEvent {
+public abstract class AbstractBusinessTransactionEvent extends GenericCBPFermatEvent {
 
-    protected NetworkService destinationNetworkService;
+    public NetworkService destinationNetworkService;
+    PlatformComponentType destinationPlatformComponentType;
     Plugins remoteBusinessTransaction;
 
     public AbstractBusinessTransactionEvent(EventType eventType) {
@@ -40,4 +42,13 @@ public class AbstractBusinessTransactionEvent extends GenericCBPFermatEvent {
     public void setRemoteBusinessTransaction(Plugins remoteBusinessTransaction) {
         this.remoteBusinessTransaction = remoteBusinessTransaction;
     }
+
+    public PlatformComponentType getDestinationPlatformComponentType(){
+        return destinationPlatformComponentType;
+    }
+
+    public void setDestinationPlatformComponentType(PlatformComponentType destinationPlatformComponentType){
+        this.destinationPlatformComponentType = destinationPlatformComponentType;
+    }
+
 }
