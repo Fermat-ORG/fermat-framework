@@ -1,49 +1,48 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
-
 import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
+        import android.content.DialogInterface;
+        import android.os.Bundle;
+        import android.support.v7.widget.LinearLayoutManager;
+        import android.support.v7.widget.RecyclerView;
+        import android.util.Log;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.util.InputDialogCBP;
+        import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+        import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+        import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+        import com.bitdubai.fermat_api.FermatException;
+        import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+        import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+        import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+        import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+        import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+        import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+        import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+        import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+        import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+        import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+        import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+        import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+        import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
+        import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+        import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+        import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+        import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+        import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+        import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
+        import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
+        import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
+        import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+        import com.bitdubai.reference_wallet.crypto_broker_wallet.util.InputDialogCBP;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+        import java.util.ArrayList;
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Map;
+        import java.util.UUID;
 
 /**
  * Created by nelson on 22/12/15.
@@ -162,7 +161,14 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
         cashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showWalletsDialog(Platforms.CASH_PLATFORM);
+                String cashWalletPublicKey = "cash_wallet";
+                if (walletManager.cashMoneyWalletExists(cashWalletPublicKey)==false){
+                    InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
+                    inputDialogCBP.DialogType(2);
+                    inputDialogCBP.show();
+                }else {
+                    showWalletsDialog(Platforms.CASH_PLATFORM);
+                }
             }
         });
 
@@ -243,19 +249,10 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                 public void onItemSelected(InstalledWallet selectedItem) {
                     if (!platform.equals(Platforms.BANKING_PLATFORM)) {
                         if (Platforms.CRYPTO_BROKER_PLATFORM.getCode().equals(platform.getCode())) {
-                            try {
-                                walletPublicKey = "cash_wallet";
-                                if (walletManager.getCashCurrency(walletPublicKey) == null) {
-                                    InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
-                                    inputDialogCBP.DialogType(2);
-                                    inputDialogCBP.show();
-                                }
-                            } catch (FermatException e) {
-                                Log.e(TAG, e.getMessage(), e);
-                                if (errorManager != null)
-                                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                                            UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
-                            }
+
+                                //walletPublicKey = "cash_wallet";
+
+
                         }
 
                         if (!containWallet(selectedItem)) {
