@@ -70,6 +70,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -179,6 +180,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         this.extraData             = extraData;
         this.starting              = new AtomicBoolean(false);
         this.register              = Boolean.FALSE;
+
+        listenersAdded = new ArrayList<>();
     }
 
 
@@ -255,15 +258,17 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                         this.communicationSupervisorPendingMessagesAgent.start();
                     }
 
-                    /*
-                     * Reprocess messages
-                     */
-                    reprocessMessages();
+
 
                     /*
                      * Call on start method
                      */
                     onStart();
+
+                    /*
+                     * Reprocess messages
+                     */
+                    reprocessMessages();
 
                     /*
                      * Its all ok, set the new status
@@ -1064,4 +1069,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @return LogManager
      */
     public abstract LogManager getLogManager();
+
+    public ECCKeyPair getIdentity() {
+        return identity;
+    }
 }
