@@ -109,12 +109,12 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
      *
      * @param communicationNetworkServiceConnectionManager
      */
-    public CommunicationNetworkServiceRemoteAgent(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager) {
+    public CommunicationNetworkServiceRemoteAgent(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, CommunicationsVPNConnection communicationsVPNConnection) {
 
         super();
         this.running                                      = Boolean.FALSE;
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
-
+        this.communicationsVPNConnection                  = communicationsVPNConnection;
     }
 
     /**
