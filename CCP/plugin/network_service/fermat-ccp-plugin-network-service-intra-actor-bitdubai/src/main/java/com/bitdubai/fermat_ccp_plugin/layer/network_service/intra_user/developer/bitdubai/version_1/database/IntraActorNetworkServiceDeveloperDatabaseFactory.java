@@ -61,7 +61,7 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId,IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -82,7 +82,7 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
                   /*
                    * We create the new database
                    */
-                database = intraActorNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = intraActorNetworkServiceDatabaseFactory.createDatabase(pluginId, IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.

@@ -12,5 +12,5 @@ public interface PreferenceSettingsOpenDialogText extends PreferenceSettingsItem
 
     String getText();
 
-    List<String> getOptionList();
+    List<PreferenceSettingsDialogItem> getOptionList();
 }

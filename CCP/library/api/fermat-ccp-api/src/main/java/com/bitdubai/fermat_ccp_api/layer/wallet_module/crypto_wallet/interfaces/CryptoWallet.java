@@ -263,7 +263,8 @@ public interface CryptoWallet extends Serializable {
                                             VaultType vaultType,
                                             String vaultIdentifier,
                                             String walletPublicKey,
-                                            ReferenceWallet walletType) throws CantRequestCryptoAddressException;
+                                            ReferenceWallet walletType,
+                                            BlockchainNetworkType blockchainNetworkType) throws CantRequestCryptoAddressException;
     // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
     CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,
@@ -298,7 +299,8 @@ public interface CryptoWallet extends Serializable {
      * @throws CantGetBalanceException if something goes wrong
      */
     long getBalance(BalanceType balanceType,
-                    String      walletPublicKey) throws CantGetBalanceException;
+                    String      walletPublicKey,
+                    BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceException;
 
     /**
      * Throw the method <code>getTransactions</code> you cant get all the transactions for an specific balance type.

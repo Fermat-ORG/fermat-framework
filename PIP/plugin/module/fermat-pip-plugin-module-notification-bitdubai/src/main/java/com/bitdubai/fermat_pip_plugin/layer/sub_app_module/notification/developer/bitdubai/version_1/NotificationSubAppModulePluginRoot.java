@@ -345,7 +345,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             notification.setNotificationType(NotificationType.INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION.getCode());
             poolNotification.add(notification);
 
-            notificationListener.notificate(notification);
+            //notificationListener.notificate(notification);
         } catch (CantCreateNotification cantCreateNotification) {
             cantCreateNotification.printStackTrace();
         }

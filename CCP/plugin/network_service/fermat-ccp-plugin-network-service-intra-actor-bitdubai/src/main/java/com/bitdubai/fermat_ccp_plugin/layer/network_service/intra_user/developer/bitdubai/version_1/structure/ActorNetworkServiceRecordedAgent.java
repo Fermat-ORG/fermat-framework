@@ -374,15 +374,15 @@ public class ActorNetworkServiceRecordedAgent extends FermatAgent{
                             PlatformComponentProfile applicantParticipant = actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                                     .constructPlatformComponentProfileFactory(
                                             actorNetworkServiceRecord.getActorSenderPublicKey(),
-                                            (!actorNetworkServiceRecord.getActorSenderAlias().equals(""))? actorNetworkServiceRecord.getActorSenderAlias():"sender_alias_null",
-                                            (!actorNetworkServiceRecord.getActorSenderAlias().equals(""))? actorNetworkServiceRecord.getActorSenderAlias():"sender_alias_null",
+                                            "A",
+                                            "A",
                                             NetworkServiceType.UNDEFINED,
                                             PlatformComponentType.ACTOR_INTRA_USER,"");
                             PlatformComponentProfile remoteParticipant = actorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                                     .constructPlatformComponentProfileFactory(
                                             actorNetworkServiceRecord.getActorDestinationPublicKey(),
-                                            (actorNetworkServiceRecord.getActorDestinationPublicKey()!=null)? actorNetworkServiceRecord.getActorDestinationPublicKey():"destination_alias_null",
-                                            (actorNetworkServiceRecord.getActorDestinationPublicKey()!=null)? actorNetworkServiceRecord.getActorDestinationPublicKey():"destination_alias_null",
+                                            "B",
+                                            "B",
                                             NetworkServiceType.UNDEFINED,
                                             PlatformComponentType.ACTOR_INTRA_USER,"");
 
