@@ -577,6 +577,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     event.getPlatformComponentProfileRegistered().getNetworkServiceType() == getNetworkServiceProfile().getNetworkServiceType() &&
                         event.getPlatformComponentProfileRegistered().getIdentityPublicKey().equals(identity.getPublicKey())) {
 
+                System.out.println("###################\n"+"NETWORK SERVICE REGISTERED: "+ name+"\n###################");
+
                 this.register = Boolean.TRUE;
                 onNetworkServiceRegistered();
             }
