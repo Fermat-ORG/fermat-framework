@@ -20,25 +20,32 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_seller.interfaces.AssetSellerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.developer_utils.AssetSellerDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database.AssetSellerDAO;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database.AssetSellerDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database.AssetSellerDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.events.AssetSellerMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.events.AssetSellerRecorderService;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional.AssetSellerTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -85,6 +92,7 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
 
     private AssetSellerMonitorAgent agent;
     private AssetSellerRecorderService recorderService;
+    private AssetSellerTransactionManager transactionManager;
     private AssetSellerDAO dao;
 
     //CONSTRUCTORS
@@ -96,7 +104,9 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
     @Override
     public void start() throws CantStartPluginException {
         try {
+            createDatabase();
             dao = new AssetSellerDAO(pluginId, pluginDatabaseSystem, actorAssetUserManager, assetUserWalletManager);
+            transactionManager = new AssetSellerTransactionManager(assetUserWalletManager, assetTransmission, actorAssetUserManager, dao);
             initializeMonitorAgent();
             initializeRecorderService();
             super.start();
@@ -120,16 +130,29 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
 
     @Override
     public void requestAssetSell(ActorAssetUser userToDeliver, AssetNegotiation negotiation) throws CantStartAssetSellTransactionException {
+        String context = "ActorAssetUser: " + userToDeliver + " - AssetNegotiation: " + negotiation;
+        try {
+            transactionManager.requestAssetSell(userToDeliver, negotiation);
+        } catch (CantLoadWalletException | CantGetAssetUserActorsException | CantSetObjectException | CantSendDigitalAssetMetadataException e) {
+            throw new CantStartAssetSellTransactionException(context, e);
+        }
     }
 
     //PRIVATE METHODS
+    private void createDatabase() throws CantCreateDatabaseException {
+        AssetSellerDatabaseFactory databaseFactory = new AssetSellerDatabaseFactory(pluginDatabaseSystem, pluginId);
+        if (!databaseFactory.databaseExists()) {
+            databaseFactory.createDatabase();
+        }
+    }
+
     private void initializeMonitorAgent() throws CantStartAgentException {
         agent = new AssetSellerMonitorAgent(assetUserWalletManager, actorAssetUserManager, dao, errorManager, assetTransmission, assetVaultManager, bitcoinNetworkManager);
         agent.start();
     }
 
     private void initializeRecorderService() throws CantStartServiceException {
-        recorderService = new AssetSellerRecorderService(eventManager, pluginDatabaseSystem, pluginId);
+        recorderService = new AssetSellerRecorderService(eventManager, pluginDatabaseSystem, pluginId, dao);
         recorderService.start();
     }
 
