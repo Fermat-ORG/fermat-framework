@@ -298,7 +298,7 @@ Updates the count of notifications in the ActionBar.
     public boolean onQueryTextSubmit(String alias) {
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
+            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.getCryptoBrokerSearch(moduleManager.getSelectedActorIdentity());
             cryptoBrokerCommunitySearch.addAlias(alias);
 
         } catch(Exception e) {
