@@ -119,7 +119,7 @@ public final class AssetVerification {
 
 
     public static CryptoTransaction foundCryptoTransaction(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
-        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransactionFromBlockChain(digitalAssetMetadata.getLastTransactionHash(), digitalAssetMetadata.getLastTransactionBlock());
+        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(digitalAssetMetadata.getLastTransactionHash());
         if (cryptoTransaction == null) {
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
         }

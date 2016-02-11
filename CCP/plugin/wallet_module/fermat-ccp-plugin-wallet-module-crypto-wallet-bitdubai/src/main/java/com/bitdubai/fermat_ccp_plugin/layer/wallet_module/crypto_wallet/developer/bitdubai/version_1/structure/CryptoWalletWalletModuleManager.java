@@ -408,7 +408,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         "",
                         "",
                         actorConnectedType,
-                        walletPublicKey
+                        walletPublicKey,
+                        blockchainNetworkType
                 );
 
                 //get to Crypto Address NS the intra user actor address
@@ -472,7 +473,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                                                   String        actorLastName,
                                                                   Actors        actorType,
                                                                   String        walletPublicKey,
-                                                                  byte[]        photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
+                                                                  byte[]        photo,
+                                                                  BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
         try{
             try {
                 walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
@@ -480,8 +482,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
                 String actorPublicKey = createActor(actorAlias, actorType, photo);
-                List<CryptoAddress> cryptoAddresses = new ArrayList<>();
-                cryptoAddresses.add(receivedCryptoAddress);
+                HashMap<BlockchainNetworkType,CryptoAddress>  cryptoAddresses = new HashMap<>();
+                cryptoAddresses.put(blockchainNetworkType,receivedCryptoAddress);
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
                         actorPublicKey,
                         actorAlias,
@@ -513,7 +515,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                                          String        actorFirstName,
                                                          String        actorLastName,
                                                          Actors        actorType,
-                                                         String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
+                                                         String        walletPublicKey,
+                                                         BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException {
         try{
             try {
                 walletContactsRegistry.getWalletContactByAliasAndWalletPublicKey(actorAlias, walletPublicKey);
@@ -522,8 +525,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
 
                 String actorPublicKey = createActor(actorAlias, actorType);
-                List<CryptoAddress> cryptoAddresses = new ArrayList<>();
-                cryptoAddresses.add(receivedCryptoAddress);
+                HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses = new HashMap<>();
+                cryptoAddresses.put(blockchainNetworkType, receivedCryptoAddress);
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
                         actorPublicKey,
                         actorAlias,
@@ -661,10 +664,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                                    VaultType vaultType,
                                                    String vaultIdentifier,
                                                    String walletPublicKey,
-                                                   ReferenceWallet walletType) throws CantRequestCryptoAddressException {
+                                                   ReferenceWallet walletType,
+                                                   BlockchainNetworkType blockchainNetworkType) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
-            deliveredCryptoAddress = requestCryptoAddressByReferenceWallet(walletType);
+            deliveredCryptoAddress = requestCryptoAddressByReferenceWallet(walletType,blockchainNetworkType);
             cryptoAddressBookManager.registerCryptoAddress(
                     deliveredCryptoAddress,
                     deliveredByActorPublicKey,
@@ -689,10 +693,10 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
-    public void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) throws CantUpdateWalletContactException {
+    public void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName, BlockchainNetworkType blockchainNetworkType) throws CantUpdateWalletContactException {
         try {
-            List<CryptoAddress> cryptoAddresses = new ArrayList<>();
-            cryptoAddresses.add(receivedCryptoAddress);
+            HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses = new HashMap<>();
+            cryptoAddresses.put(blockchainNetworkType,receivedCryptoAddress);
             walletContactsRegistry.updateWalletContact(
                     contactId,
                     actorName,
@@ -793,22 +797,22 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
             List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
 
-            //
-//                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
-//
-//                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-//
-//                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-//                        bitcoinWalletTransactionList1.add(bwt);
-//                    }
-//                }
+
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+
+                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
+                        bitcoinWalletTransactionList1.add(bwt);
+                    }
+                }
 
 
 
 
 
 
-            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList1) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
@@ -857,19 +861,19 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         max,
                         offset
                 );
-//
-//                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
-//
-//                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-//
-//                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-//                        bitcoinWalletTransactionList1.add(bwt);
-//                    }
-//                }
 
-
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
 
                 for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+
+                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
+                        bitcoinWalletTransactionList1.add(bwt);
+                    }
+                }
+
+
+
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList1) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }
             }
@@ -1261,10 +1265,10 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         }
     }
 
-    private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet) throws CantRequestOrRegisterCryptoAddressException {
+    private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet,BlockchainNetworkType blockchainNetworkType) throws CantRequestOrRegisterCryptoAddressException {
         switch (referenceWallet){
             case BASIC_WALLET_BITCOIN_WALLET:
-                return cryptoVaultManager.getAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                return cryptoVaultManager.getAddress(blockchainNetworkType);
             default:
                 throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");
         }

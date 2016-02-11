@@ -2,13 +2,8 @@ package com.bitdubai.android_core.app.common.version_1.connection_manager;
 
 import android.app.Activity;
 
-import com.bitdubai.android_core.app.SubAppActivity;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.app_connection.AssetFactoryFermatAppConnection;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.app_connection.CommunityAssetIssuerFermatAppConnection;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.app_connection.AssetIssuerFermatAppConnection;
@@ -21,7 +16,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.app_connection
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.app_connection.WalletRedeemPointFermatAppConnection;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
-import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
+//import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
@@ -97,10 +92,10 @@ public class FermatAppConnectionManager {
 
             //CBP WALLETS
             case "crypto_broker_wallet":
-                fermatAppConnection = new CryptoBrokerWalletFermatAppConnection(activity, null);
+                fermatAppConnection = new CryptoBrokerWalletFermatAppConnection(activity);
                 break;
             case "crypto_customer_wallet":
-                fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity, null);
+                fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity);
                 break;
             //CBP Sub Apps
             case "public_key_crypto_broker_community":
@@ -122,9 +117,9 @@ public class FermatAppConnectionManager {
                 break;
 
             //BANKING WALLET
-            case "banking_wallet":
-                fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
-                break;
+           // case "banking_wallet":
+               // fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
+               // break;
 
             // WPD Sub Apps
             case "public_key_store":

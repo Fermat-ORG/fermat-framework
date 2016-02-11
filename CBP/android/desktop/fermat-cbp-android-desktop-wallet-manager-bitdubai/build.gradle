@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'jacoco'
-
 android {
 
     lintOptions {
@@ -8,11 +7,13 @@ android {
     }
 
     compileSdkVersion 23
-    buildToolsVersion '23.0.1'
+
+    buildToolsVersion '21.1.2'
+
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 21
+        minSdkVersion 21
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -23,7 +24,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-        debug{
+        debug {
             debuggable true
             testCoverageEnabled = true
         }
@@ -37,30 +38,30 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
     }
+    dexOptions {
+        incremental true
+    }
 }
-
 dependencies {
     // Fermat
     compile project(':fermat-api')
     compile project(':fermat-cbp-api')
     compile project(':fermat-android-api')
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     // Android
-    compile 'com.android.support:support-v4:21.0.2'
-    compile 'com.android.support:appcompat-v7:21.0.3'
-    compile 'com.android.support:recyclerview-v7:22.2.1'
-    compile 'com.android.support:support-v13:21.0.2'
+    compile 'com.android.support:support-v4:23.1.1'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:support-v13:23.1.1'
     // RoboLectric y JUnit
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
 }
-
 // Configuracion de JaCoCo
 def jacocoHtmlReport = ""
-
-task jacocoTestReport(type:JacocoReport, dependsOn: [assemble, "testDebug"]) {
+task jacocoTestReport(type: JacocoReport, dependsOn: [assemble, "testDebug"]) {
     group = "Reporting"
 
     description = "Generate Jacoco coverage reports"
@@ -88,12 +89,11 @@ task jacocoTestReport(type:JacocoReport, dependsOn: [assemble, "testDebug"]) {
         jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
     }
 }
-
 task testCoverage(dependsOn: jacocoTestReport) << {
     println jacocoHtmlReport
 }
-
 tasks.assemble.dependsOn clean
 tasks.assemble.mustRunAfter clean
-
-
+repositories {
+    maven { url 'https://jitpack.io' }
+}

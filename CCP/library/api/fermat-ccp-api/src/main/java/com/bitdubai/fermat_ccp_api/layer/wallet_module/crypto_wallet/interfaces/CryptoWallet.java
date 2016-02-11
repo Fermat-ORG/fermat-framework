@@ -107,7 +107,8 @@ public interface CryptoWallet extends Serializable {
                                                   String        actorFirstName,
                                                   String        actorLastName,
                                                   Actors        actorType,
-                                                  String        walletPublicKey) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+                                                  String        walletPublicKey,
+                                                  BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
 
     /**
      * Convert a intra user connection to a new wallet contact
@@ -184,7 +185,8 @@ public interface CryptoWallet extends Serializable {
                                                            String        actorLastName,
                                                            Actors        actorType,
                                                            String        walletPublicKey,
-                                                           byte[]        photo) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
+                                                           byte[]        photo,
+                                                           BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
 
     /**
      * Throw the method <code>addIntraUserActorLikeContact</code> you can add an intra user connection like contact
@@ -219,7 +221,8 @@ public interface CryptoWallet extends Serializable {
 
     void updateWalletContact(UUID contactId,
                              CryptoAddress receivedCryptoAddress,
-                             String actorName) throws CantUpdateWalletContactException;
+                             String actorName,
+                             BlockchainNetworkType blockchainNetworkType) throws CantUpdateWalletContactException;
 
 
 
@@ -260,7 +263,8 @@ public interface CryptoWallet extends Serializable {
                                             VaultType vaultType,
                                             String vaultIdentifier,
                                             String walletPublicKey,
-                                            ReferenceWallet walletType) throws CantRequestCryptoAddressException;
+                                            ReferenceWallet walletType,
+                                            BlockchainNetworkType blockchainNetworkType) throws CantRequestCryptoAddressException;
     // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
     CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,

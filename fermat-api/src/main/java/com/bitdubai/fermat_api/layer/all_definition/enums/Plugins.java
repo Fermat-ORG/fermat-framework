@@ -188,6 +188,7 @@ public enum Plugins implements FermatPluginsEnum {
 
     ASSET_APPROPRIATION         ("ASAP"),
     ASSET_DISTRIBUTION          ("ASD"),
+    ASSET_TRANSFER              ("ASTT"),
     ASSET_FACTORY               ("ASF"),
     ASSET_ISSUER                ("ASI"),
     ASSET_ISSUER_COMMUNITY      ("ASIC"),
@@ -276,6 +277,7 @@ public enum Plugins implements FermatPluginsEnum {
     NEGOTIATION_TRANSMISSION            ("NGTR"),
     OPEN_CONTRACT                       ("OPC"),
     TRANSACTION_TRANSMISSION            ("TRTX"),
+    MATCHING_ENGINE                     ("MAEN"),
     CLOSE_CONTRACT                      ("CLC"),
     CUSTOMER_ONLINE_PAYMENT             ("CONP"),
     CUSTOMER_OFFLINE_PAYMENT            ("COFP"),
@@ -312,6 +314,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "APR"  :   return SUB_APP_RUNTIME          ;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
+            case "ASTT"  :  return ASSET_TRANSFER           ;
             case "ASF"  :   return ASSET_FACTORY            ;
             case "ASI"  :   return ASSET_ISSUER             ;
             case "ASIC" :   return ASSET_ISSUER_COMMUNITY   ;
@@ -350,8 +353,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "IWU"  :   return INTRA_WALLET_USER        ;
             case "IIA"  :   return INTRA_IDENTITY_USER      ;
             case "IR"   :   return ISSUER_REDEMPTION        ;
-            case "ISAP":
-                return ISSUER_APPROPRIATION;
+            case "ISAP":    return ISSUER_APPROPRIATION     ;
             case "NOT"  :   return NOTIFICATION             ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
             case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
@@ -421,6 +423,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
             case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
+            case "MAEN":    return MATCHING_ENGINE;
 
             case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;

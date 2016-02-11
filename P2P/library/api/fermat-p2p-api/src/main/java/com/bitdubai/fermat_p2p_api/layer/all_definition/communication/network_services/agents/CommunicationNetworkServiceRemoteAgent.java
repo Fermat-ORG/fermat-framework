@@ -102,19 +102,22 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
     /**
      * Represent the eccKeyPair
      */
-    private ECCKeyPair eccKeyPair;
+    private ECCKeyPair identity;
 
     /**
      * Constructor with parameters
      *
      * @param communicationNetworkServiceConnectionManager
+     * @param communicationsVPNConnection
      */
-    public CommunicationNetworkServiceRemoteAgent(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, CommunicationsVPNConnection communicationsVPNConnection) {
+    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair identity, CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, CommunicationsVPNConnection communicationsVPNConnection) {
 
         super();
         this.running                                      = Boolean.FALSE;
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
-        this.communicationsVPNConnection                  = communicationsVPNConnection;
+        this.communicationsVPNConnection = communicationsVPNConnection;
+        this.identity = identity;
+
     }
 
     /**
@@ -124,6 +127,10 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         //Set to running
         this.running  = Boolean.TRUE;
+        if(executorService!=null){
+            executorService.shutdownNow();
+        }
+
         this.executorService = Executors.newFixedThreadPool(2);
 
         //Start the Threads
@@ -199,7 +206,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Decrypt the message content
                      */
-                    ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.decryptMessagePrivateKey(message.getContent(), eccKeyPair.getPrivateKey()));
+                    ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.decryptMessagePrivateKey(message.getContent(), identity.getPrivateKey()));
 
                     /*
                      * Change to the new status
@@ -279,7 +286,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Sing the message
                              */
-                            String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), eccKeyPair.getPrivateKey());
+                            String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), identity.getPrivateKey());
                             ((FermatMessageCommunication) message).setSignature(signature);
 
                             /*

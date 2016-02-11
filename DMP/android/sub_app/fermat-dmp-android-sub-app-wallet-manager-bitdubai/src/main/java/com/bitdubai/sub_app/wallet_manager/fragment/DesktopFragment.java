@@ -17,15 +17,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.AndroidCoreManager;
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
@@ -34,16 +37,14 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
-import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.sub_app.wallet_manager.popup.FolderDialog;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
-import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
 import java.util.ArrayList;
@@ -90,6 +91,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
     ArrayList<Item> lstItems;
 
     private boolean started=false;
+    private List<Item> lstItemsWithIcon;
 
     /**
      * Create a new instance of this fragment
@@ -320,7 +322,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
             lstItems = new ArrayList<>();
 
             lstInstalledWallet = moduleManager.getUserWallets();
-            List<Item> lstItemsWithIcon = new ArrayList<>();
+            lstItemsWithIcon = new ArrayList<>();
             Item[] arrItemsWithoutIcon = new Item[12];
 
 
@@ -527,6 +529,29 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
         }
     }
 
+    private void select(AppsStatus appsStatus){
+        List<Item> list = new ArrayList<>();
+        for (Item installedWallet : lstItemsWithIcon) {
+            if(appsStatus.isAppStatusAvailable(((InstalledWallet) installedWallet.getInterfaceObject()).getAppStatus())){
+                list.add(installedWallet);
+            }
+        }
+        lstItemsWithIcon = list;
+        Item[] arrItemsWithoutIcon = new Item[12];
+        for(int i=0;i<12;i++){
+            Item emptyItem = new Item(new EmptyItem(0,i));
+            emptyItem.setIconResource(-1);
+            arrItemsWithoutIcon[i] = emptyItem;
+        }
+
+        for(Item itemIcon: lstItemsWithIcon){
+            arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
+        }
+
+        adapter.changeDataSet(Arrays.asList(arrItemsWithoutIcon));
+        adapter.notifyDataSetChanged();
+    }
+
 
     @Override
     public void onDestroy() {
@@ -534,6 +559,24 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
         adapter = null;
         mItemTouchHelper = null;
         super.onDestroy();
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        AppsStatus appsStatus = AppsStatus.getByCode(code);
+        switch (appsStatus){
+            case RELEASE:
+                break;
+            case BETA:
+                break;
+            case ALPHA:
+                break;
+            case DEV:
+                break;
+        }
+
+        select(appsStatus);
+        super.onUpdateViewOnUIThread(code);
     }
 }
 

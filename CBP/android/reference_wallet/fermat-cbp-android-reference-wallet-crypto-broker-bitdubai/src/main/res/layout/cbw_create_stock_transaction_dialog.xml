@@ -203,7 +203,7 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="#EEE"
-            android:text="Stock"
+            android:text="Restock"
             android:textColor="#666666"
             android:textSize="14sp"
             />
