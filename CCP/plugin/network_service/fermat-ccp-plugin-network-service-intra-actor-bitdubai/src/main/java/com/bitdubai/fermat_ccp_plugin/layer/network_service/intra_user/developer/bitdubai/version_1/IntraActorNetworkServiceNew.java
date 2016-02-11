@@ -8,6 +8,12 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -25,6 +31,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
@@ -48,6 +55,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IncomingNotificationDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDataBaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.OutgoingNotificationDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantAddIntraWalletCacheUserException;
@@ -76,6 +84,7 @@ import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
@@ -86,7 +95,9 @@ import java.util.concurrent.Executors;
 /**
  * Created by mati on 2016.02.05..
  */
-public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase implements IntraUserManager {
+public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase implements IntraUserManager,
+        LogManagerForDevelopers,
+        DatabaseManagerForDevelopers {
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -128,7 +139,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
-    private CommunicationNetworkServiceDeveloperDatabaseFactory communicationNetworkServiceDeveloperDatabaseFactory;
+    private IntraActorNetworkServiceDeveloperDatabaseFactory intraActorNetworkServiceDeveloperDatabaseFactory;
 
 
     /**
@@ -176,8 +187,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
         /*
          * Initialize Developer Database Factory
          */
-            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-            communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
+            intraActorNetworkServiceDeveloperDatabaseFactory = new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            intraActorNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             //DAO
             incomingNotificationsDao = new IncomingNotificationDao(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
@@ -269,7 +280,6 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
                             "INTRA ACTOR NETWORK SERVICE" +
                             "THE RECORD WAS CHANGE TO THE STATE OF DELIVERY" + actorNetworkServiceRecord.getActorSenderAlias()
                             + "\n-------------------------------------------------");
-                    //TODO: ver porqué no encuentra el id para cambiarlo
                     if(actorNetworkServiceRecord.getResponseToNotificationId()!=null)
                         outgoingNotificationDao.changeProtocolState(actorNetworkServiceRecord.getResponseToNotificationId(), ActorProtocolState.DONE);
 
@@ -1297,5 +1307,49 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
                 reprocessMessages();
             }
         },0, reprocessTimer);
+    }
+
+
+    //DatabaseManagerForDevelopers Implementation
+    /**
+     * (non-Javadoc)
+     *
+     * @see DatabaseManagerForDevelopers#getDatabaseList(DeveloperObjectFactory)
+     */
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see DatabaseManagerForDevelopers#getDatabaseTableList(DeveloperObjectFactory, DeveloperDatabase)
+     */
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    /**
+     * (non-Javadoc)
+     *
+     * @see DatabaseManagerForDevelopers#getDatabaseTableContent(DeveloperObjectFactory, DeveloperDatabase, DeveloperDatabaseTable)
+     */
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+    }
+
+
+
+    @Override
+    public List<String> getClassesFullPath() {
+        return null;
+    }
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+
     }
 }

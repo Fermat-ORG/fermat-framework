@@ -336,6 +336,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             DatabaseTable intraActorRequestTable = getDatabaseTable();
 
             intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
             intraActorRequestTable.loadToMemory();
 
             List<DatabaseTableRecord> records = intraActorRequestTable.getRecords();
@@ -366,6 +367,8 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             DatabaseTable intraActorRequestTable = getDatabaseTable();
 
             intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
+
             intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, receiveIdentityKey, DatabaseFilterType.EQUAL);
 
             intraActorRequestTable.loadToMemory();
