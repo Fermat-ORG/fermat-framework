@@ -44,6 +44,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static android.widget.Toast.makeText;
@@ -211,7 +212,8 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                         referenceWalletSession.getErrorManager(),
                         cryptoWalletWalletContact,
                         referenceWalletSession.getIntraUserModuleManager().getPublicKey(),
-                        referenceWalletSession.getAppPublicKey());
+                        referenceWalletSession.getAppPublicKey(),
+                        blockchainNetworkType);
                 receiveFragmentDialog.show();
             }
 
@@ -399,6 +401,34 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+
+    }
+
+
+    @Override
+    public void onUpdateView(String code)
+    {
+        try
+        {
+            //update contact address
+            cryptoWalletManager = referenceWalletSession.getModuleManager();
+
+            CryptoWalletWalletContact walletContact = cryptoWalletManager.getCryptoWallet().findWalletContactById(UUID.fromString(code),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+
+            if(walletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+            {
+                text_view_address.setText(walletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
+                img_update.setVisibility(View.GONE);
+                receive_button.setVisibility(View.VISIBLE);
+                send_button.setVisibility(View.VISIBLE);
+
+            }
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
 
     }
 }

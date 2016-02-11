@@ -3,6 +3,8 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentPagerAdapter;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+
 import java.util.List;
 
 
@@ -16,14 +18,14 @@ import java.util.List;
 public class ScreenPagerAdapter extends FragmentPagerAdapter {
 
 
-    private List<Fragment> fragments;
+    private List<AbstractFermatFragment> fragments;
 
     /**
      * @param fm
      * @param fragments
      */
 
-    public ScreenPagerAdapter(FragmentManager fm, List<Fragment> fragments) {
+    public ScreenPagerAdapter(FragmentManager fm, List<AbstractFermatFragment> fragments) {
         super(fm);
         this.fragments = fragments;
     }
@@ -42,4 +44,9 @@ public class ScreenPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return this.fragments.size();
     }
+
+    public List<AbstractFermatFragment> getLstCurrentFragments() {
+        return fragments;
+    }
+
 }

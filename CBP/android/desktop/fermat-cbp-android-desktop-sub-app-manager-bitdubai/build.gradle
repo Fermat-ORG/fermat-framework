@@ -1,6 +1,5 @@
 apply plugin: 'com.android.library'
 apply plugin: 'jacoco'
-
 android {
 
     lintOptions {
@@ -8,7 +7,7 @@ android {
     }
 
     compileSdkVersion 23
-    buildToolsVersion "21.1.2"
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
         minSdkVersion 21
@@ -23,7 +22,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 
-        debug{
+        debug {
             debuggable true
             testCoverageEnabled = true
         }
@@ -41,7 +40,6 @@ android {
         incremental true
     }
 }
-
 dependencies {
     // Fermat
     compile project(':fermat-api')
@@ -59,11 +57,9 @@ dependencies {
     testCompile 'org.easytesting:fest-assert-core:2.0M10'
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
 }
-
 // Configuracion de JaCoCo
 def jacocoHtmlReport = ""
-
-task jacocoTestReport(type:JacocoReport, dependsOn: [assemble, "testDebug"]) {
+task jacocoTestReport(type: JacocoReport, dependsOn: [assemble, "testDebug"]) {
     group = "Reporting"
 
     description = "Generate Jacoco coverage reports"
@@ -91,12 +87,11 @@ task jacocoTestReport(type:JacocoReport, dependsOn: [assemble, "testDebug"]) {
         jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
     }
 }
-
 task testCoverage(dependsOn: jacocoTestReport) << {
     println jacocoHtmlReport
 }
-
 tasks.assemble.dependsOn clean
 tasks.assemble.mustRunAfter clean
-
-
+repositories {
+    maven { url 'https://jitpack.io' }
+}
