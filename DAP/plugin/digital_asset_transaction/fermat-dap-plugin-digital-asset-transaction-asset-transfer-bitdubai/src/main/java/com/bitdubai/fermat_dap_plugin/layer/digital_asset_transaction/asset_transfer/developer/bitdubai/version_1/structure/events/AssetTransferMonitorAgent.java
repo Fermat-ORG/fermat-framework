@@ -38,6 +38,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetTransferContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -47,7 +49,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGet
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantGetIssuerNetworkServiceMessageListException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
@@ -67,6 +68,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptio
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -283,7 +285,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
                 throw new CantCheckTransferProgressException(e, "Exception in asset distribution monitor agent", "There was a problem while reversing a transaction.");
             } catch (CantAssetUserActorNotFoundException | CantGetAssetUserActorsException e) {
                 throw new CantCheckTransferProgressException(e, "Exception in asset distribution monitor agent", "There was a problem while getting the user list.");
-            } catch (CantCancellBroadcastTransactionException | CantSetObjectException | CantCreateDigitalAssetFileException | CantGetBroadcastStatusException | CantBroadcastTransactionException | InvalidParameterException | CantSendMessageException | CantGetIssuerNetworkServiceMessageListException | CantCreateAssetUserActorException | CantSaveStatisticException e) {
+            } catch (CantCancellBroadcastTransactionException | CantGetDAPMessagesException | CantSetObjectException | CantCreateDigitalAssetFileException | CantGetBroadcastStatusException | CantBroadcastTransactionException | InvalidParameterException | CantSendMessageException | CantGetIssuerNetworkServiceMessageListException | CantCreateAssetUserActorException | CantSaveStatisticException e) {
                 e.printStackTrace();
             }
         }
@@ -461,12 +463,12 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
             }
         }
 
-        private void checkTransferMessages() throws CantCreateAssetUserActorException, CantGetIssuerNetworkServiceMessageListException, CantLoadWalletException, CantSaveStatisticException {
+        private void checkTransferMessages() throws CantCreateAssetUserActorException, CantGetIssuerNetworkServiceMessageListException, CantLoadWalletException, CantSaveStatisticException, CantGetDAPMessagesException {
             for (DAPMessage message : assetIssuerActorNetworkServiceManager.getUnreadDAPMessagesByType(DAPMessageType.ASSET_TRANSFER)) {
                 AssetTransferContentMessage content = (AssetTransferContentMessage) message.getMessageContent();
                 ActorAssetUser actorTo = (ActorAssetUser) content.getActor();
                 actorAssetUserManager.createActorAssetUserRegisterInNetworkService(actorTo);
-                assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest", content.getNetworkType()).newMovement(message.getActorSender(), actorTo, content.getMetadataId());
+                assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, content.getNetworkType()).newMovement(message.getActorSender(), actorTo, content.getMetadataId());
             }
         }
 
@@ -491,10 +493,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
             AssetTransferContentMessage content = new AssetTransferContentMessage(newUser, digitalAssetMetadata.getMetadataId(), networkType);
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
             ActorAssetIssuer actorReceiver = (ActorAssetIssuer) ActorUtils.constructActorFromIdentity(digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer());
-            DAPMessage dapMessage = new DAPMessage();
-            dapMessage.setMessageContent(content);
-            dapMessage.setActorSender(actorSender);
-            dapMessage.setActorReceiver(actorReceiver);
+            DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver);
             assetIssuerActorNetworkServiceManager.sendMessage(dapMessage);
         }
 

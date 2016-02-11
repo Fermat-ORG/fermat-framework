@@ -78,7 +78,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
         super(new PluginVersionReference(new Version()));
     }
 
-    String walletPublicKey = "walletPublicKeyTest";
+    String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
     private AssetIssuerWallet assetIssuerWallet;
 
     @Override
