@@ -126,7 +126,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
-    public CryptoBrokerCommunitySearch searchNewCryptoBroker(final CryptoBrokerCommunitySelectableIdentity selectedIdentity) {
+    public CryptoBrokerCommunitySearch getCryptoBrokerSearch(final CryptoBrokerCommunitySelectableIdentity selectedIdentity) {
         return new CryptoBrokerCommunitySubAppModuleCommunitySearch(cryptoBrokerActorNetworkServiceManager);
     }
 
