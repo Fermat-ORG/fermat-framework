@@ -92,7 +92,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                     process();
             }
         }
-                , "userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent");
+                , this.getClass().getSimpleName());
     }
 
     @Override

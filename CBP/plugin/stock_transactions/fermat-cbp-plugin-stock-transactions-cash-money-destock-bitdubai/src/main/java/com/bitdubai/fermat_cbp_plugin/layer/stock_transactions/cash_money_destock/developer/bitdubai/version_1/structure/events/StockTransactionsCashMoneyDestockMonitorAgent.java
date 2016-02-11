@@ -74,7 +74,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
                 while (isRunning())
                     process();
             }
-        });
+        }, this.getClass().getSimpleName());
     }
 
     @Override
@@ -86,7 +86,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
 
         //this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
-        this.status=AgentStatus.STARTED;
+        this.status = AgentStatus.STARTED;
     }
 
     @Override
@@ -115,6 +115,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
             }
         }
     }
+
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
@@ -156,7 +157,6 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
 //            }
 //        }
 //    }
-
     private void doTheMainTask() {
         try {
             // I define the filter to null for all
