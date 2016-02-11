@@ -46,11 +46,12 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
 
     /**
      *
-     * @param identity
+     * @param customerPublicKey
+     * @param brokerPublicKey
      * @return
      * @throws CantGetListActorExtraDataException
      */
-    ActorExtraData getActorExtraDataByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException;
+    ActorExtraData getActorExtraDataByIdentity(String customerPublicKey, String brokerPublicKey) throws CantGetListActorExtraDataException;
 
     /**
      *
