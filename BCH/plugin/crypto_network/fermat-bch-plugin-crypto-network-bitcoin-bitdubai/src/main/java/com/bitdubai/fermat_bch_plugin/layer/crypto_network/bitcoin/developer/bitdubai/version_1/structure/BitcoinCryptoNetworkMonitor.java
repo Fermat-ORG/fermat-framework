@@ -102,12 +102,19 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         //todo move this to the correct new thread format.
-        try {
-            doTheMainTask();
-            System.out.println("***CryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
-        } catch (BlockchainException e) {
-            e.printStackTrace();
-        }
+        System.out.println("***CryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    doTheMainTask();
+                } catch (BlockchainException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
     }
 
     @Override

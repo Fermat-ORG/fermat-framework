@@ -98,7 +98,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     public void onPeerConnected(Peer peer, int peerCount) {
         StringBuilder logAggresive = new StringBuilder("***CryptoNetwork*** New Peer connection on " + NETWORK_TYPE.getCode() + "  to " + peer.toString());
         logAggresive.append(System.getProperty("line.separator"));
-        logAggresive.append("Total connected peers: " + peerCount);
+        logAggresive.append("Total connected peers for Network " + NETWORK_TYPE.getCode() + ": " + peerCount);
         System.out.println(logAggresive.toString());
     }
 
