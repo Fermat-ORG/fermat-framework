@@ -2109,12 +2109,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     {
         try {
 
-<<<<<<< HEAD
            outgoingNotificationDao.changeStatusNotSentMessage();
-=======
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(false);
-            for(ActorNetworkServiceRecord record : lstActorRecord) {
->>>>>>> eb31b20ec1446be8f78b3ba01c0b056e7eda9447
+
 
         }
         catch(CantListIntraWalletUsersException e)
@@ -2131,12 +2127,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     {
         try {
 
-<<<<<<< HEAD
            outgoingNotificationDao.changeStatusNotSentMessage(receiveIdentityKey);
-=======
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(receiveIdentityKey,false);
-            for(ActorNetworkServiceRecord record : lstActorRecord) {
->>>>>>> eb31b20ec1446be8f78b3ba01c0b056e7eda9447
 
         }
         catch(CantListIntraWalletUsersException e)
