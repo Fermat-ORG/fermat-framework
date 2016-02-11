@@ -1,6 +1,6 @@
 package unit.CryptoBrokerStockTransactionImpl;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerStockTransactionImpl;
 
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class GetMerchandiseTest {
     @Test
     public void getMerchandise(){
         CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = mock(CryptoBrokerStockTransactionImpl.class);
-        when(cryptoBrokerStockTransaction.getMerchandise()).thenReturn(CurrencyType.CRYPTO_MONEY);
+        when(cryptoBrokerStockTransaction.getMerchandise()).thenReturn(MoneyType.CRYPTO);
         assertThat(cryptoBrokerStockTransaction.getMerchandise()).isNotNull();
     }
 

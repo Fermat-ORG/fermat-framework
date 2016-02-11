@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -100,7 +100,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                     getCustomerBrokerSaleNegotiation(
                             negotiationId);
             long amount = getCryptoAmount(customerBrokerSaleNegotiation);
-            CurrencyType merchandiseType = getMerchandiseType(customerBrokerSaleNegotiation);
+            MoneyType merchandiseType = getMerchandiseType(customerBrokerSaleNegotiation);
             FiatCurrency fiatCurrencyType = getFiatCurrency(customerBrokerSaleNegotiation);
             this.brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractSale,
@@ -167,20 +167,20 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             String offlineWalletPublicKey="WalletNotSet";
             for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
                     cryptoBrokerWalletAssociatedSettingList){
-                CurrencyType currencyType=cryptoBrokerWalletAssociatedSetting.getCurrencyType();
-                System.out.println("Currency type: "+currencyType);
-                switch (currencyType){
-                    case BANK_MONEY:
+                MoneyType moneyType =cryptoBrokerWalletAssociatedSetting.getMoneyType();
+                System.out.println("Currency type: "+ moneyType);
+                switch (moneyType){
+                    case BANK:
                         offlineWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
                         System.out.println("Found wallet public key: "+offlineWalletPublicKey);
                         isCryptoWalletSets=true;
                         break;
-                    case CASH_ON_HAND_MONEY:
+                    case CASH_ON_HAND:
                         offlineWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
                         System.out.println("Found wallet public key: "+offlineWalletPublicKey);
                         isCryptoWalletSets=true;
                         break;
-                    case CASH_DELIVERY_MONEY:
+                    case CASH_DELIVERY:
                         offlineWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
                         System.out.println("Found wallet public key: "+offlineWalletPublicKey);
                         isCryptoWalletSets=true;
@@ -242,7 +242,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
      * @return
      * @throws CantGetBrokerMerchandiseException
      */
-    private CurrencyType getMerchandiseType(
+    private MoneyType getMerchandiseType(
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetBrokerMerchandiseException {
         try{
             Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
@@ -250,12 +250,12 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             for(Clause clause : negotiationClauses){
                 if(clause.getType().equals(ClauseType.BROKER_PAYMENT_METHOD)){
                     clauseValue=clause.getValue();
-                    if(clauseValue.equals(CurrencyType.CRYPTO_MONEY)){
+                    if(clauseValue.equals(MoneyType.CRYPTO)){
                         throw new CantGetBrokerMerchandiseException(
                                 "The Broker merchandise is crypto.");
                     }
 
-                        return CurrencyType.getByCode(clauseValue);
+                        return MoneyType.getByCode(clauseValue);
                     }
                 }
             throw new CantGetBrokerMerchandiseException(

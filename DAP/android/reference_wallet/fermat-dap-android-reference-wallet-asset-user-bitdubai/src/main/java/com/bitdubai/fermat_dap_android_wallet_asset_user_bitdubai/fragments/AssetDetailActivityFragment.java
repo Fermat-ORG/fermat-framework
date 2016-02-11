@@ -60,6 +60,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private Resources res;
     private View assetDetailRedeemLayout;
     private View assetDetailAppropriateLayout;
+    private View assetDetailTransferLayout;
 
     private ImageView assetImageDetail;
     private FermatTextView assetDetailNameText;
@@ -90,7 +91,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetUserSession = (AssetUserSession) appSession;
         moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-
+        moduleManager.clearDeliverList();
         settingsManager = appSession.getModuleManager().getSettingsManager();
 
         configureToolbar();
@@ -163,27 +164,43 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         assetDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetDetailBtcText);
         assetDetailRedeemText = (FermatTextView) rootView.findViewById(R.id.assetDetailRedeemText);
 
-        assetDetailRedeemLayout = rootView.findViewById(R.id.assetDetailRedeemLayout);
-
         assetDetailAppropriateLayout = rootView.findViewById(R.id.assetDetailAppropriateLayout);
         assetDetailAppropriateLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 new ConfirmDialog.Builder(getActivity(), appSession)
                         .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                         .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
-                                .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
-                                .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                    @Override
-                                    public void onClick() {
-                                        doAppropriate(digitalAsset.getAssetPublicKey());
-                                    }
-                                }).build().show();
+                        .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
+                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                            @Override
+                            public void onClick() {
+                                doAppropriate(digitalAsset.getAssetPublicKey());
+                            }
+                        }).build().show();
             }
         });
 
+        assetDetailRedeemLayout = rootView.findViewById(R.id.assetDetailRedeemLayout);
         assetDetailRedeemLayout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
+            }
+        });
+
+
+        assetDetailTransferLayout = rootView.findViewById(R.id.assetDetailTransferLayout);
+        assetDetailTransferLayout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                new ConfirmDialog.Builder(getActivity(), appSession)
+                        .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                        .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
+                        .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
+                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                            @Override
+                            public void onClick() {
+                                transferAsset(digitalAsset.getAssetPublicKey());
+                            }
+                        }).build().show();
             }
         });
     }
@@ -195,7 +212,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -206,8 +223,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image_user,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image_user, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -215,11 +232,11 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -300,6 +317,40 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 //                    );
                 //TODO: only for Appropriate test
                 moduleManager.appropriateAsset(assetPublicKey, null);
+                return true;
+            }
+        };
+        task.setContext(activity);
+        task.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (activity != null) {
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_appropriation_ok), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (activity != null)
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
+                            Toast.LENGTH_SHORT).show();
+            }
+        });
+        task.execute();
+    }
+
+    private void transferAsset(final String assetPublicKey) {
+        final Activity activity = getActivity();
+        final ProgressDialog dialog = new ProgressDialog(activity);
+        dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker task = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                moduleManager.transferAssets(assetPublicKey, null, 1);
                 return true;
             }
         };

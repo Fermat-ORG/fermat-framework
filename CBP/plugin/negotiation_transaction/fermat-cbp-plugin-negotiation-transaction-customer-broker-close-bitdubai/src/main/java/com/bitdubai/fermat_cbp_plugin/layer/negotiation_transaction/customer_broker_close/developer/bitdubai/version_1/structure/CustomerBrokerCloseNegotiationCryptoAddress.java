@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
@@ -125,7 +125,7 @@ public class    CustomerBrokerCloseNegotiationCryptoAddress {
 
             for (Clause clause : negotiationClauses) {
                 if (clause.getType().equals(paymentMethod)) {
-                    if (clause.getValue().equals(CurrencyType.CRYPTO_MONEY)) {
+                    if (clause.getValue().equals(MoneyType.CRYPTO)) {
                         return true;
                     }
                 }

@@ -102,6 +102,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             }
 
             blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+            System.out.println("Network Type"+blockchainNetworkType);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

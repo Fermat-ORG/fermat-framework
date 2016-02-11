@@ -146,7 +146,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
             latch = new CountDownLatch(1);
 
             appropriationAgent = new AppropriationAgent();
-            Thread eventThread = new Thread(appropriationAgent);
+            Thread eventThread = new Thread(appropriationAgent, "Asset Appropriation MonitorAgent");
             eventThread.start();
         } catch (Exception e) {
             throw new CantStartAgentException();
@@ -338,7 +338,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
                     metadata.getDigitalAsset().getIdentityAssetIssuer().getPublicKey());
             CryptoTransaction cryptoTransaction = AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, metadata);
             ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser(); //The user of this device, whom appropriate the asset.
-            DAPMessage message = new DAPMessage(DAPMessageType.ASSET_APPROPRIATION, new AssetAppropriationContentMessage(metadata.getMetadataId(), actorAssetUser.getActorPublicKey(), cryptoTransaction.getBlockchainNetworkType()), actorAssetUser, actorAssetIssuer);
+            DAPMessage message = new DAPMessage(new AssetAppropriationContentMessage(metadata.getMetadataId(), actorAssetUser.getActorPublicKey(), cryptoTransaction.getBlockchainNetworkType()), actorAssetUser, actorAssetIssuer);
             assetIssuerActorNetworkServiceManager.sendMessage(message); //FROM: USER. TO:ISSUER.
         }
 
