@@ -182,13 +182,21 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
         try {
             historialmensaje.clear();
+            chatHistory.clear();
             if(chatid!=null){
             messsize=chatManager.getMessageByChatId(chatid).size();
-            for (int i = 0; i < messsize; i++) {
-                message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
-                inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
-                historialmensaje.add(inorout+"@#@#"+message);
-            }
+                ChatMessage msg = new ChatMessage();
+                for (int i = 0; i < messsize; i++) {
+                    message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
+                    inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
+                    historialmensaje.add(inorout + "@#@#" + message);
+                    msg.setId(chatManager.getMessageByChatId(chatid).get(i).getMessageId());
+                    if(inorout==TypeMessage.OUTGOING.toString()) msg.setMe(true);
+                    else   msg.setMe(false);
+                    msg.setDate(chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString());
+                    msg.setUserId(chatManager.getMessageByChatId(chatid).get(i).getContactId());
+                    chatHistory.add(msg);
+                }
             }else{
                     Toast.makeText(getActivity(),"chatid null", Toast.LENGTH_SHORT).show();
             }
@@ -205,11 +213,17 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
-
+        findmessage();
         return new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addLeftName("Probando")
                 .setBackground(R.color.holo_blue)
+                .addChatHistory(chatHistory)
+                .addModuleManager(moduleManager)
+                .addErrorManager(errorManager)
+                .addChatSession(chatSession)
+                .addAppSession(appSession)
+                .addChatManager(chatManager)
                 .build();
 
         // Inflate the layout for this fragment

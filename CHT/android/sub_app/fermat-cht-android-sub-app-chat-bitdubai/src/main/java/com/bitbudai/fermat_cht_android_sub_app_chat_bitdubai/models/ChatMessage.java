@@ -1,5 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models;
 
+import java.util.UUID;
+
 /**
  * ChatMessage Model
  *
@@ -7,10 +9,10 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models;
  * @version 1.0
  */
 public class ChatMessage {
-    private String id;
+    private UUID id;
     private boolean isMe;
     private String message;
-    private Long userId;
+    private UUID userId;
     private String dateTime;
 
     public ChatMessage(/*String idm, boolean isMem, String messagem, String userIdm, String dateTimem*/) {
@@ -21,11 +23,11 @@ public class ChatMessage {
         dateTime = dateTimem;*/
     }
 
-    public String getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -45,11 +47,11 @@ public class ChatMessage {
         this.message = message;
     }
 
-    public Long getUserId() {
+    public UUID getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
