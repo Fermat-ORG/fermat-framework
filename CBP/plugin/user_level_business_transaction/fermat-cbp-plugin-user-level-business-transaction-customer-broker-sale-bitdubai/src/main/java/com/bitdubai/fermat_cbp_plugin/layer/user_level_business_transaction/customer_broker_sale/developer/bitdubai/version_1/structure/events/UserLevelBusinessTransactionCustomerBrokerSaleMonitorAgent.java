@@ -140,7 +140,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     process();
             }
         }
-                , "UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent");
+                , this.getClass().getSimpleName());
     }
 
     @Override
