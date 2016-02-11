@@ -212,7 +212,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
      */
     private void startMonitorAgent() throws CantStartAgentException {
 
-//        if (userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent == null) {
+        if (userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent == null) {
             userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent = new UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent(errorManager,
                     customerBrokerPurchaseNegotiationManager,
                     pluginDatabaseSystem,
@@ -225,7 +225,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
                     customerBrokerPurchaseManager
                     );
             userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
-//        } else userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
+        } else userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
     }
 
     public EventManager getEventManager() {
