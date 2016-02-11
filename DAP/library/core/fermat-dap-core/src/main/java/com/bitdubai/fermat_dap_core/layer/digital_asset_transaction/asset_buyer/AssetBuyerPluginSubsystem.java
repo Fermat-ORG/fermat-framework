@@ -15,7 +15,7 @@ public class AssetBuyerPluginSubsystem extends AbstractPluginSubsystem {
 
     //CONSTRUCTORS
     public AssetBuyerPluginSubsystem() {
-        super(new PluginReference(Plugins.ASSET_SELLER));
+        super(new PluginReference(Plugins.ASSET_BUYER));
     }
 
     //PUBLIC METHODS
