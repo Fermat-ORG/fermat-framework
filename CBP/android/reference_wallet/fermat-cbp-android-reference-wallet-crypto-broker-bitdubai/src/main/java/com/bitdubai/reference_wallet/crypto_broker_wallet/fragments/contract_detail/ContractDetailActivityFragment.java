@@ -191,7 +191,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 1961,
                 2016,
                 UUID.randomUUID());
-        contractDetails.add(contractDetail);
+        //contractDetails.add(contractDetail);
         //Customer Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.CUSTOMER_DETAIL,
@@ -204,13 +204,13 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 1961,
                 2016,
                 UUID.randomUUID());
-        contractDetails.add(contractDetail);
+        //contractDetails.add(contractDetail);
 
         /**
          * Get the wallet module manager
          */
         //TODO: when the module is finished, use the followings lines to create contract details.
-        /*CryptoBrokerWalletModuleManager cryptoCustomerWalletModuleManager=
+        CryptoBrokerWalletModuleManager cryptoCustomerWalletModuleManager=
                 appSession.getModuleManager();
         if(cryptoCustomerWalletModuleManager!=null){
 
@@ -266,7 +266,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                     "Sorry, an error happened in ContractDetailActivityFragment (CryptoCustomerWalletModuleManager == null)",
                     Toast.LENGTH_SHORT)
                     .show();
-        }*/
+        }
 
         return contractDetails;
     }
