@@ -535,9 +535,9 @@ public class WsCommunicationsTyrusCloudClientChannel {
             /*
              * the lastChain is divided in two parts to send
              */
-            int middleIndexlastChain = (lastChain.length() % 2 == 0) ? (lastChain.length() / 2)  : ((lastChain.length() + 1) / 2) - 1;
-            clientConnection.getBasicRemote().sendText(lastChain.substring(0, middleIndexlastChain), Boolean.FALSE);
-            clientConnection.getBasicRemote().sendText(lastChain.substring(middleIndexlastChain, lastChain.length()), Boolean.TRUE);
+            int middleIndexLastChain = (lastChain.length() % 2 == 0) ? (lastChain.length() / 2)  : ((lastChain.length() + 1) / 2) - 1;
+            clientConnection.getBasicRemote().sendText(lastChain.substring(0, middleIndexLastChain), Boolean.FALSE);
+            clientConnection.getBasicRemote().sendText(lastChain.substring(middleIndexLastChain, lastChain.length()), Boolean.TRUE);
 
         }
 

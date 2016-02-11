@@ -57,18 +57,17 @@ public class WebSocketCloudServerChannel {
      */
     private ClientConnection activeClientConnection;
 
-    /*
-     * We use messageComplete to handle the packets that are sent in parts
-     * we set the messageComplete to empty because
-      * if we do with null the messageComplete after will concat like a word and show exception in its handle
+    /**
+     * Represent the messageComplete
      */
-    private String messageComplete = "";
+    private String messageComplete;
 
     /**
      * Constructor
      */
     public WebSocketCloudServerChannel(){
         super();
+        messageComplete = "";
     }
 
     /**
@@ -150,28 +149,32 @@ public class WebSocketCloudServerChannel {
     }
 
     @OnMessage
-    public void onWebSocketText(String fermatPacketEncode, boolean lastPacket, Session session)
-    {
+    public void onWebSocketText(String fermatPacketEncode, boolean lastPacket, Session session) {
 
         /*
          *  if fermatPacketEncode is the las Packet then
-         *  the messageComplete concats the string and handle packet correctly
+         *  the messageComplete concat the string and handle packet correctly
          */
         if(lastPacket) {
 
+            /*
+             * We use messageComplete to handle the packets that are sent in parts
+             * we set the messageComplete to empty because
+             * if we do with null the messageComplete after will concat like a word and show exception in its handle
+             */
             messageComplete = messageComplete + fermatPacketEncode;
 
             LOG.info(" --------------------------------------------------------------------- ");
             LOG.info("Starting method onWebSocketText");
 
-        /*
-         * Get the server identity for this client connection
-         */
+            /*
+             * Get the server identity for this client connection
+             */
             ECCKeyPair serverIdentity = activeClientConnection.getServerIdentity();
 
-        /*
-         * Decode the fermatPacketEncode into a fermatPacket
-         */
+            /*
+             * Decode the fermatPacketEncode into a fermatPacket
+             */
             FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(messageComplete, serverIdentity.getPrivateKey());
 
 
@@ -207,7 +210,7 @@ public class WebSocketCloudServerChannel {
         }else{
 
             /*
-             * the messageComplete concats the string
+             * the messageComplete concat the string
              */
             messageComplete = messageComplete + fermatPacketEncode;
 

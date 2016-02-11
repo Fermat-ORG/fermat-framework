@@ -2108,7 +2108,10 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     private void reprocessMessage()
     {
         try {
+
            outgoingNotificationDao.changeStatusNotSentMessage();
+
+
         }
         catch(CantListIntraWalletUsersException e)
         {
@@ -2123,7 +2126,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     private void reprocessMessage(String receiveIdentityKey)
     {
         try {
-
 
            outgoingNotificationDao.changeStatusNotSentMessage(receiveIdentityKey);
 
