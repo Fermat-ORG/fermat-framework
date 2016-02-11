@@ -437,7 +437,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
     protected void reprocessMessages() {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications();
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(false);
             for(ActorNetworkServiceRecord record : lstActorRecord) {
 
                 outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
@@ -458,7 +458,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
     protected void reprocessMessages(String identityPublicKey) {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(identityPublicKey);
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(identityPublicKey,false);
             for(ActorNetworkServiceRecord record : lstActorRecord) {
 
                 outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);

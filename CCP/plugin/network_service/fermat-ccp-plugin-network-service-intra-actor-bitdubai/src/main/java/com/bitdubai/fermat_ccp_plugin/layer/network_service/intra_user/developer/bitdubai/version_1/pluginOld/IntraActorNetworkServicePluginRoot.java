@@ -2109,7 +2109,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications();
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(false);
             for(ActorNetworkServiceRecord record : lstActorRecord) {
 
                 outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
@@ -2130,7 +2130,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(receiveIdentityKey);
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(receiveIdentityKey,false);
             for(ActorNetworkServiceRecord record : lstActorRecord) {
 
                 outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
