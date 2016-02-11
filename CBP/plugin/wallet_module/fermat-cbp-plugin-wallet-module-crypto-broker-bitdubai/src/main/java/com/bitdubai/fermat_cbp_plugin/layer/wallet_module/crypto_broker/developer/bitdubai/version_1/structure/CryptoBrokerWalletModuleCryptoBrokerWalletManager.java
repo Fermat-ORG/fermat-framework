@@ -1439,7 +1439,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
      * @return
      * @throws CantGetListSaleNegotiationsException
      */
-    public CurrencyType getCurrencyTypeFromContract(
+    public MoneyType getMoneyTypeFromContract(
             CustomerBrokerContractSale customerBrokerContractSale,
             ContractDetailType contractDetailType) throws
             CantGetListSaleNegotiationsException {
@@ -1456,11 +1456,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                 switch (contractDetailType) {
                     case BROKER_DETAIL:
                         if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
-                            return CurrencyType.getByCode(clause.getValue());
+                            return MoneyType.getByCode(clause.getValue());
                         }
                     case CUSTOMER_DETAIL:
                         if (clauseType.equals(ClauseType.CUSTOMER_PAYMENT_METHOD)) {
-                            return CurrencyType.getByCode(clause.getValue());
+                            return MoneyType.getByCode(clause.getValue());
                         }
                 }
             }

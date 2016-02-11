@@ -12,7 +12,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
@@ -525,7 +525,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @return
      * @throws CantGetListSaleNegotiationsException
      */
-    CurrencyType getCurrencyTypeFromContract(
+    MoneyType getMoneyTypeFromContract(
             CustomerBrokerContractSale customerBrokerContractSale,
             ContractDetailType contractDetailType) throws
             CantGetListSaleNegotiationsException;

@@ -9,8 +9,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -28,9 +25,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
+import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor;
 
@@ -41,7 +41,7 @@ import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerI
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment {
+public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment<CryptoCustomerIdentitySubAppSession, ResourceProviderManager> {
     private static final String TAG = "CreateCustomerIdentity";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -131,7 +131,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
             }
         });
 
-        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     @Override
@@ -174,7 +174,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(actualizable) {
+        if (actualizable) {
             createNewIdentityInBackDevice();
             actualizable = false;
         }
@@ -196,39 +196,36 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     /**
      * Crea una nueva identidad para un crypto customer
      */
-    private void createNewIdentityInBackDevice(){
+    private void createNewIdentityInBackDevice() {
         String customerNameText = mCustomerName.getText().toString();
-        if(!customerNameText.trim().equals("")) {
+        if (!customerNameText.trim().equals("")) {
             if (cryptoCustomerBitmap != null) {
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoCustomerBitmap);
-                CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(appSession, customerNameText, imgInBytes);
+                final CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(appSession, customerNameText, imgInBytes);
                 int resultKey = executor.execute();
                 switch (resultKey) {
-            case SUCCESS:
+                    case SUCCESS:
 
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                try {
+                                    appSession.getModuleManager().publishCryptoCustomerIdentity(executor.getIdentity().getPublicKey());
+                                } catch (CouldNotPublishCryptoCustomerException e) {
+                                    Toast.makeText(getActivity(), "Error al publicar la identidad", Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        }.start();
 
-                            appSession.getModuleManager().publishCryptoCustomerIdentity(executor.getIdentity().getPublicKey());
-
-                        } catch(CouldNotPublishCryptoCustomerException e) {
-
-                            Toast.makeText(getActivity(), "Error al publicar la identidad", Toast.LENGTH_LONG).show();
-
-                        }
-                    }
-                }.start();
-                changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                break;
-            case EXCEPTION_THROWN:
-                Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
-                break;
-            case INVALID_ENTRY_DATA:
-                Toast.makeText(getActivity(), "Los datos para crear la indentidad no son validos", Toast.LENGTH_LONG).show();
-                break;
-        }
+                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode(), appSession.getAppPublicKey());
+                        break;
+                    case EXCEPTION_THROWN:
+                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                        break;
+                    case INVALID_ENTRY_DATA:
+                        Toast.makeText(getActivity(), "Los datos para crear la indentidad no son validos", Toast.LENGTH_LONG).show();
+                        break;
+                }
             }
         }
     }

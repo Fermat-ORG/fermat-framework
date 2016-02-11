@@ -447,7 +447,9 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
     public void onDismiss(DialogInterface dialog) {
         try {
             //Buscar la identidad
-            selectedIdentity = walletManager.getListOfIdentities().get(0);
+            List<CryptoBrokerIdentity> listOfIdentities = walletManager.getListOfIdentities();
+            if (listOfIdentities != null)
+                selectedIdentity = listOfIdentities.get(0);
         } catch (FermatException e) {
             Log.e(TAG, e.getMessage(), e);
             if (errorManager != null)
