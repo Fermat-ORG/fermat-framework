@@ -146,7 +146,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
             this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
