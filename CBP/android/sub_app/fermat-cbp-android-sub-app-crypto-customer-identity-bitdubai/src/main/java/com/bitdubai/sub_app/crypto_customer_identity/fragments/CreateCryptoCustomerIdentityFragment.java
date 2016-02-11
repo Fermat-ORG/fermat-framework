@@ -190,7 +190,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                 switch (resultKey) {
                     case SUCCESS:
                         Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
-                        break;
+                    break;
                 }
             }
         }
