@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -30,7 +31,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_identity.developer.bitdubai.version_1.structure.CryptoBrokerIdentityInformationImpl;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
@@ -77,6 +78,8 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
 
     private Switch publishIdentityCheckBox;
 
+    InputMethodManager imm;
+
     public static EditCryptoBrokerIdentityFragment newInstance() {
         return new EditCryptoBrokerIdentityFragment();
     }
@@ -100,7 +103,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         actualizable = true;
         Button mUpdateButton = (Button) layout.findViewById(R.id.update_crypto_broker_button);
         mBrokerName = (EditText) layout.findViewById(R.id.crypto_broker_name);
@@ -179,6 +181,11 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
                 }
             }
         });
+
+
+        imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
     @Override
@@ -188,6 +195,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             editIdentityInfoInBackDevice();
             actualizable = false;
         }
+        imm.hideSoftInputFromWindow(mBrokerName.getWindowToken(), 0);
     }
 
     @Override
@@ -216,6 +224,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
                 pictureView.setImageBitmap(cryptoBrokerBitmap);
             }
         }
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     @Override
@@ -255,10 +264,9 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             imgInBytes = profileImage;
         }
         if(mBrokerName != null && imgInBytes != null && cryptoBrokerPublicKey != null) {
-            //TODO: esta clase tiene que ir en la api
-//            CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
-//            EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
-//            executor = EditIdentityWorker.execute();
+            CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
+            EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
+            executor = EditIdentityWorker.execute();
         }
     }
 
@@ -280,8 +288,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             imgInBytes = profileImage;
         }
         if(mBrokerName != null && imgInBytes != null && cryptoBrokerPublicKey != null) {
-            //TODO: esta clase tiene que ir en la api
-
             CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(
                 brokerNameText,
                 cryptoBrokerPublicKey,
@@ -294,6 +300,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     }
 
     private void dispatchTakePictureIntent() {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
@@ -301,6 +308,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
     }
 
     private void loadImageFromGallery() {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }

@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.GenericCBPFermatEvent;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 
@@ -13,7 +13,7 @@ public class BrokerSubmitMerchandiseConfirmed extends GenericCBPFermatEvent {
     PlatformComponentType destinationPlatformComponentType;
     String contractHash;
 
-    CurrencyType merchandiseType;
+    MoneyType merchandiseType;
 
     public BrokerSubmitMerchandiseConfirmed(EventType eventType) {
         super(eventType);
@@ -47,16 +47,16 @@ public class BrokerSubmitMerchandiseConfirmed extends GenericCBPFermatEvent {
      * This method returns the payment type
      * @return
      */
-    public CurrencyType getPaymentType() {
+    public MoneyType getPaymentType() {
         return merchandiseType;
     }
 
     /**
      * This method sets the mecrhandise type
-     * @param currencyType
+     * @param moneyType
      */
-    public void setMerchandiseType(CurrencyType currencyType) {
-        this.merchandiseType = currencyType;
+    public void setMerchandiseType(MoneyType moneyType) {
+        this.merchandiseType = moneyType;
     }
 
 }

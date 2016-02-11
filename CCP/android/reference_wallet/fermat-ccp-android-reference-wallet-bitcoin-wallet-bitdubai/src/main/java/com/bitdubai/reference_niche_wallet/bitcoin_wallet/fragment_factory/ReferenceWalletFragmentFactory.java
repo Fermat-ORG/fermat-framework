@@ -6,6 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactDetailFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReferenceWalletSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.AddConnectionFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.NoIdentityFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
@@ -14,7 +15,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionFragment2;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsFragment2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsMainNetworkFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -23,7 +23,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<ReferenceWalletSession,WalletResourcesProviderManager,ReferenceFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
+public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<ReferenceWalletSession,WalletResourcesProviderManager,ReferenceFragmentsEnumType>  {
 
 
     @Override
@@ -83,7 +83,7 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                     currentFragment = RequestFormFragment.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT:
-                    currentFragment = SettingsFragment2.newInstance();
+                    currentFragment = ReferenceWalletSettings.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS:
                     currentFragment = SettingsNotificationsFragment.newInstance();

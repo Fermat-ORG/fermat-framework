@@ -31,14 +31,14 @@ public class StockStatisticsData {
             final String walletPublicKey = session.getAppPublicKey();
             final CryptoBrokerWalletManager walletManager = session.getModuleManager().getCryptoBrokerWallet(walletPublicKey);
 
-            currency = (Currency) associatedWallet.getMerchandise();
+            currency = associatedWallet.getMerchandise();
 
             balance = walletManager.getAvailableBalance(currency, walletPublicKey);
 
             final int offset = 30;
             stockTransactions = walletManager.getStockHistory(
                     associatedWallet.getMerchandise(),
-                    associatedWallet.getCurrencyType(),
+                    associatedWallet.getMoneyType(),
                     offset,
                     calendar.getTimeInMillis(),
                     walletPublicKey);
@@ -52,6 +52,7 @@ public class StockStatisticsData {
         }
     }
 
+    // TODO: Solo es para pruebas, eliminar despues
     public StockStatisticsData(Currency currency, int days) {
         this.currency = currency;
         stockTransactions = new ArrayList<>();

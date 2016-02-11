@@ -2,7 +2,7 @@ package unit.CryptoBrokerStockTransactionImpl;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerStockTransactionImpl;
@@ -29,7 +29,7 @@ public class ConstructionTest {
     UUID transactionId = UUID.randomUUID();
     BalanceType balanceType = BalanceType.AVAILABLE;
     TransactionType transactionType = TransactionType.CREDIT;
-    CurrencyType currencyType = CurrencyType.BANK_MONEY;
+    MoneyType moneyType = MoneyType.BANK;
     FermatEnum merchandise = BalanceType.BOOK;
     String walletPublicKey = new String();
     String brokerPublicKey = new String();
@@ -50,7 +50,7 @@ public class ConstructionTest {
                 this.transactionId,
                 this.balanceType,
                 this.transactionType,
-                this.currencyType,
+                this.moneyType,
                 this.merchandise,
                 this.walletPublicKey,
                 this.brokerPublicKey,
