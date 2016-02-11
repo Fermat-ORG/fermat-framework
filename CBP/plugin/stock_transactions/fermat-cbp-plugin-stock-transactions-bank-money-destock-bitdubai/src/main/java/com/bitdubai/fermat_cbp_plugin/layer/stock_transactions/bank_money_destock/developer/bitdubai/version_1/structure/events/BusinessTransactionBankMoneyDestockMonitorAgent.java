@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
@@ -14,7 +13,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.excep
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
@@ -191,7 +190,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                                 bankMoneyTransaction.getFiatCurrency(),
                                 BalanceType.BOOK,
                                 TransactionType.DEBIT,
-                                CurrencyType.BANK_MONEY,
+                                MoneyType.BANK,
                                 bankMoneyTransaction.getCbpWalletPublicKey(),
                                 bankMoneyTransaction.getActorPublicKey(),
                                 bankMoneyTransaction.getAmount(),
@@ -205,7 +204,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                                 bankMoneyTransaction.getFiatCurrency(),
                                 BalanceType.AVAILABLE,
                                 TransactionType.DEBIT,
-                                CurrencyType.BANK_MONEY,
+                                MoneyType.BANK,
                                 bankMoneyTransaction.getCbpWalletPublicKey(),
                                 bankMoneyTransaction.getActorPublicKey(),
                                 bankMoneyTransaction.getAmount(),

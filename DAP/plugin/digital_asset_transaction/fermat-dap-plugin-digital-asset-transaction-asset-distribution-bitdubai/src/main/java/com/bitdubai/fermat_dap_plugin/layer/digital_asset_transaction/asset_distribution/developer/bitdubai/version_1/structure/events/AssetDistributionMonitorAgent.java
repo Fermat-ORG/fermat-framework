@@ -144,7 +144,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
             monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             monitorAgent.setErrorManager(this.errorManager);
             monitorAgent.setAssetDistributionDao(new AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault));
-            this.agentThread = new Thread(monitorAgent);
+            this.agentThread = new Thread(monitorAgent,  "Asset Distribution MonitorAgent");
             this.agentThread.start();
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);

@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 
@@ -31,7 +31,7 @@ public class EqualsAndHashTest {
     private BalanceType balanceType = BalanceType.BOOK;
     private TransactionType transactionType = TransactionType.DEBIT;
     private float amount = 300;
-    private CurrencyType currencyType = CurrencyType.CRYPTO_MONEY;
+    private MoneyType moneyType = MoneyType.CRYPTO;
     private FermatEnum merchandise = CryptoCurrency.BITCOIN;
     private float runningBookBalance = 3000;
     private float runningAvailableBalance = 3000;
@@ -52,7 +52,7 @@ public class EqualsAndHashTest {
 //                ownerPublicKey,
 //                balanceType,
 //                transactionType,
-//                currencyType,
+//                moneyType,
 //                merchandise,
 //                amount,
 //                runningBookBalance,
@@ -71,7 +71,7 @@ public class EqualsAndHashTest {
 //                ownerPublicKey,
 //                balanceType,
 //                transactionType,
-//                currencyType,
+//                moneyType,
 //                merchandise,
 //                amount,
 //                runningBookBalance,
@@ -91,7 +91,7 @@ public class EqualsAndHashTest {
 //                ownerPublicKey,
 //                balanceType,
 //                transactionType,
-//                currencyType,
+//                moneyType,
 //                merchandise,
 //                amount,
 //                runningBookBalance,
@@ -111,7 +111,7 @@ public class EqualsAndHashTest {
 //                TEST_PUBLIC_KEY2,
 //                balanceType,
 //                transactionType,
-//                currencyType,
+//                moneyType,
 //                merchandise,
 //                amount,
 //                runningBookBalance,

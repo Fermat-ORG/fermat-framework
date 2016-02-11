@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-
 android {
     lintOptions {
         abortOnError false
@@ -31,7 +30,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
-
 dependencies {
     dependencies {
         // Fermat
@@ -54,4 +52,10 @@ dependencies {
         testCompile 'org.easytesting:fest-assert-core:2.0M10'
         testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     }
+
+}
+
+repositories {
+    maven { url 'https://jitpack.io' }
+
 }

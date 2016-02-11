@@ -15,7 +15,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
@@ -768,7 +768,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      * @throws CantGetListPurchaseNegotiationsException
      */
     @Override
-    public CurrencyType getCurrencyTypeFromContract(
+    public MoneyType getCurrencyTypeFromContract(
             CustomerBrokerContractPurchase customerBrokerContractPurchase,
             ContractDetailType contractDetailType) throws
             CantGetListPurchaseNegotiationsException {
@@ -785,11 +785,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                 switch (contractDetailType) {
                     case BROKER_DETAIL:
                         if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
-                            return CurrencyType.getByCode(clause.getValue());
+                            return MoneyType.getByCode(clause.getValue());
                         }
                     case CUSTOMER_DETAIL:
                         if (clauseType.equals(ClauseType.CUSTOMER_PAYMENT_METHOD)) {
-                            return CurrencyType.getByCode(clause.getValue());
+                            return MoneyType.getByCode(clause.getValue());
                         }
                 }
             }
