@@ -75,7 +75,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                 while (isRunning())
                     process();
             }
-        });
+        }, this.getClass().getSimpleName());
     }
 
     @Override
@@ -116,6 +116,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
             }
         }
     }
+
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
@@ -157,7 +158,6 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
 //            }
 //        }
 //    }
-
     private void doTheMainTask() {
         try {
             // I define the filter to null for all
