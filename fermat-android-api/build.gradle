@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-
 android {
 
     lintOptions {
@@ -7,7 +6,11 @@ android {
     }
 
     compileSdkVersion 23
-    buildToolsVersion "21.1.2"
+
+
+    buildToolsVersion '21.1.2'
+
+
 
     defaultConfig {
         minSdkVersion 21
@@ -32,7 +35,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
-
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core')
@@ -45,7 +47,15 @@ dependencies {
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
 
+
     compile 'com.google.zxing:core:3.2.0'
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.google.zxing:android-integration:3.2.0'
+    compile 'com.android.support:support-annotations:23.1.1'
+
+
+repositories {
+    maven { url 'https://jitpack.io' }
+
+}
 }

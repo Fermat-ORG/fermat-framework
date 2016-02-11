@@ -142,7 +142,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
             }
 
             blockchainNetworkType = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-
+            System.out.println("Network Type"+blockchainNetworkType);
         } catch (CantGetCryptoWalletException e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
@@ -369,12 +369,13 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                                     VaultType.CRYPTO_CURRENCY_VAULT,
                                     CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                     appSession.getAppPublicKey(),
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                    blockchainNetworkType
                             );
                         }
                     } else {
                         if (cryptoWalletWalletContact != null)
-                            walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                            walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                     }
                     if (cryptoWalletWalletContact != null) {
                         walletContact.contactId = cryptoWalletWalletContact.getContactId();
@@ -585,10 +586,12 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
 
                 String amount = editTextAmount.getText().toString();
 
-                BigDecimal money = new BigDecimal("0");
+                BigDecimal money;
 
                 if (!amount.equals(""))
                     money = new BigDecimal("0");
+                else
+                    money = new BigDecimal(amount);
 
                 if (!amount.equals("") && amount != null && !money.equals(0)) {
 
@@ -617,7 +620,8 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
                             VaultType.CRYPTO_CURRENCY_VAULT,
                             CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                             appSession.getAppPublicKey(),
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                            blockchainNetworkType
                     );
                     cryptoWallet.sendCryptoPaymentRequest(
                             cryptoWalletWalletContact.getWalletPublicKey(),
@@ -664,7 +668,7 @@ public class RequestFormFragment extends AbstractFermatFragment<ReferenceWalletS
 
                 String contactAddress = "";
                 if (wcr.getReceivedCryptoAddress().size() > 0)
-                    contactAddress = wcr.getReceivedCryptoAddress().get(0).getAddress();
+                    contactAddress = wcr.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
         } catch (CantGetAllWalletContactsException e) {

@@ -5,21 +5,25 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
@@ -30,11 +34,11 @@ import com.bitdubai.sub_app.crypto_customer_identity.common.adapters.CryptoCusto
 import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CryptoCustomerIdentityListFilter;
-import com.melnykov.fab.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.widget.Toast.makeText;
 import static com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession.IDENTITY_INFO;
 
 /**
@@ -45,10 +49,16 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     private static final String TAG = "CustomerIdentityList";
     private CryptoCustomerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<CryptoCustomerIdentityInformation> identityInformationList;
+
+    // Data
+    private List<CryptoCustomerIdentityInformation> identityInformationList;
+
+    // UI
     private View noMatchView;
     private CryptoCustomerIdentityListFilter filter;
     private PresentationDialog presentationDialog;
+
+    private IdentityCustomerPreferenceSettings subappSettings;
 
     public static CryptoCustomerIdentityListFragment newInstance() {
         return new CryptoCustomerIdentityListFragment();
@@ -60,7 +70,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
         try {
             moduleManager = ((CryptoCustomerIdentitySubAppSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
-            identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            identityInformationList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             if (errorManager != null) {
                 errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
@@ -71,6 +81,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+
         if (getActivity().getActionBar() != null) {
             getActivity().getActionBar().setDisplayShowHomeEnabled(false);
         }
@@ -80,7 +91,6 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
             View emptyListViewsContainer = layout.findViewById(R.id.no_crypto_customer_identities);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
-
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.banner_identity)
                 .setBody(R.string.cbp_customer_identity_welcome_body)
@@ -88,7 +98,32 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .build();
 
-        presentationDialog.show();
+        subappSettings = null;
+        try {
+            subappSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+        }catch (Exception e){ subappSettings = null; }
+
+        if(subappSettings == null){
+            subappSettings = new IdentityCustomerPreferenceSettings();
+            subappSettings.setIsPresentationHelpEnabled(true);
+            try {
+                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),subappSettings);
+            }catch (Exception e){
+
+            }
+        }
+
+        boolean showDialog;
+        try{
+            showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            if(showDialog){
+                presentationDialog.show();
+            }
+        }catch (FermatException e){
+            makeText(getActivity(), "Error dialogo", Toast.LENGTH_SHORT).show();
+        }
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override

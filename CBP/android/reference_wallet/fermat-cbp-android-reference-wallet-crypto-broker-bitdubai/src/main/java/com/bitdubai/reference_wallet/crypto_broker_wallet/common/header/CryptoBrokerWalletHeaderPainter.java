@@ -91,7 +91,6 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
                         View marketRateViewPagerContainer = container.findViewById(R.id.cbw_market_rate_view_pager_container);
                         marketRateViewPagerContainer.setVisibility(View.VISIBLE);
 
-                        final FragmentManager fragmentManager = activity.getFragmentManager();
                         MarketExchangeRatesPageAdapter pageAdapter = new MarketExchangeRatesPageAdapter(activity, session, summaries);
 
                         ViewPager viewPager = (ViewPager) container.findViewById(R.id.cbw_exchange_rate_view_pager);

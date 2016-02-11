@@ -151,7 +151,6 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractPlugin i
                 pluginFileSystem,
                 pluginId
         );
-
         return this.settingsManager;
     }
 

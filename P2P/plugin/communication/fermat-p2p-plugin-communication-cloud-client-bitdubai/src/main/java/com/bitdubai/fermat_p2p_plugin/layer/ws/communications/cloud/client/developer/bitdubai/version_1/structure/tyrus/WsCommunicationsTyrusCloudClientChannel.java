@@ -11,11 +11,9 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.conf.CLoudClientConfigurator;
@@ -112,7 +110,22 @@ public class WsCommunicationsTyrusCloudClientChannel {
     }
 
     public void sendMessage(final String message) {
-        clientConnection.getAsyncRemote().sendText(message);
+
+        /**
+         * if Packet is bigger than 1000 Send the message through of sendDividedChain
+         */
+//        if(message.length() > 1000){
+//
+//            try {
+//                sendDividedChain(message);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//
+//        }else{
+            clientConnection.getAsyncRemote().sendText(message);
+//        }
+
     }
 
 
@@ -471,4 +484,63 @@ public class WsCommunicationsTyrusCloudClientChannel {
     public WsCommunicationsTyrusCloudClientConnection getWsCommunicationsTyrusCloudClientConnection() {
         return wsCommunicationsTyrusCloudClientConnection;
     }
+
+    /**
+     * Send the message divide in packets of Size 1000
+     */
+    private void sendDividedChain(final String message) throws IOException {
+
+        /*
+         * Number of packets to send of Size 1000
+         */
+        int ref = message.length() / 1000;
+
+        /*
+         * Used to validate if the packet is send complete or in two parts
+         */
+        int residue = message.length() % 1000;
+
+        /*
+         * Index to handle the send of packet subString
+         */
+        int beginIndex = 0;
+        int endIndex = 1000;
+
+        for(int i = 0; i < ref-1; i++){
+
+            clientConnection.getBasicRemote().sendText(message.substring(beginIndex, endIndex), Boolean.FALSE);
+            beginIndex = endIndex;
+            endIndex = endIndex + 1000;
+
+        }
+
+        /*
+         * we get the last Chain to send
+         */
+        String lastChain = message.substring(beginIndex, message.length());
+
+        /*
+         * if residue is equals 0 then send the lastChain Complete
+         * else then the lastChain is divided in two parts to send
+         */
+        if(residue == 0){
+
+            /*
+             * the lastChain is send Complete
+             */
+            clientConnection.getBasicRemote().sendText(lastChain, Boolean.TRUE);
+
+        }else{
+
+            /*
+             * the lastChain is divided in two parts to send
+             */
+            int middleIndexlastChain = (lastChain.length() % 2 == 0) ? (lastChain.length() / 2)  : ((lastChain.length() + 1) / 2) - 1;
+            clientConnection.getBasicRemote().sendText(lastChain.substring(0, middleIndexlastChain), Boolean.FALSE);
+            clientConnection.getBasicRemote().sendText(lastChain.substring(middleIndexlastChain, lastChain.length()), Boolean.TRUE);
+
+        }
+
+    }
+
 }

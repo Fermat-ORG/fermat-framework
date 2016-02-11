@@ -129,7 +129,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
     @Override
     public void start() throws CantStartAgentException {
         MonitorAgent monitorAgent = new MonitorAgent();
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent, "User Redemption MonitorAgent");
         this.agentThread.start();
     }
 
