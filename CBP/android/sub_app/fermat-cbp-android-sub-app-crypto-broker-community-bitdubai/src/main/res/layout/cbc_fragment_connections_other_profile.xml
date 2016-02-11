@@ -113,7 +113,7 @@
         android:orientation="vertical"
         android:paddingLeft="18dp"
         android:paddingRight="18dp"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -122,18 +122,18 @@
             android:layout_marginTop="32dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="Email"
+            android:text="Currencies and exchange rates?"
             android:textColor="#0072bc"
             android:textSize="12sp"
             tools:ignore="HardcodedText" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/email"
+            android:id="@+id/currenciesexchangerates"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="janethwilliams@gmail.com"
+            android:text=""
             android:textColor="#292929"
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
