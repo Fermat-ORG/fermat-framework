@@ -8,7 +8,6 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_s
 
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
@@ -94,15 +93,18 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                 processMessageToSend();
         }
     };
+
+
     /**
-     *
+     * Represent the executorService
      */
     private ExecutorService executorService;
-    private Future<?>[] futures = new Future[2];
+
     /**
-     * Represent the eccKeyPair
+     * Represent the futures
      */
-    private ECCKeyPair identity;
+    private Future<?>[] futures = new Future[2];
+
 
     /**
      * Constructor with parameters
@@ -110,14 +112,12 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
      * @param communicationNetworkServiceConnectionManager
      * @param communicationsVPNConnection
      */
-    public CommunicationNetworkServiceRemoteAgent(ECCKeyPair identity, CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, CommunicationsVPNConnection communicationsVPNConnection) {
+    public CommunicationNetworkServiceRemoteAgent(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, CommunicationsVPNConnection communicationsVPNConnection) {
 
         super();
         this.running                                      = Boolean.FALSE;
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
         this.communicationsVPNConnection = communicationsVPNConnection;
-        this.identity = identity;
-
     }
 
     /**
@@ -206,7 +206,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                     /*
                      * Decrypt the message content
                      */
-                    ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.decryptMessagePrivateKey(message.getContent(), identity.getPrivateKey()));
+                    ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.decryptMessagePrivateKey(message.getContent(), communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey()));
 
                     /*
                      * Change to the new status
@@ -287,8 +287,8 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                             /*
                              * Sing the message
                              */
-                                String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), identity.getPrivateKey());
-                                ((FermatMessageCommunication) message).setSignature(signature);
+                            String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey());
+                            ((FermatMessageCommunication) message).setSignature(signature);
 
 
 
