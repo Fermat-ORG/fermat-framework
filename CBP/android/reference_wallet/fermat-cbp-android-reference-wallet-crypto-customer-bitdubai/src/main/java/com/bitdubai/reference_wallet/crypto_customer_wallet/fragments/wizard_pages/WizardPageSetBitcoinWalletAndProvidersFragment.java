@@ -110,6 +110,8 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             }
 
             if (walletConfigured) {
+                //TODO: Nelson revisa esto para que funcione ya el metodo devuelve true o false si la wallet esta configurada
+                //changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
                 getRuntimeManager().changeStartActivity(1);
             }
 
