@@ -5,6 +5,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -85,4 +86,12 @@ public interface AssetStatistic {
      * @return {@link String} with the asset's name.
      */
     String getAssetName();
+
+    /**
+     * This method retrieves the list of the movements made for this asset, the actor whom send it
+     * and the actor who receives it. And probably most information will be added soon.
+     *
+     * @return {@link List<AssetMovement>} instance.
+     */
+    List<AssetMovement> movementHistory();
 }
