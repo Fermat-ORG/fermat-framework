@@ -724,10 +724,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
     @Override
     public long getBalance(BalanceType balanceType,
-                           String walletPublicKey) throws CantGetBalanceException {
+                           String walletPublicKey,
+                           BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-            return bitcoinWalletWallet.getBalance(balanceType).getBalance();
+            return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType);
         } catch (CantLoadWalletException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e, "", "Cant Load Wallet.");
         }  catch (CantCalculateBalanceException e) {

@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -49,12 +52,24 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
         }
     }
 
+    @Override
+    public long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
+        try {
+            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+            return bitcoinWalletBasicWalletDao.getAvailableBalance(blockchainNetworkType);
+        } catch(CantCalculateBalanceException exception){
+            throw exception;
+        } catch(Exception exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
+        }
+    }
+
     /*
-    * NOTA:
-    *  El debit y el credit debería mirar primero si la transacción que
-    *  se quiere aplicar existe. Si no existe aplica los cambios normalmente, pero si existe
-    *  debería ignorar la transacción.
-    */
+        * NOTA:
+        *  El debit y el credit debería mirar primero si la transacción que
+        *  se quiere aplicar existe. Si no existe aplica los cambios normalmente, pero si existe
+        *  debería ignorar la transacción.
+        */
     @Override
     public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException {
         try {
