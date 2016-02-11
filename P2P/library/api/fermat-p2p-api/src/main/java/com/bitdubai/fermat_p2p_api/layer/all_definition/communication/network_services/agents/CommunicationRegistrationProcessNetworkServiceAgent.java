@@ -39,12 +39,6 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
     private AbstractNetworkServiceBase networkServiceRoot;
 
     /**
-     * Represent the networkService
-     */
-    private NetworkService networkService;
-
-
-    /**
      * Represent the active
      */
     private boolean active;
@@ -82,21 +76,19 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
 
             try{
 
-                System.out.println(networkService.getName()+" isRegister "+networkService.isRegister());
-
-                if (networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
+                if (networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isRegister() && !networkServiceRoot.isRegister()){
 
                     /*
                      * Register me
                      */
-                    networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), networkService.getPlatformComponentProfilePluginRoot());
+                    networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(networkServiceRoot.getNetworkServiceProfile().getNetworkServiceType(), networkServiceRoot.getNetworkServiceProfile());
 
                     /*
                      * Stop the internal threads
                      */
                     stop();
 
-                }else if (!networkService.isRegister()){
+                }else if (!networkServiceRoot.isRegister()){
                    try {
 
                         if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
@@ -114,6 +106,7 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
                 }
 
             }catch (Exception e){
+                e.printStackTrace();
                 try {
                     if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
                         Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);

@@ -563,7 +563,8 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
-        switch (AppsStatus.getByCode(code)){
+        AppsStatus appsStatus = AppsStatus.getByCode(code);
+        switch (appsStatus){
             case RELEASE:
                 break;
             case BETA:
@@ -573,6 +574,8 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
             case DEV:
                 break;
         }
+
+        select(appsStatus);
         super.onUpdateViewOnUIThread(code);
     }
 }

@@ -301,7 +301,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
             for(WalletContactRecord r : walletContactsSearch.getResult(max, offset)){
 
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),intraUserLoggedInPublicKey);
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(), intraUserLoggedInPublicKey);
 
                 finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
             }
@@ -1279,12 +1279,27 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         try {
             Actor involvedActor = null;
             UUID contactId = null;
+            WalletContactRecord walletContactRecord =  null;
+
             switch (bitcoinWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
-                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(),walletPublicKey);
-                        if (walletContactRecord != null)
+                        if(bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER)
+                        {
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+
+                        }
+                         else
+                        {
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+
+                           walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+
+                        }
+
+                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 
                     } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
@@ -1300,7 +1315,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                 case DEBIT:
                     try {
                         involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),intraUserLoggedInPublicKey);
-                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+                         walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 

@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
@@ -45,7 +46,9 @@ public class AppStatusDialog extends Dialog{
         radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                uncheckAllExcept(AppsStatus.RELEASE);
+                appsStatus = AppsStatus.RELEASE;
+                uncheckAllExcept();
+                buttonView.setChecked(isChecked);
                 appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.RELEASE);
             }
         });
@@ -54,7 +57,9 @@ public class AppStatusDialog extends Dialog{
         radioButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                uncheckAllExcept(AppsStatus.BETA);
+                appsStatus = AppsStatus.BETA;
+                uncheckAllExcept();
+                buttonView.setChecked(isChecked);
                 appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.BETA);
 
             }
@@ -64,7 +69,9 @@ public class AppStatusDialog extends Dialog{
         radioButton2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                uncheckAllExcept(AppsStatus.ALPHA);
+                appsStatus = AppsStatus.ALPHA;
+                uncheckAllExcept();
+                buttonView.setChecked(isChecked);
                 appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.ALPHA);
 
             }
@@ -74,7 +81,9 @@ public class AppStatusDialog extends Dialog{
         radioButton3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                uncheckAllExcept(AppsStatus.DEV);
+                appsStatus = AppsStatus.DEV;
+                uncheckAllExcept();
+                buttonView.setChecked(isChecked);
                 appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.DEV);
 
             }
@@ -94,9 +103,25 @@ public class AppStatusDialog extends Dialog{
                 radioButton3.setChecked(true);
                 break;
         }
+
+
+        View.OnClickListener onClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appStatusCallbackChanges.appSoftwareStatusChanges(appsStatus);
+                dismiss();
+            }
+        };
+
+        findViewById(R.id.linear_develop).setOnClickListener(onClickListener);
+        findViewById(R.id.linear_alpha).setOnClickListener(onClickListener);
+        findViewById(R.id.linear_beta).setOnClickListener(onClickListener);
+        findViewById(R.id.linear_relese).setOnClickListener(onClickListener);
+
+
     }
 
-    private void uncheckAllExcept(AppsStatus appsStatus){
+    private void uncheckAllExcept(){
         for (AppsStatus status : AppsStatus.values()) {
             if(status!=appsStatus){
                 switch (status){

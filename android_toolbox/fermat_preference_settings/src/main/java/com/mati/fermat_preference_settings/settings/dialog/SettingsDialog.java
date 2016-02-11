@@ -6,27 +6,30 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.mati.fermat_preference_settings.R;
+import com.mati.fermat_preference_settings.settings.interfaces.DialogCallback;
+import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsDialogItem;
 
 import java.util.List;
 
 /**
  * Created by mati on 2016.02.08..
  */
-public class SettingsDialog extends Dialog implements FermatListItemListeners<String>{
+public class SettingsDialog extends Dialog implements FermatListItemListeners<PreferenceSettingsDialogItem>{
 
 
-    private List<String> options;
+    private List<PreferenceSettingsDialogItem> options;
     RecyclerView recyclerView;
     ContextMenuAdapter contextMenuAdapter;
+    private DialogCallback callBack;
 
 
-    public SettingsDialog(Context context,List<String> options) {
+    public SettingsDialog(Context context,DialogCallback dialogCallback,List<PreferenceSettingsDialogItem> options) {
         super(context);
         this.options = options;
+        this.callBack = dialogCallback;
     }
 
     public SettingsDialog(Context context, int themeResId) {
@@ -46,17 +49,18 @@ public class SettingsDialog extends Dialog implements FermatListItemListeners<St
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         contextMenuAdapter = new ContextMenuAdapter(getContext(),options);
+        contextMenuAdapter.setFermatListEventListener(this);
         recyclerView.setAdapter(contextMenuAdapter);
     }
 
 
     @Override
-    public void onItemClickListener(String data, int position) {
-        Toast.makeText(getContext(), data, Toast.LENGTH_SHORT).show();
+    public void onItemClickListener(PreferenceSettingsDialogItem data, int position) {
+        callBack.optionSelected(data,position);
     }
 
     @Override
-    public void onLongItemClickListener(String data, int position) {
+    public void onLongItemClickListener(PreferenceSettingsDialogItem data, int position) {
 
     }
 }
