@@ -104,6 +104,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         //todo move this to the correct new thread format.
         try {
             doTheMainTask();
+            System.out.println("***CryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
         } catch (BlockchainException e) {
             e.printStackTrace();
         }
