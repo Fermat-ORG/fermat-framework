@@ -76,6 +76,7 @@ public class DeveloperDatabaseFactory {
         bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_ID_COLUMN_NAME);
         bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
         bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
+        bitcoinWalletWalletTotalBalancesColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE);
 
 
 
