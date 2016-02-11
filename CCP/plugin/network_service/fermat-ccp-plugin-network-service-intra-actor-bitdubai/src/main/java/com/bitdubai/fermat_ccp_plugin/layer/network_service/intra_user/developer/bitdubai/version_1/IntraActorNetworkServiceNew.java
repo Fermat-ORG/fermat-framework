@@ -79,6 +79,8 @@ import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
@@ -137,6 +139,10 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
      */
     private List<PlatformComponentProfile> actorsToRegisterCache;
 
+    private long reprocessTimer =  300000; //five minutes
+
+    private Timer timer = new Timer();
+
     /**
      * Executor
      */
@@ -185,6 +191,13 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
 
             executorService = Executors.newFixedThreadPool(3);
+
+            // change message state to process again first time
+            reprocessMessages();
+
+            //declare a schedule to process waiting request message
+
+            this.startTimer();
 
 
         }catch (Exception e){
@@ -1278,5 +1291,16 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessMessages();
+            }
+        },0, reprocessTimer);
     }
 }
