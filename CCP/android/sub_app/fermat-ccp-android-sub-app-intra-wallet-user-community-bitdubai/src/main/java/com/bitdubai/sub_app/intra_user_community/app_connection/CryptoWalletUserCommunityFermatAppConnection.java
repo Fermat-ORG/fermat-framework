@@ -9,6 +9,7 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -26,13 +27,13 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWallet
  */
 public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections{
 
-   private IntraUserSubAppSession fullyLoadedSession;
+   private IntraUserSubAppSession intraUserSubAppSession;
     private IntraUserModuleManager moduleManager;
 
-    public CryptoWalletUserCommunityFermatAppConnection(Activity activity,IntraUserSubAppSession fullyLoadedSession) {
+    public CryptoWalletUserCommunityFermatAppConnection(Activity activity,FermatSession fullyLoadedSession) {
         super(activity);
-        this.fullyLoadedSession = fullyLoadedSession;
-        moduleManager = fullyLoadedSession.getModuleManager();
+        this.intraUserSubAppSession = (IntraUserSubAppSession)fullyLoadedSession;
+
     }
 
     @Override
@@ -75,26 +76,35 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
     public NotificationPainter getNotificationPainter(String code){
 
         NotificationPainter notification = null;
+        try
+        {
+            moduleManager = intraUserSubAppSession.getModuleManager();
+            String[] params = code.split("|");
+            String notificationType = params[0];
+            String senderActorPublicKey = params[1];
 
-        String[] params = code.split("|");
-        String notificationType = params[0];
-        String senderActorPublicKey = params[1];
+            switch (notificationType){
+                case "CONNECTION_REQUEST":
+                    try
+                    {
+                        //find last notification by sender actor public key
+                        IntraWalletUserActor senderActor= moduleManager.getLastNotification(senderActorPublicKey);
+                        notification = new UserCommunityNotificationPainter("Nuevo pedido de conexión","Se recibió un pedido de conexion de " + senderActor.getName(),"","");
+                        break;
+                    }
+                    catch(Exception e)
+                    {
 
-        switch (notificationType){
-            case "CONNECTION_REQUEST":
-            try
-            {
-                //find last notification by sender actor public key
-                IntraWalletUserActor senderActor= moduleManager.getLastNotification(senderActorPublicKey);
-                notification = new UserCommunityNotificationPainter("Nuevo pedido de conexión","Se recibió un pedido de conexion de " + senderActor.getName(),"","");
-                break;
+                    }
+
             }
-            catch(Exception e)
-            {
-
-            }
+        }
+        catch(Exception e)
+        {
 
         }
+
+
 
         return notification;
     }

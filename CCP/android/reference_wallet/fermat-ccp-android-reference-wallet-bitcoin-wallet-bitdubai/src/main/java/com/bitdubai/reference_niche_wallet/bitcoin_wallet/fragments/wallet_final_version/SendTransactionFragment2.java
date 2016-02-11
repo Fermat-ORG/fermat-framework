@@ -1171,7 +1171,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             //update balance amount
 
-            final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()),ShowMoneyType.BITCOIN.getCode());
+            final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
 
              changeBalanceType(txt_type_balance, txt_balance_amount);
             //System.out.println(System.currentTimeMillis());

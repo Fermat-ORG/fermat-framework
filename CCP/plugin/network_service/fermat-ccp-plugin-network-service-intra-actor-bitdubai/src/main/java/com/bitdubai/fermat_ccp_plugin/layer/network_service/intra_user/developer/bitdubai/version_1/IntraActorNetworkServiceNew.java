@@ -34,6 +34,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.RequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.ActorProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantAskIntraUserForAcceptanceException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantGetNotificationsException;
@@ -225,10 +226,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
                     incomingNotificationsDao.createNotification(actorNetworkServiceRecord);
 
                     //NOTIFICATION LAUNCH
-
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,"CONNECTION_REQUEST|"+actorNetworkServiceRecord.getActorSenderPublicKey());
-
-                    launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
+                    lauchNotification();
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + actorNetworkServiceRecord.getActorSenderPublicKey());
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
                     break;
@@ -246,8 +245,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
                     System.out.println("----------------------------\n" +
                             "MENSAJE ACCEPTED LLEGÓ BIEN: CASE ACCEPTED" + actorNetworkServiceRecord.getActorSenderAlias()
                             + "\n-------------------------------------------------");
-
-
+                    //NOTIFICATION LAUNCH
+                    lauchNotification();
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
 
                     break;
@@ -294,10 +293,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
                             "MENSAJE DENIED LLEGÓ BIEN: CASE DENIED" + actorNetworkServiceRecord.getActorDestinationPublicKey()
                             + "\n-------------------------------------------------");
 
-
+                    lauchNotification();
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
-
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_DENIED|"+actorNetworkServiceRecord.getActorSenderPublicKey());
 
                     break;
 
@@ -314,7 +311,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
                             "MENSAJE DISCONNECTED LLEGÓ BIEN: CASE DISCONNECTED" + actorNetworkServiceRecord.getActorSenderAlias()
                             + "\n-------------------------------------------------");
 
-
+                    lauchNotification();
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
 
                     break;
@@ -431,25 +428,21 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
     public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
         return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
                                                                        .constructPlatformComponentProfileFactory(identityPublicKeySender,
-                                                                                                                 "sender_alias",
-                                                                                                         "sender_name",
-                                                                                                         NetworkServiceType.UNDEFINED,
-                                                                                                         PlatformComponentType.ACTOR_INTRA_USER,
-                                                                                                         "");
+                                                                               "sender_alias",
+                                                                               "sender_name",
+                                                                               NetworkServiceType.UNDEFINED,
+                                                                               PlatformComponentType.ACTOR_INTRA_USER,
+                                                                               "");
     }
 
     @Override
     protected void reprocessMessages() {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications();
-            for(ActorNetworkServiceRecord record : lstActorRecord) {
+           outgoingNotificationDao.changeStatusNotSentMessage();
 
-                outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
-            }
         }
-        catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException| CantUpdateRecordException| RequestNotFoundException
-                e)
+        catch(CantListIntraWalletUsersException e)
         {
             System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
@@ -463,14 +456,10 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
     protected void reprocessMessages(String identityPublicKey) {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(identityPublicKey);
-            for(ActorNetworkServiceRecord record : lstActorRecord) {
+           outgoingNotificationDao.changeStatusNotSentMessage(identityPublicKey);
 
-                outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
-            }
         }
-        catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException | CantUpdateRecordException | RequestNotFoundException
-                e)
+        catch(CantListIntraWalletUsersException  e)
         {
             System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
@@ -522,7 +511,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
 
 
-    private void launchIncomingRequestConnectionNotificationEvent(ActorNetworkServiceRecord actorNetworkServiceRecord) {
+    /*private void launchIncomingRequestConnectionNotificationEvent(ActorNetworkServiceRecord actorNetworkServiceRecord) {
         FermatEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION);
         IncomingActorRequestConnectionNotificationEvent incomingActorRequestConnectionNotificationEvent = (IncomingActorRequestConnectionNotificationEvent) platformEvent;
         incomingActorRequestConnectionNotificationEvent.setSource(EventSource.NETWORK_SERVICE_INTRA_ACTOR);
@@ -530,6 +519,12 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
         incomingActorRequestConnectionNotificationEvent.setActorName(actorNetworkServiceRecord.getActorSenderAlias());
         incomingActorRequestConnectionNotificationEvent.setActorType(Actors.INTRA_USER);
         eventManager.raiseEvent(platformEvent);
+    }*/
+
+    private void lauchNotification(){
+        FermatEvent fermatEvent = this.getEventManager().getNewEvent(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+        ActorNetworkServicePendingsNotificationEvent intraUserActorRequestConnectionEvent = (ActorNetworkServicePendingsNotificationEvent) fermatEvent;
+        this.getEventManager().raiseEvent(intraUserActorRequestConnectionEvent);
     }
 
     private ActorNetworkServiceRecord changeActor(ActorNetworkServiceRecord actorNetworkServiceRecord) {

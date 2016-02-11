@@ -27,9 +27,9 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
         try {
 
 
-            //this.registerVersion(new IntraActorNetworkServiceNew());
+            this.registerVersion(new IntraActorNetworkServiceNew());
 
-            this.registerVersion(new IntraActorNetworkServicePluginRoot());
+           // this.registerVersion(new IntraActorNetworkServicePluginRoot());
 
         } catch (CantRegisterVersionException e) {
 
