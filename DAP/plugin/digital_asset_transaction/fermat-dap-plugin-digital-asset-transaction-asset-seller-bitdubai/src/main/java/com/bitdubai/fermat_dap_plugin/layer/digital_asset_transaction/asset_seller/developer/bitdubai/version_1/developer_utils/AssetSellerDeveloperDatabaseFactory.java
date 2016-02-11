@@ -103,14 +103,25 @@ public class AssetSellerDeveloperDatabaseFactory {
 
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_ENTRY_ID_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_GENESIS_TRANSACTION_COLUMN_NAME);
-        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_METADATA_ID_COLUMN_NAME);
+        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NETWORK_TYPE_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_PUBLICKEY_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_SELL_STATUS_COLUMN_NAME);
+        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME);
+        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_TRANSACTION_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_TIMESTAMP_COLUMN_NAME);
 
         DeveloperDatabaseTable transactionMetadataTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetSellerDatabaseConstants.ASSET_SELLER_TABLE_NAME, assetSellerColumns);
         tables.add(transactionMetadataTable);
 
+        List<String> assetNegotiationColumns = new ArrayList<>();
+
+
+        assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_ID_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_OBJECT_XML_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_STATUS_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_TIMESTAMP_COLUMN_NAME);
+        DeveloperDatabaseTable assetNegotiationTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_TABLE_NAME, assetNegotiationColumns);
+        tables.add(assetNegotiationTable);
 
         return tables;
     }
