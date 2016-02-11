@@ -36,11 +36,18 @@ import java.util.List;
 public final class AssetSellerTransactionManager {
 
     //VARIABLE DECLARATION
-    private AssetUserWalletManager assetUserWalletManager;
-    private AssetTransmissionNetworkServiceManager assetTransmission;
-    private ActorAssetUserManager actorAssetUserManager;
-    private AssetSellerDAO dao;
+    private final AssetUserWalletManager assetUserWalletManager;
+    private final AssetTransmissionNetworkServiceManager assetTransmission;
+    private final ActorAssetUserManager actorAssetUserManager;
+    private final AssetSellerDAO dao;
+
     //CONSTRUCTORS
+    public AssetSellerTransactionManager(AssetUserWalletManager assetUserWalletManager, AssetTransmissionNetworkServiceManager assetTransmission, ActorAssetUserManager actorAssetUserManager, AssetSellerDAO dao) {
+        this.assetUserWalletManager = assetUserWalletManager;
+        this.assetTransmission = assetTransmission;
+        this.actorAssetUserManager = actorAssetUserManager;
+        this.dao = dao;
+    }
 
     //PUBLIC METHODS
     public void requestAssetSell(ActorAssetUser userToDeliver, AssetNegotiation negotiation) throws CantStartAssetSellTransactionException, CantLoadWalletException, CantGetAssetUserActorsException, CantSetObjectException, CantSendDigitalAssetMetadataException {
