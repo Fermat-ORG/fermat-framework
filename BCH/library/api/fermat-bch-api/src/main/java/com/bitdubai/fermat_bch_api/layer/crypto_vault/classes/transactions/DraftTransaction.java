@@ -9,9 +9,6 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +24,10 @@ public class DraftTransaction {
      */
     public DraftTransaction(Transaction bitcoinTransaction) {
         this.bitcoinTransaction = bitcoinTransaction;
+    }
+
+    public static DraftTransaction deserialize(BlockchainNetworkType networkType, byte[] serializedTransaction) {
+        return new DraftTransaction(new Transaction(BitcoinNetworkSelector.getNetworkParameter(networkType), serializedTransaction));
     }
 
     /**
@@ -72,6 +73,9 @@ public class DraftTransaction {
         return bitcoinTransaction.getHashAsString();
     }
 
+    public BlockchainNetworkType getNetworkType() {
+        return BitcoinNetworkSelector.getBlockchainNetworkType(bitcoinTransaction.getParams());
+    }
     /**
      * Serializes the bitcoin transaction
      * @return
