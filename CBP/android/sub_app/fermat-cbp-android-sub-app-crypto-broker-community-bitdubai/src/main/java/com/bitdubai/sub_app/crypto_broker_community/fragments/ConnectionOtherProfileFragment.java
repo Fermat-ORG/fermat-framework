@@ -46,7 +46,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
     private View rootView;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
-    private FermatTextView userEmail;
+    private FermatTextView currenciesExchangerates;
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation;
@@ -80,7 +80,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
         rootView = inflater.inflate(R.layout.cbc_fragment_connections_other_profile, container, false);
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
-        userEmail = (FermatTextView) rootView.findViewById(R.id.email);
+        currenciesExchangerates = (FermatTextView) rootView.findViewById(R.id.currenciesexchangerates);
         connect = (Button) rootView.findViewById(R.id.btn_conect);
         connect.setOnClickListener(this);
         disconnect = (Button) rootView.findViewById(R.id.btn_disconect);
@@ -100,24 +100,20 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
         }
 
 
+        //Show user image if it has one, otherwise show default user image
         try {
             userName.setText(cryptoBrokerCommunityInformation.getAlias());
-            userEmail.setText("Unknow");
-            if(cryptoBrokerCommunityInformation.getImage() != null) {
-                Bitmap bitmap;
-                if (cryptoBrokerCommunityInformation.getImage().length > 0) {
-                    bitmap = BitmapFactory.decodeByteArray(cryptoBrokerCommunityInformation.getImage(), 0, cryptoBrokerCommunityInformation.getImage().length);
-                } else {
-                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
-                }
-                bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
-                userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
-            }else{
-                Bitmap bitmap;
+            currenciesExchangerates.setText("Unknown, for now.");
+            Bitmap bitmap;
+
+            if(cryptoBrokerCommunityInformation.getImage() != null && cryptoBrokerCommunityInformation.getImage().length > 0)
+                bitmap = BitmapFactory.decodeByteArray(cryptoBrokerCommunityInformation.getImage(), 0, cryptoBrokerCommunityInformation.getImage().length);
+             else
                 bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
-                userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
-            }
+
+            bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
+            userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+
         } catch (Exception ex) {
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
