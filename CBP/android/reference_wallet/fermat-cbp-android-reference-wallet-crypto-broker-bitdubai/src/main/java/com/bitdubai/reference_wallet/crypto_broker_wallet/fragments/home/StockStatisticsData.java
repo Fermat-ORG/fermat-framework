@@ -38,7 +38,7 @@ public class StockStatisticsData {
             final int offset = 30;
             stockTransactions = walletManager.getStockHistory(
                     associatedWallet.getMerchandise(),
-                    associatedWallet.getCurrencyType(),
+                    associatedWallet.getMoneyType(),
                     offset,
                     calendar.getTimeInMillis(),
                     walletPublicKey);

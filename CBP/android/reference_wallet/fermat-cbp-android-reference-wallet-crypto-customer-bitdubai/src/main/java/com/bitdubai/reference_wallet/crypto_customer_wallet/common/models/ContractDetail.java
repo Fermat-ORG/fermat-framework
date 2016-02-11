@@ -2,7 +2,6 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.models;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 
 import java.util.Arrays;
 import java.util.UUID;

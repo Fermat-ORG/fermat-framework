@@ -7,19 +7,19 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by angel on 18/9/15.
  * Updated by Manuel Perez on 06/01/2015
  */
-public enum CurrencyType implements FermatEnum {
+public enum MoneyType implements FermatEnum {
 
-    BANK_MONEY          ("BAT", "Bank"         ),
-    CASH_DELIVERY_MONEY ("COH", "Cash Delivery"),
-    CASH_ON_HAND_MONEY  ("CAD", "Cash on Hand" ),
-    CRYPTO_MONEY        ("CRT", "Crypto"       ),
+    BANK          ("BAT", "Bank"         ),
+    CASH_DELIVERY ("COH", "Cash Delivery"),
+    CASH_ON_HAND  ("CAD", "Cash on Hand" ),
+    CRYPTO        ("CRT", "Crypto"       ),
 
     ;
 
     private final String code, friendlyName;
 
-    CurrencyType(final String code        ,
-                 final String friendlyName) {
+    MoneyType(final String code,
+              final String friendlyName) {
 
         this.code         = code        ;
         this.friendlyName = friendlyName;
@@ -34,19 +34,19 @@ public enum CurrencyType implements FermatEnum {
         return this.friendlyName;
     }
 
-    public static CurrencyType getByCode(final String code) throws InvalidParameterException {
+    public static MoneyType getByCode(final String code) throws InvalidParameterException {
 
         switch (code) {
 
-            case "BAT":return BANK_MONEY         ;
-            case "COH":return CASH_DELIVERY_MONEY;
-            case "CAD":return CASH_ON_HAND_MONEY ;
-            case "CRT":return CRYPTO_MONEY       ;
+            case "BAT":return BANK         ;
+            case "COH":return CASH_DELIVERY;
+            case "CAD":return CASH_ON_HAND ;
+            case "CRT":return CRYPTO       ;
 
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
-                        "This code is not valid for the CurrencyType enum."
+                        "This code is not valid for the MoneyType enum."
                 );
         }
     }

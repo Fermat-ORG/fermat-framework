@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchas
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
@@ -134,18 +134,18 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         }
 
         @Override
-        public ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException {
+        public ClauseType getNextClauseTypeByCurrencyType(MoneyType paymentMethod) throws CantGetNextClauseTypeException {
             switch (paymentMethod) {
-                case CRYPTO_MONEY:
+                case CRYPTO:
                     return ClauseType.CUSTOMER_CRYPTO_ADDRESS;
 
-                case BANK_MONEY:
+                case BANK:
                     return ClauseType.BROKER_BANK_ACCOUNT;
 
-                case CASH_ON_HAND_MONEY:
+                case CASH_ON_HAND:
                     return ClauseType.CUSTOMER_PLACE_TO_DELIVER;
 
-                case CASH_DELIVERY_MONEY:
+                case CASH_DELIVERY:
                     return ClauseType.CUSTOMER_PLACE_TO_DELIVER;
 
                 default:
@@ -225,19 +225,19 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
                 return false;
             }
 
-            if( clausesAgreed.containsValue(CurrencyType.CRYPTO_MONEY.getCode()) ){
+            if( clausesAgreed.containsValue(MoneyType.CRYPTO.getCode()) ){
                 if( !clausesAgreed.containsKey(ClauseType.CUSTOMER_CRYPTO_ADDRESS) ){
                     return false;
                 }
             }
 
-            if( clausesAgreed.containsValue(CurrencyType.BANK_MONEY.getCode()) ){
+            if( clausesAgreed.containsValue(MoneyType.BANK.getCode()) ){
                 if( !clausesAgreed.containsKey(ClauseType.CUSTOMER_BANK_ACCOUNT) ){
                     return false;
                 }
             }
 
-            if( clausesAgreed.containsValue(CurrencyType.CASH_ON_HAND_MONEY.getCode()) ){
+            if( clausesAgreed.containsValue(MoneyType.CASH_ON_HAND.getCode()) ){
                 if(
                         ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_PLACE_TO_DELIVER) ) &&
                                 ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) )
@@ -246,7 +246,7 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
                 }
             }
 
-            if( clausesAgreed.containsValue(CurrencyType.CASH_DELIVERY_MONEY.getCode()) ){
+            if( clausesAgreed.containsValue(MoneyType.CASH_DELIVERY.getCode()) ){
                 if(
                         ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_PLACE_TO_DELIVER) ) &&
                                 ( !clausesAgreed.containsKey(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) )
