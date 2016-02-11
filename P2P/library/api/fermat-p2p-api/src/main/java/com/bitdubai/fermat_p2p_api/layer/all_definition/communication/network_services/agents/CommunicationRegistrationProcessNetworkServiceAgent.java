@@ -6,7 +6,6 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 
 import java.util.concurrent.ExecutorService;
