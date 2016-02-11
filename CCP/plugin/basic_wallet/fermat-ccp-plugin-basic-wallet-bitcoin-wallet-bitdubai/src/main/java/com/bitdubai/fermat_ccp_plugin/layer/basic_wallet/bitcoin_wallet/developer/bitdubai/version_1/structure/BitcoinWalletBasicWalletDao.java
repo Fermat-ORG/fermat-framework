@@ -515,7 +515,7 @@ public class BitcoinWalletBasicWalletDao {
     private void executeTransaction(final BitcoinWalletTransactionRecord transactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance) throws CantExecuteBitconTransactionException {
         try{
             DatabaseTableRecord bitcoinWalletRecord = constructBitcoinWalletRecord(transactionRecord, balanceType,transactionType ,availableRunningBalance, bookRunningBalance);
-            DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance, transactionRecord.getBlockchainNetworkType());
+            DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance);
 
             BitcoinWalletBasicWalletDaoTransaction bitcoinWalletBasicWalletDaoTransaction = new BitcoinWalletBasicWalletDaoTransaction(database);
 
@@ -566,8 +566,8 @@ public class BitcoinWalletBasicWalletDao {
         return getBitcoinWalletTable().getEmptyRecord();
     }
 
-    private DatabaseTableRecord constructBalanceRecord(final long availableRunningBalance, final long bookRunningBalance,BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceRecordException{
-        DatabaseTableRecord record = getBalancesRecord(blockchainNetworkType);
+    private DatabaseTableRecord constructBalanceRecord(final long availableRunningBalance, final long bookRunningBalance) throws CantGetBalanceRecordException{
+        DatabaseTableRecord record = getBalancesRecord();
         record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
         record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, bookRunningBalance);
         return record;

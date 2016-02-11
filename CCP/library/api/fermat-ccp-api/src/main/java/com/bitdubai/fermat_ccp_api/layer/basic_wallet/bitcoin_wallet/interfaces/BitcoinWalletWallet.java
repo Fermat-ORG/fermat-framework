@@ -28,16 +28,6 @@ public interface BitcoinWalletWallet {
      */
     BitcoinWalletBalance getBalance(BalanceType balanceType);
 
-    /**
-     * Throw the method <code>getBalance</code> you can get an instance of BitcoinWalletBalance that allows you
-     * to do all possible actions over the balance of the requested type.
-     *
-     * @param balanceType type of balance that you need.
-     * @param blockchainNetworkType type of balance that you need.
-     *
-     * @return an instance of BitcoinWalletBalance.
-     */
-    BitcoinWalletBalance getBalance(BalanceType balanceType , BlockchainNetworkType blockchainNetworkType);
 
 
     /**

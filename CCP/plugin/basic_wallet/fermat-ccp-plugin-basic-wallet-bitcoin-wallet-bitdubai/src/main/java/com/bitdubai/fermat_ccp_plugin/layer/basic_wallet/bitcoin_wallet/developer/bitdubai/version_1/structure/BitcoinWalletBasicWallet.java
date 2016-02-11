@@ -262,17 +262,6 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
         }
     }
 
-    @Override
-    public BitcoinWalletBalance getBalance(BalanceType balanceType, BlockchainNetworkType blockchainNetworkType) {
-        switch (balanceType) {
-            case AVAILABLE:
-                return new BitcoinWalletBasicWalletAvailableBalance(database);
-            case BOOK:
-                return new BitcoinWalletBasicWalletBookBalance(database);
-            default:
-                return new BitcoinWalletBasicWalletAvailableBalance(database);
-        }
-    }
 
     @Override
     public BitcoinWalletTransactionSummary getActorTransactionSummary(final String actorPublicKey,

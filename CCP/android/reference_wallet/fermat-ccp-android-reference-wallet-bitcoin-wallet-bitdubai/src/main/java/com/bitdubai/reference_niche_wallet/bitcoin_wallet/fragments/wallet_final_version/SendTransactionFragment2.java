@@ -995,6 +995,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         long balance = 0;
         try {
             balance = referenceWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, referenceWalletSession.getAppPublicKey(),blockchainNetworkType);
+            System.out.println("THE BALANCE IS " + balance);
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
         } catch (CantGetCryptoWalletException e) {
