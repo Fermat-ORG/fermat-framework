@@ -122,7 +122,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                     exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
