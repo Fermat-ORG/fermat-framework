@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -225,6 +226,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
                     //NOTIFICATION LAUNCH
 
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,"CONNECTION_REQUEST|"+actorNetworkServiceRecord.getActorSenderPublicKey());
+
                     launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
@@ -293,6 +296,8 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
+
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_DENIED|"+actorNetworkServiceRecord.getActorSenderPublicKey());
 
                     break;
 
