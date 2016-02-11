@@ -2108,15 +2108,9 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     private void reprocessMessage()
     {
         try {
-
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(false);
-            for(ActorNetworkServiceRecord record : lstActorRecord) {
-
-                outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
-            }
+           outgoingNotificationDao.changeStatusNotSentMessage();
         }
-        catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException| CantUpdateRecordException| RequestNotFoundException
-                e)
+        catch(CantListIntraWalletUsersException e)
         {
             System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
@@ -2130,14 +2124,11 @@ public class IntraActorNetworkServicePluginRoot extends AbstractPlugin implement
     {
         try {
 
-            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listNotSentNotifications(receiveIdentityKey,false);
-            for(ActorNetworkServiceRecord record : lstActorRecord) {
 
-                outgoingNotificationDao.changeProtocolState(record.getId(), ActorProtocolState.PROCESSING_SEND);
-            }
+           outgoingNotificationDao.changeStatusNotSentMessage(receiveIdentityKey);
+
         }
-        catch(CantListIntraWalletUsersException | CantUpdateRecordDataBaseException| CantUpdateRecordException| RequestNotFoundException
-                e)
+        catch(CantListIntraWalletUsersException e)
         {
             System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();

@@ -265,23 +265,24 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                     filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
                     filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
 
+                    synchronized (this) {
                     /*
                      * Read all pending message from database
                      */
-                    List<FermatMessage> messages = communicationNetworkServiceConnectionManager.getOutgoingMessageDao().findAll(filters);
+                        List<FermatMessage> messages = communicationNetworkServiceConnectionManager.getOutgoingMessageDao().findAll(filters);
 
                     /*
                      * For each message
                      */
-                    for (FermatMessage message: messages){
+                        for (FermatMessage message : messages) {
 
 
-                        if (communicationsVPNConnection.isConnected() && (message.getFermatMessagesStatus() == FermatMessagesStatus.PENDING_TO_SEND)){
+                            if (communicationsVPNConnection.isConnected() && (message.getFermatMessagesStatus() == FermatMessagesStatus.PENDING_TO_SEND)) {
 
                             /*
                              * Encrypt the content of the message whit the remote network service public key
                              */
-                            ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
+                                ((FermatMessageCommunication) message).setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), communicationsVPNConnection.getRemoteParticipantNetworkService().getIdentityPublicKey()));
 
                             /*
                              * Sing the message
@@ -289,27 +290,30 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                             String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey());
                             ((FermatMessageCommunication) message).setSignature(signature);
 
-                            /*
-                             * Send the message
-                             */
-                            communicationsVPNConnection.sendMessage(message);
 
-                            /*
-                             * Change the message and update in the data base
-                             */
-                            ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
-                            communicationNetworkServiceConnectionManager.getOutgoingMessageDao().update(message);
+
+                                /*
+                                 * Send the message
+                                 */
+                                communicationsVPNConnection.sendMessage(message);
+
+                                /*
+                                 * Change the message and update in the data base
+                                 */
+                                ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
+                                communicationNetworkServiceConnectionManager.getOutgoingMessageDao().update(message);
 
                             /*
                              * Notify a new message send
                              */
-                            communicationNetworkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
+                                communicationNetworkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
 
 
-                        }else{
-                            System.out.println("CommunicationNetworkServiceRemoteAgent - VPN connection is connected = "+communicationsVPNConnection.isConnected());
+                            } else {
+                                System.out.println("CommunicationNetworkServiceRemoteAgent - VPN connection is connected = " + communicationsVPNConnection.isConnected());
+                            }
+
                         }
-
                     }
 
 
