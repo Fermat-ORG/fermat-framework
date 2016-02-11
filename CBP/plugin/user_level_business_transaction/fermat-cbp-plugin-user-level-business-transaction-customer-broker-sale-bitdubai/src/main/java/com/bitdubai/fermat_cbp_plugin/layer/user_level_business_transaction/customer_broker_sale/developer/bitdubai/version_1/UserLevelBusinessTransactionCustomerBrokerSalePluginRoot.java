@@ -220,7 +220,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-//        if(userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent == null) {
+        if(userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent == null) {
             userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent = new UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(errorManager,
                     customerBrokerSaleNegotiationManager,
                     pluginDatabaseSystem,
@@ -236,7 +236,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
                     notificationManagerMiddleware,
                     customerBrokerSaleManager);
             userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
-//        }else userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
+        }else userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
     }
 
     public EventManager getEventManager() {
