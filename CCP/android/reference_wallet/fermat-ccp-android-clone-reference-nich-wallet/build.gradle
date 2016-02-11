@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-
 android {
 
     lintOptions {
@@ -32,7 +31,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
-
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
@@ -56,4 +54,9 @@ dependencies {
     testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
     compile 'com.squareup.picasso:picasso:2.3.2'
     //compile 'com.google.guava:guava:r05'
+
+}
+
+repositories {
+    maven { url 'https://jitpack.io' }
 }

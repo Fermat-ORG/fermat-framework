@@ -430,7 +430,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         if (result != null && result.size() > 0) {
             for (ActorAssetUserGroup record : result) {
                 Group group = new Group(record);
-                group.setMembers(manager.getListActorAssetUserByGroups(group.getGroupName()).size());
+                group.setMembers(manager.getListActorAssetUserByGroups(group.getGroupId()).size());
                 dataSet.add(group);
             }
         }

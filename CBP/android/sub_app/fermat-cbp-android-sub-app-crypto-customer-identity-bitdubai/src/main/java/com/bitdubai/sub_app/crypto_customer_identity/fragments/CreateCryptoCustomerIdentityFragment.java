@@ -180,6 +180,22 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
         }
     }
 
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case CONTEXT_MENU_CAMERA:
+                dispatchTakePictureIntent();
+                break;
+            case CONTEXT_MENU_GALLERY:
+                loadImageFromGallery();
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    /**
+     * Crea una nueva identidad para un crypto customer
+     */
     private void createNewIdentityInBackDevice(){
         String customerNameText = mCustomerName.getText().toString();
         if(!customerNameText.trim().equals("")) {
@@ -188,10 +204,31 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                 CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(appSession, customerNameText, imgInBytes);
                 int resultKey = executor.execute();
                 switch (resultKey) {
-                    case SUCCESS:
-                        Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
-                    break;
-                }
+            case SUCCESS:
+
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            appSession.getModuleManager().publishCryptoCustomerIdentity(executor.getIdentity().getPublicKey());
+
+                        } catch(CouldNotPublishCryptoCustomerException e) {
+
+                            Toast.makeText(getActivity(), "Error al publicar la identidad", Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                }.start();
+                changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode(), appSession.getAppPublicKey());
+                break;
+            case EXCEPTION_THROWN:
+                Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                break;
+            case INVALID_ENTRY_DATA:
+                Toast.makeText(getActivity(), "Los datos para crear la indentidad no son validos", Toast.LENGTH_LONG).show();
+                break;
+        }
             }
         }
     }

@@ -104,6 +104,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
 
+
     /**
      * Adapters
      */
@@ -149,7 +150,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
             }
 
             blockchainNetworkType = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-
+            System.out.println("Network Type"+blockchainNetworkType);
             cryptoWallet = appSession.getModuleManager().getCryptoWallet();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -484,10 +485,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 VaultType.CRYPTO_CURRENCY_VAULT,
                                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                 appSession.getAppPublicKey(),
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                blockchainNetworkType
                         );
                     } else {
-                        walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                        walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                         if (cryptoWalletWalletContact != null) {
                             walletContact.name = cryptoWalletWalletContact.getActorName();
                             walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
@@ -501,10 +503,11 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                         VaultType.CRYPTO_CURRENCY_VAULT,
                                         CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                         appSession.getAppPublicKey(),
-                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                        blockchainNetworkType
                                 );
                             } else {
-                                walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress();
+                                walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                             }
                             walletContact.contactId = cryptoWalletWalletContact.getContactId();
                             walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
@@ -586,15 +589,17 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
     private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
-                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(0).getAddress(), cryptoWallet);
+                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), cryptoWallet);
                 if (validAddress != null) {
                     EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                     String amount = txtAmount.getText().toString();
 
-                    BigDecimal money = new BigDecimal(amount);
+                    BigDecimal money;
 
                     if (amount.equals(""))
                         money = new BigDecimal("0");
+                    else
+                        money = new BigDecimal(amount);
 
                     if(!amount.equals("") && !money.equals(new BigDecimal("0"))) {
                         try {
@@ -673,7 +678,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
 
                 String contactAddress = "";
                 if (wcr.getReceivedCryptoAddress().size() > 0)
-                    contactAddress = wcr.getReceivedCryptoAddress().get(0).getAddress();
+                    contactAddress = wcr.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                 contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
             }
         } catch (CantGetAllWalletContactsException e) {

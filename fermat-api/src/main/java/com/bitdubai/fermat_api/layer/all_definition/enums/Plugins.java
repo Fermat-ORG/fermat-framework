@@ -188,11 +188,14 @@ public enum Plugins implements FermatPluginsEnum {
 
     ASSET_APPROPRIATION         ("ASAP"),
     ASSET_DISTRIBUTION          ("ASD"),
+    ASSET_TRANSFER              ("ASTT"),
     ASSET_FACTORY               ("ASF"),
     ASSET_ISSUER                ("ASI"),
     ASSET_ISSUER_COMMUNITY      ("ASIC"),
     ASSET_ISSUING               ("ASIS"),
     ASSET_RECEPTION             ("ASR"),
+    ASSET_SELLER("ASSE"),
+    ASSET_BUYER("ASBU"),
     ASSET_USER                  ("ASU"),
     ASSET_USER_COMMUNITY        ("ASUC"),
     ASSET_TRANSMISSION          ("AST"),
@@ -313,11 +316,16 @@ public enum Plugins implements FermatPluginsEnum {
             case "APR"  :   return SUB_APP_RUNTIME          ;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
+            case "ASTT"  :  return ASSET_TRANSFER           ;
             case "ASF"  :   return ASSET_FACTORY            ;
             case "ASI"  :   return ASSET_ISSUER             ;
             case "ASIC" :   return ASSET_ISSUER_COMMUNITY   ;
             case "ASIS" :   return ASSET_ISSUING            ;
             case "ASR"  :   return ASSET_RECEPTION          ;
+            case "ASSE":
+                return ASSET_SELLER;
+            case "ASBU":
+                return ASSET_BUYER;
             case "ASU"  :   return ASSET_USER               ;
             case "ASUC" :   return ASSET_USER_COMMUNITY     ;
             case "AST"  :   return ASSET_TRANSMISSION       ;
@@ -351,8 +359,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "IWU"  :   return INTRA_WALLET_USER        ;
             case "IIA"  :   return INTRA_IDENTITY_USER      ;
             case "IR"   :   return ISSUER_REDEMPTION        ;
-            case "ISAP":
-                return ISSUER_APPROPRIATION;
+            case "ISAP":    return ISSUER_APPROPRIATION     ;
             case "NOT"  :   return NOTIFICATION             ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
             case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
