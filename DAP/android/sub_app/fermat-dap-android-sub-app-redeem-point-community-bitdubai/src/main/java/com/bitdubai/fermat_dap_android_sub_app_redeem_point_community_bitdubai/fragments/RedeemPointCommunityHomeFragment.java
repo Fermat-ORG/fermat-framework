@@ -15,15 +15,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
@@ -48,9 +51,12 @@ import static android.widget.Toast.makeText;
 
 /**
  * Home Fragment
+ * changed by jinmy Bohorquez on 11/02/16
  */
-public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
-
+public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener,
+                                                                                        AdapterView.OnItemClickListener,
+                                                                                        FermatListItemListeners<Actor> {
+    public static final String REDEEM_POINT_SELECTED = "redeemPoint";
     private static RedeemPointCommunitySubAppModuleManager manager;
     private List<Actor> actors;
     ErrorManager errorManager;
@@ -106,6 +112,9 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
             }
         });
         recyclerView.setAdapter(adapter);
+
+        adapter.setFermatListEventListener(this);
+
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -428,5 +437,23 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
             }
         }
         return dataSet;
+    }
+
+    @Override
+    public void onItemClickListener(Actor data, int position) {
+
+        appSession.setData(REDEEM_POINT_SELECTED, data);
+        changeActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+
+    }
+
+    @Override
+    public void onLongItemClickListener(Actor data, int position) {
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 }
