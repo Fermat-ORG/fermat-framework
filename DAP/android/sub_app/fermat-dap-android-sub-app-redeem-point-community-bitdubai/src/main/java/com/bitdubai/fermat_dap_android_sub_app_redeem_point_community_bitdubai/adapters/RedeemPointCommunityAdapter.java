@@ -44,12 +44,11 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
     @Override
     protected void bindHolder(final RedeemPointViewHolder holder, final Actor data, final int position) {
         try {
+            holder.name.setText(String.format("%s", data.getName()));
             if (data.getCryptoAddress() != null) {
-                holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: YES");
+                holder.connectionState.setVisibility(View.VISIBLE);
             } else {
-                holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: NO");
+                holder.connectionState.setVisibility(View.GONE);
             }
 
             if (data.getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {
@@ -64,7 +63,7 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
                 holder.status.setText(R.string.status_connecting);
             }
             holder.connect.setChecked(data.selected);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.connect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dataSet.get(position).selected = !dataSet.get(position).selected;
