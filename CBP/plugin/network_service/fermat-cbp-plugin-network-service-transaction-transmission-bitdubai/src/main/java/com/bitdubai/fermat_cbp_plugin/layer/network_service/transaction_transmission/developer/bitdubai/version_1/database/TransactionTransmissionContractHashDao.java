@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -256,6 +257,9 @@ public class TransactionTransmissionContractHashDao {
         BusinessTransactionTransactionType recordTransactionType=BusinessTransactionTransactionType.getByCode(type);
         TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.getByCode(state);
 
+        //TODO: create column remoteBusinessTransaction in database
+        Plugins remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
+
         return new BusinessTransactionMetadataRecord(
                 contractHash,
                 recordContractStatus,
@@ -268,7 +272,8 @@ public class TransactionTransmissionContractHashDao {
                 recordTransactionType,
                 timestamp,
                 transactionId,
-                transactionTransmissionStates
+                transactionTransmissionStates,
+                remoteBusinessTransaction
                 );
 
     }

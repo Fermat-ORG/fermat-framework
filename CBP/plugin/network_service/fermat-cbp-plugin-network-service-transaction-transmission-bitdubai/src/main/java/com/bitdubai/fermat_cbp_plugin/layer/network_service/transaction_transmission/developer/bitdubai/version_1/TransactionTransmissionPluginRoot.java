@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmi
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -1218,7 +1219,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                             transactionType,
                             timestamp,
                             transactionId,
-                            transactionTransmissionStates
+                            transactionTransmissionStates,
+                            Plugins.TRANSACTION_TRANSMISSION
                     );
                     transactionTransmissionNetworkServiceManager.sendContractHash(
                             transactionId,
@@ -1266,7 +1268,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                     transactionType,
                     timestamp,
                     transactionId,
-                    transactionTransmissionStates
+                    transactionTransmissionStates,
+                    Plugins.TRANSACTION_TRANSMISSION
             );
             System.out.println(businessTransactionMetadata.toString());
            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
