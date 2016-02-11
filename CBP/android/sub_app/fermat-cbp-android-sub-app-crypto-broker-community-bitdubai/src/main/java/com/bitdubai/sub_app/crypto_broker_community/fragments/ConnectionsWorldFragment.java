@@ -37,7 +37,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.CryptoBrokerCommunityInformationImpl;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
@@ -288,15 +287,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
-
+            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.getCryptoBrokerSearch(moduleManager.getSelectedActorIdentity());
             List<CryptoBrokerCommunityInformation> result = cryptoBrokerCommunitySearch.getResult();
-
-            //MOCK!
-            for(int i = 1 ; i <= 5 ; i++){
-                result.add(new CryptoBrokerCommunityInformationImpl("pk-"+i, "broker"+i, new byte[0]));
-            }
-
             dataSet.addAll(result);
             offset = dataSet.size();
 

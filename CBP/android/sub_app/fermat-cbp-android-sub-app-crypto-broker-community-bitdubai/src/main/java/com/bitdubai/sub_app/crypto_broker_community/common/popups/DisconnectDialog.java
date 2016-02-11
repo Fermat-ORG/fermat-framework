@@ -13,12 +13,19 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerConnectionDenialFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.constants.Constants;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
+
+import java.util.UUID;
 
 
 /**
@@ -27,8 +34,8 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class DisconectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements
-        View.OnClickListener {
+public class DisconnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager>
+        implements View.OnClickListener {
 
     /**
      * UI components
@@ -47,11 +54,11 @@ public class DisconectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSes
     CryptoBrokerCommunitySelectableIdentity identity;
 
 
-    public DisconectDialog(Activity a,
-                           CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession,
-                           SubAppResourcesProviderManager subAppResources,
-                           CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation,
-                           CryptoBrokerCommunitySelectableIdentity identity) {
+    public DisconnectDialog(Activity a,
+                            CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession,
+                            SubAppResourcesProviderManager subAppResources,
+                            CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation,
+                            CryptoBrokerCommunitySelectableIdentity identity) {
 
         super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
 
@@ -106,25 +113,29 @@ public class DisconectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSes
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
-            //try {
-                //image null
+            try {
                 if (cryptoBrokerCommunityInformation != null && identity != null) {
-                    Toast.makeText(getContext(), "TODO DISCONNECT ->", Toast.LENGTH_SHORT).show();
-                    //getSession().getModuleManager().disconnectIntraUSer(cryptoBrokerCommunityInformation.getPublicKey());
 
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                    prefs.edit().putBoolean("Connected", true).apply();
-                    Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
-                    broadcast.putExtra(Constants.BROADCAST_DISCONNECTED_UPDATE, true);
-                    sendLocalBroadcast(broadcast);
+                    getSession().getModuleManager().denyConnection(UUID.randomUUID());
+                    Toast.makeText(getContext(), "Disconnected successfully", Toast.LENGTH_SHORT).show();
+
+                    //set flag so that the preceding fragment reads it on dismiss()
+                    getSession().setData("connectionresult", false);
+
+
+
                     Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            /*} catch (IntraUserDisconnectingFailedException e) {
-                e.printStackTrace();
-            }*/
+            } catch (CryptoBrokerConnectionDenialFailedException e) {
+                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getContext(), "Could not disconnect, please try again", Toast.LENGTH_SHORT).show();
+            } catch (ConnectionRequestNotFoundException e) {
+                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getContext(), "There has been an error. Could not disconnect.", Toast.LENGTH_SHORT).show();
+            }
 
             dismiss();
         }else if( i == R.id.negative_button){

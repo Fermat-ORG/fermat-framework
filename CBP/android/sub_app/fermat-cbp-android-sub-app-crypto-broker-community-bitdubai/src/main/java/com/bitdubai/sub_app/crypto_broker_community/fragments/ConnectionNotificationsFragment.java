@@ -43,7 +43,8 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionNotificationsFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
+public class ConnectionNotificationsFragment extends AbstractFermatFragment
+        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
 
     public static final String ACTOR_SELECTED = "actor_selected";
 
