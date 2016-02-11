@@ -110,7 +110,7 @@ public class CloseContractMonitorAgent implements
             errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
