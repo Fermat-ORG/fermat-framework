@@ -295,7 +295,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                             //System.out.println("Threar UI corriendo");
                             //TODO: fix this
                             if (!chatManager.getContacts().isEmpty()) {
-                                specialfilldatabase();
+                      //          specialfilldatabase();
                                 updatevalues();
                                 adapter.refreshEvents(infochat, imgid);
                             } else {

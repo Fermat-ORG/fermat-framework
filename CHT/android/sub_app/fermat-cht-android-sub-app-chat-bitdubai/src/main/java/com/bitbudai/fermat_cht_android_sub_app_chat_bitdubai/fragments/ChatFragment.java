@@ -170,7 +170,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 historialmensaje.add(inorout+"@#@#"+message);
             }
             }else{
-                    Toast.makeText(getActivity(),"chatid null", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"waiting for chat message", Toast.LENGTH_SHORT).show();
             }
 
         }catch (CantGetMessageException e) {
@@ -241,6 +241,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                    }else{
 
                        UUID newchatid=UUID.randomUUID();
+                       chatid=newchatid;
 
                        chat.setChatId(newchatid);
                        chat.setObjectId(UUID.randomUUID());
@@ -269,8 +270,9 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
                        adaptador.refreshEvents(historialmensaje);
                        Toast.makeText(getActivity(),"Sending message", Toast.LENGTH_SHORT).show();
-                       messageET.setText("");
+
                    }
+                    messageET.getText().clear();
                 } catch (CantSaveMessageException e) {
 
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

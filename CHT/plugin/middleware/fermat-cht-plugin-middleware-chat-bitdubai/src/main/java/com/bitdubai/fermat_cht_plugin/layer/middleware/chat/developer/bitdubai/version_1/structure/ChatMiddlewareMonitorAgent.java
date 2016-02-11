@@ -437,7 +437,7 @@ public class ChatMiddlewareMonitorAgent implements
                                 incomingChatMetadata.getChatId(),
                                 incomingChatMetadata.getMessageId()
                         );*/
-                        break;
+             //           break;
                     }
                 }
                 eventRecord.setEventStatus(EventStatus.NOTIFIED);
