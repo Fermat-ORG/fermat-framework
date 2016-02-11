@@ -222,6 +222,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
 
                    if(chatwascreate) {
+                       chat=(ChatImpl)chatManager.getChatByChatId(chatid);
+                       chatManager.saveChat(chat);
 
                        message.setChatId(chatid);
                        message.setMessageId(UUID.randomUUID());
