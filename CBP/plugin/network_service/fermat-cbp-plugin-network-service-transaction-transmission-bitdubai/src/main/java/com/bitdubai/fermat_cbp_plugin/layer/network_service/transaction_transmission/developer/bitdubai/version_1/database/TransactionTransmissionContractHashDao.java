@@ -145,6 +145,7 @@ public class TransactionTransmissionContractHashDao {
         record.setLongValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME, businessTransactionMetadata.getTimestamp());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME, businessTransactionMetadata.getState().getCode());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, Boolean.FALSE.toString());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION, Boolean.FALSE.toString());
 
         return record;
     }
@@ -256,9 +257,20 @@ public class TransactionTransmissionContractHashDao {
         PlatformComponentType recordSenderType=PlatformComponentType.getByCode(senderType);
         BusinessTransactionTransactionType recordTransactionType=BusinessTransactionTransactionType.getByCode(type);
         TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.getByCode(state);
+        Plugins remoteBusinessTransaction;
+        String pluginCode=record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION);
+        if(pluginCode==null||pluginCode.isEmpty()){
+            //For now, I'll put transaction transmission
+            remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
+        }else{
+            try{
+                remoteBusinessTransaction=Plugins.getByCode(pluginCode);
+            } catch (InvalidParameterException exception){
+                //If the code is invalid, I''l set the Default.
+                remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
+            }
+        }
 
-        //TODO: create column remoteBusinessTransaction in database
-        Plugins remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
 
         return new BusinessTransactionMetadataRecord(
                 contractHash,
