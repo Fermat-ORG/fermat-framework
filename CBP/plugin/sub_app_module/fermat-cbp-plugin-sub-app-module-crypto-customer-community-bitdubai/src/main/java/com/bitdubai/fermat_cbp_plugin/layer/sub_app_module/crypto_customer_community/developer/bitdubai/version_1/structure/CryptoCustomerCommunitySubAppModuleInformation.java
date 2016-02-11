@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
@@ -56,6 +57,11 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
 
     @Override
     public List listCryptoCustomerWallets() {
+        return null;
+    }
+
+    @Override
+    public ConnectionState getConnectionState() {
         return null;
     }
 }

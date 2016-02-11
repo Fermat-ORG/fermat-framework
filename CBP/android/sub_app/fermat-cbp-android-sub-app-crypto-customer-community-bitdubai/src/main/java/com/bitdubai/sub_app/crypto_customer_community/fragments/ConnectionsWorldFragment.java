@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -37,6 +38,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.crypto_customer_community.common.CryptoCustomerCommunityInformationImpl;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
@@ -281,11 +283,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
             CryptoCustomerCommunitySearch cryptoCustomerCommunitySearch = moduleManager.getCryptoCustomerSearch(moduleManager.getSelectedActorIdentity());
             List<CryptoCustomerCommunityInformation> result = cryptoCustomerCommunitySearch.getResult();
 
+            List<CryptoCustomerCommunityInformation> result2 = new ArrayList<>();
+            for(CryptoCustomerCommunityInformation i : result)
+                result2.add(new CryptoCustomerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), i.getImage(), ConnectionState.CONNECTED));
 
-            //MOCK!
-            //for(int i = 1 ; i <= 5 ; i++){
-            //    result.add(new CryptoCustomerCommunityInformationImpl("pk-"+i, "custmr"+i, new byte[0]));
-            //}
 
             dataSet.addAll(result);
             offset = dataSet.size();

@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.crypto_customer_community.common;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunityInformation;
 
 import java.util.List;
@@ -12,11 +13,13 @@ public class CryptoCustomerCommunityInformationImpl implements CryptoCustomerCom
     String publicKey;
     String alias;
     byte[] image;
+    ConnectionState connectionState;
 
-    public CryptoCustomerCommunityInformationImpl(String publicKey, String alias, byte[] image){
+    public CryptoCustomerCommunityInformationImpl(String publicKey, String alias, byte[] image, ConnectionState connectionState){
         this.publicKey = publicKey;
         this.alias = alias;
         this.image = image;
+        this.connectionState = connectionState;
     }
 
 
@@ -39,5 +42,10 @@ public class CryptoCustomerCommunityInformationImpl implements CryptoCustomerCom
     @Override
     public List listCryptoCustomerWallets() {
         return null;
+    }
+
+    @Override
+    public ConnectionState getConnectionState() {
+        return this.connectionState;
     }
 }
