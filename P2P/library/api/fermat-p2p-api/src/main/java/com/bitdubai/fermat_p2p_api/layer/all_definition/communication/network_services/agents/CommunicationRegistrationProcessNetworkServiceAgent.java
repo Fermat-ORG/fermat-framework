@@ -89,16 +89,12 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
                     stop();
 
                 }else if (!networkServiceRoot.isRegister()){
-                   try {
 
-                        if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
-                            Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-
-                    } catch (InterruptedException e) {
-                        active = Boolean.FALSE;
-                    }
+                    if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
+                        Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
 
                 }else {
+
                     /*
                      * Stop the internal threads
                      */
@@ -110,6 +106,7 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
                 try {
                     if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
                         Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+                    active = Boolean.FALSE;
                 } catch (InterruptedException e1) {
                     active = Boolean.FALSE;
                 }

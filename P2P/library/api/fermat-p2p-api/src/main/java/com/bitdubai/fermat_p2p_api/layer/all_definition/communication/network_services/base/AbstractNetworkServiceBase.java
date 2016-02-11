@@ -180,8 +180,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         this.extraData             = extraData;
         this.starting              = new AtomicBoolean(false);
         this.register              = Boolean.FALSE;
-
-        listenersAdded = new ArrayList<>();
+        this.listenersAdded        = new ArrayList<>();
     }
 
 
@@ -257,8 +256,6 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                         this.communicationSupervisorPendingMessagesAgent = new CommunicationSupervisorPendingMessagesAgent(this);
                         this.communicationSupervisorPendingMessagesAgent.start();
                     }
-
-
 
                     /*
                      * Call on start method
@@ -605,6 +602,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 communicationNetworkServiceConnectionManager.stop();
             }
 
+            communicationSupervisorPendingMessagesAgent.removeAllConnectionWaitingForResponse();
+
             onClientConnectionClose();
 
         }catch (Exception e) {
@@ -673,6 +672,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
              * Tell the manager to handler the new connection established
              */
             communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(event.getRemoteComponent());
+            communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteComponent().getIdentityPublicKey());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -720,7 +720,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
         try {
 
-            communicationSupervisorPendingMessagesAgent.connectionFailure(event.getRemoteParticipant().getIdentityPublicKey());
+            communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteParticipant().getIdentityPublicKey());
             onFailureComponentConnectionRequest(event.getRemoteParticipant());
 
         } catch (Exception e) {
@@ -759,6 +759,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
 
+                communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(remotePublicKey);
+
                 reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
 
             }
@@ -783,6 +785,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
+
+                communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(remotePublicKey);
 
                 reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
 
