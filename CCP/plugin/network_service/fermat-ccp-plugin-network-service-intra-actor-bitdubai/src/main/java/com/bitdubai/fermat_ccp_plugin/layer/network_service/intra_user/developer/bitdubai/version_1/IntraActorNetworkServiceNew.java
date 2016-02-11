@@ -454,6 +454,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
 
            outgoingNotificationDao.changeStatusNotSentMessage();
 
+
         }
         catch(CantListIntraWalletUsersException e)
         {

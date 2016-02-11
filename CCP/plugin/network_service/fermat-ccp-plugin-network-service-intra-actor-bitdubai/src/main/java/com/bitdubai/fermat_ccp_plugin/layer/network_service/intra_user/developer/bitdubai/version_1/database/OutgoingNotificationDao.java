@@ -170,7 +170,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
 
                 if (!records.isEmpty())
-                    return buildActorNetworkServiceRecord(records.get(0));
+                    return buildActorNetworkServiceRecord(records.get(0),true);
                 else
                     throw new NotificationNotFoundException("",null, "RequestID: "+notificationId, "Can not find an intra user request with the given request id.");
 
@@ -202,7 +202,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
                 for (DatabaseTableRecord record : records) {
 
-                    actorNetworkServiceRecordList.add(buildActorNetworkServiceRecord(record));
+                    actorNetworkServiceRecordList.add(buildActorNetworkServiceRecord(record,true));
                 }
 
                 return actorNetworkServiceRecordList;
@@ -313,7 +313,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
 
             for (DatabaseTableRecord record : records) {
-                cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
+                cryptoPaymentList.add(buildActorNetworkServiceRecord(record,true));
             }
             return cryptoPaymentList;
 
@@ -332,6 +332,32 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     public void changeStatusNotSentMessage() throws CantListIntraWalletUsersException {
 
 
+        try {
+            DatabaseTable intraActorRequestTable = getDatabaseTable();
+
+            intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            intraActorRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = intraActorRequestTable.getRecords();
+
+            for (DatabaseTableRecord record : records) {
+                    //update record
+
+             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME,  ActorProtocolState.PROCESSING_SEND.getCode());
+                intraActorRequestTable.updateRecord(record);
+
+            }
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch (CantUpdateRecordException e) {
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+
+        }
+    }
+
+
+    public List<ActorNetworkServiceRecord> listNotSentNotifications(boolean withImage) throws CantListIntraWalletUsersException {
 
         try {
             DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
@@ -345,14 +371,16 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             for (DatabaseTableRecord record : records) {
 
+
                 //update record
 
                 record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME,  ActorProtocolState.PROCESSING_SEND.getCode());
 
                 cryptoPaymentRequestTable.updateRecord(record);
+
             }
 
-
+            return null;
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
@@ -363,6 +391,40 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
     }
 
     public void changeStatusNotSentMessage(String receiveIdentityKey) throws CantListIntraWalletUsersException {
+
+
+        try {
+            DatabaseTable intraActorRequestTable = getDatabaseTable();
+
+            intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, receiveIdentityKey, DatabaseFilterType.EQUAL);
+
+            intraActorRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = intraActorRequestTable.getRecords();
+
+
+            for (DatabaseTableRecord record : records) {
+
+                //update record
+
+                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME,  ActorProtocolState.PROCESSING_SEND.getCode());
+
+                intraActorRequestTable.updateRecord(record);
+            }
+
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+        } catch (CantUpdateRecordException e) {
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+
+        }
+
+    }
+
+    public List<ActorNetworkServiceRecord> listNotSentNotifications(String receiveIdentityKey,boolean withImage) throws CantListIntraWalletUsersException {
 
 
 
@@ -379,20 +441,16 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
             for (DatabaseTableRecord record : records) {
 
-                //update record
 
-                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME,  ActorProtocolState.PROCESSING_SEND.getCode());
+              //  cryptoPaymentList.add(buildActorNetworkServiceRecord(record,withImage));
 
-                cryptoPaymentRequestTable.updateRecord(record);
             }
 
+            return null;
 
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        } catch (CantUpdateRecordException e) {
-            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-
         }
     }
 
@@ -421,7 +479,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
             List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
 
             for (DatabaseTableRecord record : records) {
-                cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
+                cryptoPaymentList.add(buildActorNetworkServiceRecord(record,true));
             }
             return cryptoPaymentList;
 
@@ -480,7 +538,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
     }
 
-    private ActorNetworkServiceRecord buildActorNetworkServiceRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    private ActorNetworkServiceRecord buildActorNetworkServiceRecord(DatabaseTableRecord record,boolean withImage) throws InvalidParameterException {
         try
         {
         UUID   notificationId            = record.getUUIDValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
@@ -508,13 +566,15 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         Actors actorDestinationType = Actors.getByCode(destinationType);
         Actors actorSenderType    = Actors.getByCode(senderType);
 
-        byte[] profileImage;
+        byte[] profileImage = new byte[0];
 
-        try {
-            profileImage = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME));
-        } catch(FileNotFoundException e) {
-            profileImage = new  byte[0];
-        }
+            if(withImage) {
+                try {
+                    profileImage = getIntraUserProfileImagePrivateKey(record.getStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME));
+                } catch (FileNotFoundException e) {
+                    profileImage = new byte[0];
+                }
+            }
 
         return new ActorNetworkServiceRecord(
                 notificationId        ,
