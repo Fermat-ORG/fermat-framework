@@ -15,6 +15,8 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLo
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -22,6 +24,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
@@ -30,6 +33,19 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCrea
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_offline_payment.interfaces.BrokerAckOfflinePaymentManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_online_payment.interfaces.BrokerAckOnlinePaymentManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_offline_merchandise.interfaces.BrokerSubmitOfflineMerchandiseManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_online_merchandise.interfaces.BrokerSubmitOnlineMerchandiseManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleManagerMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationOfflineMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationOnlineMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
@@ -157,6 +173,10 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final CustomerBrokerUpdateManager customerBrokerUpdateManager;
     private final BitcoinWalletManager bitcoinWalletManager;
     private final CryptoBrokerActorManager cryptoBrokerActorManager;
+    private final BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager;
+    private final BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager;
+    private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
+    private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
 
     /*
     *Constructor with Parameters
@@ -177,7 +197,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                              CryptoBrokerIdentityManager cryptoBrokerIdentityManager,
                                                              CustomerBrokerUpdateManager customerBrokerUpdateManager,
                                                              BitcoinWalletManager bitcoinWalletManager,
-                                                             CryptoBrokerActorManager cryptoBrokerActorManager) {
+                                                             CryptoBrokerActorManager cryptoBrokerActorManager,
+                                                             BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager,
+                                                             BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager,
+                                                             BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
+                                                             BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager) {
         this.walletManagerManager = walletManagerManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.bankMoneyWalletManager = bankMoneyWalletManager;
@@ -195,6 +219,10 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         this.customerBrokerUpdateManager = customerBrokerUpdateManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.cryptoBrokerActorManager = cryptoBrokerActorManager;
+        this.brokerAckOfflinePaymentManager = brokerAckOfflinePaymentManager;
+        this.brokerAckOnlinePaymentManager = brokerAckOnlinePaymentManager;
+        this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
+        this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
     }
 
     private String merchandise = null, typeOfPayment = null, paymentCurrency = null;
@@ -1165,6 +1193,20 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     /**
+     * This method load the instance saveCryptoBrokerWalletSpreadSetting
+     *
+     * @return CryptoBrokerWalletSettingSpread
+     * @throws CantSaveCryptoBrokerWalletSettingException
+     */
+    @Override
+    public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException {
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        walletPublicKey = "walletPublicKeyTest";
+        return cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
+    }
+
+
+    /**
      * Returns an exchange rate of a given date, for a specific currencyPair
      *
      * @param currencyFrom
@@ -1321,6 +1363,16 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     /**
+     * Checks if wallet exists in wallet database
+     *
+     * @param walletPublicKey
+     */
+    @Override
+    public boolean cashMoneyWalletExists(String walletPublicKey) {
+        return cashMoneyWalletManager.cashMoneyWalletExists(walletPublicKey);
+    }
+
+    /**
      * Returns the Balance this BitcoinWalletBalance belongs to. (Can be available or book)
      *
      * @return A BigDecimal, containing the balance.
@@ -1353,5 +1405,267 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    /**
+     * This method returns the CustomerBrokerContractSale associated to a negotiationId
+     *
+     * @param negotiationId
+     * @return
+     * @throws CantGetListCustomerBrokerContractSaleException
+     */
+    public CustomerBrokerContractSale getCustomerBrokerContractSaleByNegotiationId(
+            String negotiationId) throws CantGetListCustomerBrokerContractSaleException {
+        Collection<CustomerBrokerContractSale> customerBrokerContractSales =
+                customerBrokerContractSaleManager.getAllCustomerBrokerContractSale();
+        String negotiationIdFromCollection;
+        //This line is only for testing
+        return new CustomerBrokerContractSaleMock();
+        /*for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSale){
+            negotiationIdFromCollection=customerBrokerContractSale.getNegotiatiotId();
+            if(negotiationIdFromCollection.equals(negotiationId)){
+                return customerBrokerContractSale;
+            }
+        }
+        throw new CantGetListCustomerBrokerContractSaleException(
+                "Cannot find the contract associated to negotiation "+negotiationId);*/
+    }
+
+    /**
+     * This method returns the currency type from a contract
+     *
+     * @param customerBrokerContractSale
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListSaleNegotiationsException
+     */
+    public CurrencyType getCurrencyTypeFromContract(
+            CustomerBrokerContractSale customerBrokerContractSale,
+            ContractDetailType contractDetailType) throws
+            CantGetListSaleNegotiationsException {
+        try {
+            String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
+                    customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+            ClauseType clauseType;
+            for (Clause clause : clauses) {
+                clauseType = clause.getType();
+
+                switch (contractDetailType) {
+                    case BROKER_DETAIL:
+                        if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                            return CurrencyType.getByCode(clause.getValue());
+                        }
+                    case CUSTOMER_DETAIL:
+                        if (clauseType.equals(ClauseType.CUSTOMER_PAYMENT_METHOD)) {
+                            return CurrencyType.getByCode(clause.getValue());
+                        }
+                }
+            }
+            throw new CantGetListSaleNegotiationsException("Cannot find the proper clause");
+        } catch (InvalidParameterException e) {
+            throw new CantGetListSaleNegotiationsException("Cannot get the negotiation list", e);
+        } catch (CantGetListClauseException e) {
+            throw new CantGetListSaleNegotiationsException("Cannot find clauses list");
+        }
+
+    }
+    /**
+     * This method return the ContractClauseType included in a CustomerBrokerSaleNegotiation clauses
+     *
+     * @param customerBrokerSaleNegotiation
+     * @return
+     * @throws CantGetListClauseException
+     */
+    private ContractClauseType getContractClauseType(
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws
+            CantGetListClauseException {
+        try {
+            //I will check if customerBrokerSaleNegotiation is null
+            ObjectChecker.checkArgument(
+                    customerBrokerSaleNegotiation,
+                    "The customerBrokerSaleNegotiation is null");
+            Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+            ClauseType clauseType;
+            for (Clause clause : clauses) {
+                clauseType = clause.getType();
+                if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                    return ContractClauseType.getByCode(clause.getValue());
+                }
+            }
+            throw new CantGetListClauseException("Cannot find the proper clause");
+        } catch (InvalidParameterException e) {
+            throw new CantGetListClauseException(
+                    "An invalid parameter is found in ContractClauseType enum");
+        } catch (ObjectNotSetException e) {
+            throw new CantGetListClauseException(
+                    "The CustomerBrokerSaleNegotiation is null");
+        }
+
+    }
+
+    /**
+     * This method returns the ContractStatus by contractHash/Id
+     *
+     * @param contractHash
+     * @return
+     */
+    public ContractStatus getContractStatus(String contractHash) throws
+            CantGetListCustomerBrokerContractSaleException {
+
+        CustomerBrokerContractSale customerBrokerContractSale;
+        //TODO: This is the real implementation
+        /*customerBrokerContractSale =
+                this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);*/
+        //TODO: for testing
+        CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock =
+                new CustomerBrokerContractSaleManagerMock();
+        customerBrokerContractSale =
+                customerBrokerContractSaleManagerMock.
+                        getCustomerBrokerContractSaleForContractId(contractHash);
+        //End of testing
+        return customerBrokerContractSale.getStatus();
+
+    }
+
+    @Override
+    public void submitMerchandise(String contractHash) throws CantSubmitMerchandiseException {
+        try{
+            CustomerBrokerContractSale customerBrokerContractSale;
+            //TODO: This is the real implementation
+            /*
+            customerBrokerContractSale=this.customerBrokerContractSaleManager.
+                    getCustomerBrokerContractSaleForContractId(
+                    contractHash);
+                    */
+            //TODO: for testing
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock=new
+                    CustomerBrokerContractSaleManagerMock();
+            customerBrokerContractSale=customerBrokerContractSaleManagerMock.
+                    getCustomerBrokerContractSaleForContractId(contractHash);
+            //End of Mock testing
+            //I need to discover the merchandise type (online or offline)
+            String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
+                    this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            //TODO: remove this mock
+            customerBrokerSaleNegotiation = new SaleNegotiationOnlineMock();
+            ContractClauseType contractClauseType = getContractClauseType(
+                    customerBrokerSaleNegotiation);
+            /**
+             * Case: sending crypto merchandise.
+             */
+            if (contractClauseType.getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
+
+                /**
+                 * TODO: here we need to get the CCP Wallet public key to send BTC to customer,
+                 * when the settings is finished, please, implement how to get the CCP Wallet public
+                 * key here. Thanks.
+                 */
+                //TODO: this is a hardcoded public key
+                String cryptoBrokerPublicKey = "walletPublicKeyTest";
+                //TODO: this is a hardcoded reference price
+                BigDecimal referencePrice = BigDecimal.TEN;
+                this.brokerSubmitOnlineMerchandiseManager.submitMerchandise(
+                        referencePrice,
+                        cryptoBrokerPublicKey,
+                        contractHash);
+            }
+            /**
+             * Case: sending offline merchandise.
+             */
+            if (contractClauseType.getCode() == ContractClauseType.BANK_TRANSFER.getCode() ||
+                    contractClauseType.getCode() == ContractClauseType.CASH_DELIVERY.getCode() ||
+                    contractClauseType.getCode() == ContractClauseType.CASH_DELIVERY.getCode()) {
+                //TODO: this is a hardcoded public key
+                String cryptoBrokerPublicKey = "walletPublicKeyTest";
+                //TODO: this is a hardcoded reference price
+                BigDecimal referencePrice = BigDecimal.TEN;
+                this.brokerSubmitOfflineMerchandiseManager.submitMerchandise(
+                        referencePrice,
+                        cryptoBrokerPublicKey,
+                        contractHash);
+            }
+        } catch (CantGetListCustomerBrokerContractSaleException e) {
+            throw new CantSubmitMerchandiseException(
+                    e,
+                    "Submitting the merchandise",
+                    "Cannot get the contract");
+        } catch (CantGetListClauseException e) {
+            throw new CantSubmitMerchandiseException(
+                    e,
+                    "Submitting the merchandise",
+                    "Cannot get the clauses list");
+        } catch (CantGetListSaleNegotiationsException e) {
+            throw new CantSubmitMerchandiseException(
+                    e,
+                    "Submitting the merchandise",
+                    "Cannot get the negotiation list");
+        }
+    }
+
+    @Override
+    public ContractStatus ackPayment(String contractHash) throws CantAckPaymentException {
+        try {
+            CustomerBrokerContractSale customerBrokerContractSale;
+            //TODO: This is the real implementation
+            /*customerBrokerContractSale =
+                    this.customerBrokerContractSaleManager.
+                            getCustomerBrokerContractSaleForContractId(contractHash);*/
+            //TODO: for testing
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock =
+                    new CustomerBrokerContractSaleManagerMock();
+            customerBrokerContractSale =
+                    customerBrokerContractSaleManagerMock.
+                            getCustomerBrokerContractSaleForContractId(contractHash);
+            //End of Mock testing
+            //System.out.println("From module:"+customerBrokerContractPurchase);
+            String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+            CustomerBrokerSaleNegotiation customerBrokerPurchaseNegotiation =
+                    this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            //TODO: remove this mock
+            customerBrokerPurchaseNegotiation = new SaleNegotiationOfflineMock();
+            ContractClauseType contractClauseType = getContractClauseType(
+                    customerBrokerPurchaseNegotiation);
+            /**
+             * Case: ack crypto merchandise.
+             */
+            if (contractClauseType.getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
+                return customerBrokerContractSale.getStatus();
+            }
+            /**
+             * Case: ack offline merchandise.
+             */
+            if (contractClauseType.getCode() == ContractClauseType.BANK_TRANSFER.getCode() ||
+                    contractClauseType.getCode() == ContractClauseType.CASH_DELIVERY.getCode() ||
+                    contractClauseType.getCode() == ContractClauseType.CASH_ON_HAND.getCode()) {
+                //TODO: this is a hardcoded public key
+                String cryptoBrokerPublicKey = "walletPublicKeyTest";
+                this.brokerAckOfflinePaymentManager.ackPayment(cryptoBrokerPublicKey, contractHash);
+                return customerBrokerContractSale.getStatus();
+            }
+
+            throw new CantAckPaymentException("Cannot find the contract clause");
+
+        } catch (CantGetListCustomerBrokerContractSaleException e) {
+            throw new CantAckPaymentException(
+                    e,
+                    "Cannot ack the merchandise",
+                    "Cannot get the contract");
+        } catch (CantGetListClauseException e) {
+            throw new CantAckPaymentException(
+                    e,
+                    "Cannot ack the merchandise",
+                    "Cannot get the clauses list");
+        } catch (CantGetListSaleNegotiationsException e) {
+            throw new CantAckPaymentException(
+                    e,
+                    "Cannot ack the merchandise",
+                    "Cannot get the negotiation list");
+        }
     }
 }

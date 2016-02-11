@@ -9,6 +9,9 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAd
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -17,6 +20,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAcc
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
@@ -27,7 +34,10 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.except
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
@@ -407,6 +417,14 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
     /**
+     * This method load the instance saveCryptoBrokerWalletSpreadSetting
+     * @param
+     * @return CryptoBrokerWalletSettingSpread
+     * @exception CantSaveCryptoBrokerWalletSettingException
+     */
+    CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
+
+    /**
      * Returns an exchange rate of a given date, for a specific currencyPair
      *
      * @return an exchangeRate object
@@ -479,9 +497,60 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     BigDecimal getBalanceCashWallet(String walletPublicKey) throws CantGetCashMoneyWalletBalanceException, CantLoadCashMoneyWalletException;
 
     /**
+     * Checks if wallet exists in wallet database
+     *
+     */
+    boolean cashMoneyWalletExists(String walletPublicKey);
+
+    /**
      * Returns the Balance this BitcoinWalletBalance belongs to. (Can be available or book)
      *
      * @return A BigDecimal, containing the balance.
      */
     public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException, CantLoadWalletException;
+
+    /**
+     * This method returns the CustomerBrokerContractSale associated to a negotiationId
+     * @param negotiationId
+     * @return
+     * @throws CantGetListCustomerBrokerContractSaleException
+     */
+    CustomerBrokerContractSale getCustomerBrokerContractSaleByNegotiationId(
+            String negotiationId) throws CantGetListCustomerBrokerContractSaleException;
+
+    /**
+     * This method returns the currency type from a contract
+     * @param customerBrokerContractSale
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListSaleNegotiationsException
+     */
+    CurrencyType getCurrencyTypeFromContract(
+            CustomerBrokerContractSale customerBrokerContractSale,
+            ContractDetailType contractDetailType) throws
+            CantGetListSaleNegotiationsException;
+
+    /**
+     * This method returns the ContractStatus by contractHash/Id
+     * @param contractHash
+     * @return
+     * @throws CantGetListCustomerBrokerContractSaleException
+     */
+    ContractStatus getContractStatus(String contractHash) throws
+            CantGetListCustomerBrokerContractSaleException;
+
+    /**
+     * This method send a merchandise according the contract elements.
+     *
+     * @param contractHash
+     */
+    void submitMerchandise(String contractHash) throws CantSubmitMerchandiseException;
+
+    /**
+     * This method execute a Broker Ack payment Business Transaction
+     *
+     * @param contractHash
+     * @throws CantAckPaymentException
+     */
+    ContractStatus ackPayment(String contractHash) throws CantAckPaymentException;
 }

@@ -154,7 +154,7 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        //if(businessTransactionBankMoneyRestockMonitorAgent == null) {
+        if(businessTransactionBankMoneyRestockMonitorAgent == null) {
             businessTransactionBankMoneyRestockMonitorAgent = new BusinessTransactionBankMoneyRestockMonitorAgent(
                     errorManager,
                     stockTransactionBankMoneyRestockManager,
@@ -166,7 +166,12 @@ public class BusinessTransactionBankMoneyRestockPluginRoot extends AbstractPlugi
 
             businessTransactionBankMoneyRestockMonitorAgent.start();
         serviceStatus = ServiceStatus.STARTED;
-        //}else businessTransactionBankMoneyRestockMonitorAgent.start();
+
+        }
+        else {
+            businessTransactionBankMoneyRestockMonitorAgent.start();
+            serviceStatus = ServiceStatus.STARTED;
+        }
     }
 
 }

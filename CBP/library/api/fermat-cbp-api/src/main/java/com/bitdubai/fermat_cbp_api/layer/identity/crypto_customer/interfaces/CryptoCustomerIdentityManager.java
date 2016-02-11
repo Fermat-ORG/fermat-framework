@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantHideIdentityException;
@@ -39,6 +40,14 @@ public interface CryptoCustomerIdentityManager extends FermatManager {
      * @throws CantListCryptoCustomerIdentityException if something goes wrong.
      */
     CryptoCustomerIdentity getCryptoCustomerIdentity(String publickey) throws CantListCryptoCustomerIdentityException;
+
+    /**
+     *
+     * @param alias
+     * @param publicKey
+     * @param imageProfile
+     */
+    void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateCustomerIdentityException;
 
     /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity
