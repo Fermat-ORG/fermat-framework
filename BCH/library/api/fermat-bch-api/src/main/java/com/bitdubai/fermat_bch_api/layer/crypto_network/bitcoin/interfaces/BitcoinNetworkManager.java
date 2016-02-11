@@ -57,16 +57,6 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      */
     CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException;
 
-    /**
-     * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
-     * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
-     * @param txHash the Hash of the transaction we are going to look for.
-     * @param blockHash the Hash of block where this transaction was stored..
-     * @return a CryptoTransaction with the information of the transaction.
-     * @throws CantGetCryptoTransactionException
-     */
-    CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException;
-
     /**********************************************Broadcasting functionality ********************************************/
 
     /**
@@ -109,14 +99,6 @@ public interface BitcoinNetworkManager extends TransactionSender<CryptoTransacti
      * @return the bitcoin transaction
      */
     Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash);
-
-
-    /**
-     * Get the Unspent bitcoin transaction stored by the CryptoNetwork
-     * @param blockchainNetworkType the network type
-     * @return the bitcoin transaction
-     */
-    List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType);
 
 
     /**

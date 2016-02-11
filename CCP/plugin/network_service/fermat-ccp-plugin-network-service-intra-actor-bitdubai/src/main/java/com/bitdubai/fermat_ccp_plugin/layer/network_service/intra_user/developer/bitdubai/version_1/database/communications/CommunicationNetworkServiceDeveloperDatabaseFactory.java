@@ -39,6 +39,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
+@Deprecated
 public class CommunicationNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity,DeveloperDatabasePIP {
 
     /**

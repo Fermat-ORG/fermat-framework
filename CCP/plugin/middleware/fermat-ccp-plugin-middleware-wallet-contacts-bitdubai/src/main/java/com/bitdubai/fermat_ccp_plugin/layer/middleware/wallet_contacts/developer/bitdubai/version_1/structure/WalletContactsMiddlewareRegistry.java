@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantAddCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantDeleteCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException;
@@ -53,6 +55,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
     private final LogManager             logManager            ;
     private final PluginDatabaseSystem   pluginDatabaseSystem  ;
     private final UUID                   pluginId              ;
+    private final Broadcaster            broadcaster;
 
     private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
 
@@ -60,13 +63,16 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                                             final ErrorManager           errorManager          ,
                                             final LogManager             logManager            ,
                                             final PluginDatabaseSystem   pluginDatabaseSystem  ,
-                                            final UUID                   pluginId              ) {
+                                            final UUID                   pluginId              ,
+                                            final Broadcaster            broadcaster
+                                            ) {
 
         this.cryptoAddressesManager = cryptoAddressesManager;
         this.errorManager           = errorManager          ;
         this.logManager             = logManager            ;
         this.pluginDatabaseSystem   = pluginDatabaseSystem  ;
         this.pluginId               = pluginId              ;
+        this.broadcaster            = broadcaster ;
     }
 
     public void initialize() throws CantInitializeWalletContactsMiddlewareDatabaseException {
@@ -427,13 +433,15 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                     );
 
                     System.out.println("----------------------------\n" +
-                            "ACTUALIZO ADDRESS PARA EL CONTACTO :" +  walletContactRecord.getContactId()
+                            "ACTUALIZO ADDRESS PARA EL CONTACTO :" + walletContactRecord.getContactId()
                             + "\n-------------------------------------------------");
 
                     walletContactsMiddlewareDao.updateCompatibility(
                             walletContactRecord.getContactId(),
                             Compatibility.COMPATIBLE
                     );
+
+                    this.broadcaster.publish(BroadcasterType.UPDATE_VIEW, walletContactRecord.getContactId().toString() );
 
                 }
 

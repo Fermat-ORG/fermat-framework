@@ -95,7 +95,7 @@ public class AssetReceptionMonitorAgent implements Agent {
             MonitorAgent monitorAgent = new MonitorAgent();
             monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             monitorAgent.setErrorManager(this.errorManager);
-            this.agentThread = new Thread(monitorAgent);
+            this.agentThread = new Thread(monitorAgent, "Asset Reception MonitorAgent");
             this.agentThread.start();
         } catch (Exception e) {
             throw new CantStartAgentException(e, null, null);
@@ -164,7 +164,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                     List<Transaction<DigitalAssetMetadataTransaction>> pendingTransactions = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
                     System.out.println("ASSET RECEPTION is " + pendingTransactions.size() + " events");
                     for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingTransactions) {
-                        if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER && transaction.getInformation().getSenderType() == PlatformComponentType.ACTOR_ASSET_ISSUER) {
+                        if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER && transaction.getInformation().getSenderType() == PlatformComponentType.ACTOR_ASSET_ISSUER || transaction.getInformation().getSenderType() == PlatformComponentType.ACTOR_ASSET_USER) {
                             DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
                             System.out.println("ASSET RECEPTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
                             DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
