@@ -33,12 +33,12 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1.structure.CryptoCustomerCommunitySubAppModuleInformation;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_customer_community.common.CryptoCustomerCommunityInformationImpl;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
@@ -285,10 +285,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
 
             List<CryptoCustomerCommunityInformation> result2 = new ArrayList<>();
             for(CryptoCustomerCommunityInformation i : result)
-                result2.add(new CryptoCustomerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), i.getImage(), ConnectionState.CONNECTED));
+                result2.add(new CryptoCustomerCommunitySubAppModuleInformation(i.getPublicKey(), i.getAlias(), i.getImage(), ConnectionState.CONNECTED));
 
 
-            dataSet.addAll(result);
+            dataSet.addAll(result2);
             offset = dataSet.size();
 
         } catch (Exception e) {

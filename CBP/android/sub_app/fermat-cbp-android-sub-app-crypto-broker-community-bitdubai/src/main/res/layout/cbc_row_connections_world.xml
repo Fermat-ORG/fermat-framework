@@ -38,7 +38,7 @@
             tools:ignore="HardcodedText" />
 
         <ImageView
-            android:id="@+id/connection_state"
+            android:id="@+id/cbc_connection_state"
             android:layout_width="25dp"
             android:layout_height="25dp"
             android:layout_alignParentLeft="true"
