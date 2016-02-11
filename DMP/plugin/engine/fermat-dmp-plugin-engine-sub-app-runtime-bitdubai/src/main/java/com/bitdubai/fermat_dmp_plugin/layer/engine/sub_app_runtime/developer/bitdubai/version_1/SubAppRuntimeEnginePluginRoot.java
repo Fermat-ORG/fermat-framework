@@ -1725,7 +1725,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Crypto Customer Identity");
         runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setTitleColor("#03A9F4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -1752,7 +1752,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#03A9F4");
+        runtimeTitleBar.setTitleColor("#03A9F4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -1777,7 +1777,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#03A9F4");
+        runtimeTitleBar.setTitleColor("#03A9F4");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
