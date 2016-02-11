@@ -15,17 +15,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
@@ -49,8 +53,12 @@ import static android.widget.Toast.makeText;
 /**
  * UserCommuinityHomeFragment
  */
-public class UserCommuinityHomeFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class UserCommuinityHomeFragment extends AbstractFermatFragment
+        implements SwipeRefreshLayout.OnRefreshListener,
+        AdapterView.OnItemClickListener,
+        FermatListItemListeners<Actor> {
 
+    public static final String USER_SELECTED = "user";
     private static AssetUserCommunitySubAppModuleManager manager;
     private static final int MAX = 20;
 
@@ -108,7 +116,10 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment implement
                 actors = dataSet;
             }
         });
+
+
         recyclerView.setAdapter(adapter);
+        adapter.setFermatListEventListener(this);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -428,5 +439,23 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment implement
             }
         }
         return dataSet;
+    }
+
+    @Override
+    public void onItemClickListener(Actor data, int position) {
+
+        appSession.setData(USER_SELECTED, data);
+        changeActivity(Activities.DAP_SUB_APP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+
+    }
+
+    @Override
+    public void onLongItemClickListener(Actor data, int position) {
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 }
