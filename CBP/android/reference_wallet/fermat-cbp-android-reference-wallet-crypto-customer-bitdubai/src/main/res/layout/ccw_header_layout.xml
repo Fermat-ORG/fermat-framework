@@ -38,4 +38,13 @@
             app:strokeWidth="4dp"
             app:unselectedColor="#220c2b"/>
     </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/ccw_header_progress_bar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        android:indeterminateTint="#d16afc"/>
+
 </FrameLayout>
