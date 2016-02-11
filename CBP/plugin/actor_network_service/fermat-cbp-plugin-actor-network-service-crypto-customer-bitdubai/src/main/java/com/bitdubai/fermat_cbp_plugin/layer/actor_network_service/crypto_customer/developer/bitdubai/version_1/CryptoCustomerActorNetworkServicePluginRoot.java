@@ -48,6 +48,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_custome
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.exceptions.CantLoadKeyPairException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseFactory;
@@ -133,21 +134,16 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
          */
         validateInjectedResources();
 
-//        try {
-//
-//            loadKeyPair(pluginFileSystem);
-//
-//
-//        } catch (CantLoadKeyPairException e) {
-//
-//            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-//            throw new CantStartPluginException(e, "", "Problem trying to load the key pair of the plugin.");
-//        }
+        try {
 
-        /*
-         * Create a new key pair for this execution
-         */
-         initializeClientIdentity();
+            loadKeyPair(pluginFileSystem);
+
+
+        } catch (CantLoadKeyPairException e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, "", "Problem trying to load the key pair of the plugin.");
+        }
 
         // template stuff.
         try {
@@ -215,63 +211,6 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
          * Its all ok, set the new status
          */
         this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    private void initializeClientIdentity() throws CantStartPluginException {
-
-        try {
-
-             /*
-              * Load the file with the clientIdentity
-              */
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            String content = pluginTextFile.getContent();
-
-            //System.out.println("content = "+content);
-
-            identity = new ECCKeyPair(content);
-
-        } catch (FileNotFoundException e) {
-
-            /*
-             * The file no exist may be the first time the plugin is running on this device,
-             * We need to create the new clientIdentity
-             */
-            try {
-
-                System.out.println("No previous clientIdentity finder - Proceed to create new one");
-
-                /*
-                 * Create the new clientIdentity
-                 */
-                identity = new ECCKeyPair();
-
-                /*
-                 * save into the file
-                 */
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "clientIdentity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                pluginTextFile.setContent(identity.getPrivateKey());
-                pluginTextFile.persistToMedia();
-
-            } catch (Exception exception) {
-                /*
-                 * The file cannot be created. I can not handle this situation.
-                 */
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-                throw new CantStartPluginException(exception.getLocalizedMessage());
-            }
-
-
-        } catch (CantCreateFileException cantCreateFileException) {
-
-            /*
-             * The file cannot be load. I can not handle this situation.
-             */
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
-            throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
-
-        }
-
     }
 
     private CryptoCustomerActorNetworkServiceManager fermatManager;
