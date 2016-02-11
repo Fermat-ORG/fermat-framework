@@ -12,12 +12,23 @@ public class AssetSellerDatabaseConstants {
 
     public static final String ASSET_SELLER_ENTRY_ID_COLUMN_NAME = "entry_id";
     public static final String ASSET_SELLER_GENESIS_TRANSACTION_COLUMN_NAME = "genesisTx";
-    public static final String ASSET_SELLER_METADATA_ID_COLUMN_NAME = "metadataId";
+    public static final String ASSET_SELLER_NETWORK_TYPE_COLUMN_NAME = "network";
     public static final String ASSET_SELLER_BUYER_PUBLICKEY_COLUMN_NAME = "buyerPublicKey";
-    public static final String ASSET_SELLER_SELL_STATUS_COLUMN_NAME = "sellStatus";
+    public static final String ASSET_SELLER_SELL_STATUS_COLUMN_NAME = "status";
+    public static final String ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME = "negotiation";
+    public static final String ASSET_SELLER_TRANSACTION_COLUMN_NAME = "draftTransaction"; //This will be encode as string using Apache Commons base 64 encoding.
     public static final String ASSET_SELLER_TIMESTAMP_COLUMN_NAME = "timeStamp";
 
     public static final String ASSET_SELLER_FIRST_KEY_COLUMN = ASSET_SELLER_ENTRY_ID_COLUMN_NAME;
+
+    public static final String ASSET_SELLER_NEGOTIATION_TABLE_NAME = "negotiation";
+
+    public static final String ASSET_SELLER_NEGOTIATION_ID_COLUMN_NAME = "entry_id";
+    public static final String ASSET_SELLER_NEGOTIATION_OBJECT_XML_COLUMN_NAME = "object";
+    public static final String ASSET_SELLER_NEGOTIATION_STATUS_COLUMN_NAME = "status";
+    public static final String ASSET_SELLER_NEGOTIATION_TIMESTAMP_COLUMN_NAME = "timeStamp";
+
+    public static final String ASSET_SELLER_NEGOTIATION_FIRST_KEY_COLUMN = ASSET_SELLER_NEGOTIATION_ID_COLUMN_NAME;
 
     /**
      * Events recorded database table definition.
