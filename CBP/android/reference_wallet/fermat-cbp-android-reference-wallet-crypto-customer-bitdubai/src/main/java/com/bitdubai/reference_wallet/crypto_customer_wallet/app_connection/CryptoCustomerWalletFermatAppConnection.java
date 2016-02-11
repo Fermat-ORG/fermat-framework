@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.header.CryptoCustomerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.CryptoCustomerWalletFragmentFactory;
@@ -60,7 +59,7 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Cryp
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        return new CryptoCustomerWalletHeaderPainter();
+        return new CryptoCustomerWalletHeaderPainter(getActivity(), getFullyLoadedSession());
     }
 
     @Override

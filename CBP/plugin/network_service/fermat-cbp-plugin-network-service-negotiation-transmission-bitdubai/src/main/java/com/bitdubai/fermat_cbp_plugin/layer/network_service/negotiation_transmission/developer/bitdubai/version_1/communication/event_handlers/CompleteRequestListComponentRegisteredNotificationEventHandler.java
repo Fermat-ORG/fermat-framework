@@ -6,7 +6,13 @@
  */
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.communication.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.event_handlers.AbstractCommunicationBaseEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 
@@ -19,14 +25,15 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Com
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteRequestListComponentRegisteredNotificationEventHandler extends AbstractCommunicationBaseEventHandler<CompleteRequestListComponentRegisteredNotificationEvent>  {
+
+//public class CompleteRequestListComponentRegisteredNotificationEventHandler extends AbstractCommunicationBaseEventHandler<CompleteRequestListComponentRegisteredNotificationEvent>  {
 
     /**
      * Constructor with parameter
      *
-     * @param networkService
+     * //@param networkService
      */
-    public CompleteRequestListComponentRegisteredNotificationEventHandler(AbstractNetworkService networkService) {
+    /*public CompleteRequestListComponentRegisteredNotificationEventHandler(AbstractNetworkService networkService) {
         super(networkService);
     }
 
@@ -35,4 +42,53 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler exte
     public void processEvent(CompleteRequestListComponentRegisteredNotificationEvent event) {
         this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(event.getRegisteredComponentList());
     }
-}
+}*/
+
+    public class CompleteRequestListComponentRegisteredNotificationEventHandler implements FermatEventHandler {
+
+        /*
+        * Represent the networkService
+        */
+        private NetworkService networkService;
+
+        /**
+         * Constructor with parameter
+         *
+         * @param networkService
+         */
+        public CompleteRequestListComponentRegisteredNotificationEventHandler(NetworkService networkService) {
+            this.networkService = networkService;
+        }
+
+        /**
+         * (non-Javadoc)
+         *
+         * @see FermatEventHandler#handleEvent(FermatEvent)
+         *
+         * @param platformEvent
+         * @throws Exception
+         */
+        @Override
+        public void handleEvent(FermatEvent platformEvent) throws FermatException {
+
+            System.out.println("Negotiation Transmission - CompleteRequestListComponentRegisteredNotificationEventHandler - handleEvent platformEvent ="+platformEvent+" end NT\n" );
+
+
+            if (((Service) this.networkService).getStatus() == ServiceStatus.STARTED) {
+
+                CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent = (CompleteRequestListComponentRegisteredNotificationEvent) platformEvent;
+
+
+                if (completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceType()){
+
+                 /*
+                 *  networkService make the job
+                 */
+                    this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent.getRegisteredComponentList());
+
+                }
+
+
+            }
+        }
+    }

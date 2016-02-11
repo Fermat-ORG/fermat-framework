@@ -5,8 +5,8 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by nelson on 22/09/15.
  */
-public class CantGetCurrentIndexSummaryForStockCurrenciesException extends FermatException {
-    public static final String DEFAULT_MESSAGE = "Cant get the index summary for the currencies the customer is interested";
+public class CantGetProvidersCurrentExchangeRatesException extends FermatException {
+    public static final String DEFAULT_MESSAGE = "Cant get the current exchange rates for the selected providers";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -16,7 +16,7 @@ public class CantGetCurrentIndexSummaryForStockCurrenciesException extends Ferma
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetCurrentIndexSummaryForStockCurrenciesException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetProvidersCurrentExchangeRatesException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
@@ -25,7 +25,7 @@ public class CantGetCurrentIndexSummaryForStockCurrenciesException extends Ferma
      *
      * @param cause the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
      */
-    public CantGetCurrentIndexSummaryForStockCurrenciesException(Exception cause) {
+    public CantGetProvidersCurrentExchangeRatesException(Exception cause) {
         super(DEFAULT_MESSAGE, cause, "", "");
     }
 }

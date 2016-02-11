@@ -102,6 +102,18 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
         }
     }
 
+    public CryptoCustomerIdentity getCryptoCustomerIdentity(String publickey) throws CantListCryptoCustomerIdentityException{
+        try {
+            return cryptoCustomerIdentityDatabaseDao.getIdentity(publickey);
+        } catch (CantGetIdentityException e) {
+            throw new CantListCryptoCustomerIdentityException("CAN'T GET CRYPTO CUSTOMER IDENTITIE", e, "Error get Identity", "");
+        } catch (IdentityNotFoundException e) {
+            throw new CantListCryptoCustomerIdentityException("CAN'T GET CRYPTO CUSTOMER IDENTITIE", e, "", "");
+        } catch (Exception e) {
+            throw new CantListCryptoCustomerIdentityException("CAN'T GET CRYPTO CUSTOMER IDENTITIE", FermatException.wrapException(e), "", "");
+        }
+    }
+
     public CryptoCustomerIdentity createCryptoCustomerIdentity(String alias, byte[] profileImage) throws CantCreateCryptoCustomerIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
