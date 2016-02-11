@@ -21,7 +21,6 @@
         android:paddingTop="10dp"
         android:weightSum="1">
 
-
         <ImageView
             android:id="@+id/imageView_contact"
             android:layout_width="110dp"
@@ -44,10 +43,7 @@
             android:textSize="14sp"
             app:typeface="ROBOTO_REGULAR"
             tools:text="Nelson Alfonso Ramirez Noguera" />
-
-
     </LinearLayout>
-
 
     <View
         android:layout_width="match_parent"
@@ -55,7 +51,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/gradient_line"></View>
+        android:background="@drawable/gradient_line"/>
 
 </LinearLayout>
 

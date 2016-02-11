@@ -12,10 +12,13 @@ public enum BlockchainNetworkType implements FermatEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    PRODUCTION  ("PROD"),
-    REG_TEST    ("RTEST"),
-    TEST_NET    ("TESTN");
+    PRODUCTION  ("mainnet"),
+    REG_TEST    ("rtest"),
+    TEST_NET    ("testnet");
 
+    /**
+     * sets the default network that will be used at start up.
+     */
     private static final BlockchainNetworkType DEFAULT_BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkType.REG_TEST;
 
     private final String code;
@@ -27,9 +30,9 @@ public enum BlockchainNetworkType implements FermatEnum {
     public static BlockchainNetworkType getByCode(String code) {
 
         switch (code) {
-            case "PROD":  return BlockchainNetworkType.PRODUCTION;
-            case "RTEST": return BlockchainNetworkType.REG_TEST;
-            case "TESTN": return BlockchainNetworkType.TEST_NET;
+            case "mainnet":  return BlockchainNetworkType.PRODUCTION;
+            case "rtest": return BlockchainNetworkType.REG_TEST;
+            case "testnet": return BlockchainNetworkType.TEST_NET;
             default:      return DEFAULT_BLOCKCHAIN_NETWORK_TYPE;
         }
     }

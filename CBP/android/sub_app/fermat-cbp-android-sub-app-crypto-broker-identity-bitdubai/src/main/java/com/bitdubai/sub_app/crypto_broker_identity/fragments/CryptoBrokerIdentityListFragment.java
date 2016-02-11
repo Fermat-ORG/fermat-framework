@@ -65,7 +65,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
     private PresentationDialog presentationDialog;
 
-    private IdentityBrokerPreferenceSettings walletSettings;
+    private IdentityBrokerPreferenceSettings subappSettings;
 
     public static CryptoBrokerIdentityListFragment newInstance() {
         return new CryptoBrokerIdentityListFragment();
@@ -105,24 +105,22 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         }
 
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
-                .setBannerRes(R.drawable.bw_banner)
-                .setBody(R.string.dialog_identity_body)
-                .setTitle("prueba Title")
-                .setSubTitle(R.string.dialog_identity_subtitle)
-                .setTextFooter(R.string.dialog_identity_footer)
+                .setBannerRes(R.drawable.banner_identity)
+                .setBody(R.string.cbp_broker_identity_welcome_body)
+                .setSubTitle(R.string.cbp_broker_identity_welcome_subTitle)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .build();
 
-        walletSettings = null;
+        subappSettings = null;
         try {
-            walletSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-        }catch (Exception e){ walletSettings = null; }
+            subappSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+        }catch (Exception e){ subappSettings = null; }
 
-        if(walletSettings == null){
-            walletSettings = new IdentityBrokerPreferenceSettings();
-            walletSettings.setIsPresentationHelpEnabled(true);
+        if(subappSettings == null){
+            subappSettings = new IdentityBrokerPreferenceSettings();
+            subappSettings.setIsPresentationHelpEnabled(true);
             try {
-                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),walletSettings);
+                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),subappSettings);
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -140,8 +138,6 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
     }
 
-
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
@@ -152,6 +148,9 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add) {
             changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY.getCode(), appSession.getAppPublicKey());
+        }
+        if (item.getItemId() == R.id.action_help) {
+            presentationDialog.show();
         }
         return true;
     }

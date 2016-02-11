@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterO
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,8 +23,17 @@ public class AndroidDatabaseTableFilterGroup implements DatabaseTableFilterGroup
     }
 
     public AndroidDatabaseTableFilterGroup(List<DatabaseTableFilter> filters, List<DatabaseTableFilterGroup> subGroups, DatabaseFilterOperator operator) {
-        this.filters = filters;
-        this.subGroups = subGroups;
+
+        if (filters != null)
+            this.filters = filters;
+        else
+            this.filters = new ArrayList<>();
+
+        if (subGroups != null)
+            this.subGroups = subGroups;
+        else
+            this.subGroups = new ArrayList<>();
+
         this.operator = operator;
     }
 

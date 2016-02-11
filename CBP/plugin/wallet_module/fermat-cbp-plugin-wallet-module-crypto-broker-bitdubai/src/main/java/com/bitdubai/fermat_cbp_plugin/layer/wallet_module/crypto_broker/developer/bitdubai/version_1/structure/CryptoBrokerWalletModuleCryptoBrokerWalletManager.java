@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -15,6 +16,8 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -22,9 +25,28 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_offline_payment.interfaces.BrokerAckOfflinePaymentManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_online_payment.interfaces.BrokerAckOnlinePaymentManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_offline_merchandise.interfaces.BrokerSubmitOfflineMerchandiseManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_online_merchandise.interfaces.BrokerSubmitOnlineMerchandiseManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleManagerMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationOfflineMock;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationOnlineMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
@@ -65,10 +87,13 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
@@ -112,6 +137,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.math.BigDecimal;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -149,6 +175,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
     private final CustomerBrokerUpdateManager customerBrokerUpdateManager;
     private final BitcoinWalletManager bitcoinWalletManager;
+    private final CryptoBrokerActorManager cryptoBrokerActorManager;
+    private final BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager;
+    private final BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager;
+    private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
+    private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
 
     /*
     *Constructor with Parameters
@@ -168,7 +199,12 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                              CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager,
                                                              CryptoBrokerIdentityManager cryptoBrokerIdentityManager,
                                                              CustomerBrokerUpdateManager customerBrokerUpdateManager,
-                                                             BitcoinWalletManager bitcoinWalletManager) {
+                                                             BitcoinWalletManager bitcoinWalletManager,
+                                                             CryptoBrokerActorManager cryptoBrokerActorManager,
+                                                             BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager,
+                                                             BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager,
+                                                             BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
+                                                             BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager) {
         this.walletManagerManager = walletManagerManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.bankMoneyWalletManager = bankMoneyWalletManager;
@@ -185,34 +221,12 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         this.cryptoBrokerIdentityManager = cryptoBrokerIdentityManager;
         this.customerBrokerUpdateManager = customerBrokerUpdateManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
+        this.cryptoBrokerActorManager = cryptoBrokerActorManager;
+        this.brokerAckOfflinePaymentManager = brokerAckOfflinePaymentManager;
+        this.brokerAckOnlinePaymentManager = brokerAckOnlinePaymentManager;
+        this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
+        this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
     }
-
-    private List<ContractBasicInformation> contractsHistory;
-    private List<CustomerBrokerNegotiationInformation> openNegotiations;
-    private ArrayList<CryptoBrokerIdentity> listOfIdentities;
-
-    public static final String CASH_IN_HAND = "Cash on Hand";
-    public static final String CASH_DELIVERY = "Cash Delivery";
-    public static final String BANK_TRANSFER = "Bank Transfer";
-    public static final String CRYPTO_TRANSFER = "Crypto Transfer";
-
-    private static final List<String> BROKER_BANK_ACCOUNTS = new ArrayList<>();
-    public static final String BROKER_BANK_ACCOUNT_1 = "Banco: BOD\nTipo de cuenta: Corriente\nNro: 0105-2255-2221548739\nCliente: Brokers Asociados";
-    public static final String BROKER_BANK_ACCOUNT_2 = "Banco: Provincial\nTipo de cuenta: Ahorro\nNro: 0114-3154-268548735\nCliente: Brokers Asociados";
-    public static final String BROKER_BANK_ACCOUNT_3 = "Banco: Banesco\nTipo de cuenta: Corriente\nNro: 1124-0235-9981548701\nCliente: Brokers Asociados";
-
-    public static final String CUSTOMER_BANK_ACCOUNT_1 = "Banco: Venezuela\nTipo de cuenta: Ahorro\nNro: 0001-2051-2221548714\nCliente: Angel Lacret";
-
-    private static final List<String> BROKER_LOCATIONS = new ArrayList<>();
-    public static final String BROKER_LOCATION_1 = "C.C. Sambil Maracaibo, Piso 2, Local 5A, al lado de Farmatodo";
-    public static final String BROKER_LOCATION_2 = "C.C. Galerias, Piso 3, Local 5A, cerca de la feria de la comida";
-    public static final String BROKER_LOCATION_3 = "Av. Padilla, Residencias San Martin, Casa #4-5";
-
-    public static final String CUSTOMER_LOCATION_1 = "Centro Empresarial Totuma, Piso 2, Local 5A";
-    public static final String CUSTOMER_LOCATION_2 = "Instituto de Calculo Aplicado, LUZ Facultad de Ingenieria";
-
-    private static final String BROKER_CRYPTO_ADDRESS = "jn384jfnqirfjqn4834232039dj";
-    private static final String CUSTOMER_CRYPTO_ADDRESS = "ioajpviq3489f9r8fj208245nds";
 
     private String merchandise = null, typeOfPayment = null, paymentCurrency = null;
 
@@ -450,9 +464,9 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         return negotiationLocations;
     }
 
-    @Override //TODO: Implementar falta walletPublicKey
-    public boolean associateIdentity(String brokerPublicKey) {
-        return false;
+    @Override
+    public boolean associateIdentity(ActorIdentity brokerIdentity, String brokerWalletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException {
+        return cryptoBrokerActorManager.createNewBrokerIdentityWalletRelationship(brokerIdentity, brokerWalletPublicKey) != null;
     }
 
     @Override //TODO: Implementar CustomerBrokerUpdateManager Negotiation Transaction
@@ -463,26 +477,94 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         return negotiation;
     }
 
-    @Override //TODO: Implementar CER provider seleccionado en la wallet
-    public Collection<IndexInfoSummary> getCurrentIndexSummaryForStockCurrencies() throws CantGetCurrentIndexSummaryForStockCurrenciesException {
-        try {
-            IndexInfoSummary indexInfoSummary;
-            Collection<IndexInfoSummary> summaryList = new ArrayList<>();
+    @Override
+    public Collection<ExchangeRate> getDailyExchangeRatesFromCurrentDate(IndexInfoSummary indexInfo, int numberOfDays) throws CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
-            indexInfoSummary = new CryptoBrokerWalletModuleIndexInfoSummary(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, 240.62, 235.87);
-            summaryList.add(indexInfoSummary);
-            indexInfoSummary = new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.VENEZUELAN_BOLIVAR, CryptoCurrency.BITCOIN, 245000, 240000);
-            summaryList.add(indexInfoSummary);
-            indexInfoSummary = new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.VENEZUELAN_BOLIVAR, FiatCurrency.US_DOLLAR, 840, 800);
-            summaryList.add(indexInfoSummary);
-            indexInfoSummary = new CryptoBrokerWalletModuleIndexInfoSummary(FiatCurrency.US_DOLLAR, FiatCurrency.EURO, 1.2, 1.1);
-            summaryList.add(indexInfoSummary);
+        CurrencyExchangeRateProviderManager providerReference = currencyExchangeProviderFilterManager.getProviderReference(indexInfo.getProviderId());
 
-            return summaryList;
+        Calendar calendar = Calendar.getInstance();
+        long endTimestamp = calendar.getTimeInMillis();
 
-        } catch (Exception ex) {
-            throw new CantGetCurrentIndexSummaryForStockCurrenciesException(ex);
+        calendar.add(Calendar.DATE, -numberOfDays);
+        long startTimestamp = calendar.getTimeInMillis();
+
+
+        ExchangeRate exchangeRateData = indexInfo.getExchangeRateData();
+        CurrencyPairImpl currencyPair = new CurrencyPairImpl(exchangeRateData.getFromCurrency(), exchangeRateData.getToCurrency());
+
+        return providerReference.getDailyExchangeRatesForPeriod(currencyPair, startTimestamp, endTimestamp);
+    }
+
+    @Override
+    public Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String brokerWalletPublicKey) throws CantGetCurrentIndexSummaryForStockCurrenciesException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, InvalidParameterException {
+        final String publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest"; //TODO: Quitar este hardcode luego que se implemente la instalacion de la wallet
+
+        final Collection<IndexInfoSummary> summaryList = new ArrayList<>();
+
+        final CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall);
+        final CryptoBrokerWalletSetting cryptoWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
+        final List<CryptoBrokerWalletProviderSetting> providerSettings = cryptoWalletSetting.getCryptoBrokerWalletProviderSettings();
+
+        for (CryptoBrokerWalletProviderSetting providerSetting : providerSettings) {
+            UUID providerId = providerSetting.getPlugin();
+
+            CurrencyExchangeRateProviderManager providerReference = currencyExchangeProviderFilterManager.getProviderReference(providerId);
+            Currency from = getCurrencyFromCode(providerSetting.getCurrencyFrom());
+            Currency to = getCurrencyFromCode(providerSetting.getCurrencyTo());
+
+            ExchangeRate currentExchangeRate = providerReference.getCurrentExchangeRate(new CurrencyPairImpl(from, to));
+
+            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(currentExchangeRate, providerId));
         }
+
+        return summaryList;
+    }
+
+    private Currency getCurrencyFromCode(String currencyCode) throws InvalidParameterException {
+        Currency currency = null;
+        if (FiatCurrency.codeExists(currencyCode)) {
+            currency = FiatCurrency.getByCode(currencyCode);
+        } else if (CryptoCurrency.codeExists(currencyCode)) {
+            currency = CryptoCurrency.getByCode(currencyCode);
+        }
+
+        return currency;
+    }
+
+    @Override
+    public boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoBrokerIdentitiesException, CantGetListBrokerIdentityWalletRelationshipException {
+        List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        BrokerIdentityWalletRelationship relationship = cryptoBrokerActorManager.getBrokerIdentityWalletRelationshipByWallet(walletPublicKey);
+
+        if (relationship != null && cryptoBrokerIdentities != null) {
+            for (CryptoBrokerIdentity identity : cryptoBrokerIdentities) {
+                String identityPublicKey = identity.getPublicKey();
+                String associatedCryptoBrokerPublicKey = relationship.getCryptoBroker();
+
+                if (identityPublicKey.equals(associatedCryptoBrokerPublicKey))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public CryptoBrokerIdentity getAssociatedIdentity(String walletPublicKey) throws CantListCryptoBrokerIdentitiesException, CantGetListBrokerIdentityWalletRelationshipException, CantGetAssociatedIdentity {
+        List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        BrokerIdentityWalletRelationship relationship = cryptoBrokerActorManager.getBrokerIdentityWalletRelationshipByWallet(walletPublicKey);
+
+        if (relationship != null && cryptoBrokerIdentities != null) {
+            for (CryptoBrokerIdentity identity : cryptoBrokerIdentities) {
+                String identityPublicKey = identity.getPublicKey();
+                String associatedCryptoBrokerPublicKey = relationship.getCryptoBroker();
+
+                if (identityPublicKey.equals(associatedCryptoBrokerPublicKey))
+                    return identity;
+            }
+        }
+
+        throw new CantGetAssociatedIdentity();
     }
 
     @Override
@@ -491,7 +573,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         return cryptoBrokerIdentities;//getListOfIdentitiesTestData();
     }
 
-    @Override //TODO: Implementar
+    @Override
     public List<String> getPaymentMethods(String currencyToSell, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
         List<String> paymentMethod = new ArrayList<>();
 
@@ -715,6 +797,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     break;
             }
         }
+
+        List<CustomerBrokerNegotiationInformation> openNegotiations = new ArrayList<>();
 
         // TODO el wrapper se le va a pasar al plugin de Yordin "Customer Broker Update Negotiation Transaction"
         //Negotiation Transaccion Update createCustomerBrokerUpdateSaleNegotiationTranasction
@@ -1054,8 +1138,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                         (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise());
 
                 currencyPair2 = new CurrencyPairImpl(
-                       (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise(),
-                       (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise());
+                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise(),
+                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise());
 
                 map.put("par1", currencyPair1);
                 map.put("par2", currencyPair2);
@@ -1110,6 +1194,20 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         walletPublicKey = "walletPublicKeyTest";
         return cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings();
     }
+
+    /**
+     * This method load the instance saveCryptoBrokerWalletSpreadSetting
+     *
+     * @return CryptoBrokerWalletSettingSpread
+     * @throws CantSaveCryptoBrokerWalletSettingException
+     */
+    @Override
+    public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException {
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        walletPublicKey = "walletPublicKeyTest";
+        return cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
+    }
+
 
     /**
      * Returns an exchange rate of a given date, for a specific currencyPair
@@ -1268,6 +1366,16 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     /**
+     * Checks if wallet exists in wallet database
+     *
+     * @param walletPublicKey
+     */
+    @Override
+    public boolean cashMoneyWalletExists(String walletPublicKey) {
+        return cashMoneyWalletManager.cashMoneyWalletExists(walletPublicKey);
+    }
+
+    /**
      * Returns the Balance this BitcoinWalletBalance belongs to. (Can be available or book)
      *
      * @return A BigDecimal, containing the balance.
@@ -1275,181 +1383,6 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException, CantLoadWalletException {
         return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
-    }
-
-
-    private List<ContractBasicInformation> getContractHistoryTestData() {
-        if (contractsHistory == null) {
-            List<CustomerBrokerNegotiationInformation> openNegotiations = getOpenNegotiationsTestData();
-
-            CryptoBrokerWalletModuleContractBasicInformation contract;
-            contractsHistory = new ArrayList<>();
-
-        }
-
-        return contractsHistory;
-    }
-
-    private List<CustomerBrokerNegotiationInformation> getOpenNegotiationsTestData() {
-        if (openNegotiations != null) {
-            return openNegotiations;
-        }
-
-        Random random = new Random(321515131);
-        DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-
-        float currencyQtyVal = random.nextFloat() * 100;
-        float exchangeRateVal = random.nextFloat();
-        String customerCurrencyQty = decimalFormat.format(currencyQtyVal);
-        String exchangeRate = decimalFormat.format(exchangeRateVal);
-        String brokerCurrencyQty = decimalFormat.format(currencyQtyVal * exchangeRateVal);
-        long timeInMillisVal = System.currentTimeMillis();
-        String timeInMillisStr = String.valueOf(timeInMillisVal);
-
-        openNegotiations = new ArrayList<>();
-        CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation item;
-
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("nelsonalfo", NegotiationStatus.WAITING_FOR_BROKER);
-        item.setLastNegotiationUpdateDate(timeInMillisVal);
-        item.setExpirationDatetime(timeInMillisVal);
-        item.setNote("Le dices al portero que vas a nombre del señor Bastidas");
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CASH_DELIVERY, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PLACE_TO_DELIVER, BROKER_LOCATION_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CRYPTO_ADDRESS, CUSTOMER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        openNegotiations.add(item);
-
-        currencyQtyVal = random.nextFloat() * 100;
-        exchangeRateVal = random.nextFloat();
-        customerCurrencyQty = decimalFormat.format(currencyQtyVal);
-        exchangeRate = decimalFormat.format(exchangeRateVal);
-        brokerCurrencyQty = decimalFormat.format(currencyQtyVal * exchangeRateVal);
-        timeInMillisVal = System.currentTimeMillis();
-        timeInMillisStr = String.valueOf(timeInMillisVal);
-
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("jorgeegonzalez", NegotiationStatus.WAITING_FOR_BROKER);
-        item.setLastNegotiationUpdateDate(timeInMillisVal);
-        item.setExpirationDatetime(timeInMillisVal);
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.US_DOLLAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CASH_IN_HAND, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PLACE_TO_DELIVER, BROKER_LOCATION_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, BANK_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_BANK_ACCOUNT, CUSTOMER_BANK_ACCOUNT_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        openNegotiations.add(item);
-
-        currencyQtyVal = random.nextFloat() * 100;
-        exchangeRateVal = random.nextFloat();
-        customerCurrencyQty = decimalFormat.format(currencyQtyVal);
-        exchangeRate = decimalFormat.format(exchangeRateVal);
-        brokerCurrencyQty = decimalFormat.format(currencyQtyVal * exchangeRateVal);
-        timeInMillisVal = System.currentTimeMillis();
-        timeInMillisStr = String.valueOf(timeInMillisVal);
-
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("Matias Furzyfer", NegotiationStatus.WAITING_FOR_BROKER);
-        item.setLastNegotiationUpdateDate(timeInMillisVal);
-        item.setExpirationDatetime(timeInMillisVal);
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, FiatCurrency.ARGENTINE_PESO.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.US_DOLLAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, BANK_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_BANK_ACCOUNT, BROKER_BANK_ACCOUNT_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, CASH_DELIVERY, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PLACE_TO_DELIVER, CUSTOMER_LOCATION_2, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        openNegotiations.add(item);
-
-
-        currencyQtyVal = random.nextFloat() * 100;
-        exchangeRateVal = random.nextFloat();
-        customerCurrencyQty = decimalFormat.format(currencyQtyVal);
-        exchangeRate = decimalFormat.format(exchangeRateVal);
-        brokerCurrencyQty = decimalFormat.format(currencyQtyVal * exchangeRateVal);
-        timeInMillisVal = System.currentTimeMillis();
-        timeInMillisStr = String.valueOf(timeInMillisVal);
-
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("neoperol", NegotiationStatus.WAITING_FOR_BROKER);
-        item.setLastNegotiationUpdateDate(timeInMillisVal);
-        item.setExpirationDatetime(timeInMillisVal);
-        item.setNote("Nos vemos cerca de la entrada principal. Voy vestido de franela amarílla y pantalón de Jean");
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.US_DOLLAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, BANK_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_BANK_ACCOUNT, CUSTOMER_BANK_ACCOUNT_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        openNegotiations.add(item);
-
-
-        currencyQtyVal = random.nextFloat() * 100;
-        exchangeRateVal = random.nextFloat();
-        customerCurrencyQty = decimalFormat.format(currencyQtyVal);
-        exchangeRate = decimalFormat.format(exchangeRateVal);
-        brokerCurrencyQty = decimalFormat.format(currencyQtyVal * exchangeRateVal);
-        timeInMillisVal = System.currentTimeMillis();
-        timeInMillisStr = String.valueOf(timeInMillisVal);
-
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("Nelson Orlando", NegotiationStatus.WAITING_FOR_CUSTOMER);
-        item.setLastNegotiationUpdateDate(timeInMillisVal);
-        item.setExpirationDatetime(timeInMillisVal);
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, CASH_DELIVERY, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_BANK_ACCOUNT, CUSTOMER_LOCATION_1, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        openNegotiations.add(item);
-
-        currencyQtyVal = random.nextFloat() * 100;
-        exchangeRateVal = random.nextFloat();
-        customerCurrencyQty = decimalFormat.format(currencyQtyVal);
-        exchangeRate = decimalFormat.format(exchangeRateVal);
-        brokerCurrencyQty = decimalFormat.format(currencyQtyVal * exchangeRateVal);
-        timeInMillisVal = System.currentTimeMillis();
-        timeInMillisStr = String.valueOf(timeInMillisVal);
-
-        item = new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation("Customer 5", NegotiationStatus.WAITING_FOR_CUSTOMER);
-        item.setLastNegotiationUpdateDate(timeInMillisVal);
-        item.setExpirationDatetime(timeInMillisVal);
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY, CryptoCurrency.LITECOIN.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_PAYMENT_METHOD, CRYPTO_TRANSFER, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_CRYPTO_ADDRESS, CUSTOMER_CRYPTO_ADDRESS, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.BROKER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        item.addClause(new CryptoBrokerWalletModuleClauseInformation(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, timeInMillisStr, ClauseStatus.DRAFT));
-        openNegotiations.add(item);
-
-        return openNegotiations;
     }
 
     @Override
@@ -1475,5 +1408,267 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    /**
+     * This method returns the CustomerBrokerContractSale associated to a negotiationId
+     *
+     * @param negotiationId
+     * @return
+     * @throws CantGetListCustomerBrokerContractSaleException
+     */
+    public CustomerBrokerContractSale getCustomerBrokerContractSaleByNegotiationId(
+            String negotiationId) throws CantGetListCustomerBrokerContractSaleException {
+        Collection<CustomerBrokerContractSale> customerBrokerContractSales =
+                customerBrokerContractSaleManager.getAllCustomerBrokerContractSale();
+        String negotiationIdFromCollection;
+        //This line is only for testing
+        return new CustomerBrokerContractSaleMock();
+        /*for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSale){
+            negotiationIdFromCollection=customerBrokerContractSale.getNegotiatiotId();
+            if(negotiationIdFromCollection.equals(negotiationId)){
+                return customerBrokerContractSale;
+            }
+        }
+        throw new CantGetListCustomerBrokerContractSaleException(
+                "Cannot find the contract associated to negotiation "+negotiationId);*/
+    }
+
+    /**
+     * This method returns the currency type from a contract
+     *
+     * @param customerBrokerContractSale
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListSaleNegotiationsException
+     */
+    public CurrencyType getCurrencyTypeFromContract(
+            CustomerBrokerContractSale customerBrokerContractSale,
+            ContractDetailType contractDetailType) throws
+            CantGetListSaleNegotiationsException {
+        try {
+            String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
+                    customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+            ClauseType clauseType;
+            for (Clause clause : clauses) {
+                clauseType = clause.getType();
+
+                switch (contractDetailType) {
+                    case BROKER_DETAIL:
+                        if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                            return CurrencyType.getByCode(clause.getValue());
+                        }
+                    case CUSTOMER_DETAIL:
+                        if (clauseType.equals(ClauseType.CUSTOMER_PAYMENT_METHOD)) {
+                            return CurrencyType.getByCode(clause.getValue());
+                        }
+                }
+            }
+            throw new CantGetListSaleNegotiationsException("Cannot find the proper clause");
+        } catch (InvalidParameterException e) {
+            throw new CantGetListSaleNegotiationsException("Cannot get the negotiation list", e);
+        } catch (CantGetListClauseException e) {
+            throw new CantGetListSaleNegotiationsException("Cannot find clauses list");
+        }
+
+    }
+    /**
+     * This method return the ContractClauseType included in a CustomerBrokerSaleNegotiation clauses
+     *
+     * @param customerBrokerSaleNegotiation
+     * @return
+     * @throws CantGetListClauseException
+     */
+    private ContractClauseType getContractClauseType(
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws
+            CantGetListClauseException {
+        try {
+            //I will check if customerBrokerSaleNegotiation is null
+            ObjectChecker.checkArgument(
+                    customerBrokerSaleNegotiation,
+                    "The customerBrokerSaleNegotiation is null");
+            Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+            ClauseType clauseType;
+            for (Clause clause : clauses) {
+                clauseType = clause.getType();
+                if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                    return ContractClauseType.getByCode(clause.getValue());
+                }
+            }
+            throw new CantGetListClauseException("Cannot find the proper clause");
+        } catch (InvalidParameterException e) {
+            throw new CantGetListClauseException(
+                    "An invalid parameter is found in ContractClauseType enum");
+        } catch (ObjectNotSetException e) {
+            throw new CantGetListClauseException(
+                    "The CustomerBrokerSaleNegotiation is null");
+        }
+
+    }
+
+    /**
+     * This method returns the ContractStatus by contractHash/Id
+     *
+     * @param contractHash
+     * @return
+     */
+    public ContractStatus getContractStatus(String contractHash) throws
+            CantGetListCustomerBrokerContractSaleException {
+
+        CustomerBrokerContractSale customerBrokerContractSale;
+        //TODO: This is the real implementation
+        /*customerBrokerContractSale =
+                this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);*/
+        //TODO: for testing
+        CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock =
+                new CustomerBrokerContractSaleManagerMock();
+        customerBrokerContractSale =
+                customerBrokerContractSaleManagerMock.
+                        getCustomerBrokerContractSaleForContractId(contractHash);
+        //End of testing
+        return customerBrokerContractSale.getStatus();
+
+    }
+
+    @Override
+    public void submitMerchandise(String contractHash) throws CantSubmitMerchandiseException {
+        try{
+            CustomerBrokerContractSale customerBrokerContractSale;
+            //TODO: This is the real implementation
+            /*
+            customerBrokerContractSale=this.customerBrokerContractSaleManager.
+                    getCustomerBrokerContractSaleForContractId(
+                    contractHash);
+                    */
+            //TODO: for testing
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock=new
+                    CustomerBrokerContractSaleManagerMock();
+            customerBrokerContractSale=customerBrokerContractSaleManagerMock.
+                    getCustomerBrokerContractSaleForContractId(contractHash);
+            //End of Mock testing
+            //I need to discover the merchandise type (online or offline)
+            String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
+                    this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            //TODO: remove this mock
+            customerBrokerSaleNegotiation = new SaleNegotiationOnlineMock();
+            ContractClauseType contractClauseType = getContractClauseType(
+                    customerBrokerSaleNegotiation);
+            /**
+             * Case: sending crypto merchandise.
+             */
+            if (contractClauseType.getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
+
+                /**
+                 * TODO: here we need to get the CCP Wallet public key to send BTC to customer,
+                 * when the settings is finished, please, implement how to get the CCP Wallet public
+                 * key here. Thanks.
+                 */
+                //TODO: this is a hardcoded public key
+                String cryptoBrokerPublicKey = "walletPublicKeyTest";
+                //TODO: this is a hardcoded reference price
+                BigDecimal referencePrice = BigDecimal.TEN;
+                this.brokerSubmitOnlineMerchandiseManager.submitMerchandise(
+                        referencePrice,
+                        cryptoBrokerPublicKey,
+                        contractHash);
+            }
+            /**
+             * Case: sending offline merchandise.
+             */
+            if (contractClauseType.getCode() == ContractClauseType.BANK_TRANSFER.getCode() ||
+                    contractClauseType.getCode() == ContractClauseType.CASH_DELIVERY.getCode() ||
+                    contractClauseType.getCode() == ContractClauseType.CASH_DELIVERY.getCode()) {
+                //TODO: this is a hardcoded public key
+                String cryptoBrokerPublicKey = "walletPublicKeyTest";
+                //TODO: this is a hardcoded reference price
+                BigDecimal referencePrice = BigDecimal.TEN;
+                this.brokerSubmitOfflineMerchandiseManager.submitMerchandise(
+                        referencePrice,
+                        cryptoBrokerPublicKey,
+                        contractHash);
+            }
+        } catch (CantGetListCustomerBrokerContractSaleException e) {
+            throw new CantSubmitMerchandiseException(
+                    e,
+                    "Submitting the merchandise",
+                    "Cannot get the contract");
+        } catch (CantGetListClauseException e) {
+            throw new CantSubmitMerchandiseException(
+                    e,
+                    "Submitting the merchandise",
+                    "Cannot get the clauses list");
+        } catch (CantGetListSaleNegotiationsException e) {
+            throw new CantSubmitMerchandiseException(
+                    e,
+                    "Submitting the merchandise",
+                    "Cannot get the negotiation list");
+        }
+    }
+
+    @Override
+    public ContractStatus ackPayment(String contractHash) throws CantAckPaymentException {
+        try {
+            CustomerBrokerContractSale customerBrokerContractSale;
+            //TODO: This is the real implementation
+            /*customerBrokerContractSale =
+                    this.customerBrokerContractSaleManager.
+                            getCustomerBrokerContractSaleForContractId(contractHash);*/
+            //TODO: for testing
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock =
+                    new CustomerBrokerContractSaleManagerMock();
+            customerBrokerContractSale =
+                    customerBrokerContractSaleManagerMock.
+                            getCustomerBrokerContractSaleForContractId(contractHash);
+            //End of Mock testing
+            //System.out.println("From module:"+customerBrokerContractPurchase);
+            String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+            CustomerBrokerSaleNegotiation customerBrokerPurchaseNegotiation =
+                    this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            //TODO: remove this mock
+            customerBrokerPurchaseNegotiation = new SaleNegotiationOfflineMock();
+            ContractClauseType contractClauseType = getContractClauseType(
+                    customerBrokerPurchaseNegotiation);
+            /**
+             * Case: ack crypto merchandise.
+             */
+            if (contractClauseType.getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
+                return customerBrokerContractSale.getStatus();
+            }
+            /**
+             * Case: ack offline merchandise.
+             */
+            if (contractClauseType.getCode() == ContractClauseType.BANK_TRANSFER.getCode() ||
+                    contractClauseType.getCode() == ContractClauseType.CASH_DELIVERY.getCode() ||
+                    contractClauseType.getCode() == ContractClauseType.CASH_ON_HAND.getCode()) {
+                //TODO: this is a hardcoded public key
+                String cryptoBrokerPublicKey = "walletPublicKeyTest";
+                this.brokerAckOfflinePaymentManager.ackPayment(cryptoBrokerPublicKey, contractHash);
+                return customerBrokerContractSale.getStatus();
+            }
+
+            throw new CantAckPaymentException("Cannot find the contract clause");
+
+        } catch (CantGetListCustomerBrokerContractSaleException e) {
+            throw new CantAckPaymentException(
+                    e,
+                    "Cannot ack the merchandise",
+                    "Cannot get the contract");
+        } catch (CantGetListClauseException e) {
+            throw new CantAckPaymentException(
+                    e,
+                    "Cannot ack the merchandise",
+                    "Cannot get the clauses list");
+        } catch (CantGetListSaleNegotiationsException e) {
+            throw new CantAckPaymentException(
+                    e,
+                    "Cannot ack the merchandise",
+                    "Cannot get the negotiation list");
+        }
     }
 }

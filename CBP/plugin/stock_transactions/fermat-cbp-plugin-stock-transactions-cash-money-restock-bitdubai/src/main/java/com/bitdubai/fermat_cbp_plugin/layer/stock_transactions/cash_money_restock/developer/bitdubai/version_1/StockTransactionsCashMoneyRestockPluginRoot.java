@@ -80,18 +80,17 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
 
             startMonitorAgent();
 
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e) {
             try {
+                startMonitorAgent();
                 StockTransactionsCashMoneyRestockDatabaseFactory stockTransactionsCashMoneyRestockDatabaseFactory = new StockTransactionsCashMoneyRestockDatabaseFactory(this.pluginDatabaseSystem);
                 stockTransactionsCashMoneyRestockDatabaseFactory.createDatabase(this.pluginId, StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_DATABASE_NAME);
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            } catch (CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             } catch (Exception exception) {
                 throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin plugin.", FermatException.wrapException(exception), null, null);
             }
-        } catch (CantStartAgentException e) {
-            throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin Agent.", FermatException.wrapException(e), null, null);
         }
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -150,7 +149,12 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
             );
 
             stockTransactionsCashMoneyRestockMonitorAgent.start();
-        } else stockTransactionsCashMoneyRestockMonitorAgent.start();
+            serviceStatus = ServiceStatus.STARTED;
+        }
+        else {
+            stockTransactionsCashMoneyRestockMonitorAgent.start();
+            serviceStatus = ServiceStatus.STARTED;
+        }
     }
 
 }

@@ -21,7 +21,7 @@ public class CryptoCustomerWalletModuleMerchandiseExchangeRate implements Mercha
 
     public CryptoCustomerWalletModuleMerchandiseExchangeRate(QuotesExtraData quotesExtraData) {
         this.merchandise = quotesExtraData.getMerchandise();
-        this.payment = quotesExtraData.getPaymentMethod();
+        this.payment = quotesExtraData.getPaymentCurrency();
         this.exchangeRate = quotesExtraData.getPrice();
     }
 

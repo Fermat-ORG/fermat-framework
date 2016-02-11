@@ -5,6 +5,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionNotificationsFragment;
+import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionsWorldFragment;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 
@@ -30,7 +32,7 @@ public class CryptoCustomerCommunityFragmentFactory extends FermatFragmentFactor
                 currentFragment = null;
                 break;
             case CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS:
-                //currentFragment = ConnectionNotificationsFragment.newInstance();
+                currentFragment = ConnectionNotificationsFragment.newInstance();
                 break;
             case CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE:
                 //currentFragment = ConnectionOtherProfileFragment.newInstance();
@@ -39,7 +41,7 @@ public class CryptoCustomerCommunityFragmentFactory extends FermatFragmentFactor
                 currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
             case CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST:
-                //currentFragment = ConnectionsListFragment.newInstance();
+                currentFragment = ConnectionsListFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException(

@@ -138,7 +138,9 @@
     <string name="cbw_contract_details_negotiation_details">NEGOTIATION DETAILS</string>
     <string name="cbw_wizard_other_settings_title">Other settings</string>
     <string name="cbw_wizard_other_settings_description">You must set the spread value applied, and Restock automatic for transactions in the wallet </string>
-
+    <string name="cbw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
+    <string name="cbw_contract_history_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
+    <string name="bought">Bought</string>
 
     <!--Dialog Help - Init-->
     <string name="cbw_crypto_broker_wallet_earning_subTitle">Subtitle text of Earnings dialog help.</string>

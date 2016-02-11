@@ -37,7 +37,7 @@ public class CryptoCustomerCommunityInformationImpl implements CryptoCustomerCom
 
 
     @Override
-    public List listCryptoBrokerWallets() {
+    public List listCryptoCustomerWallets() {
         return null;
     }
 }

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.module.asset.user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -29,39 +30,39 @@ import java.util.UUID;
  * Created by franklin on 16/10/15.
  */
 public class AssetUserWalletModule {
-    AssetUserWalletManager assetUserWalletManager;
-    AssetAppropriationManager assetAppropriationManager;
-    UserRedemptionManager userRedemptionManager;
-    IdentityAssetUserManager identityAssetUserManager;
-    UUID pluginId;
-    PluginFileSystem pluginFileSystem;
+    private AssetUserWalletManager assetUserWalletManager;
+    private AssetAppropriationManager assetAppropriationManager;
+    private UserRedemptionManager userRedemptionManager;
+    private IdentityAssetUserManager identityAssetUserManager;
+    private UUID pluginId;
+    private PluginFileSystem pluginFileSystem;
 
     public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager, AssetAppropriationManager assetAppropriationManager, UserRedemptionManager userRedemptionManager, IdentityAssetUserManager identityAssetUserManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
-        this.assetUserWalletManager     = assetUserWalletManager;
-        this.assetAppropriationManager  = assetAppropriationManager;
-        this.userRedemptionManager      = userRedemptionManager;
-        this.identityAssetUserManager   = identityAssetUserManager;
+        this.assetUserWalletManager = assetUserWalletManager;
+        this.assetAppropriationManager = assetAppropriationManager;
+        this.userRedemptionManager = userRedemptionManager;
+        this.identityAssetUserManager = identityAssetUserManager;
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException {
+    public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
-            return assetUserWalletManager.loadAssetUserWallet(publicKey).getBalance().getAssetUserWalletBalances();
+            return assetUserWalletManager.loadAssetUserWallet(publicKey, networkType).getBalance().getAssetUserWalletBalances();
         } catch (Exception exception) {
             throw new CantLoadWalletException("Error load Wallet Balances Book", exception, "Method: getAssetUserWalletBalancesBook", "Class: AssetUserWalletModule");
         }
     }
 
 
-    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoint, int assetsAmount) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
+    public void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoint, int assetsAmount, BlockchainNetworkType networkType) throws CantRedeemDigitalAssetException, NotEnoughAcceptsException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - ActorAssetRedeemPoint: " + actorAssetRedeemPoint;
         try {
             if (actorAssetRedeemPoint.isEmpty()) {
                 throw new CantRedeemDigitalAssetException(null, context, "THE REDEEM POINT LIST IS EMPTY.");
             }
             walletPublicKey = "walletPublicKeyTest"; //TODO: Solo para la prueba del Redemption
-            HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = createRedemptionMap(walletPublicKey, digitalAssetPublicKey, actorAssetRedeemPoint, assetsAmount);
+            HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = createRedemptionMap(walletPublicKey, digitalAssetPublicKey, actorAssetRedeemPoint, assetsAmount, networkType);
             userRedemptionManager.redeemAssetToRedeemPoint(hashMap, walletPublicKey);
         } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException | CantGetTransactionsException | FileNotFoundException | CantCreateFileException e) {
             throw new CantRedeemDigitalAssetException(e, context, null);
@@ -69,10 +70,10 @@ public class AssetUserWalletModule {
     }
 
 
-    private HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> createRedemptionMap(String walletPublicKey, String assetPublicKey, List<ActorAssetRedeemPoint> redeemPoints, int assetsAmount) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException, NotEnoughAcceptsException {
+    private HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> createRedemptionMap(String walletPublicKey, String assetPublicKey, List<ActorAssetRedeemPoint> redeemPoints, int assetsAmount, BlockchainNetworkType networkType) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException, NotEnoughAcceptsException {
         String context = "Asset Public Key: " + assetPublicKey + " - BTC Wallet Public Key: " + walletPublicKey + " - RedeemPoints: " + redeemPoints;
         HashMap<DigitalAssetMetadata, ActorAssetRedeemPoint> hashMap = new HashMap<>();
-        AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet(walletPublicKey);
+        AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet(walletPublicKey, networkType);
         List<AssetUserWalletTransaction> availableTransactions = wallet.getAllAvailableTransactions(assetPublicKey);
         if (redeemPoints.size() > availableTransactions.size())
             throw new NotEnoughAcceptsException(null, context, "WE DON'T HAVE ENOUGH ASSETS!!");
@@ -86,16 +87,16 @@ public class AssetUserWalletModule {
     }
 
 
-    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
+    public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey, BlockchainNetworkType networkType) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - BTC Wallet Public Key: " + bitcoinWalletPublicKey;
         try {
-            AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest");
+            AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet("walletPublicKeyTest", networkType);
             List<AssetUserWalletTransaction> transactions = wallet.getAllAvailableTransactions(digitalAssetPublicKey);
             if (transactions.isEmpty())
                 throw new NotEnoughAcceptsException(null, context, "There are no assets available to appropriate!!");
             for (AssetUserWalletTransaction transaction : transactions) {
                 DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transaction.getGenesisTransaction());
-                assetAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey);
+                assetAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey, networkType);
             }
         } catch (CantGetDigitalAssetFromLocalStorageException | CantGetTransactionsException | CantLoadWalletException e) {
             throw new CantExecuteAppropriationTransactionException(e, context, null);

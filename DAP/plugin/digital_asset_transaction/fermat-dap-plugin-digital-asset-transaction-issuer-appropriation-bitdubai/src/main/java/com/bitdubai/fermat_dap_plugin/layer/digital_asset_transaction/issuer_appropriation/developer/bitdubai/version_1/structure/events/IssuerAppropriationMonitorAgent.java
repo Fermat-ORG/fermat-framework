@@ -206,7 +206,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                 switch (record.status()) {
                     case APPROPRIATION_STARTED:
                         IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("getting crypto address and saving it..." + record.transactionRecordId());
-                        CryptoAddress cryptoAddress = cryptoVaultManager.getAddress();
+                        CryptoAddress cryptoAddress = cryptoVaultManager.getAddress(record.networkType());
                         IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Address: " + cryptoAddress.getAddress());
                         dao.updateCryptoAddress(cryptoAddress, record.transactionRecordId());
                         dao.updateTransactionStatusCryptoAddressObtained(record.transactionRecordId());
@@ -236,7 +236,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                             dao.updateTransactionStatusAppropriationStarted(record.transactionRecordId());
                         } else {
                             String newTx = assetVaultManager.sendAssetBitcoins(record.assetMetadata().getLastTransactionHash(), record.assetMetadata().getLastTransactionBlock(), record.addressTo());
-                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), newTx, null);
+                            assetVault.updateMetadataTransactionChain(record.transactionRecordId(), newTx, null, null);
                             dao.updateTransactionStatusBitcoinsSent(record.transactionRecordId());
                             IssuerAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation("Bitcoins sent!");
                         }
@@ -244,7 +244,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                     case BITCOINS_SENT: {
                         CryptoTransaction cryptoTransaction = AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.assetMetadata());
                         if (cryptoTransaction == null) continue;
-                        AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey());
+                        AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey(), cryptoTransaction.getBlockchainNetworkType());
                         AssetIssuerWalletBalance balance = issuerWallet.getBalance();
                         AssetIssuerWalletTransactionRecordWrapper walletRecord = new AssetIssuerWalletTransactionRecordWrapper(record.assetMetadata(),
                                 cryptoTransaction,
@@ -260,7 +260,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                             case IRREVERSIBLE:
                                 CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
                                 if (cryptoTransaction == null) continue;
-                                AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey());
+                                AssetIssuerWallet issuerWallet = assetIssuerWalletManager.loadAssetIssuerWallet(record.walletPublicKey(), cryptoTransaction.getBlockchainNetworkType());
                                 AssetIssuerWalletBalance balance = issuerWallet.getBalance();
                                 AssetIssuerWalletTransactionRecordWrapper walletRecord = new AssetIssuerWalletTransactionRecordWrapper(record.assetMetadata(),
                                         cryptoTransaction,

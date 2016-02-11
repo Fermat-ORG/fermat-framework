@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,17 @@ import android.widget.RelativeLayout;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 /**
@@ -23,12 +31,32 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommon
  */
 public class CustomerNavigationViewPainter implements NavigationViewPainter {
 
-    private final ActorIdentity actorIdentity;
+    private static final String TAG = "CustomerNavigationView";
+
+    private CryptoCustomerIdentity actorIdentity;
+    private CryptoCustomerWalletSession session;
+    private ErrorManager errorManager;
+    private CryptoCustomerWalletManager walletManager;
     private Activity activity;
 
-    public CustomerNavigationViewPainter(Activity activity, ActorIdentity actorIdentity) {
+    public CustomerNavigationViewPainter(Activity activity, CryptoCustomerWalletSession session) {
         this.activity = activity;
-        this.actorIdentity = actorIdentity;
+        this.session = session;
+
+        errorManager = session.getErrorManager();
+
+        try {
+            final CryptoCustomerWalletModuleManager moduleManager = session.getModuleManager();
+            walletManager = moduleManager.getCryptoCustomerWallet(session.getAppPublicKey());
+            actorIdentity = walletManager.getAssociatedIdentity(session.getAppPublicKey());
+
+        } catch (FermatException ex) {
+            if (errorManager == null)
+                Log.e(TAG, ex.getMessage(), ex);
+            else
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+        }
     }
 
     @Override

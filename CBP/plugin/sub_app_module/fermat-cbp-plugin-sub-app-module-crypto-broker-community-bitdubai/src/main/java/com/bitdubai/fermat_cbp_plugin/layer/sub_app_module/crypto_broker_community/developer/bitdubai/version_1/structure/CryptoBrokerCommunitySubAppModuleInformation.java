@@ -4,6 +4,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.Cr
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -59,5 +60,14 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
     @Override
     public List listCryptoBrokerWallets() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "CryptoBrokerCommunitySubAppModuleInformation{" +
+                "publicKey='" + publicKey + '\'' +
+                ", alias='" + alias + '\'' +
+                ", image=" + (image != null) +
+                '}';
     }
 }

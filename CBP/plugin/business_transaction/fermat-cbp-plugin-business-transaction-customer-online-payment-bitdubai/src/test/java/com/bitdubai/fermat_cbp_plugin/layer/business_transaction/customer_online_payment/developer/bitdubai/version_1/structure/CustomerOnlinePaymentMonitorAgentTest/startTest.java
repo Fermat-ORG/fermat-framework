@@ -70,10 +70,21 @@ public class startTest {
 
     @Test
     public void testStart() throws Exception {
+        customerOnlinePaymentMonitorAgent.setEventManager(eventManager);
+        customerOnlinePaymentMonitorAgent.setErrorManager(errorManager);
+        customerOnlinePaymentMonitorAgent.setPluginDatabaseSystem(pluginDatabaseSystem);
+        customerOnlinePaymentMonitorAgent.setLogManager(logManager);
+        customerOnlinePaymentMonitorAgent.setPluginId(pluginId);
         customerOnlinePaymentMonitorAgent.start();
 
-    }
 
+    }
+    @Test
+    public void testStop() throws Exception {
+        customerOnlinePaymentMonitorAgent.start();
+        customerOnlinePaymentMonitorAgent.stop();
+
+    }
     @Test(expected = Exception.class)
     public void testStart_Should_Return_Exception() throws Exception {
         customerOnlinePaymentMonitorAgent = new CustomerOnlinePaymentMonitorAgent(null,null,null,null,null,null,null,null,null);

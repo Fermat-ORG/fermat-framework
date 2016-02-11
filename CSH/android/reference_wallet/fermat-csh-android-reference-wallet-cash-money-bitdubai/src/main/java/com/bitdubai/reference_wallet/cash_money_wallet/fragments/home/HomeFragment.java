@@ -21,6 +21,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+
+import com.bitdubai.fermat_csh_api.all_definition.constants.CashMoneyWalletBroadcasterConstants;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashWalletBalances;
@@ -340,7 +342,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
 
         //Hide book balance if balances are equal
-        if(this.walletBalances.getAvailableBalance().compareTo(this.walletBalances.getAvailableBalance()) == 0)
+        if(this.walletBalances.getAvailableBalance().compareTo(this.walletBalances.getBookBalance()) == 0)
             this.bookBalanceContainer.setVisibility(View.INVISIBLE);
         else
             this.bookBalanceContainer.setVisibility(View.VISIBLE);
@@ -400,6 +402,27 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
             changeActivity(Activities.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
         }
 
+    }
+
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
+                onRefresh();
+                break;
+            case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_INSUFICCIENT_FUNDS:
+                Toast.makeText(getActivity(), "Transaction failed due to insufficient funds", Toast.LENGTH_SHORT).show();
+
+                onRefresh();
+                break;
+            case CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_TRANSACTION_FAILED:
+                Toast.makeText(getActivity(), "Sorry, the transaction has failed.", Toast.LENGTH_SHORT).show();
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
     }
 }
 

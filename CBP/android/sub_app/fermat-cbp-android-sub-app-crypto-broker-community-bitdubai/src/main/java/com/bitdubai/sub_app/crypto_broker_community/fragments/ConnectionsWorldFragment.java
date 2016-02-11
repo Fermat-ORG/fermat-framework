@@ -287,17 +287,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
-
+            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.getCryptoBrokerSearch(moduleManager.getSelectedActorIdentity());
             List<CryptoBrokerCommunityInformation> result = cryptoBrokerCommunitySearch.getResult();
-
-            /*//TODO: "FIXING" los images en null pues en el ConnectionOtherProfileFragment explota.
-            //Eventualmente este result traera las imagenes correctas. Quitar este for cuando eso ocurra.
-            List<CryptoBrokerCommunityInformation> fixedResult = new ArrayList<>();
-            for(CryptoBrokerCommunityInformation i : result){
-                fixedResult.add(new CryptoBrokerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), new byte[0]));
-            }*/
-
             dataSet.addAll(result);
             offset = dataSet.size();
 
@@ -307,60 +298,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
         return dataSet;
     }
-
-
-
-
-
-    /**
-     * OptionMenu implementation.
-     */
-//    private void updateOptionMenuNotificationsBadge(int count) {
-//        mNotificationsCount = count;
-//
-//        // force the ActionBar to relayout its MenuItems.
-//        // onCreateOptionsMenu(Menu) will be called again.
-//        getActivity().invalidateOptionsMenu();
-//    }
-//
-//
-//
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//
-//        super.onCreateOptionsMenu(menu, inflater);
-//
-//        menu.add(0, Constants.SELECT_IDENTITY, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        try {
-//
-//            int id = item.getItemId();
-//
-//            if(id == Constants.SELECT_IDENTITY){
-//                final ListIdentitiesDialog progressDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
-//                progressDialog.setTitle("Select an Identity");
-//                progressDialog.setCancelable(false);
-//                progressDialog.show();
-//                return true;
-//            }
-//
-//        } catch (Exception e) {
-//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-//            makeText(getActivity(), "Oooops! recovering from system error",
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-
-
-
-
-
 
     @Override
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
@@ -372,35 +309,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
     @Override
     public void onLongItemClickListener(CryptoBrokerCommunityInformation data, int position) {}
-
-
-
-
-
-    /**
-     * Simple AsyncTask to fetch the notifications count.
-     */
-//    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
-//
-//        @Override
-//        protected Integer doInBackground(Void... params) {
-//            int notificationCount = 0;
-//
-//            try {
-//                CryptoCustomerCommunitySelectableIdentity selectedIdentity = moduleManager.getSelectedActorIdentity();
-//                notificationCount = moduleManager.listCryptoBrokersPendingLocalAction(selectedIdentity, MAX, offset).size();
-//            } catch(CantListCryptoBrokersException | ActorIdentityNotSelectedException | CantGetSelectedActorIdentityException e){
-//                errorManager.reportUnexpectedUIException(UISource.TASK, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, e);
-//            }
-//            notificationCount = 80;
-//            return notificationCount;
-//        }
-//
-//        @Override
-//        public void onPostExecute(Integer count) {
-//            updateOptionMenuNotificationsBadge(count);
-//        }
-//    }
 
 }
 
