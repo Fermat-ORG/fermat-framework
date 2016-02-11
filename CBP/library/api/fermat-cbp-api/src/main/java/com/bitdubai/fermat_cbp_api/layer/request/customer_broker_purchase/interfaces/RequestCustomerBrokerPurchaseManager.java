@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.interfaces;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.RequestStatus;
 import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.CantGetRequestListException;
 import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.RequestPurchaseRejectFailedException;
@@ -22,9 +22,9 @@ public interface RequestCustomerBrokerPurchaseManager {
     public void sendRequestPurchase(
         String requestSenderPublicKey,
         String requestDestinationPublicKey,
-        CurrencyType merchandiseCurrency,
+        MoneyType merchandiseCurrency,
         float merchandiseAmount,
-        CurrencyType paymentCurrency,
+        MoneyType paymentCurrency,
         RequestStatus requestStatus
     ) throws RequestUnexpectedErrorException;
 
@@ -33,9 +33,9 @@ public interface RequestCustomerBrokerPurchaseManager {
     RequestCustomerBrokerPurchase createRequestCustomerBrokerPurchase(
         String requestSenderPublicKey,
         String requestDestinationPublicKey,
-        CurrencyType merchandiseCurrency,
+        MoneyType merchandiseCurrency,
         float merchandiseAmount,
-        CurrencyType paymentCurrency
+        MoneyType paymentCurrency
     ) throws com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.CantRequestCustomerBrokerPurchaseException;
 }
 

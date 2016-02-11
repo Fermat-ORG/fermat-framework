@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_api.all_definition.wallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerMarketRateException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
@@ -37,23 +37,23 @@ public interface Wallet {
     /**
      * This method load the list CryptoBrokerStockTransaction
      * @param merchandise
-     * @param currencyType
+     * @param moneyType
      * @param transactionType
      * @param balanceType
      * @return List<CryptoBrokerStockTransaction>
      * @exception CantGetCryptoBrokerStockTransactionException
      */
-    List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException;
+    List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, MoneyType moneyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
      * @param merchandise
      * @param fiatCurrency
-     * @param currencyType
+     * @param moneyType
      * @return FiatIndex
      * @exception CantGetCryptoBrokerMarketRateException
      */
-    FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException;
+    FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, MoneyType moneyType) throws CantGetCryptoBrokerMarketRateException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction

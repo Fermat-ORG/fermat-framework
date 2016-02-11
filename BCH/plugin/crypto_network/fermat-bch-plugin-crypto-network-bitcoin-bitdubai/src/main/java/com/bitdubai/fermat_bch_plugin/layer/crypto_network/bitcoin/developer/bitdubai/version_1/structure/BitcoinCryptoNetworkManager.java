@@ -496,39 +496,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return
      */
     public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
-        Wallet wallet = getWallet(blockchainNetworkType, null);
-        return wallet.getTransactionsByTime();
+        return runningAgents.get(blockchainNetworkType).wallet.getTransactionsByTime();
     }
 
-    public synchronized List<Transaction> getUnspentBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
-        Wallet wallet = getWallet(blockchainNetworkType, null);
-        List<Transaction> transactions = new ArrayList<>(wallet.getTransactionPool(WalletTransaction.Pool.UNSPENT).values());
-        return transactions;
-    }
-
-    /**
-     * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
-     * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
-     *
-     * @param txHash    the Hash of the transaction we are going to look for.
-     * @param blockHash the Hash of block where this transaction was stored..
-     * @return a CryptoTransaction with the information of the transaction.
-     * @throws CantGetCryptoTransactionException
-     */
-
-    public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
-        /**
-         * I will get the CryptoTransaction from all agents running. Only one will return the CryptoTransaction
-         */
-        for (BitcoinCryptoNetworkMonitor monitor : runningAgents.values()) {
-            return monitor.getCryptoTransactionFromBlockChain(txHash, blockHash);
-        }
-
-        /**
-         * if no agents are running, then no CryptoTransaction to return.
-         */
-        return null;
-    }
 
     /**
      * Gets the transaction passed in the network.
