@@ -9,7 +9,7 @@ This document explains the organization of Fermat Documentation and its current 
 
 ## Queue for next documentation writing.
 
-1.
+1. db plugin
 2.
 
 
