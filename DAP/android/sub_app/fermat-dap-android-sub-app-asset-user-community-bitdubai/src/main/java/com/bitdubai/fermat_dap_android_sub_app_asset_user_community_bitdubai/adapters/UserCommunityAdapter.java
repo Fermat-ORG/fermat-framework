@@ -40,12 +40,14 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
     @Override
     protected void bindHolder(final UserViewHolder holder, final Actor data, final int position) {
         try {
+            holder.name.setText(String.format("%s", data.getName()));
             if (data.getCryptoAddress() != null) {
-                holder.name.setText(String.format("%s", data.getName()));
-
+                holder.connectionState.setVisibility(View.VISIBLE);
+                //holder.
+                //holder.crypto.setText("CryptoAddress: YES");
             } else {
-                holder.name.setText(String.format("%s", data.getName()));
-
+                holder.connectionState.setVisibility(View.GONE);
+                //holder.crypto.setText("CryptoAddress: NO");
             }
 
             if (data.getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {

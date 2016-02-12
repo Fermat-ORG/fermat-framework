@@ -41,7 +41,6 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
      * Executor
      */
     private ExecutorService _executor;
-    private FermatSettingsAdapter fermatSettingsAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,7 +93,7 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
             recyclerView.setHasFixedSize(true);
             layoutManager = new LinearLayoutManager(getActivity());
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new FermatSettingsAdapter(getActivity(),setSettingsItems());
+            adapter = new FermatSettingsAdapter(getActivity(),this,setSettingsItems());
             recyclerView.setAdapter(adapter);
         }
     }
@@ -112,5 +111,14 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
      */
     protected ExecutorService getExecutor() {
         return this._executor;
+    }
+
+    public abstract void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position);
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ((FermatSettingsAdapter)adapter).clear();
     }
 }

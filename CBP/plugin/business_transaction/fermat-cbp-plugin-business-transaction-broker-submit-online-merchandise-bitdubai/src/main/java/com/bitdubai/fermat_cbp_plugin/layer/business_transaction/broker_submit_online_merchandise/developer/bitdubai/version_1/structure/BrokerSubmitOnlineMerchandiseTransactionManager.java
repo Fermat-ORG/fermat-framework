@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -269,10 +269,10 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             String cryptoWalletPublicKey="WalletNotSet";
             for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
                 cryptoBrokerWalletAssociatedSettingList){
-                CurrencyType currencyType=cryptoBrokerWalletAssociatedSetting.getCurrencyType();
-                //System.out.println("Currency type: "+currencyType);
-                switch (currencyType){
-                    case CRYPTO_MONEY:
+                MoneyType moneyType =cryptoBrokerWalletAssociatedSetting.getMoneyType();
+                //System.out.println("Currency type: "+moneyType);
+                switch (moneyType){
+                    case CRYPTO:
                         cryptoWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
                         //System.out.println("Found wallet public key: "+cryptoWalletPublicKey);
                         isCryptoWalletSets=true;

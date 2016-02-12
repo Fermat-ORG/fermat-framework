@@ -1,9 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.utils;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
@@ -23,7 +22,7 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     private final Currency          merchandise;
     private final BalanceType       balanceType;
     private final TransactionType   transactionType;
-    private final CurrencyType      currencyType;
+    private final MoneyType moneyType;
     private final String            walletPublicKey;
     private final String            brokerPublicKey;
     private final BigDecimal        amount;
@@ -36,7 +35,7 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
                                     Currency          merchandise,
                                     BalanceType       balanceType,
                                     TransactionType   transactionType,
-                                    CurrencyType      currencyType,
+                                    MoneyType moneyType,
                                     String            walletPublicKey,
                                     String            brokerPublicKey,
                                     BigDecimal        amount,
@@ -49,7 +48,7 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
         this.merchandise       = merchandise;
         this.balanceType       = balanceType;
         this.transactionType   = transactionType;
-        this.currencyType      = currencyType;
+        this.moneyType = moneyType;
         this.walletPublicKey   = walletPublicKey;
         this.brokerPublicKey   = brokerPublicKey;
         this.amount            = amount;
@@ -73,8 +72,8 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     }
 
     @Override
-    public CurrencyType getCurrencyType() {
-        return currencyType;
+    public MoneyType getMoneyType() {
+        return moneyType;
     }
 
     @Override

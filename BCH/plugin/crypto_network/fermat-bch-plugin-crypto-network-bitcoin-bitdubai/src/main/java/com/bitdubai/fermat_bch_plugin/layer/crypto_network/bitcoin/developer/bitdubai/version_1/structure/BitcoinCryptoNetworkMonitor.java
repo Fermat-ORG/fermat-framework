@@ -102,11 +102,19 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         //todo move this to the correct new thread format.
-        try {
-            doTheMainTask();
-        } catch (BlockchainException e) {
-            e.printStackTrace();
-        }
+        System.out.println("***CryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    doTheMainTask();
+                } catch (BlockchainException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
     }
 
     @Override
@@ -400,34 +408,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     public PeerGroup getPeerGroup() {
         return peerGroup;
-    }
-
-    /**
-     * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
-     * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
-     * @param txHash the Hash of the transaction we are going to look for.
-     * @param blockHash the Hash of block where this transaction was stored..
-     * @return a CryptoTransaction with the information of the transaction.
-     * @throws CantGetCryptoTransactionException
-     */
-
-    public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
-        Transaction transaction = null;
-        try {
-            transaction = this.getTransactionFromBlockChain(txHash, blockHash);
-        } catch (Exception e) {
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "Error getting the transaction from the blockchain.", null);
-        }
-        return this.getCryptoTransactionFromBitcoinTransaction(transaction);
-    }
-
-    /**
-     * Transform a Bitcoin Transaction into a Crypto Transaction
-     * @param transaction
-     * @return
-     */
-    private CryptoTransaction getCryptoTransactionFromBitcoinTransaction(Transaction transaction) {
-        return CryptoTransaction.getCryptoTransaction(BitcoinNetworkSelector.getBlockchainNetworkType(transaction.getParams()), transaction);
     }
 
     /**

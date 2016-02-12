@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-
 android {
 
     lintOptions {
@@ -7,7 +6,8 @@ android {
     }
 
     compileSdkVersion 23
-    buildToolsVersion "21.1.2"
+
+    buildToolsVersion '21.1.2'
 
     defaultConfig {
         minSdkVersion 21
@@ -32,7 +32,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
-
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
@@ -43,5 +42,10 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
     compile 'com.android.support:support-v13:23.1.1'
+
+}
+
+repositories {
+    maven { url 'https://jitpack.io' }
 
 }
