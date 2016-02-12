@@ -29,6 +29,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdenti
 //import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetActiveLoginIdentityException;
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.Actor;
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
@@ -51,10 +52,11 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
-    private FermatTextView userEmail;
+    //private FermatTextView userEmail;
     private FermatTextView userCryptoAddres;
     private FermatTextView userCryptoCurrency;
     private FermatTextView userBlockchainNetworkType;
+    private FermatTextView userRegistrationDate;
     //private IntraUserModuleManager manager;
     private static AssetUserCommunitySubAppModuleManager manager;
     private ErrorManager errorManager;
@@ -63,7 +65,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     private Button disconnect;
     private int MAX = 1;
     private int OFFSET = 0;
-    private FermatTextView userStatus;
+    //private FermatTextView userStatus;
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
     private Button accept;
@@ -100,12 +102,13 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         if (toolbar != null)
             toolbar.setTitle(actor.getName());
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
-        userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
+        //userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
-        userEmail = (FermatTextView) rootView.findViewById(R.id.email);
+        //userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         userCryptoAddres = (FermatTextView) rootView.findViewById(R.id.cryptoAddress);
         userCryptoCurrency = (FermatTextView) rootView.findViewById(R.id.cryptoCurrency);
         userBlockchainNetworkType = (FermatTextView) rootView.findViewById(R.id.blockchainNetworkType);
+        userRegistrationDate = (FermatTextView) rootView.findViewById(R.id.userRegistrationDate);
         connectionRequestSend = (Button) rootView.findViewById(R.id.btn_connection_request_send);
         connectionRequestRejected = (Button) rootView.findViewById(R.id.btn_connection_request_reject);
         connect = (Button) rootView.findViewById(R.id.btn_conect);
@@ -150,8 +153,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         try {
             userName.setText(actor.getName());
             //userStatus.setText(actor.getPhrase());
-            userStatus.setText(actor.getName());
-            userStatus.setTextColor(Color.parseColor("#292929"));
+            //userStatus.setText(actor.getName());
+            //userStatus.setTextColor(Color.parseColor("#292929"));
 
             if(actor.getCryptoAddress() != null){
                 userCryptoAddres.setText("YES");
@@ -166,6 +169,9 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             }else {
                 userBlockchainNetworkType.setText("None");
             }
+
+            userRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(actor.getRegistrationDate()));
+
             if (actor.getProfileImage() != null) {
                 Bitmap bitmap;
                 if (actor.getProfileImage().length > 0) {
