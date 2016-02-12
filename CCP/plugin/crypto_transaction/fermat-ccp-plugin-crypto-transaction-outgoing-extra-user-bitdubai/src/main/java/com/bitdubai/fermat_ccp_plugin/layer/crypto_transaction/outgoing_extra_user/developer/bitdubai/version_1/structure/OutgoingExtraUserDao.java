@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_u
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -19,8 +20,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.enums.TransactionStatus;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.InconsistentTableStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper;
@@ -83,13 +84,14 @@ public class OutgoingExtraUserDao {
                                        String deliveredByActorPublicKey,
                                        Actors deliveredByActorType,
                                        String deliveredToActorPublicKey,
-                                       Actors deliveredToActorType) throws CantInsertRecordException {
+                                       Actors deliveredToActorType,
+                                       BlockchainNetworkType blockchainNetworkType) throws CantInsertRecordException {
         try {
             DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
             DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
 
-            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType);
+            loadRecordAsNew(recordToInsert, walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType,blockchainNetworkType);
 
             transactionTable.insertRecord(recordToInsert);
             database.closeDatabase();
@@ -212,7 +214,8 @@ public class OutgoingExtraUserDao {
                                  String deliveredByActorPublicKey,
                                  Actors deliveredByActorType,
                                  String deliveredToActorPublicKey,
-                                 Actors deliveredToActorType) {
+                                 Actors deliveredToActorType,
+                                 BlockchainNetworkType blockchainNetworkType) {
 
         UUID transactionId = UUID.randomUUID();
 
@@ -241,6 +244,8 @@ public class OutgoingExtraUserDao {
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME, deliveredByActorType.getCode());
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME, deliveredToActorPublicKey);
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME, deliveredToActorType.getCode());
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode() );
+
     }
 
 
@@ -274,7 +279,7 @@ public class OutgoingExtraUserDao {
     private DatabaseTableRecord getByPrimaryKey(DatabaseTable transactionTable, UUID id) throws CantLoadTableToMemoryException, InconsistentTableStateException {
         List<DatabaseTableRecord> records;
 
-        transactionTable.setStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
+        transactionTable.addStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
         records = transactionTable.getRecords();
 
@@ -290,7 +295,7 @@ public class OutgoingExtraUserDao {
         List<DatabaseTableRecord> records;
 
         if(transactionState != null)
-            transactionTable.setStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
+            transactionTable.addStringFilter(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
 
         transactionTable.loadToMemory();
 
@@ -339,6 +344,7 @@ public class OutgoingExtraUserDao {
         Actors actorToType = Actors.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_TYPE_COLUMN_NAME));
         String actorFromPublicKey = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_FROM_ID_COLUMN_NAME);
         String actorToPublicKey = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ACTOR_TO_ID_COLUMN_NAME);
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_RUNNING_NETWORK_TYPE));
 
         return new TransactionWrapper(
                 transactionId     ,
@@ -354,7 +360,8 @@ public class OutgoingExtraUserDao {
                 memo              ,
                 walletPublicKey   ,
                 state             ,
-                cryptoStatus
+                cryptoStatus,
+                blockchainNetworkType
         );
     }
 

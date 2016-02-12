@@ -1,5 +1,0 @@
-Crear el intra_user de identityPublicKey. Esta identidad se usa al entrar a una wallet instalada. Más aún,
-se puede cambiar de identidad dentro de una wallet.
-Esto posiblemente implicará una reestructuración de lo hecho en la reference niche wallet.
-
-Crear las identidades de designer y translator. También se debe organizar

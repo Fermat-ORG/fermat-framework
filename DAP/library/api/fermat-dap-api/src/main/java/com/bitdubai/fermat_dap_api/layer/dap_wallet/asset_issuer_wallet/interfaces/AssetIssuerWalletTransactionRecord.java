@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfa
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 
 import java.util.UUID;
 
@@ -16,6 +17,7 @@ public interface AssetIssuerWalletTransactionRecord {
     String getDigitalAssetPublicKey();
     String getName();
     String getDescription();
+    String getGenesisBlock();
 
     CryptoAddress getAddressFrom();
     String getActorFromPublicKey();
@@ -34,4 +36,6 @@ public interface AssetIssuerWalletTransactionRecord {
     String getMemo();
 
     String getDigitalAssetMetadataHash();
+
+    DigitalAssetMetadata getDigitalAssetMetadata();
 }

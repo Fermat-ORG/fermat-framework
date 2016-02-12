@@ -229,7 +229,7 @@ public class WalletDesktopFragment extends Fragment {
             switch (installedWallet.getIcon()) {
 
                 case "asset_issuer":
-                    holder.imageView.setImageResource(R.drawable.wallet_1);
+                    holder.imageView.setImageResource(R.drawable.asset_issuer_icon);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
 
@@ -269,7 +269,7 @@ public class WalletDesktopFragment extends Fragment {
 
                     break;
                 case "asset_user":
-                    holder.imageView.setImageResource(R.drawable.wallet_2);
+                    holder.imageView.setImageResource(R.drawable.asset_user_wallet);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
 
@@ -309,7 +309,7 @@ public class WalletDesktopFragment extends Fragment {
 
                     break;
                 case "redeem_point":
-                    holder.imageView.setImageResource(R.drawable.wallet_3);
+                    holder.imageView.setImageResource(R.drawable.redeem_point1);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     linearLayout.setTag("WalletBitcoinActivity|4");
 

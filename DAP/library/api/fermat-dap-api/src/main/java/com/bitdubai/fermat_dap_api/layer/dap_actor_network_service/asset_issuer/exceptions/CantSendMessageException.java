@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions;
 
-import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * Created by franklin on 15/10/15.
@@ -21,6 +21,10 @@ public class CantSendMessageException extends DAPException {
 
     public CantSendMessageException(final String message) {
         this(message, null);
+    }
+
+    public CantSendMessageException(final String message, final Exception cause, final String context) {
+        this(message, cause, context, null);
     }
 
     public CantSendMessageException(final Exception exception) {

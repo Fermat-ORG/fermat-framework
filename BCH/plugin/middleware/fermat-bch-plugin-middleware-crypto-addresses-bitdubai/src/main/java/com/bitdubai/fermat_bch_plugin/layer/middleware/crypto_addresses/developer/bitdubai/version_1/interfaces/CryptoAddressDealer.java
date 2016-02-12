@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatVault
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CallToGetByCodeOnNONEException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantGenerateAndRegisterCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantGenerateCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantGetDefaultWalletException;
@@ -20,11 +21,13 @@ import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.develope
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.utils.CryptoVaultSelector;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.utils.WalletManagerSelector;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.DefaultWalletNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+
+
 
 /**
  * The interface <code>com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.interfaces.CryptoAddressDealer</code>
@@ -51,11 +54,12 @@ public abstract class CryptoAddressDealer {
     }
 
     protected final CryptoAddress getAddress(final VaultType      vaultType     ,
-                                             final CryptoCurrency cryptoCurrency) throws CantGenerateCryptoAddressException {
+                                             final CryptoCurrency cryptoCurrency,
+                                             final BlockchainNetworkType blockchainNetworkType) throws CantGenerateCryptoAddressException, GetNewCryptoAddressException {
 
         try {
 
-            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getAddress();
+            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getCryptoAddress(blockchainNetworkType);
 
         } catch (CantIdentifyVaultException e) {
 
@@ -89,10 +93,10 @@ public abstract class CryptoAddressDealer {
         }
     }
 
-    protected final void registerCryptoAddress(final CryptoAddress        cryptoAddress           ,
-                                               final CryptoAddressRequest request                 ,
-                                               final InstalledWallet      installedWallet         ,
-                                               final VaultType            vaultType               ) throws CantRegisterCryptoAddressBookException {
+    protected final void registerCryptoAddress(final CryptoAddress        cryptoAddress  ,
+                                               final CryptoAddressRequest request        ,
+                                               final InstalledWallet      installedWallet,
+                                               final VaultType            vaultType      ) throws CantRegisterCryptoAddressBookException {
 
         try {
 
@@ -102,10 +106,10 @@ public abstract class CryptoAddressDealer {
 
             cryptoAddressBookManager.registerCryptoAddress(
                     cryptoAddress,
-                    request.getIdentityPublicKeyResponding(),
-                    request.getIdentityTypeResponding(),
                     request.getIdentityPublicKeyRequesting(),
                     request.getIdentityTypeRequesting(),
+                    request.getIdentityPublicKeyResponding(),
+                    request.getIdentityTypeResponding(),
                     installedWallet.getPlatform(),
                     vaultType,
                     fermatVaultEnum.getCode(),
@@ -124,14 +128,19 @@ public abstract class CryptoAddressDealer {
 
     protected final CryptoAddress generateAndRegisterCryptoAddress(final Platforms            platform ,
                                                                    final VaultType            vaultType,
-                                                                   final CryptoAddressRequest request  ) throws CantGenerateAndRegisterCryptoAddressException,
+                                                                   final CryptoAddressRequest request) throws CantGenerateAndRegisterCryptoAddressException,
                                                                                                                 DefaultWalletNotFoundException               {
 
         try {
 
-            InstalledWallet wallet = this.getDefaultWallet(request.getIdentityTypeResponding(), request.getCryptoCurrency(), request.getBlockchainNetworkType(), platform);
+            InstalledWallet wallet = this.getDefaultWallet(
+                    request.getIdentityTypeResponding(),
+                    request.getCryptoCurrency()        ,
+                    request.getBlockchainNetworkType() ,
+                    platform
+            );
 
-            final CryptoAddress cryptoAddress = this.getAddress(vaultType, request.getCryptoCurrency());
+            final CryptoAddress cryptoAddress = this.getAddress(vaultType, request.getCryptoCurrency(), request.getBlockchainNetworkType());
 
             this.registerCryptoAddress(
                     cryptoAddress,
@@ -150,6 +159,8 @@ public abstract class CryptoAddressDealer {
             throw new CantGenerateAndRegisterCryptoAddressException(e, "", "There was a problem trying to register the crypto address.");
         } catch (CantGenerateCryptoAddressException e) {
 
+            throw new CantGenerateAndRegisterCryptoAddressException(e, "", "There was a problem trying to generate the crypto address.");
+        } catch (GetNewCryptoAddressException e) {
             throw new CantGenerateAndRegisterCryptoAddressException(e, "", "There was a problem trying to generate the crypto address.");
         }
     }

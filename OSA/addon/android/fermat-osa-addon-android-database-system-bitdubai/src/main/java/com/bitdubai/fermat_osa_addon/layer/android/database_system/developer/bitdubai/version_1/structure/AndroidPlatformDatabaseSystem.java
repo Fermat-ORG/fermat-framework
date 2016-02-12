@@ -3,7 +3,6 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 import android.content.Context;
 import android.util.Base64;
 
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -30,114 +29,72 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
     /**
      * PlatformDatabaseSystem Interface member variables.
      */
-    private final String path;
+    private final Context context;
 
-    public AndroidPlatformDatabaseSystem(final String path) {
+    public AndroidPlatformDatabaseSystem(final Context context) {
 
-        this.path = path;
+        this.context = context;
     }
 
-
-    /**
-     * PlatformDatabaseSystem Interface implementation.
-     */
-
-    /**
-     * <p>This method open a specified database file.
-     *
-     * @param databaseName database name to use
-     * @return  Database object
-     * @throws CantOpenDatabaseException
-     * @throws DatabaseNotFoundException
-     */
-
     @Override
-    public Database openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException{
-        try{
+    public final Database openDatabase(final String databaseName) throws CantOpenDatabaseException ,
+            DatabaseNotFoundException {
+
+        try {
             AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(path, hasDBName);
+            database = new AndroidDatabase(context.getFilesDir().getPath(), hasDBName);
             database.openDatabase();
             return database;
-        }
-        catch (NoSuchAlgorithmException e){
-            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
-            FermatException cause = FermatException.wrapException(e);
-            String context = "Database Name : " + databaseName;
-            String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
-            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
-        }
-        catch(Exception e){
-            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
-        }
+        } catch (final NoSuchAlgorithmException e){
 
+            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+        } catch (final Exception e){
+
+            throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
+        }
     }
 
-    /**
-     * <p>This method create a new database file.
-     *
-     * @param databaseName database name to use
-     * @return Database Object
-     * @throws CantCreateDatabaseException
-     */
     @Override
-    public Database createDatabase (String databaseName) throws CantCreateDatabaseException{
-        try{
+    public final Database createDatabase (final String databaseName) throws CantCreateDatabaseException {
+
+        try {
             AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
-            database = new AndroidDatabase(path, hasDBName);
+            database = new AndroidDatabase(context.getFilesDir().getPath(), hasDBName);
             database.createDatabase(hasDBName);
             return database;
         }
-        catch (NoSuchAlgorithmException e){
-            String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
-            FermatException cause = FermatException.wrapException(e);
-            String context = "Database Name : " + databaseName;
-            String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
-            throw new CantCreateDatabaseException(message, cause, context, possibleReason);
-        }
-        catch (Exception e){
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
+        catch (final NoSuchAlgorithmException e){
+
+            throw new CantCreateDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+        } catch (Exception e){
+
+            throw new CantCreateDatabaseException(e, null, "Unhandled Exception.");
         }
 
     }
 
-    /**
-     * <p>This method delete a specified database file.
-     *
-     * @param databaseName database name to use
-     * @throws CantOpenDatabaseException
-     * @throws DatabaseNotFoundException
-     */
     @Override
-    public void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+    public final void deleteDatabase(final String databaseName) throws CantOpenDatabaseException ,
+            DatabaseNotFoundException {
         try{
             String hasDBName = hashDataBaseName(databaseName);
             AndroidDatabase database;
-            database = new AndroidDatabase(path, hasDBName);
+            database = new AndroidDatabase(context.getFilesDir().getPath(), hasDBName);
             database.deleteDatabase();
 
-        } catch (NoSuchAlgorithmException e){
-            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
-            FermatException cause = FermatException.wrapException(e);
-            String context = "Database Name : " + databaseName;
-            String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
-            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
-        }
-        catch (Exception e){
-            throw new CantOpenDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(e),null,"Check the cause");
+        } catch (final NoSuchAlgorithmException e){
+
+            throw new CantOpenDatabaseException(e, "Database Name : " + databaseName, "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name");
+        } catch (final Exception e){
+
+            throw new CantOpenDatabaseException(e, null, "Unhandled Exception.");
         }
     }
 
-    /**
-     * <p> This method hash the database file name using the algorithm SHA 256
-     *
-     * @param databaseName database name to use
-     * @return String hashed database file name
-     * @throws NoSuchAlgorithmException
-     */
     private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
-        String encryptedString = databaseName;
+        String encryptedString;
         try{
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(databaseName.getBytes(Charset.forName("UTF-8")));
@@ -145,15 +102,16 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             byte[] encoded = Base64.encode(digest, 1);
 
             try {
-            	encryptedString = new String(encoded, "UTF-8");	
+                encryptedString = new String(encoded, "UTF-8");
             } catch (Exception e) {
-            	throw new NoSuchAlgorithmException (e);
+                throw new NoSuchAlgorithmException (e);
             }
-            
-            
+
+
         }catch(NoSuchAlgorithmException e){
             throw e;
         }
+        encryptedString = encryptedString.replace("+","");
         return encryptedString.replace("/","");
     }
 }

@@ -21,7 +21,6 @@
             android:layout_height="match_parent"
 
 
-            android:src="@drawable/store_1"
             android:scaleType="centerCrop"
             android:layout_centerHorizontal="true"
 

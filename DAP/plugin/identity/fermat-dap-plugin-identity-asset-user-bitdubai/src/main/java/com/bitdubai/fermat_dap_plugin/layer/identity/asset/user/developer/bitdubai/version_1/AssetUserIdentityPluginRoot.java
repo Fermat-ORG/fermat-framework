@@ -16,23 +16,29 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.database.AssetUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantListAssetUserIdentitiesException;
 import com.bitdubai.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.structure.IdentityAssetUserManagerImpl;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,23 +54,25 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
         IdentityAssetUserManager,
         LogManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM      , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API   , layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API   , layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM    )
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API   , layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER    )
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM      , layer = Layers.USER  , addon = Addons.DEVICE_USER        )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR , plugin = Plugins.ASSET_USER        )
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
+
+    private SettingsManager<AssetUserSettings> settingsManager;
 
     public AssetUserIdentityPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -75,7 +83,7 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     public static final String ASSET_USER_PROFILE_IMAGE_FILE_NAME = "assetUserIdentityProfileImage";
-    public static final String ASSET_USER_PRIVATE_KEYS_FILE_NAME  = "assetUserIdentityPrivateKey";
+    public static final String ASSET_USER_PRIVATE_KEYS_FILE_NAME = "assetUserIdentityPrivateKey";
 
     @Override
     public List<String> getClassesFullPath() {
@@ -134,7 +142,7 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
         }
 
         try {
-            registerIdentities();
+            registerIdentitiesANS();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
@@ -171,8 +179,18 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public IdentityAssetUser createNewIdentityAssetIssuer(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetUserException {
+    public IdentityAssetUser getIdentityAssetUser() throws CantGetAssetUserIdentitiesException {
+        return identityAssetUserManager.getIdentityAssetUser();
+    }
+
+    @Override
+    public IdentityAssetUser createNewIdentityAssetUser(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetUserException {
         return identityAssetUserManager.createNewIdentityAssetUser(alias, profileImage);
+    }
+
+    @Override
+    public void updateIdentityAssetUser(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetUserException {
+        identityAssetUserManager.updateIdentityAssetUser(identityPublicKey, identityAlias, profileImage);
     }
 
     @Override
@@ -180,8 +198,46 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
         return identityAssetUserManager.hasIntraUserIdentity();
     }
 
-    public void registerIdentities() throws CantListAssetUserIdentitiesException {
-        identityAssetUserManager.registerIdentities();
+    public void registerIdentitiesANS() throws CantRegisterActorAssetUserException {
+        identityAssetUserManager.registerIdentitiesANS();
     }
 
+    @Override
+    public SettingsManager getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+        try {
+            List<IdentityAssetUser> identities = identityAssetUserManager.getIdentityAssetUsersFromCurrentDeviceUser();
+            return (identities == null || identities.isEmpty()) ? null : identityAssetUserManager.getIdentityAssetUsersFromCurrentDeviceUser().get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        identityAssetUserManager.createNewIdentityAssetUser(name, profile_img);
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
+    }
 }

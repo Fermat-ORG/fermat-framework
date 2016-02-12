@@ -1,9 +1,8 @@
 package com.bitdubai.fermat_api.layer.osa_android.file_system;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-
-import java.util.UUID;
 
 
 /**
@@ -17,7 +16,7 @@ import java.util.UUID;
  *  @since   01/02/15.
  * */
 
- public interface PlatformFileSystem {
+ public interface PlatformFileSystem extends FermatManager {
 
     PlatformTextFile getFile (String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException;
 

@@ -208,19 +208,19 @@ public class CircularProgressBar extends View {
         mCircleProgressBounds.set(STROKE_WIDTH, STROKE_WIDTH, min + STROKE_WIDTH, min + STROKE_WIDTH);
     }
 
-    public void setProgressValue(int mProgressValue) {
+    public void setProgressValue(int mProgressValue)throws IllegalArgumentException{
         validateProgressValue(mProgressValue);
         this.mProgressValue = getProgressValue(mProgressValue);
         postInvalidate();
     }
 
-    public void setProgressValue2(int mProgressValue) {
+    public void setProgressValue2(int mProgressValue)throws IllegalArgumentException{
         validateProgressValue(mProgressValue);
         this.mProgress2Value = getProgressValue(mProgressValue);
         postInvalidate();
     }
 
-    private void validateProgressValue(int mProgressValue) {
+    private void validateProgressValue(int mProgressValue)throws IllegalArgumentException{
         if (mProgressValue < 0 || mProgressValue > 100) {
             throw new IllegalArgumentException("Value must be between 0 and 100");
         }
@@ -248,5 +248,9 @@ public class CircularProgressBar extends View {
     public void setBackgroundProgressColor(int color) {
         mPaintBackground.setColor(color);
 
+    }
+
+    public int getprogress1() {
+        return mProgressValue;
     }
 }

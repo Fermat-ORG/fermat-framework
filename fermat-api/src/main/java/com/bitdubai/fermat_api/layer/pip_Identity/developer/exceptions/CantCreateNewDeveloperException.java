@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by eze on 2015.07.09..
+ * Refactored by Manuel Perez on 04/12/2015
  */
 public class CantCreateNewDeveloperException extends FermatException {
     /**
@@ -29,3 +30,4 @@ public class CantCreateNewDeveloperException extends FermatException {
         super(message, cause, context, possibleReason);
     }
 }
+

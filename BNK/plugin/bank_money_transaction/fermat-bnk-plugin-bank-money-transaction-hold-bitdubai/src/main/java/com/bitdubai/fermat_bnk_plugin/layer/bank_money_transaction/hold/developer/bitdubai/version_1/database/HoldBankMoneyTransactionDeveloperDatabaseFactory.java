@@ -125,7 +125,7 @@ public class HoldBankMoneyTransactionDeveloperDatabaseFactory implements DealsWi
         holdColumns.add(HoldBankMoneyTransactionDatabaseConstants.HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME);
         holdColumns.add(HoldBankMoneyTransactionDatabaseConstants.HOLD_ACCOUNT_NUMBER_COLUMN_NAME);
         holdColumns.add(HoldBankMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME);
-        holdColumns.add(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_COLUMN_NAME);
+        holdColumns.add(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME);
         holdColumns.add(HoldBankMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME);
         holdColumns.add(HoldBankMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME);
         /**

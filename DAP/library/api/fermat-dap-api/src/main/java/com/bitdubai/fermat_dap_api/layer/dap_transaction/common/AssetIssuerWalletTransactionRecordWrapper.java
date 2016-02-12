@@ -30,38 +30,7 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     private final String memo;
     private final String digitalAssetMetadataHash;
     private final String transactionId;
-
-    AssetIssuerWalletTransactionRecordWrapper(DigitalAsset digitalAsset,
-                                              String digitalAssetPublicKey,
-                                              String name,
-                                              String description,
-                                              CryptoAddress addressFrom,
-                                              CryptoAddress addressTo,
-                                              String actorFromPublicKey,
-                                              String actorToPublicKey,
-                                              Actors actorFromType,
-                                              Actors actorToType,
-                                              long amount,
-                                              long timeStamp,
-                                              String memo,
-                                              String digitalAssetMetadataHash,
-                                              String transactionId){
-        this.digitalAsset = digitalAsset;
-        this.digitalAssetPublicKey = digitalAssetPublicKey;
-        this.name = name;
-        this.description = description;
-        this.addressFrom = addressFrom;
-        this.addressTo = addressTo;
-        this.actorFromPublicKey = actorFromPublicKey;
-        this.actorToPublicKey =actorToPublicKey;
-        this.actorFromType = actorFromType;
-        this.actorToType = actorToType;
-        this.amount = amount;
-        this.timeStamp = timeStamp;
-        this.memo = memo;
-        this.digitalAssetMetadataHash = digitalAssetMetadataHash;
-        this.transactionId = transactionId;
-    }
+    private DigitalAssetMetadata digitalAssetMetadata;
 
     public AssetIssuerWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
                                               CryptoTransaction cryptoGenesisTransaction,
@@ -77,12 +46,13 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
         this.actorToPublicKey =actorToPublicKey;
         this.actorFromType = Actors.INTRA_USER;
         this.actorToType = Actors.DAP_ASSET_ISSUER;
-        this.amount = cryptoGenesisTransaction.getCryptoAmount();
-        this.digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
+        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0 ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
+        this.digitalAssetMetadataHash = digitalAssetMetadata.getGenesisTransaction();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         Date date= new Date();
         this.timeStamp = date.getTime();
         this.memo = "Digital Asset delivered at"+this.timeStamp;
+        this.digitalAssetMetadata = digitalAssetMetadata;
     }
 
     @Override
@@ -158,5 +128,15 @@ public class AssetIssuerWalletTransactionRecordWrapper implements AssetIssuerWal
     @Override
     public String getDigitalAssetMetadataHash() {
         return digitalAssetMetadataHash;
+    }
+
+    @Override
+    public String getGenesisBlock() {
+        return digitalAssetMetadata.getGenesisBlock();
+    }
+
+    @Override
+    public DigitalAssetMetadata getDigitalAssetMetadata() {
+        return this.digitalAssetMetadata;
     }
 }

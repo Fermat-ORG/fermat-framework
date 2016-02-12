@@ -3,17 +3,16 @@ package com.bitdubai.sub_app.crypto_customer_identity.common.adapters;
 import android.content.Context;
 import android.text.SpannableString;
 import android.view.View;
-import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.TextUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.common.holders.CryptoCustomerIdentityInfoViewHolder;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CryptoCustomerIdentityListFilter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter para el RecyclerView del CryptoBrokerIdentityListFragment que muestra la lista de identidades de un customer
@@ -26,13 +25,16 @@ public class CryptoCustomerIdentityInfoAdapter
 
     CryptoCustomerIdentityListFilter filter;
 
-    public CryptoCustomerIdentityInfoAdapter(Context context, ArrayList<CryptoCustomerIdentityInformation> dataSet) {
+    public CryptoCustomerIdentityInfoAdapter(Context context, List<CryptoCustomerIdentityInformation> dataSet) {
         super(context, dataSet);
     }
 
     @Override
-    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder, final CryptoCustomerIdentityInformation data, final int position) {
-        filter = (CryptoCustomerIdentityListFilter) getFilter();
+    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder  ,
+                              final CryptoCustomerIdentityInformation    data    ,
+                              final int                                  position) {
+
+        filter = getFilter();
 
         SpannableString spannedText = TextUtils.getSpannedText(
                 context.getResources(),
@@ -55,7 +57,7 @@ public class CryptoCustomerIdentityInfoAdapter
     }
 
     @Override
-    public Filter getFilter() {
+    public CryptoCustomerIdentityListFilter getFilter() {
         if (filter == null)
             filter = new CryptoCustomerIdentityListFilter(dataSet, this);
 

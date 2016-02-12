@@ -69,6 +69,6 @@ public class CommunicationNetworkServiceDatabaseConstants {
     public static final String DIGITAL_ASSET_METADATA_TRANSACTION_TIMESTAMP_COLUMN_NAME = "timestamp";
     public static final String DIGITAL_ASSET_METADATA_TRANSACTION_PROCESSED_COLUMN_NAME = "processed";
 
-    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_FIRST_KEY_COLUMN = "transaction_id";
+    public static final String DIGITAL_ASSET_METADATA_TRANSACTION_FIRST_KEY_COLUMN = DIGITAL_ASSET_METADATA_TRANSACTION_TRANSACTION_ID_COLUMN_NAME;
 
 }

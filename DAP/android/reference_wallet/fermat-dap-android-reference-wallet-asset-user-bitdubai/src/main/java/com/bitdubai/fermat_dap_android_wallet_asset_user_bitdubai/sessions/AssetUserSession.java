@@ -3,9 +3,8 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletSession;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
@@ -18,7 +17,7 @@ import java.util.Map;
  * @author Francisco Vasquez
  * @version 1.0
  */
-public class AssetUserSession extends AbstractFermatSession<InstalledWallet,AssetUserWalletSubAppModuleManager,WalletResourcesProviderManager> implements WalletSession {
+public class AssetUserSession extends AbstractFermatSession<InstalledWallet,AssetUserWalletSubAppModuleManager,WalletResourcesProviderManager> {
 
     private WalletResourcesProviderManager resourceManager;
     private AssetUserWalletSubAppModuleManager walletManager;
@@ -44,6 +43,10 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
         this.resourceManager = resourceManager;
     }
 
+    public AssetUserSession() {
+        data = new HashMap<String, Object>();
+        installedWallet = null;
+    }
 
     public InstalledWallet getWalletSessionType() {
         return installedWallet;
@@ -51,14 +54,12 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
 
     @Override
     public void setData(String key, Object object) {
-        if (data == null)
-            data = new HashMap<>();
         data.put(key, object);
     }
 
     @Override
     public Object getData(String key) {
-        return data;
+        return data.get(key);
     }
 
     @Override
@@ -69,11 +70,6 @@ public class AssetUserSession extends AbstractFermatSession<InstalledWallet,Asse
 
     public WalletResourcesProviderManager getWalletResourcesProviderManager() {
         return resourceManager;
-    }
-
-    @Override
-    public WalletSettings getWalletSettings() {
-        return settings;
     }
 
     public AssetUserWalletSubAppModuleManager getWalletManager() {

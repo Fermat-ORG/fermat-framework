@@ -17,6 +17,8 @@ public interface Actor {
 
     String getName();
 
+    String getPhrase();
+
     Actors getType();
 
     byte[] getPhoto();

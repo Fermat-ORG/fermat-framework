@@ -13,6 +13,7 @@ public enum CryptoAddressDealers implements FermatEnum {
 
     CRYPTO_WALLET   ("CRW"),
     DAP_ASSET       ("DAPA"),
+    DAP_WATCH_ONLY  ("DAPW"),
 
     ;
 
@@ -28,6 +29,7 @@ public enum CryptoAddressDealers implements FermatEnum {
 
             case "CRW": return CRYPTO_WALLET;
             case "DAPA": return DAP_ASSET;
+            case "DAPW": return DAP_WATCH_ONLY;
 
             default:
                 throw new InvalidParameterException(

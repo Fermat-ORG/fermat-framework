@@ -52,6 +52,7 @@ public abstract class AbstractNewReceiveMessagesNotificationEventHandler impleme
         }
     }
 
-    protected abstract void handleNewMessages(final FermatMessage message) throws FermatException;
-
+    protected void handleNewMessages(final FermatMessage message) throws FermatException {
+        networkService.handleNewMessages(message);
+    }
 }

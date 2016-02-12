@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -15,7 +17,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.*;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionSummary;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
@@ -23,15 +31,15 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTr
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.AssetUserWalletPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.AssetUserWalletDao;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.AssetUserWalletDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantInitializeAssetUserWalletException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -45,11 +53,15 @@ public class AssetUserWalletImpl implements AssetUserWallet {
      */
     private Database database;
 
-    private Map<String, UUID> walletAssetIssuer = new HashMap<>();
+    private List<UUID> createdWallets;
+
+    {
+        createdWallets = new ArrayList<>();
+    }
 
     //TODO: Implementar clase DAO y los metodos de la interfaz manager y otros metodos.
     private AssetUserWalletDao assetUserWalletDao;
-    private com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager errorManager;
+    private ErrorManager errorManager;
 
     private PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -57,7 +69,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     private UUID pluginId;
 
-    public AssetUserWalletImpl(com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public AssetUserWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
@@ -79,36 +91,30 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         }
     }
 
-    public UUID create(String walletId) throws CantCreateWalletException {
+    public UUID create(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
             // TODO: Until the Wallet MAnager create the wallets, we will use this internal id
             //       We need to change this in the near future
-            UUID internalWalletId = UUID.randomUUID();
+            UUID internalWalletId = WalletUtilities.constructWalletId(walletPublicKey, networkType);
             createWalletDatabase(internalWalletId);
-            PluginTextFile walletAssetIssuerFile = createAssetUserWalletFile();
-            loadAssetUserWalletMap(walletAssetIssuerFile);
-            walletAssetIssuer.put(walletId, internalWalletId);
-            persistAssetUserWallet(walletAssetIssuerFile);
+            PluginTextFile walletFile = createAssetUserWalletFile();
+            loadAssetUserWalletList(walletFile);
+            createdWallets.add(internalWalletId);
+            persistAssetUserWallet(walletFile);
             return internalWalletId;
         } catch (CantCreateWalletException exception) {
             throw exception;
         } catch (Exception exception) {
             throw new CantCreateWalletException(CantCreateWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
-
     }
 
-    private void loadAssetUserWalletMap(final PluginTextFile loadAssetIssuerWalletMap) throws CantCreateWalletException
-    {
+    private void loadAssetUserWalletList(final PluginTextFile walletListFile) throws CantCreateWalletException {
         try {
-            loadAssetIssuerWalletMap.loadFromMedia();
-            String[] stringAssetIssuerWallet = loadAssetIssuerWalletMap.getContent().split(";", -1);
-
-            for (String stringWalletId : stringAssetIssuerWallet) {
-
-                if (!stringWalletId.equals("")) {
-                    String[] idPair = stringWalletId.split(",", -1);
-                    walletAssetIssuer.put(idPair[0], UUID.fromString(idPair[1]));
+            walletListFile.loadFromMedia();
+            for (String stringWalletId : walletListFile.getContent().split(";")) {
+                if (!stringWalletId.isEmpty()) {
+                    createdWallets.add(UUID.fromString(stringWalletId));
                 }
             }
         } catch (CantLoadFileException exception) {
@@ -116,25 +122,12 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         }
     }
 
-    private void persistAssetUserWallet(final PluginTextFile pluginTextFile) throws CantCreateWalletException
-    {
-        StringBuilder stringBuilder = new StringBuilder(walletAssetIssuer.size() * 72);
-        Iterator iterator = walletAssetIssuer.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            Map.Entry pair = (Map.Entry) iterator.next();
-
-            stringBuilder
-                    .append(pair.getKey().toString())
-                    .append(",")
-                    .append(pair.getValue().toString())
-                    .append(";");
-
-            iterator.remove();
+    private void persistAssetUserWallet(final PluginTextFile pluginTextFile) throws CantCreateWalletException {
+        StringBuilder stringBuilder = new StringBuilder(createdWallets.size() * 72);
+        for (UUID walletId : createdWallets) {
+            stringBuilder.append(walletId).append(";");
         }
-
         pluginTextFile.setContent(stringBuilder.toString());
-
         try {
             pluginTextFile.persistToMedia();
         } catch (CantPersistFileException cantPersistFileException) {
@@ -142,8 +135,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         }
     }
 
-    private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException
-    {
+    private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException {
         try {
             AssetUserWalletDatabaseFactory databaseFactory = new AssetUserWalletDatabaseFactory();
             databaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
@@ -153,8 +145,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         }
     }
 
-    private PluginTextFile  createAssetUserWalletFile() throws CantCreateWalletException
-    {
+    private PluginTextFile createAssetUserWalletFile() throws CantCreateWalletException {
         try {
             return pluginFileSystem.getTextFile(pluginId, "", ASSET_USER_WALLET_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         } catch (CantCreateFileException cantCreateFileException) {
@@ -165,7 +156,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     }
 
     @Override
-    public com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException {
+    public com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance getBalance() throws CantGetTransactionsException {
         try {
             return new AssetUserWalletBalanceImpl(database, pluginId, pluginFileSystem);
         } catch (Exception exception) {
@@ -175,11 +166,35 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     }
 
     @Override
+    public List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException {
+        List<AssetUserWalletTransaction> allCreditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
+        List<AssetUserWalletTransaction> alldebitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
+        for (AssetUserWalletTransaction transaction : alldebitAvailable) {
+            allCreditAvailable.remove(transaction);
+        }
+        return allCreditAvailable;
+    }
+
+    @Override
+    public List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException {
+        try {
+            assetUserWalletDao = new AssetUserWalletDao(database);
+            return assetUserWalletDao.listsTransactionsByAssets(balanceType, transactionType, assetPublicKey);
+        } catch (CantGetTransactionsException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw exception;
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
     public List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException {
         try {
             assetUserWalletDao = new AssetUserWalletDao(database);
             return assetUserWalletDao.listsTransactionsByAssets(balanceType, transactionType, max, offset, assetPublicKey);
-        }catch (CantGetTransactionsException exception) {
+        } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
         } catch (Exception exception) {
@@ -193,7 +208,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         try {
             assetUserWalletDao = new AssetUserWalletDao(database);
             return assetUserWalletDao.getTransactionsByActor(actorPublicKey, balanceType, max, offset);
-        }catch (CantGetTransactionsException exception) {
+        } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
         } catch (Exception exception) {
@@ -204,10 +219,10 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     @Override
     public List<AssetUserWalletTransaction> gettLastActorTransactionsByTransactionType(BalanceType balanceType, TransactionType transactionType, int max, int offset) throws CantGetTransactionsException {
-        try{
+        try {
             assetUserWalletDao = new AssetUserWalletDao(database);
             return assetUserWalletDao.getTransactionsByTransactionType(transactionType, max, offset);
-        }catch (CantGetTransactionsException exception) {
+        } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
         } catch (Exception exception) {
@@ -221,7 +236,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         try {
             assetUserWalletDao = new AssetUserWalletDao(database);
             assetUserWalletDao.updateMemoField(transactionID, description);
-        }catch (CantStoreMemoException exception) {
+        } catch (CantStoreMemoException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
         } catch (Exception exception) {
@@ -233,5 +248,27 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     @Override
     public AssetUserWalletTransactionSummary getActorTransactionSummary(String actorPublicKey, BalanceType balanceType) throws CantGetActorTransactionSummaryException {
         return null;
+    }
+
+    @Override
+    public DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException {
+        String context = "Path: " + AssetUserWalletPluginRoot.PATH_DIRECTORY + " - Tx Hash: " + transactionHash;
+        try {
+            String metadataXML = pluginFileSystem.getTextFile(pluginId, AssetUserWalletPluginRoot.PATH_DIRECTORY, transactionHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
+            return (DigitalAssetMetadata) XMLParser.parseXML(metadataXML, new DigitalAssetMetadata());
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
+        }
+    }
+
+    @Override
+    public DigitalAsset getDigitalAsset(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
+        String context = "Path: " + AssetUserWalletPluginRoot.PATH_DIRECTORY + " - Asset PK: " + assetPublicKey;
+        try {
+            String assetXML = pluginFileSystem.getTextFile(pluginId, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
+            return (DigitalAsset) XMLParser.parseXML(assetXML, new DigitalAsset());
+        } catch (FileNotFoundException | CantCreateFileException e) {
+            throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
+        }
     }
 }

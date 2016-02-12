@@ -1,4 +1,5 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+<!-- all links tested by laderuner -->
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 # Welcome to Fermat!
 
@@ -6,35 +7,37 @@ In the last 20 years virtually everything went digital: pictures, music, videos,
 
 #### Why isn't cash money digital yet?
 
-The reason is that digital information can be cloned, and if digital cash could be cloned it would render it useless. When bitcoin was invented it brought with it the solution to the last barrier preventing money to go digital: the solution to the _double spend problem_.
+The reason is that digital information can be cloned, and if digital cash could be cloned it would render it useless. When bitcoin was invented it brought with it the solution to the last barrier preventing money from going digital: the solution to the _double spend problem_.
 
 We firmly believe that the next decade will witness governments issuing digital currency based on blockchain technology. We expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge.
 
-In order to meet this demand thousands of wallets should be available. Wallets will evolve into sophisticated financial applications. Such a wide variety of wallets is indispensable owing to the diversity characterizing the world's population and its financial needs. In fact most of current mobile APPs will turn into financial APPs once we provide them with the ability to easily handle digital cash and digital assets. 
+In order to meet this demand thousands of wallets should be available. Wallets will evolve into sophisticated financial applications. Such a wide variety of wallets / financial applications are indispensable owing to the diversity characterizing the world's population and its financial needs. In fact most of current mobile APPs will turn into financial APPs once Fermat provides them with the ability to easily handle digital cash and digital assets. 
 
 #### The Master Plan
 
 Fermat is a master plan to avoid getting into that future by waiting for independent entrepreneurs to build each of these wallets and financial apps one at the time and from scratch, repeating every time all the math, accounting, cryptography and algorithms that are common to all these APPs. Fermat handles all that and by doing the heavy lifting enables any developer in the world to easily create niche wallets and financial APPs on top of its shared infrastructure.
 
+Fermat offers a new approach, allowing us to achieve large-scale and systematic cooperation in an entirely distributed and decentralized manner. Our goal is to move from competition to cooperation by creating the infraestructure needed to decentralize not only software development, but also analysis and design. 
+
 #### The Framework
 
-Fermat is a trust-less financial application framework that enables any kind of trust-less applications, including digital wallets. 
+Fermat is a p2p financial application framework that enables any kind of trust-less applications, including digital wallets. 
 
-The framework evolves from the stand-alone crypto wallet and enables an ecosystem of peer-to-peer financial applications that are both crypto-currency and digital-asset-enabled. The Framework handles a full stack of layers. Starting down from an OS API level, to a Blockchain, Communication, Platform, and User Interface Level. 
+The framework evolves from the stand-alone crypto wallet and enables an ecosystem of peer-to-peer financial applications that are both crypto currency and digital asset enabled. The Framework handles a full stack of layers. Starting down from an OS API level, to a Blockchain, Communication, Platform, and User Interface Level. 
 
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/PIP.jpg "Plugins Platform")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Platform%20Coins/PIP/PIP.jpg "Plugins Platform")
 
 #### The Network
 
-Crypto networks are peer-to-Peer electronic cash systems that allow online payments to be sent directly from one party to another without going through a financial institution. Stand-alone crypto wallets are truth to that principle. But the main benefits are lost if a trusted third party is still required to transport meta-data, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
+Crypto networks are peer-to-Peer electronic cash systems that allow online payments to be sent directly from one party to another without going through a financial institution. Stand-alone crypto wallets stay truth to that principle. But the main benefits are lost if a trusted third party is still required to transport metadata, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
 
-Fermat features a peer-to-peer network for transporting meta-data and inter-connect network clients between each other. On top of that network a synchronization scheme transforms a standalone app into a distributed application across several devices still owned by the same user. 
+Fermat features a peer-to-peer network for transporting metadata and interconnect network clients between each other. On top of that network a synchronization scheme transforms a standalone app into a distributed application across several devices still owned by the same user. 
 
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Coins/P2P.jpg "Peer to Peer Network")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Platform%20Coins/P2P/P2P.jpg "Peer to Peer Network")
 
 #### Fermat Goals
 
-* To allow people with no developing knowledge to build their own desktop and mobile peer-to-peer financial applications in a similar way a non-developer builds a **Wordpress** site: re-using Plug-ins and _themes_. 
+* To allow people with no developing knowledge to build their own desktop and mobile peer-to-peer financial applications in a similar way a non-developer builds a **Wordpress** site: reusing Plug-ins and _themes_. 
 
 * To act as a local back-end not only for native-Fermat-APPs and wallets, but also for any other mobile app.
 
@@ -51,9 +54,9 @@ We believe the open source community collectively has more influence than any of
 
 #### Developer Network
 
-We are asking each of you to help lead the way.  Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology that people need to become financially independent, have access from any country to financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money. We believe in financial freedom.
+We are asking each of you to help lead the way. Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology that people need to become financially independent, have access from any country to financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money. We believe in true financial freedom.
 
-We want to hear from you on how we can build this network. We are by now about 30 developers working full time on Fermat and our goal is to reach 300. To learn more about how to join, just read the [how-to-participate-guide](https://github.com/bitDubai/participate-now). We hope at every single one of you will join us.  Because Fermat and the world need you.  We need your skills, imagination and optimism.  And with this new network, we're sure we can be partners for decades to come.
+We want to hear from you on how we can build this network. We are by now about 35 developers / designers working full time on Fermat and our goal is to reach 300. To learn more about how to join, just read the [how-to-participate-guide](https://github.com/bitDubai/participate-now). We hope at every single one of you will join us.  Because Fermat and the world need you.  We need your skills, imagination and optimism.  And with this new network, we're sure we can be partners for decades to come.
 
 We believe in people with passion who are crazy enough to think they can change the world. With a lot of hard work, we believe we can accomplish this.
 
@@ -88,28 +91,31 @@ The answers to each of these questions are addressed within Fermat.
 <br>
 ## What is Fermat?
 
-Fermat is a system where we experiment on what needs to be done fo the masses to adopt crypto currencies. As it is very easy to develop mobile APPs on Fermat, entrepreneurs can use it to easily test their business models.
+Fermat is a system where we experiment on what needs to be done for the masses to adopt crypto currencies. As it is very easy to develop mobile APPs on Fermat, entrepreneurs can use it to easily test their business models.
 
-Technically Fermat is an open-source P2P system built on a plug-in architecture that handles a stack of platforms and runs on multiple OS including Android, Linux, iOS, OSX and Windows.
+Technically Fermat is an open-source P2P system built on a Plug-in architecture that handles a stack of platforms and runs on multiple OS including Android, Linux, iOS, OSX and Windows.
 
 #### What makes Fermat different from other wallet systems or services?
 
-* **Fermat is P2P.** This makes it censorship resistent and difficult to hack.
+* **Fermat is P2P.** This makes it censorship resistant and difficult to hack.
 
-* **Fermat is built with plug-ins.** This enables it to be reused and for any developer to engage.
+* **Fermat is built with Plug-ins.** This enables it to be reused and for any developer to engage.
 
 * **Fermat runs on end users' devices.** This enables users to manage their own money eliminating the need to trust a third party.
 
-* **Fermat is inclusive.** By creating their own plugins, current industry members can integrate with Fermat to offer their services and products to Fermat's already user base.
+* **Fermat is inclusive.** By creating their own Plug-ins, current industry members can integrate with Fermat to offer their services and products to Fermat's already user base.
 
 * **Fermat segments the world population and offers a custom tailored solution for each segment.** Any developer can easily create niche wallets for a particular group of people, for example Brands creating their own wallets for their customers. All the heavy lifting is done by the Fermat underlaying technology.
 
-* **Fermat guaratees plugins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers.
+* **Fermat guarantees Plug-ins and wallet developers a revenue stream.** Fermat implements an innovative business model which allows plugins and wallet developers to define a use license, and Fermat itself enforces this license on behalf of developers.
 
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [white paper](FERMAT-WHITE-PAPER.md) that we're anxious to add. So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet or financial APP.
 
-You can learn more, see some cool imagess of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
+You can learn more, see some cool images of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
+
+
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Fiat%20Coins/Fiat%20Art/Scene1/HQ_1920x1080.jpg "Fermat Digital Money")
 
 <br>
 ### Fermat's Purpose
@@ -121,7 +127,7 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 <br>
 ### Fermat's Mission
 
-* To get cryptocurrencies mass adopted as soon as possible.
+* To get crypto currencies mass adopted as soon as possible.
 
 * To build the best possible system able to manage the finances of people.
 
@@ -152,7 +158,7 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 ##### 4. Fermat must never loose a user's funds.
 
 * Transaction responsability transmission protocols.
-* Remote technical support by wallet and plugins developers.
+* Remote technical support by wallet and Plug-ins developers.
 
 ##### 5. Fermat must be useful to each segment of the world population.
 
@@ -161,24 +167,24 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 
 ##### 6. Fermat must be extensible and open to innovation.
 
-* Plugins architecture.
+* Plug-ins architecture.
 * Multi dimensional layer architecture.
 
 ##### 7. Fermat must be open and inclusive.
 
 * Any developer can contribute to the shared infraestructure.
-* Any developer can write code for new plugins.
+* Any developer can write code for new Plug-ins.
 * Any developer can write code for new niche wallets.
 * Any developer can fork an existing niche wallet to further specialize it.
 * Any graphic / UX designer could provide skins to existing wallets.
 * Anyone could provide language packs to existing wallets.
 
-##### 8. Each developer must be compesated for their contribution to Fermat.
+##### 8. Each developer must be compensated for their contribution to Fermat.
 
 * Micro license concept.
 * Micro license structure concept.
 * Fermat automatically enforcing license agreements.
-* Plugin ownership concept.
+* Plug-in ownership concept.
 * Niche wallet ownership concept.
 * Branded wallet onwnership concept.
 * Master plan design concept, wiht no overlaping functionality but shared ownership.
@@ -189,12 +195,12 @@ You can learn more, see some cool imagess of Fermat's architecture and its P2P n
 
 ##### 10. Fermat must be inclusive with crypto currency industry members.
 
-* Any bitcoin | crypto | blockchain established startup could write their own plugins and expose their services to both Fermat developers and the Fermat user base.
-* Any alt-coin community could write plugins to enable their crypto currency within the Fermat wallet ecosystem.
+* Any bitcoin | crypto | blockchain established startup could write their own Plug-ins and expose their services to both Fermat developers and the Fermat user base.
+* Any alt-coin community could write Plug-ins to enable their crypto currency within the Fermat wallet ecosystem.
 
 ##### 11. Fermat must be inclusive with the current financial system.
 
-* Banks and financial institutions could write plugins to enable Fermat wallets to hold funds in banks and other financial institutions.
+* Banks and financial institutions could write Plug-ins to enable Fermat wallets to hold funds in banks and other financial institutions.
 * Fermat allows its users to move money both from public value transport networks as well as crypto currency networks and also through private or legal financial networks.
 
 ##### 12. Fermat must be unbanked-people friendly.
@@ -249,7 +255,7 @@ Take a look at the [Fermat Book](https://github.com/bitDubai/fermat/tree/master/
 
 As of November 2015 the project status is the following:
 
-**Code state** : Under development for 6 months. No realeses yet. 30+ full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+**Code state** : Under development for 6 months. No releases yet. Many full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
 
 **Future path of development** : Active (First release with very limited features scheduled for December 2015).
 
@@ -262,12 +268,13 @@ Awesome!
 
 #### Developers
 
-If you are a developer and want to contribute from a bug-fix up to building a whole financial APP on top of Fermat, please read the [Contributing Guide](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
+If you are a developer and want to contribute either from a bug-fix up to building a whole financial APP on top of Fermat, please read the [Contributing Guide](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
 then learn how to pull the repo and hack on Fermat. Then say hi at our [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/) or you can also find us on [Facebook](https://www.facebook.com/FermatOrg/). 
 
 #### Others
 
 You don't need to be a developer to participate on the project. There are many ways to do it and we explain each one of them at the [How to Participate Guide](https://github.com/bitDubai/participate-now).
 
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Background/Front_Bitcoin_scn_low.jpg "Fermat Coin")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Fermat%20Bitcoin/PerspView/1/Front_HQ_1920x1080.jpg "Fermat Coin")
+
 

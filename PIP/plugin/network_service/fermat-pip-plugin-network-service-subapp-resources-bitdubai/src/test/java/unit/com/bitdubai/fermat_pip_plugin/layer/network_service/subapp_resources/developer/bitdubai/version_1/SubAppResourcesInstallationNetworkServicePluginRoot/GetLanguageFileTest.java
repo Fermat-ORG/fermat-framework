@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.SubAppResourcesNetworkServicePluginRoot;
@@ -159,7 +159,7 @@ public class GetLanguageFileTest {
         skinId = UUID.randomUUID();
         subAppResourcesDAO.createRepository(repository, skinId);
         when(mockDatabase.getTable(anyString())).thenReturn(mockDatabaseTable);
-        mockDatabaseTable.setUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+        mockDatabaseTable.addUUIDFilter(SubAppResourcesNetworkServiceDatabaseConstants.REPOSITORIES_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
         mockDatabaseTable.loadToMemory();
         when(mockDatabaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(databaseTableRecordList.get(anyInt())).thenReturn(mockDatabaseTableRecord);

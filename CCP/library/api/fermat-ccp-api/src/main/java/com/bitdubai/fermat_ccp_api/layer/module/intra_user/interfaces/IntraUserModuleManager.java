@@ -1,11 +1,20 @@
 package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.modules.ModuleManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
 
 import java.util.List;
 
@@ -13,18 +22,19 @@ import java.util.List;
  * The interface <code>IntraUserModuleManager</code>
  * provides the methods for the Intra Users sub app.
  */
-public interface IntraUserModuleManager extends ModuleManager {
+public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSettings, ActiveActorIdentityInformation> {
 
 
     /**
      * The method <code>createIntraUser</code> is used to create a new intra user
      *
      * @param intraUserName the name of the intra user to create
+     * @param phrase the phrase of the intra user to create
      * @param profileImage  the profile image of the intra user to create
      * @return the login identity generated for the said intra user.
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException
      */
-     IntraUserLoginIdentity createIntraUser(String intraUserName, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
+     IntraUserLoginIdentity createIntraUser(String intraUserName, String phrase, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 
     /**
      * The method <code>setProfileImage</code> let the current logged in intra user set its profile
@@ -59,6 +69,17 @@ public interface IntraUserModuleManager extends ModuleManager {
      */
      List<IntraUserInformation> getSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
+
+    /**
+     * The method <code>getCacheSuggestionsToContact</code> get cache list of intra users that the logged in
+     * intra user could be interested to add.
+     *
+     * @return a list with information of intra users
+     * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
+     */
+    List<IntraUserInformation> getCacheSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
+
+
     /**
      * The method <code>searchIntraUser</code> gives us an interface to manage a search for a particular
      * intra user
@@ -73,10 +94,11 @@ public interface IntraUserModuleManager extends ModuleManager {
      *
      * @param intraUserToAddName      The name of the intra user to add
      * @param intraUserToAddPublicKey The public key of the intra user to add
-     * @param profileImage            The profile image that the intra user has
+     * @param OthersProfileImage      The profile image of the other intra user
+     * @param MyProfileImage          The profile image of the logged intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException
      */
-     void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey,String identityAlias) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
+     void askIntraUserForAcceptance(String intraUserToAddName, String intraUserPhrase,String intraUserToAddPublicKey, byte[] OthersProfileImage,byte[] MyProfileImage,String identityPublicKey,String identityAlias) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
 
     /**
      * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts
@@ -94,9 +116,9 @@ public interface IntraUserModuleManager extends ModuleManager {
      * The method <code>denyConnection</code> denies a conection request from other intra user
      *
      * @param intraUserToRejectPublicKey the public key of the user to deny its connection request
-     * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException
+     * @throws IntraUserConnectionDenialFailedException
      */
-     void denyConnection(String intraUserToRejectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConectionDenegationFailedException;
+     void denyConnection(String intraUserLoggedPublicKey,String intraUserToRejectPublicKey) throws IntraUserConnectionDenialFailedException;
 
     /**
      * The method <code>disconnectIntraUSer</code> disconnect an intra user from the list managed by this
@@ -105,7 +127,7 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @param intraUserToDisconnectPublicKey the public key of the intra user to disconnect
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException
      */
-     void disconnectIntraUSer(String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
+     void disconnectIntraUSer(String intraUserLoggedPublicKey, String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 
     /**
      * The method <code>cancelIntraUser</code> cancels an intra user from the list managed by this
@@ -160,10 +182,11 @@ public interface IntraUserModuleManager extends ModuleManager {
      * The method <code>updateIntraUserIdentity</code> change a identity information data
      * @param identityPublicKey
      * @param identityAlias
+     * @param identityPhrase
      * @param profileImage
      * @throws CantUpdateIdentityException
      */
-    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityException;
+    void  updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase,byte[] profileImage) throws CantUpdateIdentityException;
 
 
     /**
@@ -172,4 +195,24 @@ public interface IntraUserModuleManager extends ModuleManager {
      * @throws CantListIntraWalletUsersException
      */
     void  deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIdentityException;
+
+
+    /**
+     * The method <code>getIntraUsersConnectionStatus</code> return connection request status
+     * @param intraUserConnectedPublicKey
+     * @return ConnectionState object
+     * @throws CantGetIntraUserConnectionStatusException
+     */
+    ConnectionState getIntraUsersConnectionStatus(String intraUserConnectedPublicKey) throws CantGetIntraUserConnectionStatusException;
+
+    boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException;
+
+    /**
+     * The method <code>getLastNotification</code> get the last notification received by actor public key
+     * @param intraUserConnectedPublicKey
+     * @return IntraWalletUserActor notification object
+     * @throws CantGetIntraUsersListException
+     */
+
+    IntraWalletUserActor getLastNotification(String intraUserConnectedPublicKey) throws CantGetIntraUsersListException;
 }

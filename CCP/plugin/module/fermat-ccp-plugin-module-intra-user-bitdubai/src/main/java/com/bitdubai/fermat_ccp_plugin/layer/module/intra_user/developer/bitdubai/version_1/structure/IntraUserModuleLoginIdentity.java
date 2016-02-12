@@ -24,7 +24,7 @@ public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
     {
         this.alias = alias;
         this.publicKey = publicKey;
-        this.profileImage = (byte[] )profileImage.clone();
+        this.profileImage = (profileImage!=null) ? (byte[] )profileImage.clone() : null;
     }
     /**
      * That method returns the alias of the intra user identity

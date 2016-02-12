@@ -11,6 +11,7 @@ dependencies {
      */
 
     compile project(':fermat-api')
+    compile project(':fermat-core-api')
 
     compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')
@@ -20,11 +21,14 @@ dependencies {
     compile project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
     compile project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai')
 
-    compile project(':fermat-dap-plugin-digital-asset-transaction-appropriation-stats-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-appropriation-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-distribution-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-transfer-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-seller-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-asset-buyer-bitdubai')
+    compile project(':fermat-dap-plugin-digital-asset-transaction-issuer-appropriation-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-redeem-point-redemption-bitdubai')
     compile project(':fermat-dap-plugin-digital-asset-transaction-user-redemption-bitdubai')

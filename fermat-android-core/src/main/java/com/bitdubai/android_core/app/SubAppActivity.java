@@ -3,42 +3,43 @@ package com.bitdubai.android_core.app;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
-import com.bitdubai.android_core.app.common.version_1.fragment_factory.SubAppFragmentFactory;
-import com.bitdubai.android_core.app.common.version_1.managers.ManagerFactory;
-import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
+import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppSessionManager;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.*;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.*;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-import com.bitdubai.fermat.R;
-
+import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Objects;
 
 
 /**
@@ -49,11 +50,7 @@ import java.util.Objects;
 public class SubAppActivity extends FermatActivity implements FermatScreenSwapper{
 
     public static final String INSTALLED_SUB_APP = "sub_app";
-    /**
-     * Members used by back button
-     */
-
-
+    public static final String SUB_APP_PUBLIC_KEY = "SUB_APP_PUBLIC_KEY";
 
     /**
      *  Called when the activity is first created
@@ -64,10 +61,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        activePlatforms = getIntent().getParcelableArrayListExtra(StartActivity.ACTIVE_PLATFORMS);
-
-        developMode = getIntent().getBooleanExtra(DEVELOP_MODE,false);
-
         setActivityType(ActivityType.ACTIVITY_TYPE_SUB_APP);
 
         try {
@@ -75,11 +68,11 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             loadUI(createOrCallSubAppSession());
 
         } catch (Exception e) {
-
             //reportUnexpectedUICoreException
             //hacer un enum con areas genericas
             //TODO error manager null
           //  getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            e.printStackTrace();
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
@@ -87,7 +80,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         unbindDrawables(findViewById(R.id.drawer_layout));
         System.gc();
     }
@@ -106,37 +98,29 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
-
-
     /**
      * This method replaces the current fragment by the next in navigation
      * @param fragmentType Type Id of fragment to show
      */
 
-    private void loadFragment(SubApps subApp,int idContainer, String fragmentType) throws InvalidParameterException {
+    private void loadFragment(SubApps subApp,int idContainer, String fragmentType,FermatFragmentFactory fermatFragmentFactory) throws InvalidParameterException {
 
 
         SubAppSessionManager subAppSessionManager = ((ApplicationSession) getApplication()).getSubAppSessionManager();
-        SubAppsSession subAppsSession = subAppSessionManager.getSubAppsSession(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey());
+        FermatSession subAppsSession = subAppSessionManager.getSubAppsSession(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey());
 
 
         try {
-            getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(fragmentType);
-            com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subApp);
+            //getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(fragmentType);
+            //com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subApp);
 
+            FermatFragmentsEnumType fermatFragmentsEnumType = fermatFragmentFactory.getFermatFragmentEnumType(fragmentType);
+            android.app.Fragment fragment =  fermatFragmentFactory.getFragment(fragmentType,subAppsSession,null);
 
-            android.app.Fragment fragment = subAppFragmentFactory.getFragment(
-                    fragmentType,
-                    subAppsSession,
-                    null, //getSubAppSettingsManager().getSettings(xxx),
-                    getSubAppResourcesProviderManager()
-            );
 
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-
             FT.replace(idContainer, fragment);
-
             FT.commit();
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
@@ -158,7 +142,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         /**
          *  Our future code goes here...
          */
-
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -173,17 +156,12 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
         try {
-
-
             int id = item.getItemId();
-
 
             /**
              *  Our future code goes here...
              */
-
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
@@ -199,9 +177,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     public void onBackPressed() {
-
-
-
         // get actual fragment on execute
         String frgBackType = null;
         try {
@@ -210,16 +185,21 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment=null;
 
             Activity activity = null;
+            WeakReference<FermatAppConnection> fermatAppConnection = null;
             try{
-
-                activity= subAppRuntimeManager.getLastSubApp().getLastActivity();
+                SubApp subApp = subAppRuntimeManager.getLastSubApp();
+                activity= subApp.getLastActivity();
                 fragment  = activity.getLastFragment();
+                FermatSession fermatSession = getSubAppSessionManager().getSubAppsSession(subApp.getAppPublicKey());
+
+//                fermatAppConnection = new WeakReference<FermatAppConnection>(FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity()));
+
+                fermatAppConnection = new WeakReference<FermatAppConnection>(FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this,fermatSession)) ;
+
 
             }catch (NullPointerException nullPointerException){
                 fragment=null;
             }
-
-
 
             //get setting fragment to back
             //if not fragment to back I back to desktop
@@ -231,21 +211,18 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             if (frgBackType != null) {
 
                 Activity activities = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
-
                 com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = activities.getFragment(frgBackType); //set back fragment to actual fragment to run
-
-
                 //TODO: ver como hacer para obtener el id del container
                 if(fragmentBack.getType().equals("CSADDTD") || fragmentBack.getType().equals("CSADDTT") || fragmentBack.getType().equals("CSADDTR")  || fragmentBack.getType().equals("CSADDT")){
-                    this.loadFragment(subAppRuntimeManager.getLastSubApp().getType(), R.id.logContainer,frgBackType);
+                    loadFragment(subAppRuntimeManager.getLastSubApp().getType(), R.id.logContainer,frgBackType,fermatAppConnection.get().getFragmentFactory());
                 }else {
-                    this.loadFragment(subAppRuntimeManager.getLastSubApp().getType(), R.id.startContainer,frgBackType);
+                    loadFragment(subAppRuntimeManager.getLastSubApp().getType(), R.id.startContainer,frgBackType,fermatAppConnection.get().getFragmentFactory());
                 }
 
             }else if(activity!=null && activity.getBackActivity()!=null){
 
                 //todo: hacer
-                //changeActivity(activity.getBackActivity().getCode());
+                changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
 
             } else {
                 // set Desktop current activity
@@ -274,8 +251,6 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
-
-
     /**
      * ScreenSwapper interface implementation
      */
@@ -288,12 +263,17 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     public void changeScreen(String screen,int idContainer,Object[] objects) {
-
         try {
 
             SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
 
-            loadFragment(subAppRuntimeManager.getLastSubApp().getType(), idContainer, screen);
+            SubApp subApp = subAppRuntimeManager.getLastSubApp();
+
+
+
+//            loadFragment(subApp.getType(), idContainer, screen,FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity()).getFragmentFactory());
+
+            loadFragment(subApp.getType(), idContainer, screen, FermatAppConnectionManager.getFermatAppConnection(subApp.getPublicKey(), this, getSubAppSessionManager().getSubAppsSession(subApp.getAppPublicKey())).getFragmentFactory());
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeWalletFragment"));
@@ -305,11 +285,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     @Override
     public void selectWallet(InstalledWallet installedWallet){
         Intent intent;
-
         try {
-
-            //Activities activityType = Activities.getValueFromString(this.actionKey);
-
 
             WalletNavigationStructure walletNavigationStructure= getWalletRuntimeManager().getWallet(installedWallet.getWalletPublicKey());
 
@@ -352,6 +328,41 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             }else{
                 try {
+
+
+                    boolean isConnectionWithOtherApp = false;
+                    Activity lastActivity = null;
+                    Activity nextActivity = null;
+                    SubApp subApp = null;
+                    try {
+                        SubApp subAppNavigationStructure = getSubAppRuntimeMiddleware().getLastSubApp();
+                        if(subAppNavigationStructure.getPublicKey().equals(appBackPublicKey)) {
+                            lastActivity = subAppNavigationStructure.getLastActivity();
+                            nextActivity = subAppNavigationStructure.getActivity(Activities.getValueFromString(activityName));
+                        }else{
+                            subApp= getSubAppRuntimeMiddleware().getSubAppByPublicKey(appBackPublicKey);
+                            if(subApp!=null){
+                                isConnectionWithOtherApp = true;
+                                subApp.getActivity(Activities.getValueFromString(activityName));
+                            }
+                        }
+                        if(!isConnectionWithOtherApp) {
+                            if (!nextActivity.equals(lastActivity)) {
+                                resetThisActivity();
+                                loadUI(getSubAppSessionManager().getSubAppsSession(subAppNavigationStructure.getAppPublicKey()));
+                            }
+                        }else{
+                            //connectWithSubApp(null,objects,subApp.getPublicKey());
+                        }
+
+                    } catch (Exception e) {
+                        getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
+                        Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+                    } catch (Throwable throwable) {
+                        Toast.makeText(getApplicationContext(), "Oooops! recovering from system error. Throwable", Toast.LENGTH_LONG).show();
+                        throwable.printStackTrace();
+                    }
+
                     //resetThisActivity();
 
                     Activity a =  getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.getValueFromString(activityName));
@@ -371,14 +382,12 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     }
 
 
+
+
     @Override
     public void selectSubApp(InstalledSubApp installedSubApp) {
         Intent intent;
-
         try {
-
-            //Activities activityType = Activities.getValueFromString(this.actionKey);
-
             SubApp subAppNavigationStructure= getSubAppRuntimeMiddleware().getSubAppByPublicKey(installedSubApp.getAppPublicKey());
 
             intent = new Intent(this, com.bitdubai.android_core.app.SubAppActivity.class);
@@ -397,23 +406,58 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     public void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType) {
-
     }
 
     @Override
     public void onCallbackViewObserver(FermatCallback fermatCallback) {
-
     }
 
     @Override
-    public void connectWithOtherApp(Engine emgine, Object[] objectses) {
+    public void connectWithOtherApp(Engine engine, String fermatAppPublicKey,Object[] objectses) {
+        WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
+        SubApp installedSubApp = getSubAppRuntimeMiddleware().getSubAppByPublicKey(fermatAppPublicKey);
+        switch (engine){
+            case BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY:
 
+                //subApp runtime
+                try {
+                    connectWithSubApp(engine,objectses,installedSubApp);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            case BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY:
+
+                try {
+
+                    connectWithSubApp(engine,objectses,installedSubApp);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
     public Object[] connectBetweenAppsData() {
-        Objects[] objectses = (Objects[]) getIntent().getSerializableExtra(ConnectionConstants.SEARCH_NAME);
-        return objectses;
+        Object[] objects = (Object[]) getIntent().getSerializableExtra(ConnectionConstants.SEARCH_NAME);
+        return objects;
+    }
+
+    @Override
+    public void onControlledActivityBack(String activityCodeBack) {
+        //TODO: implement in the super class
+    }
+
+    @Override
+    public void setChangeBackActivity(Activities activityCodeBack) {
+
     }
 
 
@@ -421,24 +465,21 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
      * Method that loads the UI
      */
 
-    protected void loadUI(SubAppsSession subAppSession) {
-
+    protected void loadUI(FermatSession<InstalledSubApp,?> subAppSession) {
         try {
-            /**
-             * Get current activity to paint
-             */
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(subAppSession.getAppPublicKey(), this, subAppSession);
             Activity activity = getActivityUsedType();
-
-            loadBasicUI(activity);
-
+            loadBasicUI(activity, fermatAppConnection);
+            FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
+            hideBottonIcons();
             if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                 initialisePaging();
             }
             if (activity.getTabStrip() != null) {
-                setPagerTabs(getSubAppRuntimeMiddleware().getLastSubApp(), activity.getTabStrip(), subAppSession);
+                setPagerTabs(activity.getTabStrip(), subAppSession,fermatFragmentFactory);
             }
             if (activity.getFragments().size() == 1) {
-                setOneFragmentInScreen();
+                setOneFragmentInScreen(fermatFragmentFactory);
             }
         }catch (NullPointerException e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -451,71 +492,43 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         }
     }
 
-    private void setOneFragmentInScreen() throws InvalidParameterException {
-
-        SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
-        SubApp subApp = subAppRuntimeManager.getLastSubApp();
-        SubApps subAppType = subApp.getType();
-
-        com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subAppType);
-        String fragment = subAppRuntimeManager.getLastSubApp().getLastActivity().getLastFragment().getType();
-        SubAppsSession subAppsSession = getSubAppSessionManager().getSubAppsSession(subApp.getAppPublicKey());
-
-        try {
-            if(subAppFragmentFactory !=null){
-
-
-                    TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-                    tabLayout.setVisibility(View.GONE);
-
-                    ViewPager pagertabs = (ViewPager) findViewById(R.id.pager);
-                    pagertabs.setVisibility(View.VISIBLE);
-
-
-                    adapter = new TabsPagerAdapter(getFragmentManager(),
-                            getApplicationContext(),
-                            subAppFragmentFactory,
-                            fragment,
-                            subAppsSession,
-                            getSubAppResourcesProviderManager(),
-                            getResources());
-                    pagertabs.setAdapter(adapter);
-
-                    final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                            .getDisplayMetrics());
-                    pagertabs.setPageMargin(pageMargin);
-
-                }
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-
-        }
-    private SubAppsSession createOrCallSubAppSession(){
-        SubAppsSession subAppSession = null;
+    private FermatSession<InstalledSubApp,?> createOrCallSubAppSession(){
+        FermatSession<InstalledSubApp,?> subAppSession = null;
         try {
             Bundle bundle = getIntent().getExtras();
             InstalledSubApp installedSubApp=null;
+            SubApps subAppType=null;
+            String publicKey=null;
             if(bundle!=null){
                 if(bundle.containsKey(INSTALLED_SUB_APP)){
                     installedSubApp  = ((InstalledSubApp) bundle.getSerializable(INSTALLED_SUB_APP));
                 }else if(bundle.containsKey(ConnectionConstants.SUB_APP_CONNECTION)){
-                    //installedSubApp =  bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION);
+                    subAppType = (SubApps) bundle.getSerializable(ConnectionConstants.SUB_APP_CONNECTION_TYPE);
+                    publicKey = bundle.getString(ConnectionConstants.SUB_APP_CONNECTION);
                 }
             }
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection((publicKey==null) ? installedSubApp.getAppPublicKey() : publicKey, this);
+            ModuleManager moduleManager = getModuleManager(fermatAppConnection.getPluginVersionReference());
             if(installedSubApp!=null){
                 if (getSubAppSessionManager().isSubAppOpen(installedSubApp.getAppPublicKey())) {
                     subAppSession = getSubAppSessionManager().getSubAppsSession(installedSubApp.getAppPublicKey());
                 } else {
-                    ManagerFactory managerFactory = new ManagerFactory(((ApplicationSession) getApplication()).getFermatSystem());
-                    subAppSession = getSubAppSessionManager().openSubAppSession(
-                            installedSubApp,
-                            getErrorManager(),
-                            managerFactory.getModuleManagerFactory(installedSubApp.getSubAppType())
-                    );
+                        subAppSession = getSubAppSessionManager().openSubAppSession(
+                                installedSubApp,
+                                getErrorManager(),
+                                moduleManager,
+                                fermatAppConnection
+                        );
                 }
+            }else {
+                installedSubApp = getSubAppManager().getSubApp(subAppType.getCode());
+                //TODO:deberiamos tener el subAppManager por eso va en null
+                subAppSession = getSubAppSessionManager().openSubAppSession(
+                        installedSubApp,
+                        getErrorManager(),
+                        moduleManager,
+                        fermatAppConnection
+                );
             }
 
         } catch (NullPointerException nullPointerException){
@@ -538,23 +551,44 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
         try {
             String activityCode = data.getLinkToActivity().getCode();
             if(activityCode.equals("develop_mode")){
-                developMode = true;
                 onBackPressed();
             }else
                 changeActivity(activityCode,data.getAppLinkPublicKey());
         }catch (Exception e){
-
+            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in onNavigationMenuItemTouchListener"));
+            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
     @Override
     public void changeActivityBack(String appBackPublicKey,String activityCode){
         try {
             getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().changeBackActivity(appBackPublicKey,activityCode);
-        } catch (InvalidParameterException e) {
+        }catch (InvalidParameterException e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivityBack"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
 
+    @Override
+    protected FermatStructure getAppInUse() {
+        return getSubAppRuntimeMiddleware().getLastSubApp();
+    }
 
+    @Override
+    protected FermatSession getFermatSessionInUse(String appPublicKey) {
+        return getSubAppSessionManager().getSubAppsSession(appPublicKey);
+    }
+
+
+    private void connectWithSubApp(Engine engine, Object[] objects,SubApp subApp){
+        Intent intent = new Intent(this, SubAppActivity.class);
+        intent.putExtra(ConnectionConstants.ENGINE_CONNECTION, engine);
+        intent.putExtra(ConnectionConstants.SEARCH_NAME,objects);
+        intent.putExtra(ConnectionConstants.SUB_APP_CONNECTION,subApp.getAppPublicKey());
+        intent.putExtra(ConnectionConstants.SUB_APP_CONNECTION_TYPE,subApp.getType());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        startActivity(intent);
+    }
 }

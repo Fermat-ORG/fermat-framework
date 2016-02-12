@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.structure.dealers;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -9,12 +10,14 @@ import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.develope
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.interfaces.CryptoAddressDealer;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.utils.CryptoVaultSelector;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.utils.WalletManagerSelector;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantAcceptIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantAcceptAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantDenyAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 
 /**
  * Created by Nerio on 07/11/15.
@@ -26,7 +29,7 @@ public class CryptoAssetCryptoAddressDealer extends CryptoAddressDealer {
     public CryptoAssetCryptoAddressDealer(final CryptoAddressesManager   cryptoAddressesManager  ,
                                           final CryptoAddressBookManager cryptoAddressBookManager,
                                           final CryptoVaultSelector      cryptoVaultSelector     ,
-                                          final WalletManagerSelector walletManagerSelector      ) {
+                                          final WalletManagerSelector    walletManagerSelector   ) {
 
         super(cryptoAddressBookManager, cryptoVaultSelector, walletManagerSelector);
 
@@ -35,10 +38,13 @@ public class CryptoAssetCryptoAddressDealer extends CryptoAddressDealer {
 
     @Override
     public void handleCryptoAddressesNew(final CryptoAddressRequest request) throws CantHandleCryptoAddressesNewException {
+
         try {
+
             try {
+
                 Platforms platform  = Platforms.DIGITAL_ASSET_PLATFORM;
-                VaultType vaultType = VaultType.ASSET_VAULT;
+                VaultType vaultType = VaultType.CRYPTO_ASSET_VAULT;
 
                 CryptoAddress cryptoAddress = this.generateAndRegisterCryptoAddress(
                         platform,
@@ -54,7 +60,6 @@ public class CryptoAssetCryptoAddressDealer extends CryptoAddressDealer {
             } catch(DefaultWalletNotFoundException z) {
                 cryptoAddressesManager.denyAddressExchangeRequest(request.getRequestId());
             }
-
         } catch(PendingRequestNotFoundException |
                 CantAcceptAddressExchangeRequestException |
                 CantDenyAddressExchangeRequestException e) {
@@ -65,4 +70,5 @@ public class CryptoAssetCryptoAddressDealer extends CryptoAddressDealer {
             throw new CantHandleCryptoAddressesNewException(e, "", "There was an error trying to generate the crypto address.");
         }
     }
+
 }

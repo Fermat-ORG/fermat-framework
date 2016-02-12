@@ -1,29 +1,31 @@
 package com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-
-import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
-//import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
-//import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
-
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
 import java.util.List;
+
+//import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
+//import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.interfaces.InstalledWallet;
 
 /**
  * Created by franklin on 07/09/15.
  */
-public interface AssetFactoryManager {
+public interface AssetFactoryManager extends FermatManager {
     //Getters
     /**
      * This method returns the information stored about the Asset Factory
@@ -38,12 +40,17 @@ public interface AssetFactoryManager {
     /**
      * This method returns the information stored about the all Asset Factory by state
      */
-    List<AssetFactory> getAssetFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException;
+    List<AssetFactory> getAssetFactoryByState(State state, BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException;
 
     /**
      * This method returns the information stored about the all Asset Factory
      */
-    List<AssetFactory> getAssetFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException;
+    List<AssetFactory> getAssetFactoryAll(BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException;
+
+    /**
+     * This method get the binary resource persisted in device
+     */
+    PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
 
     //CRUD
     /**
@@ -74,7 +81,7 @@ public interface AssetFactoryManager {
     /**
      * TThis method publishes the asset digital object with the number and amount of Asset, start the transaction
      */
-    void publishAsset(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException;
+    void publishAsset(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
 
     /**
      * TThis method list all wallet installed in device, start the transaction
@@ -85,4 +92,6 @@ public interface AssetFactoryManager {
      * TThis method check what all information is complete the Asset Factory
      */
     boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy;
+
+    public List<IdentityAssetIssuer> getActiveIdentities();
 }

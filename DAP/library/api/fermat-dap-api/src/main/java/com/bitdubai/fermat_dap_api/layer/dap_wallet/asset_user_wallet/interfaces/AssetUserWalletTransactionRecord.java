@@ -3,8 +3,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interface
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-
-import java.util.UUID;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 
 /**
  * Created by franklin on 05/10/15.
@@ -32,5 +31,7 @@ public interface AssetUserWalletTransactionRecord {
 
     String getMemo();
 
-    String getDigitalAssetMetadataHash();
+    String getGenesisTransaction();
+
+    DigitalAssetMetadata getDigitalAssetMetadata();
 }

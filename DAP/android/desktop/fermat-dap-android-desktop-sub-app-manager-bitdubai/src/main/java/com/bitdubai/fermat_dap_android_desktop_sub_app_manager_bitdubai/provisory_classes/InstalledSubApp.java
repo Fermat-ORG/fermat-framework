@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_desktop_sub_app_manager_bitdubai.provisory_classes;
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
@@ -11,7 +12,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.08.19..
  */
 
-public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp {
+public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp {
 
     private SubApps subApps;
     private List<InstalledSkin> skinsId;
@@ -85,6 +86,11 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         return walletIcon;
     }
 
+    @Override
+    public String getAppName() {
+        return getSubAppType().getCode();
+    }
+
     /**
      * This method gives us the public key of the wallet in this device. It is used as identifier of
      * the wallet
@@ -94,6 +100,11 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return null;
     }
 
     /**

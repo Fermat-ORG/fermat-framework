@@ -1,6 +1,0 @@
-[[Platform-SubApps-Brand]]
-= Brand
-
-This subapp let a brand navigate through the wallets it has published and create marketing products like coupons. +
-
-There will be a mechanism for the interaction between a brands and shops to associate in the use of marketing products.

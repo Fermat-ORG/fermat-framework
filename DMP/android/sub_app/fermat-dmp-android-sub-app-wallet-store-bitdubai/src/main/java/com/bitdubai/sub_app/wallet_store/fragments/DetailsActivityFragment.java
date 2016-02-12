@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.wallet_store.fragments;
 
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,12 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.sub_app.wallet_store.common.adapters.ImagesAdapter;
@@ -29,7 +29,7 @@ import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
 import com.bitdubai.sub_app.wallet_store.util.UtilsFuncs;
 import com.wallet_store.bitdubai.R;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
@@ -48,7 +48,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class DetailsActivityFragment extends FermatFragment {
+public class DetailsActivityFragment extends AbstractFermatFragment {
     private final String TAG = "DetailsActivityFragment";
 
     // MODULE
@@ -86,31 +86,32 @@ public class DetailsActivityFragment extends FermatFragment {
         return new DetailsActivityFragment();
     }
 
-    @Override
-    public void setSubAppsSession(SubAppsSession subAppsSession) {
-        super.setSubAppsSession(subAppsSession);
-
-        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
-        moduleManager = session.getWalletStoreModuleManager();
-        errorManager = subAppsSession.getErrorManager();
-    }
+//    @Override
+//    public void setSubAppsSession(SubAppsSession subAppsSession) {
+//        super.setSubAppsSession(subAppsSession);
+//
+//        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
+//        moduleManager = session.getModuleManager();
+//        errorManager = subAppsSession.getErrorManager();
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.wallet_store_fragment_details_activity, container, false);
 
-        developerName = (FermatTextView) rootView.findViewById(R.id.wallet_developer_name);
-        shortDescription = (FermatTextView) rootView.findViewById(R.id.wallet_short_description);
-        walletName = (FermatTextView) rootView.findViewById(R.id.wallet_name);
-        walletIcon = (ImageView) rootView.findViewById(R.id.wallet_icon);
-        walletBanner = (ImageView) rootView.findViewById(R.id.wallet_banner);
-        publisherName = (FermatTextView) rootView.findViewById(R.id.wallet_publisher_name);
-        totalInstalls = (FermatTextView) rootView.findViewById(R.id.wallet_total_installs);
-        readMoreLink = (FermatTextView) rootView.findViewById(R.id.read_more_link);
-        installButton = (FermatButton) rootView.findViewById(R.id.wallet_install_button);
-        uninstallButton = (FermatButton) rootView.findViewById(R.id.wallet_uninstall_button);
-        previewImagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.wallet_screenshots_recycler_view);
-        noPreviewImages = (FermatTextView) rootView.findViewById(R.id.no_preview_images);
+        developerName = (FermatTextView) rootView.findViewById(R.id.ws_developer);
+        publisherName = (FermatTextView) rootView.findViewById(R.id.ws_publisher);
+        walletName = (FermatTextView) rootView.findViewById(R.id.ws_name);
+        walletIcon = (ImageView) rootView.findViewById(R.id.ws_icon);
+        walletBanner = (ImageView) rootView.findViewById(R.id.ws_banner);
+        shortDescription = (FermatTextView) rootView.findViewById(R.id.ws_short_description);
+        totalInstalls = (FermatTextView) rootView.findViewById(R.id.ws_total_installs);
+        readMoreLink = (FermatTextView) rootView.findViewById(R.id.ws_read_more);
+        installButton = (FermatButton) rootView.findViewById(R.id.ws_install_button);
+        uninstallButton = (FermatButton) rootView.findViewById(R.id.ws_uninstall_button);
+        previewImagesRecyclerView = (RecyclerView) rootView.findViewById(R.id.ws_screenshots);
+        noPreviewImages = (FermatTextView) rootView.findViewById(R.id.ws_no_preview);
+
 
         setupDataInViews();
 
@@ -118,30 +119,32 @@ public class DetailsActivityFragment extends FermatFragment {
     }
 
     private void setupDataInViews() {
-        final ArrayList<Bitmap> walletPreviewImgList = (ArrayList) subAppsSession.getData(PREVIEW_IMGS);
-        final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
-        catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
+        final List screenshotList = (List) appSession.getData(PREVIEW_IMGS);
+        final String developerAlias = (String) appSession.getData(DEVELOPER_NAME);
+        catalogItem = (WalletStoreListItem) appSession.getData(BASIC_DATA);
 
 
         walletName.setText(catalogItem.getWalletName());
         walletIcon.setImageBitmap(catalogItem.getWalletIcon());
         developerName.setText(developerAlias);
         shortDescription.setText(catalogItem.getDescription());
-        walletBanner.setImageBitmap(catalogItem.getWalletIcon()); // TODO Obtener valor correcto
-        publisherName.setText("Publisher Name"); // TODO Obtener valor correcto
-        totalInstalls.setText("10"); // TODO Obtener valor correcto
+        walletBanner.setImageResource(catalogItem.getBannerWalletRes()); // TODO Obtener valor correcto
+        publisherName.setText("BitDubai"); // TODO Obtener valor correcto
+        totalInstalls.setText("1"); // TODO Obtener valor correcto
 
         readMoreLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode());
+                changeActivity(Activities.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getCode(), appSession.getAppPublicKey());
             }
         });
 
         final InstallationStatus installStatus = catalogItem.getInstallationStatus();
         int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installStatus);
         resId = (resId == R.string.wallet_status_installed) ? R.string.wallet_status_open : resId;
-        installButton.setText(resId);
+
+        // TODO Corregir esto para que tome el string en base al estado de la instalacion (resId)
+        installButton.setText(R.string.wallet_status_open);
         installButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,11 +170,12 @@ public class DetailsActivityFragment extends FermatFragment {
             });
         }
 
-        if (walletPreviewImgList != null) {
+
+        if (screenshotList != null) {
             LinearLayoutManager layout = new LinearLayoutManager(getActivity(), HORIZONTAL, false);
             previewImagesRecyclerView.setLayoutManager(layout);
 
-            ImagesAdapter adapter = new ImagesAdapter(getActivity(), walletPreviewImgList);
+            FermatAdapter adapter = new ImagesAdapter(getActivity(), screenshotList);
             previewImagesRecyclerView.setAdapter(adapter);
 
         } else {
@@ -188,7 +192,7 @@ public class DetailsActivityFragment extends FermatFragment {
                 getActivity(), errorManager, dialog, installButton, uninstallButton);
 
         InstallWalletWorker installWalletWorker = new InstallWalletWorker(
-                getActivity(), callback, moduleManager, subAppsSession);
+                getActivity(), callback, moduleManager, (SubAppsSession) appSession);
 
         if (executor != null) {
             executor.shutdownNow();

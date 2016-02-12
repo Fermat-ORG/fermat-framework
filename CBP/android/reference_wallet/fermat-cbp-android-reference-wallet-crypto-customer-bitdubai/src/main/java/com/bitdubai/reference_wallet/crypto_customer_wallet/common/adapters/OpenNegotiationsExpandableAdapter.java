@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.NegotiationInformationViewHolder;
@@ -72,7 +72,7 @@ public class OpenNegotiationsExpandableAdapter
             parentViewHolder.configureStyle(
                     R.color.ccw_waiting_for_broker_grouper_background,
                     R.color.ccw_waiting_for_broker_grouper_text,
-                    R.drawable.ic_home_tab_arrow_white_down
+                    R.drawable.ccw_ic_home_tab_arrow_white_down
             );
         }
     }

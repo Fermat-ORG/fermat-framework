@@ -4,9 +4,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 12/10/15.
+ * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 28/12/15.
  */
 public enum ReceptionStatus implements FermatEnum {
+
+    //ENUM DECLARATION
     ASSET_ACCEPTED("DAMA"),
     CHECKING_CONTRACT("CCONT"),
     CHECKING_HASH("CHASH"),
@@ -16,46 +18,35 @@ public enum ReceptionStatus implements FermatEnum {
     RECEIVING("RXG"),
     REJECTED_BY_CONTRACT("DAMRBC"),
     REJECTED_BY_HASH("RBH"),
+    CANCELLED("CNC"),
     UNDEFINED_REJECTION("URJ"),
     RECEPTION_FINISHED("REFI");
 
+    //VARIABLE DECLARATION
+
     private String code;
+
+    //CONSTRUCTORS
 
     ReceptionStatus(String code) {
         this.code = code;
     }
 
-    @Override
-    public String getCode() {
-        return this.code;
-    }
+    //PUBLIC METHODS
 
     public static ReceptionStatus getByCode(String code) throws InvalidParameterException {
-        switch (code) {
-            case "ACD":
-                return ReceptionStatus.ASSET_ACCEPTED;
-            case "CCONT":
-                return ReceptionStatus.CHECKING_CONTRACT;
-            case "CHASH":
-                return ReceptionStatus.CHECKING_HASH;
-            case "CONTC":
-                return ReceptionStatus.CONTRACT_CHECKED;
-            case "BTCRX":
-                return ReceptionStatus.CRYPTO_RECEIVED;
-            case "HASHC":
-                return ReceptionStatus.HASH_CHECKED;
-            case "RXG":
-                return ReceptionStatus.RECEIVING;
-            case "RBC":
-                return ReceptionStatus.REJECTED_BY_CONTRACT;
-            case "RBH":
-                return ReceptionStatus.REJECTED_BY_HASH;
-            case "URJ":
-                return ReceptionStatus.UNDEFINED_REJECTION;
-            case "REFI":
-                return ReceptionStatus.RECEPTION_FINISHED;
-            default:
-                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ReceptionStatus enum.");
+        for (ReceptionStatus fenum : values()) {
+            if (fenum.getCode().equals(code)) return fenum;
         }
+        throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ReceptionStatus enum.");
+    }
+
+    //PRIVATE METHODS
+
+    //GETTER AND SETTERS
+
+    @Override
+    public String getCode() {
+        return code;
     }
 }

@@ -1,27 +1,26 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Filter;
@@ -31,48 +30,45 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.FermatListViewFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.SubActionButton;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.IndexBarView;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.HeaderTypes;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.NavigationViewAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ConnectionWithCommunityDialog;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ContactsTutorialPart1V2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.FragmentsCommons;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
-import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
-
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -89,40 +85,25 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
  * Created by Matias Furszyfer on 19/07/15.
  */
 
-public class ContactsFragment extends FermatWalletFragment implements FermatListViewFragment,DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler,CreateContactDialogCallback, View.OnClickListener {
+public class ContactsFragment extends AbstractFermatFragment implements FermatListViewFragment, DialogInterface.OnDismissListener, Thread.UncaughtExceptionHandler, CreateContactDialogCallback, View.OnClickListener, AbsListView.OnScrollListener {
 
-
-    static final int ID_BTN_EXTRA_USER = 12;
-    static final int ID_BTN_INTRA_USER = 23;
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     public static final int REQUEST_LOAD_IMAGE = 2;
     public static final int CONTEXT_MENU_CAMERA = 1;
     public static final int CONTEXT_MENU_GALLERY = 2;
+    static final int ID_BTN_EXTRA_USER = 12;
+    static final int ID_BTN_INTRA_USER = 23;
     private static final int CONTEXT_MENU_NO_PHOTO = 4;
     private static final int UNIQUE_FRAGMENT_GROUP_ID = 17;
-
-    /** DealsWithWalletModuleCryptoWallet Interface member variables. */
-    private CryptoWalletManager cryptoWalletManager;
-    private CryptoWallet cryptoWallet;
-    private ErrorManager errorManager;
-    private Bitmap contactImageBitmap;
-    private WalletContact walletContact;
-
     CreateContactFragmentDialog dialog;
-
     View rootView;
-    String walletPublicKey = "reference_wallet";
-
-    // TODO: preguntar de donde saco el user id
-    String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
-
     //Type face font
     Typeface tf;
-
-    /** Wallet session */
+    /**
+     * Wallet session
+     */
     ReferenceWalletSession referenceWalletSession;
-
     // unsorted list items
     List<CryptoWalletWalletContact> mItems;
     // array list to store section positions
@@ -141,18 +122,25 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     ProgressBar mLoadingView;
     // empty view
     LinearLayout mEmptyView;
-
     Bundle mSavedInstanceState;
-
-
+    String user_id = UUID.fromString("afd0647a-87de-4c56-9bc9-be736e0c5059").toString();
     /**
      * Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
-
     List<CryptoWalletWalletContact> walletContactRecords;
+    /**
+     * DealsWithWalletModuleCryptoWallet Interface member variables.
+     */
+    private CryptoWalletManager cryptoWalletManager;
+    private CryptoWallet cryptoWallet;
+    private ErrorManager errorManager;
+    private Bitmap contactImageBitmap;
+    private WalletContact walletContact;
     private FrameLayout contacts_container;
-    private boolean connectionDialogIsShow=false;
+    private boolean connectionDialogIsShow = false;
+    private SettingsManager<BitcoinWalletSettings> settingsManager;
+    private boolean isScrolled = false;
 
     public static ContactsFragment newInstance() {
 
@@ -165,12 +153,12 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession =(ReferenceWalletSession) walletSession;
-        setRetainInstance(true);
-        setHasOptionsMenu(false);
+        referenceWalletSession = (ReferenceWalletSession) appSession;
+        setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
-        errorManager = walletSession.getErrorManager();
+        errorManager = appSession.getErrorManager();
         cryptoWalletManager = referenceWalletSession.getModuleManager();
+        settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
         } catch (CantGetCryptoWalletException e) {
@@ -188,58 +176,63 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             rootView = inflater.inflate(R.layout.main_act, container, false);
             setupViews(rootView);
             setUpFAB();
-            setUpScreen(inflater);
             walletContactRecords = new ArrayList<>();
             mItems = new ArrayList<>();
             mListSectionPos = new ArrayList<Integer>();
             mListItems = new ArrayList<Object>();
             onRefresh();
+            Handler handlerTimer = new Handler();
+            handlerTimer.postDelayed(new Runnable() {
+                public void run() {
+                    if (walletContactRecords.isEmpty()) {
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
+                        try {
+                            setUpTutorial();
+                        } catch (CantGetSettingsException e) {
+                            e.printStackTrace();
+                        } catch (SettingsNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
+                    }
+                }
+            }, 300);
             return rootView;
-
-        } catch (CantGetActiveLoginIdentityException e) {
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-        } catch (Exception e){
+        } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
         return container;
     }
 
+    @SuppressWarnings("ResourceType")
     private void setUpFAB() {
         // in Activity Context
         FrameLayout frameLayout = new FrameLayout(getActivity());
 
-        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,RelativeLayout.LayoutParams.MATCH_PARENT);
+        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 
         frameLayout.setLayoutParams(lbs);
 
-        ImageView icon = new ImageView(getActivity()); // Create an icon
-        icon.setImageResource(R.drawable.ic_contact_newcontact);
-
+        ImageView icon = new ImageView(getActivity());
         frameLayout.addView(icon);
-
-
-        FloatingActionButton actionButton = new FloatingActionButton.Builder(getActivity())
+        com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout)
                 .setBackgroundDrawable(R.drawable.btn_contact_selector)
                 .build();
-
-
-
-
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
-// repeat many times:
+        // repeat many times:
         ImageView itemIcon = new ImageView(getActivity());
-        itemIcon.setImageResource(R.drawable.ic_contact_float_new_contact_blue);
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setLayoutParams(new FrameLayout.LayoutParams(160,160)).build();
+        itemIcon.setImageResource(R.drawable.extra_user_button);
+
+        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button)).setText("External User").build();
         button1.setId(ID_BTN_EXTRA_USER);
-//        button1.setLayoutParams();
 
 
         ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setImageResource(R.drawable.ic_contact_float_new_contact);
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).build();
+        itemIcon2.setImageResource(R.drawable.intra_user_button);
+        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).setBackgroundDrawable(getResources().getDrawable(R.drawable.intra_user_button)).setText("Fermat User").build();
         button2.setId(ID_BTN_INTRA_USER);
 
 
@@ -254,17 +247,14 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-        /**
-         * add navigation header
-         */
-        addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity()));
-
-        /**
-         * Navigation view items
-         */
-        NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(getActivity(),null,referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity());
-        setNavigationDrawer(navigationViewAdapter);
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        try {
+            super.onActivityCreated(new Bundle());
+        } catch (Exception e) {
+            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
     }
 
 
@@ -281,6 +271,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                     mPinnedHeaderAdapter.notifyDataSetChanged();
                 }
             }
+
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
 
@@ -292,13 +283,39 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         // Apply any required UI change now that the Fragment is visible.
     }
 
-    private void onRefresh(){
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+        super.onCreateOptionsMenu(menu, inflater);
+
+        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        //inflater.inflate(R.menu.home_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
         try {
-            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(),referenceWalletSession.getIntraUserModuleManager().getActiveIntraUserIdentity().getPublicKey());
+
+            int id = item.getItemId();
+
+            if (id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT) {
+                setUpTutorial();
+                return true;
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void onRefresh() {
+        try {
+            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
         } catch (CantGetAllWalletContactsException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
-        } catch (CantGetActiveLoginIdentityException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
         } catch (Exception e) {
@@ -306,20 +323,41 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             showMessage(getActivity(), "unknown error- " + e.getMessage());
         }
 
-        if(walletContactRecords.isEmpty()){
+        if (walletContactRecords.isEmpty()) {
             mEmptyView.setVisibility(View.VISIBLE);
-            contacts_container.setVisibility(View.GONE);
-        }else {
-            contacts_container.setVisibility(View.VISIBLE);
+            mListView.setVisibility(View.GONE);
+        } else {
+            mListView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
         }
         refreshAdapter();
     }
 
-    private void refreshAdapter(){
+    private void setUpTutorial() throws CantGetSettingsException, SettingsNotFoundException {
+        boolean isHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+        if (isHelpEnabled) {
+            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).isContactsHelpEnabled());
+            contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Object b = referenceWalletSession.getData(SessionConstant.CREATE_EXTRA_USER);
+                    if (b != null) {
+                        if ((Boolean) b) {
+                            lauchCreateContactDialog(false);
+                            referenceWalletSession.removeData(SessionConstant.CREATE_EXTRA_USER);
+                        }
+                    }
+
+                }
+            });
+            contactsTutorialPart1.show();
+        }
+    }
+
+    private void refreshAdapter() {
         if (mSavedInstanceState != null) {
             //TODO: no se si esto esta bien
-            mListItems =(ArrayList) mSavedInstanceState.getParcelableArrayList("mListItems");
+            mListItems = (ArrayList) mSavedInstanceState.getParcelableArrayList("mListItems");
             mListSectionPos = mSavedInstanceState.getIntegerArrayList("mListSectionPos");
 
             if (mListItems != null && mListItems.size() > 0 && mListSectionPos != null && mListSectionPos.size() > 0) {
@@ -333,7 +371,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
             }
         } else {
             mItems = walletContactRecords;
-            new Populate().execute((ArrayList<CryptoWalletWalletContact>)mItems);
+            isScrolled = false;
+            new Populate().execute((ArrayList<CryptoWalletWalletContact>) mItems);
         }
 
     }
@@ -347,7 +386,6 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         mListView = (PinnedHeaderListView) rootView.findViewById(R.id.list_view);
         mEmptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
-        mSearchView.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
         mClearSearchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -400,14 +438,12 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                 mListItems,
                 mListSectionPos,
                 constrainStr,
-                this);
+                this,
+                errorManager);
 
         mListView.setAdapter(mPinnedHeaderAdapter);
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        //LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(LAYOUT_INFLATER_SERVICE);
-
         // set header view
         View pinnedHeaderView = inflater.inflate(R.layout.section_row_view, mListView, false);
         mListView.setPinnedHeaderView(pinnedHeaderView);
@@ -416,15 +452,14 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         IndexBarView indexBarView = (IndexBarView) inflater.inflate(R.layout.index_bar_view, mListView, false);
         indexBarView.setData(mListView, mListItems, mListSectionPos);
         mListView.setIndexBarView(indexBarView);
-
+/*
         // set preview text view
         View previewTextView = inflater.inflate(R.layout.preview_view, mListView, false);
-        mListView.setPreviewView(previewTextView);
+        mListView.setPreviewView(previewTextView);*/
 
 
-
-        // for configure pinned header view on scroll change
-        mListView.setOnScrollListener(mPinnedHeaderAdapter);
+        // for configure pinned header view on onrefresh change
+        mListView.setOnScrollListener(this);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -433,35 +468,30 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                     PinnedHeaderAdapter adapter = (PinnedHeaderAdapter) adapterView.getAdapter();
 
                     referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
-                    CryptoWalletWalletContact cryptoWalletWalletContact;
 
-                    System.out.println(adapterView.getItemAtPosition(position).toString());
-
-                    if(position == 1)
-                        referenceWalletSession.setLastContactSelected((CryptoWalletWalletContact)adapterView.getItemAtPosition(position));
+                    if (position == 1)
+                        referenceWalletSession.setLastContactSelected((CryptoWalletWalletContact) adapterView.getItemAtPosition(position));
                     else
-                        referenceWalletSession.setLastContactSelected((CryptoWalletWalletContact)adapterView.getItemAtPosition(position));
+                        referenceWalletSession.setLastContactSelected((CryptoWalletWalletContact) adapterView.getItemAtPosition(position));
 
 
-                    Boolean isFromActionBarSend = (Boolean)referenceWalletSession.getData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS);
+                    Boolean isFromActionBarSend = (Boolean) referenceWalletSession.getData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS);
 
-                    if(isFromActionBarSend!=null) {
+                    if (isFromActionBarSend != null) {
                         if (isFromActionBarSend) {
                             referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, Boolean.FALSE);
-                            changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,referenceWalletSession.getAppPublicKey());
+                            changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
 
                         } else {
-                            //((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
-                            changeActivity(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY,referenceWalletSession.getAppPublicKey());
+                            changeActivity(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
                         }
                     } else {
-                    //((FermatScreenSwapper) getActivity()).changeWalletFragment(installedWallet.getWalletCategory().getCode(), installedWallet.getWalletType().getCode(), installedWallet.getWalletPublicKey(), ReferenceFragmentsEnumType.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS.getKey());
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY,referenceWalletSession.getAppPublicKey());
-                     }
+                        changeActivity(Activities.CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                    }
 
 
                 } catch (Exception ex) {
-                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE,ex);
+                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, ex);
                     showMessage(getActivity(), "Unexpected error get Contact Detalil - " + ex.getMessage());
                 }
             }
@@ -470,7 +500,7 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         mListView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-              //  Toast.makeText(getActivity(), mListItems.get(i).toString(), Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
@@ -495,8 +525,8 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         getActivity().openContextMenu(mClearSearchImageButton);
     }
 
-    public void setWalletSession(ReferenceWalletSession walletSession) {
-        this.walletSession = walletSession;
+    public void setWalletSession(ReferenceWalletSession appSession) {
+        this.appSession = appSession;
     }
 
     public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
@@ -508,241 +538,32 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
 
         int id = v.getId();
 
-        if(id == ID_BTN_EXTRA_USER){
-                walletContact = new WalletContact();
-                walletContact.setName("");
-                lauchCreateContactDialog(false);
-        }else if (id == ID_BTN_INTRA_USER){
-            changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY,referenceWalletSession.getAppPublicKey());
+        if (id == ID_BTN_EXTRA_USER) {
+            walletContact = new WalletContact();
+            walletContact.setName("");
+            lauchCreateContactDialog(false);
+        } else if (id == ID_BTN_INTRA_USER) {
+            changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY, referenceWalletSession.getAppPublicKey());
         }
     }
 
-
-    /**
-     * Sort array and extract sections f background Thread here we use AsyncTask
-     */
-    private class Populate extends AsyncTask<ArrayList<CryptoWalletWalletContact>, Void, Void> {
-        private final int TOTAL_CONTACTS_SECTION_POSITION = 0;
-        private String constrainStr;
-
-
-        public Populate() {
-            constrainStr = null;
-        }
-
-        public Populate(String constrainStr) {
-            this();
-            if (constrainStr != null) {
-                if (!constrainStr.isEmpty()) {
-                    this.constrainStr = constrainStr;
-                }
-            }
-
-        }
-
-        @Override
-        protected void onPreExecute() {
-            // show loading indicator
-            showLoading(mListView, mLoadingView, mEmptyView);
-            super.onPreExecute();
-        }
-
-
-        @Override
-        @SafeVarargs
-        protected final Void doInBackground(ArrayList<CryptoWalletWalletContact>... params) {
-            mListItems.clear();
-            mListSectionPos.clear();
-
-            ArrayList<CryptoWalletWalletContact> items = params[0];
-
-            Map<Integer,CryptoWalletWalletContact> positions = new HashMap<>();
-
-            if(items!=null)
-            if (items.size() > 0) {
-
-                // sort array
-                //Collections.sort(items, new SortIgnoreCase());
-
-                MyComparator icc = new MyComparator();
-
-                Collections.sort(items, icc);
-
-                final boolean searchMode = constrainStr != null;
-                if (searchMode) {
-                    // add this section to the list of items
-                    mListItems.add("All Contacts: " + items.size() + " found ");
-
-                    // add the position of this section to the list of section positions
-                    mListSectionPos.add(TOTAL_CONTACTS_SECTION_POSITION);
-
-                    // add the items to the list of items
-                    mListItems.addAll(items);
-
-                } else {
-                    // hashMap to group the items by number (#), symbol (@), and letter (a)
-                    HashMap<HeaderTypes, ArrayList<String>> hashMap = new HashMap<>();
-                    hashMap.put(HeaderTypes.NUMBER, new ArrayList<String>());
-                    hashMap.put(HeaderTypes.SYMBOL, new ArrayList<String>());
-                    hashMap.put(HeaderTypes.LETTER, new ArrayList<String>());
-
-                    // list of symbols, numbers and letter items contained in the hashMap
-                    final ArrayList<String> symbols = hashMap.get(HeaderTypes.SYMBOL);
-                    final ArrayList<String> numbers = hashMap.get(HeaderTypes.NUMBER);
-                    final ArrayList<String> letters = hashMap.get(HeaderTypes.LETTER);
-
-                    // Regex for Number and Letters
-                    final String numberRegex = HeaderTypes.NUMBER.getRegex();
-                    final String letterRegex = HeaderTypes.LETTER.getRegex();
-
-                    // for each item in the list look if is number, symbol o letter and put it in the corresponding list
-                    for (int i=0;i<items.size();i++){//) {
-
-                        CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
-
-                        String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
-
-                        if (currentSection.matches(numberRegex))
-                            // is Digit
-                            numbers.add(cryptoWalletWalletContact.getActorName());
-                        else if (currentSection.matches(letterRegex)) {
-                            // is Letter
-                            letters.add(cryptoWalletWalletContact.getActorName());
-                            positions.put(i, cryptoWalletWalletContact);
-                        }
-                        else
-                            // Is other symbol
-                            symbols.add(cryptoWalletWalletContact.getActorName());
-                    }
-
-                    final String symbolCode = HeaderTypes.SYMBOL.getCode();
-                    if (!symbols.isEmpty()) {
-                        // add the section in the list of items
-                        mListItems.add(symbolCode);
-                        // add the section position in the list section positions
-                        mListSectionPos.add(mListItems.indexOf(symbolCode));
-                        // add all the items in this group
-                        mListItems.addAll(symbols);
-                    }
-
-                    final String numberCode = HeaderTypes.NUMBER.getCode();
-                    if (!numbers.isEmpty()) {
-                        mListItems.add(numberCode);
-                        mListSectionPos.add(mListItems.indexOf(numberCode));
-                        mListItems.addAll(numbers);
-                    }
-
-                    // add the letters items in the list and his corresponding sections based on its first letter
-                    String prevSection = "";
-                    for (int i = 0; i<letters.size();i++){//String currentItem : letters) {
-                        String currentItem = letters.get(i);
-                        String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
-
-                        if (!prevSection.equals(currentSection)) {
-                            mListItems.add(currentSection);
-
-                            // array list of section positions
-                            mListSectionPos.add(mListItems.indexOf(currentSection));
-                            prevSection = currentSection;
-                        }
-
-                        mListItems.add(positions.get(i));
-                    }
-                }
-
-            }
-            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(Void result) {
-            if (!isCancelled()) {
-                if (mListItems.isEmpty()) {
-                    showEmptyText(mListView, mLoadingView, mEmptyView);
-                } else {
-                    setListAdaptor(constrainStr);
-                    showContent(mListView, mLoadingView, mEmptyView);
-                }
-            }
-            super.onPostExecute(result);
-        }
-
-
-        private void showLoading(View contentView, View loadingView, View emptyView) {
-            contentView.setVisibility(View.GONE);
-            loadingView.setVisibility(View.VISIBLE);
-            emptyView.setVisibility(View.GONE);
-        }
-
-
-        private void showContent(View contentView, View loadingView, View emptyView) {
-            contentView.setVisibility(View.VISIBLE);
-            loadingView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.GONE);
-        }
-
-
-        private void showEmptyText(View contentView, View loadingView, View emptyView) {
-            contentView.setVisibility(View.GONE);
-            loadingView.setVisibility(View.GONE);
-            emptyView.setVisibility(View.VISIBLE);
-        }
-
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        isScrolled = true;
 
     }
 
-
-    /**
-     * Filter Class for the Items in PinnedHeaderAdapter
-     */
-    public class ListFilter extends Filter {
-
-        @Override
-        protected FilterResults performFiltering(CharSequence constraint) {
-            // NOTE: this function is *always* called from a background thread, and not the UI thread.
-            FilterResults result = new FilterResults();
-
-            if (constraint != null && constraint.toString().length() > 0) {
-                String constraintStr = constraint.toString().toLowerCase(Locale.getDefault());
-                ArrayList<CryptoWalletWalletContact> filterItems = new ArrayList<>();
-
-                synchronized (this) {
-                    for (CryptoWalletWalletContact item : mItems) {
-                        if (item.getActorName().toLowerCase(Locale.getDefault()).contains(constraintStr)) {
-                            filterItems.add(item);
-                        }
-                    }
-                    result.count = filterItems.size();
-                    result.values = filterItems;
-                }
-            } else {
-                synchronized (this) {
-                    result.count = mItems.size();
-                    result.values = mItems;
-                }
-            }
-            return result;
-        }
-
-
-        @Override
-        @SuppressWarnings("unchecked")
-        protected void publishResults(CharSequence constraint, FilterResults results) {
-            ArrayList<CryptoWalletWalletContact> filtered = (ArrayList<CryptoWalletWalletContact>) results.values;
-            final String constrainStr = constraint.toString();
-            setIndexBarViewVisibility(constrainStr);
-
-            // sort array and extract sections in background Thread
-            new Populate(constrainStr).execute(filtered);
-        }
-
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//TODO obtener la [a posicion del scroll antes de hacer populate
+        //if (isScrolled) {
+        //new Populate().execute((ArrayList<CryptoWalletWalletContact>) mItems);
+        //TODO setear la posicion obtenida despues de hacer el populate
+        //   mListView.scrollTo(0, mListSectionPos.size() - firstVisibleItem);
+//        }
     }
 
-    /* Create Contacto Dialog */
-
-    private void lauchCreateContactDialog(boolean withImage){
+    private void lauchCreateContactDialog(boolean withImage) {
         dialog = new CreateContactFragmentDialog(
                 getActivity(),
                 referenceWalletSession,
@@ -754,22 +575,22 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
         dialog.show();
     }
 
-
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
         onRefresh();
     }
 
+    /* Create Contacto Dialog */
+
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
         referenceWalletSession.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception());
-        Toast.makeText(getActivity(),"oooopps",Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "oooopps", Toast.LENGTH_SHORT).show();
     }
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             contactImageBitmap = null;
             switch (requestCode) {
@@ -847,6 +668,219 @@ public class ContactsFragment extends FermatWalletFragment implements FermatList
                 Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intentLoad, REQUEST_LOAD_IMAGE);
+    }
+
+    /**
+     * Sort array and extract sections f background Thread here we use AsyncTask
+     */
+    private class Populate extends AsyncTask<ArrayList<CryptoWalletWalletContact>, Void, Void> {
+        private final int TOTAL_CONTACTS_SECTION_POSITION = 0;
+        private String constrainStr;
+
+
+        public Populate() {
+            constrainStr = null;
+        }
+
+        public Populate(String constrainStr) {
+            this();
+            if (constrainStr != null) {
+                if (!constrainStr.isEmpty()) {
+                    this.constrainStr = constrainStr;
+                }
+            }
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // show loading indicator
+            if (!isScrolled)
+                showLoading(mListView, mLoadingView, mEmptyView);
+            super.onPreExecute();
+        }
+
+
+        @Override
+        @SafeVarargs
+        protected final Void doInBackground(ArrayList<CryptoWalletWalletContact>... params) {
+            mListItems.clear();
+            mListSectionPos.clear();
+
+            ArrayList<CryptoWalletWalletContact> items = params[0];
+
+            Map<Integer, CryptoWalletWalletContact> positions = new HashMap<>();
+
+            if (items != null)
+                if (items.size() > 0) {
+                    MyComparator icc = new MyComparator();
+                    Collections.sort(items, icc);
+                    final boolean searchMode = constrainStr != null;
+                    if (searchMode) {
+                        // add this section to the list of items
+                        mListItems.add("All Contacts: " + items.size() + " found ");
+
+                        // add the position of this section to the list of section positions
+                        mListSectionPos.add(TOTAL_CONTACTS_SECTION_POSITION);
+
+                        // add the items to the list of items
+                        mListItems.addAll(items);
+
+                    } else {
+                        // hashMap to group the items by number (#), symbol (@), and letter (a)
+                        HashMap<HeaderTypes, ArrayList<String>> hashMap = new HashMap<>();
+                        hashMap.put(HeaderTypes.NUMBER, new ArrayList<String>());
+                        hashMap.put(HeaderTypes.SYMBOL, new ArrayList<String>());
+                        hashMap.put(HeaderTypes.LETTER, new ArrayList<String>());
+
+                        // list of symbols, numbers and letter items contained in the hashMap
+                        final ArrayList<String> symbols = hashMap.get(HeaderTypes.SYMBOL);
+                        final ArrayList<String> numbers = hashMap.get(HeaderTypes.NUMBER);
+                        final ArrayList<String> letters = hashMap.get(HeaderTypes.LETTER);
+
+                        // Regex for Number and Letters
+                        final String numberRegex = HeaderTypes.NUMBER.getRegex();
+                        final String letterRegex = HeaderTypes.LETTER.getRegex();
+
+                        // for each item in the list look if is number, symbol o letter and put it in the corresponding list
+                        for (int i = 0; i < items.size(); i++) {//) {
+                            CryptoWalletWalletContact cryptoWalletWalletContact = items.get(i);
+                            String currentSection = cryptoWalletWalletContact.getActorName().substring(0, 1);
+                            if (currentSection.matches(numberRegex))
+                                // is Digit
+                                numbers.add(cryptoWalletWalletContact.getActorName());
+                            else if (currentSection.matches(letterRegex)) {
+                                // is Letter
+                                letters.add(cryptoWalletWalletContact.getActorName());
+                                positions.put(i, cryptoWalletWalletContact);
+                            } else
+                                // Is other symbol
+                                symbols.add(cryptoWalletWalletContact.getActorName());
+                        }
+
+                        final String symbolCode = HeaderTypes.SYMBOL.getCode();
+                        if (!symbols.isEmpty()) {
+                            // add the section in the list of items
+                            mListItems.add(symbolCode);
+                            // add the section position in the list section positions
+                            mListSectionPos.add(mListItems.indexOf(symbolCode));
+                            // add all the items in this group
+                            mListItems.addAll(symbols);
+                        }
+
+                        final String numberCode = HeaderTypes.NUMBER.getCode();
+                        if (!numbers.isEmpty()) {
+                            mListItems.add(numberCode);
+                            mListSectionPos.add(mListItems.indexOf(numberCode));
+                            mListItems.addAll(numbers);
+                        }
+
+                        // add the letters items in the list and his corresponding sections based on its first letter
+                        String prevSection = "";
+                        for (int i = 0; i < letters.size(); i++) {//String currentItem : letters) {
+                            String currentItem = letters.get(i);
+                            String currentSection = currentItem.substring(0, 1).toUpperCase(Locale.getDefault());
+
+                            if (!prevSection.equals(currentSection)) {
+                                mListItems.add(currentSection);
+
+                                // array list of section positions
+                                mListSectionPos.add(mListItems.indexOf(currentSection));
+                                prevSection = currentSection;
+                            }
+
+                            mListItems.add(positions.get(i));
+                        }
+                    }
+
+                }
+            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (!isCancelled()) {
+                if (mListItems.isEmpty()) {
+                    showEmptyText(mListView, mLoadingView, mEmptyView);
+                } else {
+                    setListAdaptor(constrainStr);
+                    showContent(mListView, mLoadingView, mEmptyView);
+                }
+            }
+            super.onPostExecute(result);
+        }
+
+
+        private void showLoading(View contentView, View loadingView, View emptyView) {
+            contentView.setVisibility(View.GONE);
+            loadingView.setVisibility(View.VISIBLE);
+            FermatAnimationsUtils.showEmpty(getActivity(), false, emptyView);
+        }
+
+
+        private void showContent(View contentView, View loadingView, View emptyView) {
+            contentView.setVisibility(View.VISIBLE);
+            loadingView.setVisibility(View.GONE);
+            FermatAnimationsUtils.showEmpty(getActivity(), false, emptyView);
+        }
+
+
+        private void showEmptyText(View contentView, View loadingView, View emptyView) {
+            contentView.setVisibility(View.GONE);
+            loadingView.setVisibility(View.GONE);
+            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
+        }
+
+
+    }
+
+    /**
+     * Filter Class for the Items in PinnedHeaderAdapter
+     */
+    public class ListFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            // NOTE: this function is *always* called from a background thread, and not the UI thread.
+            FilterResults result = new FilterResults();
+
+            if (constraint != null && constraint.toString().length() > 0) {
+                String constraintStr = constraint.toString().toLowerCase(Locale.getDefault());
+                ArrayList<CryptoWalletWalletContact> filterItems = new ArrayList<>();
+
+                synchronized (this) {
+                    for (CryptoWalletWalletContact item : mItems) {
+                        if (item.getActorName().toLowerCase(Locale.getDefault()).contains(constraintStr)) {
+                            filterItems.add(item);
+                        }
+                    }
+                    result.count = filterItems.size();
+                    result.values = filterItems;
+                }
+            } else {
+                synchronized (this) {
+                    result.count = mItems.size();
+                    result.values = mItems;
+                }
+            }
+            return result;
+        }
+
+
+        @Override
+        @SuppressWarnings("unchecked")
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            ArrayList<CryptoWalletWalletContact> filtered = (ArrayList<CryptoWalletWalletContact>) results.values;
+            final String constrainStr = constraint.toString();
+            setIndexBarViewVisibility(constrainStr);
+
+            // sort array and extract sections in background Thread
+            isScrolled = false;
+            new Populate(constrainStr).execute(filtered);
+        }
+
     }
 
 }

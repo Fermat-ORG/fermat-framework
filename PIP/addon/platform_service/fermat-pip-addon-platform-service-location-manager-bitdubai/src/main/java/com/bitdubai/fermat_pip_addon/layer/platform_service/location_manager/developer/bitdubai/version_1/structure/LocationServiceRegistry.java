@@ -45,7 +45,7 @@ public class LocationServiceRegistry {
         /**
          * It is not ordered by ID, because not  necessarily every register has a later date to the previous
          */
-        table.setFilterOrder(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_TIME_COLUMN, DatabaseFilterOrder.DESCENDING);
+        table.addFilterOrder(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_TIME_COLUMN, DatabaseFilterOrder.DESCENDING);
         table.setFilterTop("1");
         table.loadToMemory();
         table.clearAllFilters();
@@ -61,7 +61,7 @@ public class LocationServiceRegistry {
     public List<LocationSubsystem> findLastLocations(int limit) throws CantLoadTableToMemoryException {
         List<LocationSubsystem> l = new ArrayList<>(limit);
         DatabaseTable table = database.getTable(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_NAME);
-        table.setFilterOrder(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_TIME_COLUMN, DatabaseFilterOrder.DESCENDING);
+        table.addFilterOrder(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_TIME_COLUMN, DatabaseFilterOrder.DESCENDING);
         table.setFilterTop(limit + "");
         table.loadToMemory();
         table.clearAllFilters();

@@ -1,259 +1,222 @@
 package com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.events;
 
 
-import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.IssuerRedemptionDigitalAssetTransactionPluginRoot;
-import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantCheckAssetIssuerRedemptionProgressException;
 import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDao;
-import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDatabaseConstants;
-import com.bidbubai.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDatabaseFactory;
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.Agent;
+import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetIssuerWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantInitializeAssetMonitorAgentException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_appropriation.interfaces.IssuerAppropriationManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
-import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/10/15.
  */
-public class IssuerRedemptionMonitorAgent implements Agent,DealsWithLogger,DealsWithEvents,DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class IssuerRedemptionMonitorAgent implements Agent {
 
-    Database database;
-    String userPublicKey;
-    MonitorAgent monitorAgent;
-    Thread agentThread;
-    LogManager logManager;
-    EventManager eventManager;
-    ErrorManager errorManager;
-    PluginDatabaseSystem pluginDatabaseSystem;
-    UUID pluginId;
-    OutgoingIntraActorManager outgoingIntraActorManager;
-    AssetVaultManager assetVaultManager;
-    //DigitalAssetIssuingVault digitalAssetIssuingVault;
-    BitcoinNetworkManager bitcoinNetworkManager;
-//TODO: clean up this class
+    private final ErrorManager errorManager;
+    private MonitorAgent agent;
+    private IssuerRedemptionDao issuerRedemptionDao;
+    private AssetIssuerWalletManager assetIssuerWalletManager;
+    private BitcoinNetworkManager bitcoinNetworkManager;
+    private ActorAssetIssuerManager actorAssetIssuerManager;
+    private CryptoAddressBookManager cryptoAddressBookManager;
+    private AssetVaultManager assetVaultManager;
+    private IssuerAppropriationManager issuerAppropriationManager;
+    //TODO REMOVE HARDCODE!!!
+    private String issuerPublicKeyWallet = "walletPublicKeyTest";
+    private String btcWallet;
 
-    public IssuerRedemptionMonitorAgent(EventManager eventManager,
-                                               PluginDatabaseSystem pluginDatabaseSystem,
-                                               ErrorManager errorManager,
-                                               UUID pluginId,
-                                               String userPublicKey,
-                                               AssetVaultManager assetVaultManager,
-                                               OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException {
-        this.eventManager = eventManager;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
-        this.pluginId = pluginId;
-        this.userPublicKey = userPublicKey;
-        setAssetVaultManager(assetVaultManager);
-        setOutgoingIntraActorManager(outgoingIntraActorManager);
-    }
-
-    private void setOutgoingIntraActorManager(OutgoingIntraActorManager outgoingIntraActorManager)throws CantSetObjectException{
-        if(outgoingIntraActorManager==null){
-            throw new CantSetObjectException("outgoingIntraActorManager is null");
+    public IssuerRedemptionMonitorAgent(AssetIssuerWalletManager assetIssuerWalletManager,
+                                        ActorAssetIssuerManager actorAssetIssuerManager,
+                                        BitcoinNetworkManager bitcoinNetworkManager,
+                                        CryptoAddressBookManager cryptoAddressBookManager,
+                                        ErrorManager errorManager,
+                                        UUID pluginId,
+                                        PluginDatabaseSystem pluginDatabaseSystem,
+                                        AssetVaultManager assetVaultManager,
+                                        IssuerAppropriationManager issuerAppropriationManager,
+                                        WalletManagerManager walletMiddlewareManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+        this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
+        this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
+        this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
+        this.actorAssetIssuerManager = Validate.verifySetter(actorAssetIssuerManager, "actorAssetIssuerManager is null");
+        this.cryptoAddressBookManager = Validate.verifySetter(cryptoAddressBookManager, "cryptoAddressBookManager is null");
+        this.assetVaultManager = Validate.verifySetter(assetVaultManager, "assetVaultManager is null");
+        this.issuerAppropriationManager = Validate.verifySetter(issuerAppropriationManager, "issuerAppropriationManager is null");
+        issuerRedemptionDao = new IssuerRedemptionDao(pluginId, pluginDatabaseSystem);
+        List<InstalledWallet> installedWallets = new ArrayList<>();
+        try {
+            installedWallets = walletMiddlewareManager.getInstalledWallets();
+            //TODO REMOVE HARDCODE
+            InstalledWallet installedWallet = installedWallets.get(0);
+            btcWallet = installedWallet.getWalletPublicKey();
+        } catch (CantListWalletsException e) {
+            e.printStackTrace();
         }
-        this.outgoingIntraActorManager=outgoingIntraActorManager;
-    }
-
-    private void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException{
-        if(assetVaultManager==null){
-            throw new CantSetObjectException("AssetVaultManager is null");
-        }
-        this.assetVaultManager=assetVaultManager;
-    }
-
-    /*public void setDigitalAssetIssuingVault(DigitalAssetIssuingVault digitalAssetIssuingVault)throws CantSetObjectException{
-        if(digitalAssetIssuingVault ==null){
-            throw new CantSetObjectException("DigitalAssetIssuingVault is null");
-        }
-        this.digitalAssetIssuingVault = digitalAssetIssuingVault;
-    }*/
-
-    public void setBitcoinNetworkManager(BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException{
-        if(bitcoinNetworkManager ==null){
-            throw new CantSetObjectException("bitcoinNetworkManager is null");
-        }
-        this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
 
     @Override
     public void start() throws CantStartAgentException {
-
-        Logger LOG = Logger.getGlobal();
-        LOG.info("Asset Issuing monitor agent starting");
-        monitorAgent = new MonitorAgent();
-
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
-
-        try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
-        } catch (CantInitializeAssetMonitorAgentException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-        }
-
-        this.agentThread = new Thread(monitorAgent);
-        this.agentThread.start();
-
+        agent = new MonitorAgent();
+        Thread agentThread = new Thread(agent, "Issuer Redemption MonitorAgent");
+        agentThread.start();
     }
 
     @Override
     public void stop() {
-        this.agentThread.interrupt();
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager=errorManager;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager=logManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId=pluginId;
+        agent.stopAgent();
     }
 
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements /*IssuerRedemptionNotificationAgent,*/ DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
+    private class MonitorAgent implements Runnable {
 
-        ErrorManager errorManager;
-        PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = /*IssuerRedemptionNotificationAgent.AGENT_SLEEP_TIME*/5000;
-        int iterationNumber = 0;
-        IssuerRedemptionDao issuerRedemptionDao;
-        boolean threadWorking;
+        private int WAIT_TIME = 5 * 1000;
+        private boolean agentRunning;
 
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        {
+            startAgent();
         }
 
-        @Override
-        public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-            this.pluginDatabaseSystem = pluginDatabaseSystem;
-        }
         @Override
         public void run() {
-
-            threadWorking=true;
-            logManager.log(IssuerRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuing Transaction Protocol Notification Agent: running...", null, null);
-            while(threadWorking){
-                /**
-                 * Increase the iteration counter
-                 */
-                iterationNumber++;
+            while (agentRunning) {
                 try {
-                    Thread.sleep(SLEEP_TIME);
-                } catch (InterruptedException interruptedException) {
-                    return;
-                }
-
-                /**
-                 * now I will check if there are pending transactions to raise the event
-                 */
-                try {
-
-                    logManager.log(IssuerRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
-                } catch (CantDeliverDigitalAssetToAssetWalletException | CantCheckAssetIssuerRedemptionProgressException | CantExecuteQueryException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    errorManager.reportUnexpectedPluginException(Plugins.ISSUER_REDEMPTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                } finally {
+                    try {
+                        Thread.sleep(WAIT_TIME);
+                    } catch (InterruptedException e) {
+                        agentRunning = false;
+                    /*If this happen there's a chance that the information remains
+                    in a corrupt state. That probably would be fixed in a next run.
+                    */
+                        errorManager.reportUnexpectedPluginException(Plugins.ISSUER_REDEMPTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                    }
                 }
-
             }
 
         }
-        public void Initialize() throws CantInitializeAssetMonitorAgentException {
-            try {
 
-                database = this.pluginDatabaseSystem.openDatabase(pluginId,  IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_DATABASE);
-            }
-            catch (DatabaseNotFoundException databaseNotFoundException) {
 
-                Logger LOG = Logger.getGlobal();
-                LOG.info("Database in issuer redemption agent doesn't exists");
-                IssuerRedemptionDatabaseFactory assetIssuingTransactionDatabaseFactory=new IssuerRedemptionDatabaseFactory(this.pluginDatabaseSystem);
-                try {
-                    database = assetIssuingTransactionDatabaseFactory.createDatabase(pluginId, userPublicKey);
-                } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,cantCreateDatabaseException);
-                    throw new CantInitializeAssetMonitorAgentException(cantCreateDatabaseException,"Initialize Monitor Agent - trying to create the plugin database","Please, check the cause");
+        private void doTheMainTask() throws Exception {
+            checkPendingCryptoRouterEvents();
+        }
+
+        public void checkPendingCryptoRouterEvents() throws Exception {
+            for (String eventId : issuerRedemptionDao.getPendingCryptoRouterEvents()) {
+                boolean notify = true;
+                switch (issuerRedemptionDao.getEventTypeById(eventId)) {
+                    case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION: {
+                        List<DigitalAssetMetadata> allUsedAssets = new ArrayList<>();
+                        allUsedAssets.addAll(assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, BlockchainNetworkType.TEST_NET).getAllUnusedAssets());
+                        allUsedAssets.addAll(assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, BlockchainNetworkType.PRODUCTION).getAllUnusedAssets());
+                        allUsedAssets.addAll(assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, BlockchainNetworkType.REG_TEST).getAllUnusedAssets());
+                        for (DigitalAssetMetadata digitalAssetMetadata : allUsedAssets) {
+                            List<CryptoTransaction> allChildTx = bitcoinNetworkManager.getChildTransactionsFromParent(digitalAssetMetadata.getLastTransactionHash());
+                            if (allChildTx.isEmpty()) {
+                                notify = false;
+                                continue;
+                            }
+                            CryptoTransaction lastChild = allChildTx.get(0);
+                            digitalAssetMetadata.addNewTransaction(lastChild.getTransactionHash(), lastChild.getBlockHash());
+                            CryptoTransaction cryptoTransactionOnCryptoNetwork = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata, CryptoStatus.ON_CRYPTO_NETWORK);
+                            if (cryptoTransactionOnCryptoNetwork == null) {
+                                notify = false;
+                                continue; //NOT TODAY KID.
+                            }
+                            AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, cryptoTransactionOnCryptoNetwork.getBlockchainNetworkType());
+                            String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getMetadataId());
+                            String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
+                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork, publicKeyFrom, publicKeyTo);
+                            issuerRedemptionDao.assetReceived(digitalAssetMetadata, cryptoTransactionOnCryptoNetwork.getBlockchainNetworkType());
+                            wallet.getBalance().credit(recordWrapper, BalanceType.BOOK);
+                            notify = true;
+                        }
+                        break;
+                    }
+                    case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION: {
+                        for (Map.Entry<BlockchainNetworkType, String> genesisTx : issuerRedemptionDao.getToBeAppliedGenesisTransaction().entrySet()) {
+                            AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(issuerPublicKeyWallet, genesisTx.getKey());
+                            DigitalAssetMetadata digitalAssetMetadata = wallet.getDigitalAssetMetadata(genesisTx.getValue());
+                            CryptoTransaction cryptoTransactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata, CryptoStatus.ON_BLOCKCHAIN);
+                            if (cryptoTransactionOnBlockChain == null) {
+                                notify = false;
+                                continue;
+                            }
+                            CryptoAddressBookRecord bookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransactionOnBlockChain.getAddressTo());
+                            String publicKeyFrom = wallet.getUserDeliveredToPublicKey(digitalAssetMetadata.getMetadataId());
+                            String publicKeyTo = actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
+                            wallet.assetRedeemed(digitalAssetMetadata.getMetadataId(), null, bookRecord.getDeliveredToActorPublicKey());
+                            digitalAssetMetadata.getDigitalAsset().setGenesisAmount(cryptoTransactionOnBlockChain.getCryptoAmount());
+                            digitalAssetMetadata.setMetadataId(UUID.randomUUID());
+                            digitalAssetMetadata.addNewTransaction(cryptoTransactionOnBlockChain.getTransactionHash(), cryptoTransactionOnBlockChain.getBlockHash());
+                            wallet.createdNewAsset(digitalAssetMetadata);
+                            /**
+                             * Notifies the Asset Vault that the address of this Redeem Point, has been used.
+                             */
+                            assetVaultManager.notifyUsedRedeemPointAddress(bookRecord.getCryptoAddress(), bookRecord.getDeliveredToActorPublicKey());
+                            AssetIssuerWalletTransactionRecordWrapper recordWrapper = new AssetIssuerWalletTransactionRecordWrapper(digitalAssetMetadata, cryptoTransactionOnBlockChain, publicKeyFrom, publicKeyTo);
+                            wallet.getBalance().credit(recordWrapper, BalanceType.AVAILABLE);
+                            issuerRedemptionDao.redemptionFinished(digitalAssetMetadata);
+                            if (cryptoTransactionOnBlockChain.getCryptoAmount() < DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT) {
+                                System.out.println("ASSET AMOUNT IS NOT ENOUGH TO START ANOTHER CYCLE, AUTOMATIC APPROPRIATING IT...");
+                                issuerAppropriationManager.appropriateAsset(digitalAssetMetadata, issuerPublicKeyWallet, btcWallet, genesisTx.getKey());
+                            }
+                            notify = true;
+                        }
+                    }
+                    break;
+                    case INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION:
+                        break;
+                    case INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION:
+                        break;
                 }
-            } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ISSUER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantInitializeAssetMonitorAgentException(exception,"Initialize Monitor Agent - trying to open the plugin database","Please, check the cause");
+                if (notify) {
+                    issuerRedemptionDao.notifyEvent(eventId);
+                }
             }
         }
 
-        private void doTheMainTask() throws CantCheckAssetIssuerRedemptionProgressException, CantExecuteQueryException, CantDeliverDigitalAssetToAssetWalletException {
-
-            Logger LOG = Logger.getGlobal();
-            //LOG.info("Asset Issuing monitor agent DoTheMainTask");
-            try {
-                issuerRedemptionDao =new IssuerRedemptionDao(pluginDatabaseSystem,pluginId);
-
-
-
-            } catch (CantExecuteDatabaseOperationException exception) {
-                throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset Issuing monitor agent","Cannot execute database operation");
-            } /*catch (OutgoingIntraActorCantGetCryptoStatusException exception) {
-                throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Exception in OutgoingIntraActor plugin");
-            } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-                throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Unexpected result in database query");
-            } catch (CantGetCryptoTransactionException exception){
-                throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get genesis transaction from asset vault");
-            } catch (CantDeleteDigitalAssetFromLocalStorageException exception) {
-                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            } catch (DAPException exception) {
-                throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Cannot check the asset issuing progress");
-            } catch (OutgoingIntraActorCantGetSendCryptoTransactionHashException exception) {
-                throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get the genesis transaction from Outgoing Intra actor");
-            } catch (CantGetOutgoingIntraActorTransactionManagerException exception) {
-                throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Cannot get the outgoing intra actor transaction manager");
-            } catch(Exception exception){
-                throw new CantCheckAssetIssuerRedemptionProgressException(exception,"Exception in asset Issuing monitor agent","Unexpected exception");
-            }*/
-
+        public void stopAgent() {
+            agentRunning = false;
         }
 
+        public void startAgent() {
+            agentRunning = true;
+        }
     }
 }

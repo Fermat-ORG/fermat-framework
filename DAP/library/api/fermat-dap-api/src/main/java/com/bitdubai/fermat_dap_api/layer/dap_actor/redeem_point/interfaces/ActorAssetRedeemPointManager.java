@@ -1,27 +1,29 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 
 import java.util.List;
 
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface ActorAssetRedeemPointManager {
+public interface ActorAssetRedeemPointManager extends FermatManager {
 
     /**
-     * The method <code>getActorByPublicKey</code> shows the information associated with the actorPublicKey
+     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
      *
      * @param actorPublicKey                    The public key of the Asset Actor Redeem Point
      * @return                                  The information associated with the actorPublicKey.
      * @throws CantGetAssetRedeemPointActorsException
      * @throws CantAssetRedeemPointActorNotFoundException
      */
-    ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
+    ActorAssetRedeemPoint getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
 
     /**
      * The method <code>createActorAssetRedeemPointFactory</code> create Actor by a Identity
@@ -32,6 +34,28 @@ public interface ActorAssetRedeemPointManager {
      * @throws CantCreateActorRedeemPointException
      */
     void createActorAssetRedeemPointFactory(String assetRedeemPointActorPublicKey, String assetRedeemPointActorName, byte[] assetRedeemPointActorprofileImage) throws CantCreateActorRedeemPointException;
+
+    /**
+     * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service
+     */
+    void registerActorInActorNetworkService() throws CantRegisterActorAssetRedeemPointException;
+
+    /**
+     * This method saves an already existing redeem point in the registered redeem point database,
+     * usually uses when the redeem point request the issuer an extended public key, we save in
+     * the issuer side this redeem point so we can retrieve its information on future uses.
+     * @param redeemPoint The already existing redeem point with all its information
+     * @throws CantCreateActorRedeemPointException
+     */
+    void saveRegisteredActorRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws CantCreateActorRedeemPointException;
+
+    /**
+     * The method <code>createActorAssetRedeemPointRegisterInNetworkService</code> create Actor Registered
+     *
+     * @param actorAssetRedeemPoints                       Referred to the Identity publicKey
+     * @throws CantCreateActorRedeemPointException
+     */
+    void createActorAssetRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantCreateActorRedeemPointException;
 
     /**
      * The method <code>getActorAssetRedeemPoint</code> get All Information about Actor
@@ -55,11 +79,14 @@ public interface ActorAssetRedeemPointManager {
      */
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnected() throws CantGetAssetRedeemPointActorsException;
 
+    List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey) throws CantGetAssetRedeemPointActorsException;
+
     /**
-     * The method <code>connectToActorAssetUser</code> Stablish Connection
-     * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
+     * The method <code>sendMessage</code> Stablish Connection
+     * with Requester and Lists Issuers Delivered
      *
-     * @throws CantConnectToActorAssetRedeemPointException
+     * @throws CantConnectToActorAssetUserException
      */
-    void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException;
+    void sendMessage(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetUserException;
+
 }

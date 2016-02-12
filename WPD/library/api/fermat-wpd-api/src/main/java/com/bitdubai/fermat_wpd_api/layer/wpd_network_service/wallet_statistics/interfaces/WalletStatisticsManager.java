@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_statistics.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_statistics.exceptions.CantGetWalletStatisticsException;
 
 import java.util.UUID;
@@ -14,7 +15,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface WalletStatisticsManager {
+public interface WalletStatisticsManager extends FermatManager {
 
     /**
      * This method gives us the wallet statistics associated to a particular wallet.

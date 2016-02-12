@@ -65,6 +65,8 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
 
             table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_FIRST_KEY_COLUMN);
 
@@ -92,6 +94,7 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_FIRST_KEY_COLUMN);
 
@@ -102,6 +105,42 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
+            /**
+             * Create Asset User GROUP database Associate table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME);
+
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
+
+            table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+            /**
+             * Create Asset User GROUP MEMBER database Associate table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_TABLE_NAME);
+
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+
+
+//            table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_GROUP_ID_COLUMN_NAME);
+            table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
             /**
              * Create Asset User relation Asset Issuer Associate table.
              */
@@ -131,12 +170,35 @@ public class AssetUserActorDatabaseFactory implements DealsWithPluginDatabaseSys
 //                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
 //            }
 
+            /**
+             * Create Crypo Address Database table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME);
+
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.TRUE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 256, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+
+
+            table.addIndex(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
         } catch (InvalidOwnerIdException exception) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              */
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "", "There is a problem with the ownerId of the database.");
+        }
+        catch (Exception exception) {
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "", exception.getMessage());
         }
 
         return database;

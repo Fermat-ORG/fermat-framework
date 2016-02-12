@@ -21,10 +21,10 @@ public class PluginVersionReferenceKeyTest {
 				new Version()
 		);
 
-		String key = pvr.toKey();
-		System.out.println(pvr.toKey());
+		//String key = pvr.toKey();
+		//System.out.println(pvr.toKey());
 
-		System.out.println(PluginVersionReference.getByKey(key));
+		//System.out.println(PluginVersionReference.getByKey(key));
 	}
 
 

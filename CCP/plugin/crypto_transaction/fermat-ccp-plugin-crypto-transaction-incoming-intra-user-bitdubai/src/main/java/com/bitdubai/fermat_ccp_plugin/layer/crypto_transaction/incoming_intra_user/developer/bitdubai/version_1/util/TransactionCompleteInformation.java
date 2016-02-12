@@ -1,13 +1,14 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.exceptions.CryptoAddressBookRecordNotFoundException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CryptoAddressBookRecordNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookRecord;
 
 /**
  * The class <code>TransactionCompleteInformation</code>
@@ -42,6 +43,7 @@ public class TransactionCompleteInformation {
 
             return new IncomingIntraUserTransactionWrapper(
                     cryptoTransactionContainer.getTransactionID()            ,
+                    null,
                     cryptoAddressBookRecord   .getDeliveredByActorPublicKey(),
                     cryptoAddressBookRecord   .getDeliveredToActorPublicKey(),
                     cryptoAddressBookRecord   .getDeliveredByActorType()     ,
@@ -51,7 +53,9 @@ public class TransactionCompleteInformation {
                     cryptoTransaction         .getAddressTo()                ,
                     cryptoTransaction         .getCryptoAmount()             ,
                     timestamp                                                ,
-                    memo
+                    memo,
+                    cryptoTransaction.getBlockchainNetworkType()
+
             );
 
         } catch (CantGetCryptoAddressBookRecordException e) {

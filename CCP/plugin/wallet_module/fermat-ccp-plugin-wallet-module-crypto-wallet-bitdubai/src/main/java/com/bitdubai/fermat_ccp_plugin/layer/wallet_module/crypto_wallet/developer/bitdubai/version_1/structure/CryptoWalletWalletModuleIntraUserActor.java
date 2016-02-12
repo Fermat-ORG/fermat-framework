@@ -15,6 +15,7 @@ public class CryptoWalletWalletModuleIntraUserActor implements CryptoWalletIntra
     private final boolean    isContact;
     private final byte[]     profileImage;
     private final String     publicKey;
+    private boolean isSelected=false;
 
     public CryptoWalletWalletModuleIntraUserActor(final String   alias,
                                                   final boolean  isContact,
@@ -35,6 +36,16 @@ public class CryptoWalletWalletModuleIntraUserActor implements CryptoWalletIntra
     @Override
     public boolean isContact() {
         return isContact;
+    }
+
+    @Override
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    @Override
+    public void setSelected(boolean b) {
+        this.isSelected = b;
     }
 
     @Override

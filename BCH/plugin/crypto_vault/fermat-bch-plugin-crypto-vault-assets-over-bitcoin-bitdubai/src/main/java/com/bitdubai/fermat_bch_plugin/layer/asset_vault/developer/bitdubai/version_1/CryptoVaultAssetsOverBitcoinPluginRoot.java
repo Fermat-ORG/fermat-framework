@@ -17,21 +17,43 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
-import com.bitdubai.fermat_pip_api.layer.pip_user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import org.bitcoinj.crypto.DeterministicKey;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.CryptoVaultAssetsOverBitcoinPluginRoot</code>
@@ -45,6 +67,7 @@ import java.util.List;
  */
 public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin implements
         AssetVaultManager,
+        PlatformCryptoVault,
         DatabaseManagerForDevelopers {
 
     @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.USER            , addon  = Addons .DEVICE_USER           )
@@ -143,8 +166,6 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
         //generateAddress();
         //sendBitcoinsTest();
 
-
-
         /**
          * Nothing left to do.
          */
@@ -159,31 +180,10 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     private void generateAddress() {
         try{
             Thread.sleep(5000);
-            System.out.println("Asset vault address: " + this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.DEFAULT).getAddress());
+            System.out.println("Asset vault address: " + this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType()).getAddress());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (GetNewCryptoAddressException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sendBitcoinsTest(){
-        try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(5000);
-                        assetCryptoVaultManager.sendAssetBitcoins("c932eb1b998ceed9e38a40dd2efa9d925007d4898dc91451c79fdc6529116cfd", new CryptoAddress("myd4UH9nGSqxwejkyk8rZWvuxQqzqLfB7J", CryptoCurrency.BITCOIN), 100000);
-                    } catch (CantSendAssetBitcoinsToUserException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -198,8 +198,152 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
         return assetCryptoVaultManager.getAvailableBalanceForTransaction(genesisTransaction);
     }
 
+    /**
+     * Sends the bitcoins generated from the genesisTransactionId to the specified User Actor addres.
+     * @param genesisTransactionId
+     * @param genesisBlock
+     * @param addressTo
+     * @return
+     * @throws CantSendAssetBitcoinsToUserException
+     */
     @Override
-    public String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException {
-        return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, addressTo, amount);
+    public String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
+        return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, genesisBlock, addressTo);
     }
+
+    /**
+     * PlatformCryptoVault interface implementation.
+     * Generates a new Crypto Address by getting next available key path, derive it, and generate it in the specified network.
+     * @param blockchainNetworkType DEFAULT if null value is passed.
+     * @return the newly created crypto address
+     * @throws GetNewCryptoAddressException
+     */
+    @Override
+    public CryptoAddress getCryptoAddress(@Nullable BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
+        return getNewAssetVaultCryptoAddress(blockchainNetworkType);
+    }
+
+    /**
+     * PlatformCryptoVault interface implementation-
+     * @return DAP
+     */
+    @Override
+    public Platforms getPlatform() {
+        return Platforms.DIGITAL_ASSET_PLATFORM;
+    }
+
+    /**
+     * Gets the amount of unused keys that are available from the passed account.
+     * @return
+     */
+    @Override
+    public int getAvailableKeyCount(){
+        HierarchyAccount masterAccount = new HierarchyAccount(0, "Asset Vault", HierarchyAccountType.MASTER_ACCOUNT);
+        return assetCryptoVaultManager.getAvailableKeyCount(masterAccount);
+    }
+
+
+    /**
+     * Derives the specified amount of keys in the selected account. Only some plugins can execute this method.
+     * @param plugin the pluginId invoking this call. Might not have permissions to create new keys.
+     * @param keysToDerive thre amount of keys to derive.
+     * @throws CantDeriveNewKeysException
+     */
+    @Override
+    public void deriveKeys(Plugins plugin,  int keysToDerive) throws CantDeriveNewKeysException{
+        assetCryptoVaultManager.deriveKeys(plugin, keysToDerive);
+    }
+
+
+    /**
+     * Gets the Extended Public Key from the specified account. Can't be from a master account.
+     * @param redeemPointPublicKey a Redeem Point publicKey
+     * @return the DeterministicKey that will be used by the redeem Points.
+     * @throws CantGetExtendedPublicKeyException
+     */
+    @Override
+    public ExtendedPublicKey getRedeemPointExtendedPublicKey(String redeemPointPublicKey) throws CantGetExtendedPublicKeyException {
+        return assetCryptoVaultManager.getRedeemPointExtendedPublicKey(redeemPointPublicKey);
+    }
+
+    /**
+     * If the redeem point keys are initialized, will return all the generated addresses
+     * @param redeemPointPublicKey
+     * @return
+     * @throws CantGetActiveRedeemPointAddressesException
+     */
+    @Override
+    public List<CryptoAddress> getActiveRedeemPointAddresses(String redeemPointPublicKey) throws CantGetActiveRedeemPointAddressesException {
+        return assetCryptoVaultManager.getActiveRedeemPointAddresses(redeemPointPublicKey);
+    }
+
+    /**
+     * Returns the private Keys of all the active Redeem Points hierarchies in the asset vault
+     * @return
+     */
+    @Override
+    public List<String> getActiveRedeemPoints() throws CantGetActiveRedeemPointsException {
+        return assetCryptoVaultManager.getActiveRedeemPoints();
+    }
+
+    /**
+     * When we receive assets from a Redeemption processes, the Issuer that granted the extended public key to the redeem point
+     * needs to inform us when an address is used, so we can generate more if needed.
+     * @param cryptoAddress
+     * @param redeemPointPublicKey
+     */
+    @Override
+    public void notifyUsedRedeemPointAddress(CryptoAddress cryptoAddress, String redeemPointPublicKey) {
+        assetCryptoVaultManager.notifyUsedRedeemPointAddress(cryptoAddress, redeemPointPublicKey);
+    }
+
+    /**
+     * Will create a Bitcoin transaction and prepare it to be broadcasted later.
+     * This transaction locks the bitcoins associated with the passed input (if valid).
+     * @param inputTransaction the Transaction hash that will be used to get the funds from.
+     * @param addressTo the destination of the bitcoins.
+     * @return the Transaction Hash of the new transaction
+     * @throws CantCreateBitcoinTransactionException
+     */
+    @Override
+    public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException {
+        return assetCryptoVaultManager.createBitcoinTransaction(inputTransaction, addressTo);
+    }
+
+    /**
+     * generates a final transaction based on a draft transaction and prepares it to be broadcasted.
+     * @param draftTransaction the completed and signed transaction
+     * @param fermatTrId the internal transaction id
+     * @return the final transactionHash
+     * @throws CantCreateBitcoinTransactionException
+     */
+    @Override
+    public String createBitcoinTransaction(DraftTransaction draftTransaction, UUID fermatTrId) throws CantCreateBitcoinTransactionException {
+        return null;
+    }
+
+    /**
+     * Creates a non complete, unsigned draft bitcoin transaction given the passed input and address to.
+     * @param inputTransaction the Input transaction hash used to take funds from.
+     * @param addressTo the address to whom we are giving the funds.
+     * @return a DraftTransaction class
+     * @throws CantCreateDraftTransactionException
+     */
+    @Override
+    public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
+        return null;
+    }
+
+    /**
+     * Signs the owned inputs of the passed Draft transaction
+     * @param draftTransaction the transaction to sign
+     * @return the signed Transaction
+     * @throws CantSignTransactionException
+     */
+    @Override
+    public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
+        return null;
+    }
+
+
 }

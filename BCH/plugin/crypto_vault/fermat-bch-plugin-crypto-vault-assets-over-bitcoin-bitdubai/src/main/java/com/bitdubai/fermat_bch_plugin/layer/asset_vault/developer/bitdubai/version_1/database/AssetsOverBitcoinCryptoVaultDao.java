@@ -1,11 +1,14 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -13,9 +16,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.HierarchyAccount;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+
+import org.bitcoinj.core.ECKey;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -114,6 +123,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
 
         record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME, hierarchyAccount.getId());
         record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, hierarchyAccount.getDescription());
+        record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME, hierarchyAccount.getHierarchyAccountType().getCode());
 
         try {
             databaseTable.insertRecord(record);
@@ -142,21 +152,22 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "There was an error loading into memory table " +
-                            AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME,
-                    "A database error.");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         /**
          * Iterate each record and form the HierarchyAccount object.
          */
         for (DatabaseTableRecord record : databaseTable.getRecords()){
-            HierarchyAccount hierarchyAccount = new HierarchyAccount(
-                    record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME),
-                    record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME));
+            HierarchyAccount hierarchyAccount = null;
+            try {
+                hierarchyAccount = new HierarchyAccount(
+                        record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME),
+                        record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME),
+                        HierarchyAccountType.getByCode(record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME)));
+            } catch (InvalidParameterException e) {
+                throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Invalid Account Type: " + record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME), null );
+            }
 
             /**
              * Adds the created HierarchyAccount into the list to be returned.
@@ -189,17 +200,11 @@ public class AssetsOverBitcoinCryptoVaultDao {
         /**
          * I will filter the table using the account id
          */
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "there was an error loading the " +
-                            AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_MONITOR_TABLE_NAME
-                            + " table into memory.",
-                    "Database issue");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         /**
@@ -313,15 +318,11 @@ public class AssetsOverBitcoinCryptoVaultDao {
         /**
          * first I see if we already have records for this account by setting a filter and getting the values
          */
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException (
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "there was an error loading into memory the table " + databaseTable.getTableName(),
-                    "database error");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         /**
@@ -361,11 +362,11 @@ public class AssetsOverBitcoinCryptoVaultDao {
      */
     public int getCurrentGeneratedKeys(int accountId) throws CantExecuteDatabaseOperationException{
         DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error loading table to get current Generated Keys value.", "database error");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         if (databaseTable.getRecords().size() == 0)
@@ -382,11 +383,11 @@ public class AssetsOverBitcoinCryptoVaultDao {
      */
     public int getCurrentUsedKeys(int accountId) throws CantExecuteDatabaseOperationException{
         DatabaseTable databaseTable = getDatabaseTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_TABLE_NAME);
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Error loading table to get current Used Keys value.", "database error");
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
         if (databaseTable.getRecords().size() == 0)
@@ -407,17 +408,13 @@ public class AssetsOverBitcoinCryptoVaultDao {
         /**
          * I will check to see if I already have a value for this account so i can updated it.
          */
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_ACCOUNT_ID_COLUMN_NAME, String.valueOf(accountId), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "Error loading into memory table " + databaseTable.getTableName() + " to set new key depth.",
-                    "Database issue");
-
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
+
         DatabaseTableRecord record = null;
         try{
             if (databaseTable.getRecords().size() == 0){
@@ -457,16 +454,11 @@ public class AssetsOverBitcoinCryptoVaultDao {
         /**
          * I will check to see if I already have a value for this account so i can updated it.
          */
-        databaseTable.setStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.ACTIVE_NETWORKS_NETWORKTYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "Error loading into memory table " + databaseTable.getTableName() + " to set new network type.",
-                    "Database issue");
-
+            throwLoadToMemoryException(e, databaseTable.getTableName());
         }
         DatabaseTableRecord record = null;
         String date = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
@@ -509,13 +501,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantExecuteDatabaseOperationException(
-                    CantExecuteDatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
-                    "Error loading into memory table " + databaseTable.getTableName() + " to set new network type.",
-                    "Database issue");
-
-        }
+            throwLoadToMemoryException(e, databaseTable.getTableName());}
 
         /**
          * I will add all the saved values into the list to return
@@ -529,10 +515,192 @@ public class AssetsOverBitcoinCryptoVaultDao {
          * I will manually save the default value
          */
         if (networkTypes.size() == 0){
-            this.setActiveNetworkType(BlockchainNetworkType.DEFAULT);
-            networkTypes.add(BlockchainNetworkType.DEFAULT);
+            this.setActiveNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            networkTypes.add(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         }
 
         return networkTypes;
+    }
+
+    /**
+     * Insert new public keys into the detailed monitor table
+     * @param accountId
+     * @param keys
+     * @throws CantExecuteDatabaseOperationException
+     */
+    public void updateDetailMaintainerStats(int accountId, List<ECKey> keys, int currentGeneratedKeys) throws CantExecuteDatabaseOperationException {
+        /**
+         * If we are not allowed to save detailed information then we will exit.
+         */
+        if (!VaultKeyMaintenanceParameters.STORE_DETAILED_KEY_INFORMATION)
+            return;
+
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        DatabaseTransaction transaction = database.newTransaction();
+
+
+
+        /**
+         * I will insert each key. Since I don't want to repeat inserting keys, I will only insert the keys
+         * which position is after currentGeneratedKeys value
+         */
+        int i=1;
+        for (ECKey key : keys){
+            if (i >= currentGeneratedKeys){
+                DatabaseTableRecord record = databaseTable.getEmptyRecord();
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, accountId);
+                record.setIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME, i);
+                record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, key.getPublicKeyAsHex());
+                transaction.addRecordToInsert(databaseTable, record);
+            }
+            i++;
+        }
+
+        /**
+         * once I collected all records, I will insert them in a single transaction
+         */
+        try {
+            database.executeTransaction(transaction);
+        } catch (DatabaseTransactionFailedException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error inserting records in transaction.", null);
+        }
+    }
+
+    /**
+     * Updates the Key detailed table for this account and key, with the passed addres
+     * @param hierarchyAccountId
+     * @param ecKey
+     * @param cryptoAddress
+     */
+    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
+        /**
+         * If we are not allowed to save detailed information then we will exit
+         */
+        if (!VaultKeyMaintenanceParameters.STORE_DETAILED_KEY_INFORMATION)
+            return;
+
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ACCOUNT_ID_COLUMN_NAME, String.valueOf(hierarchyAccountId), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME, ecKey.getPublicKeyAsHex(), DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        if (databaseTable.getRecords().size() == 0){
+            StringBuilder output = new StringBuilder("The key " + ecKey.toString());
+            output.append(System.lineSeparator());
+            output.append("which generated the address " + cryptoAddress.getAddress());
+            output.append(System.lineSeparator());
+            output.append("is not a key derived from the vault.");
+
+            throw new UnexpectedResultReturnedFromDatabaseException(null, output.toString(), "Vault derivation miss match");
+        }
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+        record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+        try {
+            databaseTable.updateRecord(record);
+        } catch (CantUpdateRecordException e) {
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "error updating record", "database issue");
+        }
+    }
+
+    /**
+     * Gets the next It to be used to create a new HierarchyAccountId
+     * @return
+     */
+    public int getNextAvailableHierarchyAccountId() throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        /**
+         * returns the next available Id to be used.
+         */
+        List<DatabaseTableRecord> databaseTableRecords =  databaseTable.getRecords();
+        if (databaseTableRecords.isEmpty())
+            return 0;
+        else
+        {
+            int hierarchyAccountId = 0;
+            for (DatabaseTableRecord record : databaseTableRecords){
+                if (record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME) > hierarchyAccountId)
+                    hierarchyAccountId = record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME);
+            }
+
+            return hierarchyAccountId + 1;
+        }
+    }
+
+
+    /**
+     * searches for the public key and notifies if is exists.
+     * @param redeemPointPublicKey
+     * @return
+     */
+    public boolean isExistingRedeemPoint(String redeemPointPublicKey) throws CantExecuteDatabaseOperationException{
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, redeemPointPublicKey, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        return !databaseTable.getRecords().isEmpty();
+    }
+
+    /**
+     * sets and thorws the error when we coundl't load a table into memory
+     * @param e
+     * @param tableName
+     * @throws CantExecuteDatabaseOperationException
+     */
+    private void throwLoadToMemoryException(Exception e, String tableName) throws CantExecuteDatabaseOperationException{
+        String outputMessage = "There was an error loading into memory table " + tableName + ".";
+        throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage, "Database error.");
+    }
+
+    /**
+     * Will load an existing Hierarchy Account
+     * @param publicKey
+     * @return
+     */
+    public HierarchyAccount getHierarchyAccount(String publicKey) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
+        databaseTable.addStringFilter(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_DESCRIPTION_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        if (databaseTable.getRecords().size() != 1)
+            throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, null, "inconsistent data found in Key_Accounts table.", "more than one Hierarchy Account stored.");
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+
+
+        /**
+         * Gets the records and forms the HierarchyAccount class.
+         */
+        int id = record.getIntegerValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_ID_COLUMN_NAME);
+        HierarchyAccountType hierarchyAccountType=null;
+        try {
+            hierarchyAccountType = HierarchyAccountType.getByCode(record.getStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TYPE_COLUMN_NAME));
+        } catch (InvalidParameterException e) {
+            hierarchyAccountType = HierarchyAccountType.REDEEMPOINT_ACCOUNT;
+        }
+
+        HierarchyAccount hierarchyAccount = new HierarchyAccount(id, publicKey, hierarchyAccountType);
+        return hierarchyAccount;
     }
 }

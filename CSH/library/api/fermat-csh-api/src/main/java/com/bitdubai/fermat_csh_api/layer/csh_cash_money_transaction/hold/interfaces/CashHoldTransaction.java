@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces;
 
-import com.bitdubai.fermat_csh_api.all_definition.cash_money_transaction.CashTransaction;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransaction;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
 
 /**

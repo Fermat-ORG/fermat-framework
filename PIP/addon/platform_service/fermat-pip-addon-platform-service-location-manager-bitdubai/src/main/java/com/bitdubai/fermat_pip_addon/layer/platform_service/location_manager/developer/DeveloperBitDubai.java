@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAddonDeveloperException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.LocationManagerPlatformServicePluginRoot;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.location_manager.developer.bitdubai.LocationManagerPlatformServiceAddonRoot;
 
 /**
  * The class <code>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.DeveloperBitDubai</code>
@@ -25,7 +25,7 @@ public class DeveloperBitDubai extends AbstractAddonDeveloper {
     public void start() throws CantStartAddonDeveloperException {
         try {
 
-            this.registerVersion(new LocationManagerPlatformServicePluginRoot());
+            this.registerVersion(new LocationManagerPlatformServiceAddonRoot());
 
         } catch (CantRegisterVersionException e) {
 

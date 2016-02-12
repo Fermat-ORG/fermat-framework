@@ -1,14 +1,16 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 
 /**
  * Created by Nerio on 10/09/15.
  */
-public interface ActorAssetUser {
+public interface ActorAssetUser extends DAPActor {
 
     /**
      * The method <code>getPubliclinkedIdentity</code> gives us the public Linked Identity of the represented Asset User
@@ -16,20 +18,6 @@ public interface ActorAssetUser {
      * @return the Public Linked Identity
      */
     String getPublicLinkedIdentity();
-
-    /**
-     * The method <code>getPublicKey</code> gives us the public key of the represented Asset User
-     *
-     * @return the public key
-     */
-     String getPublicKey();
-
-    /**
-     * The method <code>getName</code> gives us the name of the represented Asset User
-     *
-     * @return the name of the intra user
-     */
-    String getName();
 
     /**
      * The method <code>getAge</code> gives us the Age of the represented Asset user
@@ -94,17 +82,16 @@ public interface ActorAssetUser {
     Double getLocationLongitude();
 
     /**
-     * The method <coda>getProfileImage</coda> gives us the profile image of the represented
-     * Asset User
-     *
-     * @return the image
-     */
-    byte[] getProfileImage();
-
-    /**
      * returns the crypto address to which it belongs
      *
      * @return CryptoAddress instance.
      */
     CryptoAddress getCryptoAddress();
+
+    /**
+     * The method <code>getNetworkType</code> returns the network type which it belongs
+     *
+     * @return BlockchainNetworkType instance with the network type.
+     */
+    BlockchainNetworkType getBlockchainNetworkType();
 }

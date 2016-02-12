@@ -1,6 +1,6 @@
 package com.fermat_wpd_plugin.layer.sub_app_module.wallet_factory.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletFactoryProjectState;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.WalletFactoryProjectState;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantCreateWalletFactoryProjectException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantGetWalletFactoryProjectException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.exceptions.CantSaveWalletFactoryProyect;

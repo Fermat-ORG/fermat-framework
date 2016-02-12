@@ -37,6 +37,10 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
     private final RequestAction               action                     ;
     private final CryptoAddressDealers        cryptoAddressDealer        ;
     private final BlockchainNetworkType       blockchainNetworkType      ;
+    private final int                          sentNumber;
+    private final long                          sentDate;
+    private final String                      messageType;
+    private boolean                     readMark;
 
     public CryptoAddressesNetworkServiceCryptoAddressRequest(final UUID                  requestId                  ,
                                                              final String                walletPublicKey            ,
@@ -50,7 +54,11 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
                                                              final RequestType           type                       ,
                                                              final RequestAction         action                     ,
                                                              final CryptoAddressDealers  cryptoAddressDealer        ,
-                                                             final BlockchainNetworkType blockchainNetworkType      ) {
+                                                             final BlockchainNetworkType blockchainNetworkType     ,
+                                                             final int sentNumber,
+                                                             final long sentDate,
+                                                             final String messageType,
+                                                             final boolean readMark) {
 
         this.requestId                   = requestId                  ;
         this.walletPublicKey             = walletPublicKey            ;
@@ -65,6 +73,10 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
         this.action                      = action                     ;
         this.cryptoAddressDealer         = cryptoAddressDealer        ;
         this.blockchainNetworkType       = blockchainNetworkType      ;
+        this.sentNumber = sentNumber;
+        this.sentDate                   = sentDate;
+        this.messageType                = messageType;
+        this.readMark = readMark;
     }
 
     public UUID getRequestId() {
@@ -111,14 +123,41 @@ public class CryptoAddressesNetworkServiceCryptoAddressRequest implements Crypto
         return action;
     }
 
+    @Override
+    public RequestType getRequestType() {
+        return type;
+    }
+
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
+    }
+
+    public int getSentNumber() {
+        return sentNumber;
+    }
+
+    public long getSentDate() {
+        return sentDate;
+    }
+
+    @Override
+    public String getMessageType() {
+        return this.messageType;
     }
 
     @Override
     public CryptoAddressDealers getCryptoAddressDealer() {
         return cryptoAddressDealer;
     }
+
+    public boolean isReadMark() {
+        return readMark;
+    }
+
+    public void setReaded(boolean readMark){
+        this.readMark = readMark;
+    }
+
 
     @Override
     public String toString() {

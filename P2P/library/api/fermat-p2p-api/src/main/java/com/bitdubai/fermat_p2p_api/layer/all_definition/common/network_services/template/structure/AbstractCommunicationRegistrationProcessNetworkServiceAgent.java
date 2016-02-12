@@ -4,7 +4,10 @@ import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.AbstractCommunicationRegistrationProcessNetworkServiceAgent</code>
@@ -17,6 +20,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgent extends FermatAgent {
 
     /*
@@ -25,10 +29,18 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
     private static final long SLEEP_TIME     =  5000;
     private static final long MAX_SLEEP_TIME = 20000;
 
-    private final Thread agentThread;
-
     private final AbstractNetworkService networkServicePluginRoot      ;
-    private final CommunicationsClientConnection communicationsClientConnection;
+    private final WsCommunicationsCloudClientManager communicationsClientConnection;
+
+    private ExecutorService executorService;
+
+    private final Thread agentThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (isRunning())
+                registrationProcess();
+        }
+    });
 
     /**
      * Constructor with parameters.
@@ -36,93 +48,82 @@ public abstract class AbstractCommunicationRegistrationProcessNetworkServiceAgen
      * @param networkServicePluginRoot         pluginRoot of the network service.
      * @param communicationsClientConnection   communication client connection instance.
      */
-    public AbstractCommunicationRegistrationProcessNetworkServiceAgent(final AbstractNetworkService networkServicePluginRoot,
-                                                                       final CommunicationsClientConnection communicationsClientConnection) {
+    public AbstractCommunicationRegistrationProcessNetworkServiceAgent(final AbstractNetworkService         networkServicePluginRoot      ,
+                                                                       final WsCommunicationsCloudClientManager communicationsClientConnection) {
 
         this.networkServicePluginRoot       = networkServicePluginRoot      ;
         this.communicationsClientConnection = communicationsClientConnection;
-
         this.status = AgentStatus.CREATED;
+        executorService = Executors.newSingleThreadExecutor();
 
-        this.agentThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (isRunning())
-                    registrationProcess();
-            }
-        });
     }
 
     @Override
-    public final synchronized void start() {
-
-        this.agentThread.start();
-
+    public void start() {
         this.status = AgentStatus.STARTED;
-
+        executorService.execute(agentThread);
     }
 
     @Override
-    public final void stop() {
-
-        this.agentThread.interrupt();
-
+    public void stop() {
         this.status = AgentStatus.STOPPED;
-
+        executorService.shutdown();
     }
 
     protected void registrationProcess() {
 
-        while (this.isRunning()){
-            try{
+        try {
 
-                if (communicationsClientConnection.isRegister() && !networkServicePluginRoot.isRegister()){
+            if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkServicePluginRoot.isRegister()){
 
-                    //Construct my profile and register me
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(
-                            networkServicePluginRoot.getIdentityPublicKey(),
-                             networkServicePluginRoot.getAlias().toLowerCase(),
-                             networkServicePluginRoot.getName(),
-                             networkServicePluginRoot.getNetworkServiceType(),
-                             networkServicePluginRoot.getPlatformComponentType(),
-                             networkServicePluginRoot.getExtraData());
+                //Construct my profile and register me
+                PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(
+                        networkServicePluginRoot.getIdentityPublicKey(),
+                         networkServicePluginRoot.getAlias().toLowerCase(),
+                         networkServicePluginRoot.getName(),
+                         networkServicePluginRoot.getNetworkServiceType(),
+                         networkServicePluginRoot.getPlatformComponentType(),
+                         networkServicePluginRoot.getExtraData()
+                );
 
-                    // Register me
-                    communicationsClientConnection.registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
+                // Register me
+                communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkServicePluginRoot.getNetworkServiceType(), platformComponentProfile);
 
-                    // Configure my new profile
-                    networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
+                // Configure my new profile
+                networkServicePluginRoot.setPlatformComponentProfilePluginRoot(platformComponentProfile);
 
-                    //Initialize the connection manager
-                    networkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
+                //Initialize the connection manager
+                networkServicePluginRoot.initializeCommunicationNetworkServiceConnectionManager();
 
-                    // Stop the agent
-                    this.status = AgentStatus.STOPPED;
+                // Stop the agent
+                stop();
 
-                } else if (!networkServicePluginRoot.isRegister()){
+            } else if (!networkServicePluginRoot.isRegister()){
 
-                    try {
-                        Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        this.status = AgentStatus.STOPPED;
-                    }
-
-                } else if (!networkServicePluginRoot.isRegister()){
-                    this.status = AgentStatus.STOPPED;
-                }
-
-                // TODO add better exception control here.
-
-            } catch (Exception e) {
                 try {
-                    e.printStackTrace();
-                    Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
-                } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                    if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
+                        Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
+                } catch (InterruptedException e) {
+                    System.out.println(e.getMessage());
                     this.status = AgentStatus.STOPPED;
                 }
+
+            }else if(networkServicePluginRoot.isRegister()){
+                /*
+                 * Stop the internal threads
+                 */
+                 stop();
+            }
+
+        } catch (Exception e) {
+            try {
+                if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
+                    Thread.sleep(AbstractCommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
+            } catch (InterruptedException e1) {
+                System.out.println(e1.getMessage());
+                this.status = AgentStatus.STOPPED;
             }
         }
+
     }
 }

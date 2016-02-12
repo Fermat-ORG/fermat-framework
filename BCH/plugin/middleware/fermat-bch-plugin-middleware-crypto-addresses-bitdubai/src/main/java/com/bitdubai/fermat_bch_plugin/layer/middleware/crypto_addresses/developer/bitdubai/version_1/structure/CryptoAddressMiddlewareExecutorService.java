@@ -5,11 +5,12 @@ import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.develope
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressesNewException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CryptoAddressDealerNotSupportedException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.interfaces.CryptoAddressDealer;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 
@@ -44,19 +45,21 @@ public final class CryptoAddressMiddlewareExecutorService {
 
             final List<CryptoAddressRequest> cryptoAddressRequestRespondedList = cryptoAddressesManager.listPendingCryptoAddressRequests();
 
+            System.out.println("******* Crypto Addresses -> List of pending Crypto Address Requests -> "+cryptoAddressRequestRespondedList);
+
             for (final CryptoAddressRequest request : cryptoAddressRequestRespondedList) {
+                if (request.getRequestType() == RequestType.RECEIVED){
+                    try {
+                        final CryptoAddressDealer dealer = dealersFactory.getCryptoAddressDealer(request.getCryptoAddressDealer());
 
-                try {
+                        dealer.handleCryptoAddressesNew(request);
 
-                    final CryptoAddressDealer dealer = dealersFactory.getCryptoAddressDealer(request.getCryptoAddressDealer());
+                    } catch(CryptoAddressDealerNotSupportedException |
+                            CantHandleCryptoAddressesNewException    e) {
 
-                    dealer.handleCryptoAddressesNew(request);
+                        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
-                } catch(CryptoAddressDealerNotSupportedException |
-                        CantHandleCryptoAddressesNewException    e) {
-
-                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-
+                    }
                 }
             }
 

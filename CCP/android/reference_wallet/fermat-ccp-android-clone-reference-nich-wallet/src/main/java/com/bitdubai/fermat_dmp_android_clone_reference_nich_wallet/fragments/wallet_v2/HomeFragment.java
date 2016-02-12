@@ -11,9 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -21,7 +27,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 
 import java.util.List;
@@ -29,7 +35,7 @@ import java.util.List;
 import static com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.common.utils.WalletUtils.formatBalanceString;
 
 
-public class HomeFragment extends FermatWalletFragment {
+public class HomeFragment extends AbstractFermatFragment {
     View rootView;
     ExpandableListView lv;
     String[] contacts;
@@ -53,6 +59,8 @@ public class HomeFragment extends FermatWalletFragment {
     private long bookBalance;
 
     private ReferenceWalletSession referenceWalletSession;
+    SettingsManager<BitcoinWalletSettings> settingsManager;
+    BlockchainNetworkType blockchainNetworkType;
 
     private CryptoWallet cryptoWallet;
 
@@ -74,7 +82,7 @@ public class HomeFragment extends FermatWalletFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        referenceWalletSession = (ReferenceWalletSession) walletSession;
+        referenceWalletSession = (ReferenceWalletSession) appSession;
 
 
         try {
@@ -92,6 +100,50 @@ public class HomeFragment extends FermatWalletFragment {
                 { "Mati", "Mati", "Mati", "Mati"},
                 {  "Mati", "Mati", "Mati", "Mati" }
         };
+
+        settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+
+
+        BitcoinWalletSettings bitcoinWalletSettings = null;
+        try {
+            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+        }catch (Exception e){
+            bitcoinWalletSettings = null;
+        }
+        if(bitcoinWalletSettings == null){
+            bitcoinWalletSettings = new BitcoinWalletSettings();
+            bitcoinWalletSettings.setIsContactsHelpEnabled(true);
+            bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
+
+            if(bitcoinWalletSettings.getBlockchainNetworkType()==null){
+                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            }
+
+
+            try {
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if(bitcoinWalletSettings.getBlockchainNetworkType()==null){
+            bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+        }
+        try {
+            settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+        } catch (CantPersistSettingsException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Network Type"+blockchainNetworkType);
 
         account_types = new String[]{"1 current and 2 saving accounts"};
         balances = new String[]{"$5,693.50"};
@@ -124,9 +176,9 @@ public class HomeFragment extends FermatWalletFragment {
 
         try {
             String publicKey = referenceWalletSession.getWalletSessionType().getWalletPublicKey();
-            availableBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE, publicKey);
+            availableBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE, publicKey,blockchainNetworkType);
 
-            bookBalance = cryptoWallet.getBalance(BalanceType.BOOK, referenceWalletSession.getWalletSessionType().getWalletPublicKey());
+            bookBalance = cryptoWallet.getBalance(BalanceType.BOOK, referenceWalletSession.getWalletSessionType().getWalletPublicKey(),blockchainNetworkType);
 
 
         } catch (CantGetBalanceException e) {

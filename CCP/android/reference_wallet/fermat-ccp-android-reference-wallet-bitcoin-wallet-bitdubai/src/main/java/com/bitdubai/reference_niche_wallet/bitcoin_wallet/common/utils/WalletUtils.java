@@ -5,18 +5,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 
-import com.bitdubai.fermat_android_api.engine.PaintActivtyFeactures;
+import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 
 import java.text.DecimalFormat;
@@ -49,7 +43,47 @@ public class WalletUtils {
 
             stringBalance = BTCFormat ;//+ " BTC";
         }else if(typeAmount== ShowMoneyType.BITS.getCode()){
-            stringBalance = (int) (balance / 100) + " bits";
+            stringBalance = String.valueOf(balance / 100);
+        }
+        showMoneyType=!showMoneyType;
+
+        /*switch (showMoneyType){
+
+            case true:
+                DecimalFormat df = new DecimalFormat();
+                df.setMaximumFractionDigits(2);
+                df.setMinimumFractionDigits(2);
+                String BTCFormat = df.format(balance / 100000000.0);
+                stringBalance = BTCFormat + " BTC";
+                break;
+            case false:
+                stringBalance = (int) (balance / 100) + " bits";
+                break;
+            default:
+                DecimalFormat df1 = new DecimalFormat();
+                df1.setMaximumFractionDigits(2);
+                df1.setMinimumFractionDigits(2);
+                String BTCFormat1 = df1.format(balance / 100000000.0);
+                stringBalance = BTCFormat1 + " BTC";
+                break;
+        }*/
+        return stringBalance;
+    }
+
+    public static String formatBalanceStringNotDecimal(long balance,int typeAmount) {
+        String stringBalance = "";
+
+        if(typeAmount== ShowMoneyType.BITCOIN.getCode()){
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(0);
+            df.setMinimumFractionDigits(0);
+            String BTCFormat = "";
+
+            BTCFormat = df.format(balance / 100000000.0); //
+
+            stringBalance = BTCFormat ;//+ " BTC";
+        }else if(typeAmount== ShowMoneyType.BITS.getCode()){
+            stringBalance = String.valueOf(balance / 100);
         }
         showMoneyType=!showMoneyType;
 
@@ -111,15 +145,4 @@ public class WalletUtils {
         alertDialog.show();
     }
 
-    public static void setNavigatitDrawer(PaintActivtyFeactures paintActivtyFeactures,IntraUserLoginIdentity intraUserInformation){
-        Context context =(Context)paintActivtyFeactures;
-        List<String> list = new ArrayList<>();
-        list.add("profile_image");
-        list.add("Home");
-        list.add("Contacts");
-        list.add("Payment request");
-        list.add("Settings");
-        list.add("Logout");
-       // paintActivtyFeactures.changeNavigationDrawerAdapter(new NavigationDrawerArrayAdapter(context, list,intraUserInformation));
-    }
 }

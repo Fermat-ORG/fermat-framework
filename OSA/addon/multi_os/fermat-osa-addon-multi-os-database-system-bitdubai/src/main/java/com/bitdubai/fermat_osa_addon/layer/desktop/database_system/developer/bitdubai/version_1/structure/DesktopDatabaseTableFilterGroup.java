@@ -45,7 +45,6 @@ public class DesktopDatabaseTableFilterGroup implements DatabaseTableFilterGroup
      *
      * @param filters List of DatabaseTableFilter object
      */
-    @Override
     public void setFilters(List<DatabaseTableFilter> filters) {
         this.filters = filters;
     }
@@ -65,7 +64,6 @@ public class DesktopDatabaseTableFilterGroup implements DatabaseTableFilterGroup
      *
      * @param subGroups  List of DatabaseTableFilterGroup object
      */
-    @Override
     public void setSubGroups(List<DatabaseTableFilterGroup> subGroups) {
         this.subGroups = subGroups;
     }
@@ -86,7 +84,6 @@ public class DesktopDatabaseTableFilterGroup implements DatabaseTableFilterGroup
      *
      * @param operator
      */
-    @Override
     public void setOperator(DatabaseFilterOperator operator) {
         this.operator = operator;
     }

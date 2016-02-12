@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_ccp_core.layer.module;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractLayer;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_ccp_core.layer.module.intra_user_identity.IntraUserIdentityPluginSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_ccp_core.layer.module.intra_wallet_user.IntraWalletUserPluginSubsystem;
 
@@ -23,7 +24,7 @@ public class SubAppModuleLayer extends AbstractLayer {
         try {
 
             registerPlugin(new IntraWalletUserPluginSubsystem());
-
+            registerPlugin(new IntraUserIdentityPluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 

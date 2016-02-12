@@ -17,15 +17,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -38,9 +37,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCrea
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWallet;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.developerUtils.DeveloperDatabaseFactory;
 
 import java.util.ArrayList;
@@ -66,6 +64,9 @@ public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implement
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
 
     private static final String WALLET_IDS_FILE_NAME = "walletsIds";
@@ -144,7 +145,7 @@ public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implement
     @Override
     public BitcoinWalletWallet loadWallet(String walletId) throws CantLoadWalletException {
         try {
-            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
 
             UUID internalWalletId = walletIds.get(walletId);
             bitcoinWallet.initialize(internalWalletId);
@@ -162,7 +163,7 @@ public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implement
     @Override
     public void createWallet(String walletId) throws CantCreateWalletException {
         try {
-            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId);
+            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
 
             UUID internalWalletId = bitcoinWallet.create(walletId);
 

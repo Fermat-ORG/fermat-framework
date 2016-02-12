@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.interfaces.CommunicationBaseEvent;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent</code>
@@ -18,7 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class VPNConnectionCloseNotificationEvent extends AbstractP2PFermatEvent {
+public class VPNConnectionCloseNotificationEvent extends AbstractP2PFermatEvent implements CommunicationBaseEvent {
 
     /**
      * Represent the remoteComponent
@@ -29,6 +30,11 @@ public class VPNConnectionCloseNotificationEvent extends AbstractP2PFermatEvent 
      * Represent the remoteParticipant
      */
     private PlatformComponentProfile remoteParticipant;
+
+    /**
+     * this member will be true if the close is for normal reasons
+     */
+    private boolean isCloseNormal;
 
     /**
      * Constructor with parameter
@@ -69,5 +75,21 @@ public class VPNConnectionCloseNotificationEvent extends AbstractP2PFermatEvent 
      */
     public void setRemoteParticipant(PlatformComponentProfile remoteParticipant) {
         this.remoteParticipant = remoteParticipant;
+    }
+
+    @Override
+    public NetworkServiceType getNetworkServiceTypeApplicant() {
+        return networkServiceApplicant;
+    }
+
+    public void setIsCloseNormal(boolean isCloseNormal) {
+        this.isCloseNormal = isCloseNormal;
+    }
+
+    /**
+     * this member will be true if the close is for normal reasons
+     */
+    public boolean isCloseNormal() {
+        return isCloseNormal;
     }
 }

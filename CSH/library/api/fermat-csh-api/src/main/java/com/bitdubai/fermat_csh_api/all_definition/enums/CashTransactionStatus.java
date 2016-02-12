@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_csh_api.all_definition.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
@@ -7,10 +8,10 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Modified by Alejandro Bicelis on 11/17/2015.
  */
  
-public enum CashTransactionStatus {
+public enum CashTransactionStatus implements FermatEnum {
     ACKNOWLEDGED("ACK"),
     PENDING("PEN"),
-    COMPLETED("COM"),
+    CONFIRMED("CON"),
     REJECTED("REJ");
 
     private String code;
@@ -25,10 +26,10 @@ public enum CashTransactionStatus {
 
     public static CashTransactionStatus getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "NEG": return CashTransactionStatus.ACKNOWLEDGED;
+            case "ACK": return CashTransactionStatus.ACKNOWLEDGED;
             case "PEN": return CashTransactionStatus.PENDING;
-            case "COM": return CashTransactionStatus.COMPLETED;
-            case "CAN": return CashTransactionStatus.REJECTED;
+            case "CON": return CashTransactionStatus.CONFIRMED;
+            case "REJ": return CashTransactionStatus.REJECTED;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This is an invalid CashTransactionStatus code");
         }
     }

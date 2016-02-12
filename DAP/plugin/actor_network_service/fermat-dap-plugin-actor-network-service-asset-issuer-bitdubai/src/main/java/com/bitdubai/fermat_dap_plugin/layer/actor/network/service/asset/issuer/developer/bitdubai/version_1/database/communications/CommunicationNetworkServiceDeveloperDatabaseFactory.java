@@ -61,8 +61,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
-
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
@@ -82,7 +81,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
                   /*
                    * We create the new database
                    */
-                database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -98,7 +97,8 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Template", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
+//        databases.add(developerObjectFactory.getNewDeveloperDatabase("Template", this.pluginId.toString()));
         return databases;
     }
 

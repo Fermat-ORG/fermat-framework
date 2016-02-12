@@ -1,9 +1,14 @@
 package com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantAcceptIntraWalletUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 
 import java.util.List;
 
@@ -11,7 +16,7 @@ import java.util.List;
  * The interface <code>IntraWalletUserIdentityManager</code>
  * defines the methods to administrate the intra users,
  */
-public interface IntraWalletUserActorManager {
+public interface IntraWalletUserActorManager extends FermatManager {
 
     /**
      * The method <code>askIntraWalletUserForAcceptance</code> registers a new intra user in the list
@@ -20,6 +25,7 @@ public interface IntraWalletUserActorManager {
      *
      * @param intraWalletUserIdentityToLinkPublicKey The public key of the intra user sending the connection request.
      * @param intraWalletUserToAddName               The name of the intra user to add
+     * @param intraUserPhrase                        The phrase of the intra user to add
      * @param intraWalletUserToAddPublicKey          The public key of the intra user to add
      * @param profileImage                           The profile image that the intra user has
      *
@@ -27,8 +33,9 @@ public interface IntraWalletUserActorManager {
      */
     void askIntraWalletUserForAcceptance(String intraWalletUserIdentityToLinkPublicKey,
                                          String intraWalletUserToAddName              ,
+                                         String intraUserPhrase                       ,
                                          String intraWalletUserToAddPublicKey         ,
-                                         byte[] profileImage                          ) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
+                                         byte[] profileImage                          ) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException,RequestAlreadySendException;
 
 
     /**
@@ -60,7 +67,7 @@ public interface IntraWalletUserActorManager {
     void disconnectIntraWalletUser(String intraUserLoggedInPublicKey, String intraUserToDisconnectPublicKey) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantDisconnectIntraWalletUserException;
 
 
-    void receivingIntraWalletUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
+    void receivingIntraWalletUserRequestConnection(String intraUserLoggedInPublicKey, String intraUserToAddName, String intraUserPhrase,String intraUserToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateIntraWalletUserException;
 
     /**
      * The method <code>cancelIntraWalletUser</code> cancels an intra user from the connections registry
@@ -136,5 +143,24 @@ public interface IntraWalletUserActorManager {
      * @throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException
      */
     void setPhoto(String actorPublicKey, byte[] photo) throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantSetPhotoException, com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException;
+
+    boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException;
+
+    /**
+     *The method <code>CantGetIntraUsersConnectedStateException</code> intra user get connection status
+     *
+     * @param intraUserConnectedPublicKey
+     * @return ConnectionState object
+     * @throws CantGetIntraUsersConnectedStateException
+     */
+    ConnectionState getIntraUsersConnectionStatus(String intraUserConnectedPublicKey) throws CantGetIntraUsersConnectedStateException;
+
+    /**
+     *The method <code>getLastNotification</code> get the last notification received by actor public key
+     * @param intraUserConnectedPublicKey
+     * @return IntraWalletUserActor notification object
+     * @throws CantGetIntraUserException
+     */
+    IntraWalletUserActor getLastNotification(String intraUserConnectedPublicKey) throws CantGetIntraUserException;
 
 }

@@ -104,7 +104,7 @@ public class ScreensShotsComponentsDao {
              */
             getDataBase().openDatabase();
             DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.setStringFilter(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FIRST_KEY_COLUMN, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.addStringFilter(WalletPublisherMiddlewareDatabaseConstants.SCREENS_SHOTS_COMPONENTS_FIRST_KEY_COLUMN, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -313,7 +313,7 @@ public class ScreensShotsComponentsDao {
              */
             getDataBase().openDatabase();
             DatabaseTable walletPublishedMiddlewareInformationTable = getDatabaseTable();
-            walletPublishedMiddlewareInformationTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            walletPublishedMiddlewareInformationTable.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             walletPublishedMiddlewareInformationTable.loadToMemory();
 
             /*

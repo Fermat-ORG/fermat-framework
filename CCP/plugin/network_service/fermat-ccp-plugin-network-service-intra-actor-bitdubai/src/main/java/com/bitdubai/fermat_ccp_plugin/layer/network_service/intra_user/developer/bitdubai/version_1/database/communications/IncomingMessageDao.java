@@ -41,6 +41,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public class IncomingMessageDao {
 
     /**
@@ -97,7 +98,7 @@ public class IncomingMessageDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.setStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -218,7 +219,7 @@ public class IncomingMessageDao {
              * 1 - load the data base to memory with filters
              */
             DatabaseTable networkIntraUserTable = getDatabaseTable();
-            networkIntraUserTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            networkIntraUserTable.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             networkIntraUserTable.loadToMemory();
 
             /*
@@ -377,17 +378,21 @@ public class IncomingMessageDao {
 
         try {
 
-            /*
-             * 1- Create the record to the entity
-             */
-            DatabaseTableRecord entityRecord = constructFrom(entity);
+            if(findById(String.valueOf(entity.getId()))== null)
+            {
+                /* 1- Create the record to the entity
+                    */
+                DatabaseTableRecord entityRecord = constructFrom(entity);
 
-            /**
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
+                /**
+                 * 2.- Create a new transaction and execute
+                 */
+                DatabaseTransaction transaction = getDataBase().newTransaction();
+                transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
+                getDataBase().executeTransaction(transaction);
+            }
+
+
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
@@ -399,6 +404,9 @@ public class IncomingMessageDao {
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
+        } catch (CantReadRecordDataBaseException e) {
+            throw new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, e, "", "Cant get record on table");
+
         }
 
     }
@@ -425,8 +433,14 @@ public class IncomingMessageDao {
             /**
              * 2.- Create a new transaction and execute
              */
+
+        DatabaseTable incomingMessageTable = getDatabaseTable();
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+
+            //set filter
+            incomingMessageTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_ID_COLUMN_NAME,entity.getId(),DatabaseFilterType.EQUAL);
+
+            transaction.addRecordToUpdate(incomingMessageTable, entityRecord);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {

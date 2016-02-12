@@ -1,1 +1,496 @@
-### Dev Teams
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+
+# Dev Teams
+
+## Introduction
+
+All the work done for the Fermat open source project is done by several teams of people collaborating between each other. Fermat has several teams working in parallel. Most of them are dev teams, but these are not the only ones. Fermat also has teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
+
+bitDubai is a network of teams working on the Fermat project. In this document you will learn about how bitDubai teams are organized. At the moment bitDubai is the only team-network working on Fermat, but there is room for other networks to join and they might want to get organized in a different way.
+
+Below you will find a list of bitDubai/Fermat developers teams. Feel free to contact their team leaders if you want to join them.
+
+You can also contribute to the Fermat project through other means. Please refer to the [CONTRIBUTING GUIDE](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md) for more details.
+
+## bitDubai Teams Organization
+
+The maximun size for a team is 5 people. All of them together should have all the skill sets needed for these kind of projects.
+
+Teams are organized in a hierarchical way. This helps the task of reviewing changes in source code, since it is expected that a child team changes they are pushed to its parent team in order to be reviewed, merged with their own changes and pushed again to the next parent in the hierarchy. At the top the core developers are the only ones merging the combined batch of changes into the bitDubai codebase.
+
+
+## Teams List
+
+* Thunder
+* Code Butchers
+* Coin Diggers
+* Disruptors
+* DBZ Team
+* Mordor
+* Kabuto
+* Skynet
+* Fermat ORG Charlie
+* Fermat ORG Sierra
+
+## Current Hierarchy
+
+### Fermat Network, Framework & APPs
+
+| Level 1 | Level 2 | Level 3 | Level 4 |
+|:----:|:----:|:----:|:----:|
+| Thunder | | | |
+| | Kabuto | | |
+| | Mordor | | |
+| | Skynet | | |
+| | Yayo | | |
+| Code Butchers | | | |
+| | DBZ Team | | |
+| Coin Diggers | | | |
+| | Disruptors | | |
+
+
+### Fermat ORG Site
+
+| Level 1 | Level 2 | Level 3 | Level 4 |
+|:----:|:----:|:----:|:----:|
+| Fermat ORG Charlie | | | |
+| Fermat ORG Sierra | | | |
+
+## Compensation
+
+Developers and team leaders in particular are classified by the deepness of the hierarchy that lies below them. The following table shows the categories related to compensation:
+
+### Fermat Network, Framework & APPs
+
+| # | Category | Description |
+|:-----:|:-----:|:-----| 
+| 1 | Contributor | Casual contributor to the project. |
+| 2 | New Part-Time Developer | New part-time developer on the project. |
+| 3 | Part-Time Veteran Developer | Working part-time 6+ months OR high performant. |
+| 4 | New Developer | New full-time developer on the project. |
+| 5 | Veteran Developer | (Working full time 3+ months OR high performant) AND highly engaged. |
+| 6 | New Team Leader | Team Leader with 1 full-time member on the team. |
+| 7 | Team Leader | Team Leader with less than 5 full-time members on the team. |
+| 8 | Full Team Leader | Team Leader with 5 full-time members on the team. |
+| 9 | Awarded Team Leader | Team Leader awarded a bounty for finishing a project on time. |
+| 10 | New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 11 | Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 12 | Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 13 | Awarded Parent Team Leader | Team Leader with at least 1 awarded sub-team. |
+| 14 | New Grand Parent Team Leader | Team Leader with 5 sub-teams and one grand child. |
+| 15 | Grand Parent Team Leader | Team Leader with 5 sub-teams and several grand children. |
+| 16 | Full Grand Parent Team Leader | Team Leader with 5 sub-teams and 5 grand children. |
+| 17 | Awarded Grand Parent Team Leader | Grand Parent Team Leader with 1 awarded grand children. |
+| 18 | Core Developer | Won Programming Competition AND a grand children had a child. |
+
+### Fermat ORG Site
+
+| # | Category | Description |
+|:-----:|:-----:|:-----| 
+| 1 | ORG Developer | New developer on the project. |
+| 2 | ORG Veteran Developer| Working full time 3+ months OR part-time 6+ months OR high performant. |
+| 3 | ORG New Team Leader | Team Leader with 1 full-time member on the team. |
+| 4 | ORG Team Leader | Team Leader with less than 5 full-time members on the team. |
+| 5 | ORG Full Team Leader | Team Leader with 5 full-time members on the team. |
+| 6 | ORG Awarded Team Leader | Team Leader with 5 full-time members on the team. |
+| 7 | ORG New Parent Team Leader | Team Leader of a team with one sub-team. |
+| 8 | ORG Parent Team Leader | Team Leader of a team with many sub-teams. |
+| 9 | ORG Full Parent Team Leader | Team Leader with 5 sub-teams. |
+| 10 | ORG Awarded Parent Team Leader | Team Leader with 5 sub-teams. |
+
+
+### The following rules apply:
+
+1. **Team Size** : Standard team size is of 5 full-time members.
+2. **Part-Time & Full-Time** : One full-time member can be replaced by 2 part-time members.
+3. **Up & Down** : Developers can go up the category list and they can also go down in certain circumstances.
+4. **Approval** : Going up or down a category is decided by the developers's team leader or parent team leader in case a the one moving is already a team leader. In all cases these rules and the project director must approve the move.
+5. **Cumulative Conditions** : To move up one category or to keep the current one, all the conditions of previous categories need to have been met.
+6. **Awards Needed** : To be _awarded_ means to win the full bounty at the month targeted by the bounty program.
+7. **When** : When a criteria is met to go up a category, the developer will be moved up the following calendar month.
+8. **Replacement** : When a full team has a child sub-team leaded by one of the current members:<br>
+    a. Their current team leader must add a full-time developer within the same month in order to keep his category.<br>
+    b. Failing to do so, will move him down the next month to _Team Leader_.<br>
+    c. Succeeding to get a full-time member will probably move him to _New Parent Team Leader_ if this was his first child.<br>
+9. **Removing Members** : Team leaders can remove members from their teams with a reasonable cause (lack of engagement, performance, etc.).
+10. **Changing Parents** : Team leaders might move their team and decendence to other parent if they don't fell supported by their biological or current parent. They need an authoritation by the project director for this to happen.
+
+<br>
+## Teams presentations and members
+
+<br>
+### Thunder Team:
+-----------------------------------
+<br>
+### ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/Thunder%20Team/HQ_1920x1080.jpg "Thunder Team Logo"")
+
+More than a Team we are a group of highly motivated friends pursuing the goal of taking Fermat to success! We are in charge of core development and top priority platforms like DAP, BCH and WPD among others. A highly communicated group of developers solving issues and dealing with high difficulty designs and implementations, with a lot of room for other priorities like music, Star Wars, series and movies.
+
+#### Thunder Team Members:
+
+
+* **Rodrigo Acosta [Core Developer]** <br/>
+---
+    Email:   acosta_rodrigo@hotmail.com
+    Skype:   acosta_rodrigo
+    Github:  https://github.com/acostarodrigo
+
+* **Manuel Perez [Team Leader]**<br/>
+---
+    Email:   darkpriestrelative@gmail.com
+    Skype:   darkestpriest
+    Github:  https://github.com/darkestpriest
+
+* **Franklin Marcano [Team Leader]**<br/>
+---
+    Email:   franklinmarcano1970@gmail.com
+    Skype:   franklginmarcano1970
+    Github:  https://github.com/franklinmarcano1970
+
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
+---
+      Email:   nerioindriago@gmail.com
+      Skype:   nerioindriago
+      Github:  https://github.com/nindriago
+
+* **Victor Mars [New Team Leader]** <br/>
+---
+      Email:   marsvicam@gmail.com
+      Skype:   yayotron
+      Github:  https://github.com/yayotron
+
+<br>
+
+### Coin Diggers Team:
+-----------------------------------
+<br>
+### ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/CoinDiggers%20Team/HQ_1920x1080.jpg "Logo Coin Diggers Team")
+
+We are passionate geeks, always on the edge of technology and a little more. 
+With the only phrase "Keep moving forward" we just walk through Fermat.
+We are in charge of Android-core, Fermat-Core, Android framework development and platforms like CCP, CCM among others.
+
+#### CoinDiggers Team Members:
+
+
+* **Matias Furszyfer [Core Developer]** <br/>
+---
+    Email:   matiasfurszyfer@gmail.com
+    Skype:   matias.furszyfer
+    Github:  https://github.com/furszy
+    
+    
+* **Natalia Cortez [Veteran Developer]**<br/>
+---
+      Email:   nattyco@gmail.com
+      Skype:   nattyco
+      Github:  https://github.com/nattyco
+
+* **Joaquin Carrasquero [New Developer]** <br/>
+---
+      Email:   jc.juaco@gmail.com
+      Skype:   j-u-a-c-o@hotmail.com
+      Github:  https://github.com/Exilum
+
+* **Jose Manuel de Sousa [New Developer]**<br/>
+---
+      Email:   -----
+      Skype:   -----
+      Github:  https://github.com/josemanueldsds
+
+
+<br>
+
+### Disruptor Team:
+-----------------------------------
+
+We are team that wants to combine technical capacity with creative talent, where passion for development and satisfaction for the work done are important ingredients of the daily motivation, and also so engaged that we do not hesitate in sharing nights without sleep to fullfill the goals! The spirit of gentle collaboration is also very important to us. We are willing to share our work with new members.
+
+Currently we are a small team dedicated to the development of a communication layer based on a peer-to-peer network with all its complexity, and the development of some network services.
+
+#### Team Members:
+
+* **Roberto Requena [New Team Leader]**<br/>
+---
+    Email:   rart3001@gmail.com
+    Skype:   Rart3001
+    Github:  https://github.com/Rart3001
+
+* **Hendry Rodriguez [New Developer]**<br/>
+---
+      Email:   elnegroevaristo@gmail.com
+      Skype:   Hendry19901990
+      Github:  https://github.com/hendry19901990
+
+We would be grateful for any help received, and anyone interested in joining the team will be welcome.
+
+<br/>
+### Mordor Team:
+-----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/1479ec1f2e93a1b11f0f1ac9e312099f08aa7aec/Logotype/FermatTeams/logo_mordor_team.jpg "Logo Mordor Team")
+We are putting together a team of talented developers, especially passionate about the implementation of major challenges, in order to carry out our goals and collaborate with other teams on their goals.
+
+In the Crypto Broker Platform we are responsible for a large part of business transactions, while in the Chat Platform we are developing the back end. In each platform mentioned, we are involved in the development of Network Services and transactional plugins.
+
+#### Team Members:
+
+
+* **Manuel Perez [Team Leader]**<br/>
+---
+    Email:   darkpriestrelative@gmail.com
+    Skype:   darkestpriest
+    Github:  https://github.com/darkestpriest
+    
+    
+* **Gabriel Araujo [Veteran Developer]**<br/>
+---
+      Email:   gabe_512@hotmail.com
+      Skype:   gabee512
+      Github:  https://github.com/GaboHub
+
+* **Miguel Payarez [New Part-Time Developer]**<br/>
+---
+    Email:   miguel_payarez@hotmail.com
+    Skype:   payarez
+    Github:  https://github.com/lostwood
+
+* **Juan Sulbaran [New Part-Time Developer]**<br/>
+---
+    Email:   sulbaranja@gmail.com
+    Skype:   juanaso15
+    Github:  https://github.com/Juanaso
+
+* **Alexander Jimenez [New Developer]**<br/>
+---
+    Email:   alex_jimenez76@hotmail.com
+    Skype:   alex_jimenez76
+    Github:  https://github.com/alexanderejm
+    
+This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
+
+<br/>
+### Kabuto Team:
+-----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/1479ec1f2e93a1b11f0f1ac9e312099f08aa7aec/Logotype/FermatTeams/logo_kabuto_team.jpg "Logo Kabuto Team")
+Passionate about technologies, programming for us is part of our life and virtues, using as always ethical management best practices for writing our code.
+
+In the Crypto Broker Platform we are responsible for a large part of user level business transactions, wallet and module, while in the Chat Platform we are developing the back end.
+
+#### Team Members:
+
+* **Franklin Marcano [Team Leader]**<br/>
+---
+    Email:   franklinmarcano1970@gmail.com
+    Skype:   franklginmarcano1970
+    Github:  https://github.com/franklinmarcano1970
+
+* **Jose Cardozo [Veteran Developer]**<br/>
+---
+      Email:   josejcb89@gmail.com
+      Skype:   josejcb89
+      Github:  https://github.com/josejcb
+
+* **Jose Vilchez [New Developer]**<br/>
+---
+      Email:   josvilchezalmera@gmail.com
+      Skype:   josvilchezalmera
+      Github:  https://github.com/JDVilchez  
+
+* **Richard Lozada [New Developer]**<br/>
+---
+      Email:   richardalozada@hotmail.com
+      Skype:   richardalozada
+      Github:  https://github.com/Lozadaa 
+
+* **Rodrigo Guzman [New Part-Time Developer]**<br/>
+---
+      Email:   roygufo@gmail.com
+      Skype:   roy-epps
+      Github:  https://github.com/RoyGF
+
+We are also amateur philosophers, passionate about esoteric topics and video games.
+
+<br>
+
+### Skynet Team:
+-----------------------------------
+### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/b3d2a45ba6cff999accae76ae30fdd41f160b90d/Logotype/FermatTeams/logo_skynet_team.jpg "Logo Skynet Team")
+From the most hidden and beautiful corner, in an unknown place of the universe, a network that gathers a group of polymaths is born. Such network combines their knowledge and artificial intelligence in order to overcome any obstacle that might try to avoid giving life to a limitless project.. that network is Team Skynet, a group of workaholics that enjoys turning challenges into fun, having a great will to help the needed and learn continuously.
+We are a team with diverse tastes and full of color making it an explosive integration. We love video games, anime, movie theaters, music and many other things. If you want to be part of our team, you will be always welcome at Skynet
+
+#### Skynet Team Members:
+
+* **Nerio Enrique Indriago Ortega [Team Leader]** <br/>
+---
+      Email:   nerioindriago@gmail.com
+      Skype:   nerioindriago
+      Github:  https://github.com/nindriago
+
+* **Penelope Quintero [New Developer]** <br/>
+---
+      Email:   pennyxz@gmail.com
+      Skype:   pennyxz
+      Github:  https://github.com/pennyxz
+
+* **Jinmy Bohorquez [New Developer]** <br/>
+---
+      Email:   jinmybohorquez@gmail.com
+      Skype:   jinmyb22
+      Github:  https://github.com/jinmyjbv
+
+
+<br/>
+
+### Team Yayo:
+-----------------------------------
+On the Team Yayo we do believe that coding is a kind of art and should be treated like so. We don't aim to be a hardworking team but a smartworking one.
+We are responsible of only one thing, making fermat a successfully project, sharing our good ideas and developing whatever is needed without fear of what -end it is on.
+
+#### Team Members:
+
+* **Victor Mars [New Team Leader]** <br/>
+---
+      Email:   marsvicam@gmail.com
+      Skype:   yayotron
+      Github:  https://github.com/yayotron
+      
+* **Frank Contreras [New Developer]** <br/>
+---
+      Email:   contrerasfrank@gmail.com
+      Skype:   fcontreras1234
+      Github:  https://github.com/javafrank
+
+<br>
+We don't mean to make fun of everything, just about the serious things.
+<br>
+
+### Code Butchers Team:
+-----------------------------------
+We are a team of developers of diverse nature, interested on the basis and structure of the Fermat Framework, and always looking for a better way of perfecting the system, with an innovative spirit and full of perspicacy. We work across the entire platform, trying to keep the things ordered and paying attention to collaborate with other teams.
+
+* In the Fermat Core we are responsible for the enhancements and maintenance.
+* In the OSA Platform we do our best.
+* In the Crypto Broker Platform we are responsible for the communication between its respectives actors.
+* In the Crypto Currency Platform we developed a serie of plug-ins and we have knowdlege of the whole platform.
+
+In each platform mentioned, we are involved in the development of Network Services, GUI Components and Platform components.
+
+#### Team Members:
+
+
+* **León Acosta [Core Developer]**<br/>
+---
+    Email:   laion.cj91@gmail.com
+    Skype:   leon.acosta
+    Github:  https://github.com/lnacosta
+    
+    
+* **Patricio Gesualdi**<br/>
+---
+      Email:   pmgesualdi@hotmail.com
+      Skype:   pmgesualdi
+      Github:  https://github.com/pmgesualdi
+
+We love music and we do music, we love movies (fanatics), we are also amateur philosophers. We're always available to talk about whatever. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
+
+<br/>
+### DBZ Team:
+-----------------------------------
+We are a developer team with different experience levels; we give our best to deliver products of the highest quality. Our team is responsible for the design and development of both the CSH and BNK Platform as well as several plug-ins, Reference Wallets and Sub Apps for the CBP Platform
+
+#### Team Members:
+
+* **Nelson Ramirez [Full Team Leader]**<br/>
+---
+    Email:   nelsonalfo@gmail.com
+    Skype:   nelalfo
+    Github:  https://github.com/nelsonalfo
+
+* **Angel Veloz [New Developer]**
+---
+      Skype:   vlzangel
+      Github:  https://github.com/vlzangel
+   
+* **Alejandro Bicelis [Veteran Developer]**
+---
+      Skype:   seed_1987
+      Github:  https://github.com/abicelis
+    
+
+* **Guillermo Gutierrez [New Developer]**
+---
+      Email:   guillermo20@gmail.com
+      Skype:   guillermo20
+      Github:  https://github.com/guillermo20
+
+* **Yordin Alayn [New Developer]**
+---
+      Email:   y.alayn@gmail.com
+      Skype:   y_alayn
+      Github:  https://github.com/yalayn
+
+We can talk about any topic outside of work, as movies, video games (!), politics, etc, always respecting everyone's opinion. The DBZ initials refers to Dragon Ball Z, so as you can notice we also like anime and boy do we! If you want to join our team you're more than welcome!
+
+<br/>
+
+### Fermat ORG Charlie:
+-----------------------------------
+Developers of dev.fermat.org on the client-side. We are responsible to show to the public and to the developers the current state and structure of this big project the best we can in a 3D graphic environment. We are a team of passionate developers with different levels of skills, from JavaScript developers through web testers to 3D graphics experts, we enjoy a lot what we do and work side-by-side with other teams like the Server-side, graphic designers and Fermat internal developers.
+
+#### Team Members:
+
+* **Miguel Celedon [ORG Team Leader]**<br/>
+---
+    Email:   miguelceledon@outlook.com
+    Skype:   miguel-209
+    Github:  https://github.com/miguelcldn
+    
+    
+* **Ricardo Delgado [ORG Veteran Developer]**<br/>
+---
+      Email:   ricardodelgado460@hotmail.com
+      Skype:   ricardodelgado460
+      Github:  https://github.com/ricardo460
+
+* **Emmanuel Colina [ORG Developer]**<br/>
+---
+    Email:   emmanuelcolina14@gmail.com
+    Skype:   ecolina4
+    Github:  https://github.com/emmanuelcolina
+
+We welcome everyone who would like to join us. JavaScript is a hard language when it comes to write big projects, but we learn and teach techniques to keep it simple to everyone.
+
+<br/>
+
+### Fermat ORG Sierra:
+-----------------------------------
+In the Fermat ORG Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
+
+#### Team Members:
+
+* **Luis Fuenmayor [ORG Team Leader]**<br/>
+---
+    Email:   fuelusumar@gmail.com
+    Skype:   live:fuelusumar.
+    Github:  https://github.com/fuelusumar
+    
+* **German Mendoza [ORG Veteran Developer]**<br/>
+---
+    Email:   german.mendoza.187@gmail.com
+    Skype:   german0296
+    Github:  https://github.com/kyxer
+
+* **Luis Campo [ORG Developer]**<br/>
+---
+    Email:   campusprize@gmail.com
+    Skype:   campol
+    Github:  https://github.com/campol
+
+* **Erick Narvaez [ORG Developer]**<br/>
+---
+    Email:   ericknarvaez@hotmail.com 
+    Skype:   live:ericknarvaez
+    Github:  https://github.com/korik1
+
+<br/>
+

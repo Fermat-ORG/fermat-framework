@@ -31,7 +31,7 @@ import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develope
 public class CreateDatabaseTest {
 
     private Activity mockActivity;
-    private Context mockContext;
+    private String mockContext;
 
     private AndroidDatabase testDatabase;
     private String testDatabaseName = "testDatabase";
@@ -40,7 +40,7 @@ public class CreateDatabaseTest {
     @Before
     public void CreateDatabase_TheDatabaseHasNotBeenCreated_MethodInvokedSuccessfully() throws Exception{
         mockActivity = Robolectric.setupActivity(Activity.class);
-        mockContext = shadowOf(mockActivity).getApplicationContext();
+        mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
 
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
         catchException(testDatabase).createDatabase(testDatabaseName);
@@ -50,7 +50,7 @@ public class CreateDatabaseTest {
     @Test
     public void CreateDatabase_TheDatabaseHasAlreadyBeenCreated_ThrowsCantCreateDatabaseException() throws Exception{
         mockActivity = Robolectric.setupActivity(Activity.class);
-        mockContext = shadowOf(mockActivity).getApplicationContext();
+        mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
 
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);

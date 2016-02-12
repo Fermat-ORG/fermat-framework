@@ -20,13 +20,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_customer_identity.R;
+import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdentitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CommonLogger;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerIdentityExecutor;
 
@@ -37,7 +40,7 @@ import static com.bitdubai.sub_app.crypto_customer_identity.util.CreateCustomerI
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
+public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment<CryptoCustomerIdentitySubAppSession, SubAppResourcesProviderManager> {
     private static final String TAG = "CreateCustomerIdentity";
 
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -63,7 +66,7 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            errorManager = subAppsSession.getErrorManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -109,6 +112,7 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             ImageView pictureView = mCustomerImage;
 
@@ -170,12 +174,28 @@ public class CreateCryptoCustomerIdentityFragment extends FermatFragment {
         String customerNameText = mCustomerName.getText().toString();
         byte[] imgInBytes = ImagesUtils.toByteArray(cryptoCustomerBitmap);
 
-        CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(subAppsSession, customerNameText, imgInBytes);
+        final CreateCustomerIdentityExecutor executor = new CreateCustomerIdentityExecutor(appSession, customerNameText, imgInBytes);
+
         int resultKey = executor.execute();
 
         switch (resultKey) {
             case SUCCESS:
-                //changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
+
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            appSession.getModuleManager().publishCryptoCustomerIdentity(executor.getIdentity().getPublicKey());
+
+                        } catch(CouldNotPublishCryptoCustomerException e) {
+
+                            Toast.makeText(getActivity(), "Error al publicar la identidad", Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                }.start();
+                changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode(), appSession.getAppPublicKey());
                 break;
             case EXCEPTION_THROWN:
                 Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();

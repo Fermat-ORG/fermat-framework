@@ -60,12 +60,7 @@ public class CryptoCustomerWalletPreferenceSettings implements WalletSettings {
     }
 
     @Override
-    public void setPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantSaveWalletSettings {
+    public void setIsPresentationHelpEnabled(boolean b) {
 
-    }
-
-    @Override
-    public String getPreferenceSettings(PreferenceWalletSettings preferenceWalletSettings) throws CantLoadWalletSettings {
-        return null;
     }
 }

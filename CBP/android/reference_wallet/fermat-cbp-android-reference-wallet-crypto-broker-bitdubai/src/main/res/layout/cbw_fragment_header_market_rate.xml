@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -14,7 +15,8 @@
         android:paddingRight="16dp"
         android:paddingStart="16dp"
         android:paddingTop="15dp"
-        android:visibility="visible">
+        android:visibility="visible"
+        tools:background="@drawable/cbw_header_gradient_background">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_sell_price"
@@ -25,7 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/market_rate_container"
             android:layout_toStartOf="@+id/market_rate_container"
-            android:textColor="@color/withe"
+            android:textColor="@color/white"
             tools:text="Buy: Bs 800,00"/>
 
         <LinearLayout
@@ -41,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:textColor="@color/withe"
+                android:textColor="@color/white"
                 tools:text="BTC / USD"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -63,14 +65,38 @@
             android:layout_toEndOf="@+id/market_rate_container"
             android:layout_toRightOf="@+id/market_rate_container"
             android:gravity="end"
-            android:textColor="@color/withe"
+            android:textColor="@color/white"
             tools:text="Buy: Bs 840,25"/>
     </RelativeLayout>
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/cbw_market_rate_line_chart"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/cbw_action_bar_gradient_colors"
-        android:paddingBottom="8dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="8dp"
+        tools:background="@drawable/cbw_action_bar_gradient_colors">
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/cbw_market_rate_line_chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_market_rate_line_chart_no_data_msg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="No Data"
+            android:textColor="@color/white"
+            android:visibility="gone"/>
+
+        <ProgressBar
+            android:id="@+id/cbw_market_rate_line_chart_progress_bar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+    </FrameLayout>
 </LinearLayout>

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -19,10 +20,10 @@ public interface BankTransactionParameters {
     String getPublicKeyActor();
 
 
-    float getAmount();
+    BigDecimal getAmount();
 
 
-    long getAccountNumber();
+    String getAccount();
 
 
     FiatCurrency getCurrency();

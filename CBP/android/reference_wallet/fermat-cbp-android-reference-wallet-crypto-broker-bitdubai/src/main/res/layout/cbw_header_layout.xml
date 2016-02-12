@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:app="http://schemas.android.com/apk/res-auto"
              android:layout_width="match_parent"
-             android:layout_height="wrap_content"
+             android:layout_height="250dp"
              android:layout_marginTop="?attr/actionBarSize"
              android:background="@drawable/cbw_header_gradient_background">
 
@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/cbw_no_market_exchange_rates_to_show"
-        android:textColor="@color/withe"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:visibility="gone"/>
 
@@ -20,11 +20,24 @@
         android:id="@+id/cbw_market_rate_view_pager_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/cbw_market_exchange_rate_layout_height"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@drawable/cbw_action_bar_gradient_colors"/>
+        </LinearLayout>
 
         <android.support.v4.view.ViewPager
             android:id="@+id/cbw_exchange_rate_view_pager"
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
@@ -38,4 +51,12 @@
             app:strokeWidth="4dp"
             app:unselectedColor="#052331"/>
     </FrameLayout>
+
+    <ProgressBar
+        android:id="@+id/cbw_header_progress_bar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:indeterminate="true"
+        android:layout_gravity="center"/>
+
 </FrameLayout>

@@ -125,7 +125,7 @@ public class UnholdBankMoneyTransactionDeveloperDatabaseFactory implements Deals
         unholdColumns.add(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME);
         unholdColumns.add(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_ACCOUNT_NUMBER_COLUMN_NAME);
         unholdColumns.add(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_AMOUNT_COLUMN_NAME);
-        unholdColumns.add(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_COLUMN_NAME);
+        unholdColumns.add(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME);
         unholdColumns.add(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_MEMO_COLUMN_NAME);
         unholdColumns.add(UnholdBankMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME);
         /**

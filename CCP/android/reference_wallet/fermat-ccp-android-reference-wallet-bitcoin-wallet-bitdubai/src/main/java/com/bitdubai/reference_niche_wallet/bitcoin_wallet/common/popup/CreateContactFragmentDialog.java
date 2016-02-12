@@ -10,48 +10,37 @@ import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CreateContactDialogCallback;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
 import java.io.ByteArrayOutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.validateAddress;
 
 /**
@@ -76,6 +65,8 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
     private ReferenceWalletSession referenceWalletSession;
+    SettingsManager<BitcoinWalletSettings> settingsManager;
+    BlockchainNetworkType blockchainNetworkType;
 
     /**
      *  Contact member
@@ -123,6 +114,36 @@ public class CreateContactFragmentDialog extends Dialog implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpScreenComponents();
+        settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+        BitcoinWalletSettings bitcoinWalletSettings = null;
+        try {
+            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if(bitcoinWalletSettings != null) {
+
+            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            }
+            try {
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        try {
+            blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
 
 //        user_address_wallet= getWalletAddress(walletContact.actorPublicKey);
 //
@@ -143,7 +164,10 @@ public class CreateContactFragmentDialog extends Dialog implements
             contact_name = (AutoCompleteTextView) findViewById(R.id.contact_name);
             take_picture_btn = (ImageView) findViewById(R.id.take_picture_btn);
             txt_address = (EditText) findViewById(R.id.txt_address);
-            contact_name.setText(walletContact.name);
+            if(walletContact!=null){
+                contact_name.setText(walletContact.name);
+            }
+
 
 
 
@@ -152,7 +176,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
             if(contactImageBitmap!=null){
                 contactImageBitmap = Bitmap.createScaledBitmap(contactImageBitmap,65,65,true);
-                take_picture_btn.setBackground(new BitmapDrawable(contactImageBitmap));
+                take_picture_btn.setBackground(new BitmapDrawable(getContext().getResources(),contactImageBitmap));
                 take_picture_btn.setImageDrawable(null);
             }
 
@@ -224,7 +248,8 @@ public class CreateContactFragmentDialog extends Dialog implements
                             null,
                             Actors.EXTRA_USER,
                             referenceWalletSession.getAppPublicKey(),
-                            toByteArray(contactImageBitmap)
+                            toByteArray(contactImageBitmap),
+                            blockchainNetworkType
                     );
                 }
                 else
@@ -235,7 +260,8 @@ public class CreateContactFragmentDialog extends Dialog implements
                             null,
                             null,
                             Actors.EXTRA_USER,
-                            referenceWalletSession.getAppPublicKey()
+                            referenceWalletSession.getAppPublicKey(),
+                            blockchainNetworkType
                     );
                 }
 

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_purchase.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -11,14 +12,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.RequestStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.CantGetRequestListException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.CantRequestCustomerBrokerPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.RequestPurchaseRejectFailedException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.exceptions.RequestUnexpectedErrorException;
-import com.bitdubai.fermat_cbp_api.layer.cbp_request.customer_broker_purchase.interfaces.RequestCustomerBrokerPurchase;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.CantGetRequestListException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.CantRequestCustomerBrokerPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.RequestPurchaseRejectFailedException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.exceptions.RequestUnexpectedErrorException;
+import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.interfaces.RequestCustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseRequestDaoException;
 import com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseRequest;
 
@@ -61,9 +61,9 @@ public class CustomerBrokerPurchaseRequestDao {
     public void sendRequestPurchase(
             String requestSenderPublicKey,
             String requestDestinationPublicKey,
-            CurrencyType merchandiseCurrency,
+            MoneyType merchandiseCurrency,
             float merchandiseAmount,
-            CurrencyType paymentCurrency,
+            MoneyType paymentCurrency,
             RequestStatus requestStatus
     ) throws RequestUnexpectedErrorException{
         try {
@@ -105,9 +105,9 @@ public class CustomerBrokerPurchaseRequestDao {
     public void createRequestCustomerBrokerPurchase(
             String requestSenderPublicKey,
             String requestDestinationPublicKey,
-            CurrencyType merchandiseCurrency,
+            MoneyType merchandiseCurrency,
             float merchandiseAmount,
-            CurrencyType paymentCurrency
+            MoneyType paymentCurrency
     ) throws CantRequestCustomerBrokerPurchaseException{
 
         try {
@@ -134,7 +134,7 @@ public class CustomerBrokerPurchaseRequestDao {
 
     List<RequestCustomerBrokerPurchase> getRequestPurchaseSent(String requestSenderPublicKey) throws CantGetRequestListException, CantLoadTableToMemoryException, InvalidParameterException {
         DatabaseTable RequestPurchaseTable = this.database.getTable(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_TABLE_NAME);
-        RequestPurchaseTable.setStringFilter(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
+        RequestPurchaseTable.addStringFilter(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
         RequestPurchaseTable.loadToMemory();
 
         List<DatabaseTableRecord> records = RequestPurchaseTable.getRecords();
@@ -151,7 +151,7 @@ public class CustomerBrokerPurchaseRequestDao {
 
     List<RequestCustomerBrokerPurchase> getReceivedRequestPurchase(String requestSenderPublicKey) throws CantGetRequestListException, CantLoadTableToMemoryException, InvalidParameterException {
         DatabaseTable RequestPurchaseTable = this.database.getTable(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_TABLE_NAME);
-        RequestPurchaseTable.setStringFilter(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
+        RequestPurchaseTable.addStringFilter(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey, DatabaseFilterType.EQUAL);
         RequestPurchaseTable.loadToMemory();
 
         List<DatabaseTableRecord> records = RequestPurchaseTable.getRecords();
@@ -175,9 +175,9 @@ public class CustomerBrokerPurchaseRequestDao {
                                      UUID requestID,
                                      String requestSenderPublicKey,
                                      String requestDestinationPublicKey,
-                                     CurrencyType merchandiseCurrency,
+                                     MoneyType merchandiseCurrency,
                                      float merchandiseAmount,
-                                     CurrencyType paymentCurrency,
+                                     MoneyType paymentCurrency,
                                      RequestStatus requestStatus) {
 
         databaseTableRecord.setUUIDValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_ID_COLUMN_NAME, requestID);
@@ -194,9 +194,9 @@ public class CustomerBrokerPurchaseRequestDao {
                                  UUID requestID,
                                  String requestSenderPublicKey,
                                  String requestDestinationPublicKey,
-                                 CurrencyType merchandiseCurrency,
+                                 MoneyType merchandiseCurrency,
                                  float merchandiseAmount,
-                                 CurrencyType paymentCurrency) {
+                                 MoneyType paymentCurrency) {
 
         databaseTableRecord.setUUIDValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_ID_COLUMN_NAME, requestID);
         databaseTableRecord.setStringValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME, requestSenderPublicKey);
@@ -212,9 +212,9 @@ public class CustomerBrokerPurchaseRequestDao {
         UUID            requestId                       = record.getUUIDValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_ID_COLUMN_NAME);
         String          requestSenderPublicKey          = record.getStringValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_SENDER_PUBLIC_KEY_COLUMN_NAME);
         String          requestDestinationPublicKey     = record.getStringValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
-        CurrencyType    merchandiseCurrency             = CurrencyType.getByCode(record.getStringValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_MERCHANDISE_CURRENCY_COLUMN_NAME));
+        MoneyType merchandiseCurrency             = MoneyType.getByCode(record.getStringValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_MERCHANDISE_CURRENCY_COLUMN_NAME));
         float           merchandiseAmount               = record.getFloatValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_MERCHANDISE_AMOUNT_COLUMN_NAME);
-        CurrencyType    paymentCurrency                 = CurrencyType.getByCode(record.getStringValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME));
+        MoneyType paymentCurrency                 = MoneyType.getByCode(record.getStringValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_PAYMENT_CURRENCY_COLUMN_NAME));
         RequestStatus   requestStatus                   = RequestStatus.getByCode(record.getStringValue(CustomerBrokerPurchaseRequestDatabaseConstants.REQUEST_CUSTOMER_BROKER_PURCHASE_REQUEST_STATUS_COLUMN_NAME));
 
         return new CustomerBrokerPurchaseRequest(

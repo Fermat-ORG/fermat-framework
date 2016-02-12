@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.layer.cbp_actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
 
 import java.util.UUID;
 
@@ -16,9 +16,9 @@ public class BrokerIdentityWalletRelationshipInformation implements BrokerIdenti
 
     private final UUID      relationshipId;
     private final String    identity;
-    private final UUID      wallet;
+    private final String      wallet;
 
-    public BrokerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final UUID Wallet){
+    public BrokerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final String Wallet){
         this.identity = identity;
         this.wallet = Wallet;
         this.relationshipId = relationshipId;
@@ -35,7 +35,7 @@ public class BrokerIdentityWalletRelationshipInformation implements BrokerIdenti
     }
 
     @Override
-    public UUID getWallet() {
+    public String getWallet() {
         return this.wallet;
     }
 

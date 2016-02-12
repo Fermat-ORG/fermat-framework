@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces;
 
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
+
 import java.util.UUID;
 
 /**
@@ -22,5 +24,5 @@ public interface PaymentRequest {
 
     int getType();
 
-    String getState();
+    CryptoPaymentState getState();
 }

@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.Agent;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
@@ -92,7 +93,10 @@ class VaultKeyHierarchyMaintainer implements Agent {
 
     @Override
     public void stop() {
+        System.out.println("***AssetVault*** Key maintainer stopped.");
         isSupposedToRun = false;
+        vaultKeyHierarchyMaintainerAgent.interruptProcess();
+        vaultKeyHierarchyMaintainerAgent = null;
     }
 
     private class VaultKeyHierarchyMaintainerAgent implements Runnable {
@@ -109,7 +113,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * Sleep time of the agent between iterations
          */
-        final long AGENT_SLEEP_TIME = 600000; //default time is 10 minutes
+        final long AGENT_SLEEP_TIME = 20000; //default time is 2 minutes
 
 
         @Override
@@ -129,6 +133,13 @@ class VaultKeyHierarchyMaintainer implements Agent {
         }
 
         /**
+         * stop the current thread.
+         */
+        public void interruptProcess(){
+            Thread.currentThread().interrupt();
+        }
+
+        /**
          * main executor of the agent
          */
         private void doTheMainTask() throws CantLoadHierarchyAccountsException, KeyMaintainerStatisticException {
@@ -136,7 +147,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
             /**
              * I get all the accounts that are available from the database
              */
-            for (HierarchyAccount hierarchyAccount : getHierarchyAccounts()) {
+            for (com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount : getHierarchyAccounts()) {
                 /**
                  * for each account, I will get the currentGeneratedKeys value
                  */
@@ -163,12 +174,18 @@ class VaultKeyHierarchyMaintainer implements Agent {
                      * I will generate the list of keys from zero to the new value
                      */
                     keys = deriveChildKeys(hierarchyAccount, newGeneratedKeys);
+
+                    /**
+                     * and update the detail key maintenance with all the keys derive from this account
+                     */
+                    updateDetailMaintainerStats(hierarchyAccount.getId(), keys, currentGeneratedKeys);
+
                 } else {
                     /**
                      * There is no need to generate new keys, so I will re generate the ones I previously generated
                      * to control them.
                      */
-                    keys = deriveChildKeys(hierarchyAccount, currentGeneratedKeys);
+                    keys = deriveChildKeys(hierarchyAccount,  currentGeneratedKeys);
                 }
 
                 /**
@@ -179,6 +196,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                         currentGeneratedKeys,
                         currentUsedKeys,
                         currentThreshold);
+
 
                 /**
                  * At this point I have the list of keys for each account, so I will put them all together at allAccountsKeyList
@@ -200,6 +218,22 @@ class VaultKeyHierarchyMaintainer implements Agent {
         }
 
         /**
+         * Inserts new or updates the current list of public keys for this account in the Detailed Maintenance table
+         * @param accountId
+         * @param keys
+         */
+        private void updateDetailMaintainerStats(int accountId, List<ECKey> keys, int currentGeneratedKeys) {
+            try {
+                getDao().updateDetailMaintainerStats(accountId, keys, currentGeneratedKeys);
+            } catch (CantExecuteDatabaseOperationException e) {
+                /**
+                 * will continue if there was an error
+                 */
+                e.printStackTrace();
+            }
+        }
+
+        /**
          * Gets the list of active networks on this platform.
          *
          * @return
@@ -215,7 +249,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 /**
                  * the default network is always active, so I will add this.
                  */
-                blockchainNetworkTypes.add(BlockchainNetworkType.DEFAULT);
+                blockchainNetworkTypes.add(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
             return blockchainNetworkTypes;
@@ -228,12 +262,12 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @param amount
          * @return
          */
-        private List<ECKey> deriveChildKeys(HierarchyAccount hierarchyAccount, int amount) {
+        private List<ECKey> deriveChildKeys(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount, int amount) {
             DeterministicHierarchy keyHierarchy = vaultKeyHierarchy.getKeyHierarchyFromAccount(hierarchyAccount);
             List<ECKey> childKeys = new ArrayList<>();
-            for (int i = 0; i < amount; i++) {
+            for (int i = 1; i < amount; i++) {
                 // I derive the key at position i
-                DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, true, new ChildNumber(i, false));
+                DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(i, false));
                 // I add this key to the ECKey list
                 childKeys.add(ECKey.fromPrivate(derivedKey.getPrivKey()));
             }
@@ -296,7 +330,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @param hierarchyAccount
          * @return
          */
-        private int getCurrentUsedKeys(HierarchyAccount hierarchyAccount) {
+        private int getCurrentUsedKeys(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) {
             try {
                 int currentUsedKeys = getDao().getCurrentUsedKeys(hierarchyAccount.getId());
 
@@ -312,7 +346,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
          * @param hierarchyAccount
          * @return
          */
-        private int getCurrentGeneratedKeys(HierarchyAccount hierarchyAccount) {
+        private int getCurrentGeneratedKeys(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount) {
             /**
              * I can never return 0 or it will fail by dividing by 0
              */
@@ -332,8 +366,8 @@ class VaultKeyHierarchyMaintainer implements Agent {
          *
          * @return
          */
-        private List<HierarchyAccount> getHierarchyAccounts() throws CantLoadHierarchyAccountsException {
-            List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
+        private List<com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount> getHierarchyAccounts() throws CantLoadHierarchyAccountsException {
+            List<com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount> hierarchyAccounts = new ArrayList<>();
 
             /**
              * The DAO object used to access the database.
@@ -358,7 +392,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
              * the account 0 that will be used by the asset vault.
              */
             if (hierarchyAccounts.size() == 0) {
-                HierarchyAccount accountZero = new HierarchyAccount(0, "Asset Vault account");
+                com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount accountZero = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Asset Vault account", HierarchyAccountType.MASTER_ACCOUNT);
                 hierarchyAccounts.add(accountZero);
 
                 /**

@@ -31,7 +31,7 @@ import unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.develope
 public class GetDatabaseFactoryTest {
 
     private Activity mockActivity;
-    private Context mockContext;
+    private String mockContext;
 
     private AndroidDatabase testDatabase;
     private String testDatabaseName = "testDatabase";
@@ -39,7 +39,7 @@ public class GetDatabaseFactoryTest {
     @Before
     public void setUpContext(){
         mockActivity = Robolectric.setupActivity(Activity.class);
-        mockContext = shadowOf(mockActivity).getApplicationContext();
+        mockContext = "test1"; //shadowOf(mockActivity).getApplicationContext();
     }
 
     @Test

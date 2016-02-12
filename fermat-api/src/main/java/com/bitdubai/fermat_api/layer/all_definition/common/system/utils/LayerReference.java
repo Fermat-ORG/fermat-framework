@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.common.system.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 
 /**
  * The class <code>LayerReference</code>
@@ -26,6 +27,13 @@ public class LayerReference {
 
         this.platformReference = platformReference;
         this.layer             = layer            ;
+    }
+
+    public LayerReference(final Platforms platform,
+                          final Layers    layer   ) {
+
+        this.platformReference = new PlatformReference(platform);
+        this.layer             = layer                          ;
     }
 
     public PlatformReference getPlatformReference() {
@@ -68,6 +76,13 @@ public class LayerReference {
         return "LayerReference{" +
                 "platformReference=" + platformReference +
                 ", layer=" + layer +
+                '}';
+    }
+
+    public String toString3() {
+        return "Layer{" +
+                ""  + platformReference.getPlatform() +
+                ", "+ layer +
                 '}';
     }
 }

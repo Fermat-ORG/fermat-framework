@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
@@ -39,7 +40,7 @@ public class PluginVersionReference {
 
     public PluginVersionReference(final Platforms platform,
                                   final Layers layer,
-                                  final Plugins pluginEnum,
+                                  final FermatPluginsEnum pluginEnum,
                                   final Developers developer,
                                   final Version version) {
 
@@ -50,46 +51,6 @@ public class PluginVersionReference {
         this.pluginDeveloperReference = new PluginDeveloperReference(pluginReference, developer);
         ;
         this.version = version;
-    }
-
-    public static PluginVersionReference getByKey(final String key) throws InvalidParameterException {
-
-        String[] keySplit = key.split(Pattern.quote(KEY_SEPARATOR));
-
-        if (keySplit.length != 5)
-            throw new InvalidParameterException("Key: " + key, "This key should respect the separation pattern using \"" + KEY_SEPARATOR + "\"");
-
-        final String platformString = keySplit[0];
-        final String layerString = keySplit[1];
-        final String pluginEnumString = keySplit[2];
-        final String developerString = keySplit[3];
-        final String versionString = keySplit[4];
-
-        final Platforms platform = Platforms.getByCode(platformString);
-        final Layers layer = Layers.getByCode(layerString);
-        final Plugins pluginEnum = Plugins.getByCode(pluginEnumString);
-        final Developers developer = Developers.getByCode(developerString);
-        final Version version = new Version(versionString);
-
-        return new PluginVersionReference(platform, layer, pluginEnum, developer, version);
-    }
-
-    public String toKey() {
-
-        PluginReference pluginReference = pluginDeveloperReference.getPluginReference();
-        LayerReference layerReference = pluginReference.getLayerReference();
-        PlatformReference platformReference = layerReference.getPlatformReference();
-
-        Platforms platform = platformReference.getPlatform();
-        Layers layer = layerReference.getLayer();
-        Plugins plugin = pluginReference.getPlugin();
-        Developers developer = pluginDeveloperReference.getDeveloper();
-
-        return platform.getCode() + KEY_SEPARATOR +
-                layer.getCode() + KEY_SEPARATOR +
-                plugin.getCode() + KEY_SEPARATOR +
-                developer.getCode() + KEY_SEPARATOR +
-                version.toString();
     }
 
     public final Version getVersion() {

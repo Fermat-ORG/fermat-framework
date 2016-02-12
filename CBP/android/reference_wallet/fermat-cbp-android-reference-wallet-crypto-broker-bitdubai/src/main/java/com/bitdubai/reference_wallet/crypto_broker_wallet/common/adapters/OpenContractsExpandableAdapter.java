@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ContractExpandableListViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.GrouperViewHolder;
@@ -53,7 +53,7 @@ public class OpenContractsExpandableAdapter
      */
     @Override
     public ContractExpandableListViewHolder onCreateChildViewHolder(ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.cbw_open_contract_list_item, parent, false);
+        View view = mInflater.inflate(R.layout.cbw_open_negotiation_and_contract_list_item, parent, false);
         return new ContractExpandableListViewHolder(view);
     }
 

@@ -12,7 +12,7 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.common.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 import java.util.Map;
@@ -58,7 +58,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
 
     public void bind(CustomerBrokerNegotiationInformation itemInfo) {
 
-        CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
+        CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastNegotiationUpdateDate());
         lastUpdateDate.setText(date);
 
         ActorIdentity broker = itemInfo.getBroker();
@@ -73,8 +73,8 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         merchandiseAmount.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
         exchangeRateAmount.setText(negotiationSummary.get(ClauseType.EXCHANGE_RATE));
         merchandise.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY));
-        paymentMethod.setText(negotiationSummary.get(ClauseType.BROKER_PAYMENT_METHOD));
-        paymentCurrency.setText(negotiationSummary.get(ClauseType.BROKER_CURRENCY));
+//        paymentMethod.setText(negotiationSummary.get(ClauseType.BROKER_PAYMENT_METHOD));
+//        paymentCurrency.setText(negotiationSummary.get(ClauseType.BROKER_CURRENCY));
     }
 
     private int getStatusBackgroundColor(NegotiationStatus status) {

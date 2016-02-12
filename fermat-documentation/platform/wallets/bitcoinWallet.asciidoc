@@ -1,5 +1,0 @@
-= Bitcoin Wallet
-
-
-This wallet is represented by the Nich Wallet Bitcoin Reference Wallet. +
-We will explore the functionality of this wallet and all the modules involved in different work cycles. +

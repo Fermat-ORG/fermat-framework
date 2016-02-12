@@ -3,13 +3,13 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.Agent;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.TransactionTypes;
+import com.bitdubai.fermat_bch_api.layer.definition.enums.EventType;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_cry_api.layer.definition.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Set;
@@ -173,29 +173,30 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
             FermatEvent event = null;
             switch (cryptoStatus){
                 case ON_CRYPTO_NETWORK:
-                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_ON_CRYPTO_NETWORK);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    //event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_ON_CRYPTO_NETWORK);
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
                     break;
                 case ON_BLOCKCHAIN:
-                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_ON_BLOCKCHAIN);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    //event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_ON_BLOCKCHAIN);
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
                     break;
                 case REVERSED_ON_CRYPTO_NETWORK:
-                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    //event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
                     break;
                 case REVERSED_ON_BLOCKCHAIN:
-                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    //event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
                     break;
                 case IRREVERSIBLE:
-                    event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_IRREVERSIBLE);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
+                    //event = eventManager.getNewEvent(EventType.OUTGOING_CRYPTO_IRREVERSIBLE);
+                    event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE);
                     break;
             }
             /**
              * I raise the event
              */
+            event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
             eventManager.raiseEvent(event);
         }
 
@@ -222,28 +223,24 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
             switch (cryptoStatus){
                 case ON_CRYPTO_NETWORK:
                     event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
                 case ON_BLOCKCHAIN:
                     event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
                 case REVERSED_ON_CRYPTO_NETWORK:
                     event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
                 case REVERSED_ON_BLOCKCHAIN:
                     event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
                 case IRREVERSIBLE:
                     event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE);
-                    event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
                     break;
             }
             /**
              * I raise the event
              */
+            event.setSource(EventSource.CRYPTO_NETWORK_BITCOIN_PLUGIN);
             eventManager.raiseEvent(event);
         }
 

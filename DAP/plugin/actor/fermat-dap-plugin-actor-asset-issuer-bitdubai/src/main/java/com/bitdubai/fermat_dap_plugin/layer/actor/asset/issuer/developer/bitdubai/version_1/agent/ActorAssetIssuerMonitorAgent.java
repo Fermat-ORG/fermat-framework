@@ -2,13 +2,14 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdub
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_world.Agent;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.Agent;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
@@ -16,8 +17,8 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitduba
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.exceptions.CantAddPendingAssetIssuerException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerActorDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -132,38 +133,38 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
         }
 
         private void doTheMainTask() throws CantCreateActorAssetIssuerException {
-            try {
-//                test_RegisterActorNetworkService();
-
-                listByActorAssetIssuerNetworkService();
-
-            } catch (CantCreateActorAssetIssuerException e) {
-                throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER IN ACTOR NETWORK SERVICE", e, "", "");
-            }
+//            try {
+//                listByActorAssetIssuerNetworkService();
+//
+//            } catch (CantCreateActorAssetIssuerException e) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                throw new CantCreateActorAssetIssuerException("CAN'T START AGENT FOR SEARCH NEW ACTOR ASSET ISSUER IN ACTOR NETWORK SERVICE", e, "", "");
+//            }
         }
 
         private void listByActorAssetIssuerNetworkService() throws CantCreateActorAssetIssuerException {
             try {
-                if (assetIssuerActorNetworkServiceManager != null) {
+                if (assetIssuerActorNetworkServiceManager != null && assetIssuerActorDao.getActorAssetIssuer() != null) {
                     List<ActorAssetIssuer> list = assetIssuerActorNetworkServiceManager.getListActorAssetIssuerRegistered();
                     if (list.isEmpty()) {
                         System.out.println("Actor Asset Issuer - Lista de Actor Asset Network Service: RECIBIDA VACIA - Nuevo intento en: " + SLEEP_TIME / 1000 / 60 + " minute (s)");
-                        //TODO List Empty State = DISCONNECTED_REMOTELY
                         System.out.println("Actor Asset Issuer - Se procede actualizar Lista en TABLA (si) Existiera algun Registro");
                         assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(list);
                     } else {
                         System.out.println("Actor Asset Issuer - Se Recibio Lista de: " + list.size() + " Actors desde Actor Network Service - SE PROCEDE A SU REGISTRO");
-                        //TODO new Actors State = PENDING_LOCALLY_ACCEPTANCE
                         int recordInsert = assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(list);
                         System.out.println("Actor Asset Issuer - Se Registro en tabla REGISTER Lista de: " + recordInsert + " Actors desde Actor Network Service");
                     }
-                } else {
-                    System.out.println("Actor Asset assetIssuerActorNetworkServiceManager: " + assetIssuerActorNetworkServiceManager);
                 }
             } catch (CantRequestListActorAssetIssuerRegisteredException e) {
-                throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ASSET USER ACTOR NETWORK SERVICE", e, "", "");
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCreateActorAssetIssuerException("CAN'T REQUEST LIST ACTOR ASSET ISSUER NETWORK SERVICE, POSSIBLE NULL", e, "", "POSSIBLE REASON: " + assetIssuerActorNetworkServiceManager);
             } catch (CantAddPendingAssetIssuerException e) {
-                e.printStackTrace();
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCreateActorAssetIssuerException("CAN'T ADD LIST ACTOR ASSET ISSUER IN BD ACTORS ", e, "", "");
+            } catch (CantGetAssetIssuerActorsException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCreateActorAssetIssuerException("CAN'T GET ASSET ACTOR ASSET ISSUER", e, "", "");
             }
         }
     }

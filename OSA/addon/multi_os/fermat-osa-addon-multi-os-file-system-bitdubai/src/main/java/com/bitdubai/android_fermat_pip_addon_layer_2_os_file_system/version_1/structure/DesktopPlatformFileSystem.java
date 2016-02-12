@@ -5,6 +5,7 @@ package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.s
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
@@ -92,18 +93,14 @@ public class DesktopPlatformFileSystem implements PlatformFileSystem {
         }
     }
 
-    /**
-     <p>This method set the os context
-     *
-     * @param context Android context object
-     */
-    
-    // Methon available only for Android OS
     @Override
-    public void setContext(Object context) {
+    public PlatformBinaryFile getBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException {
+        return null;
+    }
 
-        //this.context = (Context)context;
-
+    @Override
+    public PlatformBinaryFile createBinaryFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException {
+        return null;
     }
 
     /**

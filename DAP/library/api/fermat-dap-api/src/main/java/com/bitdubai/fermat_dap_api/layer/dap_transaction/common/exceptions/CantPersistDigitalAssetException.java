@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions;
 
-import com.bitdubai.fermat_api.layer.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/09/15.

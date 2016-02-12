@@ -1,7 +1,12 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_broker.interfaces.ContractBasicInformation;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -24,21 +29,42 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private String paymentCurrency;
     private long date;
     private ContractStatus status;
+    private String cancellationReason;
 
-    public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status) {
+    public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status, CustomerBrokerContractSale customerBrokerContractSale, CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) {
         this.customerAlias = customerAlias;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
 
-        amount = random.nextFloat() * 100;
-        exchangeRateAmount = random.nextFloat();
+        if (customerBrokerSaleNegotiation != null) {
+            this.cancellationReason = customerBrokerSaleNegotiation.getCancelReason(); //Negotiation del objeto como tal
+            date = customerBrokerSaleNegotiation.getLastNegotiationUpdateDate(); //instance.getTimeInMillis(); //
+            negotiationId = customerBrokerSaleNegotiation.getNegotiationId(); //UUID.fromString(customerBrokerContractSale.getNegotiatiotId()); //Contrato
+            try {
+                for (Clause clause : customerBrokerSaleNegotiation.getClauses()) {
+                    if (clause.getType().getCode() == ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode()) {
+                        amount = Float.valueOf(clause.getValue());
+                    }
+                    if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode()) {
+                        exchangeRateAmount = Float.valueOf(clause.getValue());
+                    }
+                }
+            } catch (CantGetListClauseException e) {
+                e.printStackTrace();
+            }
+        }else{
+            amount = random.nextFloat() * 100; //Cantidad de mercancia que recibe el customer
+            exchangeRateAmount = random.nextFloat(); //tasa de cambio
+            this.cancellationReason = ""; //Negotiation del objeto como tal
+            date = instance.getTimeInMillis(); //
+            negotiationId = UUID.randomUUID(); //Contrato
+        }
 
-        imageBytes = new byte[0];
-        negotiationId = UUID.randomUUID();
-
-        date = instance.getTimeInMillis();
-        this.status = status;
+        imageBytes = new byte[0]; //Actor customer
+        if (customerBrokerContractSale != null){
+            this.status =  customerBrokerContractSale.getStatus(); //getLastNegotiationUpdateDate del Negotiation
+        }else this.status = status;
     }
 
     @Override
@@ -63,8 +89,19 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     }
 
     @Override
+    public String getCancellationReason() {
+        return cancellationReason;
+    }
+
+    @Override
     public String getMerchandise() {
         return merchandise;
+    }
+
+    @Override
+    public UUID getNegotiationId() {
+        //TODO
+        return negotiationId;
     }
 
     @Override
@@ -90,5 +127,45 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     @Override
     public long getLastUpdate() {
         return date;
+    }
+
+    public void setCustomerAlias(String customerAlias) {
+        this.customerAlias = customerAlias;
+    }
+
+    public void setNegotiationId(UUID negotiationId) {
+        this.negotiationId = negotiationId;
+    }
+
+    public void setAmount(float amount) {
+        this.amount = amount;
+    }
+
+    public void setMerchandise(String merchandise) {
+        this.merchandise = merchandise;
+    }
+
+    public void setTypeOfPayment(String typeOfPayment) {
+        this.typeOfPayment = typeOfPayment;
+    }
+
+    public void setExchangeRateAmount(float exchangeRateAmount) {
+        this.exchangeRateAmount = exchangeRateAmount;
+    }
+
+    public void setPaymentCurrency(String paymentCurrency) {
+        this.paymentCurrency = paymentCurrency;
+    }
+
+    public void setLastUpdate(long date) {
+        this.date = date;
+    }
+
+    public void setStatus(ContractStatus status) {
+        this.status = status;
+    }
+
+    public void setCancellationReason(String cancellationReason) {
+        this.cancellationReason = cancellationReason;
     }
 }

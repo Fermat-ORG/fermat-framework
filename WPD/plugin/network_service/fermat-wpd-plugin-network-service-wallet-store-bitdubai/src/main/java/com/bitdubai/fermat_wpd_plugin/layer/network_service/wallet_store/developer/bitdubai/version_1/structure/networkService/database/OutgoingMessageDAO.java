@@ -82,7 +82,7 @@ public class OutgoingMessageDAO {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.setStringFilter(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            incomingMessageTable.addStringFilter(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
             /*
@@ -207,7 +207,7 @@ public class OutgoingMessageDAO {
              * 1 - load the data base to memory with filters
              */
             DatabaseTable templateTable = getDatabaseTable();
-            templateTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            templateTable.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             templateTable.loadToMemory();
 
             /*

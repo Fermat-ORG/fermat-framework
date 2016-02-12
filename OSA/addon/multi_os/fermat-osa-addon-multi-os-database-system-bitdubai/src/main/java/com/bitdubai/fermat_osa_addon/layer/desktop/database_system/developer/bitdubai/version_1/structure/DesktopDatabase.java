@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
@@ -112,6 +114,11 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
         return databaseTransaction = new DesktopDatabaseTransaction();
     }
 
+    @Override
+    public void executeQuery(String query) throws CantExecuteQueryException {
+
+    }
+
     /**
      * <p>Return a DatabaseTable definition
      *
@@ -168,6 +175,21 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
              */
             throw new DatabaseTransactionFailedException();
         }
+    }
+
+    @Override
+    public DatabaseFactory getDatabaseFactory() {
+        return null;
+    }
+
+    @Override
+    public void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
+
+    }
+
+    @Override
+    public void closeDatabase() {
+
     }
 
 

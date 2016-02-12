@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
@@ -24,7 +24,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
  * @author Nelson Ramirez
  * @version 1.0
  */
-public class MoreDetailsActivityFragment extends FermatFragment {
+public class MoreDetailsActivityFragment extends AbstractFermatFragment {
     // MANAGERS
     private WalletStoreModuleManager moduleManager;
 
@@ -52,20 +52,20 @@ public class MoreDetailsActivityFragment extends FermatFragment {
     }
 
 
-    @Override
-    public void setSubAppsSession(SubAppsSession subAppsSession) {
-        super.setSubAppsSession(subAppsSession);
-
-        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
-        moduleManager = session.getWalletStoreModuleManager();
-    }
+//    @Override
+//    public void setSubAppsSession(SubAppsSession subAppsSession) {
+//        super.setSubAppsSession(subAppsSession);
+//
+//        WalletStoreSubAppSession session = (WalletStoreSubAppSession) subAppsSession;
+//        moduleManager = session.getModuleManager();
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View layout = inflater.inflate(R.layout.fragment_more_details_wallet, container, false);
-        final WalletStoreListItem catalogItem = (WalletStoreListItem) subAppsSession.getData(BASIC_DATA);
+        final WalletStoreListItem catalogItem = (WalletStoreListItem) appSession.getData(BASIC_DATA);
 
         ActionBar actionBar = getActivity().getActionBar();
         if (actionBar != null) {
@@ -80,7 +80,7 @@ public class MoreDetailsActivityFragment extends FermatFragment {
         updateDate = (FermatTextView) layout.findViewById(R.id.update_date);
         numInstalls = (FermatTextView) layout.findViewById(R.id.num_installs);
         resourcesSize = (FermatTextView) layout.findViewById(R.id.resources_size);
-        walletPublisherName = (FermatTextView) layout.findViewById(R.id.wallet_publisher_name);
+        walletPublisherName = (FermatTextView) layout.findViewById(R.id.ws_wallet_publisher_name);
         developerAddress = (FermatTextView) layout.findViewById(R.id.developer_address);
         developerEmail = (FermatTextView) layout.findViewById(R.id.developer_email);
 
@@ -90,7 +90,7 @@ public class MoreDetailsActivityFragment extends FermatFragment {
     }
 
     private void setDataInViews(WalletStoreListItem catalogItem) {
-        final String developerAlias = (String) subAppsSession.getData(DEVELOPER_NAME);
+        final String developerAlias = (String) appSession.getData(DEVELOPER_NAME);
 
         elevatorPitch.setText("Elevator Pitch de la Wallet.\nElevetor Pitch de la Wallet Linea 2.");
         description.setText(catalogItem.getDescription());

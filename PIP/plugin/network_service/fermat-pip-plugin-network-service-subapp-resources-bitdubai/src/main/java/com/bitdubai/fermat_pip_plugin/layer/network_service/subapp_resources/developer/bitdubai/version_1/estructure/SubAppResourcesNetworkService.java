@@ -1,11 +1,6 @@
 package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.estructure;
 
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.SubAppResources;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetLanguageFileException;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetManifestException;
-import com.bitdubai.fermat_pip_api.layer.pip_network_service.subapp_resources.exceptions.CantGetSkinFileException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;

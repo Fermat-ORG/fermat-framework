@@ -17,7 +17,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.de
  */
 public class CommunicationNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "communication_network_service_data_base";
+    public static final String DATA_BASE_NAME  = "ActorNetworkServiceAssetUser";
 
     /**
      * incoming messages database table definition.
@@ -33,7 +33,7 @@ public class CommunicationNetworkServiceDatabaseConstants {
     public static final String INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME = "delivery_timestamp";
     public static final String INCOMING_MESSAGES_STATUS_COLUMN_NAME = "status";
 
-    public static final String INCOMING_MESSAGES_FIRST_KEY_COLUMN = "id";
+    public static final String INCOMING_MESSAGES_FIRST_KEY_COLUMN = INCOMING_MESSAGES_ID_COLUMN_NAME;
 
     /**
      * outgoing messages database table definition.
@@ -49,6 +49,6 @@ public class CommunicationNetworkServiceDatabaseConstants {
     public static final String OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME = "delivery_timestamp";
     public static final String OUTGOING_MESSAGES_STATUS_COLUMN_NAME = "status";
 
-    public static final String OUTGOING_MESSAGES_FIRST_KEY_COLUMN = "id";
+    public static final String OUTGOING_MESSAGES_FIRST_KEY_COLUMN = OUTGOING_MESSAGES_ID_COLUMN_NAME;
 
 }

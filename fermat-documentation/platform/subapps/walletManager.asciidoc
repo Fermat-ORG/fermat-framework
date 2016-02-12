@@ -1,7 +1,0 @@
-[[Platform-SubApps-WalletManager]]
-= Wallet Manager
-
-This app let the user administrate the different <<PlatformDescription-Wallets,wallets>> a he has installed in his device. +
-There are some operations between wallets that may be appropriate for this module to handle, for example we could manage transactions between wallets of a same user using this app. +
-
-The first set of wallets will be installed by default, in the future the manager will get new wallets from the <<Platform-SubApps-WalletStore,wallet store>>.

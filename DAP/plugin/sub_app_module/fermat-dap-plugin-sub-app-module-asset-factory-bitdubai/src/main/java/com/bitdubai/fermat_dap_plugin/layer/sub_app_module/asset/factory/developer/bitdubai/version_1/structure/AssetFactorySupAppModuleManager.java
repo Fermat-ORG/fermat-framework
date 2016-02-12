@@ -1,9 +1,17 @@
 package com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateEmptyAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantDeleteAsserFactoryException;
@@ -22,13 +30,15 @@ import java.util.List;
 public class AssetFactorySupAppModuleManager  {
 
     private final AssetFactoryManager assetFactoryManager;
+    private final IdentityAssetIssuerManager identityAssetIssuerManager;
+
     /**
      * constructor
      * @param assetFactoryManager
      */
-    public AssetFactorySupAppModuleManager(final AssetFactoryManager assetFactoryManager) {
-
+    public AssetFactorySupAppModuleManager(final AssetFactoryManager assetFactoryManager, final IdentityAssetIssuerManager identityAssetIssuerManager) {
         this.assetFactoryManager = assetFactoryManager;
+        this.identityAssetIssuerManager = identityAssetIssuerManager;
     }
 
     public AssetFactory getAssetFactory(String assetPublicKey)  throws CantGetAssetFactoryException, CantCreateFileException {
@@ -47,20 +57,24 @@ public class AssetFactorySupAppModuleManager  {
         assetFactoryManager.removeAssetFactory(publicKey);
     }
 
-    public void publishAssetFactory(AssetFactory assetFactory, BlockchainNetworkType blockchainNetworkType)  throws CantSaveAssetFactoryException {
-        assetFactoryManager.publishAsset(assetFactory, blockchainNetworkType);
+    public void publishAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException {
+        assetFactoryManager.publishAsset(assetFactory);
     }
 
     public List<AssetFactory> getAssetsFactoryByIssuer(String issuerIdentityPublicKey) throws CantGetAssetFactoryException, CantCreateFileException {
         return assetFactoryManager.getAssetFactoryByIssuer(issuerIdentityPublicKey);
     }
 
-    public List<AssetFactory> getAssetsFactoryByState(State state) throws CantGetAssetFactoryException, CantCreateFileException {
-        return assetFactoryManager.getAssetFactoryByState(state);
+    public List<AssetFactory> getAssetsFactoryByState(State state, BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException {
+        return assetFactoryManager.getAssetFactoryByState(state, networkType);
     }
 
-    public List<AssetFactory> getAssetsFactoryAll() throws CantGetAssetFactoryException, CantCreateFileException {
-        return assetFactoryManager.getAssetFactoryAll();
+    public List<AssetFactory> getAssetsFactoryAll(BlockchainNetworkType networkType) throws CantGetAssetFactoryException, CantCreateFileException {
+        return assetFactoryManager.getAssetFactoryAll(networkType);
+    }
+
+    public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
+        return assetFactoryManager.getAssetFactoryResource(resource);
     }
 
     public List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException {
@@ -72,4 +86,22 @@ public class AssetFactorySupAppModuleManager  {
         return assetFactoryManager.isReadyToPublish(assetPublicKey);
     }
 
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        try {
+            List<IdentityAssetIssuer> identities = assetFactoryManager.getActiveIdentities();
+            return (identities == null || identities.isEmpty()) ? null : assetFactoryManager.getActiveIdentities().get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<IdentityAssetIssuer> getActiveIdentities() {
+        try {
+            return identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

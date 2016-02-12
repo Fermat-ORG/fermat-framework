@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes;
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -26,6 +27,8 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     private String publicKey;
     private String walletPlatformIdentifier;
     private Version version;
+    private int iconResource;
+    private int position;
 
     public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.walletCategory = walletCategory;
@@ -37,6 +40,10 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
         this.publicKey = publicKey;
         this.walletPlatformIdentifier = walletPlatformIdentifier;
         this.version = version;
+    }
+
+    public void setIconResource(int iconResource) {
+        this.iconResource = iconResource;
     }
 
     /**
@@ -91,6 +98,11 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
         return walletIcon;
     }
 
+    @Override
+    public int getIconResource() {
+        return iconResource;
+    }
+
     /**
      * This method gives us the public key of the wallet in this device. It is used as identifier of
      * the wallet
@@ -133,7 +145,32 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     }
 
     @Override
+    public String getAppName() {
+        return getName();
+    }
+
+    @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return null;
+    }
+
+    @Override
+    public int getPosition() {
+        return position;
+    }
+
+    @Override
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    @Override
+    public int getNotifications() {
+        return 0;
     }
 }

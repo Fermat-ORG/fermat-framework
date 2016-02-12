@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     android:background="#FFFFFF"
-   >
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text=" Create contact"
+            android:text="@string/create_external_contact_text"
             android:layout_gravity="center_vertical"
             android:gravity="center_vertical"
             android:paddingLeft="12dp"
@@ -26,9 +26,7 @@
             app:typeface="ROBOTO_REGULAR"
             />
 
-
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="380dp"
@@ -41,7 +39,6 @@
         android:background="#FFFFFF"
         android:divider="#e1e1e1">
 
-
         <ImageView
             android:id="@+id/take_picture_btn"
             android:layout_width="50dp"
@@ -49,7 +46,6 @@
             android:layout_margin="7dip"
             android:src="@drawable/ic_camera"
             />
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -60,13 +56,12 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Set name"
+                android:text="@string/set_name_text"
                 android:textColor="#12aca1"
                 android:paddingLeft="20dp"
                 android:layout_alignParentTop="true"
                 android:visibility="visible"
                 app:typeface="ROBOTO_REGULAR"/>
-
 
             <AutoCompleteTextView
                 android:id="@+id/contact_name"
@@ -76,7 +71,7 @@
                 android:layout_marginBottom="3dip"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:hint="Name"
+                android:text="@string/name_text"
                 android:textColorHint="#9a9a9c"
                 android:inputType="textCapWords"
                 android:paddingBottom="7dip"
@@ -91,10 +86,8 @@
                 android:textStyle="normal" />
 
         </LinearLayout>
-
-
-
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
@@ -103,13 +96,12 @@
         android:paddingRight="3dp"
         android:paddingTop="3dp"
         android:paddingBottom="3dp"
-        android:layout_marginTop="7dp"
-        ></View>
+        android:layout_marginTop="7dp"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Set address"
+        android:text="@string/set_address_text"
         android:textColor="#12aca1"
         android:paddingLeft="24dp"
         android:layout_alignParentTop="true"
@@ -122,64 +114,59 @@
         android:layout_height="wrap_content"
         >
 
+        <LinearLayout
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:divider="#e1e1e1"
+            android:baselineAligned="false"
+            android:id="@+id/container">
 
+            <EditText
+                android:id="@+id/txt_address"
+                android:layout_width="210dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="3dip"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:text="@string/address_text"
+                android:textColorHint="#9a9a9c"
+                android:inputType="textCapWords"
+                android:paddingBottom="7dip"
+                android:paddingLeft="15dip"
+                android:paddingRight="7dip"
+                android:paddingTop="7dip"
+                android:singleLine="true"
+                android:textColor="#1d1d26"
+                android:textSize="14sp"
+                android:layout_marginLeft="15dp"
+                android:textStyle="normal" />
 
+            <ImageView
+                android:id="@+id/paste_from_clipboard_btn"
+                android:layout_width="28dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_copy"
+                android:layout_marginLeft="20dp"/>
 
-
-    <LinearLayout
-        android:layout_width="380dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#FFFFFF"
-        android:divider="#e1e1e1"
-        android:baselineAligned="false"
-        android:id="@+id/container">
-
-
-        <EditText
-            android:id="@+id/txt_address"
-            android:layout_width="210dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="3dip"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:hint="Address"
-            android:textColorHint="#9a9a9c"
-            android:inputType="textCapWords"
-            android:paddingBottom="7dip"
-            android:paddingLeft="15dip"
-            android:paddingRight="7dip"
-            android:paddingTop="7dip"
-            android:singleLine="true"
-            android:textColor="#1d1d26"
-            android:textSize="14sp"
-            android:layout_marginLeft="15dp"
-            android:textStyle="normal" />
-
-        <ImageView
-            android:id="@+id/paste_from_clipboard_btn"
-            android:layout_width="28dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_copy"
-            android:layout_marginLeft="20dp"/>
-
-        <ImageView
-            android:id="@+id/scan_qr"
-            android:layout_width="28dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/ic_qr"
-            android:layout_marginLeft="12dp"/>
-
-
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/scan_qr"
+                android:layout_width="28dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_qr"
+                android:layout_marginLeft="12dp"/>
+        </LinearLayout>
 
     </RelativeLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#e1e1e1"
-        android:layout_alignParentBottom="true"></View>
+        android:layout_alignParentBottom="true"/>
+
     <LinearLayout
         android:id="@+id/linear_create_contact"
         android:layout_width="380dp"
@@ -197,11 +184,10 @@
             android:layout_height="40dp"
             android:layout_weight="1"
             android:background="#efefef"
-            android:text="Cancel"
+            android:text="@string/cancel_text"
             android:textColor="#666666"
             android:textSize="14sp"
             />
-
 
         <Button
             android:id="@+id/save_contact_btn"
@@ -209,12 +195,10 @@
             android:layout_weight="1"
             android:layout_height="40dp"
             android:background="#1173aa"
-            android:text="Save"
+            android:text="@string/save_text"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             />
     </LinearLayout>
-
-
 
 </LinearLayout>

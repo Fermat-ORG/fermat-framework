@@ -21,6 +21,7 @@ public class IntraWalletUserIdentityDatabaseConstants {
 
     public static final String INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME             = "public_key"            ;
     public static final String INTRA_WALLET_USER_ALIAS_COLUMN_NAME                  = "alias"                 ;
+    public static final String INTRA_WALLET_USER_PHRASE_COLUMN_NAME                  = "phrase"  ;
     public static final String INTRA_WALLET_USER_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
     public static final String INTRA_WALLET_USER_ACTIVE_COLUMN_NAME                 = "active"     ;
 

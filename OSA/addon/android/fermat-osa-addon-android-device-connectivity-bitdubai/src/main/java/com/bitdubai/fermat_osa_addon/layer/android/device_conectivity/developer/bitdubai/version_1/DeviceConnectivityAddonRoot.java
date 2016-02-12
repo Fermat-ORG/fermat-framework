@@ -3,6 +3,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer
 import android.content.Context;
 import android.net.NetworkInfo;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectionType;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectivityAgent;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectivityManager;
@@ -16,14 +17,14 @@ import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.
 import com.bitdubai.fermat_api.CantStartPluginException;
 
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStartAgentException;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -62,6 +63,11 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
      * Plugin Interface member variables.
      */
     private UUID pluginId;
+
+    @Override
+    public FermatManager getManager() {
+        return null;
+    }
 
     public UUID getPluginId() {
 		return pluginId;
@@ -356,8 +362,4 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
-
-
-
-
 }

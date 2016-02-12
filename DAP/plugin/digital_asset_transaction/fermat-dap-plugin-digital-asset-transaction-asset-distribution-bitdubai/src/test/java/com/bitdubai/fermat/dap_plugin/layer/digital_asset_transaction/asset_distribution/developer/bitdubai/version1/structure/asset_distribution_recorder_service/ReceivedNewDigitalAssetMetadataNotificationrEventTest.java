@@ -37,7 +37,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationrEventTest {
 
     @Test
     public void receivedNewDigitalAssetMetadataNotificationrEventTest () throws CantSaveEventException {
-        assetDistributionRecorderService.receivedNewDigitalAssetMetadataNotificationrEvent(event);
+        assetDistributionRecorderService.receivedTransactionStatusNotificationrEvent(event);
     }
 
 }

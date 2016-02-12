@@ -16,26 +16,41 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantMonitorBitcoinNetworkException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCryptoNetworkDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkEventsAgent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.UTXOProvider;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by rodrigo on 9/23/15.
@@ -53,6 +68,12 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
+    /**
+     * Default Constructor
+     */
     public BitcoinCryptoNetworkPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -94,7 +115,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         /**
          * instantiate the network Manager
          */
-        bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager, this.pluginDatabaseSystem, this.pluginId);
+        bitcoinCryptoNetworkManager = new BitcoinCryptoNetworkManager(this.eventManager, this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
 
         /**
          * Start the agent that will search for pending transactions to be notified.
@@ -145,29 +166,8 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      * @throws CantGetCryptoTransactionException
      */
     @Override
-    public List<CryptoTransaction> getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+    public List<CryptoTransaction> getCryptoTransactions(String txHash) throws CantGetCryptoTransactionException {
         return bitcoinCryptoNetworkManager.getGenesisTransaction(txHash);
-    }
-
-    /**
-     * Broadcast a well formed, commited and signed transaction into the specified network
-     * @param blockchainNetworkType
-     * @param tx
-     * @throws CantBroadcastTransactionException
-     */
-    @Override
-    public void broadcastTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx) throws CantBroadcastTransactionException {
-        bitcoinCryptoNetworkManager.broadcastTransaction(blockchainNetworkType, tx);
-    }
-
-    /**
-     * Gets the UTXO provider from the CryptoNetwork on the specified Network
-     * @param blockchainNetworkType
-     * @return
-     */
-    @Override
-    public UTXOProvider getUTXOProvider(BlockchainNetworkType blockchainNetworkType) {
-        return bitcoinCryptoNetworkManager.getUTXOProvider(blockchainNetworkType);
     }
 
     /**
@@ -180,18 +180,117 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
         return bitcoinCryptoNetworkManager.getBitcoinTransaction(blockchainNetworkType, transactionHash);
     }
 
+    /**
+     * gets the current Crypto Status for the specified Transaction ID
+     * @param txHash the Bitcoin transaction hash
+     * @return the last crypto status
+     * @throws CantGetTransactionCryptoStatusException
+     */
     @Override
-    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, ECKey ecKey) {
-        return null;
+    public CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException {
+        return bitcoinCryptoNetworkManager.getCryptoStatus(txHash);
     }
 
+     /**
+     * Broadcast a well formed, commited and signed transaction into the network.
+     * @param txHash
+     * @throws CantBroadcastTransactionException
+     */
     @Override
-    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, List<ECKey> ecKeys) {
-        return null;
+    public synchronized void broadcastTransaction(String txHash) throws CantBroadcastTransactionException {
+        bitcoinCryptoNetworkManager.broadcastTransaction(txHash);
     }
 
+    /**
+     * Returns the broadcast Status for a specified transaction.
+     * @param txHash
+     * @return
+     * @throws CantGetBroadcastStatusException
+     */
     @Override
-    public List<Transaction> getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, VaultType vaultType) {
-        return null;
+    public BroadcastStatus getBroadcastStatus(String txHash) throws CantGetBroadcastStatusException {
+        return bitcoinCryptoNetworkManager.getBroadcastStatus(txHash);
+    }
+
+
+    /**
+     * Stores a Bitcoin Transaction in the CryptoNetwork to be broadcasted later
+     * @param blockchainNetworkType
+     * @param tx
+     * @param transactionId
+     * @param commit
+     * @throws CantStoreBitcoinTransactionException
+     */
+    @Override
+    public synchronized void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException {
+        bitcoinCryptoNetworkManager.storeBitcoinTransaction(blockchainNetworkType, tx, transactionId, commit);
+    }
+
+    /**
+     * Will mark the passed transaction as cancelled, and it won't be broadcasted again.
+     * @param txHash
+     * @throws CantCancellBroadcastTransactionException
+     */
+    @Override
+    public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException {
+        bitcoinCryptoNetworkManager.cancelBroadcast(txHash);
+    }
+
+    /**
+     * Will get the BlockchainConnectionStatus for the specified network.
+     * @param blockchainNetworkType the Network type we won't to get info from. If the passed network is not currently activated,
+     *                              then we will receive null.
+     * @return BlockchainConnectionStatus with information of amount of peers currently connected, etc.
+     * @exception CantGetBlockchainConnectionStatusException
+     */
+    @Override
+    public BlockchainConnectionStatus getBlockchainConnectionStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainConnectionStatusException {
+        return bitcoinCryptoNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType);
+    }
+
+    /**
+     * Get the bitcoin transactions stored by the CryptoNetwork
+     * @param blockchainNetworkType the network type
+     * @return the bitcoin transaction
+     */
+    @Override
+    public List<Transaction> getBitcoinTransactions(BlockchainNetworkType blockchainNetworkType) {
+        return bitcoinCryptoNetworkManager.getBitcoinTransactions(blockchainNetworkType);
+    }
+
+    /**
+     * Gets a stored CryptoTransaction in wathever network.
+     * @param txHash the transaction hash we want to get the CryptoTransaction
+     * @return the last recorded CryptoTransaction.
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getCryptoTransaction(txHash);
+    }
+
+    /**
+     * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path
+     * of the chain until the Genesis Transaction is reached.
+     * The genesis Transaction will be the first transaction in the map.
+     * @param transactionChain a Map with the form TransactionHash / BlockHash
+     * @return all the CryptoTransactions originated at the genesis transaction
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public CryptoTransaction getGenesisCryptoTransaction(@Nullable BlockchainNetworkType blockchainNetworkType, LinkedHashMap<String, String> transactionChain) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getGenesisCryptoTransaction(blockchainNetworkType, transactionChain);
+    }
+
+    /**
+     * Based on the Parent trasaction passed, will return all the CryptoTransactions that are a direct descendant of this parent.
+     * Only if it is a locally stored transaction
+     * @param parentTransactionHash the hash of the parent trasaction
+     * @return the list of CryptoTransactions that are a direct child of the parent.
+     * @throws CantGetCryptoTransactionException
+     */
+    @Override
+    public List<CryptoTransaction> getChildTransactionsFromParent(String parentTransactionHash) throws CantGetCryptoTransactionException {
+        return bitcoinCryptoNetworkManager.getChildTransactionsFromParent(parentTransactionHash);
     }
 }

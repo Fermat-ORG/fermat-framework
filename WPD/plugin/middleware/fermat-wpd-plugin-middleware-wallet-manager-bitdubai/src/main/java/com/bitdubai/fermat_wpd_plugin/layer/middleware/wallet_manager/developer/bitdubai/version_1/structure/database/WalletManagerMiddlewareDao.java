@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
@@ -95,7 +96,8 @@ public class WalletManagerMiddlewareDao {
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
                         record.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
-                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
+                        BlockchainNetworkType.getByCode(record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME))
                 );
 
                 lstInstalledWallet.add(installedWallet);
@@ -120,7 +122,7 @@ public class WalletManagerMiddlewareDao {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
 
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME,walletPublicKey,DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -147,7 +149,9 @@ public class WalletManagerMiddlewareDao {
                         databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
                         databaseTableRecord.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
                         databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
-                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME));
+                        databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
+                        BlockchainNetworkType.getByCode( databaseTableRecord.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME))
+                        );
             }
 
 
@@ -181,7 +185,7 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME, walletIdInThisDevice.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME, walletIdInThisDevice.toString(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             if (records.isEmpty()) {
@@ -205,7 +209,8 @@ public class WalletManagerMiddlewareDao {
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
                         record.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
-                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
+                        BlockchainNetworkType.getByCode( record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME))
                 );
             }
 
@@ -232,7 +237,7 @@ public class WalletManagerMiddlewareDao {
             //LOG.info("DB:"+database.toString());
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
             //LOG.info("TABLE:" + databaseTable.isTableExists());
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             //LOG.info("TABLE loaded:");
             List<DatabaseTableRecord> records = databaseTable.getRecords();
@@ -258,7 +263,8 @@ public class WalletManagerMiddlewareDao {
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME),
                         record.getUUIDValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME),
                         record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
-                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME)
+                        record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
+                        BlockchainNetworkType.getByCode( record.getStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME))
                 );
                 //LOG.info("record:"+record);
             }
@@ -275,7 +281,7 @@ public class WalletManagerMiddlewareDao {
     }
 
 
-    public void persistWallet(String walletPublicKey, String walletPrivateKey, String deviceUserPublicKey, WalletCategory walletCategory, String walletName, String walletIconName, String walletIdentifier, UUID walletCatalogueId, Version walletVersion, String developerName, String screenSize, String navigationVersion) throws CantPersistWalletException {
+    public void persistWallet(String walletPublicKey, String walletPrivateKey, String deviceUserPublicKey, WalletCategory walletCategory, String walletName, String walletIconName, String walletIdentifier, UUID walletCatalogueId, Version walletVersion, String developerName, String screenSize, String navigationVersion, BlockchainNetworkType blockchainNetworkType) throws CantPersistWalletException {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
@@ -292,11 +298,12 @@ public class WalletManagerMiddlewareDao {
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME, developerName);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME, screenSize);
             record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME, navigationVersion);
+            record.setStringValue(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
             //Logger LOG = Logger.getGlobal();
             //LOG.info("RECORD:" + record);
             databaseTable.insertRecord(record);
             //TODO: BORRAR
-            /*databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME,walletPublicKey,DatabaseFilterType.EQUAL);
+            /*databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME,walletPublicKey,DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             LOG.info("RECORDs:"+records.size());
@@ -367,8 +374,8 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_ID_COLUMN_NAME, languageId.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_ID_COLUMN_NAME, languageId.toString(), DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -392,8 +399,8 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME, skinId.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME, skinId.toString(), DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -416,7 +423,7 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME, walletId.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME, walletId.toString(), DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -445,7 +452,7 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME, walletIdInTheDevice.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME, walletIdInTheDevice.toString(), DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -472,7 +479,7 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME, skinId, DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -504,7 +511,7 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, languageId, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, languageId, DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -540,7 +547,7 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogId, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogId, DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -575,7 +582,7 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogId, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogId, DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -608,7 +615,7 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -631,7 +638,7 @@ public class WalletManagerMiddlewareDao {
         try {
             database = openDatabase();
             DatabaseTable databaseTable = getDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME);
-            databaseTable.setStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_WALLET_CATALOG_ID_COLUMN_NAME, walletCatalogueId.toString(), DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 

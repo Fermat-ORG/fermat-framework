@@ -1,10 +1,11 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_language.exceptions.CantGetWalletLanguageException;
+import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetCatalogItemException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetDesignerException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetDeveloperException;
@@ -29,7 +30,7 @@ import java.util.UUID;
 /**
  * Created by loui on 18/02/15.
  */
-public interface WalletStoreManager {
+public interface WalletStoreManager extends FermatManager {
     public void publishWallet(CatalogItem catalogItem) throws CantPublishWalletInCatalogException;
 
     public void publishSkin(Skin skin) throws CantPublishSkinInCatalogException;

@@ -9,13 +9,10 @@ import android.widget.LinearLayout;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledSubApp;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-
-import java.util.Objects;
 
 /**
  * Created by nelson on 21/09/15.
@@ -33,16 +30,16 @@ public class TestActivity extends Activity implements WizardConfiguration, Ferma
     }
 
     @Override
+    public void showWizard(String key, Object... args) {
+
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         LinearLayout view = new LinearLayout(this);
         view.setId(LAYOUT_ID);
         setContentView(view);
         super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void showWizard(WizardTypes key, Object... args) {
-        // DO NOTHING...
     }
 
     @Override
@@ -56,8 +53,8 @@ public class TestActivity extends Activity implements WizardConfiguration, Ferma
     }
 
     @Override
-    public void changeActivity(String activity, Object... objects) {
-        boolean areEquals = Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode().equals(activity);
+    public void changeActivity(String activityName, String appBackPublicKey, Object... objects) {
+        boolean areEquals = Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode().equals(activityName);
 
         if (areEquals) {
             FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -67,6 +64,7 @@ public class TestActivity extends Activity implements WizardConfiguration, Ferma
             lastFragment = null;
         }
     }
+
 
     @Override
     public void selectSubApp(InstalledSubApp installedSubApp) {
@@ -84,7 +82,7 @@ public class TestActivity extends Activity implements WizardConfiguration, Ferma
     }
 
     @Override
-    public void connectWithOtherApp(Engine emgine, Objects... objectses) {
+    public void connectWithOtherApp(Engine emgine, Object[] objectses) {
 
     }
 

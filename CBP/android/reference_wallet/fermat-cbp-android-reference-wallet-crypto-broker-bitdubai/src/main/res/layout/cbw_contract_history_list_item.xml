@@ -71,5 +71,5 @@
         android:singleLine="true"
         android:textColor="@color/cbw_contract_history_exchange_rate_text"
         android:textSize="@dimen/cbw_regular_text_size"
-        android:text="@string/cbw_exchange_rate_amount_and_currency"/>
+        android:text="@string/cbw_exchange_rate_summary"/>
 </RelativeLayout>

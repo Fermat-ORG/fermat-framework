@@ -13,11 +13,8 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
  public interface DataBaseTableOrder {
 
-    public void setColumName (String column);
+    String getColumnName();
 
-    public void setDirection (DatabaseFilterOrder direction);
+    DatabaseFilterOrder getDirection ();
 
-    public String getColumName ();
-
-    public DatabaseFilterOrder getDirection ();
 }

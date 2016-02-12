@@ -149,25 +149,20 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
         }
     }
 
-    /**
-     *<p>This method set the os context
-     *
-     * @param context Android context object
-     */
-    
-    // Method only available for Android OS
     @Override
-    public void setContext(Object context) {
-        //this.context = (Context) context;
+    public void deleteTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
+
     }
 
+    @Override
+    public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
 
+    }
 
     /**
      *
      * Hash the file name using the algorithm SHA 256
      */
-
     private String hashFileName(String fileName) throws NoSuchAlgorithmException {
         String encryptedString = fileName;
         try{

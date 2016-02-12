@@ -1,16 +1,18 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 
 import java.util.List;
@@ -23,16 +25,18 @@ public interface AssetIssuerWallet {
 
     //TODO:Documentar y manejo de excepciones
 
-    AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
+    AssetIssuerWalletBalance getBalance() throws CantGetTransactionsException;
 
     List<AssetIssuerWalletTransaction> getTransactionsAll(BalanceType balanceType,
                                                           TransactionType transactionType,
                                                           String assetPublicKey) throws CantGetTransactionsException;
 
     List<AssetIssuerWalletTransaction> getTransactions(BalanceType balanceType,
-                                                        TransactionType transactionType,
-                                                        int max,
-                                                        int offset, String assetPublicKey) throws CantGetTransactionsException;
+                                                       TransactionType transactionType,
+                                                       int max,
+                                                       int offset, String assetPublicKey) throws CantGetTransactionsException;
+
+    List<AssetIssuerWalletTransaction> getAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
 
     List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey,
                                                               BalanceType balanceType,
@@ -50,10 +54,35 @@ public interface AssetIssuerWallet {
     AssetIssuerWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
                                                                    BalanceType balanceType) throws CantGetActorTransactionSummaryException;
 
-    //void distributionAssets(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers)  throws CantDistributeDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException;
+    List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException;
 
-    List<AssetIssuerWalletTransaction>  getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException;
+    DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException;
 
-    DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
+    DigitalAsset getAssetByPublicKey(String assetPublicKey);
 
+    String getUserDeliveredToPublicKey(UUID transactionId) throws RecordsNotFoundException, CantGetAssetStatisticException;
+
+    List<DigitalAssetMetadata> getAllUnusedAssets() throws CantGetDigitalAssetFromLocalStorageException;
+
+    //ASSET STATISTIC METHODS
+
+    void createdNewAsset(DigitalAssetMetadata assetMetadata) throws CantSaveStatisticException;
+
+    void newMovement(DAPActor actorFrom, DAPActor actorTo, UUID metadataId) throws CantSaveStatisticException;
+
+    void assetDistributed(UUID transactionId, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+
+    void assetRedeemed(UUID transactionId, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+
+    void assetAppropriated(UUID transactionId, String userPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+
+    List<AssetStatistic> getAllStatisticForAllAssets() throws CantGetAssetStatisticException;
+
+    List<AssetStatistic> getStatisticForAllAssetsByStatus(AssetCurrentStatus status) throws CantGetAssetStatisticException;
+
+    List<AssetStatistic> getStatisticForGivenAssetByStatus(String assetName, AssetCurrentStatus status) throws CantGetAssetStatisticException;
+
+    List<AssetStatistic> getAllStatisticForGivenAsset(String assetName) throws CantGetAssetStatisticException;
+
+    int getUnusedAmountForAssetByStatus(AssetCurrentStatus status, String assetName) throws CantGetAssetStatisticException;
 }

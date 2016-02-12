@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_bch_core.layer.crypto_vault.bitcoin_watch_only_vault;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginSubsystem;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartSubsystemException;
+
+
+import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
@@ -19,11 +22,11 @@ public class BitcoinWatchOnlyVaultPluginSubsystem extends AbstractPluginSubsyste
 
     @Override
     public void start() throws CantStartSubsystemException {
-        /*try {
+        try {
             registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
-        }*/
+        }
     }
 }

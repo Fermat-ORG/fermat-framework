@@ -3,7 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.identities;
 /**
  * Created by MAtias Furszyfer on 2015.10.22..
  */
-public interface ActiveIdentity {
+public interface ActiveIdentity{
 
     /**
      * The method <code>getAlias</code> returns the alias of the represented intra user

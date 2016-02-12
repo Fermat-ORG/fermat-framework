@@ -1,37 +1,35 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.FermatWalletFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.layer.cbp_wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.NavigationViewAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
+
+import static android.widget.Toast.makeText;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SettingsActivityFragment extends FermatWalletFragment {
+public class SettingsActivityFragment extends AbstractFermatFragment {
 
-    private static final String CRYPTO_CUSTOMER_WALLET_PUBLIC_KEY = "crypto_customer_wallet";
     private static final String TAG = "SettingsActivityFragment";
 
     // Fermat Managers
@@ -49,8 +47,8 @@ public class SettingsActivityFragment extends FermatWalletFragment {
         setHasOptionsMenu(false);
 
         try {
-            moduleManager = ((CryptoCustomerWalletSession) walletSession).getModuleManager();
-            errorManager = walletSession.getErrorManager();
+            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -61,21 +59,31 @@ public class SettingsActivityFragment extends FermatWalletFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View layout = inflater.inflate(R.layout.ccw_fragment_settings, container, false);
 
         configureActionBar();
 
-        Activity activity = getActivity();
-        LayoutInflater layoutInflater = activity.getLayoutInflater();
-        try {
-            addNavigationHeader(FragmentsCommons.setUpHeaderScreen(layoutInflater, getActivity(), null));
-            NavigationViewAdapter adapter = new NavigationViewAdapter(activity, null);
-            setNavigationDrawer(adapter);
-        } catch (CantGetActiveLoginIdentityException e) {
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-        }
+        View mylocationsBtn = layout.findViewById(R.id.settings_my_location);
+        mylocationsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+            }
+        });
 
-        return rootView;
+        return layout;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        try {
+            CustomerNavigationViewPainter navigationViewPainter = new CustomerNavigationViewPainter(getActivity(), null);
+        } catch (Exception e) {
+            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+        }
     }
 
     private void configureActionBar() {
