@@ -105,7 +105,6 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
                 try {
                     if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
                         Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
-                    active = Boolean.FALSE;
                 } catch (InterruptedException e1) {
                     active = Boolean.FALSE;
                 }
