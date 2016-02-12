@@ -26,11 +26,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -270,7 +272,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.OFFLINE_PAYMENT_ACK
+                            ContractTransactionStatus.OFFLINE_PAYMENT_ACK,
+                            Plugins.BROKER_ACK_OFFLINE_PAYMENT
                     );
                     brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -290,7 +293,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_OFFLINE_ACK_PAYMENT
+                            ContractTransactionStatus.CONFIRM_OFFLINE_ACK_PAYMENT,
+                            Plugins.BROKER_ACK_OFFLINE_PAYMENT
                     );
                     brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -355,6 +359,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             CustomerBrokerContractPurchase customerBrokerContractPurchase=
                                     customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(
                                             contractHash);
+                            //If the contract is null, I cannot handle with this situation
+                            ObjectChecker.checkArgument(customerBrokerContractPurchase);
                             brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
                                     customerBrokerContractPurchase);
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
@@ -441,6 +447,11 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "Cannot update the contract purchase status");
+            } catch (ObjectNotSetException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "The customerBrokerContractPurchase is null");
             }
 
 

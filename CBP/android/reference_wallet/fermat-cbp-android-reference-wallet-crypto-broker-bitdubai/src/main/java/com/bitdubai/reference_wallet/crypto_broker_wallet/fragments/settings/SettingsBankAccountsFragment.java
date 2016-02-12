@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
@@ -180,7 +180,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
                 associatedSetting.setId(UUID.randomUUID());
                 associatedSetting.setWalletPublicKey(walletPublicKey);
                 associatedSetting.setPlatform(platform);
-                associatedSetting.setCurrencyType(CurrencyType.BANK_MONEY);
+                associatedSetting.setMoneyType(MoneyType.BANK);
                 associatedSetting.setBankAccount(accountNumber.getAccount());
                 walletManager.saveWalletSettingAssociated(associatedSetting, appSession.getAppPublicKey());
             }

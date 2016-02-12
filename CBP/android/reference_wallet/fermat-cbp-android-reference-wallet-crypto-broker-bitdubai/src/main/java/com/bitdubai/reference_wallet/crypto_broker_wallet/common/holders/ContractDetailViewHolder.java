@@ -96,7 +96,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
             if(buttonText.equals("CONFIRM")){
                 //TODO: Ack Payment
                 //In this case, I will ack the payment to Customer
-                //this.walletManager.sendPayment(this.contractId.toString());
+                this.walletManager.ackPayment(this.contractId.toString());
                 updateBackground(
                         this.contractId.toString(),
                         ContractDetailType.BROKER_DETAIL);
@@ -104,14 +104,14 @@ public class ContractDetailViewHolder extends FermatViewHolder {
             if(buttonText.equals("SEND")){
                 //TODO: Send Merchandise
                 //In this case, I will send the broker merchandise
-                //this.walletManager.ackMerchandise(this.contractId.toString());
+                this.walletManager.submitMerchandise(this.contractId.toString());
                 updateBackground(
                         this.contractId.toString(),
                         ContractDetailType.CUSTOMER_DETAIL);
             }
             //TODO: catch the proper exception when the wallet module is ready (the catch is commented)
-        } catch (Exception ex) {
-        //} catch (FermatException ex) {
+        //} catch (Exception ex) {
+        } catch (FermatException ex) {
             Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
@@ -128,16 +128,16 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     private void updateBackground(String contractHash, ContractDetailType contractDetailType){
         try{
             //TODO: remove the hardcode when the wallet module is ready
-            ContractStatus contractStatus=ContractStatus.PENDING_PAYMENT;
-            //ContractStatus contractStatus=this.walletManager.getContractStatus(contractHash);
+            //ContractStatus contractStatus=ContractStatus.PENDING_PAYMENT;
+            ContractStatus contractStatus=this.walletManager.getContractStatus(contractHash);
             ContractStatus backgroundContractStatus=getContractStatusByContractDetailType(
                     contractStatus,
                     contractDetailType);
             itemView.setBackgroundColor(getStatusBackgroundColor(backgroundContractStatus));
             textButton.setText(contractStatus.getFriendlyName());
             //TODO: catch the proper exception when the wallet module is ready (the catch is commented)
-        } catch (Exception ex) {
-        //} catch (CantGetListCustomerBrokerContractSaleException ex) {
+        //} catch (Exception ex) {
+        } catch (CantGetListCustomerBrokerContractSaleException ex) {
             Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
             Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);

@@ -26,11 +26,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.CustomerAckMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -269,7 +271,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK
+                            ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK,
+                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE
                     );
                     customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -289,7 +292,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE
+                            ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE,
+                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE
                     );
                     customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -366,6 +370,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                             CustomerBrokerContractSale customerBrokerContractSale=
                                     customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
                                             contractHash);
+                            //If the contract is null, I cannot handle with this situation
+                            ObjectChecker.checkArgument(customerBrokerContractSale);
                             customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                                     customerBrokerContractSale);
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
@@ -452,6 +458,11 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "Cannot update the contract sale status");
+            } catch (ObjectNotSetException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "The customerBrokerContractSale is null");
             }
 
         }

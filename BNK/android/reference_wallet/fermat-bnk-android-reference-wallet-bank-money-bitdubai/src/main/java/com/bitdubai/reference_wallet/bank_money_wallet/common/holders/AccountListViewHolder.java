@@ -50,7 +50,7 @@ public class AccountListViewHolder extends FermatViewHolder {
         itemView.setBackgroundColor(335);
         account.setText(itemInfo.getAccount());
         alias.setText(itemInfo.getAlias());
-        //currency.setText(itemInfo.getCurrencyType().getCode());
+        //currency.setText(itemInfo.getMoneyType().getCode());
 
         availableBalance.setText(String.valueOf(moduleManager.getBankingWallet().getAvailableBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
         bookBalance.setText(String.valueOf(moduleManager.getBankingWallet().getBookBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());

@@ -210,6 +210,23 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
 //        DeveloperDatabaseTable assetUserRelationAssetIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ASSET_ISSUER_TABLE_NAME, assetUserRelationAssetIssuerColumns);
 //        tables.add(assetUserRelationAssetIssuerTable);
 
+        /**
+         * Crypto Address database columns.
+         */
+        List<String> cryptoAddressColums = new ArrayList<String>();
+
+        cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME);
+        cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME);
+        cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME);
+        cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME);
+
+
+        /**
+         * Crypto Address  database addition.
+         */
+        DeveloperDatabaseTable assetUserRelationAssetIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME, cryptoAddressColums);
+        tables.add(assetUserRelationAssetIssuerTable);
+
         return tables;
     }
 

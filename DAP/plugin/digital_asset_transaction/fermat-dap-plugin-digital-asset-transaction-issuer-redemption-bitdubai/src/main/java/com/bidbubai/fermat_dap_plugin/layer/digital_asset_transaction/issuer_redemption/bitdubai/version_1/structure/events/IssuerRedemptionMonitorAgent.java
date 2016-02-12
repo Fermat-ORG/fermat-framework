@@ -86,7 +86,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         agent = new MonitorAgent();
-        Thread agentThread = new Thread(agent);
+        Thread agentThread = new Thread(agent, "Issuer Redemption MonitorAgent");
         agentThread.start();
     }
 

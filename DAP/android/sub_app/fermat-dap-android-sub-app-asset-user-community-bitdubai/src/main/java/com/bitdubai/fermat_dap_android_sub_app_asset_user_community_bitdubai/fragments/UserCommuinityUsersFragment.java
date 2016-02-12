@@ -41,7 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Home Fragment
+ * UserCommuinityUsersFragment, Shows all the users in current network not in the seleted group for adding
+ *
  */
 public class UserCommuinityUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -273,27 +274,15 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
 
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        result = manager.getAllActorAssetUserRegistered();
-        usersInGroup = manager.getListActorAssetUserByGroups(group.getGroupName());
+
+        result = manager.getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(group.getGroupId());
+
         if (result != null && result.size() > 0) {
             for (AssetUserActorRecord record : result) {
-                if (!userInGroup(record.getActorPublicKey(),usersInGroup) && record.getCryptoAddress() != null)
-                {
                     dataSet.add((new Actor(record)));
-                }
-
             }
         }
         return dataSet;
     }
 
-    private boolean userInGroup(String actorPublicKey, List<ActorAssetUser> usersInGroup) {
-        for (ActorAssetUser record : usersInGroup) {
-            if (record.getActorPublicKey().equals(actorPublicKey))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 }

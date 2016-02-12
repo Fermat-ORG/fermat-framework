@@ -176,10 +176,10 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
-                    System.out.println("############################################################");
-                    System.out.println("#  WsCommunicationsCloudClientConnection - Reconnecting... #");
-                    System.out.println("############################################################");
-                    return true;
+                System.out.println("############################################################");
+                System.out.println("#  WsCommunicationsCloudClientConnection - Reconnecting... #");
+                System.out.println("############################################################");
+                return true;
             }
 
             @Override
@@ -224,9 +224,9 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
             //Validate parameters
             if ((identityPublicKey == null || identityPublicKey.equals("")) ||
                     (alias == null || alias.equals(""))                     ||
-                        (name == null || name.equals(""))                   ||
-                                    networkServiceType == null         ||
-                                        platformComponentType == null  ){
+                    (name == null || name.equals(""))                   ||
+                    networkServiceType == null         ||
+                    platformComponentType == null  ){
 
                 throw new IllegalArgumentException("All argument are required, can not be null ");
 
@@ -246,13 +246,13 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              * Construct a PlatformComponentProfile instance
              */
             return new PlatformComponentProfileCommunication(alias,
-                                                             wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),
-                                                             identityPublicKey,
-                                                             location,
-                                                             name,
-                                                             networkServiceType,
-                                                             platformComponentType,
-                                                             extraData);
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),
+                    identityPublicKey,
+                    location,
+                    name,
+                    networkServiceType,
+                    platformComponentType,
+                    extraData);
 
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
@@ -280,13 +280,13 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
             }
 
             return new PlatformComponentProfileCommunication(null,
-                                                            wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),
-                                                            identityPublicKey,
-                                                            null,
-                                                            null,
-                                                            networkServiceType,
-                                                            platformComponentType,
-                                                            null);
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),
+                    identityPublicKey,
+                    null,
+                    null,
+                    networkServiceType,
+                    platformComponentType,
+                    null);
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
@@ -450,19 +450,19 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
         try {
 
-                Gson gson = new Gson();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceApplicant.getNetworkServiceType().toString());
-                jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty(JsonAttNamesConstants.NETWORK_SERVICE_TYPE, networkServiceApplicant.getNetworkServiceType().toString());
+            jsonObject.addProperty(JsonAttNamesConstants.DISCOVERY_PARAM, discoveryQueryParameters.toJson());
 
                  /*
                  * Construct a fermat packet whit the filters
                  */
-                FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsTyrusCloudClientChannel.getServerIdentity(),                  //Destination
-                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                        gson.toJson(jsonObject),                                           //Message Content
-                        FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
-                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+            FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsTyrusCloudClientChannel.getServerIdentity(),                  //Destination
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                    gson.toJson(jsonObject),                                           //Message Content
+                    FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED,                      //Packet type
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
             System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() "+ wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
             if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
@@ -838,10 +838,10 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
              * Construct a fermat packet whit the request
              */
             FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(wsCommunicationsTyrusCloudClientChannel.getServerIdentity(),                  //Destination
-                                                                                                                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
-                                                                                                                        packetContentJson,                                                  //Message Content
-                                                                                                                        FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_REQUEST,                 //Packet type
-                                                                                                                        wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPublicKey(),   //Sender
+                    packetContentJson,                                                  //Message Content
+                    FermatPacketType.DISCOVERY_COMPONENT_CONNECTION_REQUEST,                 //Packet type
+                    wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
 
             System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());

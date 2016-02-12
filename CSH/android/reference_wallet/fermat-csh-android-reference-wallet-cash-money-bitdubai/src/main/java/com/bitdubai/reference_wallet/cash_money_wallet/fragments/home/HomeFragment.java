@@ -342,7 +342,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
 
         //Hide book balance if balances are equal
-        if(this.walletBalances.getAvailableBalance().compareTo(this.walletBalances.getAvailableBalance()) == 0)
+        if(this.walletBalances.getAvailableBalance().compareTo(this.walletBalances.getBookBalance()) == 0)
             this.bookBalanceContainer.setVisibility(View.INVISIBLE);
         else
             this.bookBalanceContainer.setVisibility(View.VISIBLE);

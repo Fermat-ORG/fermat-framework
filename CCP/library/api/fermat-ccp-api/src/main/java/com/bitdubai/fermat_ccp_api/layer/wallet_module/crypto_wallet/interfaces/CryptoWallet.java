@@ -263,7 +263,8 @@ public interface CryptoWallet extends Serializable {
                                             VaultType vaultType,
                                             String vaultIdentifier,
                                             String walletPublicKey,
-                                            ReferenceWallet walletType) throws CantRequestCryptoAddressException;
+                                            ReferenceWallet walletType,
+                                            BlockchainNetworkType blockchainNetworkType) throws CantRequestCryptoAddressException;
     // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
     CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,

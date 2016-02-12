@@ -271,7 +271,8 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
                                     transactionId,
-                                    ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
+                                    ContractTransactionStatus.CHECKING_CLOSING_CONTRACT,
+                                    Plugins.CLOSE_CONTRACT);
                             break;
                         case SALE:
                             saleContract=(ContractSaleRecord) XMLParser.parseXML(
@@ -282,7 +283,8 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
                                     transactionId,
-                                    ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
+                                    ContractTransactionStatus.CHECKING_CLOSING_CONTRACT,
+                                    Plugins.CLOSE_CONTRACT);
                             break;
                     }
                 }
@@ -308,7 +310,8 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
-                                    transactionId);
+                                    transactionId,
+                                    Plugins.CLOSE_CONTRACT);
                             break;
                         case SALE:
                             saleContract=(ContractSaleRecord) XMLParser.parseXML(
@@ -318,7 +321,8 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
-                                    transactionId);
+                                    transactionId,
+                                    Plugins.CLOSE_CONTRACT);
                             break;
                     }
                 }
