@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * Created by eze on 2015.08.01..
  */
-public enum NotificationDescriptor {
+public enum AssetNotificationDescriptor implements FermatEnum {
 
     ASKFORCONNECTION    ("ASK"),
     ACCEPTED            ("ACP"),
@@ -17,7 +18,7 @@ public enum NotificationDescriptor {
 
     private String code;
 
-    NotificationDescriptor(String code) {
+    AssetNotificationDescriptor(String code) {
         this.code = code;
     }
 
@@ -25,7 +26,7 @@ public enum NotificationDescriptor {
         return this.code;
     }
 
-    public static NotificationDescriptor getByCode(String code) throws InvalidParameterException {
+    public static AssetNotificationDescriptor getByCode(String code) throws InvalidParameterException {
         switch (code){
             case "ASK": return ASKFORCONNECTION;
             case "CAN": return CANCEL;
