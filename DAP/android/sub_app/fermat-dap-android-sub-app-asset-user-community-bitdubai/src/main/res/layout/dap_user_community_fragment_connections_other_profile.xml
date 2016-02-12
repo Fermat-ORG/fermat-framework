@@ -149,34 +149,6 @@
                 android:layout_marginTop="8dp"
                 android:background="#b5b5b7" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="32dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:text="Status"
-                android:textColor="#0072bc"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText" />
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/userPhrase"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="User Phrase"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:textColor="#292929"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="#b5b5b7" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
@@ -253,6 +225,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="blockchainNetworkType"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:textColor="#292929"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="#b5b5b7" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="32dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:text="Registration Date"
+                android:textColor="#0072bc"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/userRegistrationDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="RegistrationDate"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
                 android:textColor="#292929"
