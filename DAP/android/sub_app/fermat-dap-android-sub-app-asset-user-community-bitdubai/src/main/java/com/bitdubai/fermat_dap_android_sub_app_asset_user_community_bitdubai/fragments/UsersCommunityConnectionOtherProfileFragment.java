@@ -157,15 +157,15 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             //userStatus.setTextColor(Color.parseColor("#292929"));
 
             if(actor.getCryptoAddress() != null){
-                userCryptoAddres.setText("YES");
-                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getCode());
+                userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
+                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
             } else{
                 userCryptoAddres.setText("No");
                 userCryptoCurrency.setText("None");
             }
 
             if(actor.getBlockchainNetworkType() != null) {
-                userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().getCode());
+                userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().toString().replace("_"," "));
             }else {
                 userBlockchainNetworkType.setText("None");
             }
