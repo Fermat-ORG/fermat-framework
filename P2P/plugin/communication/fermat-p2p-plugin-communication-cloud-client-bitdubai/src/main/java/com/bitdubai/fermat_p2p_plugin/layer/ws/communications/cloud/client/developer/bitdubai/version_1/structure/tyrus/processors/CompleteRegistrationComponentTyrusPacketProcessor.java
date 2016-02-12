@@ -23,6 +23,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentTyrusPacketProcessor</code>
  * <p/>
@@ -118,6 +120,17 @@ public class CompleteRegistrationComponentTyrusPacketProcessor extends FermatTyr
          */
         ((CompleteComponentRegistrationNotificationEvent)event).setPlatformComponentProfileRegistered(platformComponentProfile);
         ((CompleteComponentRegistrationNotificationEvent)event).setNetworkServiceTypeApplicant(networkServiceTypeApplicant);
+
+        /*
+         * We wait 1 second if it is a NETWORK_SERVICE to avoid that the Network Service is Initialized completely
+         */
+        if(platformComponentProfile.getNetworkServiceType() != NetworkServiceType.UNDEFINED) {
+            try {
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         /*
          * Raise the event
