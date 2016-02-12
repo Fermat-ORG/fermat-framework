@@ -102,7 +102,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
         userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
-        userEmail = (FermatTextView) rootView.findViewById(R.id.email);
+        //userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         userCryptoAddres = (FermatTextView) rootView.findViewById(R.id.cryptoAddress);
         userCryptoCurrency = (FermatTextView) rootView.findViewById(R.id.cryptoCurrency);
         userBlockchainNetworkType = (FermatTextView) rootView.findViewById(R.id.blockchainNetworkType);
