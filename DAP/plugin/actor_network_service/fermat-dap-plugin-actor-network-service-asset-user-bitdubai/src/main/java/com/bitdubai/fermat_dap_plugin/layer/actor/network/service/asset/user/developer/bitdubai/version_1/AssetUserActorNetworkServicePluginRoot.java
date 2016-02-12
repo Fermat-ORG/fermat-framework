@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -55,6 +56,12 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserCom
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAcceptConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantConfirmActorAssetNotificationException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDisconnectConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
@@ -105,6 +112,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
 
@@ -813,226 +821,255 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
         return actorAssetUserRegisteredList;
     }
 
-
     @Override
-    public void requestCryptoAddress(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserDestination) throws CantRequestCryptoAddressException {
-
-        try {
-
-            if (true) {
-
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserDestination.getActorPublicKey());
-
-                Gson gson = new Gson();
-                JsonObject packetContent = new JsonObject();
-                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.ISSUER, gson.toJson(actorAssetIssuerSender));
-                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.USER, gson.toJson(actorAssetUserDestination));
-
-
-                String messageContentIntoJson = gson.toJson(packetContent);
-
-                if (communicationNetworkServiceLocal != null) {
-
-                    //Send the message
-                    communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getActorPublicKey(), actorAssetUserDestination.getActorPublicKey(), messageContentIntoJson);
-
-                } else {
-
-                    /*
-                     * Created the message
-                     */
-                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetIssuerSender.getActorPublicKey(),//Sender
-                            actorAssetUserDestination.getActorPublicKey(), //Receiver
-                            messageContentIntoJson,                //Message Content
-                            FermatMessageContentType.TEXT);//Type
-
-                    /*
-                     * Configure the correct status
-                     */
-                    ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
-                    /*
-                     * Save to the data base table
-                     */
-                    OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
-                    outgoingMessageDao.create(fermatMessage);
-
-                    /*
-                     * Create the sender basic profile
-                     */
-                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
-
-                    /*
-                     * Create the receiver basic profile
-                     */
-                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserDestination.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
-
-                    /*
-                     * Ask the client to connect
-                     */
-                    communicationNetworkServiceConnectionManager.connectTo(sender, getPlatformComponentProfilePluginRoot(), receiver);
-
-                }
-
-
-            } else {
-
-                StringBuffer contextBuffer = new StringBuffer();
-                contextBuffer.append("Plugin ID: " + pluginId);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("errorManager: " + errorManager);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("eventManager: " + eventManager);
-
-                String context = contextBuffer.toString();
-                String possibleCause = "Asset User Actor Network Service Not Registered";
-
-                CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-                throw pluginStartException;
-
-            }
-
-        } catch (Exception e) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Cant Request Crypto Address";
-
-            CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
-        }
+    public void askConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetLoggedName, Actors senderType, String actorAssetToAddPublicKey, String actorAssetToAddName, Actors destinationType, byte[] profileImage) throws CantAskConnectionActorAssetException {
 
     }
 
     @Override
-    public void sendCryptoAddress(ActorAssetUser actorAssetUserSender, ActorAssetIssuer actorAssetIssuerDestination, CryptoAddress cryptoAddress) throws CantSendCryptoAddressException {
+    public void acceptConnectionActorAsset(String actorAssetLoggedInPublicKey, String ActorAssetToAddPublicKey) throws CantAcceptConnectionActorAssetException {
 
-        try {
-
-
-            if (true) {
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerDestination.getActorPublicKey());
-
-                Gson gson = new Gson();
-                JsonObject packetContent = new JsonObject();
-                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.ISSUER, gson.toJson(actorAssetIssuerDestination));
-                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.USER, gson.toJson(actorAssetUserSender));
-                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.CRYPTOADDRES, gson.toJson(cryptoAddress));
-
-                String messageContentIntoJson = gson.toJson(packetContent);
-
-                if (communicationNetworkServiceLocal != null) {
-
-                    //Send the message
-                    communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getActorPublicKey(), actorAssetIssuerDestination.getActorPublicKey(), messageContentIntoJson);
-
-                } else {
-
-                    /*
-                     * Created the message
-                     */
-                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetUserSender.getActorPublicKey(),//Sender
-                            actorAssetIssuerDestination.getActorPublicKey(), //Receiver
-                            messageContentIntoJson,                //Message Content
-                            FermatMessageContentType.TEXT);//Type
-
-                    /*
-                     * Configure the correct status
-                     */
-                    ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
-                    /*
-                     * Save to the data base table
-                     */
-                    OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
-                    outgoingMessageDao.create(fermatMessage);
-
-                    /*
-                     * Create the sender basic profile
-                     */
-                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
-
-                    /*
-                     * Create the receiver basic profile
-                     */
-                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerDestination.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
-
-                    /*
-                     * Ask the client to connect
-                     */
-                    communicationNetworkServiceConnectionManager.connectTo(sender, getPlatformComponentProfilePluginRoot(), receiver);
-
-                }
-
-            } else {
-
-
-                StringBuffer contextBuffer = new StringBuffer();
-                contextBuffer.append("Plugin ID: " + pluginId);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("errorManager: " + errorManager);
-                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-                contextBuffer.append("eventManager: " + eventManager);
-
-                String context = contextBuffer.toString();
-                String possibleCause = "Cant Request Crypto Address";
-
-                CantSendCryptoAddressException pluginStartException = new CantSendCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-                throw pluginStartException;
-
-            }
-
-
-        } catch (Exception e) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Cant Send Message";
-
-            CantSendCryptoAddressException pluginStartException = new CantSendCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
-        }
     }
+
+    @Override
+    public void denyConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetToRejectPublicKey) throws CantDenyConnectionActorAssetException {
+
+    }
+
+    @Override
+    public void disconnectConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetToDisconnectPublicKey) throws CantDisconnectConnectionActorAssetException {
+
+    }
+
+    @Override
+    public void cancelConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetToCancelPublicKey) throws CantCancelConnectionActorAssetException {
+
+    }
+
+    @Override
+    public void confirmActorAssetNotification(UUID notificationID) throws CantConfirmActorAssetNotificationException {
+
+    }
+
+//    @Override
+//    public void requestCryptoAddress(ActorAssetIssuer actorAssetIssuerSender, ActorAssetUser actorAssetUserDestination) throws CantRequestCryptoAddressException {
+//
+//        try {
+//
+//            if (true) {
+//
+//                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetUserDestination.getActorPublicKey());
+//
+//                Gson gson = new Gson();
+//                JsonObject packetContent = new JsonObject();
+//                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.ISSUER, gson.toJson(actorAssetIssuerSender));
+//                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.USER, gson.toJson(actorAssetUserDestination));
+//
+//
+//                String messageContentIntoJson = gson.toJson(packetContent);
+//
+//                if (communicationNetworkServiceLocal != null) {
+//
+//                    //Send the message
+//                    communicationNetworkServiceLocal.sendMessage(actorAssetIssuerSender.getActorPublicKey(), actorAssetUserDestination.getActorPublicKey(), messageContentIntoJson);
+//
+//                } else {
+//
+//                    /*
+//                     * Created the message
+//                     */
+//                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetIssuerSender.getActorPublicKey(),//Sender
+//                            actorAssetUserDestination.getActorPublicKey(), //Receiver
+//                            messageContentIntoJson,                //Message Content
+//                            FermatMessageContentType.TEXT);//Type
+//
+//                    /*
+//                     * Configure the correct status
+//                     */
+//                    ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+//
+//                    /*
+//                     * Save to the data base table
+//                     */
+//                    OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
+//                    outgoingMessageDao.create(fermatMessage);
+//
+//                    /*
+//                     * Create the sender basic profile
+//                     */
+//                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+//
+//                    /*
+//                     * Create the receiver basic profile
+//                     */
+//                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserDestination.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+//
+//                    /*
+//                     * Ask the client to connect
+//                     */
+//                    communicationNetworkServiceConnectionManager.connectTo(sender, getPlatformComponentProfilePluginRoot(), receiver);
+//
+//                }
+//
+//
+//            } else {
+//
+//                StringBuffer contextBuffer = new StringBuffer();
+//                contextBuffer.append("Plugin ID: " + pluginId);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("errorManager: " + errorManager);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("eventManager: " + eventManager);
+//
+//                String context = contextBuffer.toString();
+//                String possibleCause = "Asset User Actor Network Service Not Registered";
+//
+//                CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+//
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+//
+//                throw pluginStartException;
+//
+//            }
+//
+//        } catch (Exception e) {
+//
+//            StringBuffer contextBuffer = new StringBuffer();
+//            contextBuffer.append("Plugin ID: " + pluginId);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("errorManager: " + errorManager);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("eventManager: " + eventManager);
+//
+//            String context = contextBuffer.toString();
+//            String possibleCause = "Cant Request Crypto Address";
+//
+//            CantRequestCryptoAddressException pluginStartException = new CantRequestCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+//
+//            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+//
+//            throw pluginStartException;
+//        }
+//
+//    }
+//
+//    @Override
+//    public void sendCryptoAddress(ActorAssetUser actorAssetUserSender, ActorAssetIssuer actorAssetIssuerDestination, CryptoAddress cryptoAddress) throws CantSendCryptoAddressException {
+//
+//        try {
+//
+//
+//            if (true) {
+//                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(actorAssetIssuerDestination.getActorPublicKey());
+//
+//                Gson gson = new Gson();
+//                JsonObject packetContent = new JsonObject();
+//                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.ISSUER, gson.toJson(actorAssetIssuerDestination));
+//                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.USER, gson.toJson(actorAssetUserSender));
+//                packetContent.addProperty(JsonAssetUserANSAttNamesConstants.CRYPTOADDRES, gson.toJson(cryptoAddress));
+//
+//                String messageContentIntoJson = gson.toJson(packetContent);
+//
+//                if (communicationNetworkServiceLocal != null) {
+//
+//                    //Send the message
+//                    communicationNetworkServiceLocal.sendMessage(actorAssetUserSender.getActorPublicKey(), actorAssetIssuerDestination.getActorPublicKey(), messageContentIntoJson);
+//
+//                } else {
+//
+//                    /*
+//                     * Created the message
+//                     */
+//                    FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorAssetUserSender.getActorPublicKey(),//Sender
+//                            actorAssetIssuerDestination.getActorPublicKey(), //Receiver
+//                            messageContentIntoJson,                //Message Content
+//                            FermatMessageContentType.TEXT);//Type
+//
+//                    /*
+//                     * Configure the correct status
+//                     */
+//                    ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+//
+//                    /*
+//                     * Save to the data base table
+//                     */
+//                    OutgoingMessageDao outgoingMessageDao = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
+//                    outgoingMessageDao.create(fermatMessage);
+//
+//                    /*
+//                     * Create the sender basic profile
+//                     */
+//                    PlatformComponentProfile sender = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetUserSender.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_USER);
+//
+//                    /*
+//                     * Create the receiver basic profile
+//                     */
+//                    PlatformComponentProfile receiver = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(actorAssetIssuerDestination.getActorPublicKey(), NetworkServiceType.UNDEFINED, PlatformComponentType.ACTOR_ASSET_ISSUER);
+//
+//                    /*
+//                     * Ask the client to connect
+//                     */
+//                    communicationNetworkServiceConnectionManager.connectTo(sender, getPlatformComponentProfilePluginRoot(), receiver);
+//
+//                }
+//
+//            } else {
+//
+//
+//                StringBuffer contextBuffer = new StringBuffer();
+//                contextBuffer.append("Plugin ID: " + pluginId);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("errorManager: " + errorManager);
+//                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//                contextBuffer.append("eventManager: " + eventManager);
+//
+//                String context = contextBuffer.toString();
+//                String possibleCause = "Cant Request Crypto Address";
+//
+//                CantSendCryptoAddressException pluginStartException = new CantSendCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+//
+//                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+//
+//                throw pluginStartException;
+//
+//            }
+//
+//
+//        } catch (Exception e) {
+//
+//            StringBuffer contextBuffer = new StringBuffer();
+//            contextBuffer.append("Plugin ID: " + pluginId);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("errorManager: " + errorManager);
+//            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+//            contextBuffer.append("eventManager: " + eventManager);
+//
+//            String context = contextBuffer.toString();
+//            String possibleCause = "Cant Send Message";
+//
+//            CantSendCryptoAddressException pluginStartException = new CantSendCryptoAddressException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
+//
+//            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+//
+//            throw pluginStartException;
+//        }
+//    }
 
     @Override
     public List<PlatformComponentProfile> getRemoteNetworkServicesRegisteredList() {
@@ -1494,8 +1531,12 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
      * @param fermatMessage
      */
     public void markAsRead(FermatMessage fermatMessage) throws CantUpdateRecordDataBaseException {
-        ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-        communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
+        try {
+                ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
+                communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(fermatMessage);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
     }
 
     /**
