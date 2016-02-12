@@ -107,6 +107,16 @@ public class CompleteRegistrationComponentTyrusPacketProcessor extends FermatTyr
             getWsCommunicationsTyrusCloudClientChannel().setIsRegister(Boolean.TRUE);
             System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - getWsCommunicationsTyrusCloudClientChannel().isRegister() " + getWsCommunicationsTyrusCloudClientChannel().isRegister());
 
+            try {
+
+                /*
+                 * Wait 1 second to avoid that the Network Services are Initialized completely
+                 */
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         }
 
         /*
@@ -120,17 +130,6 @@ public class CompleteRegistrationComponentTyrusPacketProcessor extends FermatTyr
          */
         ((CompleteComponentRegistrationNotificationEvent)event).setPlatformComponentProfileRegistered(platformComponentProfile);
         ((CompleteComponentRegistrationNotificationEvent)event).setNetworkServiceTypeApplicant(networkServiceTypeApplicant);
-
-        /*
-         * We wait 1 second if it is a NETWORK_SERVICE to avoid that the Network Service is Initialized completely
-         */
-        if(platformComponentProfile.getNetworkServiceType() != NetworkServiceType.UNDEFINED) {
-            try {
-                TimeUnit.SECONDS.sleep(2);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
 
         /*
          * Raise the event
