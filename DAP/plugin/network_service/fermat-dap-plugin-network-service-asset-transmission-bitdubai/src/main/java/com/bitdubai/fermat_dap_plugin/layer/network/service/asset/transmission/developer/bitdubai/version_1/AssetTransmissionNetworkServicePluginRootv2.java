@@ -21,9 +21,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
@@ -219,14 +222,29 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
     }
 
     /**
-     * This method sends the digital asset metadata to a remote device.
-     *
-     * @param dapMessage {@link DAPMessage <AssetMetadataContentMessage>} instance, which should contain all the information to send
-     *                   this metadata to the destination device.
-     * @throws CantSendDigitalAssetMetadataException
+     * @param dapMessage the message to be sent, this message has to contain both the actor
+     *                   that sent the message and the actor that will receive the message.
+     * @throws CantSendMessageException
      */
     @Override
-    public void sendDigitalAssetMetadata(DAPMessage dapMessage) throws CantSendDigitalAssetMetadataException {
+    public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
+
+    }
+
+    /**
+     * This method retrieves the list of new incoming and unread DAP Messages for a specific type.
+     *
+     * @param type The {@link DAPMessageType} of message to search for.
+     * @return {@link List} instance filled with all the {@link DAPMessage} that were found.
+     * @throws CantGetDAPMessagesException If there was an error while querying for the list.
+     */
+    @Override
+    public List<DAPMessage> getUnreadDAPMessagesByType(DAPMessageType type) throws CantGetDAPMessagesException {
+        return null;
+    }
+
+    @Override
+    public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
 
     }
 

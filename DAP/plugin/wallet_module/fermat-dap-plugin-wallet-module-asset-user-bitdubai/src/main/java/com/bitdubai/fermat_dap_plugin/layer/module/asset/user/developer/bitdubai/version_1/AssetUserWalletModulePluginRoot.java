@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -51,6 +52,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfa
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
@@ -163,7 +165,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     public List<ActorAssetRedeemPoint> getRedeemPointsConnectedForAsset(String assetPublicKey) throws CantGetAssetRedeemPointActorsException {
         String context = "Asset PK: " + assetPublicKey;
         try {
-            loadAssetUserWallet("walletPublicKeyTest");
+            loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY);
             DigitalAsset digitalAsset = wallet.getDigitalAsset(assetPublicKey);
             return actorAssetRedeemPointManager.getAllRedeemPointActorConnectedForIssuer(digitalAsset.getIdentityAssetIssuer().getPublicKey());
         } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException e) {
@@ -324,6 +326,16 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         } catch (CantGetAssetUserActorsException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public ActorAssetUser getActorByPublicKey(String publicKey) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
+        return actorAssetUserManager.getActorByPublicKey(publicKey);
+    }
+
+    @Override
+    public ActorAssetUser getActorRegisteredByPublicKey(String publicKey) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
+        return actorAssetUserManager.getActorRegisteredByPublicKey(publicKey);
     }
 
     @Override
