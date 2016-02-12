@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 
 
 import bitdubai.version_1.CryptoTransmissionNetworkServicePluginRoot;
+import bitdubai.version_1.CryptoTransmissionNetworkServicePluginRootNew;
 
 
 /**
@@ -27,7 +28,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new CryptoTransmissionNetworkServicePluginRoot());
+            this.registerVersion(new CryptoTransmissionNetworkServicePluginRootNew());
 
         } catch (CantRegisterVersionException e) {
 
