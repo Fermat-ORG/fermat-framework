@@ -154,7 +154,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                     case PARTIALLY_SIGNED: {
                         //TODO VALIDATE TRANSACTION!!
                         DraftTransaction draftTransaction = assetVaultManager.signTransaction(record.getDraftTransaction());
-                        String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction, UUID.randomUUID());
+                        String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction);
                         bitcoinNetworkManager.broadcastTransaction(txHash);
                         //TODO WALLET CREDIT/DEBIT!!!
                         dao.updateSellingTransaction(record.getRecordId(), draftTransaction.serialize());
