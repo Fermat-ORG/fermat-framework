@@ -105,6 +105,13 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
 
     /**
      *
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListPurchaseNegotiationsException;
+
+    /**
+     *
      * @param type
      * @return
      * @throws CantGetNextClauseTypeException

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_appropriation.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
@@ -24,10 +25,11 @@ public interface IssuerAppropriationManager extends FermatManager {
      * @param digitalAssetMetadata   the asset to be appropriated and its metadata
      * @param issuerWalletPublicKey  the public key from the asset issuer wallet where this asset will be debited.
      * @param bitcoinWalletPublicKey the bitcoin wallet public key where the bitcoins will be sent.
+     * @param networkType            the type of network where this operation will occur.
      * @throws CantExecuteAppropriationTransactionException in case something bad happen and the appropriation flow can't start.
      * @throws TransactionAlreadyStartedException           in case for some reason you try to appropriate the same asset twice.
      */
-    void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String issuerWalletPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException;
+    void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String issuerWalletPublicKey, String bitcoinWalletPublicKey, BlockchainNetworkType networkType) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException;
 
     /**
      * Returns an {@link AppropriationTransactionRecord} instance with all its stored values,

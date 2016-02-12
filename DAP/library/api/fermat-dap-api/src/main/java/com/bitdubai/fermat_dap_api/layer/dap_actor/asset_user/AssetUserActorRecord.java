@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -18,19 +19,21 @@ import java.util.Arrays;
  */
 public class AssetUserActorRecord implements ActorAssetUser {
 
-    private String              publicLinkedIdentity    ;
-    private String              actorPublicKey          ;
-    private String              name                    ;
-    private String              age                     ;
-    private Genders             genders                 ;
-    private DAPConnectionState  dapConnectionState      ;
-    private Location            location                ;
-    private Double              locationLatitude        ;
-    private Double              locationLongitude       ;
-    private long                registrationDate        ;
-    private long                lastConnectionDate      ;
-    private CryptoAddress       cryptoAddress           ;
-    private byte[]              profileImage            ;
+    private String                  publicLinkedIdentity    ;
+    private String                  actorPublicKey          ;
+    private String                  name                    ;
+    private String                  age                     ;
+    private Genders                 genders                 ;
+    private DAPConnectionState      dapConnectionState      ;
+    private Location                location                ;
+    private Double                  locationLatitude        ;
+    private Double                  locationLongitude       ;
+    private long                    registrationDate        ;
+    private long                    lastConnectionDate      ;
+    private CryptoAddress           cryptoAddress           ;
+    private BlockchainNetworkType   blockchainNetworkType   ;
+    private byte[]                  profileImage            ;
+
 
     /**
      * Constructor
@@ -76,6 +79,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 final CryptoAddress cryptoAddress,
                                 final Long registrationDate,
                                 final Long lastConnectionDate,
+                                final BlockchainNetworkType blockchainNetworkType,
                                 final byte[] profileImage) {
 
         this.actorPublicKey         =       actorPublicKey          ;
@@ -91,6 +95,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
         if(cryptoAddress != null)
             this.cryptoAddress          = cryptoAddress             ;
+        if(blockchainNetworkType != null)
+            this.blockchainNetworkType  =    blockchainNetworkType  ;
         this.registrationDate       =       registrationDate        ;
         this.lastConnectionDate     =       lastConnectionDate      ;
         this.profileImage           =       profileImage.clone()    ;
@@ -110,6 +116,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.locationLatitude = Double.valueOf(jsonObject.get("locationLatitude").getAsString());
         this.locationLongitude = Double.valueOf(jsonObject.get("locationLongitude").getAsString());
         this.cryptoAddress = gson.fromJson(jsonObject.get("cryptoAddress").getAsString(), CryptoAddress.class);
+        this.blockchainNetworkType = gson.fromJson(jsonObject.get("blockchainNetworkType").getAsString(), BlockchainNetworkType.class);
         this.profileImage = Base64.decode(jsonObject.get("profileImage").getAsString(), Base64.DEFAULT);
     }
 
@@ -328,6 +335,21 @@ public class AssetUserActorRecord implements ActorAssetUser {
             this.cryptoAddress = cryptoAddress;
     }
 
+    /**
+     * The method <code>getNetworkType</code> returns the network type which it belongs
+     *
+     * @return BlockchainNetworkType instance with the network type.
+     */
+    @Override
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return this.blockchainNetworkType;
+    }
+
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        if(blockchainNetworkType != null)
+            this.blockchainNetworkType = blockchainNetworkType;
+    }
+
     public static AssetUserActorRecord fromJson(String jsonString) {
 
         Gson gson = new Gson();
@@ -353,6 +375,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
         jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
+        jsonObject.addProperty("blockchainNetworkType", blockchainNetworkType.toString());
         jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
         return gson.toJson(jsonObject);
     }
@@ -375,6 +398,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
                 ", registrationDate="       + registrationDate +
                 ", lastConnectionDate="     + lastConnectionDate +
                 ", cryptoAddress="          + cryptoAddress +
+                ", blockchainNetworkType="  + blockchainNetworkType +
                 ", profileImage="           + profileImageUser +
                 '}';
     }

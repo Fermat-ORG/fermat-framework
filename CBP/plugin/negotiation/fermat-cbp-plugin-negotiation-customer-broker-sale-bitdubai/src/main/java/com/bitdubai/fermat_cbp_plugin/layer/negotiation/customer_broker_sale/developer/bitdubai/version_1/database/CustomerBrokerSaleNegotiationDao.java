@@ -309,6 +309,40 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             }
         }
 
+        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListSaleNegotiationsException {
+            try {
+                DatabaseTable table = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
+    
+                String Query = "SELECT * FROM " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME +
+                        " WHERE " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.SENT_TO_BROKER.getCode() +
+                        "' OR " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.WAITING_FOR_BROKER.getCode() +
+                        "' ORDER BY " +
+                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME +
+                        " DESC";
+    
+                Collection<DatabaseTableRecord> res = table.customQuery(Query, true);
+                Collection<CustomerBrokerSaleNegotiation> negs = new ArrayList<>();
+                for (DatabaseTableRecord record : res) {
+                    negs.add(constructCustomerBrokerSaleFromRecordByQuery(record));
+                }
+    
+                return negs;
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+            } catch (CantGetListClauseException e) {
+                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+            }
+        }
+
     /*
     *   Methods of Clauses
     * */
@@ -402,6 +436,39 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
     
             NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME));
     
+            return newCustomerBrokerSaleNegotiation(
+                    negotiationId,
+                    publicKeyCustomer,
+                    publicKeyBroker,
+                    startDataTime,
+                    negotiationExpirationDate,
+                    statusNegotiation,
+                    getClauses(negotiationId),
+                    _NearExpirationDatetime,
+                    memo,
+                    cancel,
+                    lastNegotiationUpdateDate
+            );
+        }
+
+        private CustomerBrokerSaleNegotiation constructCustomerBrokerSaleFromRecordByQuery(DatabaseTableRecord record) throws InvalidParameterException, CantGetListClauseException {
+
+            UUID    negotiationId     = record.getUUIDValue("Column0");
+            String  publicKeyCustomer = record.getStringValue("Column1");
+            String  publicKeyBroker   = record.getStringValue("Column2");
+            Long    startDataTime     = record.getLongValue("Column3");
+            Long    negotiationExpirationDate = record.getLongValue("Column4");
+            NegotiationStatus  statusNegotiation = NegotiationStatus.getByCode(record.getStringValue("Column5"));
+            String  nearExpirationDatetime = record.getStringValue("Column6");
+            String  memo = record.getStringValue("Column7");
+            String  cancel = record.getStringValue("Column8");
+            Long    lastNegotiationUpdateDate = record.getLongValue("Column9");
+
+            Boolean _NearExpirationDatetime = true;
+            if(nearExpirationDatetime.equals("0")){
+                _NearExpirationDatetime = false;
+            }
+
             return newCustomerBrokerSaleNegotiation(
                     negotiationId,
                     publicKeyCustomer,

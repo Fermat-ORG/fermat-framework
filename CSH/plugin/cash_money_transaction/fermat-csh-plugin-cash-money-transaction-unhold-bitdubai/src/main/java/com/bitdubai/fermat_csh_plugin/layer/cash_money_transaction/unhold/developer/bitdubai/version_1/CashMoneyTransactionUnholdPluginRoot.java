@@ -111,6 +111,10 @@ public class CashMoneyTransactionUnholdPluginRoot extends AbstractPlugin impleme
         return unholdTransactionManager.getCashUnholdTransactionStatus(transactionId);
     }
 
+    @Override
+    public boolean isTransactionRegistered(UUID transactionId) {
+        return unholdTransactionManager.isTransactionRegistered(transactionId);
+    }
 
 
     /*

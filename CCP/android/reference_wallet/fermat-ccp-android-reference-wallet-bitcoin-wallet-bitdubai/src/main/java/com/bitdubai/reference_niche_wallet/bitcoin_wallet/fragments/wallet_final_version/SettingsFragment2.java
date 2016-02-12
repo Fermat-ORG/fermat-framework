@@ -78,7 +78,7 @@ public class SettingsFragment2 extends AbstractFermatFragment implements View.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
-            rootView = inflater.inflate(R.layout.settings_fragment_base, container, false);
+            rootView = inflater.inflate(R.layout.settings_fragment_base_main, container, false);
             setUpUI();
             setUpActions();
             setUpUIData();

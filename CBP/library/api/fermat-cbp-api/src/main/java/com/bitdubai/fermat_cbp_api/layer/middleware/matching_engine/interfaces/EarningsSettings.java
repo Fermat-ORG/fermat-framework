@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.C
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public interface EarningsSettings {
      *
      * @param earningCurrency   the currency which we decided to extract the earnings.
      * @param linkedCurrency    the currency that we're linking to the previous selected currency to conform the pair.
-     * @param walletPublicKey   the public key of the wallet that we're associating and where we will deposit the earnings.
+     * @param walletReference   the information of the wallet that we're associating and where we will deposit the earnings.
      *
      * @return an instance of the well formed associated EarningPair-
      *
@@ -35,10 +36,9 @@ public interface EarningsSettings {
      */
     EarningsPair associatePair(
 
-            Currency earningCurrency,
-            Currency linkedCurrency ,
-            String   walletPublicKey
-            // TODO ADD THE PARAMETERS FOR ALL THE NECESSARY WALLET INFORMATION
+            Currency        earningCurrency,
+            Currency        linkedCurrency ,
+            WalletReference walletReference
 
     ) throws CantAssociatePairException    ,
              PairAlreadyAssociatedException;

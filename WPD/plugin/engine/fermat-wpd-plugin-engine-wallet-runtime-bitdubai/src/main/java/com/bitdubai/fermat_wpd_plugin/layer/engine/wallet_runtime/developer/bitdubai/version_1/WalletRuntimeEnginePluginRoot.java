@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
@@ -60,7 +61,9 @@ import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitd
 import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 
@@ -82,7 +85,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
      * WalletRuntimeManager Interface member variables.
      */
 
-    WalletNavigationStructure walletNavigationStructureOpen;
+    Map<String,WalletNavigationStructure> lstWalletNavigationStructureOpen;
+    String lastWalletPublicKey;
+
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -138,6 +143,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         eventManager.addListener(fermatEventListenerStructureDownloaded);
         listenersAdded.add(fermatEventListenerStructureDownloaded);
 
+        lstWalletNavigationStructureOpen = new HashMap<>();
         /**
          * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
          * functionality based on wallets downloaded by users this wont be an option.
@@ -162,6 +168,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     }
 
+
+
     @Override
     public void stop() {
 
@@ -183,7 +191,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     @Override
     public void recordNavigationStructure(String xmlText, String linkToRepo, String name, UUID skinId, String walletPublicKey) throws CantCheckResourcesException {
         //TODO: pido el navigationStrucutre del network service que sea y lo mando ahí
-        //setNavigationStructureXml(walletNavigationStructure);
+        //recordNavigationStructureIsNotExist(walletNavigationStructure);
 
 
         // For testing purpose
@@ -225,13 +233,25 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public WalletNavigationStructure getNavigationStructureFromWallet(String publicKey) {
-        return getNavigationStructure(publicKey);
+    public WalletNavigationStructure getNavigationStructureFromWallet(String publicKey) throws WalletRuntimeExceptions {
+        try {
+            WalletNavigationStructure walletNavigationStructure = null;
+            if (!lstWalletNavigationStructureOpen.containsKey(publicKey)){
+                walletNavigationStructure = getNavigationStructure(publicKey);
+                lstWalletNavigationStructureOpen.put(publicKey,walletNavigationStructure);
+            }else{
+                walletNavigationStructure = lstWalletNavigationStructureOpen.get(publicKey);
+            }
+            lastWalletPublicKey = publicKey;
+            return walletNavigationStructure;
+        } catch (Exception e) {
+            throw new WalletRuntimeExceptions("WALLET RUNTIME GET WALLET", e, "wallet runtime not found the navigation structure for: " + publicKey, "");
+        }
     }
 
     @Override
     public WalletNavigationStructure getLastWallet() {
-        return walletNavigationStructureOpen;
+        return lstWalletNavigationStructureOpen.get(lastWalletPublicKey);
     }
 
 
@@ -239,12 +259,24 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     public WalletNavigationStructure getWallet(String publicKey) throws WalletRuntimeExceptions {
         //TODO: acá hay que poner una excepcion si no encuentra la wallet
         try {
-            walletNavigationStructureOpen = getNavigationStructure(publicKey);
-            return walletNavigationStructureOpen;
+            WalletNavigationStructure walletNavigationStructure = null;
+            if (!lstWalletNavigationStructureOpen.containsKey(publicKey)){
+                walletNavigationStructure = getNavigationStructure(publicKey);
+                lstWalletNavigationStructureOpen.put(publicKey,walletNavigationStructure);
+            }else{
+                walletNavigationStructure = lstWalletNavigationStructureOpen.get(publicKey);
+            }
+            lastWalletPublicKey = publicKey;
+            return walletNavigationStructure;
         } catch (Exception e) {
             throw new WalletRuntimeExceptions("WALLET RUNTIME GET WALLET", e, "wallet runtime not found the navigation structure for: " + publicKey, "");
         }
 
+    }
+
+    @Override
+    public void recordNAvigationStructure(FermatStructure fermatStructure) {
+        setNavigationStructureXml((WalletNavigationStructure)fermatStructure);
     }
 
     /**
@@ -252,6 +284,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
      * factory structure.
      */
     private void factoryReset() throws CantFactoryReset {
+
+
 
         Activity runtimeActivity;
         Fragment runtimeFragment;
@@ -270,39 +304,39 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         String publicKey;
 
         runtimeWalletNavigationStructure = createAssetIssuerWalletNavigationStructure();
-        setNavigationStructureXml(runtimeWalletNavigationStructure);
+        recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 
         //WalletNavigationStructure walletNavigationStructure= getNavigationStructure(publicKey);
 
         runtimeWalletNavigationStructure = createAssetUserWalletNavigationStructure();
-        setNavigationStructureXml(runtimeWalletNavigationStructure);
+        recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 
         runtimeWalletNavigationStructure = createAssetRedeemPointWalletNavigationStructure();
-        setNavigationStructureXml(runtimeWalletNavigationStructure);
+        recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 
         /**
          * CRYPTO BROKER WALLET
          */
         runtimeWalletNavigationStructure = createCryptoBrokerWalletNavigationStructure();
-        setNavigationStructureXml(runtimeWalletNavigationStructure);
+        recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 
         /**
          * CRYPTO CUSTOMER WALLET
          */
         runtimeWalletNavigationStructure = createCryptoCustomerWalletNavigationStructure();
-        setNavigationStructureXml(runtimeWalletNavigationStructure);
+        recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 
         /**
          * Banking Wallet
          * */
         runtimeWalletNavigationStructure = createBankMoneyWalletNavigationStructure();
-        setNavigationStructureXml(runtimeWalletNavigationStructure);
+        recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 
         /**
          * Cash Wallet
          * */
         runtimeWalletNavigationStructure = createCashMoneyWalletNavigationStructure();
-        setNavigationStructureXml(runtimeWalletNavigationStructure);
+        recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
         /**
          * fin asset issuer
          */
@@ -511,7 +545,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 //
 //
 //            // Testing purpose Mati
-//            //setNavigationStructureXml(runtimeWalletNavigationStructure);
+//            //recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 //
 //            //getNavigationStructure("fasf");
 //
@@ -1185,6 +1219,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY);
         runtimeActivity.setActivityType(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_SETTINGS_ACTIVITY.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -2169,29 +2205,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         // WIZARD
-        // step 1 - Set Identity
-//        runtimeActivity = new Activity();
-//        runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
-//        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getCode());
-//        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-//        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
 
-        String walletSetupLabel = "Wallet Setup";
-
-//        runtimeStatusBar = new StatusBar();
-//        runtimeStatusBar.setColor(statusBarColor);
-//        runtimeActivity.setStatusBar(runtimeStatusBar);
-
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
-//        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey(), runtimeFragment);
-//        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getKey());
-
-        // step 2 - Set Merchandises
+        // step 1 - Set Merchandises
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getCode());
-        //runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES);
@@ -2205,7 +2223,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getKey());
 
-        // step 3 - Set Earnings
+        // step 2 - Set Earnings
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_EARNINGS.getCode());
@@ -2306,6 +2324,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Broker Wallet");
@@ -2729,28 +2748,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         // WIZARD
-        // step 1 - Set Identity
-//        runtimeActivity = new Activity();
-//        runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_IDENTITY);
-//        runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_IDENTITY.getCode());
-//        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-//        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_IDENTITY);
-//
-//        runtimeStatusBar = new StatusBar();
-//        runtimeStatusBar.setColor(statusBarColor);
-//        runtimeActivity.setStatusBar(runtimeStatusBar);
-//
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_SET_IDENTITY.getKey());
-//        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_SET_IDENTITY.getKey(), runtimeFragment);
-//        runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_SET_IDENTITY.getKey());
 
         // step 2 - Set Bitcoin Wallet and Providers
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS.getCode());
-//        runtimeActivity.setBackActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_IDENTITY);
-//        runtimeActivity.setBackPublicKey(publicKey);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS);
 
@@ -2856,6 +2858,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Customer Wallet");
@@ -3490,7 +3493,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 //            WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
             //          if(walletNavigationStructure==null){
-            setNavigationStructureXml(startWalletNavigationStructure());
+            recordNavigationStructureIsNotExist(startWalletNavigationStructure());
             WalletNavigationStructure walletNavigationStructure = getNavigationStructure(publicKey);
             //        }
             //listWallets.put(publicKey, walletNavigationStructure);
@@ -3559,6 +3562,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     }
 
 
+
+
     @Override
     public void setNavigationStructureXml(WalletNavigationStructure walletNavigationStructure) {
         String publiKey = walletNavigationStructure.getPublicKey();
@@ -3579,6 +3584,20 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_FACTORY_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't convert navigation structure to xml format", "");
         }
+    }
+
+    private void recordNavigationStructureIsNotExist(WalletNavigationStructure walletNavigationStructure){
+        String publiKey = walletNavigationStructure.getPublicKey();
+        try {
+            String navigationStructureXml = parseNavigationStructureXml(walletNavigationStructure);
+            String navigationStructureName = publiKey + ".xml";
+            //if (!pluginFileSystem.isTextFileExist(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT)){
+                setNavigationStructureXml(walletNavigationStructure);
+            //}
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
 
@@ -3612,7 +3631,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         publicKey = "reference_wallet";
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
-        walletNavigationStructureOpen = runtimeWalletNavigationStructure;
+        lastWalletPublicKey = publicKey;
+        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
 
         runtimeActivity = new Activity();
         runtimeActivity.setActivityType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
@@ -4263,6 +4283,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT.getKey(), runtimeFragment);
 
+        recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 
         return runtimeWalletNavigationStructure;
     }
