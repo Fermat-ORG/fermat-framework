@@ -95,7 +95,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by mati on 2016.02.05..
  */
-public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase implements IntraUserManager,
+public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServiceBase implements IntraUserManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
@@ -160,7 +160,7 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
      * Constructor with parameters
      *
      */
-    public IntraActorNetworkServiceNew() {
+    public IntraActorNetworkServicePluginRootNew() {
         super(new PluginVersionReference(new Version()),
                 EventSource.NETWORK_SERVICE_INTRA_ACTOR,
                 PlatformComponentType.NETWORK_SERVICE,
@@ -179,11 +179,6 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
          * Initialize the data base
          */
             initializeDb();
-        /*
-         * Initialize cache data base
-         */
-           // initializeCacheDb();
-
         /*
          * Initialize Developer Database Factory
          */
@@ -528,16 +523,6 @@ public class IntraActorNetworkServiceNew extends AbstractNetworkServiceBase impl
     }
 
 
-
-    /*private void launchIncomingRequestConnectionNotificationEvent(ActorNetworkServiceRecord actorNetworkServiceRecord) {
-        FermatEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION);
-        IncomingActorRequestConnectionNotificationEvent incomingActorRequestConnectionNotificationEvent = (IncomingActorRequestConnectionNotificationEvent) platformEvent;
-        incomingActorRequestConnectionNotificationEvent.setSource(EventSource.NETWORK_SERVICE_INTRA_ACTOR);
-        incomingActorRequestConnectionNotificationEvent.setActorId(actorNetworkServiceRecord.getActorSenderPublicKey());
-        incomingActorRequestConnectionNotificationEvent.setActorName(actorNetworkServiceRecord.getActorSenderAlias());
-        incomingActorRequestConnectionNotificationEvent.setActorType(Actors.INTRA_USER);
-        eventManager.raiseEvent(platformEvent);
-    }*/
 
     private void lauchNotification(){
         FermatEvent fermatEvent = this.getEventManager().getNewEvent(EventType.ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS);
