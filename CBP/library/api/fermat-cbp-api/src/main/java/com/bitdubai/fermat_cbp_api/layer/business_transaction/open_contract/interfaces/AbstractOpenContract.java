@@ -8,7 +8,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
@@ -43,11 +43,11 @@ public abstract class AbstractOpenContract {
             throws InvalidParameterException, CantGetIndexException {
 
         ContractSaleRecord contractRecord=new ContractSaleRecord();
-        CurrencyType merchandiseCurrency;
+        MoneyType merchandiseCurrency;
         float merchandiseAmount;
         long merchandiseDeliveryExpirationDate;
         float paymentAmount;
-        CurrencyType paymentCurrency;
+        MoneyType paymentCurrency;
         long paymentExpirationDate;
         String clauseValue;
         long dayTime;
@@ -62,7 +62,7 @@ public abstract class AbstractOpenContract {
             switch (clauseType){
 
                 case BROKER_CURRENCY:
-                    merchandiseCurrency=CurrencyType.getByCode(clauseValue);
+                    merchandiseCurrency= MoneyType.getByCode(clauseValue);
                     contractRecord.setMerchandiseCurrency(merchandiseCurrency);
                     break;
                 case BROKER_CURRENCY_QUANTITY:
@@ -78,7 +78,7 @@ public abstract class AbstractOpenContract {
                     contractRecord.setPaymentAmount(paymentAmount);
                     break;
                 case CUSTOMER_CURRENCY:
-                    paymentCurrency=CurrencyType.getByCode(clauseValue);
+                    paymentCurrency= MoneyType.getByCode(clauseValue);
                     contractRecord.setPaymentCurrency(paymentCurrency);
                     break;
                 case CUSTOMER_DATE_TIME_TO_DELIVER:
@@ -131,11 +131,11 @@ public abstract class AbstractOpenContract {
             throws InvalidParameterException, CantGetIndexException {
 
         ContractPurchaseRecord contractRecord=new ContractPurchaseRecord();
-        CurrencyType merchandiseCurrency;
+        MoneyType merchandiseCurrency;
         float merchandiseAmount;
         long merchandiseDeliveryExpirationDate;
         float paymentAmount;
-        CurrencyType paymentCurrency;
+        MoneyType paymentCurrency;
         long paymentExpirationDate;
         String clauseValue;
         long dayTime;
@@ -151,7 +151,7 @@ public abstract class AbstractOpenContract {
             switch (clauseType){
 
                 case BROKER_CURRENCY:
-                    merchandiseCurrency=CurrencyType.getByCode(clauseValue);
+                    merchandiseCurrency= MoneyType.getByCode(clauseValue);
                     contractRecord.setMerchandiseCurrency(merchandiseCurrency);
                     break;
                 case BROKER_CURRENCY_QUANTITY:
@@ -167,7 +167,7 @@ public abstract class AbstractOpenContract {
                     contractRecord.setPaymentAmount(paymentAmount);
                     break;
                 case CUSTOMER_CURRENCY:
-                    paymentCurrency=CurrencyType.getByCode(clauseValue);
+                    paymentCurrency= MoneyType.getByCode(clauseValue);
                     contractRecord.setPaymentCurrency(paymentCurrency);
                     break;
                 case CUSTOMER_DATE_TIME_TO_DELIVER:

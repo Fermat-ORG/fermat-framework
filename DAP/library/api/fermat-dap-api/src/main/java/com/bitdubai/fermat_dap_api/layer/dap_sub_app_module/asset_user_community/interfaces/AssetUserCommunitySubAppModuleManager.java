@@ -27,6 +27,8 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager {
 
     List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;
 
+    List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupId) throws CantGetAssetUserActorsException;
+
     void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException;
 
 //    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException;
@@ -75,11 +77,11 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager {
 
     /**
      * The method <code>getListActorAssetUserByGroups</code> Returns a list of groups by name
-     * @param groupName
+     * @param groupId
      * @return
      * @throws CantGetAssetUserActorsException
      */
-    List<ActorAssetUser> getListActorAssetUserByGroups (String groupName) throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getListActorAssetUserByGroups (String groupId) throws CantGetAssetUserActorsException;
 
     /**
      * The method <code>getListGroupsByActorAssetUser</code> Returns a list of groups by asset user

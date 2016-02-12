@@ -18,8 +18,12 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVer
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -202,9 +206,18 @@ public abstract class AbstractPlugin implements Plugin, Service {
 
     private void collectReferences() throws CantCollectReferencesException {
 
+        collectReferences(this.getClass());
+    }
+
+    private void collectReferences(Class toCollectClass) throws CantCollectReferencesException {
+
+        // collect superclass references
+        if (toCollectClass.getSuperclass() != null)
+            collectReferences(toCollectClass.getSuperclass());
+
         try {
 
-            for (final Annotation a : this.getClass().getDeclaredAnnotations()) {
+            for (final Annotation a : toCollectClass.getDeclaredAnnotations()) {
                 if (a instanceof NeededIndirectPluginReferences) {
 
                     NeededIndirectPluginReferences neededIndirectPluginReferences = (NeededIndirectPluginReferences) a;
@@ -224,7 +237,7 @@ public abstract class AbstractPlugin implements Plugin, Service {
                 }
             }
 
-            for (final Field f : this.getClass().getDeclaredFields()) {
+            for (final Field f : toCollectClass.getDeclaredFields()) {
 
                 for (final Annotation a : f.getDeclaredAnnotations()) {
 

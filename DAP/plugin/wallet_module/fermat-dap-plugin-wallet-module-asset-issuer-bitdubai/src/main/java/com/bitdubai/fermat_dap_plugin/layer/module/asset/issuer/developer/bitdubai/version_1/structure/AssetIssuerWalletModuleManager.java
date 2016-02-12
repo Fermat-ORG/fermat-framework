@@ -101,9 +101,9 @@ public class AssetIssuerWalletModuleManager {
         }
     }
 
-    public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException {
+    public List<ActorAssetUser> getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException {
         try {
-            return actorAssetUserManager.getAllAssetUserActorConnected();
+            return actorAssetUserManager.getAllAssetUserActorConnected(blockchainNetworkType);
         } catch (Exception exception) {
             throw new CantGetAssetUserActorsException("Error Get Actor Connected", exception, "Method: getAllAssetUserActorConnected", "Class: AssetIssuerWalletModuleManager");
         }
