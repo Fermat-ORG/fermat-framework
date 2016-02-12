@@ -158,6 +158,10 @@ This means that any Fermat APP can be specialized to target an specific audience
 
 This means that any Fermat APP can have its look and feel changed without programing and still produce micro payments to the original author. We call this _Fermat Branded APPs_.
 
+**Fermat as Mobile-APPs local Back-End**
+
+This means that Fermat can be used by any regular Mobile APP as a local back-end in at the same device they are running, transmiting to them their core properties like censorship resistance, and all the services available within the Fermat Framework. At the same time giving mobile APPs developers the freedom to developt their mobile APPs without external constraints.
+
 #### Clear Governance Model
 
 Open source projects that do not have a clear governance model either fail or take more time to reach their goal since deadlocks can occur like the "block-size debate" of 2015. Fermat governance model is:
