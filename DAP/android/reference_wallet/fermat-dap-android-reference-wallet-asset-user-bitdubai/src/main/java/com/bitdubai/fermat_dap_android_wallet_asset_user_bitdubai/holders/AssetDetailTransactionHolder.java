@@ -67,7 +67,7 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
             amountText.setTextColor(res.getColor(R.color.fab_material_red_900));
             balanceTypeText.setTextColor(res.getColor(R.color.fab_material_red_900));
         }
-        amountText.setText(DAPStandardFormats.BITCOIN_FORMAT.format(transaction.getAmount()));
+        amountText.setText(DAPStandardFormats.BITCOIN_FORMAT.format(symbol + transaction.getAmount()));
         balanceTypeText.setText((transaction.getBalanceType() == BalanceType.AVAILABLE) ? "AVAILABLE" : "BOOK");
         dateText.setText(transaction.getFormattedDate());
     }
