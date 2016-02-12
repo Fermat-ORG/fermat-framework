@@ -98,7 +98,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private RecyclerView messagesContainer;
     public Button sendBtn;
     private ChatAdapter adapter;
-    public ArrayList<ChatMessage> chatHistory;
+    public ArrayList<ChatMessage> chatHistory= new ArrayList<ChatMessage>();
 
     public static ChatFragment newInstance() { return new ChatFragment(); }
 
@@ -121,8 +121,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         }
     }
 
-    void findvalues(Contact contact, Chat chat, String whatlist){ //With contact Id find chatid,pkremote,actortype
-
+    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
         try {
             if (contact != null){
                 remotepk = contact.getRemoteActorPublicKey();
@@ -134,16 +133,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     }
                 }
             }
-           /* for (int i=0; i<chatManager.getContacts().size();i++){
-                if(contactid.equals(chatManager.getContacts().get(i).getContactId())){
-                    remotepk=chatManager.getContacts().get(i).getRemoteActorPublicKey();
-                    remotepct=chatManager.getContacts().get(i).getRemoteActorType();
-                }
-            }*/
-            if (chat != null){
-                chatid= chat.getChatId();
-                //contactid=chatmanager.
-            }
         }catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch(Exception e){
@@ -151,19 +140,13 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         }
     }
 
-
     void whattodo(){
         try {
             if (appSession.getData("whocallme").equals("chatlist")) {
-                //con=(Contact)appSession.getData("contactid");
-                //contactid = con.getContactId();
-                Chat chat=chatSession.getSelectedChat();
-                findvalues(null, chat, "chatlist");//if I choose a chat, this will retrieve the chatid
+                findvalues((Contact)appSession.getData("contactid"));//if I choose a chat, this will retrieve the chatid
                 chatwascreate = true;
             } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
-                Contact con = chatSession.getSelectedContact();
-                contactid = con.getContactId();
-                findvalues(con, null, "contact");//if I choose a contact, this will search the chat previously created with this contact
+                findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
                 if (chatid != null) {//Here it is define if we need to create a new chat or just add the message to chat created previously
                     chatwascreate = true;
                 } else {
@@ -198,17 +181,13 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     chatHistory.add(msg);
                 }
             }else{
-                    Toast.makeText(getActivity(),"chatid null", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"chatid null", Toast.LENGTH_SHORT).show();
             }
-
         }catch (CantGetMessageException e) {
-
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch (Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
         }
-
     }
 
     @Override
@@ -361,6 +340,27 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //        });
 //        return layout;
     }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        // Inflate the menu items
+        inflater.inflate(R.menu.chat_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_update_contact) {
+            Contact con = new ContactImpl();
+            con.setRemoteActorPublicKey("CONTACTTOUPDATE_DATA");
+            con.setContactId(contactid);
+            appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, con);
+            appSession.setData("chatid", chatid);
+            changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 //
 //    private void scroll() {
 //        messagesContainer.setSelection(messagesContainer.getCount() - 1);
@@ -384,4 +384,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //        }
 //        return super.onOptionsItemSelected(item);
 //    }
+
+
 }

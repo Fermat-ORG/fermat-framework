@@ -45,7 +45,7 @@
                 android:layout_alignParentStart="false"
                 android:layout_alignParentTop="false"
                 android:layout_marginBottom="20dp"
-                android:layout_above="@+id/messageEdit"
+                android:layout_above="@+id/friendLabel"
                 android:layout_below="@+id/meLbl"
                 android:layout_marginTop="10dp"
                 android:listSelector="@android:color/transparent"
