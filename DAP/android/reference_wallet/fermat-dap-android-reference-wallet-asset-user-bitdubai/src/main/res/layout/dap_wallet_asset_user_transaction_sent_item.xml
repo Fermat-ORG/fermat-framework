@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:background="@color/fab_material_white">
+
+    <ImageView
+        android:id="@+id/img_person_sent"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/img_asset_without_image"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/sentUserNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Frank Contreras"
+        android:textSize="16sp"
+        android:textColor="#37474f"
+        android:fontFamily="regular"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/img_person_sent"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/sentByText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sent by"
+        android:textSize="10sp"
+        android:textColor="#607d8b"
+        android:fontFamily="regular"
+        android:layout_above="@+id/sentByNameText"
+        android:layout_alignLeft="@+id/sentUserNameText"
+        android:layout_marginBottom="1dp"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/sentByNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rodrigo Acosta"
+        android:textSize="12sp"
+        android:textColor="#607d8b"
+        android:fontFamily="regular"
+        android:layout_marginBottom="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/img_person_sent"
+        android:layout_marginLeft="10dp"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/sentAmountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0.000001 BTC"
+        android:textSize="13sp"
+        android:textColor="#000000"
+        android:fontFamily="regular"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="25dp"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/sentDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2 Feb, 2016"
+        android:textSize="10sp"
+        android:textColor="#37474f"
+        android:fontFamily="regular"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/gray"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
