@@ -37,6 +37,8 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.pop
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.DisconectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+
+import java.util.Date;
 //import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 /**
@@ -170,7 +172,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 userBlockchainNetworkType.setText("None");
             }
 
-            userRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(actor.getRegistrationDate()));
+            userRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
 
             if (actor.getProfileImage() != null) {
                 Bitmap bitmap;
