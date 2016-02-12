@@ -54,5 +54,14 @@ public class AssetWalletIssuerDatabaseConstant {
     public static final String ASSET_STATISTIC_ASSET_CURRENT_STATUS_COLUMN_NAME = "asset_current_status";
     public static final String ASSET_STATISTIC_ASSET_NAME_COLUMN_NAME = "asset_name";
 
+    // ASSET MOVEMENTS TABLE
+    public static final String ASSET_MOVEMENTS_TABLE_NAME = "asset_movements";
+    public static final String ASSET_MOVEMENTS_ENTRY_ID = "uniqueId";
+    public static final String ASSET_MOVEMENTS_METADATA_ID = "metadataId";
+    public static final String ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY = "actorFromPublicKey";
+    public static final String ASSET_MOVEMENTS_ACTOR_FROM_TYPE = "actorFromType";
+    public static final String ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY = "actorToPublicKey";
+    public static final String ASSET_MOVEMENTS_ACTOR_TO_TYPE = "actorToType";
+    public static final String ASSET_MOVEMENTS_TIMESTAMP = "timestamp";
 
 }

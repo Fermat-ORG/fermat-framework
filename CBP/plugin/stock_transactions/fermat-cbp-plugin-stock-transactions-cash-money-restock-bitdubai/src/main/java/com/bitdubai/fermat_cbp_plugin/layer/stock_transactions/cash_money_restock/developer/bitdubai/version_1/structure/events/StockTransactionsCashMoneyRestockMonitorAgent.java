@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
@@ -10,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CashMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
@@ -208,7 +207,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                                 cashMoneyTransaction.getFiatCurrency(),
                                 BalanceType.BOOK,
                                 TransactionType.CREDIT,
-                                CurrencyType.CASH_DELIVERY_MONEY,
+                                MoneyType.CASH_DELIVERY,
                                 cashMoneyTransaction.getCbpWalletPublicKey(),
                                 cashMoneyTransaction.getActorPublicKey(),
                                 cashMoneyTransaction.getAmount(),
@@ -222,7 +221,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                                 cashMoneyTransaction.getFiatCurrency(),
                                 BalanceType.AVAILABLE,
                                 TransactionType.CREDIT,
-                                CurrencyType.CASH_DELIVERY_MONEY,
+                                MoneyType.CASH_DELIVERY,
                                 cashMoneyTransaction.getCbpWalletPublicKey(),
                                 cashMoneyTransaction.getActorPublicKey(),
                                 cashMoneyTransaction.getAmount(),

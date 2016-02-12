@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
@@ -22,7 +22,7 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
     private final UUID transactionId;
     private final BalanceType balanceType;
     private final TransactionType transactionType;
-    private final CurrencyType currencyType;
+    private final MoneyType moneyType;
     private final Currency merchandise;
     private final String walletPublicKey;
     private final String brokerPublicKey;
@@ -41,7 +41,7 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
      * @param transactionId
      * @param balanceType
      * @param transactionType
-     * @param currencyType
+     * @param moneyType
      * @param merchandise
      * @param walletPublicKey
      * @param brokerPublicKey
@@ -58,7 +58,7 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
                                             final UUID transactionId,
                                             final BalanceType balanceType,
                                             final TransactionType transactionType,
-                                            final CurrencyType currencyType,
+                                            final MoneyType moneyType,
                                             final Currency merchandise,
                                             final String walletPublicKey,
                                             final String brokerPublicKey,
@@ -74,7 +74,7 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
         this.transactionId = transactionId;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
-        this.currencyType = currencyType;
+        this.moneyType = moneyType;
         this.merchandise = merchandise;
         this.walletPublicKey = walletPublicKey;
         this.brokerPublicKey = brokerPublicKey;
@@ -145,8 +145,8 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
      * {@inheritDoc}
      */
     @Override
-    public CurrencyType getCurrencyType() {
-        return currencyType;
+    public MoneyType getMoneyType() {
+        return moneyType;
     }
 
     /**

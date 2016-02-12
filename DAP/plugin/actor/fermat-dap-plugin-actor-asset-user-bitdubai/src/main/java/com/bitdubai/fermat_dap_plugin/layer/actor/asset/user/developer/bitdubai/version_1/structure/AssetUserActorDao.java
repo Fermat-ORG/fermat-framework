@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.Crypto;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
@@ -42,15 +43,19 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.database.AssetUserActorDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.AssetUserNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserCryptoAddressNetworkException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantCreateAssetUserGroupException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantDeleteAssetUserGroupException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserActorProfileImageException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserCryptoAddressTableExcepcion;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupTableExcepcion;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUsersCryptoAddressListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUsersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserConnectionException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserCryptoAddressNetworkException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserGroupException;
 
@@ -581,7 +586,6 @@ public class AssetUserActorDao implements Serializable {
 
             // 2) Find the Asset User , filter by keys.
             table.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorAssetPublicKey, DatabaseFilterType.EQUAL);
-
             table.loadToMemory();
 
             /**
@@ -593,13 +597,13 @@ public class AssetUserActorDao implements Serializable {
             // 3) Get Asset User record and update state.
             for (DatabaseTableRecord record : table.getRecords()) {
 
-                if (cryptoAddress != null) {
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
+                if(assetUserRegisteredExistsInCryptoAddressNetworkTable(actorAssetPublicKey, blockchainNetworkType))
+                {
+                    updateActorAssetUserActorCryptoNetwork(actorAssetPublicKey,blockchainNetworkType,cryptoAddress);
                 }
-
-                if (blockchainNetworkType != null) {
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
+                else
+                {
+                    createActorAssetUserActorCryptoNetwork(actorAssetPublicKey,blockchainNetworkType,cryptoAddress);
                 }
 
                 if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
@@ -628,8 +632,84 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
+    private void createActorAssetUserActorCryptoNetwork(String actorAssetPublicKey, BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetAssetUserCryptoAddressTableExcepcion, CantCreateAssetUserCryptoAddressNetworkException {
+        DatabaseTable table;
+        try {
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetAssetUserCryptoAddressTableExcepcion("Cant check if alias exists, table not found.", "Asset User Crypto Table", "Cant check if alias exists, table not found.");
+            }
+                    table.loadToMemory();
+                    DatabaseTableRecord record = table.getEmptyRecord();
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME,actorAssetPublicKey);
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
+                    table.insertRecord(record);
+
+        } catch (CantInsertRecordException em) {
+            throw new CantGetAssetUserCryptoAddressTableExcepcion(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantCreateAssetUserCryptoAddressNetworkException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor Crypto Address, Creating record", "Cant check if alias exists, unknown failure.");
+        }
+    }
+
+    private void updateActorAssetUserActorCryptoNetwork(String actorAssetPublicKey, BlockchainNetworkType blockchainNetworkType, CryptoAddress cryptoAddress) throws CantGetAssetUserCryptoAddressTableExcepcion, CantUpdateAssetUserCryptoAddressNetworkException {
+        DatabaseTable table;
+        try {
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetAssetUserCryptoAddressTableExcepcion("Cant check if alias exists, table not found.", "Asset User Crypto Table", "Cant check if alias exists, table not found.");
+            }
+            table.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME, actorAssetPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            if (!table.getRecords().isEmpty()) {
+                for (DatabaseTableRecord record : table.getRecords()) {
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
+                    table.updateRecord(record);
+                }
+
+            }
+
+        } catch (CantLoadTableToMemoryException | CantUpdateRecordException em) {
+            throw new CantGetAssetUserCryptoAddressTableExcepcion(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantUpdateAssetUserCryptoAddressNetworkException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor Crypto Address, Updating Record", "Cant check if alias exists, unknown failure.");
+        }
+    }
+
+    private boolean assetUserRegisteredExistsInCryptoAddressNetworkTable(String actorAssetPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserCryptoAddressTableExcepcion, CantGetAssetUsersCryptoAddressListException {
+        DatabaseTable table;
+        try {
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetAssetUserCryptoAddressTableExcepcion("Cant check if alias exists, table not found.", "Asset User Crypto Table", "Cant check if alias exists, table not found.");
+            }
+            table.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME, actorAssetPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            if (table.getRecords().isEmpty()) {
+                return false;
+            }
+
+            return true;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantGetAssetUserCryptoAddressTableExcepcion(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantGetAssetUsersCryptoAddressListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor Crypto Address", "Cant check if alias exists, unknown failure.");
+        }
+    }
+
     //    public List<ActorAssetUser> getAssetUserRegistered(String actorAssetPublicKey, int max, int offset) throws CantGetAssetUsersListException {
-    public List<ActorAssetUser> getAssetUserRegistered(String actorAssetPublicKey) throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getAssetUserRegistered(String actorAssetPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUsersListException {
 
         // Setup method.
         List<ActorAssetUser> list = new ArrayList<ActorAssetUser>(); // Asset User Actor list.
@@ -657,7 +737,7 @@ public class AssetUserActorDao implements Serializable {
             table.loadToMemory();
 
             // 3) Get Asset Users Record.
-            this.addRecordsTableRegisteredToList(list, table.getRecords());
+            this.addRecordsTableRegisteredToList(list, table.getRecords(), blockchainNetworkType);
 
 
         } catch (CantLoadTableToMemoryException e) {
@@ -697,7 +777,7 @@ public class AssetUserActorDao implements Serializable {
             table.loadToMemory();
 
             // 3) Get Asset Users Record.
-            this.addRecordsTableRegisteredToList(list, table.getRecords());
+            this.addRecordsTableRegisteredToList(list, table.getRecords(), null);
 
 
         } catch (CantLoadTableToMemoryException e) {
@@ -798,7 +878,7 @@ public class AssetUserActorDao implements Serializable {
 
             table.loadToMemory();
             // 3) Get Asset Users Record.
-            this.addRecordsTableRegisteredToList(list, table.getRecords());
+            this.addRecordsTableRegisteredToList(list, table.getRecords(), null);
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
@@ -811,8 +891,43 @@ public class AssetUserActorDao implements Serializable {
         return list;
     }
 
-    public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getAllAssetUserActorRegistered(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUsersListException {
         List<ActorAssetUser> list = new ArrayList<>(); // Asset User Actor list.
+
+        DatabaseTable table;
+
+        // Get Asset Users identities list.
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get asset User identity list, table not found.", "Plugin Identity", "Cant get asset user identity list, table not found.");
+            }//TODO Filtro de Busqueda en Tabla NO colocado para que traiga toda la informacion que contiene
+
+            table.loadToMemory();
+            // 3) Get Asset Users Record.
+            this.addRecordsTableRegisteredToList(list, table.getRecords(), blockchainNetworkType);
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
+        } catch (CantGetAssetUserActorProfileImageException e) {
+            throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Can't get profile ImageMiddleware.");
+        } catch (Exception e) {
+            throw new CantGetAssetUsersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
+        }
+        // Return the list values.
+        return list;
+    }
+
+    public List<ActorAssetUser> getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUsersListException {
+        List<ActorAssetUser> list = new ArrayList<>(); // Asset User Actor list.
+        List<ActorAssetUser> auxList = new ArrayList<>();
         DatabaseTable table;
         // Get Asset Users identities list.
         try {
@@ -829,8 +944,14 @@ public class AssetUserActorDao implements Serializable {
 
             table.loadToMemory();
 
-            this.addRecordsTableRegisteredToList(list, table.getRecords());
+            this.addRecordsTableRegisteredToList(list, table.getRecords(), blockchainNetworkType);
 
+
+            for (ActorAssetUser record : list)
+            {
+                if (record.getCryptoAddress()!=null)
+                    auxList.add(record);
+            }
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
@@ -840,7 +961,7 @@ public class AssetUserActorDao implements Serializable {
             throw new CantGetAssetUsersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         }
         // Return the list values.
-        return list;
+        return auxList;
     }
 
     /**
@@ -998,22 +1119,11 @@ public class AssetUserActorDao implements Serializable {
         return actorAssetUser;
     }
 
-    private void addRecordsTableRegisteredToList(List<ActorAssetUser> list, List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetAssetUserActorProfileImageException {
+    private void addRecordsTableRegisteredToList(List<ActorAssetUser> list, List<DatabaseTableRecord> records, BlockchainNetworkType blockchainNetworkType) throws InvalidParameterException, CantGetAssetUserActorProfileImageException, CantGetAssetUserCryptoAddressTableExcepcion, CantGetAssetUsersCryptoAddressListException {
 
         for (DatabaseTableRecord record : records) {
-            CryptoAddress cryptoAddress = null;
-            BlockchainNetworkType blockchainNetworkType = null;
 
-            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
-                cryptoAddress = new CryptoAddress(
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
-                        CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
-            }
-            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME) != null) {
-                blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME));
-            }
-
-            list.add(new AssetUserActorRecord(
+            AssetUserActorRecord user = new AssetUserActorRecord(
                     record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME),
                     record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NAME_COLUMN_NAME),
                     record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_AGE_COLUMN_NAME),
@@ -1021,11 +1131,55 @@ public class AssetUserActorDao implements Serializable {
                     DAPConnectionState.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME)),
                     record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
                     record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
-                    cryptoAddress,
+                    /*Crypto*/   null,
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
-                    blockchainNetworkType,
-                    getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME))));
+                    /*Blockchain*/ null,
+                    getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)));
+
+            if (blockchainNetworkType != null) {
+                getCryptoAddressNetwork(user, blockchainNetworkType);
+            }
+            list.add(user);
+            
+        }
+    }
+
+    private void getCryptoAddressNetwork(AssetUserActorRecord user, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserCryptoAddressTableExcepcion, CantGetAssetUsersCryptoAddressListException {
+        DatabaseTable table;
+        /**
+         * Get developers identities list.
+         * I select records on table
+         */
+        try {
+            table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME);
+
+            if (table == null) {
+                throw new CantGetAssetUserCryptoAddressTableExcepcion("Cant check if alias exists, table not found.", "Asset User Crypto Table", "Cant check if alias exists, table not found.");
+            }
+            table.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME, user.getActorPublicKey(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            if (!table.getRecords().isEmpty()) {
+                for (DatabaseTableRecord record : table.getRecords()) {
+                    CryptoAddress cryptoAddress = null;
+                    if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
+                        cryptoAddress = new CryptoAddress(
+                                record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME),
+                                CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME)));
+                    }
+                    user.setCryptoAddress(cryptoAddress);
+                    user.setBlockchainNetworkType(blockchainNetworkType);
+
+                }
+
+            }
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantGetAssetUserCryptoAddressTableExcepcion(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantGetAssetUsersCryptoAddressListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor Crypto Address", "Cant check if alias exists, unknown failure.");
         }
     }
 
@@ -1285,27 +1439,13 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUsersListException {
-        DatabaseTable tableGroup;
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUsersListException {
         DatabaseTable tableGroupMember;
-        String groupId = "";
+
         String actorAssetUserPublicKey = "";
         List<ActorAssetUser> actorAssetUserList = new ArrayList<ActorAssetUser>();
 
         try {
-            /**
-             * 1) Get the table.
-             */
-            tableGroup = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_TABLE_NAME);
-
-            if (tableGroup == null) {
-                throw new CantGetAssetUserGroupTableExcepcion("CANT GET ASSET USER GROUP MEMBER, TABLE NOT FOUND.", " ASSET USER GROUP MEMBER", "");
-            }
-            tableGroup.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_NAME_COLUMN_NAME, groupName, DatabaseFilterType.EQUAL);
-            tableGroup.loadToMemory();
-            for (DatabaseTableRecord record : tableGroup.getRecords()) {
-                groupId = record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_ID_COLUMN_NAME);
-            }
 
             tableGroupMember = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_TABLE_NAME);
 
