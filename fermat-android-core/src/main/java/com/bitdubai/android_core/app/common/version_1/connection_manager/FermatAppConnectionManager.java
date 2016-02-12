@@ -16,7 +16,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.app_connection
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.app_connection.WalletRedeemPointFermatAppConnection;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
-import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
+//import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
@@ -36,7 +36,7 @@ public class FermatAppConnectionManager {
 
 
 
-    public static AppConnections switchStatement(Activity activity,String publicKey){
+    public static AppConnections switchStatement(Activity activity,String publicKey,FermatSession fermatSession){
         AppConnections fermatAppConnection = null;
 
         switch (publicKey){
@@ -49,7 +49,7 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new CryptoWalletUserFermatAppConnection(activity);
                 break;
             case "public_key_intra_user_commmunity":
-                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
+                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity,fermatSession);
                 break;
 
             //DAP WALLETS
@@ -92,10 +92,10 @@ public class FermatAppConnectionManager {
 
             //CBP WALLETS
             case "crypto_broker_wallet":
-                fermatAppConnection = new CryptoBrokerWalletFermatAppConnection(activity, null);
+                fermatAppConnection = new CryptoBrokerWalletFermatAppConnection(activity);
                 break;
             case "crypto_customer_wallet":
-                fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity, null);
+                fermatAppConnection = new CryptoCustomerWalletFermatAppConnection(activity);
                 break;
             //CBP Sub Apps
             case "public_key_crypto_broker_community":
@@ -117,9 +117,9 @@ public class FermatAppConnectionManager {
                 break;
 
             //BANKING WALLET
-            case "banking_wallet":
-                fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
-                break;
+           // case "banking_wallet":
+               // fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
+               // break;
 
             // WPD Sub Apps
             case "public_key_store":
@@ -140,14 +140,14 @@ public class FermatAppConnectionManager {
             String publicKey,
             Activity activity,
             FermatSession fermatSession) {
-        AppConnections fermatAppConnection = switchStatement(activity,publicKey);
+        AppConnections fermatAppConnection = switchStatement(activity,publicKey,fermatSession);
         fermatAppConnection.setFullyLoadedSession(fermatSession);
         return fermatAppConnection;
     }
 
 
     public static AppConnections getFermatAppConnection(String appPublicKey, Activity activity) {
-        AppConnections fermatAppConnection = switchStatement(activity,appPublicKey);
+        AppConnections fermatAppConnection = switchStatement(activity,appPublicKey, null);
         return fermatAppConnection;
     }
 }

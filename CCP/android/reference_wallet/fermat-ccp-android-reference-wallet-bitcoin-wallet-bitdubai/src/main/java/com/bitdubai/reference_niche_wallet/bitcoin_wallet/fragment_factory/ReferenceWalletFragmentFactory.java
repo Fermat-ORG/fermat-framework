@@ -6,6 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactDetailFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReferenceWalletSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.AddConnectionFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.NoIdentityFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
@@ -23,7 +24,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<ReferenceWalletSession,WalletResourcesProviderManager,ReferenceFragmentsEnumType> {//implements com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WalletFragmentFactory {
+public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<ReferenceWalletSession,WalletResourcesProviderManager,ReferenceFragmentsEnumType>  {
 
 
     @Override

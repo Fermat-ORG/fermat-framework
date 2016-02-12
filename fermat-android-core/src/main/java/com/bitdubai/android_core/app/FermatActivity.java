@@ -64,6 +64,8 @@ import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatA
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
+import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusListener;
 import com.bitdubai.android_core.app.common.version_1.top_settings.TopSettings;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
@@ -78,6 +80,7 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -87,6 +90,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.AndroidCoreManager;
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
@@ -231,6 +235,10 @@ public abstract class FermatActivity extends AppCompatActivity
     private BottomNavigation bottomNavigation;
 
     private boolean hidden = true;
+    /**
+     * Listeners
+     */
+    private AppStatusListener appStatusListener;
 
     /**
      * Service
@@ -518,6 +526,17 @@ public abstract class FermatActivity extends AppCompatActivity
                                                                  };
         view.findViewById(R.id.img_fermat_setting_1).setOnClickListener(onClickListener);
         view.findViewById(R.id.img_fermat_setting).setOnClickListener(onClickListener);
+
+        if(appStatusListener==null){
+            appStatusListener = new AppStatusListener(this);
+        }
+
+        mRevealView.findViewById(R.id.btn_fermat_apps_status).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AppStatusDialog(view.getContext(), AppsStatus.RELEASE,appStatusListener).show();
+            }
+        });
 
         TopSettings.buildSettingsTop(mRevealView);
 
@@ -1226,7 +1245,7 @@ public abstract class FermatActivity extends AppCompatActivity
 
             }
 
-            List<android.app.Fragment> fragments = new Vector<android.app.Fragment>();
+            List<AbstractFermatFragment> fragments = new Vector<AbstractFermatFragment>();
 
             elementsWithAnimation = new ArrayList<>();
             if(bottomNavigation!=null) {
@@ -1263,7 +1282,7 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void initialisePaging() {
 
         try {
-            List<android.app.Fragment> fragments = new Vector<>();
+            List<AbstractFermatFragment> fragments = new Vector<>();
 
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
 
@@ -1560,6 +1579,9 @@ public abstract class FermatActivity extends AppCompatActivity
 //        stopService(intent);
 
         //navigationDrawerFragment.onDetach();
+        if(appStatusListener != null)
+             appStatusListener.clear();
+
         resetThisActivity();
         super.onDestroy();
     }
@@ -1577,7 +1599,18 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void changeStartActivity(int optionActivity){
-        getAppInUse().changeActualStartActivity(optionActivity);
+        FermatStructure fermatStructure = getAppInUse();
+        fermatStructure.changeActualStartActivity(optionActivity);
+        switch (activityType){
+            case ACTIVITY_TYPE_WALLET:
+                getWalletRuntimeManager().recordNAvigationStructure(fermatStructure);
+                break;
+            case ACTIVITY_TYPE_SUB_APP:
+                getSubAppRuntimeMiddleware().recordNAvigationStructure(fermatStructure);
+                break;
+            case ACTIVITY_TYPE_DESKTOP:
+                break;
+        }
     }
 
 
@@ -2060,5 +2093,7 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
-
+    public ScreenPagerAdapter getScreenAdapter() {
+        return screenPagerAdapter;
+    }
 }

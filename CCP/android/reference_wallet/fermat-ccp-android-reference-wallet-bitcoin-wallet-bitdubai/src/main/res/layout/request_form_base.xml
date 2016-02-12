@@ -172,6 +172,7 @@
                         android:background="@null"
                         android:gravity="left"
                         android:text="@string/balance_amount_0_text"
+                        android:hint="@string/balance_amount_0_text"
                         android:inputType="numberDecimal"
                         android:paddingBottom="7dip"
                         android:paddingLeft="14dip"

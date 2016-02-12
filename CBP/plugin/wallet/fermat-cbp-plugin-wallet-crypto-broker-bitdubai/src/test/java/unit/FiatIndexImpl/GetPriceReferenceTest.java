@@ -1,6 +1,5 @@
 package unit.FiatIndexImpl;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.FiatIndexImpl;
 
 import org.junit.Test;

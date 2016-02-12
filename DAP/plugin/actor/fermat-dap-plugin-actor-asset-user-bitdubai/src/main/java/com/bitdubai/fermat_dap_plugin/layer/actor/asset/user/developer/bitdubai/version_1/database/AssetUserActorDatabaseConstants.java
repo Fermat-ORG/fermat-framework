@@ -78,6 +78,7 @@ public class AssetUserActorDatabaseConstants {
 
     public static final String ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME = "asset_user_crypto_public_key";
     public static final String ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME = "asset_user_crypto_address";
+    public static final String ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME = "asset_user_crypto_currency";
     public static final String ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME = "asset_user_crypto_network_type";
 
     public static final String ASSET_USER_CRYPTO_FIRST_KEY_COLUMN = ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME;

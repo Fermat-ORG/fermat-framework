@@ -756,7 +756,7 @@ public class AssetCryptoVaultManager  {
      * @return the Transaction Hash of the new transaction
      * @throws CantCreateBitcoinTransactionException
      */
-    public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException {
+    public synchronized String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException {
         /**
          * I get the network for this address.
          */

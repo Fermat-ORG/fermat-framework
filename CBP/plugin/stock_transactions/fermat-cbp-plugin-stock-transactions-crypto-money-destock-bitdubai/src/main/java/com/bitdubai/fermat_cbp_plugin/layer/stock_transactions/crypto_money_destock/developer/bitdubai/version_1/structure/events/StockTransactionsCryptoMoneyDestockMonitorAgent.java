@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
@@ -48,6 +48,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CryptoHoldTransactionManager cryptoHoldTransactionManager;
     private final StockTransactionCryptoMoneyDestockFactory stockTransactionCryptoMoneyDestockFactory;
+    private UUID pluginId;
 
     public StockTransactionsCryptoMoneyDestockMonitorAgent(ErrorManager errorManager,
                                                            StockTransactionCryptoMoneyDestockManager stockTransactionCryptoMoneyDestockManager,
@@ -62,6 +63,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
         this.cryptoBrokerWalletManager                 = cryptoBrokerWalletManager;
         this.cryptoHoldTransactionManager              = cryptoHoldTransactionManager;
         this.stockTransactionCryptoMoneyDestockFactory = new StockTransactionCryptoMoneyDestockFactory(pluginDatabaseSystem, pluginId);
+        this.pluginId                                  = pluginId;
     }
     @Override
     public void start() throws CantStartAgentException {
@@ -140,7 +142,7 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
                                     cryptoMoneyTransaction.getCryptoCurrency(),
                                     BalanceType.AVAILABLE,
                                     TransactionType.CREDIT,
-                                    CurrencyType.CRYPTO_MONEY,
+                                    MoneyType.CRYPTO,
                                     cryptoMoneyTransaction.getCbpWalletPublicKey(),
                                     cryptoMoneyTransaction.getActorPublicKey(),
                                     cryptoMoneyTransaction.getAmount(),
@@ -175,8 +177,12 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent implements Agent{
                                 cryptoMoneyTransaction.getActorPublicKey(),
                                 cryptoMoneyTransaction.getAmount(),
                                 cryptoMoneyTransaction.getMemo(),
-                                "pluginId");
+                                pluginId.toString());
                         cryptoHoldTransactionManager.createCryptoHoldTransaction(cryptoTransactionParametersWrapper);
+                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
+                        stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyTransaction);
+                        break;
+                    case IN_EJECUTION:
                         CryptoTransactionStatus cryptoTransactionStatus = cryptoHoldTransactionManager.getCryptoHoldTransactionStatus(cryptoMoneyTransaction.getTransactionId());
                         if (CryptoTransactionStatus.CONFIRMED.getCode() == cryptoTransactionStatus.getCode()) {
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);

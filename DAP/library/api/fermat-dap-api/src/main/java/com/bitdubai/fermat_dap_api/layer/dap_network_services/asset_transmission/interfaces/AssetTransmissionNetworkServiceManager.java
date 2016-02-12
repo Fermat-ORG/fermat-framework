@@ -8,9 +8,9 @@ package com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmissio
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 
@@ -29,12 +29,11 @@ public interface AssetTransmissionNetworkServiceManager extends TransactionProto
     /**
      * This method sends the digital asset metadata to a remote device.
      *
-     * @param actorSender                The {@link DAPActor} that is sending the metadata
-     * @param actorReceiver              The {@link DAPActor} that will receive the metadata
-     * @param digitalAssetMetadataToSend The {@link DigitalAssetMetadata} that is going to be sent.
+     * @param dapMessage {@link DAPMessage<AssetMetadataContentMessage>} instance, which should contain all the information to send
+     *                                                                  this metadata to the destination device.
      * @throws CantSendDigitalAssetMetadataException
      */
-    void sendDigitalAssetMetadata(DAPActor actorSender, DAPActor actorReceiver, DigitalAssetMetadata digitalAssetMetadataToSend) throws CantSendDigitalAssetMetadataException;
+    void sendDigitalAssetMetadata(DAPMessage dapMessage) throws CantSendDigitalAssetMetadataException;
 
     /**
      * Method that send the Transaction New Status Notification

@@ -10,25 +10,21 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmQuotesRequestException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.RequestMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -58,20 +54,17 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
     private final CryptoBrokerActorNetworkServicePluginRoot cryptoBrokerActorNetworkServicePluginRoot;
     private final ErrorManager                              errorManager                             ;
     private final EventManager                              eventManager                             ;
-    private final CryptoBrokerActorNetworkServiceDao dao                                      ;
-    private final WsCommunicationsCloudClientManager        wsCommunicationsCloudClientManager       ;
+    private final CryptoBrokerActorNetworkServiceDao        dao                                      ;
 
     public CryptoBrokerExecutorAgent(final CryptoBrokerActorNetworkServicePluginRoot cryptoBrokerActorNetworkServicePluginRoot,
                                      final ErrorManager                              errorManager                             ,
                                      final EventManager                              eventManager                             ,
-                                     final CryptoBrokerActorNetworkServiceDao dao                                      ,
-                                     final WsCommunicationsCloudClientManager        wsCommunicationsCloudClientManager       ) {
+                                     final CryptoBrokerActorNetworkServiceDao dao                                             ) {
 
         this.cryptoBrokerActorNetworkServicePluginRoot = cryptoBrokerActorNetworkServicePluginRoot;
         this.errorManager                              = errorManager                             ;
         this.eventManager                              = eventManager                             ;
         this.dao                                       = dao                                      ;
-        this.wsCommunicationsCloudClientManager        = wsCommunicationsCloudClientManager       ;
 
         this.status                                    = AgentStatus.CREATED                      ;
 
@@ -129,22 +122,25 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
         try {
 
-            if(cryptoBrokerActorNetworkServicePluginRoot.isRegister()) {
+            if (cryptoBrokerActorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null) {
 
-                // function to process and send the right message to the counterparts.
-                processSend();
+                if (cryptoBrokerActorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
+
+                    processSend();
+
+                    //Sleep for a time
+                    Thread.sleep(SLEEP_TIME);
+                }
             }
 
-            //Sleep for a time
-            Thread.sleep(SLEEP_TIME);
-
         } catch (InterruptedException e) {
-            status = AgentStatus.STOPPED;
-            reportUnexpectedError(e);
-        } catch(Exception e) {
 
             reportUnexpectedError(FermatException.wrapException(e));
+        } catch(Exception e) {
+            status = AgentStatus.STOPPED;
+            reportUnexpectedError(e);
         }
+
     }
 
     private void processSend() {
@@ -270,14 +266,16 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
         try {
 
-            if(cryptoBrokerActorNetworkServicePluginRoot.isRegister()) {
+            if (cryptoBrokerActorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection() != null) {
 
-                // function to process and send the right message to the counterparts.
-                processReceive();
+                if (cryptoBrokerActorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isConnected()) {
+
+                    processReceive();
+
+                    //Sleep for a time
+                    Thread.sleep(SLEEP_TIME);
+                }
             }
-
-            //Sleep for a while
-            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
             status = AgentStatus.STOPPED;
@@ -295,14 +293,14 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
 
             if(dao.isPendingQuotesRequestsNews()) {
                 FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_QUOTES_REQUEST_NEWS);
-                eventToRaise.setSource(cryptoBrokerActorNetworkServicePluginRoot.getEventSource());
+                eventToRaise.setSource(cryptoBrokerActorNetworkServicePluginRoot.eventSource);
                 eventManager.raiseEvent(eventToRaise);
                 System.out.println("CRYPTO BROKER QUOTES NEWS");
             }
 
             if(dao.isPendingQuotesRequestUpdates()) {
                 FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_QUOTES_REQUEST_UPDATES);
-                eventToRaise.setSource(cryptoBrokerActorNetworkServicePluginRoot.getEventSource());
+                eventToRaise.setSource(cryptoBrokerActorNetworkServicePluginRoot.eventSource);
                 eventManager.raiseEvent(eventToRaise);
                 System.out.println("CRYPTO BROKER QUOTES UPDATES");
             }
@@ -310,14 +308,14 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
             // if there is pending actions i raise a crypto address news event.
             if(dao.isPendingConnectionRequests()) {
                 FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
-                eventToRaise.setSource(cryptoBrokerActorNetworkServicePluginRoot.getEventSource());
+                eventToRaise.setSource(cryptoBrokerActorNetworkServicePluginRoot.eventSource);
                 eventManager.raiseEvent(eventToRaise);
                 System.out.println("CRYPTO BROKER CONNECTION NEWS");
             }
 
             if(dao.isPendingConnectionUpdates()) {
                 FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES);
-                eventToRaise.setSource(cryptoBrokerActorNetworkServicePluginRoot.getEventSource());
+                eventToRaise.setSource(cryptoBrokerActorNetworkServicePluginRoot.eventSource);
                 eventManager.raiseEvent(eventToRaise);
                 System.out.println("CRYPTO BROKER CONNECTION UPDATES");
             }
@@ -328,43 +326,41 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
         }
     }
 
-    public boolean sendMessageToActor(final String jsonMessage      ,
-                                      final String identityPublicKey,
-                                      final Actors identityType     ,
-                                      final String actorPublicKey   ,
-                                      final Actors actorType        ) {
+    private boolean sendMessageToActor(final String jsonMessage      ,
+                                       final String identityPublicKey,
+                                       final Actors identityType     ,
+                                       final String actorPublicKey   ,
+                                       final Actors actorType        ) {
 
         try {
 
             if (!poolConnectionsWaitingForResponse.containsKey(actorPublicKey)) {
 
-                if (cryptoBrokerActorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
+                if (cryptoBrokerActorNetworkServicePluginRoot.getCommunicationNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey) == null) {
 
-                    PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                            .constructPlatformComponentProfileFactory(
-                                    identityPublicKey,
-                                    "no_matter",
-                                    "no_matter",
-                                    NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(identityType), "");
 
-                    PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                            .constructPlatformComponentProfileFactory(
-                                    actorPublicKey,
-                                    "no_matter",
-                                    "no_matter",
-                                    NetworkServiceType.UNDEFINED,
-                                    platformComponentTypeSelectorByActorType(actorType), "");
+                    if (cryptoBrokerActorNetworkServicePluginRoot.getNetworkServiceProfile() != null) {
 
-                    cryptoBrokerActorNetworkServicePluginRoot.getNetworkServiceConnectionManager().connectTo(
-                            applicantParticipant,
-                            cryptoBrokerActorNetworkServicePluginRoot.getPlatformComponentProfilePluginRoot(),
-                            remoteParticipant
-                    );
+                        PlatformComponentProfile applicantParticipant = cryptoBrokerActorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
+                                .constructBasicPlatformComponentProfileFactory(
+                                        identityPublicKey,
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(identityType));
+                        PlatformComponentProfile remoteParticipant = cryptoBrokerActorNetworkServicePluginRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
+                                .constructBasicPlatformComponentProfileFactory(
+                                        actorPublicKey,
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(actorType));
 
-                    // i put the actor in the pool of connections waiting for response-
-                    poolConnectionsWaitingForResponse.put(actorPublicKey, actorPublicKey);
+                        cryptoBrokerActorNetworkServicePluginRoot.getCommunicationNetworkServiceConnectionManager().connectTo(
+                                applicantParticipant,
+                                cryptoBrokerActorNetworkServicePluginRoot.getNetworkServiceProfile(),
+                                remoteParticipant
+                        );
 
+                        // i put the actor in the pool of connections waiting for response-
+                        poolConnectionsWaitingForResponse.put(actorPublicKey, actorPublicKey);
+                    }
 
                     return false;
 
@@ -385,24 +381,24 @@ public final class CryptoBrokerExecutorAgent extends FermatAgent {
             return false;
         }
     }
-
     private boolean sendMessage(final String identityPublicKey,
                                 final String actorPublicKey   ,
                                 final String jsonMessage      ) {
 
-        NetworkServiceLocal communicationNetworkServiceLocal = cryptoBrokerActorNetworkServicePluginRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
+        CommunicationNetworkServiceLocal communicationNetworkServiceLocal = cryptoBrokerActorNetworkServicePluginRoot.getCommunicationNetworkServiceConnectionManager().getNetworkServiceLocalInstance(actorPublicKey);
 
         if (communicationNetworkServiceLocal != null) {
 
             communicationNetworkServiceLocal.sendMessage(
                     identityPublicKey,
-                    actorPublicKey,
                     jsonMessage
             );
 
+            poolConnectionsWaitingForResponse.remove(actorPublicKey);
+
             return true;
         }
-
+        poolConnectionsWaitingForResponse.remove(actorPublicKey);
         return false;
     }
 

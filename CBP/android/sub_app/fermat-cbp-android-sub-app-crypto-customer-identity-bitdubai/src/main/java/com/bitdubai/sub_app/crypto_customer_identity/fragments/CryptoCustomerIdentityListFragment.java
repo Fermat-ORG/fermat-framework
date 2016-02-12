@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.widget.SearchView;
 
@@ -49,7 +47,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     private ErrorManager errorManager;
 
     // Data
-    private ArrayList<CryptoCustomerIdentityInformation> identityInformationList;
+    private List<CryptoCustomerIdentityInformation> identityInformationList;
 
     // UI
     private View noMatchView;
@@ -68,7 +66,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
             // setting up  module
             moduleManager = ((CryptoCustomerIdentitySubAppSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
-            identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            identityInformationList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
 
@@ -220,7 +218,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
         if (filter == null) {
             CryptoCustomerIdentityInfoAdapter infoAdapter = (CryptoCustomerIdentityInfoAdapter) this.adapter;
 
-            filter = (CryptoCustomerIdentityListFilter) infoAdapter.getFilter();
+            filter = infoAdapter.getFilter();
             filter.setNoMatchViews(noMatchView, recyclerView);
         }
 

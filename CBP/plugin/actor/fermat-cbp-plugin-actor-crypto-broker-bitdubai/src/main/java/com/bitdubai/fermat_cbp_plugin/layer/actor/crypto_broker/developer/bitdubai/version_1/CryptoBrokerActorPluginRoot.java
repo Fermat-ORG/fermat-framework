@@ -27,8 +27,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdub
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.event_handlers.CryptoBrokerExtraDataEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantInitializeCryptoBrokerActorDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.ActorExtraDataEventActions;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.ActorManager;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.ActorBrokerExtraDataEventActions;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.structure.BrokerActorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -80,17 +80,14 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Datab
                     this.cryptoBrokerActorDao = new CryptoBrokerActorDao(pluginDatabaseSystem, pluginId);
                     this.cryptoBrokerActorDao.initializeDatabase();
 
-                    /*
                         FermatEventListener fermatEventListener;
                         FermatEventHandler fermatEventHandler;
-                        ActorExtraDataEventActions handlerAction = new ActorExtraDataEventActions(cryptoBrokerANSManager, cryptoBrokerWalletManager, cryptoBrokerActorDao);
-                        // TODO: cambiar el EventType por el de ExtraData
-                        fermatEventListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
+                        ActorBrokerExtraDataEventActions handlerAction = new ActorBrokerExtraDataEventActions(cryptoBrokerANSManager, cryptoBrokerWalletManager, cryptoBrokerActorDao);
+                        fermatEventListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_QUOTES_REQUEST_NEWS);
                         fermatEventHandler = new CryptoBrokerExtraDataEventHandler(handlerAction, this);
                         fermatEventListener.setEventHandler(fermatEventHandler);
                         eventManager.addListener(fermatEventListener);
                         listenersAdded.add(fermatEventListener);
-                    */
 
                     this.serviceStatus = ServiceStatus.STARTED;
                 } catch (CantInitializeCryptoBrokerActorDatabaseException cantInitializeExtraUserRegistryException) {
@@ -101,17 +98,15 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Datab
 
     @Override
     public void stop() {
-        /*
         for (FermatEventListener fermatEventListener : listenersAdded) {
             eventManager.removeListener(fermatEventListener);
         }
         listenersAdded.clear();
-        */
     }
 
     @Override
             public FermatManager getManager() {
-                return new ActorManager(this.cryptoBrokerActorDao, cryptoBrokerANSManager, cryptoBrokerWalletManager);
+                return new BrokerActorManager(this.cryptoBrokerActorDao, cryptoBrokerANSManager, cryptoBrokerWalletManager);
             }
 
         /*
