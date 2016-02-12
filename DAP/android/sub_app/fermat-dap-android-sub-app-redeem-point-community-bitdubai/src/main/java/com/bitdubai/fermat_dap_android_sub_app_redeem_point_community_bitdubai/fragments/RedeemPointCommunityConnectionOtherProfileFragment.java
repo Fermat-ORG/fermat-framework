@@ -30,6 +30,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.p
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -52,9 +53,10 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     private AssetRedeemPointCommunitySubAppSession assetUserCommunitySubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
-    private FermatTextView userEmail;
+    //private FermatTextView userEmail;
     private FermatTextView userCryptoAddres;
     private FermatTextView userCryptoCurrency;
+    private FermatTextView redeemRegistrationDate;
     //private FermatTextView userBlockchainNetworkType;
     //private IntraUserModuleManager manager;
     private static RedeemPointCommunitySubAppModuleManager manager;
@@ -64,7 +66,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     private Button disconnect;
     private int MAX = 1;
     private int OFFSET = 0;
-    private FermatTextView userStatus;
+    //private FermatTextView userStatus;
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
     private Button accept;
@@ -101,11 +103,12 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         if (toolbar != null)
             toolbar.setTitle(actor.getName());
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
-        userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
+       // userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
-        userEmail = (FermatTextView) rootView.findViewById(R.id.email);
+        //userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         userCryptoAddres = (FermatTextView) rootView.findViewById(R.id.cryptoAddress);
         userCryptoCurrency = (FermatTextView) rootView.findViewById(R.id.cryptoCurrency);
+        redeemRegistrationDate = (FermatTextView) rootView.findViewById(R.id.redeemRegistrationDate);
         //userBlockchainNetworkType = (FermatTextView) rootView.findViewById(R.id.blockchainNetworkType);
         connectionRequestSend = (Button) rootView.findViewById(R.id.btn_connection_request_send);
         connectionRequestRejected = (Button) rootView.findViewById(R.id.btn_connection_request_reject);
@@ -151,8 +154,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         try {
             userName.setText(actor.getName());
             //userStatus.setText(actor.getPhrase());
-            userStatus.setText(actor.getName());
-            userStatus.setTextColor(Color.parseColor("#292929"));
+            //userStatus.setText(actor.getName());
+            //userStatus.setTextColor(Color.parseColor("#292929"));
 
             if(actor.getCryptoAddress() != null){
                 userCryptoAddres.setText("YES");
@@ -161,6 +164,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                 userCryptoAddres.setText("No");
                 userCryptoCurrency.setText("None");
             }
+
+            redeemRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(actor.getRegistrationDate()));
 
             /*if(actor.getBlockchainNetworkType() != null) {
                 userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().getCode());
