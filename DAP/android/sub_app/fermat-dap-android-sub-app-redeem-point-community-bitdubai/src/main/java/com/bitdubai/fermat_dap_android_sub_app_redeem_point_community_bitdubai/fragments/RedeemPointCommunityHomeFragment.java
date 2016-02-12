@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.adapters.RedeemPointCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.SessionConstantRedeemPointCommunity;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
@@ -298,49 +300,87 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+
 //        if (item.getItemId() == R.id.action_connect) {
         if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT) {
-            final ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("Connecting please wait...");
-            dialog.setCancelable(false);
-            dialog.show();
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    List<ActorAssetRedeemPoint> toConnect = new ArrayList<>();
-                    for (Actor actor : actors) {
-                        if (actor.selected)
-                            toConnect.add(actor);
-                    }
-                    //// TODO: 28/10/15 get Actor asset Redeem Point
-                    manager.connectToActorAssetRedeemPoint(null, toConnect);
-                    return true;
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @Override
-                public void onPostExecute(Object... result) {
-                    dialog.dismiss();
-                    if (swipeRefreshLayout != null)
-                        swipeRefreshLayout.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                onRefresh();
-                            }
-                        });
-                }
+            List<ActorAssetRedeemPoint> actorsSelected = new ArrayList<>();
+            for (Actor actor : actors) {
+                if (actor.selected)
+                    actorsSelected.add(actor);
+            }
+          if(actorsSelected.size() > 0) {
 
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    dialog.dismiss();
-//                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                    Toast.makeText(getActivity(), "Asset User or Redeem Point Identities must be created before using this app.", Toast.LENGTH_LONG).show();
-//                    ex.printStackTrace();
-                }
-            });
-            worker.execute();
-            return true;
+
+              ConnectDialog connectDialog;
+
+              connectDialog = new ConnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null){
+                  @Override
+                  public void onClick(View v) {
+                      int i = v.getId();
+                      if (i == R.id.positive_button) {//
+
+
+                          final ProgressDialog dialog = new ProgressDialog(getActivity());
+                          dialog.setMessage("Connecting please wait...");
+                          dialog.setCancelable(false);
+                          dialog.show();
+                          FermatWorker worker = new FermatWorker() {
+                              @Override
+                              protected Object doInBackground() throws Exception {
+                                  List<ActorAssetRedeemPoint> toConnect = new ArrayList<>();
+                                  for (Actor actor : actors) {
+                                      if (actor.selected)
+                                          toConnect.add(actor);
+                                  }
+                                  //// TODO: 28/10/15 get Actor asset Redeem Point
+                                  manager.connectToActorAssetRedeemPoint(null, toConnect);
+                                  return true;
+                              }
+                          };
+                          worker.setContext(getActivity());
+                          worker.setCallBack(new FermatWorkerCallBack() {
+                              @Override
+                              public void onPostExecute(Object... result) {
+                                  dialog.dismiss();
+                                  Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                  if (swipeRefreshLayout != null)
+                                      swipeRefreshLayout.post(new Runnable() {
+                                          @Override
+                                          public void run() {
+                                              onRefresh();
+                                          }
+                                      });
+                              }
+
+                              @Override
+                              public void onErrorOccurred(Exception ex) {
+                                  dialog.dismiss();
+//                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                                  Toast.makeText(getActivity(), "Asset User or Redeem Point Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+//                                ex.printStackTrace();
+                              }
+                          });
+                          worker.execute();
+//
+
+                          dismiss();
+                      } else if (i == R.id.negative_button) {
+                          dismiss();
+                      }
+                  }
+              };
+              connectDialog.setTitle("Connection Request");
+              connectDialog.setDescription("Do you want to send to ");
+              connectDialog.setUsername((actorsSelected.size() > 1) ? "" + actorsSelected.size() +
+                      " Redeem Points" : actorsSelected.get(0).getName());
+              connectDialog.setSecondDescription("a connection request");
+              connectDialog.show();
+              return true;
+          }else {
+              Toast.makeText(getActivity(), "No Redeem Point selected to connect.", Toast.LENGTH_LONG).show();
+              return false;
+          }
+
         }
 
         try {

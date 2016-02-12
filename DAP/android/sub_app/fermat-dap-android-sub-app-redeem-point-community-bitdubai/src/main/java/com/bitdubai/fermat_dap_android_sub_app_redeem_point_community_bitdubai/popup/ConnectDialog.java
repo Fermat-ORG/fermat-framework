@@ -36,7 +36,7 @@ public class ConnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppS
     private CharSequence secondDescription;
     private CharSequence username;
     private CharSequence title;
-
+    private int actorsSelected;
     private final Actor   actor;
     private final RedeemPointIdentity identity            ;
 
@@ -52,6 +52,15 @@ public class ConnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppS
         this.actor = actor;
         this.identity             = identity            ;
     }
+
+    public ConnectDialog(Activity a,
+                        final AssetRedeemPointCommunitySubAppSession         actorUserSubAppSession,
+                        final SubAppResourcesProviderManager subAppResources ) {
+        super(a, actorUserSubAppSession, subAppResources);
+        this.actor  =   null;
+        this.identity = null;
+    }
+
 
 
     @SuppressLint("SetTextI18n")
