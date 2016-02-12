@@ -47,6 +47,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CryptoUnholdTransactionManager cryptoUnholdTransactionManager;
     private final StockTransactionCryptoMoneyRestockFactory stockTransactionCryptoMoneyRestockFactory;
+    private UUID pluginId;
 
     public StockTransactionsCryptoMoneyRestockMonitorAgent(ErrorManager errorManager,
                                                            StockTransactionCryptoMoneyRestockManager stockTransactionCryptoMoneyRestockManager,
@@ -60,6 +61,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.cryptoUnholdTransactionManager = cryptoUnholdTransactionManager;
         this.stockTransactionCryptoMoneyRestockFactory = new StockTransactionCryptoMoneyRestockFactory(pluginDatabaseSystem, pluginId);
+        this.pluginId                                  = pluginId;
     }
 
     @Override
@@ -138,12 +140,23 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
                                 cryptoMoneyTransaction.getActorPublicKey(),
                                 cryptoMoneyTransaction.getAmount(),
                                 cryptoMoneyTransaction.getMemo(),
-                                "pluginId");
+                                pluginId.toString());
                         cryptoUnholdTransactionManager.createCryptoUnholdTransaction(cryptoTransactionParametersWrapper);
 
-                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
+                        cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
                         stockTransactionCryptoMoneyRestockFactory.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
                         break;
+                    case IN_EJECUTION:
+                        if (CryptoTransactionStatus.CONFIRMED == cryptoUnholdTransactionManager.getCryptoUnholdTransactionStatus(cryptoMoneyTransaction.getTransactionId()))
+                        {
+                            cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
+                            stockTransactionCryptoMoneyRestockFactory.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
+                        }
+                        if (CryptoTransactionStatus.REJECTED == cryptoUnholdTransactionManager.getCryptoUnholdTransactionStatus(cryptoMoneyTransaction.getTransactionId()))
+                        {
+                            cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
+                            stockTransactionCryptoMoneyRestockFactory.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
+                        }
                     case IN_HOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido

@@ -70,6 +70,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -153,7 +154,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     /**
      * Represent the dataBase
      */
-    private Database dataBase;
+    private Database abstractCommunicationNetworkServiceDatabase;
 
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
@@ -179,6 +180,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         this.extraData             = extraData;
         this.starting              = new AtomicBoolean(false);
         this.register              = Boolean.FALSE;
+        this.listenersAdded        = new ArrayList<>();
     }
 
 
@@ -256,14 +258,14 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     }
 
                     /*
-                     * Reprocess messages
-                     */
-                    reprocessMessages();
-
-                    /*
                      * Call on start method
                      */
                     onStart();
+
+                    /*
+                     * Reprocess messages
+                     */
+                    reprocessMessages();
 
                     /*
                      * Its all ok, set the new status
@@ -489,7 +491,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
             /*
              * Open new database connection
              */
-            this.dataBase = this.getPluginDatabaseSystem().openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.abstractCommunicationNetworkServiceDatabase = this.getPluginDatabaseSystem().openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -512,7 +514,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 /*
                  * We create the new database
                  */
-                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.abstractCommunicationNetworkServiceDatabase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -572,6 +574,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     event.getPlatformComponentProfileRegistered().getNetworkServiceType() == getNetworkServiceProfile().getNetworkServiceType() &&
                         event.getPlatformComponentProfileRegistered().getIdentityPublicKey().equals(identity.getPublicKey())) {
 
+                System.out.println("###################\n"+"NETWORK SERVICE REGISTERED: "+ name+"\n###################");
+
                 this.register = Boolean.TRUE;
                 onNetworkServiceRegistered();
             }
@@ -597,6 +601,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 communicationNetworkServiceConnectionManager.closeAllConnection();
                 communicationNetworkServiceConnectionManager.stop();
             }
+
+            communicationSupervisorPendingMessagesAgent.removeAllConnectionWaitingForResponse();
 
             onClientConnectionClose();
 
@@ -666,6 +672,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
              * Tell the manager to handler the new connection established
              */
             communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(event.getRemoteComponent());
+            communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteComponent().getIdentityPublicKey());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -713,7 +720,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
         try {
 
-            communicationSupervisorPendingMessagesAgent.connectionFailure(event.getRemoteParticipant().getIdentityPublicKey());
+            communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteParticipant().getIdentityPublicKey());
             onFailureComponentConnectionRequest(event.getRemoteParticipant());
 
         } catch (Exception e) {
@@ -752,6 +759,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
 
+                communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(remotePublicKey);
+
                 reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
 
             }
@@ -776,6 +785,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
+
+                communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(remotePublicKey);
 
                 reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
 
@@ -850,7 +861,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @return Database
      */
     protected Database getDataBase() {
-        return dataBase;
+        return abstractCommunicationNetworkServiceDatabase;
     }
 
     /**
@@ -1064,4 +1075,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @return LogManager
      */
     public abstract LogManager getLogManager();
+
+    public ECCKeyPair getIdentity() {
+        return identity;
+    }
 }
