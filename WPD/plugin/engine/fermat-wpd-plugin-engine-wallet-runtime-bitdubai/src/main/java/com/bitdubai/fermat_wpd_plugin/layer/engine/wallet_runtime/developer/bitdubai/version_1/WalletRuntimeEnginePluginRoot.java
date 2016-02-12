@@ -1581,6 +1581,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         StatusBar runtimeStatusBar;
         Header runtimeHeader;
         Fragment runtimeFragment;
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
 
         final String publicKey = "asset_user";
 
@@ -1686,10 +1688,39 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        runtimeHeader = new Header();
+        runtimeHeader.setLabel("root");
+        runtimeActivity.setHeader(runtimeHeader);
+
+        runtimeTabStrip = new TabStrip();
+        runtimeTabStrip.setTabsColor("#4382ef");//808A96
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#8ab1f5");
+//        runtimeTabStrip.setBackgroundColor(8424086);
+//        runtimeTabStrip.setDividerColor(16777215);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Sent");
+        runtimeTab.setFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_SENT_TAB);
+        runtimeTabStrip.addTab(runtimeTab);
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL.getKey());
-        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL.getKey());
+        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_SENT_TAB.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_SENT_TAB.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_SENT_TAB.getKey());
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Recieved");
+        runtimeTab.setFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_RECIEVED_TAB);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_RECIEVED_TAB.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_RECIEVED_TAB.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_RECIEVED_TAB.getKey());
 
         // BEG Settings activity from DAP WALLET USER
         runtimeActivity = new Activity();
