@@ -30,6 +30,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private String memo;
     private OriginTransaction originTransaction;
     private BigDecimal priceReference;
+    private String originTransactionId;
+    private boolean seen;
 
     /**
      * Constructor for CryptoBrokerStockTransactionRecordImpl
@@ -48,6 +50,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
      * @param memo
      * @param originTransaction
      * @param priceReference
+     * @param originTransactionId
+     * @param seen
      */
     public CryptoBrokerStockTransactionRecordImpl(
             UUID transactionId,
@@ -63,7 +67,9 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             long timeStamp,
             String memo,
             OriginTransaction originTransaction,
-            BigDecimal priceReference
+            BigDecimal priceReference,
+            String originTransactionId,
+            boolean seen
     ) {
         this.transactionId = transactionId;
         this.walletKeyPair = walletKeyPair;
@@ -79,6 +85,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         this.memo = memo;
         this.priceReference = priceReference;
         this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
+        this.seen = seen;
     }
 
     /**
@@ -191,6 +199,22 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     @Override
     public OriginTransaction getOriginTransaction() {
         return this.originTransaction;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return this.originTransactionId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getSeen() {
+        return this.seen;
     }
 
 }
