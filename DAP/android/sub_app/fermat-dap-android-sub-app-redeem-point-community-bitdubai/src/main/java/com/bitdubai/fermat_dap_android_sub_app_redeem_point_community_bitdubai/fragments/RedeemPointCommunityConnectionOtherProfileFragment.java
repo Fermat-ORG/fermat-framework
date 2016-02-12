@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments;
+package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.fragments;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -21,44 +21,45 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup.AcceptDialog; 
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup.ConnectDialog; 
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup.DisconectDialog;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
 //import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.AssetUserWalletSubAppModuleManager;
 //import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetActiveLoginIdentityException;
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.Actor;
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.AcceptDialog;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.DisconectDialog;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 //import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 /**
- * Creado por Jinmy Bohorquez on 09/02/16.
+ * Creado por Jinmy Bohorquez on 11/02/16.
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class RedeemPointCommunityConnectionOtherProfileFragment extends AbstractFermatFragment implements View.OnClickListener {
 
-    public static final String USER_SELECTED = "user";
+    public static final String REDEEM_POINT_SELECTED = "redeemPoint";
     private String TAG = "ConnectionOtherProfileFragment";
     private Resources res;
     private View rootView;
-    private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    private AssetRedeemPointCommunitySubAppSession assetUserCommunitySubAppSession;
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     //private FermatTextView userEmail;
     private FermatTextView userCryptoAddres;
     private FermatTextView userCryptoCurrency;
-    private FermatTextView userBlockchainNetworkType;
-    private FermatTextView userRegistrationDate;
+    private FermatTextView redeemRegistrationDate;
+    //private FermatTextView userBlockchainNetworkType;
     //private IntraUserModuleManager manager;
-    private static AssetUserCommunitySubAppModuleManager manager;
+    private static RedeemPointCommunitySubAppModuleManager manager;
     private ErrorManager errorManager;
     private Actor actor;
     private Button connect;
@@ -77,8 +78,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
      *
      * @return InstalledFragment instance object
      */
-    public static UsersCommunityConnectionOtherProfileFragment newInstance() {
-        return new UsersCommunityConnectionOtherProfileFragment();
+    public static RedeemPointCommunityConnectionOtherProfileFragment newInstance() {
+        return new RedeemPointCommunityConnectionOtherProfileFragment();
     }
 
     @Override
@@ -86,8 +87,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
-        actor = (Actor) appSession.getData(USER_SELECTED);
+        assetUserCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+        actor = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
         manager = assetUserCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
@@ -97,18 +98,18 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dap_user_community_fragment_connections_other_profile, container, false);
+        rootView = inflater.inflate(R.layout.dap_redeem_point_community_fragment_connections_other_profile, container, false);
         toolbar = getToolbar();
         if (toolbar != null)
             toolbar.setTitle(actor.getName());
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
-        //userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
+       // userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
         //userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         userCryptoAddres = (FermatTextView) rootView.findViewById(R.id.cryptoAddress);
         userCryptoCurrency = (FermatTextView) rootView.findViewById(R.id.cryptoCurrency);
-        userBlockchainNetworkType = (FermatTextView) rootView.findViewById(R.id.blockchainNetworkType);
-        userRegistrationDate = (FermatTextView) rootView.findViewById(R.id.userRegistrationDate);
+        redeemRegistrationDate = (FermatTextView) rootView.findViewById(R.id.redeemRegistrationDate);
+        //userBlockchainNetworkType = (FermatTextView) rootView.findViewById(R.id.blockchainNetworkType);
         connectionRequestSend = (Button) rootView.findViewById(R.id.btn_connection_request_send);
         connectionRequestRejected = (Button) rootView.findViewById(R.id.btn_connection_request_reject);
         connect = (Button) rootView.findViewById(R.id.btn_conect);
@@ -157,21 +158,20 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             //userStatus.setTextColor(Color.parseColor("#292929"));
 
             if(actor.getCryptoAddress() != null){
-                userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
-                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
+                userCryptoAddres.setText("YES");
+                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getCode());
             } else{
                 userCryptoAddres.setText("No");
                 userCryptoCurrency.setText("None");
             }
 
-            if(actor.getBlockchainNetworkType() != null) {
-                userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().toString().replace("_"," "));
+            redeemRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(actor.getRegistrationDate()));
+
+            /*if(actor.getBlockchainNetworkType() != null) {
+                userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().getCode());
             }else {
                 userBlockchainNetworkType.setText("None");
-            }
-
-            userRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(actor.getRegistrationDate()));
-
+            }*/
             if (actor.getProfileImage() != null) {
                 Bitmap bitmap;
                 if (actor.getProfileImage().length > 0) {
@@ -202,7 +202,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
             ConnectDialog connectDialog;
             try {
-                connectDialog = new ConnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetUserIdentity());
+                connectDialog = new ConnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetRedeemPointIdentity());
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
                 connectDialog.setUsername(actor.getName());
@@ -214,16 +214,15 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                     }
                 });
                 connectDialog.show();
-            } catch (CantGetIdentityAssetUserException e) {
+            } catch (CantGetIdentityRedeemPointException e) {
                 e.printStackTrace();
-
             }
         }
         if (i == R.id.btn_disconect) {
             //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
             final DisconectDialog disconectDialog;
             try {
-                disconectDialog = new DisconectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetUserIdentity());
+                disconectDialog = new DisconectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetRedeemPointIdentity());
                 disconectDialog.setTitle("Disconnect");
                 disconectDialog.setDescription("Want to disconnect from");
                 disconectDialog.setUsername(actor.getName());
@@ -235,14 +234,14 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                     }
                 });
                 disconectDialog.show();
-            } catch (CantGetIdentityAssetUserException e) {
+            } catch (CantGetIdentityRedeemPointException e) {
                 e.printStackTrace();
             }
         }
         if (i == R.id.btn_connection_accept){
             try {
 
-                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(AssetUserCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetUserIdentity());
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(AssetRedeemPointCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetRedeemPointIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -251,7 +250,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 });
                 notificationAcceptDialog.show();
 
-            } catch (CantGetIdentityAssetUserException e) {
+            } catch (CantGetIdentityRedeemPointException e) {
                 e.printStackTrace();
             }
         }
