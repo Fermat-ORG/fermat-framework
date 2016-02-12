@@ -110,7 +110,7 @@ public class CompleteRegistrationComponentTyrusPacketProcessor extends FermatTyr
             try {
 
                 /*
-                 * Wait 1 second to avoid that the Network Services are Initialized completely
+                 * Wait 2 second to avoid that the Network Services are Initialized completely
                  */
                 TimeUnit.SECONDS.sleep(2);
             } catch (InterruptedException e) {
