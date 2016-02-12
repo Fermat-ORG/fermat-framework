@@ -1475,7 +1475,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Administrate Groups");
+        runtimeMenuItem.setLabel("Manage Groups");
         runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -1515,7 +1515,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
-        // Activity: Administrate Groups
+        // Activity: Manage Groups
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
         runtimeActivity.setActivityType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN.getCode());
@@ -1528,7 +1528,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Administrate Groups");
+        runtimeTitleBar.setLabel("Manage Groups");
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -1566,7 +1566,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Administrate Groups");
+        runtimeMenuItem.setLabel("Manage Groups");
         runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -1625,7 +1625,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Administrate Groups");
+        runtimeMenuItem.setLabel("Manage Groups");
         runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -1684,7 +1684,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Administrate Groups");
+        runtimeMenuItem.setLabel("Manage Groups");
         runtimeMenuItem.setLinkToActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN);
         runtimeMenuItem.setAppLinkPublicKey(communityUserPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
