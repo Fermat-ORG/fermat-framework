@@ -267,10 +267,9 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
     CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
     CHT_CHAT_OPEN_MESSAGE_LIST("CHTOML"),
-    //  CHT_CHAT_OPEN_CHAT_DETAIL("CHTOCHDF"),
-    CHT_CHAT_OPEN_CONTACT_DETAIL("CHTOCODF"),
-    CHT_CHAT_EDIT_CONTACT("CHTEDCOF"),
-    CHT_CHAT_OPEN_CONNECTIONLIST("CHTOCONNLTF"),
+    CHT_CHAT_OPEN_CONTACT_DETAIL("CHTOCOD"),
+    CHT_CHAT_EDIT_CONTACT("CHTEDCO"),
+    CHT_CHAT_OPEN_CONNECTIONLIST("CHTOCONNLT"),
 
 
     WPD_DESKTOP("WPD"),;
@@ -662,14 +661,12 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_CONTACTLIST;
             case "CHTOML":
                 return Activities.CHT_CHAT_OPEN_MESSAGE_LIST;
-           /* case "CHTOCHDF":
-                return CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT;
-           */ case "CHTOCODF":
+            case "CHTOCOD":
                 return Activities.CHT_CHAT_OPEN_CONTACT_DETAIL;
-           /* case "CHTEDCOF":
-                return CHT_CHAT_EDIT_CONTACT_FRAGMENT;
-            case "CHTOCONNLTF":
-                return CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT;*/
+            case "CHTEDCO":
+                return Activities.CHT_CHAT_EDIT_CONTACT;
+            case "CHTOCONNLT":
+                return Activities.CHT_CHAT_OPEN_CONNECTIONLIST;
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
