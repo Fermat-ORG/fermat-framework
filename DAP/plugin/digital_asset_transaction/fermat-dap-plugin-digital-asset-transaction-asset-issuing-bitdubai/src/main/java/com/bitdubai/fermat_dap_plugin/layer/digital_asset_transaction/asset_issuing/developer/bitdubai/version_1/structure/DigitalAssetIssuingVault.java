@@ -17,6 +17,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptio
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
@@ -114,7 +115,7 @@ public class DigitalAssetIssuingVault extends AbstractDigitalAssetVault {
     private void creditIssuerWallet(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, BlockchainNetworkType networkType) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantGetAssetIssuerActorsException {
         /////////////////////////////////////////////
         // TODO: Coloque esto porque es la wallet que tengo hardcore para la wallet y para hacer las pruebas
-        this.walletPublicKey = "walletPublicKeyTest";
+        this.walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
         /////////////////////////////////////////////
         System.out.println("ASSET ISSUING Before delivering - Wallet public key is:"+this.walletPublicKey);
         AssetIssuerWallet assetIssuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey, networkType);
