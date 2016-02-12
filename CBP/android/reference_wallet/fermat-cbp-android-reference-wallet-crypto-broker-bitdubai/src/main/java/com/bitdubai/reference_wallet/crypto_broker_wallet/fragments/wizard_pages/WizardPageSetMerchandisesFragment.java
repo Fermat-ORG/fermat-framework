@@ -162,7 +162,14 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
         cashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showWalletsDialog(Platforms.CASH_PLATFORM);
+                String cashWalletPublicKey = "cash_wallet";
+                if (walletManager.cashMoneyWalletExists(cashWalletPublicKey)==false){
+                    InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
+                    inputDialogCBP.DialogType(2);
+                    inputDialogCBP.show();
+                }else {
+                    showWalletsDialog(Platforms.CASH_PLATFORM);
+                }
             }
         });
 

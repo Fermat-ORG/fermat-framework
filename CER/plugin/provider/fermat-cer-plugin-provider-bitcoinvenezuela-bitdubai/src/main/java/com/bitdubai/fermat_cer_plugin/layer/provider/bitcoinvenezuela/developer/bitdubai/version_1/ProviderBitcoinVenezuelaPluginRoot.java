@@ -295,7 +295,7 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
         queryBitcoinVenezuelaExchangeRateHistoryAPI(exchangeRates, inverseExchangeRates, currencyFrom, currencyTo);
 
         //Find requiredExchangeRate
-        List<ExchangeRate> aux = (invertExchange ? exchangeRates : inverseExchangeRates);
+        List<ExchangeRate> aux = (invertExchange ? inverseExchangeRates : exchangeRates);
         for(ExchangeRate er : aux) {
             if (er.getTimestamp() >= stdStartTimestamp && er.getTimestamp() <= stdEndTimestamp)
                 requiredExchangeRates.add(er);
