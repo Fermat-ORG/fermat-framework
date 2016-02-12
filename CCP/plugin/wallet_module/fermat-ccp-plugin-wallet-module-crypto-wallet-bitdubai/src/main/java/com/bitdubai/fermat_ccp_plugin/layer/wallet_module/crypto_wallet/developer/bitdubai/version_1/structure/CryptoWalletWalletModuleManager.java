@@ -664,10 +664,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                                    VaultType vaultType,
                                                    String vaultIdentifier,
                                                    String walletPublicKey,
-                                                   ReferenceWallet walletType) throws CantRequestCryptoAddressException {
+                                                   ReferenceWallet walletType,
+                                                   BlockchainNetworkType blockchainNetworkType) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
-            deliveredCryptoAddress = requestCryptoAddressByReferenceWallet(walletType);
+            deliveredCryptoAddress = requestCryptoAddressByReferenceWallet(walletType,blockchainNetworkType);
             cryptoAddressBookManager.registerCryptoAddress(
                     deliveredCryptoAddress,
                     deliveredByActorPublicKey,
@@ -796,22 +797,22 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
             List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
 
-            //
-//                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
-//
-//                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-//
-//                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-//                        bitcoinWalletTransactionList1.add(bwt);
-//                    }
-//                }
+
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+
+                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
+                        bitcoinWalletTransactionList1.add(bwt);
+                    }
+                }
 
 
 
 
 
 
-            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList1) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
@@ -860,19 +861,19 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         max,
                         offset
                 );
-//
-//                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
-//
-//                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-//
-//                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-//                        bitcoinWalletTransactionList1.add(bwt);
-//                    }
-//                }
 
-
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
 
                 for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+
+                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
+                        bitcoinWalletTransactionList1.add(bwt);
+                    }
+                }
+
+
+
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList1) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }
             }
@@ -1264,10 +1265,10 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         }
     }
 
-    private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet) throws CantRequestOrRegisterCryptoAddressException {
+    private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet,BlockchainNetworkType blockchainNetworkType) throws CantRequestOrRegisterCryptoAddressException {
         switch (referenceWallet){
             case BASIC_WALLET_BITCOIN_WALLET:
-                return cryptoVaultManager.getAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                return cryptoVaultManager.getAddress(blockchainNetworkType);
             default:
                 throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");
         }

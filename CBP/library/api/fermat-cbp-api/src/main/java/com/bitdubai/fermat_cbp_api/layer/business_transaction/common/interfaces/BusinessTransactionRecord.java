@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 
 import java.math.BigDecimal;
 
@@ -45,7 +45,7 @@ public class BusinessTransactionRecord {
 
     private long paymentAmount;
 
-    private CurrencyType paymentType;
+    private MoneyType paymentType;
 
     //Getters
 
@@ -89,7 +89,7 @@ public class BusinessTransactionRecord {
         return paymentAmount;
     }
 
-    public CurrencyType getPaymentType() {
+    public MoneyType getPaymentType() {
         return paymentType;
     }
 
@@ -156,7 +156,7 @@ public class BusinessTransactionRecord {
         this.paymentAmount = paymentAmount;
     }
 
-    public void setPaymentType(CurrencyType paymentType) {
+    public void setPaymentType(MoneyType paymentType) {
         this.paymentType = paymentType;
     }
 

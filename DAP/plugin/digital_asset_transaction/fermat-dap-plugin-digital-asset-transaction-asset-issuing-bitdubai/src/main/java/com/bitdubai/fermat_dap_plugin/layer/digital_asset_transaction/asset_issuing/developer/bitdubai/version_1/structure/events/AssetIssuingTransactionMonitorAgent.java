@@ -89,7 +89,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
     public void start() throws CantStartAgentException {
         try {
             MonitorAgent monitorAgent = new MonitorAgent();
-            this.agentThread = new Thread(monitorAgent);
+            this.agentThread = new Thread(monitorAgent,  "Asset Issuing MonitorAgent");
             this.agentThread.start();
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantStartAgentException(e, null, null);

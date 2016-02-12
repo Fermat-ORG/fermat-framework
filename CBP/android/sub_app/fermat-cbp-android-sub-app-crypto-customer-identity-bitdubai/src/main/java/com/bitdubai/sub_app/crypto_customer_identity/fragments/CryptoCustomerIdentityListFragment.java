@@ -49,7 +49,11 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     private static final String TAG = "CustomerIdentityList";
     private CryptoCustomerIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArrayList<CryptoCustomerIdentityInformation> identityInformationList;
+
+    // Data
+    private List<CryptoCustomerIdentityInformation> identityInformationList;
+
+    // UI
     private View noMatchView;
     private CryptoCustomerIdentityListFilter filter;
     private PresentationDialog presentationDialog;
@@ -66,7 +70,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
         try {
             moduleManager = ((CryptoCustomerIdentitySubAppSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
-            identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            identityInformationList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             if (errorManager != null) {
                 errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);

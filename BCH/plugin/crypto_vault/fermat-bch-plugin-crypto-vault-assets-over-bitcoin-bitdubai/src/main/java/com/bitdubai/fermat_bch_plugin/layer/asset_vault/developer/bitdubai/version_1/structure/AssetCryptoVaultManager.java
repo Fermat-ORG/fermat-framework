@@ -375,11 +375,19 @@ public class AssetCryptoVaultManager  {
          * if the network parameters calculated is different that the Default network I will double check
          */
         if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
-            //return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-            // implement a new way to double check we are getting the right network parameter
-            return networkParameters;
+            try {
+                // If only one network is enabled, then I will return the default
+                if (getDao().getActiveNetworkTypes().size() == 1)
+                    return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                else {
+                    // If I have TestNet and RegTest registered, I may return any of them since they share the same prefix.
+                    return networkParameters;
+                }
+            } catch (CantExecuteDatabaseOperationException e) {
+                return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            }
         } else
-        return networkParameters;
+            return networkParameters;
     }
 
     /**
@@ -748,7 +756,7 @@ public class AssetCryptoVaultManager  {
      * @return the Transaction Hash of the new transaction
      * @throws CantCreateBitcoinTransactionException
      */
-    public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException {
+    public synchronized String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException {
         /**
          * I get the network for this address.
          */

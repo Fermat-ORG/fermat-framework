@@ -27,7 +27,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
@@ -276,5 +279,30 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     @Override
     public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
         return bitcoinCurrencyCryptoVaultManager.getMnemonicCode();
+    }
+
+
+    /**
+     * Signs the owned inputs of the passed Draft transaction
+     * @param draftTransaction the transaction to sign
+     * @return the signed Transaction
+     * @throws CantSignTransactionException
+     */
+    @Override
+    public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
+        return null;
+    }
+
+    /**
+     * Adds more inputs and outputs to a draft transaction
+     * @param draftTransaction the incomplete draft transaction
+     * @param valueToSend the amount of bitcoins in satoshis to add to the transaction
+     * @param addressTo the address to that will receive the bitcoins.
+     * @return the draft transaction with the added values.
+     * @throws CantCreateDraftTransactionException
+     */
+    @Override
+    public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
+        return null;
     }
 }

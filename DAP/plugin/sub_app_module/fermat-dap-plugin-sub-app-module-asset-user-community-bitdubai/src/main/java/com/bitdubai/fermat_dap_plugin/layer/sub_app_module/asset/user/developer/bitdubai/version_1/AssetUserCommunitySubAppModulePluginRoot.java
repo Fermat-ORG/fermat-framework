@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -110,15 +111,12 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             assetUserActorRecords = new ArrayList<>();
 
             try {
-                for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered()) {
-                    blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+                BlockchainNetworkType blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+                for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered(blockchainNetworkType)) {
 
                     AssetUserActorRecord assetUserActorRecord = (AssetUserActorRecord) actorAssetUser;
-                    if (assetUserActorRecord.getCryptoAddress() == null) {
-                        assetUserActorRecords.add(assetUserActorRecord);
-                    } else if (Objects.equals(assetUserActorRecord.getBlockchainNetworkType().getCode(), blockchainNetworkType.getCode())) {
-                        assetUserActorRecords.add(assetUserActorRecord);
-                    }
+                    assetUserActorRecords.add(assetUserActorRecord);
+
                 }
 
             } catch (CantGetAssetUserActorsException e) {
@@ -130,20 +128,47 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException {
+    public List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupId) throws CantGetAssetUserActorsException {
+        List<AssetUserActorRecord> allUserRegistered = this.getAllActorAssetUserRegistered();
+        List<ActorAssetUser> allUserRegisteredInGroup = this.getListActorAssetUserByGroups(groupId);
+        List<AssetUserActorRecord> allUserRegisteredFiltered = new ArrayList<>();
+        for (AssetUserActorRecord record : allUserRegistered)
+        {
+            if (record.getCryptoAddress() != null && (!userInGroup(record.getActorPublicKey(), allUserRegisteredInGroup)))
+            {
+                allUserRegisteredFiltered.add(record);
+            }
+        }
+
+        return allUserRegisteredFiltered;
+    }
+
+    private boolean userInGroup(String actorPublicKey, List<ActorAssetUser> usersInGroup) {
+        for (ActorAssetUser record : usersInGroup) {
+            if (record.getActorPublicKey().equals(actorPublicKey))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException {
         blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
-        ActorAssetIssuer actorAssetIssuer;
-
-        //TODO Actor Asset Issuer de BD Local
         try {
-            actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
-
-            if (actorAssetIssuer != null)
+            ActorAssetIssuer actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
+            if (actorAssetIssuer != null) {
                 actorAssetUserManager.connectToActorAssetUser(actorAssetIssuer, actorAssetUsers, blockchainNetworkType);
-            else
-                throw new CantConnectToActorAssetUserException(CantConnectToActorAssetUserException.DEFAULT_MESSAGE, null, "There was an error connecting to users.", null);
-
-        } catch (CantGetAssetIssuerActorsException e) {
+            } else {
+                ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser();
+                if (actorAssetUser != null) {
+                    actorAssetUserManager.connectToActorAssetUser(actorAssetUser, actorAssetUsers, blockchainNetworkType);
+                } else {
+                    throw new CantConnectToActorAssetUserException(CantConnectToActorAssetUserException.DEFAULT_MESSAGE, null, "There was an error connecting to users.", null);
+                }
+            }
+        } catch (CantGetAssetIssuerActorsException | CantGetAssetUserActorsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConnectToActorAssetUserException(CantConnectToActorAssetUserException.DEFAULT_MESSAGE, e, "There was an error connecting to users.", null);
         }
@@ -210,9 +235,9 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException {
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUserActorsException {
         try {
-            return actorAssetUserManager.getListActorAssetUserByGroups(groupName);
+            return actorAssetUserManager.getListActorAssetUserByGroups(groupId);
         } catch (CantGetAssetUserActorsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;

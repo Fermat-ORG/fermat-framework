@@ -17,9 +17,30 @@ import java.util.List;
  */
 public interface CryptoCustomerIdentityManager extends FermatManager {
 
+    /**
+     * The method <code>createCryptoCustomerIdentity</code> is used to Create a Customer Identity
+     *
+     * @param alias the public key of the crypto Broker to publish
+     * @param profileImage the image of the crypto customer identity
+     *
+     * @throws CantCreateCryptoCustomerIdentityException if something goes wrong.
+     */
+    CryptoCustomerIdentity createCryptoCustomerIdentity(final String alias, final byte[] profileImage) throws CantCreateCryptoCustomerIdentityException;
+
+    /**
+     * The method <code>listAllCryptoCustomerFromCurrentDeviceUser</code> is used to list all the Customer Identity
+     *
+     * @throws CantListCryptoCustomerIdentityException if something goes wrong.
+     */
     List<CryptoCustomerIdentity> listAllCryptoCustomerFromCurrentDeviceUser() throws CantListCryptoCustomerIdentityException;
 
-    CryptoCustomerIdentity createCryptoCustomerIdentity(final String alias, final byte[] profileImage) throws CantCreateCryptoCustomerIdentityException;
+    /**
+     * The method <code>listAllCryptoCustomerFromCurrentDeviceUser</code> is used to list all the Customer Identity
+     *
+     * @throws CantListCryptoCustomerIdentityException if something goes wrong.
+     */
+    CryptoCustomerIdentity getCryptoCustomerIdentity(String publickey) throws CantListCryptoCustomerIdentityException;
+
     /**
      *
      * @param alias

@@ -37,7 +37,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_customer_community.common.CryptoCustomerCommunityInformationImpl;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
@@ -279,7 +278,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
         List<CryptoCustomerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoCustomerCommunitySearch cryptoCustomerCommunitySearch = moduleManager.searchNewCryptoCustomer(moduleManager.getSelectedActorIdentity());
+            CryptoCustomerCommunitySearch cryptoCustomerCommunitySearch = moduleManager.getCryptoCustomerSearch(moduleManager.getSelectedActorIdentity());
             List<CryptoCustomerCommunityInformation> result = cryptoCustomerCommunitySearch.getResult();
 
 
@@ -354,10 +353,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
 
     @Override
     public void onItemClickListener(CryptoCustomerCommunityInformation data, int position) {
-
-        appSession.setData(ACTOR_SELECTED, data);
-        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
+        //appSession.setData(ACTOR_SELECTED, data);
+        //changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

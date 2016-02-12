@@ -26,17 +26,19 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CryptoMoneyDeStockRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -496,7 +498,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             BrokerSubmitMerchandiseConfirmed brokerSubmitMerchandiseConfirmed = (BrokerSubmitMerchandiseConfirmed) fermatEvent;
             brokerSubmitMerchandiseConfirmed.setSource(EventSource.BROKER_SUBMIT_ONLINE_MERCHANDISE);
             brokerSubmitMerchandiseConfirmed.setContractHash(contractHash);
-            brokerSubmitMerchandiseConfirmed.setMerchandiseType(CurrencyType.CRYPTO_MONEY);
+            brokerSubmitMerchandiseConfirmed.setMerchandiseType(MoneyType.CRYPTO);
             eventManager.raiseEvent(brokerSubmitMerchandiseConfirmed);
         }
 
@@ -567,6 +569,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             CustomerBrokerContractPurchase customerBrokerContractPurchase=
                                     customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(
                                             contractHash);
+                            //If the contract is null, I cannot handle with this situation
+                            ObjectChecker.checkArgument(customerBrokerContractPurchase);
                             brokerSubmitOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                                     customerBrokerContractPurchase);
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
@@ -640,6 +644,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "Cannot update the contract purchase status");
+            } catch (ObjectNotSetException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "The customerBrokerContractPurchase is null");
             }
 
         }
