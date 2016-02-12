@@ -10,8 +10,10 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.RadioButton;
 
-import com.customviews.fermat.customviews.R;
-import com.customviews.fermat.customviews.views.custom.util.TypefaceEnumType;
+
+import com.customviews.fermat.currency_selector.R;
+import com.customviews.fermat.currency_selector.custom.util.TypefaceEnumType;
+
 import java.util.HashMap;
 
 /**

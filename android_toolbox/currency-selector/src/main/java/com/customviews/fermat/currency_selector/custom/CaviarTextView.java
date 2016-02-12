@@ -7,10 +7,11 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
-import java.util.HashMap;
 
-import com.customviews.fermat.customviews.R;
-import com.customviews.fermat.customviews.views.custom.util.TypefaceEnumType;
+import com.customviews.fermat.currency_selector.R;
+import com.customviews.fermat.currency_selector.custom.util.TypefaceEnumType;
+
+import java.util.HashMap;
 
 /**
  * Custom TextView view with Roboto Typeface

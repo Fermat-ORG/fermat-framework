@@ -17,10 +17,12 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 
-import com.customviews.fermat.customviews.views.custom.CaviarEditText;
-import com.customviews.fermat.customviews.views.custom.CaviarRadioButton;
-import com.customviews.fermat.customviews.views.custom.CaviarTextView;
-import com.customviews.fermat.customviews.views.custom.util.TypefaceEnumType;
+
+import com.customviews.fermat.currency_selector.R;
+import com.customviews.fermat.currency_selector.custom.CaviarEditText;
+import com.customviews.fermat.currency_selector.custom.CaviarRadioButton;
+import com.customviews.fermat.currency_selector.custom.CaviarTextView;
+import com.customviews.fermat.currency_selector.custom.util.TypefaceEnumType;
 
 import java.util.ArrayList;
 
@@ -374,7 +376,7 @@ public class CurrencySelector
             setText(code);
             setPadding(10, 0, 0, 0);
             setTypeFace(TypefaceEnumType.CAVIAR_DREAMS_BOLD);
-            setOnClick(new OnClickListener() { @Override public void onClick(View view) { handleClick(view); }});
+            setOnClick(new View.OnClickListener() { @Override public void onClick(View view) { handleClick(view); }});
         }
 
         /**
@@ -435,7 +437,7 @@ public class CurrencySelector
          *  Set onClick method for view component
          *  @param listener     View.OnClickListener object
          */
-        private void setOnClick(OnClickListener listener) {
+        private void setOnClick(View.OnClickListener listener) {
             radioButton.setOnClickListener(listener);
         }
 
