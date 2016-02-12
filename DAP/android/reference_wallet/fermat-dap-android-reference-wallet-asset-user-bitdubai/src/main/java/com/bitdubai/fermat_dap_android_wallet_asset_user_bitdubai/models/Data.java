@@ -14,6 +14,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.sql.Timestamp;
@@ -26,7 +27,7 @@ import java.util.List;
  */
 public class Data {
     public static List<DigitalAsset> getAllDigitalAssets(AssetUserWalletSubAppModuleManager moduleManager) throws Exception {
-        List<AssetUserWalletList> assets = moduleManager.getAssetUserWalletBalances("walletPublicKeyTest");
+        List<AssetUserWalletList> assets = moduleManager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
 
@@ -50,7 +51,7 @@ public class Data {
     }
 
     public static DigitalAsset getDigitalAsset(AssetUserWalletSubAppModuleManager moduleManager, String digitalAssetPublicKey) throws CantLoadWalletException {
-        List<AssetUserWalletList> balances = moduleManager.getAssetUserWalletBalances("walletPublicKeyTest");
+        List<AssetUserWalletList> balances = moduleManager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         DigitalAsset digitalAsset;
         String publicKey;
         for (AssetUserWalletList balance : balances) {
