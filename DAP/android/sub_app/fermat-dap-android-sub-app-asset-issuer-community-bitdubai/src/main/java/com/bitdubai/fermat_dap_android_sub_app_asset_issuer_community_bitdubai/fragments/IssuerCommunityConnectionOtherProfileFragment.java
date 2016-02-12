@@ -32,7 +32,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_communi
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 
-
 /**
  * Creado por Jinmy Bohorquez on 09/02/16.
  */
@@ -47,6 +46,9 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     private ImageView issuerProfileAvatar;
     private FermatTextView issuerName;
     private FermatTextView userEmail;
+    private FermatTextView issuerExtendedKey;
+    private FermatTextView issuerRegistrationDate;
+
 
     private static AssetIssuerCommunitySubAppModuleManager manager;
     private ErrorManager errorManager;
@@ -55,7 +57,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     private Button disconnect;
     private int MAX = 1;
     private int OFFSET = 0;
-    private FermatTextView issuerStatus;
+    //private FermatTextView issuerStatus;
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
     private Button accept;
@@ -87,14 +89,17 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_connections_other_profile, container, false);
+        rootView = inflater.inflate(R.layout.dap_issuer_community_fragment_connections_other_profile, container, false);
         toolbar = getToolbar();
         if (toolbar != null)
             toolbar.setTitle(actorIssuer.getRecord().getName());
         issuerProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
-        issuerStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
+        //issuerStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         issuerName = (FermatTextView) rootView.findViewById(R.id.username);
-        userEmail = (FermatTextView) rootView.findViewById(R.id.email);
+        issuerExtendedKey = (FermatTextView) rootView.findViewById(R.id.userExtendedKey);
+        issuerRegistrationDate = (FermatTextView) rootView.findViewById(R.id.userRegistrationDate);
+
+        //userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         connectionRequestSend = (Button) rootView.findViewById(R.id.btn_connection_request_send);
         connectionRequestRejected = (Button) rootView.findViewById(R.id.btn_connection_request_reject);
         connect = (Button) rootView.findViewById(R.id.btn_conect);
@@ -134,13 +139,13 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                     connectionSend();
                     break;
             }*/
-            connectRequest();
+        connectRequest();
 
         try {
             issuerName.setText(actorIssuer.getRecord().getName());
             //issuerStatus.setText(actorIssuer.getPhrase());
-            issuerStatus.setText(actorIssuer.getRecord().getDescription());
-            issuerStatus.setTextColor(Color.parseColor("#292929"));
+            //issuerStatus.setText(actorIssuer.getRecord().getDescription());
+            //issuerStatus.setTextColor(Color.parseColor("#292929"));
             if (actorIssuer.getRecord().getProfileImage() != null) {
                 Bitmap bitmap;
                 if (actorIssuer.getRecord().getProfileImage().length > 0) {
@@ -156,6 +161,16 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                 bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
                 issuerProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             }
+
+            if (actorIssuer.getRecord().getExtendedPublicKey() != null){
+                issuerExtendedKey.setText(actorIssuer.getRecord().getExtendedPublicKey());
+            }else {
+                issuerExtendedKey.setText("None");
+            }
+            //TODO Format this to a legible date please
+            //issuerRegistrationDate.setText(actorIssuer.getRecord().getRegistrationDate());
+
+
         } catch (Exception ex) {
             ex.printStackTrace();
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -200,7 +215,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         connectRequest();
-                       // updateButton();
+                        // updateButton();
                     }
                 });
                 disconectDialog.show();
@@ -229,7 +244,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
             Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
-           // CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
+            // CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
             Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
         }
     }
