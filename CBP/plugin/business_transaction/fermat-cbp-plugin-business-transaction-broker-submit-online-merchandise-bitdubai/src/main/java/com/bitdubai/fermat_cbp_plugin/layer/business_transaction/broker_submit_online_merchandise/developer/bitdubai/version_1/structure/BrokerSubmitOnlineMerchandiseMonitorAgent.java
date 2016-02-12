@@ -363,7 +363,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED
+                            ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED,
+                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE
                     );
                     //Updating the business transaction record
                     pendingToSubmitNotificationRecord.setContractTransactionStatus(
@@ -384,7 +385,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT
+                            ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT,
+                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE
                     );
                     //Updating the business transaction record
                     pendingToSubmitConfirmationRecord.setContractTransactionStatus(

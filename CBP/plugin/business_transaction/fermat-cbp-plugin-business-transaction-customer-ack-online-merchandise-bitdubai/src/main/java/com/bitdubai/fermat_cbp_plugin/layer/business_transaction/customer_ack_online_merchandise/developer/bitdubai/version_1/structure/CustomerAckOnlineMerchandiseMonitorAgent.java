@@ -286,7 +286,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.ONLINE_MERCHANDISE_ACK
+                            ContractTransactionStatus.ONLINE_MERCHANDISE_ACK,
+                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE
                     );
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -306,7 +307,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE
+                            ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE,
+                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE
                     );
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,

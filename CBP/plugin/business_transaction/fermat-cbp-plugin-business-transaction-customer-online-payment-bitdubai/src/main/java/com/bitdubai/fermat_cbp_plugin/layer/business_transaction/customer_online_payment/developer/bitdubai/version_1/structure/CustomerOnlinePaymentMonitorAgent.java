@@ -356,7 +356,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED
+                            ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED,
+                            Plugins.CUSTOMER_ONLINE_PAYMENT
                     );
                     customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -376,7 +377,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT
+                            ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT,
+                            Plugins.CUSTOMER_ONLINE_PAYMENT
                     );
                     customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,

@@ -270,7 +270,8 @@ public class CustomerOfflinePaymentMonitorAgent implements
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED
+                            ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED,
+                            Plugins.CUSTOMER_OFFLINE_PAYMENT
                     );
                     customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -290,7 +291,8 @@ public class CustomerOfflinePaymentMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT
+                            ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT,
+                            Plugins.CUSTOMER_OFFLINE_PAYMENT
                     );
                     customerOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
