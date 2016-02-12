@@ -424,7 +424,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
         try {
 
             ProtocolState protocolState = ProtocolState.PENDING_ACTION    ;
-            RequestType type          = RequestType  .RECEIVED          ;
+            RequestType type            = RequestType  .RECEIVED          ;
             RequestAction action        = RequestAction.REQUEST           ;
 
             cryptoAddressesNetworkServiceDao.createAddressExchangeRequest(
@@ -476,6 +476,23 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
             cryptoAddressesNetworkServiceDao.changeActionState(acceptMessage.getRequestId(), RequestAction.RECEIVED);
 
+            final CryptoAddressRequest cryptoAddressRequest = cryptoAddressesNetworkServiceDao.getPendingRequest(acceptMessage.getRequestId());
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
+                                getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
+                                buildJsonReceivedMessage(cryptoAddressRequest));
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedException(e);
+                    }
+                }
+            });
+
+
 
 
         } catch (CantAcceptAddressExchangeRequestException | PendingRequestNotFoundException e){
@@ -504,6 +521,23 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
                     denyMessage.getRequestId(),
                     protocolState
             );
+
+            final CryptoAddressRequest cryptoAddressRequest = cryptoAddressesNetworkServiceDao.getPendingRequest(denyMessage.getRequestId());
+
+//            executorService.submit(new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        sendNewMessage(
+//                                getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
+//                                getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
+//                                buildJsonReceivedMessage(cryptoAddressRequest));
+//                    } catch (CantSendMessageException e) {
+//                        reportUnexpectedException(e);
+//                    }
+//                }
+//            });
+//
 
 
             cryptoAddressesNetworkServiceDao.changeActionState(denyMessage.getRequestId(), RequestAction.RECEIVED);
@@ -740,7 +774,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
      * - Type          : SENT.
      */
     @Override
-    public void sendAddressExchangeRequest(String walletPublicKey, CryptoCurrency cryptoCurrency, Actors identityTypeRequesting, Actors identityTypeResponding, String identityPublicKeyRequesting, String identityPublicKeyResponding, CryptoAddressDealers cryptoAddressDealer, BlockchainNetworkType blockchainNetworkType) throws CantSendAddressExchangeRequestException {
+    public void sendAddressExchangeRequest(String walletPublicKey, CryptoCurrency cryptoCurrency, Actors identityTypeRequesting, Actors identityTypeResponding, final String identityPublicKeyRequesting, final String identityPublicKeyResponding, CryptoAddressDealers cryptoAddressDealer, BlockchainNetworkType blockchainNetworkType) throws CantSendAddressExchangeRequestException {
 
         try {
 
@@ -771,6 +805,24 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
                     false
             );
 
+            final CryptoAddressRequest cryptoAddressRequest  = cryptoAddressesNetworkServiceDao.getPendingRequest(newId);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(identityPublicKeyRequesting),
+                                getProfileDestinationToRequestConnection(identityPublicKeyResponding),
+                                buildJsonRequestMessage(cryptoAddressRequest));
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedException(e);
+                    }
+                }
+            });
+
+
+
             System.out.println("********* Crypto Addresses: Successful Address Exchange Request creation. ");
 
         } catch (CantCreateRequestException e){
@@ -799,6 +851,24 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
             ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
             cryptoAddressesNetworkServiceDao.acceptAddressExchangeRequest(requestId, cryptoAddressReceived, protocolState);
+
+            final CryptoAddressRequest cryptoAddressRequest = cryptoAddressesNetworkServiceDao.getPendingRequest(requestId);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
+                                getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
+                                buildJsonAcceptMessage(cryptoAddressRequest));
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedException(e);
+                    }
+                }
+            });
+
+
 
             System.out.println("************ Crypto Addresses -> i already execute the acceptance.");
 
@@ -929,6 +999,24 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
             ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
             cryptoAddressesNetworkServiceDao.denyAddressExchangeRequest(requestId, protocolState);
+
+            final CryptoAddressRequest cryptoAddressRequest = cryptoAddressesNetworkServiceDao.getPendingRequest(requestId);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
+                                getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
+                                buildJsonDenyMessage(cryptoAddressRequest));
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedException(e);
+                    }
+                }
+            });
+
+
 
         } catch(PendingRequestNotFoundException |
                 CantDenyAddressExchangeRequestException e){
