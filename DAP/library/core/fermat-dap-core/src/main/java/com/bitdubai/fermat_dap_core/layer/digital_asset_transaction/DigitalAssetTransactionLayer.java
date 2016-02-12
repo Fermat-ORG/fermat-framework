@@ -5,9 +5,11 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_appropriation.AssetAppropriationPluginSubsystem;
+import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_buyer.AssetBuyerPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_distribution.AssetDistributionPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_issuing.AssetIssuingPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_reception.AssetReceptionPluginSubsystem;
+import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_seller.AssetSellerPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.asset_transfer.AssetTransferPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.issuer_appropriation.IssuerAppropriationPluginSubsystem;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.issuer_redemption.IssuerRedemptionPluginSubsystem;
@@ -34,13 +36,15 @@ public class DigitalAssetTransactionLayer extends AbstractLayer {
             registerPlugin(new AssetDistributionPluginSubsystem());
             registerPlugin(new AssetIssuingPluginSubsystem());
             registerPlugin(new AssetReceptionPluginSubsystem());
+            registerPlugin(new AssetSellerPluginSubsystem());
+            registerPlugin(new AssetBuyerPluginSubsystem());
             registerPlugin(new AssetTransferPluginSubsystem());
             registerPlugin(new IssuerAppropriationPluginSubsystem());
             registerPlugin(new IssuerRedemptionPluginSubsystem());
             registerPlugin(new RedeemPointRedemptionPluginSubsystem());
             registerPlugin(new UserRedemptionPluginSubsystem());
 
-        } catch(CantRegisterPluginException e) {
+        } catch (CantRegisterPluginException e) {
 
             throw new CantStartLayerException(
                     e,

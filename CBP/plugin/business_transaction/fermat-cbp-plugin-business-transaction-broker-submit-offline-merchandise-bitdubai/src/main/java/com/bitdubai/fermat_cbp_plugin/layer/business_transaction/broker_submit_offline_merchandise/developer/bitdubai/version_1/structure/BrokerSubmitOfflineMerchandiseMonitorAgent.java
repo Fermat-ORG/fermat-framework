@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
@@ -38,7 +38,6 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.excep
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
@@ -278,20 +277,20 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                  */
                 List<BusinessTransactionRecord> pendingToDeStockTransactionList=
                         brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingDeStockTransactionList();
-                CurrencyType currencyType;
+                MoneyType moneyType;
                 for(BusinessTransactionRecord pendingToDeStockTransaction : pendingToDeStockTransactionList){
-                    currencyType=pendingToDeStockTransaction.getPaymentType();
-                    switch (currencyType){
-                        case BANK_MONEY:
+                    moneyType =pendingToDeStockTransaction.getPaymentType();
+                    switch (moneyType){
+                        case BANK:
                             executeBankDeStock(pendingToDeStockTransaction);
                             break;
-                        case CRYPTO_MONEY:
+                        case CRYPTO:
                             throw new CantSubmitMerchandiseException(
-                                    "The currency type is CRYPTO_MONEY, can't send crypto money from this plugin");
-                        case CASH_DELIVERY_MONEY:
+                                    "The currency type is CRYPTO, can't send crypto money from this plugin");
+                        case CASH_DELIVERY:
                             executeCashDeStock(pendingToDeStockTransaction);
                             break;
-                        case CASH_ON_HAND_MONEY:
+                        case CASH_ON_HAND:
                             executeCashDeStock(pendingToDeStockTransaction);
                             break;
                     }
@@ -413,12 +412,12 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                     pendingToDeStockTransaction);
         }
 
-        private void raisePaymentConfirmationEvent(String contractHash, CurrencyType currencyType){
+        private void raisePaymentConfirmationEvent(String contractHash, MoneyType moneyType){
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.BROKER_SUBMIT_MERCHANDISE_CONFIRMED);
             BrokerSubmitMerchandiseConfirmed brokerSubmitMerchandiseConfirmed = (BrokerSubmitMerchandiseConfirmed) fermatEvent;
             brokerSubmitMerchandiseConfirmed.setSource(EventSource.BROKER_SUBMIT_OFFLINE_MERCHANDISE);
             brokerSubmitMerchandiseConfirmed.setContractHash(contractHash);
-            brokerSubmitMerchandiseConfirmed.setMerchandiseType(currencyType);
+            brokerSubmitMerchandiseConfirmed.setMerchandiseType(moneyType);
             eventManager.raiseEvent(brokerSubmitMerchandiseConfirmed);
         }
 
@@ -452,8 +451,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                     contractHash,
                                     ContractStatus.MERCHANDISE_SUBMIT);
-                            //TODO: I'm going to set BANK_MONEY, I need to look a better way to set this
-                            raisePaymentConfirmationEvent(contractHash, CurrencyType.BANK_MONEY);
+                            //TODO: I'm going to set BANK, I need to look a better way to set this
+                            raisePaymentConfirmationEvent(contractHash, MoneyType.BANK);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }

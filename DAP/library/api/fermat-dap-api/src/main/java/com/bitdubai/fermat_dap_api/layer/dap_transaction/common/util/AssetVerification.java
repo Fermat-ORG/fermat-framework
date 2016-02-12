@@ -83,7 +83,7 @@ public final class AssetVerification {
     }
 
     private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws DAPException, CantGetCryptoTransactionException {
-        return bitcoinNetworkManager.getGenesisCryptoTransaction(null, digitalAssetMetadata.getTransactionChain());
+        return bitcoinNetworkManager.getGenesisCryptoTransaction(digitalAssetMetadata.getNetworkType(), digitalAssetMetadata.getTransactionChain());
     }
 
     public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
