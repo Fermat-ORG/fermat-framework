@@ -288,6 +288,24 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
             for(CryptoAddressRequest record : cryptoAddressRequestList) {
 
                 cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(), ProtocolState.PROCESSING_SEND);
+
+                final CryptoAddressRequest cryptoAddressRequest  = record;
+
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
+                                    getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
+                                    buildJsonRequestMessage(cryptoAddressRequest));
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedException(e);
+                        }
+                    }
+                });
+
+
             }
         }
         catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
@@ -697,6 +715,23 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
             for(CryptoAddressRequest record : cryptoAddressRequestList) {
 
                 cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.PROCESSING_SEND);
+
+                final CryptoAddressRequest cryptoAddressRequest  = record;
+
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
+                                    getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
+                                    buildJsonRequestMessage(cryptoAddressRequest));
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedException(e);
+                        }
+                    }
+                });
+
             }
         }
         catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
@@ -717,6 +752,24 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
             for(CryptoAddressRequest record : cryptoAddressRequestList) {
 
                 cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.PROCESSING_SEND);
+
+
+                final CryptoAddressRequest cryptoAddressRequest  = record;
+
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
+                                    getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
+                                    buildJsonRequestMessage(cryptoAddressRequest));
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedException(e);
+                        }
+                    }
+                });
+
             }
         }
         catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
