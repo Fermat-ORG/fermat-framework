@@ -36,10 +36,12 @@ We are building Fermat to get into that future in the fastest way possible. And 
 
 This white paper does not describe a theoretical system that might work one day to get us to that future. It describes a system that already works and it is in alpha testing right now. It also describes the organization of several networks of people spanning different disciplines and countries collaborating to produce the most ambitious project in the industry.
 
+<br>
 ## Part I : Overview
 
 In this section you will get an overview of the Fermat System to describe the general idea. After this, you will be ready to re-explore the concepts in more detail in the next section.
 
+<br>
 ### Introduction
 
 Since the last technical barrier to issue digital money has already been overcome with the invention of bitcoin [1] - the double spend problem -, there is little doubt that governments of the world are on the way of digitalizing cash. As soon as the US or EU can achieve this, the rest of the world will follow suit. So, this part of our envisioned future is already on the way to happen and there is no need for us to intervene in any way except to handle in Fermat the fact that money is going to be digital and paper money is going to disappear. This means that our mission can be condensed into designing a system that:
@@ -83,6 +85,7 @@ It must be able to run in major operating systems.
 
 It must be open to anyone in the community to participate developing the system or using it as end users or business operators.
 
+<br>
 ### System Properties
 
 We designed Fermat to hold all these eight properties at the same time, what originated certain designing constraints we are going to examine now.
@@ -277,7 +280,7 @@ In this way we introduced our concept of layers: a logical place where component
 Throughout the first 18 months of the project, the following layers emerged:
 
 
-**Table: Layers**
+**Table: Fermat Framwork Layers.**
 
 | Super Layer | Layer Name | Language | 
 |:-----------:|:----------:|:---------|
@@ -354,6 +357,8 @@ So vertical division (in contrast to the horizontal division in layers) emerged 
 * Some platforms reuses components and their services from other platforms.
 
 After analyzing several use cases we found out that it was possible to create a stack of platforms, where platforms up the stack reuses components from platforms down the stack. And at the same time components where organized in layers inside each platform. For the first phase of the Fermat System Master Plan, we identified the following low level platforms and implemented some of them:
+
+**Table: Fermat Platforms.**
 
 | Code Name | Platform Name |
 |:---------:|:--------------|
