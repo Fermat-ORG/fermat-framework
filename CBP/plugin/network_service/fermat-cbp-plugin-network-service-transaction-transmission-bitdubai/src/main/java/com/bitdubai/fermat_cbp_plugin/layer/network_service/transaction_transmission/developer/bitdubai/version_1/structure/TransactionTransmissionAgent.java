@@ -484,13 +484,13 @@ public class TransactionTransmissionAgent {
                                 System.out.print(businessTransactionMetadata.getSenderId()+" Transaction Transmission CONFIRM_CONTRACT");
 
                                 //this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
-                                launchNotification();
+                                launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction());
                                 this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
                                 break;
 
                             case CONFIRM_RESPONSE:
                                 System.out.print(businessTransactionMetadata.getSenderId()+" Transaction Transmission CONFIRM_RESPONSE");
-                                launchNotification();
+                                launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction());
                                 this.poolConnectionsWaitingForResponse.remove(businessTransactionMetadata.getReceiverId());
                                 break;
                             // si el mensaje viene con un estado de SENT es porque es la primera vez que llega, por lo que tengo que guardarlo en la bd y responder
@@ -504,7 +504,7 @@ public class TransactionTransmissionAgent {
                                         "RECEIVING BUSINESS TRANSACTION -----------------------\n" +
                                         "-----------------------\n STATE: " + businessTransactionMetadata.getState());
 
-                                launchNotification();
+                                launchNotification(businessTransactionMetadata.getRemoteBusinessTransaction());
 
                                 TransactionTransmissionResponseMessage cryptoTransmissionResponseMessage = new TransactionTransmissionResponseMessage(
                                         businessTransactionMetadata.getTransactionId(),
@@ -572,10 +572,11 @@ public class TransactionTransmissionAgent {
         return running;
     }
 
-    private void launchNotification(){
+    private void launchNotification(Plugins remoteBusinessTransaction){
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE);
         IncomingNewContractStatusUpdate incomingNewContractStatusUpdate = (IncomingNewContractStatusUpdate) fermatEvent;
         incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
+        incomingNewContractStatusUpdate.setRemoteBusinessTransaction(remoteBusinessTransaction);
         eventManager.raiseEvent(incomingNewContractStatusUpdate);
     }
 
