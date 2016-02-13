@@ -40,7 +40,6 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
@@ -123,7 +122,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                     exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
@@ -283,7 +282,8 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.ONLINE_PAYMENT_ACK
+                            ContractTransactionStatus.ONLINE_PAYMENT_ACK,
+                            Plugins.BROKER_ACK_ONLINE_PAYMENT
                     );
                     brokerAckOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -303,7 +303,8 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT
+                            ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT,
+                            Plugins.BROKER_ACK_ONLINE_PAYMENT
                     );
                     brokerAckOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
