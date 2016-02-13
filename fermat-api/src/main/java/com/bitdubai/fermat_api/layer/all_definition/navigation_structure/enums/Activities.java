@@ -149,6 +149,7 @@ public enum Activities implements FermatEnum {
 
     DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN("DAPARPCAM"),
     DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE("DARPCCOP"),
+    DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTIONS_LIST("DARPCCL"),
 
 
     // Crypto Broker Wallet
@@ -707,6 +708,8 @@ public enum Activities implements FermatEnum {
                 return DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE;
             case "DAUCCL":
                 return DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST;
+            case "DARPCCL":
+                return DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTIONS_LIST;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
