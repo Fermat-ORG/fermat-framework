@@ -25,6 +25,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.excepti
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
@@ -39,11 +40,15 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.crypto.TransactionSignature;
+import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
@@ -999,6 +1004,96 @@ public class AssetCryptoVaultManager  {
         }
 
         return draftTransaction.getBitcoinTransaction().getHashAsString();
+    }
+
+    /**
+     * Signs the owned inputs of the passed Draft transaction
+     * @param draftTransaction the transaction to sign
+     * @return the signed Transaction
+     * @throws CantSignTransactionException
+     */
+    public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
+        Transaction transaction = draftTransaction.getBitcoinTransaction();
+        final NetworkParameters NETWORK_PARAMETERS  = transaction.getParams();
+
+        if (transaction == null)
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "Bitcoin Transaction can't be null", null);
+
+
+        /**
+         * Create the bitcoinj wallet from the keys of all accounts
+         */
+        final Wallet wallet;
+        try {
+            wallet = Wallet.fromSeed(NETWORK_PARAMETERS, getAssetVaultSeed());
+        } catch (InvalidSeedException e) {
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
+        }
+
+        try {
+            wallet.importKeys(getKeysForAllAccounts(NETWORK_PARAMETERS));
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+        }
+
+        /**
+         * Once I get the wallet, I will get the output of the transaction that is mine.
+         * Should be the first one.
+         */
+        Script script = null;
+        for (TransactionOutput output : transaction.getOutputs()){
+            if (output.isMine(wallet)){
+                script = output.getScriptPubKey();
+            }
+        }
+        /**
+         * If I couldn't get an output that was ours, I can't go on.
+         */
+        if (script == null)
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "The draft Transaction doesn't have an output that is ours.", null);
+
+        /**
+         * I get the signature hash for my output.
+         */
+        Sha256Hash sigHash = transaction.hashForSignature(0, script, Transaction.SigHash.ALL, false);
+
+        /**
+         * Get the private Key I will use to sign the hash
+         */
+        ECKey privateKey = null;
+        try {
+            privateKey = this.getNextAvailableECKey(new HierarchyAccount(0, "Asset Vault Account", HierarchyAccountType.MASTER_ACCOUNT));
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Can't get private key to sign", "hierarchy error");
+        }
+
+        /**
+         * I create the signature
+         */
+        ECKey.ECDSASignature signature = privateKey.sign(sigHash);
+        TransactionSignature transactionSignature = new TransactionSignature(signature, Transaction.SigHash.ALL, false);
+        Script inputScript = ScriptBuilder.createInputScript(transactionSignature);
+
+        /**
+         * Add the signature to the input that is ours. Should be the first one.
+         */
+        TransactionInput inputToSign = null;
+        for (TransactionInput input : transaction.getInputs()){
+            if (input.getConnectedOutput().isMine(wallet)){
+                inputToSign = input;
+            }
+        }
+
+        if (inputToSign == null)
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "No inputs that we own were found in the draft transaction.", "wrong draft transaction");
+
+        inputToSign.setScriptSig(inputScript);
+
+        /**
+         * return a signed draft transaction
+         */
+        return draftTransaction;
+
     }
 
 }

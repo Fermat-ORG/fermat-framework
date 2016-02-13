@@ -341,7 +341,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      */
     @Override
     public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
-        return null;
+        return assetCryptoVaultManager.signTransaction(draftTransaction);
     }
 
 
