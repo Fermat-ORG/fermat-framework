@@ -47,8 +47,10 @@ public class RedeemPointCommunityAdapter extends FermatAdapter<Actor, RedeemPoin
             holder.name.setText(String.format("%s", data.getName()));
             if (data.getCryptoAddress() != null) {
                 holder.connectionState.setVisibility(View.VISIBLE);
+                holder.connect.setVisibility(View.GONE);
             } else {
                 holder.connectionState.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.VISIBLE);
             }
 
             if (data.getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {

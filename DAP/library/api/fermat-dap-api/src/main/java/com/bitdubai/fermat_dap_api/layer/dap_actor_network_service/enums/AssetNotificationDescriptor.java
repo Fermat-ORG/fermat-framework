@@ -28,12 +28,12 @@ public enum AssetNotificationDescriptor implements FermatEnum {
 
     public static AssetNotificationDescriptor getByCode(String code) throws InvalidParameterException {
         switch (code){
-            case "ASK": return ASKFORCONNECTION;
-            case "CAN": return CANCEL;
-            case "ACP": return ACCEPTED;
-            case "DIS": return DISCONNECTED;
-            case "REC": return RECEIVED;
-            case "DEN": return DENIED;
+            case "ASK": return AssetNotificationDescriptor.ASKFORCONNECTION;
+            case "CAN": return AssetNotificationDescriptor.CANCEL;
+            case "ACP": return AssetNotificationDescriptor.ACCEPTED;
+            case "DIS": return AssetNotificationDescriptor.DISCONNECTED;
+            case "REC": return AssetNotificationDescriptor.RECEIVED;
+            case "DEN": return AssetNotificationDescriptor.DENIED;
             default:
                 throw new InvalidParameterException(
                         InvalidParameterException.DEFAULT_MESSAGE,

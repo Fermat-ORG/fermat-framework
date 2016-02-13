@@ -264,7 +264,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException {
         try {
-            return actorAssetUserManager.getListActorAssetUserByGroups(groupName);
+            return actorAssetUserManager.getListActorAssetUserByGroups(groupName,selectedNetwork);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException(e);
