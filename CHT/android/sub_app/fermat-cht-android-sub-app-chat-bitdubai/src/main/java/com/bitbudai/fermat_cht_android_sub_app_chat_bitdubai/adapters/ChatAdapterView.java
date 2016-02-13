@@ -153,6 +153,8 @@ public class ChatAdapterView extends LinearLayout {
         ChatMessage msg;
         int messsize;
         try {
+            //chatHistory.clear();
+            setChatHistory(null);
             Chat chat=chatSession.getSelectedChat();
             if(chat!=null)
                 chatid=chat.getChatId();
@@ -202,6 +204,7 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
         TextView meLabel = (TextView) findViewById(R.id.meLbl);
         TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
@@ -304,33 +307,26 @@ public class ChatAdapterView extends LinearLayout {
                 }
             }
         });
-    }
 
-//    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//        @Override
-//        public void onRefresh() {
-//            new Handler().postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
-//                    try {
-//                        //System.out.println("Threar UI corriendo");
-//                        //TODO: fix this
-//                        findmessage();
-//                        adaptador.refreshEvents(historialmensaje);
-//                    } catch (Exception e) {
-//
-//                        //TODO: fix this
-//                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//
-//                    }
-//                    mSwipeRefreshLayout.setRefreshing(false);
-//                }
-//            }, 2500);
-//        }
-//    });
-//    return layout;
-//}
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
+                        try {
+                            findmessage();
+                        } catch (Exception e) {
+                            //TODO: fix this
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
+            }
+        });
+    }
 
     private void loadHistory() {
 
