@@ -18,10 +18,12 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.Can
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
@@ -42,6 +44,7 @@ import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
 
@@ -897,6 +900,86 @@ public class AssetCryptoVaultManager  {
             allAccountsKeys.addAll(derivedKeys);
         }
         return allAccountsKeys;
+    }
+
+    /**
+     * Creates a non complete, unsigned draft bitcoin transaction given the passed input and address to.
+     * @param inputTransaction the Input transaction hash used to take funds from.
+     * @param addressTo the address to whom we are giving the funds.
+     * @return a DraftTransaction class
+     * @throws CantCreateDraftTransactionException
+     */
+    public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
+        if (inputTransaction.isEmpty() || addressTo == null)
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "InputTransaction or AddressTo can't be null", null);
+
+
+        /**
+         * I get the network for this address.
+         */
+        BlockchainNetworkType networkType = null;
+        try {
+            networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
+        } catch (CantValidateActiveNetworkException e) {
+            throw new CantCreateDraftTransactionException (CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "Network is not active for this address.", "wrong address");
+        }
+
+        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
+
+        /**
+         * I will get the input transaction  I will use to form the input from the CryptoNetwork
+         */
+        Transaction genesisTransaction = bitcoinNetworkManager.getBitcoinTransaction(networkType, inputTransaction);
+
+        /**
+         * If I couldn't get it I can't go on.
+         */
+        if (genesisTransaction  == null){
+            StringBuilder output = new StringBuilder("The specified transaction hash ");
+            output.append(inputTransaction);
+            output.append(System.lineSeparator());
+            output.append("doesn't exists in the CryptoNetwork.");
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
+
+        /**
+         * I get the bitcoin address
+         */
+        Address address = null;
+        try {
+            address = getBitcoinAddress(networkParameters,addressTo);
+        } catch (AddressFormatException e) {
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+        }
+
+        /**
+         * Calculates the amount to be sent by removing the fee from the available balance.
+         * I'm ignoring the GenesisAmount passed because this might not be the right value.
+         */
+        Coin fee = Coin.valueOf(10000);
+        final Coin coinToSend = genesisTransaction.getOutput(0).getValue().subtract(fee);
+
+
+        /**
+         * if the value to send is negative or zero, I will inform of the error
+         */
+        if (coinToSend.isNegative() || coinToSend.isZero()){
+            StringBuilder output = new StringBuilder("The resulting value to be send is insufficient.");
+            output.append(System.lineSeparator());
+            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + genesisTransaction.getOutput(0).getValue().getValue() + " - " + fee.getValue() + ")");
+
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
+
+        /**
+         * I will create the Bitcoin transaction
+         */
+        Transaction transaction = new Transaction(networkParameters);
+        transaction.addInput(genesisTransaction.getOutput(0));
+        transaction.addOutput(coinToSend, address);
+
+        DraftTransaction draftTransaction = new DraftTransaction(transaction);
+        return draftTransaction;
     }
 
 }

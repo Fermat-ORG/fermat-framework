@@ -330,7 +330,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      */
     @Override
     public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
-        return null;
+        return assetCryptoVaultManager.createDraftTransaction(inputTransaction, addressTo);
     }
 
     /**
