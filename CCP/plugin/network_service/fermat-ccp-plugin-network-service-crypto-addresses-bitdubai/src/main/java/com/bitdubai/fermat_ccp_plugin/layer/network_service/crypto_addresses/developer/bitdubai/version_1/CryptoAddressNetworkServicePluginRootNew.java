@@ -350,8 +350,8 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
 
                     //close connection - end message
-                    communicationNetworkServiceConnectionManager.closeConnection(acceptMessage.getActorDestination());
-                    cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(acceptMessage.getActorDestination());
+                  //  communicationNetworkServiceConnectionManager.closeConnection(acceptMessage.getActorDestination());
+                   // cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(acceptMessage.getActorDestination());
 
                     break;
 
@@ -360,8 +360,8 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
                     receiveDenial(denyMessage);
 
                     //close connection - end message
-                    communicationNetworkServiceConnectionManager.closeConnection(denyMessage.getActorDestination());
-                    cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(denyMessage.getActorDestination());
+                  //  communicationNetworkServiceConnectionManager.closeConnection(denyMessage.getActorDestination());
+                  //  cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(denyMessage.getActorDestination());
                     break;
 
                 case REQUEST:
@@ -386,48 +386,60 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
             }
 
 
-            try {
-
-                //TODO:aca dispara este evento que va a tratar de actualizar el address del contacto cuando en realidad solo tiene que generarla
-                //hay que separar los evento para que el wallet contact escuche otro evento de actualizar el address
-                List<CryptoAddressRequest> list = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.PENDING_ACTION);
-                for (CryptoAddressRequest cryptoAddressRequest : list) {
-                    if (!cryptoAddressRequest.isReadMark()) {
-                        if (cryptoAddressRequest.getMessageType().equals(AddressesConstants.INCOMING_MESSAGE)) {
-                            System.out.println("CRYPTO ADDRESS NEWS - INCOMING MESSAGE");
-                            FermatEvent eventToRaisenew = getEventManager().getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
-                            eventToRaisenew.setSource(this.eventSource);
-                            getEventManager().raiseEvent(eventToRaisenew);
-                        }
-
-                    }
-                }
-
-                List<CryptoAddressRequest> list1 = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.WAITING_RESPONSE);
-                for (CryptoAddressRequest cryptoAddressRequest : list1) {
-                    if (!cryptoAddressRequest.isReadMark()) {
-                        if (cryptoAddressRequest.getMessageType().equals(AddressesConstants.OUTGOING_MESSAGE)) {
-                            FermatEvent eventToRaisenew = getEventManager().getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
-                            eventToRaisenew.setSource(this.eventSource);
-                            getEventManager().raiseEvent(eventToRaisenew);
-                            System.out.println("CRYPTO ADDRESS NEWS PROTOCOL DONE");
-
-                        }
-                    }
-
-                }
-
-
-            } catch (CantListPendingCryptoAddressRequestsException e) {
-                reportUnexpectedException(e);
-            } catch (Exception e) {
-                reportUnexpectedException(e);
-            }
+            raiseEvents();
 
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+
+
+    public void raiseEvents(){
+
+
+
+        try {
+
+            //TODO:aca dispara este evento que va a tratar de actualizar el address del contacto cuando en realidad solo tiene que generarla
+            //hay que separar los evento para que el wallet contact escuche otro evento de actualizar el address
+            List<CryptoAddressRequest> list = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.PENDING_ACTION);
+            for (CryptoAddressRequest cryptoAddressRequest : list) {
+                if (!cryptoAddressRequest.isReadMark()) {
+                    if (cryptoAddressRequest.getMessageType().equals(AddressesConstants.INCOMING_MESSAGE)) {
+                        System.out.println("CRYPTO ADDRESS NEWS - INCOMING MESSAGE");
+                        FermatEvent eventToRaisenew = getEventManager().getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
+                        eventToRaisenew.setSource(this.eventSource);
+                        getEventManager().raiseEvent(eventToRaisenew);
+                    }
+
+                }
+            }
+
+            List<CryptoAddressRequest> list1 = cryptoAddressesNetworkServiceDao.listPendingRequestsByProtocolState(ProtocolState.WAITING_RESPONSE);
+            for (CryptoAddressRequest cryptoAddressRequest : list1) {
+                if (!cryptoAddressRequest.isReadMark()) {
+                    if (cryptoAddressRequest.getMessageType().equals(AddressesConstants.OUTGOING_MESSAGE)) {
+                        FermatEvent eventToRaisenew = getEventManager().getNewEvent(EventType.CRYPTO_ADDRESSES_NEWS);
+                        eventToRaisenew.setSource(this.eventSource);
+                        getEventManager().raiseEvent(eventToRaisenew);
+                        System.out.println("CRYPTO ADDRESS NEWS PROTOCOL DONE");
+
+                    }
+                }
+
+            }
+
+
+        } catch (CantListPendingCryptoAddressRequestsException e) {
+            reportUnexpectedException(e);
+        } catch (Exception e) {
+            reportUnexpectedException(e);
+        }
+
+
 
     }
 
@@ -493,6 +505,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
             );
 
             cryptoAddressesNetworkServiceDao.changeActionState(acceptMessage.getRequestId(), RequestAction.RECEIVED);
+            cryptoAddressesNetworkServiceDao.changeProtocolState(acceptMessage.getRequestId(),ProtocolState.WAITING_RESPONSE);
 
             final CryptoAddressRequest cryptoAddressRequest = cryptoAddressesNetworkServiceDao.getPendingRequest(acceptMessage.getRequestId());
 
@@ -577,9 +590,9 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
             cryptoAddressesNetworkServiceDao.changeActionState(receivedMessage.getRequestId(), RequestAction.NONE);
             cryptoAddressesNetworkServiceDao.changeProtocolState(receivedMessage.getRequestId(),ProtocolState.DONE);
 
-            communicationNetworkServiceConnectionManager.closeConnection(receivedMessage.getActorDestination());
-            //remove from the waiting pool
-            cryptoAddressesExecutorAgent.connectionFailure(receivedMessage.getActorDestination());
+//            communicationNetworkServiceConnectionManager.closeConnection(receivedMessage.getIdentitySender());
+//            //remove from the waiting pool
+//            cryptoAddressesExecutorAgent.connectionFailure(receivedMessage.getIdentitySender());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -619,6 +632,8 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
                     break;
                 case RECEIVED:
                     ReceivedMessage receivedMessage  =  gson.fromJson(jsonMessage, ReceivedMessage.class);
+                    cryptoAddressesNetworkServiceDao.changeProtocolState(receivedMessage.getRequestId(), ProtocolState.DONE);
+                    cryptoAddressesNetworkServiceDao.changeActionState(receivedMessage.getRequestId(),RequestAction.NONE);
                     //receivedMessage(receivedMessage);
                     break;
                 default:
