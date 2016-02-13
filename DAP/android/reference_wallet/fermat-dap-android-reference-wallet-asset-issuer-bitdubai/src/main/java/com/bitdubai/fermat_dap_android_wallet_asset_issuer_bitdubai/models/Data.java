@@ -135,7 +135,7 @@ public class Data {
         List<ActorAssetUserGroup> actorAssetUserGroups = moduleManager.getAssetUserGroupsList();
         for (ActorAssetUserGroup actorAssetUserGroup:actorAssetUserGroups) {
             Group newGroup = new Group(actorAssetUserGroup.getGroupName(), actorAssetUserGroup);
-            List<ActorAssetUser> actorAssetUsers = moduleManager.getListActorAssetUserByGroups(newGroup.getName());
+            List<ActorAssetUser> actorAssetUsers = moduleManager.getListActorAssetUserByGroups(actorAssetUserGroup.getGroupId());
             List<User> users = new ArrayList<>();
             for (ActorAssetUser actorAssetUser : actorAssetUsers) {
                 users.add(new User(actorAssetUser.getName(), actorAssetUser));
