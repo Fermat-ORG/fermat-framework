@@ -205,7 +205,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                     bitcoinCryptoNetworkMonitor = null;
 
                     /**
-                     * once the agent is stoped, I will restart it with the new wallet.
+                     * once the agent is stopped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
                     bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem);

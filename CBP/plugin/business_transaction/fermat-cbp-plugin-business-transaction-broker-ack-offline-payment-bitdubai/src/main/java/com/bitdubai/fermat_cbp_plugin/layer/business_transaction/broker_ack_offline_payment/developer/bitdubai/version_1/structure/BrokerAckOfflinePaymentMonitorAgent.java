@@ -119,7 +119,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
@@ -272,7 +272,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.OFFLINE_PAYMENT_ACK
+                            ContractTransactionStatus.OFFLINE_PAYMENT_ACK,
+                            Plugins.BROKER_ACK_OFFLINE_PAYMENT
                     );
                     brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -292,7 +293,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_OFFLINE_ACK_PAYMENT
+                            ContractTransactionStatus.CONFIRM_OFFLINE_ACK_PAYMENT,
+                            Plugins.BROKER_ACK_OFFLINE_PAYMENT
                     );
                     brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,

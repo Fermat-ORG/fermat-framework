@@ -38,21 +38,24 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
             @Override
             public String getText() {
-                return "opcion_1";
+                return "Enabled Notifications";
             }
         });
         list.add(new PreferenceSettingsOpenDialogText() {
             @Override
             public String getText() {
-                return "open dialog";
+                return "Select Network";
             }
 
             @Override
             public List<PreferenceSettingsDialogItem> getOptionList() {
-//                List<PreferenceSettingsDialogItem> strings = new ArrayList<String>();
-//                strings.add("opcion1");
-//                strings.add("opcion2");
+             //  List<PreferenceSettingsDialogItem> strings = new ArrayList<PreferenceSettingsDialogItem>();
+               //strings.add(new PreferenceSettingsDialogItem("MainNet") );
+               // strings.add("TestNet");
+               // strings.add("RegTest");
+
                 return null;
+
             }
         });
         return list;

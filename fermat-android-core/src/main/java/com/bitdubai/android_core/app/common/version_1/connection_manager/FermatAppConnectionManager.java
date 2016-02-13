@@ -36,7 +36,7 @@ public class FermatAppConnectionManager {
 
 
 
-    public static AppConnections switchStatement(Activity activity,String publicKey){
+    public static AppConnections switchStatement(Activity activity,String publicKey,FermatSession fermatSession){
         AppConnections fermatAppConnection = null;
 
         switch (publicKey){
@@ -49,7 +49,7 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new CryptoWalletUserFermatAppConnection(activity);
                 break;
             case "public_key_intra_user_commmunity":
-                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
+                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity,fermatSession);
                 break;
 
             //DAP WALLETS
@@ -140,14 +140,14 @@ public class FermatAppConnectionManager {
             String publicKey,
             Activity activity,
             FermatSession fermatSession) {
-        AppConnections fermatAppConnection = switchStatement(activity,publicKey);
+        AppConnections fermatAppConnection = switchStatement(activity,publicKey,fermatSession);
         fermatAppConnection.setFullyLoadedSession(fermatSession);
         return fermatAppConnection;
     }
 
 
     public static AppConnections getFermatAppConnection(String appPublicKey, Activity activity) {
-        AppConnections fermatAppConnection = switchStatement(activity,appPublicKey);
+        AppConnections fermatAppConnection = switchStatement(activity,appPublicKey, null);
         return fermatAppConnection;
     }
 }

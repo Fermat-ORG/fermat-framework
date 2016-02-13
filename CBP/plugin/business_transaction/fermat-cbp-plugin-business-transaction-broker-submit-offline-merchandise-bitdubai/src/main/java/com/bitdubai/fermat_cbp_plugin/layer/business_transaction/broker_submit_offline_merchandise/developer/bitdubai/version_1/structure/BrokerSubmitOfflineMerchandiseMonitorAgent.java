@@ -130,7 +130,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                     exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
@@ -309,7 +309,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED
+                            ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED,
+                            Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE
                     );
                     //Updating the business transaction record
                     pendingToSubmitNotificationRecord.setContractTransactionStatus(
@@ -330,7 +331,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT
+                            ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT,
+                            Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE
                     );
                     //Updating the business transaction record
                     pendingToSubmitConfirmationRecord.setContractTransactionStatus(

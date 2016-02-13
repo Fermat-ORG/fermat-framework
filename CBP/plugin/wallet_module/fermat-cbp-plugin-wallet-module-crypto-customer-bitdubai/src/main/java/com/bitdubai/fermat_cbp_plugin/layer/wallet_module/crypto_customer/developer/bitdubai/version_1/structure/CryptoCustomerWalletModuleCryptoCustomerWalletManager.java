@@ -517,8 +517,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     @Override
     public boolean isWalletConfigured(String customerWalletPublicKey) throws CantGetSettingsException, SettingsNotFoundException {
         CryptoCustomerWalletPreferenceSettings walletSettings = settingsManager.loadAndGetSettings(customerWalletPublicKey);
-        if(!walletSettings.getSelectedBitcoinWallet().equals(null) && !walletSettings.getSelectedProviders().isEmpty()){return true;}
-        else{return false;}
+        return walletSettings.getSelectedBitcoinWallet() != null && !walletSettings.getSelectedProviders().isEmpty();
     }
 
     //Modified by Yordin Alayn 22.01.16

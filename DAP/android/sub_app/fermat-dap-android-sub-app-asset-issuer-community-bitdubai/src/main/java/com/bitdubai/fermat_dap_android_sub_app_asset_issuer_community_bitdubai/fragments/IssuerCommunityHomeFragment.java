@@ -15,15 +15,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
@@ -49,8 +52,12 @@ import static android.widget.Toast.makeText;
 /**
  * Created by francisco on 21/10/15.
  */
-public class IssuerCommunityHomeFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
+public class IssuerCommunityHomeFragment extends AbstractFermatFragment implements
+        SwipeRefreshLayout.OnRefreshListener,
+        AdapterView.OnItemClickListener,
+        FermatListItemListeners<ActorIssuer> {
 
+    public static final String ISSUER_SELECTED = "issuer";
     private static AssetIssuerCommunitySubAppModuleManager manager;
     private List<ActorIssuer> actors;
     ErrorManager errorManager;
@@ -106,6 +113,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             }
         });
         recyclerView.setAdapter(adapter);
+        adapter.setFermatListEventListener(this);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -427,5 +435,22 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             }
         }
         return dataSet;
+    }
+
+    @Override
+    public void onItemClickListener(ActorIssuer data, int position) {
+        appSession.setData(ISSUER_SELECTED, data);
+        changeActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
+
+    }
+
+    @Override
+    public void onLongItemClickListener(ActorIssuer data, int position) {
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 }

@@ -158,7 +158,7 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(networkServiceRoot.getIdentity(),this,communicationsVPNConnection);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(this, communicationsVPNConnection);
 
                 /*
                  * Register the observer to the observable agent

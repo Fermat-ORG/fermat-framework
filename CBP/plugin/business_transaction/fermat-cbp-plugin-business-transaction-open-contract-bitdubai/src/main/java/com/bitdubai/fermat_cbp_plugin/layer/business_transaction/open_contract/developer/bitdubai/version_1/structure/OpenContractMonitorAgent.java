@@ -111,7 +111,7 @@ public class OpenContractMonitorAgent implements
             errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
@@ -268,7 +268,8 @@ public class OpenContractMonitorAgent implements
                                         purchaseContract.getPublicKeyCustomer(),
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
-                                        purchaseContract.getNegotiationId());
+                                        purchaseContract.getNegotiationId(),
+                                        Plugins.OPEN_CONTRACT);
                                 break;
                             case SALE:
                                 saleContract=(ContractSaleRecord)XMLParser.parseXML(
@@ -279,7 +280,8 @@ public class OpenContractMonitorAgent implements
                                         saleContract.getPublicKeyBroker(),
                                         saleContract.getPublicKeyCustomer(),
                                         hashToSubmit,
-                                        saleContract.getNegotiationId());
+                                        saleContract.getNegotiationId(),
+                                        Plugins.OPEN_CONTRACT);
                                 break;
                         }
                         //Update the ContractTransactionStatus
@@ -310,7 +312,8 @@ public class OpenContractMonitorAgent implements
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
                                         transactionId.toString(),
-                                        ContractTransactionStatus.CONTRACT_CONFIRMED);
+                                        ContractTransactionStatus.CONTRACT_CONFIRMED,
+                                        Plugins.OPEN_CONTRACT);
                                 break;
                             case SALE:
                                 saleContract=(ContractSaleRecord)XMLParser.parseXML(
@@ -321,7 +324,8 @@ public class OpenContractMonitorAgent implements
                                         purchaseContract.getPublicKeyCustomer(),
                                         hashToSubmit,
                                         transactionId.toString(),
-                                        ContractTransactionStatus.CONTRACT_CONFIRMED);
+                                        ContractTransactionStatus.CONTRACT_CONFIRMED,
+                                        Plugins.OPEN_CONTRACT);
                                 break;
                         }
                         //Update the ContractTransactionStatus
