@@ -5,6 +5,30 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#4382ef">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TRANSACTIONS"
+            android:textSize="22sp"
+            android:fontFamily="normal"
+            android:textStyle="bold"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="7dp"
+            android:textColor="@color/color_white"/>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:background="@color/color_white"
+            android:layout_alignParentBottom="true"/>
+
+    </RelativeLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
@@ -18,7 +42,7 @@
             android:visibility="visible">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/dap_wallet_asset_issuer_user_asset_detail_transaction_recieved_recycler_view"
+                android:id="@+id/dap_wallet_asset_issuer_user_asset_detail_transaction_sent_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="16dp"
@@ -30,7 +54,7 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout
-            android:id="@+id/dap_wallet_asset_issuer_no_transactions_recieved"
+            android:id="@+id/dap_wallet_asset_issuer_no_transactions_sent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
