@@ -17,12 +17,16 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents.CommunicationSupervisorPendingMessagesAgent</code> is
@@ -37,49 +41,24 @@ import java.util.concurrent.Future;
 public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
 
     /**
-     * Represent the sleep time between process (15000 milliseconds)
-     */
-    private static final long SLEEP_TIME  = 15000;
-
-    /**
-     * Represent the OUT_TASK_INDEX (0)
-     */
-    private static final int OUT_TASK_INDEX = 0;
-
-    /**
-     * Represent the IN_TASK_INDEX (1)
-     */
-    private static final int IN_TASK_INDEX = 1;
-
-    /**
      * Represent the networkServiceRoot
      */
     private AbstractNetworkServiceBase networkServiceRoot;
 
     /**
-     * Represent the threadPoolExecutor
+     * Represent the scheduledThreadPool
      */
-    private final ExecutorService threadPoolExecutor;
+    private ScheduledExecutorService scheduledThreadPool;
 
     /**
-     * Represent the pendingOutgoingMessageProcessorTask
+     * Represent the scheduledFutures
      */
-    private Runnable pendingOutgoingMessageProcessorTask;
-
-    /**
-     * Represent the pendingIncomingMessageProcessorTask
-     */
-    private Runnable pendingIncomingMessageProcessorTask;
+    private List<ScheduledFuture> scheduledFutures;
 
     /**
      * Represent the poolConnectionsWaitingForResponse
      */
     private Map<String, PlatformComponentProfile> poolConnectionsWaitingForResponse;
-
-    /**
-     * Represent the futures task array
-     */
-    private Future<?>[] futures;
 
     /**
      * Constructor with parameter
@@ -89,28 +68,10 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
     public CommunicationSupervisorPendingMessagesAgent(AbstractNetworkServiceBase networkServiceRoot){
         super();
         this.networkServiceRoot                = networkServiceRoot;
-        this.futures                           = new Future[2];
-        this.threadPoolExecutor                = Executors.newFixedThreadPool(2);
         this.status                            = AgentStatus.CREATED;
         this.poolConnectionsWaitingForResponse = new HashMap<>();
-
-        //Create a thread to process the messages in the outgoing table
-        this.pendingOutgoingMessageProcessorTask = new Runnable() {
-            @Override
-            public void run() {
-                while (isRunning())
-                    processPendingOutgoingMessage();
-            }
-        };
-
-        //Create a thread to process the messages in the ingoing table
-        this.pendingIncomingMessageProcessorTask = new Runnable() {
-            @Override
-            public void run() {
-                while (isRunning())
-                    processPendingIncomingMessage();
-            }
-        };
+        this.scheduledThreadPool               = Executors.newScheduledThreadPool(4);
+        this.scheduledFutures                  = new ArrayList<>();
     }
 
     /**
@@ -134,13 +95,6 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
                 networkServiceRoot.onNewMessagesReceive(fermatMessage);
             }
 
-            /*
-             * Sleep for a while
-             */
-            if(!Thread.currentThread().isInterrupted()){
-                Thread.sleep(SLEEP_TIME);
-            }
-
         }catch (Exception e){
             System.out.println("CommunicationSupervisorPendingMessagesAgent - processPendingIncomingMessage detect a error: "+e.getMessage());
         }
@@ -151,7 +105,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
      * validate is pending message to send, and request new connection for
      * the remote agent send the message
      */
-    private void processPendingOutgoingMessage() {
+    private void processPendingOutgoingMessage(Integer countFail) {
 
         try {
 
@@ -160,6 +114,8 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
              */
             Map<String, Object> filters = new HashMap<>();
             filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, countFail);
+
             List<FermatMessage> messages = networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().findAll(filters);
 
             /*
@@ -182,13 +138,6 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
                 }
             }
 
-            /*
-             * Sleep for a while
-             */
-            if(!Thread.currentThread().isInterrupted()){
-                Thread.sleep(SLEEP_TIME);
-            }
-
         } catch (Exception e) {
             System.out.println("CommunicationSupervisorPendingMessagesAgent - processPendingOutgoingMessage detect a error: "+e.getMessage());
         }
@@ -204,14 +153,10 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
 
         try {
 
-            if(futures!=null){
-                if(futures[OUT_TASK_INDEX]!=null) futures[OUT_TASK_INDEX].cancel(true);
-                if(futures[IN_TASK_INDEX]!=null) futures[IN_TASK_INDEX].cancel(true);
-
-                futures[OUT_TASK_INDEX] = threadPoolExecutor.submit(pendingOutgoingMessageProcessorTask);
-                futures[IN_TASK_INDEX] = threadPoolExecutor.submit(pendingIncomingMessageProcessorTask);
-
-            }
+            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingIncomingMessageProcessorTask(),  15, 15, TimeUnit.SECONDS));
+            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(0), 15, 15, TimeUnit.SECONDS));
+            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5),  5,  5, TimeUnit.MINUTES));
+            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10), 1, 1, TimeUnit.HOURS));
 
             this.status = AgentStatus.STARTED;
 
@@ -226,16 +171,18 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
      */
     public void resume() throws CantStartAgentException {
         try {
-            if(futures!=null){
-                if(futures[OUT_TASK_INDEX]!=null) futures[OUT_TASK_INDEX].cancel(true);
-                if(futures[IN_TASK_INDEX]!=null) futures[IN_TASK_INDEX].cancel(true);
+            try {
 
-                futures[OUT_TASK_INDEX] = threadPoolExecutor.submit(pendingOutgoingMessageProcessorTask);
-                futures[IN_TASK_INDEX] = threadPoolExecutor.submit(pendingIncomingMessageProcessorTask);
+                scheduledThreadPool.scheduleAtFixedRate(new PendingIncomingMessageProcessorTask()  , 15, 15, TimeUnit.SECONDS);
+                scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(0) , 15, 15, TimeUnit.SECONDS);
+                scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5) ,  5,  5, TimeUnit.MINUTES);
+                scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10),  1,  1, TimeUnit.HOURS);
 
+                this.status = AgentStatus.STARTED;
+
+            } catch (Exception exception) {
+                throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
             }
-
-            this.status = AgentStatus.STARTED;
 
         } catch (Exception exception) {
 
@@ -250,9 +197,8 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
     public void pause() throws CantStopAgentException {
         try {
 
-            if(futures!=null){
-                if(futures[OUT_TASK_INDEX]!=null) futures[OUT_TASK_INDEX].cancel(true);
-                if(futures[IN_TASK_INDEX]!=null) futures[IN_TASK_INDEX].cancel(true);
+            for (ScheduledFuture future: scheduledFutures) {
+                future.cancel(Boolean.TRUE);
             }
 
             this.status = AgentStatus.PAUSED;
@@ -270,11 +216,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
     public void stop() throws CantStopAgentException {
         try {
 
-            if(futures!=null){
-                if(futures[OUT_TASK_INDEX]!=null) futures[OUT_TASK_INDEX].cancel(true);
-                if(futures[IN_TASK_INDEX]!=null) futures[IN_TASK_INDEX].cancel(true);
-            }
-
+            scheduledThreadPool.shutdown();
             this.status = AgentStatus.PAUSED;
 
         } catch (Exception exception) {
@@ -298,4 +240,44 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
     public void removeAllConnectionWaitingForResponse(){
         this.poolConnectionsWaitingForResponse.clear();
     }
+
+
+    private class PendingIncomingMessageProcessorTask implements Runnable {
+
+        /**
+         * (non-javadoc)
+         * @see Runnable#run()
+         */
+        @Override
+        public void run() {
+            processPendingIncomingMessage();
+        }
+    }
+
+    private class PendingOutgoingMessageProcessorTask implements Runnable {
+
+        /**
+         * Represent the count fail
+         */
+        private int countFail;
+
+        /**
+         * Constructor with parameters
+         * @param countFail
+         */
+        public PendingOutgoingMessageProcessorTask(int countFail){
+            super();
+            this.countFail = countFail;
+        }
+
+        /**
+         * (non-javadoc)
+         * @see Runnable#run()
+         */
+        @Override
+        public void run() {
+            processPendingOutgoingMessage(countFail);
+        }
+    }
+
 }
