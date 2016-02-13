@@ -17,16 +17,20 @@ public final class SellingRecord {
     private DigitalAssetMetadata metadata;
     private ActorAssetUser buyer;
     private AssetSellStatus status;
-    private DraftTransaction draftTransaction;
+    private DraftTransaction buyerTransaction;
+    private DraftTransaction sellerTransaction;
+    private String broadcastingTxHash;
 
     //CONSTRUCTORS
 
-    public SellingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser buyer, AssetSellStatus status, DraftTransaction draftTransaction) {
+    public SellingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser buyer, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash) {
         this.recordId = recordId;
         this.metadata = metadata;
         this.buyer = buyer;
         this.status = status;
-        this.draftTransaction = draftTransaction;
+        this.buyerTransaction = buyerTransaction;
+        this.sellerTransaction = sellerTransaction;
+        this.broadcastingTxHash = broadcastingTxHash;
     }
 
     //PUBLIC METHODS
@@ -51,8 +55,17 @@ public final class SellingRecord {
         return status;
     }
 
-    public DraftTransaction getDraftTransaction() {
-        return draftTransaction;
+    public DraftTransaction getBuyerTransaction() {
+        return buyerTransaction;
     }
+
+    public DraftTransaction getSellerTransaction() {
+        return sellerTransaction;
+    }
+
+    public String getBroadcastingTxHash() {
+        return broadcastingTxHash;
+    }
+
     //INNER CLASSES
 }
