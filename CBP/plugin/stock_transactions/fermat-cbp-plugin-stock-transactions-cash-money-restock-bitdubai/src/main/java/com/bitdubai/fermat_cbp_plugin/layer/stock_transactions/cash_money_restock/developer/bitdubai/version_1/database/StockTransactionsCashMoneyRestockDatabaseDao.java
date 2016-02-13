@@ -89,6 +89,7 @@ public class StockTransactionsCashMoneyRestockDatabaseDao {
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cashMoneyTransaction.getTransactionStatus().getCode());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, cashMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cashMoneyTransaction.getOriginTransaction().getCode());
+        record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, cashMoneyTransaction.getOriginTransactionId());
 
         return record;
     }
