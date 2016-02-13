@@ -95,6 +95,10 @@ public class DraftTransaction {
         this.buyerCryptoAddress = buyerCryptoAddress;
     }
 
+    public Transaction getBitcoinTransaction() {
+        return bitcoinTransaction;
+    }
+
     /**
      * Serializes the bitcoin transaction
      * @return

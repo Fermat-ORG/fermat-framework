@@ -982,4 +982,23 @@ public class AssetCryptoVaultManager  {
         return draftTransaction;
     }
 
+    /**
+     * generates a final transaction based on a draft transaction and prepares it to be broadcasted.
+     * @param draftTransaction the completed and signed transaction
+     * @return the final transactionHash
+     * @throws CantCreateBitcoinTransactionException
+     */
+    public String createBitcoinTransaction(DraftTransaction draftTransaction) throws CantCreateBitcoinTransactionException {
+        try {
+            /**
+             * Once I formed the transaction, I will store it in the CryptoNetwork so that is ready for broadcasting.
+             */
+            bitcoinNetworkManager.storeBitcoinTransaction(draftTransaction.getNetworkType(), draftTransaction.getBitcoinTransaction(), UUID.randomUUID(), false);
+        } catch (CantStoreBitcoinTransactionException e) {
+            throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the created transaction in the CryptoNetwork", "Crypto Network issue");
+        }
+
+        return draftTransaction.getBitcoinTransaction().getHashAsString();
+    }
+
 }
