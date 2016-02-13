@@ -16,6 +16,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.Draft
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
@@ -556,6 +557,130 @@ public class BitcoinCurrencyCryptoVaultManager  {
         /**
          * return a signed draft transaction
          */
+        return draftTransaction;
+    }
+
+    /**
+     * Adds more inputs and outputs to a draft transaction
+     * @param draftTransaction the incomplete draft transaction
+     * @param valueToSend the amount of bitcoins in satoshis to add to the transaction
+     * @param addressTo the address to that will receive the bitcoins.
+     * @return the draft transaction with the added values.
+     * @throws CantCreateDraftTransactionException
+     */
+    public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
+        if (draftTransaction == null || addressTo == null || valueToSend == 0)
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Parameters can't be null", null);
+
+        /**
+         * I get the network for this address and validate that is active
+         */
+        BlockchainNetworkType networkType = null;
+        try {
+            networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
+        } catch (CantValidateCryptoNetworkIsActiveException e) {
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "The network to which this address belongs to, is not active!", null);
+        }
+
+        /**
+         * I get the networkParameter
+         */
+        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
+
+        /**
+         * I get the bitcoin address
+         */
+        Address address = null;
+        try {
+            address = getBitcoinAddress(networkParameters,addressTo);
+        } catch (AddressFormatException e) {
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE,e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+        }
+
+        /**
+         * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
+         */
+        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
+
+        /**
+         * Create the bitcoinj wallet from the keys of this account
+         */
+        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+        //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
+        Wallet wallet = null;
+
+        try {
+            wallet = Wallet.fromSeed(networkParameters, getBitcoinVaultSeed());
+        } catch (InvalidSeedException e) {
+            e.printStackTrace();
+        }
+
+        wallet.importKeys(vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount));
+
+        /**
+         * Add transactions to the wallet that we can use to spend.
+         */
+        for (Transaction transaction : transactions){
+            if (!transaction.isEveryOwnedOutputSpent(wallet)){
+                WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.UNSPENT, transaction);
+                wallet.addWalletTransaction(walletTransaction);
+            }
+        }
+
+        /**
+         * sets the fee and value to send
+         */
+        Coin fee = Coin.valueOf(10000);
+        final Coin coinToSend = Coin.valueOf(valueToSend);
+
+        if (coinToSend.isNegative() || coinToSend.isZero()){
+            StringBuilder output = new StringBuilder("The resulting value to be send is insufficient.");
+            output.append(System.lineSeparator());
+            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + valueToSend + " - " + fee.getValue() + ")");
+
+
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
+
+        /**
+         * I will add the outputs to the Draft transaction
+         */
+        Transaction transaction = draftTransaction.getBitcoinTransaction();
+        transaction.addOutput(coinToSend, address);
+        Wallet.SendRequest sendRequest = Wallet.SendRequest.forTx(transaction);
+
+        /**
+         * I set SendRequest properties
+         */
+        sendRequest.fee = fee;
+        sendRequest.feePerKb = Coin.ZERO;
+        sendRequest.shuffleOutputs = false;
+
+        try {
+            // this will add the inputs to fill the transaction.
+            wallet.completeTx(sendRequest);
+        } catch (InsufficientMoneyException e) {
+            StringBuilder output = new StringBuilder("Not enought money to send bitcoins.");
+            output.append(System.lineSeparator());
+            output.append("Current balance available for this vault: " + wallet.getBalance().getValue());
+            output.append(System.lineSeparator());
+            output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, output.toString(), null);
+        }
+
+        /**
+         * I will store the transaction in the crypto network
+         */
+        try {
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID(), true);
+        } catch (CantStoreBitcoinTransactionException e) {
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
+        }
+
+        /**
+         * updates the bitcoin transaction
+         */
+        draftTransaction.setBitcoinTransaction(sendRequest.tx);
         return draftTransaction;
     }
 }
