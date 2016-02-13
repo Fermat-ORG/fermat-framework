@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmi
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -1087,6 +1088,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                         IncomingConfirmBusinessTransactionContract incomingConfirmBusinessTransactionContract = (IncomingConfirmBusinessTransactionContract) fermatEvent;
                         incomingConfirmBusinessTransactionContract.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
                         incomingConfirmBusinessTransactionContract.setDestinationPlatformComponentType(businessTransactionMetadataReceived.getReceiverType());
+                        incomingConfirmBusinessTransactionContract.setRemoteBusinessTransaction(businessTransactionMetadataReceived.getRemoteBusinessTransaction());
                         eventManager.raiseEvent(incomingConfirmBusinessTransactionContract);
                         break;
                     case CONFIRM_RESPONSE:
@@ -1098,15 +1100,22 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                         IncomingConfirmBusinessTransactionResponse incomingConfirmBusinessTransactionResponse = (IncomingConfirmBusinessTransactionResponse) fermatEvent;
                         incomingConfirmBusinessTransactionResponse.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
                         incomingConfirmBusinessTransactionResponse.setDestinationPlatformComponentType(businessTransactionMetadataReceived.getReceiverType());
+                        incomingConfirmBusinessTransactionResponse.setRemoteBusinessTransaction(businessTransactionMetadataReceived.getRemoteBusinessTransaction());
                         eventManager.raiseEvent(incomingConfirmBusinessTransactionResponse);
                         break;
                 }
 
             }
         } catch (CantInsertRecordDataBaseException | CantUpdateRecordDataBaseException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.TRANSACTION_TRANSMISSION,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
         } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.TRANSACTION_TRANSMISSION,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
         }
     }
 
@@ -1123,7 +1132,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
 
                 TransactionTransmissionResponseMessage transactionTransmissionResponseMessage =  gson.fromJson(fermatMessage.getContent(), TransactionTransmissionResponseMessage.class);
                 FermatEvent fermatEvent;
-                switch (transactionTransmissionResponseMessage.getTransactionTransmissionStates()){
+                switch (transactionTransmissionResponseMessage.getTransactionTransmissionStates()) {
                     case CONFIRM_CONTRACT:
                         transactionTransmissionContractHashDao.changeState(transactionTransmissionResponseMessage.getTransactionId(), TransactionTransmissionStates.CONFIRM_CONTRACT);
                         System.out.print("-----------------------\n" +
@@ -1133,6 +1142,7 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                         IncomingConfirmBusinessTransactionContract incomingConfirmBusinessTransactionContract = (IncomingConfirmBusinessTransactionContract) fermatEvent;
                         incomingConfirmBusinessTransactionContract.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
                         incomingConfirmBusinessTransactionContract.setDestinationPlatformComponentType(businessTransactionMetadataReceived.getReceiverType());
+                        incomingConfirmBusinessTransactionContract.setRemoteBusinessTransaction(businessTransactionMetadataReceived.getRemoteBusinessTransaction());
                         eventManager.raiseEvent(incomingConfirmBusinessTransactionContract);
                         break;
                     case CONFIRM_RESPONSE:
@@ -1144,15 +1154,22 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                         IncomingConfirmBusinessTransactionResponse incomingConfirmBusinessTransactionResponse = (IncomingConfirmBusinessTransactionResponse) fermatEvent;
                         incomingConfirmBusinessTransactionResponse.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
                         incomingConfirmBusinessTransactionResponse.setDestinationPlatformComponentType(businessTransactionMetadataReceived.getReceiverType());
+                        incomingConfirmBusinessTransactionResponse.setRemoteBusinessTransaction(businessTransactionMetadataReceived.getRemoteBusinessTransaction());
                         eventManager.raiseEvent(incomingConfirmBusinessTransactionResponse);
                         break;
                 }
 
             }
         } catch (CantInsertRecordDataBaseException | CantUpdateRecordDataBaseException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.TRANSACTION_TRANSMISSION,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
         } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.TRANSACTION_TRANSMISSION,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
         }
     }
 
@@ -1218,14 +1235,16 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                             transactionType,
                             timestamp,
                             transactionId,
-                            transactionTransmissionStates
+                            transactionTransmissionStates,
+                            Plugins.TRANSACTION_TRANSMISSION
                     );
                     transactionTransmissionNetworkServiceManager.sendContractHash(
                             transactionId,
                             senderId,
                             receiverId,
                             contractHash,
-                            negotiationId
+                            negotiationId,
+                            Plugins.TRANSACTION_TRANSMISSION
                     );
                 }
             }
@@ -1266,7 +1285,8 @@ public class TransactionTransmissionPluginRoot extends AbstractNetworkService im
                     transactionType,
                     timestamp,
                     transactionId,
-                    transactionTransmissionStates
+                    transactionTransmissionStates,
+                    Plugins.TRANSACTION_TRANSMISSION
             );
             System.out.println(businessTransactionMetadata.toString());
            transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
