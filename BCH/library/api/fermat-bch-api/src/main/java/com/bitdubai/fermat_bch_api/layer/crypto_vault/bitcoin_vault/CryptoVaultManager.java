@@ -78,9 +78,6 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      */
     String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return) throws InsufficientCryptoFundsException, InvalidSendToAddressException, CouldNotSendMoneyException, CryptoTransactionAlreadySentException;
 
-
-
-
     /**
      * Validates if the passes CryptoAddress is valid in the current network or not.
      * @param addressTo

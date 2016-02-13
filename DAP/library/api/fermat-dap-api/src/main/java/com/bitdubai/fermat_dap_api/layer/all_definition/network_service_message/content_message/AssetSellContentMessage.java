@@ -8,17 +8,17 @@ import java.util.UUID;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 11/02/16.
  */
-public class DraftTransactionContentMessage implements DAPContentMessage {
+public class AssetSellContentMessage implements DAPContentMessage {
     //VARIABLE DECLARATION
     private UUID sellingId;
     private byte[] serializedTransaction;
     private AssetSellStatus sellStatus;
 
     //CONSTRUCTORS
-    public DraftTransactionContentMessage() {
+    public AssetSellContentMessage() {
     }
 
-    public DraftTransactionContentMessage(UUID sellingId, byte[] serializedTransaction, AssetSellStatus sellStatus) {
+    public AssetSellContentMessage(UUID sellingId, byte[] serializedTransaction, AssetSellStatus sellStatus) {
         this.sellingId = sellingId;
         this.serializedTransaction = serializedTransaction;
         this.sellStatus = sellStatus;
@@ -33,7 +33,7 @@ public class DraftTransactionContentMessage implements DAPContentMessage {
      */
     @Override
     public DAPMessageType messageType() {
-        return DAPMessageType.DRAFT_TRANSACTION;
+        return DAPMessageType.ASSET_SELL;
     }
 
     //PRIVATE METHODS

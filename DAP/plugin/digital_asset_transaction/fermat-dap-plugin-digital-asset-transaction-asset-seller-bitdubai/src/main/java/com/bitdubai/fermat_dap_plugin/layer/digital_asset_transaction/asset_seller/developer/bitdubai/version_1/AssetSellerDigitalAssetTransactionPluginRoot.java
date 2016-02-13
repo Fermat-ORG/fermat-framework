@@ -52,6 +52,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
@@ -105,6 +106,8 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
     public void start() throws CantStartPluginException {
         try {
             createDatabase();
+            Scanner scanner = new Scanner(System.in);
+            
             dao = new AssetSellerDAO(pluginId, pluginDatabaseSystem, actorAssetUserManager, assetUserWalletManager);
             transactionManager = new AssetSellerTransactionManager(assetUserWalletManager, assetTransmission, actorAssetUserManager, dao);
             initializeMonitorAgent();
