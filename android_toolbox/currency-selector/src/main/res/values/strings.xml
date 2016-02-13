@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name" translatable="false">Currency-Selector</string>
+
+    <!-- Labels -->
+    <string name="aud_label">AUD</string>
+    <string name="cad_label">CAD</string>
+    <string name="eur_label">EUR</string>
+    <string name="usd_label">USD</string>
+    <string name="vef_label">VEF</string>
+    <string name="ars_label">ARS</string>
+    <string name="cop_label">COP</string>
+    <string name="australian_dollar_label">Australian Dollar</string>
+    <string name="canadian_dollar_label">Canadian Dollar</string>
+    <string name="euro_label">Euro</string>
+    <string name="venezuelan_bolivar_label">Venezuelan Bolivar</string>
+    <string name="argentine_peso_label">Argentine Peso</string>
+    <string name="colombian_peso_label">Colombian Peso</string>
+    <string name="header_label">Currency Selector</string>
+    <string name="currency_amount_0_label">0</string>
+    <string name="currency_label">Currency</string>
+    <string name="btc_label">BTC</string>
+    <string name="american_dollar_label">American Dollar</string>
+    <string name="gbp_label">GBP</string>
+    <string name="british_pound_label">Pound sterling</string>
+    <string name="jpy_label">JPY</string>
+    <string name="japanese_yen_label">Japanese Yen</string>
+
+    <!-- Test Strings -->
+    <string name="test_amount">Amount</string>
+    <string name="test_default">Default</string>
+</resources>
