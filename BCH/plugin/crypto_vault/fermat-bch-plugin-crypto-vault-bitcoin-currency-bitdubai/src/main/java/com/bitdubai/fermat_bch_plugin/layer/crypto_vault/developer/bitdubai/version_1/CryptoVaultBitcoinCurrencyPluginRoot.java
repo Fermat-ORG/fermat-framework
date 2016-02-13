@@ -290,7 +290,7 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
      */
     @Override
     public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
-        return null;
+        return bitcoinCurrencyCryptoVaultManager.signTransaction(draftTransaction);
     }
 
     /**

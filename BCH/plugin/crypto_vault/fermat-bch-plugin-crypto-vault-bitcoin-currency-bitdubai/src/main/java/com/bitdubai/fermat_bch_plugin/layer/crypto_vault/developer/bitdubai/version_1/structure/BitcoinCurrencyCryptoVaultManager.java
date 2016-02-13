@@ -10,10 +10,13 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantB
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
@@ -31,13 +34,17 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.crypto.TransactionSignature;
 import org.bitcoinj.params.Networks;
 import org.bitcoinj.params.RegTestParams;
+import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -461,5 +468,94 @@ public class BitcoinCurrencyCryptoVaultManager  {
         } catch (InvalidSeedException e) {
             throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");
         }
+    }
+
+    /**
+     * Signs the owned inputs of the passed Draft transaction
+     * @param draftTransaction the transaction to sign
+     * @return the signed Transaction
+     * @throws CantSignTransactionException
+     */
+    public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
+        Transaction transaction = draftTransaction.getBitcoinTransaction();
+        final NetworkParameters NETWORK_PARAMETERS  = transaction.getParams();
+
+        if (transaction == null)
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "Bitcoin Transaction can't be null", null);
+
+        /**
+         * Create the bitcoinj wallet from the keys of all accounts
+         */
+        final Wallet wallet;
+        try {
+            wallet = Wallet.fromSeed(NETWORK_PARAMETERS, getBitcoinVaultSeed());
+        } catch (InvalidSeedException e) {
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
+        }
+
+        HierarchyAccount hierarchyAccount = new HierarchyAccount(0, "Bitcoin Vault Accoun", HierarchyAccountType.MASTER_ACCOUNT);
+        try {
+            wallet.importKeys(vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(hierarchyAccount));
+        } catch (Exception e) {
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+        }
+
+        /**
+         * Once I get the wallet, I will get the output of the transaction that is mine.
+         * Should be the second one.
+         */
+        Script script = null;
+        for (TransactionOutput output : transaction.getOutputs()){
+            if (output.isMine(wallet)){
+                script = output.getScriptPubKey();
+            }
+        }
+        /**
+         * If I couldn't get an output that was ours, I can't go on.
+         */
+        if (script == null)
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "The draft Transaction doesn't have an output that is ours.", null);
+
+        /**
+         * I get the signature hash for my output.
+         */
+        Sha256Hash sigHash = transaction.hashForSignature(0, script, Transaction.SigHash.ALL, false);
+
+        /**
+         * Get the private Key I will use to sign the hash
+         */
+        ECKey privateKey = null;
+        try {
+            privateKey = this.getNextAvailableECKey(hierarchyAccount);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Can't get private key to sign", "hierarchy error");
+        }
+
+        /**
+         * I create the signature
+         */
+        ECKey.ECDSASignature signature = privateKey.sign(sigHash);
+        TransactionSignature transactionSignature = new TransactionSignature(signature, Transaction.SigHash.ALL, false);
+        Script inputScript = ScriptBuilder.createInputScript(transactionSignature);
+
+        /**
+         * Add the signature to the input that is ours. Should be the second one.
+         */
+        TransactionInput inputToSign = null;
+        for (TransactionInput input : transaction.getInputs()){
+            if (input.getConnectedOutput().isMine(wallet)){
+                inputToSign = input;
+            }
+        }
+
+        if (inputToSign == null)
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "No inputs that we own were found in the draft transaction.", "wrong draft transaction");
+
+        inputToSign.setScriptSig(inputScript);
+
+        /**
+         * return a signed draft transaction
+         */
+        return draftTransaction;
     }
 }
