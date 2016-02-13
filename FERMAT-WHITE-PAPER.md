@@ -386,7 +386,7 @@ We had to design a business model that works fine for several different actors. 
 
 We divided the challenge of creating incentives for everybody in the following way:
 
-#### Fermat Miners
+#### Fermat Miners: Computer Network
 
 We believe there is a need for an application token system that can be mined in order to encourage nodes operators to put their hardware and band-with to work for the Fermat p2p Network. Lets call these tokens _fermats_.
 
@@ -403,14 +403,44 @@ We chose the same economic parameters than the bitcoin network itself: 21 millio
 
 NOTE: The current implementation of the Fermat p2p Network does not include the mining scheme yet, meaning that no _fermats_ have been mined at present time.
 
-#### Developers
+#### Human Networks
+
+##### Developers
+
+In bitcoin, the focus of the system is in creating an unmutalbe distributed layer across parties that don't trust each other. In that case the issuing of their token, bitcoins is tightly coupled with the mining process, that is the key element to achieve their goal.
+
+In Fermat, the key element to achieve our goal (mass adoption) is to have all use cases covered as soon as possible, and the whole system design orbits around that. Having a p2p network for exchanging information is needed for the system to be censorship resistant. For this reason, _fermats_ are equally issued to incentivize network node operators and developers. 
+
+Developers have several business models they can choose from. Each one are initially managed as development programs run by the Fermat Foundation. These programs are:
+
+** Casual Contribution Program ** : Casual contributors are rewarded in _fermats_ for isolated bug discoveries, or sporadic time spent on the project doing assorted tasks.
+
+** Regular Contribution Program ** : Regular contributors are rewarded monthly in tokens for their continious dedication to the project.
+
+** Bounty Program ** : The Fermat bounty program defines the roadmap of the project, assigning bounties to different needed functionality.
+
+** Component Ownership Program ** : This program allow developers or teams to own components, entitle them to receive micro-payments from end users using them.
+
+** Component Mantainance Program ** : This program allows mantainers to be compensated for taking care of individual components, improving its performance, security, relayability, etc.
+
+** Fermat APPs Queue Program ** : This program allows startups to request functionality to the Fermat Developers Network. These requested functionality is procesed in parallel from the official project's roadmap.
+
+All these programs are run and managed by the Fermat Foundation. There is an intention to automate most of these programs inside the fermat system itself in order to avoid single points of failure.
+
+With all these options, the Fermat project aims to recruite thousands of developers into a global network with the highest software developing power ever. In this way developers can achieve sustainable self-employment desintermediating software development corporations.
+
+The key idea here is the ownership of developed components. This is the core that enables developers to live out of a stream of micro-payments flowing from around the globe. The Fermat system even allow them to trade that ownership by selling it to someone else.
+
+##### Developers
+
+
 
 #### Business Operators
 
 
 
 <br><br>
-## Part II - In Details
+## Part II - Fermat In Detail
 
 <br>
 ### Introduction
