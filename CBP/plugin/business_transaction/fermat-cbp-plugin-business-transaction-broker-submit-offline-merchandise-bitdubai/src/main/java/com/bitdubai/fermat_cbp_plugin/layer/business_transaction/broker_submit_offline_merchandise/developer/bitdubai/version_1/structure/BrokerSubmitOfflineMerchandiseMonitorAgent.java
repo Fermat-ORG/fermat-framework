@@ -383,7 +383,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                     bankMoneyDeStockRecord.getAmount(),
                     bankMoneyDeStockRecord.getMemo(),
                     bankMoneyDeStockRecord.getPriceReference(),
-                    bankMoneyDeStockRecord.getOriginTransaction()
+                    bankMoneyDeStockRecord.getOriginTransaction(),
+                    pendingToDeStockTransaction.getContractHash()
             );
             pendingToDeStockTransaction.setContractTransactionStatus(
                     ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION);
@@ -406,7 +407,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                     cashMoneyDeStockRecord.getAmount(),
                     cashMoneyDeStockRecord.getMemo(),
                     cashMoneyDeStockRecord.getPriceReference(),
-                    cashMoneyDeStockRecord.getOriginTransaction()
+                    cashMoneyDeStockRecord.getOriginTransaction(),
+                    pendingToDeStockTransaction.getContractHash()
             );
             pendingToDeStockTransaction.setContractTransactionStatus(
                     ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION);
