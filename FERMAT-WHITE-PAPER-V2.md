@@ -189,7 +189,7 @@ Users interfaces in Fermat are native to the OS they are running, allowing devel
 
 Fermat is a community driven open source project with several networks of people collaborating to develop the system. This community was started in 2014 by the project founder, Luis Molina in Budapest, Hungary. Since then it spanned several countries and by the time of the last revision of this paper on Feb 2016, 50+ people were working full-time on the project plus many more were collaborating part-time or with casual contributions. 
 
-Fermat must be designed for massive collaboration. We expect thousands of developers join the project and the system and project management must be able to deal with this fact. Several human networks need to exist to produce such a massive system:
+Fermat is designed for massive collaboration. We expect thousands of developers join the project and the system and project management must be able to deal with this fact. Several human networks need to exist to produce such a massive system:
 
 **Developers Networks**
 
@@ -387,20 +387,20 @@ We divided the challenge of creating incentives for everybody in the following w
 
 #### Fermat Miners
 
-We believe there is a need for an application token system that can be mined in order to encourage nodes operators to put their hardware and band-with to work for the Fermat p2p Network. Lets call these tokens _band-with tokens_ or _b-fermats_.
+We believe there is a need for an application token system that can be mined in order to encourage nodes operators to put their hardware and band-with to work for the Fermat p2p Network. Lets call these tokens _fermats_.
 
 The business model for miners consist of:
 
-* End users paying miners a fee in _b-fermats_for the band-with provided.
-* Miners getting newly _b-fermats_ issued by the Fermat Protocol according to a _Proof of Work_ algorithm based on band-with, not CPU power as bitcoin.
+* End users paying miners a fee in _fermats_for the band-with provided.
+* Miners getting newly _fermats_ issued by the Fermat Protocol according to a _Proof of Work_ algorithm based on band-with, not CPU power as bitcoin.
 
-So basically is the same model that bitcoin in the sense that we need to bootstrap the Fermat Network at the beginning by letting the protocol to issue tokens, that users are going to need in order to pay for the fees required to use that network. 
+So basically is the same model that bitcoin in the sense that at the begining we need to bootstrap the Fermat Network by letting the Fermat Protocol to issue tokens. Users need them in order to pay for the fees required to use that network. 
 
 As we have a premise of reusing what is working, instead of handling these tokens transactions by ourselves, we are outsourcing the bitcoin network to do that for us. With this in mind, our blockchain will only need to record _coinbase_ or newly issued tokens transaction, while transfers from user to user can be handled directly by the bitcoin network itself.
 
 We chose the same economic parameters than the bitcoin network itself: 21 million units, generated every 10 minutes approximately, staring with 50 per block and halving this number every 4 years. The intended effect would be that a diverse community of nodes operators arise encouraged by the block reward, while there is not enough user base to profit from the selling of band-with to end users.
 
-NOTE: The current implementation of the Fermat p2p Network does not include the mining scheme yet, meaning that no _b-fermats_ have been mined at present time.
+NOTE: The current implementation of the Fermat p2p Network does not include the mining scheme yet, meaning that no _fermats_ have been mined at present time.
 
 #### Developers
 
