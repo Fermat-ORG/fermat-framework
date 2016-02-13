@@ -265,7 +265,7 @@ Up to this point Fermat is a Framework that extends the OS capabilities enabling
 
 ##### Multi-Layer Design Pattern
 
-We choose d a multi-layer design pattern to arrange the thousands of components that this system is going to require. The core idea is simple: 
+We choosed a multi-layer design pattern to arrange the thousands of components that this system is going to require. The core idea is simple: 
 
 * Components give services to other components on upper layers.
 * Components consume services from other components on lower layers.
@@ -276,6 +276,8 @@ In this way we introduced our concept of layers: a logical place where component
 
 Throughout the first 18 months of the project, the following layers emerged:
 
+
+**Table: Layers**
 
 | Super Layer | Layer Name | Language | 
 |:-----------:|:----------:|:---------|
