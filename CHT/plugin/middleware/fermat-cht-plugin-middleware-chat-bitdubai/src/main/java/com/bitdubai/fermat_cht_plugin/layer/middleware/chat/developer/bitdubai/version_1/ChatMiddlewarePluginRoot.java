@@ -325,12 +325,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     exception,
                     "Starting open contract plugin",
                     "Cannot set an object");
-        } catch (CantStartAgentException exception) {
-            throw new CantStartPluginException(
-                    CantStartPluginException.DEFAULT_MESSAGE,
-                    FermatException.wrapException(exception),
-                    "Starting open contract plugin",
-                    "Cannot start the monitor agent");
+//        } catch (CantStartAgentException exception) {
+//            throw new CantStartPluginException(
+//                    CantStartPluginException.DEFAULT_MESSAGE,
+//                    FermatException.wrapException(exception),
+//                    "Starting open contract plugin",
+//                    "Cannot start the monitor agent");
         } catch (Exception exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,

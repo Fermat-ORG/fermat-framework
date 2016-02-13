@@ -515,7 +515,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                     eventManager
             );
 
-            chatNetworkServiceAgent.start();
+//            chatNetworkServiceAgent.start();
         }
 
     }
@@ -678,7 +678,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                  * Initialize the agent and start
                  */
                 communicationRegistrationProcessNetworkServiceAgent = new CommunicationRegistrationProcessNetworkServiceAgent(this, wsCommunicationsCloudClientManager);
-                communicationRegistrationProcessNetworkServiceAgent.start();
+//                communicationRegistrationProcessNetworkServiceAgent.start();
             }
 
             /*

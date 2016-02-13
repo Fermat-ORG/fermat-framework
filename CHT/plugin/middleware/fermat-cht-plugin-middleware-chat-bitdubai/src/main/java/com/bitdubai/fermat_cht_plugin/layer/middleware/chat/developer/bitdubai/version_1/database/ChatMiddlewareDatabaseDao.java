@@ -731,6 +731,9 @@ public class ChatMiddlewareDatabaseDao {
         message.setContactId(messageTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID));
 
 
+
+
+
         return message;
     }
 

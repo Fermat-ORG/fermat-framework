@@ -21,6 +21,7 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
     public static final String CHAT_DATA = "CHAT_DATA";
     public static final String whocallme = "whocallme";
     public static final String chatvalues = "chatvalues";
+    public static final String chatid = "chatid";
 
     public ChatSession() {}
 
@@ -43,5 +44,4 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
         Object data = getData(CONTACTTOUPDATE_DATA);
         return (data != null) ? (Contact) data : null;
     }
-
 }
