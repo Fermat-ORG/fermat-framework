@@ -326,97 +326,77 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
         }
     }
 
-    public List<ActorNetworkServiceRecord> listRequestsByProtocolState(final ActorProtocolState protocolState) throws CantListIntraWalletUsersException {
 
-        if (protocolState == null)
-            throw new CantListIntraWalletUsersException("protocolState null",null, "The protocolState is required, can not be null","");
+
+
+    public void changeStatusNotSentMessage() throws CantListIntraWalletUsersException {
 
 
         try {
-            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+            DatabaseTable intraActorRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, protocolState.getCode(), DatabaseFilterType.EQUAL);
+            intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
+            intraActorRequestTable.loadToMemory();
 
-            cryptoPaymentRequestTable.loadToMemory();
-
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
-
-            List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
+            List<DatabaseTableRecord> records = intraActorRequestTable.getRecords();
 
             for (DatabaseTableRecord record : records) {
-                cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
-            }
-            return cryptoPaymentList;
+                    //update record
 
+             record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME,  ActorProtocolState.PROCESSING_SEND.getCode());
+                intraActorRequestTable.updateRecord(record);
+
+            }
         } catch (CantLoadTableToMemoryException e) {
 
             throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        } catch(InvalidParameterException exception){
+        } catch (CantUpdateRecordException e) {
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
 
-            throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
         }
     }
 
 
-    public List<ActorNetworkServiceRecord> listNotSentNotifications() throws CantListIntraWalletUsersException {
+
+    public void changeStatusNotSentMessage(String receiveIdentityKey) throws CantListIntraWalletUsersException {
 
 
 
         try {
-            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+            DatabaseTable intraActorRequestTable = getDatabaseTable();
 
-            cryptoPaymentRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
+            intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.NOT_EQUALS);
 
-            cryptoPaymentRequestTable.loadToMemory();
+            intraActorRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, receiveIdentityKey, DatabaseFilterType.EQUAL);
 
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+            intraActorRequestTable.loadToMemory();
 
-            List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
+            List<DatabaseTableRecord> records = intraActorRequestTable.getRecords();
+
 
             for (DatabaseTableRecord record : records) {
-                cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
+
+                //update record
+
+                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME,  ActorProtocolState.PROCESSING_SEND.getCode());
+
+                intraActorRequestTable.updateRecord(record);
             }
-            return cryptoPaymentList;
+
 
         } catch (CantLoadTableToMemoryException e) {
 
+            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.", "");
+        } catch (CantUpdateRecordException e) {
             throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        } catch(InvalidParameterException exception){
 
-            throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
         }
+
     }
 
 
-    public List<ActorNetworkServiceRecord> listNotSentNotifications(String receiveIdentityKey) throws CantListIntraWalletUsersException {
-
-
-        //TODO: ver si en vez de receiver es destination
-        try {
-            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
-
-            cryptoPaymentRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, ActorProtocolState.DONE.getCode(), DatabaseFilterType.NOT_EQUALS);
-            cryptoPaymentRequestTable.addStringFilter(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, receiveIdentityKey, DatabaseFilterType.EQUAL);
-
-            cryptoPaymentRequestTable.loadToMemory();
-
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
-
-            List<com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord> cryptoPaymentList = new ArrayList<>();
-
-            for (DatabaseTableRecord record : records) {
-                cryptoPaymentList.add(buildActorNetworkServiceRecord(record));
-            }
-            return cryptoPaymentList;
-
-        } catch (CantLoadTableToMemoryException e) {
-
-            throw new CantListIntraWalletUsersException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        } catch(InvalidParameterException exception){
-
-            throw new CantListIntraWalletUsersException("",exception, "Exception invalidParameterException.","");
-        }
-    }
 
 
     public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState,

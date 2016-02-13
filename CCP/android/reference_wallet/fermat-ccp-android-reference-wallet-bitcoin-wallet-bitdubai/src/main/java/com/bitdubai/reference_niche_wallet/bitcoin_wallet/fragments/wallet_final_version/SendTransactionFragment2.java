@@ -416,7 +416,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
-       final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()),ShowMoneyType.BITCOIN.getCode());
+       final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
 
         circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
         circularProgressBar.setProgressValue2(getBalanceAverage());
@@ -560,7 +560,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         //txt_balance_amount.setTypeface(tf);
 
         try {
-            long balance = moduleManager.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getAppPublicKey());
+            long balance = moduleManager.getBalance(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), referenceWalletSession.getAppPublicKey(),blockchainNetworkType);
             txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, referenceWalletSession.getTypeAmount()));
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
@@ -607,7 +607,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void GET(String url, final Context context){
         final Handler mHandler = new Handler();
         try {
-            if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey())<500000000L) {
+            if(moduleManager.getBalance(BalanceType.AVAILABLE,appSession.getAppPublicKey(),blockchainNetworkType)<500000000L) {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -994,7 +994,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private long loadBalance(BalanceType balanceType){
         long balance = 0;
         try {
-            balance = referenceWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, referenceWalletSession.getAppPublicKey());
+            balance = referenceWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, referenceWalletSession.getAppPublicKey(),blockchainNetworkType);
+            System.out.println("THE BALANCE IS " + balance);
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
         } catch (CantGetCryptoWalletException e) {
@@ -1052,14 +1053,14 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             if(bitcoinWalletSettings == null){
 
-                runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
                 bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
             }
             else {
 
                 if (bitcoinWalletSettings.getRunningDailyBalance() == null){
-                    runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey()));
+                    runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
                 }
                 else
                 {
@@ -1078,13 +1079,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         if(runningDailyBalance.size() == 30)
                             runningDailyBalance = new HashMap<Long, Long>();
 
-                        runningDailyBalance.put(currentTime, moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()));
+                        runningDailyBalance.put(currentTime, moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
 
                     }
                     else
                     {
                         //update balance
-                        this.updateDailyBalance(runningDailyBalance.size()-1,moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey()));
+                        this.updateDailyBalance(runningDailyBalance.size()-1,moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
                     }
 
 
@@ -1164,5 +1165,24 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
 
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try {
+
+            //update balance amount
+
+            final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
+
+             changeBalanceType(txt_type_balance, txt_balance_amount);
+            //System.out.println(System.currentTimeMillis());
+
+            circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+            circularProgressBar.setProgressValue2(getBalanceAverage());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 }
 

@@ -406,9 +406,8 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
 
 
     @Override
-    public void onUpdateView(String code)
-    {
-        try
+    public void onUpdateViewOnUIThread(String code){
+      try
         {
             //update contact address
             cryptoWalletManager = referenceWalletSession.getModuleManager();
