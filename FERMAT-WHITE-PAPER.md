@@ -36,7 +36,8 @@ We are building Fermat to get into that future in the fastest way possible. And 
 
 This white paper does not describe a theoretical system that might work one day to get us to that future. It describes a system that already works and it is in alpha testing right now. It also describes the organization of several networks of people spanning different disciplines and countries collaborating to produce the most ambitious project in the industry.
 
-<br>
+<br><br>
+
 ## Part I : Overview
 
 In this section you will get an overview of the Fermat System to describe the general idea. After this, you will be ready to re-explore the concepts in more detail in the next section.
@@ -408,7 +409,7 @@ NOTE: The current implementation of the Fermat p2p Network does not include the 
 
 
 
-
+<br><br>
 ## Part II - In Details
 
 <br>
