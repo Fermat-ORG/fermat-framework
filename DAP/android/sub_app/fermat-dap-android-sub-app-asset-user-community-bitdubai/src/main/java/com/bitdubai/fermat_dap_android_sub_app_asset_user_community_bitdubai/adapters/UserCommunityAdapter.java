@@ -44,7 +44,6 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
             if (data.getCryptoAddress() != null) {
                 holder.connectionState.setVisibility(View.VISIBLE);
                 holder.connect.setVisibility(View.GONE);
-                //holder.
                 //holder.crypto.setText("CryptoAddress: YES");
             } else {
                 holder.connectionState.setVisibility(View.GONE);
@@ -75,26 +74,8 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
                 }
             });
 
-            /*
-            This is for clicking all the box. I want,
-            for now, only the check, So when I click, I can display de user profile
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dataSet.get(position).selected = !dataSet.get(position).selected;
-                    notifyItemChanged(position);
-                    if (adapterChangeListener != null)
-                        adapterChangeListener.onDataSetChanged(dataSet);
-                }
-            });*/
-
             byte[] profileImage = data.getProfileImage();
 
-            //TODO: chamo esto te va a tirar error si es nula la imagen :p, el leght no lo va a poder sacar
-//            if (profileImage != null && profileImage.length > 0) {
-//                holder.thumbnail.setImageDrawable(new BitmapDrawable(context.getResources(),
-//                        BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length)));
-//            }
 
             if (profileImage != null) {
                 if (profileImage.length > 0) {
