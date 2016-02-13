@@ -435,11 +435,17 @@ The key idea here is the ownership of developed components. This is the core tha
 
 ##### Designers
 
-
+-- Explanation needed --
 
 #### Business Operators
 
+On top of the functionality built by the developers network, business operators can run their business. One example here are Crypto Brokers using the Crypto Brokers Wallet to run a localized business of buying and selling crypto currency to nearby end users.
 
+This functionality was developed by the developers network with the only intention that business operator would pick it up and run their business using their code.
+
+There is no limit on the different kind of business that the Fermat system can support. It is only a matter of time until the most popular global services like Uber, AirBNB, social networks, dating APPs, etc. will be replicated into Fermat. That would open the door for thousands of regional operators to fine tune these business models to adapt them to local audiences. 
+
+The sinergy produced by having more and more use cases covered by the same platform would be unmatcheable. This openess allows any of these use cases to increase the overal system user base, which in turn benefits all other use cases since one of the key problem for adoption is how end users end up with crypto currency in the first place. If one use case brings the in, they would likely jump to other use cases available since that barrier has already been overcome.
 
 <br><br>
 ## Part II - Fermat In Detail
