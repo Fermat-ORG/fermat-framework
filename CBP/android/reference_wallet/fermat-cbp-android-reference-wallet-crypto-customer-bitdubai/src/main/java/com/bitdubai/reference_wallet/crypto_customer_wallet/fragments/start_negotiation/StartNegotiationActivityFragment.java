@@ -78,7 +78,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
     private EmptyCustomerBrokerNegotiationInformation negotiationInfo;
-    private List<BrokerCurrencyQuotationImpl> brokerCurrencyQuotationlist;
     private List<MerchandiseExchangeRate> quotes;
     private NumberFormat numberFormat = DecimalFormat.getInstance();
 
@@ -263,7 +262,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         adapter = new StartNegotiationAdapter(getActivity(), negotiationInfo);
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
-        adapter.setMarketRateList(brokerCurrencyQuotationlist);
+        adapter.setMarketRateList(appSession.getActualExchangeRates());
 
         recyclerView.setAdapter(adapter);
     }
