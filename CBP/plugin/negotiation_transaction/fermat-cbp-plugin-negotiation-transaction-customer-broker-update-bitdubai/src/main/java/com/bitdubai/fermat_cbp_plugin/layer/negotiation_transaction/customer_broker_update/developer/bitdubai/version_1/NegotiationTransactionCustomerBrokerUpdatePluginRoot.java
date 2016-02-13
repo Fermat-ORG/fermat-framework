@@ -190,7 +190,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 //            createCustomerBrokerCancelSaleNegotiationTest();
 
             //TEST EVENT REGISTER
-//            registerEventTest();
+            registerEventTest();
 
             //TEST GET ALL EVENT
 //            getAllEvent();
@@ -638,7 +638,8 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                timestamp
         );
     }
 
@@ -663,7 +664,8 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                timestamp
         );
     }
 
