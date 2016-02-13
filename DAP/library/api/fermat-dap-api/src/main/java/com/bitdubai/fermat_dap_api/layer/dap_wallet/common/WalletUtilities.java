@@ -10,7 +10,7 @@ import java.util.UUID;
 public final class WalletUtilities {
 
     //VARIABLE DECLARATION
-
+    public static String WALLET_PUBLIC_KEY = "walletPublicKeyTest";
     //CONSTRUCTORS
 
     private WalletUtilities() {

@@ -5,8 +5,38 @@ import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetNegotiationContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.DraftTransactionContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database.AssetSellerDAO;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional.NegotiationRecord;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional.SellingRecord;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
@@ -15,9 +45,26 @@ public class AssetSellerMonitorAgent extends FermatAgent {
 
     //VARIABLE DECLARATION
     private SellerAgent sellerAgent;
-    private ErrorManager errorManager;
+
+    private final AssetUserWalletManager userWalletManager;
+    private final ActorAssetUserManager actorAssetUserManager;
+    private final AssetSellerDAO dao;
+    private final ErrorManager errorManager;
+    private final AssetTransmissionNetworkServiceManager assetTransmission;
+    private final AssetVaultManager assetVaultManager;
+    private final BitcoinNetworkManager bitcoinNetworkManager;
 
     //CONSTRUCTORS
+
+    public AssetSellerMonitorAgent(AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetSellerDAO dao, ErrorManager errorManager, AssetTransmissionNetworkServiceManager assetTransmission, AssetVaultManager assetVaultManager, BitcoinNetworkManager bitcoinNetworkManager) {
+        this.userWalletManager = userWalletManager;
+        this.actorAssetUserManager = actorAssetUserManager;
+        this.dao = dao;
+        this.errorManager = errorManager;
+        this.assetTransmission = assetTransmission;
+        this.assetVaultManager = assetVaultManager;
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
+    }
 
     //PUBLIC METHODS
 
@@ -82,7 +129,89 @@ public class AssetSellerMonitorAgent extends FermatAgent {
         }
 
         private void doTheMainTask() {
+            try {
+                checkUnreadMessages();
+                checkPendingSells();
+                checkPendingNegotiation();
+            } catch (CantLoadTableToMemoryException | CantUpdateRecordException | DAPException | CantLoadWalletException | CantSignTransactionException | CantCreateDraftTransactionException | CantDeleteRecordException | CantBroadcastTransactionException | CantCreateBitcoinTransactionException e) {
+                //TODO EXCEPTION HANDLING.
+                e.printStackTrace();
+            }
+        }
 
+        private void checkPendingSells() throws DAPException, CantCreateDraftTransactionException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantCreateBitcoinTransactionException, CantBroadcastTransactionException {
+            for (SellingRecord record : dao.getActionRequiredSellings()) {
+                switch (record.getStatus()) {
+                    case NEGOTIATION_CONFIRMED: {
+                        ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
+                        DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress());
+                        DraftTransactionContentMessage contentMessage = new DraftTransactionContentMessage(record.getRecordId(), draftTransaction.serialize(), AssetSellStatus.WAITING_FIRST_SIGNATURE);
+                        DAPMessage dapMessage = new DAPMessage(contentMessage, mySelf, record.getBuyer());
+                        assetTransmission.sendMessage(dapMessage);
+                        dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.WAITING_FIRST_SIGNATURE);
+                        break;
+                    }
+                    case PARTIALLY_SIGNED: {
+                        //TODO VALIDATE TRANSACTION!!
+                        DraftTransaction draftTransaction = assetVaultManager.signTransaction(record.getDraftTransaction());
+                        String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction);
+                        bitcoinNetworkManager.broadcastTransaction(txHash);
+                        //TODO WALLET CREDIT/DEBIT!!!
+                        dao.updateSellingTransaction(record.getRecordId(), draftTransaction.serialize());
+                        break;
+                    }
+                }
+            }
+        }
+
+        private void checkPendingNegotiation() throws DAPException, CantDeleteRecordException, CantLoadTableToMemoryException, CantUpdateRecordException, CantLoadWalletException {
+            for (NegotiationRecord record : dao.getActionRequiredNegotiations()) {
+                switch (record.getNegotiationStatus()) {
+                    case NEGOTIATION_CONFIRMED: {
+                        List<SellingRecord> sellingRecords = dao.getSellingRecordsForNegotiation(record.getNegotiation().getNegotiationId());
+                        int index = 0;
+                        for (SellingRecord sellingRecord : sellingRecords) {
+                            //If we agree with the user that we want to sell him lower than the initial contract then we will start the
+                            //selling transaction and delete the remaining records.
+                            if (index > record.getNegotiation().getQuantityToBuy()) {
+                                dao.deleteSellingRecord(sellingRecord.getRecordId());
+                            } else {
+                                dao.updateNegotiationStatus(sellingRecord.getRecordId(), AssetSellStatus.NEGOTIATION_CONFIRMED);
+                            }
+                            index++;
+                        }
+                        break;
+                    }
+                    case NEGOTIATION_REJECTED: {
+                        List<SellingRecord> sellingRecords = dao.getSellingRecordsForNegotiation(record.getNegotiation().getNegotiationId());
+                        for (SellingRecord sellingRecord : sellingRecords) {
+                            //UNLOCK THESE TRANSACTIONS
+                            dao.deleteSellingRecord(sellingRecord.getRecordId());
+                        }
+                        break;
+                    }
+                    case DEAL_CHANGED:
+                        //TODO
+                        break;
+                }
+            }
+        }
+
+        private void checkUnreadMessages() throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException, CantGetDAPMessagesException, CantUpdateMessageStatusException {
+            //NEGOTIATION
+            for (DAPMessage message : assetTransmission.getUnreadDAPMessagesByType(DAPMessageType.ASSET_NEGOTIATION)) {
+                AssetNegotiationContentMessage content = (AssetNegotiationContentMessage) message.getMessageContent();
+                dao.updateNegotiationStatus(content.getAssetNegotiation().getNegotiationId(), content.getSellStatus());
+                dao.updateAssetNegotiation(content.getAssetNegotiation());
+                assetTransmission.confirmReception(message);
+            }
+            //SIGNED TRANSACTIONS
+            for (DAPMessage message : assetTransmission.getUnreadDAPMessagesByType(DAPMessageType.DRAFT_TRANSACTION)) {
+                DraftTransactionContentMessage content = (DraftTransactionContentMessage) message.getMessageContent();
+                dao.updateSellingStatus(content.getSellingId(), content.getSellStatus());
+                dao.updateSellingTransaction(content.getSellingId(), content.getSerializedTransaction());
+                assetTransmission.confirmReception(message);
+            }
         }
 
         public boolean isAgentRunning() {

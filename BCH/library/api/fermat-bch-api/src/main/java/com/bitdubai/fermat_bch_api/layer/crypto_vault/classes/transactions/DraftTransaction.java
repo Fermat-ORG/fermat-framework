@@ -17,6 +17,8 @@ import java.util.Map;
  */
 public class DraftTransaction {
     private Transaction bitcoinTransaction;
+    private CryptoAddress sellerCryptoAddress;
+    private CryptoAddress buyerCryptoAddress;
 
     /**
      * constructor
@@ -76,6 +78,23 @@ public class DraftTransaction {
     public BlockchainNetworkType getNetworkType() {
         return BitcoinNetworkSelector.getBlockchainNetworkType(bitcoinTransaction.getParams());
     }
+
+    public CryptoAddress getSellerCryptoAddress() {
+        return sellerCryptoAddress;
+    }
+
+    public void setSellerCryptoAddress(CryptoAddress sellerCryptoAddress) {
+        this.sellerCryptoAddress = sellerCryptoAddress;
+    }
+
+    public CryptoAddress getBuyerCryptoAddress() {
+        return buyerCryptoAddress;
+    }
+
+    public void setBuyerCryptoAddress(CryptoAddress buyerCryptoAddress) {
+        this.buyerCryptoAddress = buyerCryptoAddress;
+    }
+
     /**
      * Serializes the bitcoin transaction
      * @return
