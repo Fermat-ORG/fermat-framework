@@ -1,15 +1,23 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetExtraDataActorException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
@@ -27,10 +35,12 @@ public class ActorCustomerExtraDataEventActions {
 
     private CryptoBrokerManager cryptoBrokerANSManager;
     private CryptoCustomerActorDao cryptoCustomerActorDao;
+    private CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
 
-    public ActorCustomerExtraDataEventActions(CryptoBrokerManager cryptoBrokerANSManager, CryptoCustomerActorDao cryptoCustomerActorDao){
+    public ActorCustomerExtraDataEventActions(CryptoBrokerManager cryptoBrokerANSManager, CryptoCustomerActorDao cryptoCustomerActorDao, CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager){
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
         this.cryptoCustomerActorDao = cryptoCustomerActorDao;
+        this.cryptoCustomerActorConnectionManager = cryptoCustomerActorConnectionManager;
     }
 
     public void handleNewsEvent(){
@@ -39,6 +49,43 @@ public class ActorCustomerExtraDataEventActions {
         } catch (CantGetExtraDataActorException e) {
 
         }
+    }
+
+    public void handleNewConnectionEvent(){
+        try {
+            Collection<CustomerIdentityWalletRelationship> relationships = cryptoCustomerActorDao.getAllCustomerIdentityWalletRelationship();
+            for(CustomerIdentityWalletRelationship relationship : relationships){
+                List<CryptoCustomerActorConnection> actores = getBrokersConnects(relationship);
+                for(CryptoCustomerActorConnection broker : actores){
+                    if( !this.cryptoCustomerActorDao.existBrokerExtraData(relationship.getCryptoCustomer(), broker.getPublicKey()) ) {
+                        try {
+                            ActorIdentity brokerIdentity = new ActorExtraDataIdentity(broker.getAlias(), broker.getPublicKey(), broker.getImage());
+                            this.cryptoCustomerActorDao.createCustomerExtraData(new ActorExtraDataInformation(relationship.getCryptoCustomer(), brokerIdentity, null, null));
+                            this.cryptoBrokerANSManager.requestQuotes(relationship.getCryptoCustomer(), Actors.CBP_CRYPTO_CUSTOMER, broker.getPublicKey());
+                        } catch (CantCreateNewActorExtraDataException e) {
+                        } catch (CantRequestQuotesException e) {
+                        }
+                    }
+                }
+            }
+        } catch (CantGetListCustomerIdentityWalletRelationshipException e) {
+
+        }
+    }
+
+    private List<CryptoCustomerActorConnection> getBrokersConnects(CustomerIdentityWalletRelationship relationship){
+        CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(
+                relationship.getCryptoCustomer(),
+                Actors.CBP_CRYPTO_CUSTOMER
+        );
+        final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
+        search.addConnectionState(ConnectionState.CONNECTED);
+        try {
+            return search.getResult();
+        } catch (CantListActorConnectionsException e) {
+
+        }
+        return null;
     }
 
     public void setExtraData() throws CantGetExtraDataActorException {
