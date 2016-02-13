@@ -214,7 +214,9 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                                 new Date().getTime() / 1000,
                                 cashMoneyTransaction.getConcept(),
                                 cashMoneyTransaction.getPriceReference(),
-                                cashMoneyTransaction.getOriginTransaction());
+                                cashMoneyTransaction.getOriginTransaction(),
+                                cashMoneyTransaction.getOriginTransactionId(),
+                                false);
 
                         WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
                                 cashMoneyTransaction.getTransactionId(),
@@ -228,7 +230,9 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                                 new Date().getTime() / 1000,
                                 cashMoneyTransaction.getConcept(),
                                 cashMoneyTransaction.getPriceReference(),
-                                cashMoneyTransaction.getOriginTransaction());
+                                cashMoneyTransaction.getOriginTransaction(),
+                                cashMoneyTransaction.getOriginTransactionId(),
+                                false);
 
                         //TODO:Solo para testear
                         cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
