@@ -43,10 +43,12 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
             holder.name.setText(String.format("%s", data.getName()));
             if (data.getCryptoAddress() != null) {
                 holder.connectionState.setVisibility(View.VISIBLE);
+                holder.connect.setVisibility(View.GONE);
                 //holder.
                 //holder.crypto.setText("CryptoAddress: YES");
             } else {
                 holder.connectionState.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.VISIBLE);
                 //holder.crypto.setText("CryptoAddress: NO");
             }
 
@@ -72,6 +74,7 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
                         adapterChangeListener.onDataSetChanged(dataSet);
                 }
             });
+
             /*
             This is for clicking all the box. I want,
             for now, only the check, So when I click, I can display de user profile
