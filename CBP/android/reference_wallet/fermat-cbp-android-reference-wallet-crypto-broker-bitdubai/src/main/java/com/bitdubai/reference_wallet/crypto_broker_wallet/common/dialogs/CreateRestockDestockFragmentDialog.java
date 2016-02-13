@@ -171,28 +171,29 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
             }
             switch (option){
                 case "stock":
+                    //TODO:Nelson falta pasar el price de reference en dolar al momento de hacer el restock/destock new BigDecimal(0)
                     System.out.println("*************REESTOCK DIALOG****************   ["+setting.getPlatform()+"]" );
                     if(Platforms.BANKING_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionRestockBank(setting.getBrokerPublicKey(),(FiatCurrency)setting.getMerchandise(),setting.getBrokerPublicKey(),setting.getWalletPublicKey(),setting.getBankAccount(),new BigDecimal(amount),memo,null, OriginTransaction.RESTOCK_AUTOMATIC);
+                        cryptoBrokerWalletManager.createTransactionRestockBank(setting.getBrokerPublicKey(),(FiatCurrency)setting.getMerchandise(),setting.getBrokerPublicKey(),setting.getWalletPublicKey(),setting.getBankAccount(),new BigDecimal(amount),memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getWalletPublicKey());
                     }
                     if(Platforms.CASH_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionRestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
+                        cryptoBrokerWalletManager.createTransactionRestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(0), memo, new BigDecimal(amount), OriginTransaction.RESTOCK, setting.getWalletPublicKey());
                     }
                     if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionRestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(),  new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
+                        cryptoBrokerWalletManager.createTransactionRestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(),  new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getWalletPublicKey());
                     }
                     dismiss();
                     return;
                 case "destock":
                     System.out.println("*************DESTOCK DIALOG****************  ["+setting.getPlatform()+"]");
                     if(Platforms.BANKING_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionDestockBank(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), setting.getBankAccount(), new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
+                        cryptoBrokerWalletManager.createTransactionDestockBank(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), setting.getBankAccount(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getWalletPublicKey());
                     }
                     if(Platforms.CASH_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionDestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
+                        cryptoBrokerWalletManager.createTransactionDestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getWalletPublicKey());
                     }
                     if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, null, OriginTransaction.RESTOCK_AUTOMATIC);
+                        cryptoBrokerWalletManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getWalletPublicKey());
                     }
                     dismiss();
                     return;
