@@ -114,12 +114,12 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
     public View getView() {
         //View convertView = getView();
         //LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-       // LayoutInflater vi = LayoutInflater.from(context);
+        // LayoutInflater vi = LayoutInflater.from(context);
         LayoutInflater vi = LayoutInflater.from(context) ;
 
         View convertView = vi.inflate(R.layout.chat_list_item, null);
 
-       // LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        // LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         /*if (data == null) {
             convertView = vi.inflate(R.layout.chat_list_item, null);
@@ -128,13 +128,10 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
         } else {
             holder = (ChatHolder) convertView.getTag();
         }
-
         boolean myMsg = data.getIsme() ;//test to simulate whether it me or other sender
         setAlignment(holder, myMsg);
         holder.txtMessage.setText(data.getMessage());
         holder.txtInfo.setText(data.getDate());
-
-
         setAlignment(holder, data.getIsme());*/
         return convertView;
 
@@ -143,14 +140,10 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
         View item = inflater.inflate(R.layout.chat_list_item, null);*/
        /* LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View convertView = vi.inflate(R.layout.chat_list_item, null);
-
-
         FermatTextView lblTitulo = (FermatTextView)convertView.findViewById(R.id.txtInfo);
         lblTitulo.setText(datos[position].getTitulo());
-
         FermatTextView lblSubtitulo = (FermatTextView)convertView.findViewById(R.id.txtMessage);
         lblSubtitulo.setText(datos[position].getSubtitulo());
-
         return(convertView);//return(item);*/
     }
 
@@ -170,32 +163,12 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
     }
 
     private void setAlignment(ChatHolder holder, boolean isMe) {
-        if (!isMe) {
-            holder.contentWithBG.setBackgroundResource(R.drawable.out_message_bg);
-
-            LinearLayout.LayoutParams layoutParams =
-                    (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
-            layoutParams.gravity = Gravity.START;
-            holder.contentWithBG.setLayoutParams(layoutParams);
-
-            RelativeLayout.LayoutParams lp =
-                    (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
-            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            holder.content.setLayoutParams(lp);
-            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
-            layoutParams.gravity = Gravity.START;
-            holder.txtMessage.setLayoutParams(layoutParams);
-
-            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-            layoutParams.gravity = Gravity.START;
-            holder.txtInfo.setLayoutParams(layoutParams);
-        } else {
+        if (isMe) {
             holder.contentWithBG.setBackgroundResource(R.drawable.in_message_bg);
 
             LinearLayout.LayoutParams layoutParams =
                     (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
-            layoutParams.gravity = Gravity.END;
+            layoutParams.gravity = Gravity.RIGHT;
             holder.contentWithBG.setLayoutParams(layoutParams);
 
             RelativeLayout.LayoutParams lp =
@@ -204,13 +177,74 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
             lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
             holder.content.setLayoutParams(lp);
             layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
-            layoutParams.gravity = Gravity.END;
+            layoutParams.gravity = Gravity.RIGHT;
             holder.txtMessage.setLayoutParams(layoutParams);
 
             layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-            layoutParams.gravity = Gravity.END;
+            layoutParams.gravity = Gravity.RIGHT;
+            holder.txtInfo.setLayoutParams(layoutParams);
+        } else {
+            holder.contentWithBG.setBackgroundResource(R.drawable.out_message_bg);
+
+            LinearLayout.LayoutParams layoutParams =
+                    (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
+            layoutParams.gravity = Gravity.LEFT;
+            holder.contentWithBG.setLayoutParams(layoutParams);
+
+            RelativeLayout.LayoutParams lp =
+                    (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
+            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+            holder.content.setLayoutParams(lp);
+            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
+            layoutParams.gravity = Gravity.LEFT;
+            holder.txtMessage.setLayoutParams(layoutParams);
+
+            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
+            layoutParams.gravity = Gravity.LEFT;
             holder.txtInfo.setLayoutParams(layoutParams);
         }
+//        if (!isMe) {
+//            holder.contentWithBG.setBackgroundResource(R.drawable.out_message_bg);
+//
+//            LinearLayout.LayoutParams layoutParams =
+//                    (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
+//            layoutParams.gravity = Gravity.START;
+//            holder.contentWithBG.setLayoutParams(layoutParams);
+//
+//            RelativeLayout.LayoutParams lp =
+//                    (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
+//            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
+//            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//            holder.content.setLayoutParams(lp);
+//            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
+//            layoutParams.gravity = Gravity.START;
+//            holder.txtMessage.setLayoutParams(layoutParams);
+//
+//            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
+//            layoutParams.gravity = Gravity.START;
+//            holder.txtInfo.setLayoutParams(layoutParams);
+//        } else {
+//            holder.contentWithBG.setBackgroundResource(R.drawable.in_message_bg);
+//
+//            LinearLayout.LayoutParams layoutParams =
+//                    (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
+//            layoutParams.gravity = Gravity.END;
+//            holder.contentWithBG.setLayoutParams(layoutParams);
+//
+//            RelativeLayout.LayoutParams lp =
+//                    (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
+//            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
+//            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+//            holder.content.setLayoutParams(lp);
+//            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
+//            layoutParams.gravity = Gravity.END;
+//            holder.txtMessage.setLayoutParams(layoutParams);
+//
+//            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
+//            layoutParams.gravity = Gravity.END;
+//            holder.txtInfo.setLayoutParams(layoutParams);
+//        }
     }
 
 }

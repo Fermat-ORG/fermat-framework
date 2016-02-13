@@ -85,6 +85,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     SwipeRefreshLayout mSwipeRefreshLayout;
     Map<String,Contact>others=new HashMap<String,Contact>();
     Map<String,Contact>me=new HashMap<String,Contact>();
+    // Defines a tag for identifying log entries
     String TAG="CHT_ChatFragment";
 
     boolean chatwascreate=false;
@@ -110,94 +111,86 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             moduleManager = chatSession.getModuleManager();
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
-
-            whattodo();
-            Chat chat=chatSession.getSelectedChat();
-            if(chat.getChatId()!=null)
+            //whattodo();
+            //     Chat chat=chatSession.getSelectedChat();
+            if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
                 setHasOptionsMenu(true);
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
-
-    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
-        try {
-            if (contact != null){
-                remotepk = contact.getRemoteActorPublicKey();
-                remotepct = contact.getRemoteActorType();
-                contactid=contact.getContactId();
-                for (int i = 0; i < chatManager.getMessages().size(); i++) {
-                    if (contactid.equals(chatManager.getMessages().get(i).getContactId())) {
-                        chatid = chatManager.getMessages().get(i).getChatId();
-                    }
-                }
-            }
-        }catch (CantGetMessageException e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }catch(Exception e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-    }
-
-    void whattodo(){
-        try {
-            if (appSession.getData("whocallme").equals("chatlist")) {
-                findvalues((Contact)appSession.getData("contactid"));//if I choose a chat, this will retrieve the chatid
-                chatwascreate = true;
-            } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
-                findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
-                if (chatid != null) {//Here it is define if we need to create a new chat or just add the message to chat created previously
-                    chatwascreate = true;
-                } else {
-                    chatwascreate = false;
-                }
-            }
-        }catch(Exception e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-    }
-
-    void findmessage(){
-        String message;
-        String inorout;
-        int messsize;
-
-        try {
-            historialmensaje.clear();
-            chatHistory.clear();
-            if(chatid!=null){
-            messsize=chatManager.getMessageByChatId(chatid).size();
-                ChatMessage msg = new ChatMessage();
-                for (int i = 0; i < messsize; i++) {
-                    message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
-                    inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
-                    historialmensaje.add(inorout + "@#@#" + message);
-                    msg.setId(chatManager.getMessageByChatId(chatid).get(i).getMessageId());
-                    if(inorout==TypeMessage.OUTGOING.toString()) msg.setMe(true);
-                    else   msg.setMe(false);
-                    msg.setDate(chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString());
-                    msg.setUserId(chatManager.getMessageByChatId(chatid).get(i).getContactId());
-                    chatHistory.add(msg);
-                }
-            }else{
-                Toast.makeText(getActivity(),"chatid null", Toast.LENGTH_SHORT).show();
-            }
-        }catch (CantGetMessageException e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }catch (Exception e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-    }
+//
+//    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
+    //    try {
+    //        if (contact != null){
+    //            remotepk = contact.getRemoteActorPublicKey();
+    //            remotepct = contact.getRemoteActorType();
+    //            contactid=contact.getContactId();
+    //            for (int i = 0; i < chatManager.getMessages().size(); i++) {
+    //                if (contactid.equals(chatManager.getMessages().get(i).getContactId())) {
+    //                    chatid = chatManager.getMessages().get(i).getChatId();
+    //                }
+    //            }
+    //        }
+    //
+    //    }catch (CantGetMessageException e) {
+    //        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+    //    }catch(Exception e){
+    //        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+    //    }
+    //}
+//
+//    void whattodo(){
+    //    try {
+    //        if (appSession.getData("whocallme").equals("chatlist")) {
+    //            findvalues((Contact)appSession.getData("contactid"));//if I choose a chat, this will retrieve the chatid
+    //            chatwascreate = true;
+    //        } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
+    //            findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
+    //            if (chatid != null) {//Here it is define if we need to create a new chat or just add the message to chat created previously
+    //                chatwascreate = true;
+    //            } else {
+    //                chatwascreate = false;
+    //            }
+    //        }
+    //    }catch(Exception e){
+    //        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+    //    }
+    //}
+//
+//    void findmessage(){
+//        String message;
+//        String inorout;
+//        int messsize;
+//
+//        try {
+//            historialmensaje.clear();
+//            if(chatid!=null){
+//                messsize=chatManager.getMessageByChatId(chatid).size();
+//                for (int i = 0; i < messsize; i++) {
+//                    message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
+//                    inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
+//                    historialmensaje.add(inorout+"@#@#"+message);
+//                }
+//            }else{
+//                Toast.makeText(getActivity(),"waiting for chat message", Toast.LENGTH_SHORT).show();
+//            }//
+//        }catch (CantGetMessageException e) {//
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }catch (Exception e){
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
-        findmessage();
+
         return new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
-                .addLeftName("Probando")
-                .setBackground(R.color.holo_blue)
-                .addChatHistory(chatHistory)
+                        //.addLeftName("Probando")
+                        //.setBackground(R.color.holo_blue)
+                        //.addChatHistory(chatHistory)
                 .addModuleManager(moduleManager)
                 .addErrorManager(errorManager)
                 .addChatSession(chatSession)
@@ -213,10 +206,10 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //        sendBtn = (Button) layout.findViewById(R.id.chatSendButton);
 //        mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
 //        final ChatAdapterView adaptador;
-//   //   final FermatTextView meLabel = (FermatTextView) layout.findViewById(R.id.meLbl);
-//  //    FermatTextView companionLabel = (FermatTextView) layout.findViewById(R.id.friendLabel);
+//        //   final FermatTextView meLabel = (FermatTextView) layout.findViewById(R.id.meLbl);
+//        //    FermatTextView companionLabel = (FermatTextView) layout.findViewById(R.id.friendLabel);
 //        RelativeLayout contain = (RelativeLayout) layout.findViewById(R.id.container);
-// //     companionLabel.setText("My Contact");
+//        //     companionLabel.setText("My Contact");
 //        ListView lstOpciones;
 //
 //
@@ -240,66 +233,58 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //                    Long dv=System.currentTimeMillis();
 //
 //
-//                   if(chatwascreate) {
+//                    if(chatwascreate) {
+//                        chat=(ChatImpl)chatManager.getChatByChatId(chatid);
+//                        chatManager.saveChat(chat);
 //
-//                      /* chat.setChatId(chatid);
-//                       chat.setObjectId(UUID.randomUUID());
-//                       chat.setStatus(ChatStatus.VISSIBLE);
-//                       chat.setChatName("DeathNote");
-//                       chat.setDate(new Timestamp(dv));
-//                       chat.setLastMessageDate(new Timestamp(dv));
-//                       chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-//                       chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-//                       chat.setRemoteActorPublicKey(remotepk);
-//                       chat.setRemoteActorType(remotepct);*/
+//                        message.setChatId(chatid);
+//                        message.setMessageId(UUID.randomUUID());
+//                        message.setMessage(messageText);
+//                        message.setMessageDate(new Timestamp(dv));
+//                        message.setStatus(MessageStatus.CREATED);
+//                        message.setType(TypeMessage.OUTGOING);
+//                        message.setContactId(contactid);
+//                        chatManager.saveMessage(message);
 //
+//                        findmessage();
+//                        adaptador.refreshEvents(historialmensaje);
+//                        Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
 //
-//                       message.setChatId(chatid);
-//                       message.setMessageId(UUID.randomUUID());
-//                       message.setMessage(messageText);
-//                       message.setMessageDate(new Timestamp(dv));
-//                       message.setStatus(MessageStatus.CREATED);
-//                       message.setType(TypeMessage.OUTGOING);
-//                       message.setContactId(contactid);
-//                       chatManager.saveMessage(message);
+//                    }else{
 //
-//                       findmessage();
-//                       adaptador.refreshEvents(historialmensaje);
-//                       Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
+//                        UUID newchatid=UUID.randomUUID();
+//                        chatid=newchatid;
 //
-//                   }else{
+//                        chat.setChatId(newchatid);
+//                        chat.setObjectId(UUID.randomUUID());
+//                        chat.setStatus(ChatStatus.VISSIBLE);
+//                        chat.setChatName("DeathNote");
+//                        chat.setDate(new Timestamp(dv));
+//                        chat.setLastMessageDate(new Timestamp(dv));
+//                        chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
+//                        chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+//                        chat.setRemoteActorPublicKey(remotepk);
+//                        chat.setRemoteActorType(remotepct);
 //
-//                       UUID newchatid=UUID.randomUUID();
+//                        chatManager.saveChat(chat);
 //
-//                       chat.setChatId(newchatid);
-//                       chat.setObjectId(UUID.randomUUID());
-//                       chat.setStatus(ChatStatus.VISSIBLE);
-//                       chat.setChatName("DeathNote");
-//                       chat.setDate(new Timestamp(dv));
-//                       chat.setLastMessageDate(new Timestamp(dv));
-//                       chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-//                       chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-//                       chat.setRemoteActorPublicKey(remotepk);
-//                       chat.setRemoteActorType(remotepct);
+//                        message.setChatId(newchatid);
+//                        message.setMessageId(UUID.randomUUID());
+//                        message.setMessage(messageText);
+//                        message.setMessageDate(new Timestamp(dv));
+//                        message.setStatus(MessageStatus.CREATED);
+//                        message.setType(TypeMessage.OUTGOING);
+//                        message.setContactId(contactid);
 //
-//                       chatManager.saveChat(chat);
+//                        chatManager.saveMessage(message);
 //
-//                       message.setChatId(newchatid);
-//                       message.setMessageId(UUID.randomUUID());
-//                       message.setMessage(messageText);
-//                       message.setMessageDate(new Timestamp(dv));
-//                       message.setStatus(MessageStatus.CREATED);
-//                       message.setType(TypeMessage.OUTGOING);
-//                       message.setContactId(contactid);
+//                        findmessage();
 //
-//                       chatManager.saveMessage(message);
+//                        adaptador.refreshEvents(historialmensaje);
+//                        Toast.makeText(getActivity(),"Sending message", Toast.LENGTH_SHORT).show();
 //
-//                       findmessage();
-//
-//                       adaptador.refreshEvents(historialmensaje);
-//                       Toast.makeText(getActivity(),"Sending message", Toast.LENGTH_SHORT).show();
-//                       messageET.setText("");
-//                   }
+//                    }
+//                    messageET.getText().clear();
 //                } catch (CantSaveMessageException e) {
 //
 //                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -325,8 +310,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //                        try {
 //                            //System.out.println("Threar UI corriendo");
 //                            //TODO: fix this
-//                                findmessage();
-//                                adaptador.refreshEvents(historialmensaje);
+//                            findmessage();
+//                            adaptador.refreshEvents(historialmensaje);
 //                        } catch (Exception e) {
 //
 //                            //TODO: fix this

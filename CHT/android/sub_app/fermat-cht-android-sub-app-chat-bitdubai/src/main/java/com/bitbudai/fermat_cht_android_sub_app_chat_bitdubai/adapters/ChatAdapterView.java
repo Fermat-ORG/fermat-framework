@@ -154,35 +154,41 @@ public class ChatAdapterView extends LinearLayout {
         int messsize;
         try {
             Chat chat=chatSession.getSelectedChat();
-            chatid=chat.getChatId();
+            if(chat!=null)
+                chatid=chat.getChatId();
             //historialmensaje.clear();
-            chatHistory.clear();
+            //chatHistory.clear();
+            if (chatHistory == null) {
+                chatHistory = new ArrayList<ChatMessage>();
+            }
 
             if(chatid!=null){
                 messsize=chatManager.getMessageByChatId(chatid).size();
-                msg = new ChatMessage();
+
                 for (int i = 0; i < messsize; i++) {
+                    msg = new ChatMessage();
                     message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
                     inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
                     ///historialmensaje.add(inorout + "@#@#" + message);
                     msg.setId(chatManager.getMessageByChatId(chatid).get(i).getMessageId());
-                    if(inorout== TypeMessage.OUTGOING.toString()) msg.setMe(true);
+                    if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else   msg.setMe(false);
                     msg.setDate(chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString());
                     msg.setUserId(chatManager.getMessageByChatId(chatid).get(i).getContactId());
                     msg.setMessage(message);
+                    //displayMessage(msg);
                     chatHistory.add(msg);//displayMessage(msg);
+                    //displayMessage(msg);
                 }
-
                 adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                 messagesContainer.setAdapter(adapter);
-
-                for (int i = 0; i < chatHistory.size(); i++) {
+                int size = chatHistory.size();
+                for (int i = 0; i < size-1; i++) {
                     msg = chatHistory.get(i);
-                    displayMessage(msg);
+                    //displayMessage(msg);
                 }
             }else{
-                Toast.makeText(getContext(),"chatid null", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),"Waiting for chat message", Toast.LENGTH_SHORT).show();
             }
         }catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -196,22 +202,19 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
 
         TextView meLabel = (TextView) findViewById(R.id.meLbl);
         TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
         RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 
-        //loadDummyHistory();
         if(chatSession!= null){
             whattodo();
-            findmessage();
+            //findmessage();
         }
-
         if (rightName != null) {
             meLabel.setText(rightName);
         } else {
-            meLabel.setText("Me");
+            meLabel.setText("Yo");
         }
 
         if (leftName != null ) {
@@ -224,20 +227,25 @@ public class ChatAdapterView extends LinearLayout {
             container.setBackgroundColor(background);
         }
 
+        loadHistory();
+
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-
             public void onClick(View v) {
                 String messageText = messageET.getText().toString();
                 if (TextUtils.isEmpty(messageText)) {
                     return;
                 }
+
                 try {
                     ChatImpl chat = new ChatImpl();
                     MessageImpl message = new MessageImpl();
                     Long dv = System.currentTimeMillis();
 
                     if (chatwascreate) {
+                        chat=(ChatImpl)chatManager.getChatByChatId(chatid);
+                        chatManager.saveChat(chat);
+
                         message.setChatId(chatid);
                         message.setMessageId(UUID.randomUUID());
                         message.setMessage(messageText);
@@ -246,11 +254,9 @@ public class ChatAdapterView extends LinearLayout {
                         message.setType(TypeMessage.OUTGOING);
                         message.setContactId(contactid);
                         chatManager.saveMessage(message);
-
-                        findmessage();
-                        messageET.setText("");
-                        //adaptador.refreshEvents(historialmensaje);
-                        //Toast.makeText(get, "Message Created", Toast.LENGTH_SHORT).show();
+                        //findmessage();
+                        // adaptador.refreshEvents(historialmensaje);
+                        //Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
                     } else {
                         UUID newchatid = UUID.randomUUID();
                         chat.setChatId(newchatid);
@@ -274,11 +280,19 @@ public class ChatAdapterView extends LinearLayout {
                         message.setContactId(contactid);
                         chatManager.saveMessage(message);
 
-                        findmessage();
-                        messageET.setText("");
-                        //adaptador.refreshEvents(historialmensaje);
-                       // Toast.makeText(getActivity(), "Sending message", Toast.LENGTH_SHORT).show();
+//                        findmessage();
+//                        adaptador.refreshEvents(historialmensaje);
+//                        Toast.makeText(getActivity(),"Sending message", Toast.LENGTH_SHORT).show();
                     }
+
+                    ChatMessage chatMessage = new ChatMessage();
+                    chatMessage.setId(UUID.randomUUID());//dummy
+                    chatMessage.setMessage(messageText);
+                    chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                    chatMessage.setMe(true);
+                    messageET.setText("");
+                    displayMessage(chatMessage);
+
                 } catch (CantSaveMessageException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (CantSaveChatException e) {
@@ -288,34 +302,43 @@ public class ChatAdapterView extends LinearLayout {
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
-//                ChatMessage chatMessage = new ChatMessage();
-//                // chatMessage.setId("122");//dummy
-//                chatMessage.setMessage(messageText);
-//                chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-//                chatMessage.setMe(true);
-//                messageET.setText("");
-//                displayMessage(chatMessage);
             }
         });
+    }
 
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
-                        try {
-                            findmessage();
-                            // adaptador.refreshEvents(historialmensaje);
-                        } catch (Exception e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 2500);
-            }
-        });
+//    mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//        @Override
+//        public void onRefresh() {
+//            new Handler().postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
+//                    try {
+//                        //System.out.println("Threar UI corriendo");
+//                        //TODO: fix this
+//                        findmessage();
+//                        adaptador.refreshEvents(historialmensaje);
+//                    } catch (Exception e) {
+//
+//                        //TODO: fix this
+//                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//
+//                    }
+//                    mSwipeRefreshLayout.setRefreshing(false);
+//                }
+//            }, 2500);
+//        }
+//    });
+//    return layout;
+//}
+
+    private void loadHistory() {
+
+        findmessage();
+//        for (int i = 0; i < chatHistory.size(); i++) {
+//            ChatMessage message = chatHistory.get(i);
+//            displayMessage(message);
+//        }
     }
 
     private void loadDummyHistory() {
@@ -325,13 +348,13 @@ public class ChatAdapterView extends LinearLayout {
             chatHistory = new ArrayList<ChatMessage>();
 
             ChatMessage msg = new ChatMessage();
-            //msg.setId("1");
+            msg.setId(UUID.randomUUID());
             msg.setMe(false);
             msg.setMessage("Hola");
             msg.setDate(DateFormat.getDateTimeInstance().format(new Date()));
             chatHistory.add(msg);
             ChatMessage msg1 = new ChatMessage();
-            //msg1.setId("2");
+            msg1.setId(UUID.randomUUID());
             msg1.setMe(true);
             msg1.setMessage("como andas?");
             msg1.setDate(DateFormat.getDateTimeInstance().format(new Date()));
@@ -525,12 +548,8 @@ public class ChatAdapterView extends LinearLayout {
                 chatView.setBackground(background);
             }
             chatView.loadDummyHistory(loadDummyData);
-
-
             return chatView;
         }
-
-
     }
 
 // extends ArrayAdapter {
