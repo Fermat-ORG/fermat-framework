@@ -11,6 +11,8 @@ import android.view.View;
  */
 public abstract class FermatViewHolder extends RecyclerView.ViewHolder {
 
+    private int holderType;
+
     /**
      * Constructor
      *
@@ -18,5 +20,14 @@ public abstract class FermatViewHolder extends RecyclerView.ViewHolder {
      */
     protected FermatViewHolder(View itemView) {
         super(itemView);
+    }
+    protected FermatViewHolder(View itemView,int holderType) {
+        super(itemView);
+        this.holderType = holderType;
+    }
+
+
+    public int getHolderType() {
+        return holderType;
     }
 }

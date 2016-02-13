@@ -61,6 +61,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -70,7 +71,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -153,7 +157,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     /**
      * Represent the dataBase
      */
-    private Database dataBase;
+    private Database abstractCommunicationNetworkServiceDatabase;
 
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
@@ -179,6 +183,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         this.extraData             = extraData;
         this.starting              = new AtomicBoolean(false);
         this.register              = Boolean.FALSE;
+
+        listenersAdded = new CopyOnWriteArrayList<>();
     }
 
 
@@ -256,14 +262,14 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     }
 
                     /*
-                     * Reprocess messages
-                     */
-                    reprocessMessages();
-
-                    /*
                      * Call on start method
                      */
                     onStart();
+
+                    /*
+                     * Reprocess messages
+                     */
+                    reprocessMessages();
 
                     /*
                      * Its all ok, set the new status
@@ -273,13 +279,15 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
                 } catch (Exception exception) {
 
+                    System.out.println(exception.toString());
+
                     StringBuffer contextBuffer = new StringBuffer();
                     contextBuffer.append("Plugin ID: " + pluginId);
                     contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
                     contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
                     String context = contextBuffer.toString();
-                    String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
+                    String possibleCause = "The Template triggered an unexpected problem that wasn't able to solve by itself";
                     CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
                     getErrorManager().reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
@@ -489,7 +497,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
             /*
              * Open new database connection
              */
-            this.dataBase = this.getPluginDatabaseSystem().openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.abstractCommunicationNetworkServiceDatabase = this.getPluginDatabaseSystem().openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -512,7 +520,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 /*
                  * We create the new database
                  */
-                this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.abstractCommunicationNetworkServiceDatabase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -572,6 +580,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     event.getPlatformComponentProfileRegistered().getNetworkServiceType() == getNetworkServiceProfile().getNetworkServiceType() &&
                         event.getPlatformComponentProfileRegistered().getIdentityPublicKey().equals(identity.getPublicKey())) {
 
+                System.out.println("###################\n"+"NETWORK SERVICE REGISTERED: "+ name+"\n###################");
+
                 this.register = Boolean.TRUE;
                 onNetworkServiceRegistered();
             }
@@ -597,6 +607,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 communicationNetworkServiceConnectionManager.closeAllConnection();
                 communicationNetworkServiceConnectionManager.stop();
             }
+
+            communicationSupervisorPendingMessagesAgent.removeAllConnectionWaitingForResponse();
 
             onClientConnectionClose();
 
@@ -666,6 +678,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
              * Tell the manager to handler the new connection established
              */
             communicationNetworkServiceConnectionManager.handleEstablishedRequestedNetworkServiceConnection(event.getRemoteComponent());
+            communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteComponent().getIdentityPublicKey());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -713,7 +726,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
         try {
 
-            communicationSupervisorPendingMessagesAgent.connectionFailure(event.getRemoteParticipant().getIdentityPublicKey());
+            communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteParticipant().getIdentityPublicKey());
+            checkFailedSendMessage(event.getRemoteParticipant().getIdentityPublicKey());
             onFailureComponentConnectionRequest(event.getRemoteParticipant());
 
         } catch (Exception e) {
@@ -752,6 +766,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
 
+                communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(remotePublicKey);
+
                 reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
 
             }
@@ -776,6 +792,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                 if(communicationNetworkServiceConnectionManager != null) {
                     communicationNetworkServiceConnectionManager.closeConnection(remotePublicKey);
                 }
+
+                communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(remotePublicKey);
 
                 reprocessMessages(event.getRemoteParticipant().getIdentityPublicKey());
 
@@ -832,9 +850,62 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
         }catch (Exception e){
 
-            System.out.println("Error sending message: "+e.getMessage());
+            System.out.println("Error sending message: " + e.getMessage());
             throw new CantSendMessageException(CantSendMessageException.DEFAULT_MESSAGE, e);
         }
+    }
+
+    /**
+     * Check fail send message
+     *
+     * @param destinationPublicKey
+     */
+    private void checkFailedSendMessage(String destinationPublicKey){
+
+        try{
+
+            /*
+             * Read all pending message from database
+             */
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, destinationPublicKey);
+            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+            List<FermatMessage> messages = getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().findAll(filters);
+
+            for (FermatMessage fermatMessage: messages) {
+
+                /*
+                 * Increment the fail count field
+                 */
+                FermatMessageCommunication fermatMessageCommunication = (FermatMessageCommunication) fermatMessage;
+                fermatMessageCommunication.setFailCount(fermatMessageCommunication.getFailCount() + 1);
+
+                if(fermatMessageCommunication.getFailCount() > 10 ) {
+
+                    /*
+                     * Calculate the date
+                     */
+                    long sentDate = fermatMessageCommunication.getShippingTimestamp().getTime();
+                    long currentTime = System.currentTimeMillis();
+                    long dif = currentTime - sentDate;
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+
+                    /*
+                     * if have mora that 3 days
+                     */
+                    if ((int) dias > 3) {
+                        getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().delete(fermatMessage.getId());
+                    }
+                }else {
+                    getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().update(fermatMessage);
+                }
+
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -850,7 +921,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @return Database
      */
     protected Database getDataBase() {
-        return dataBase;
+        return abstractCommunicationNetworkServiceDatabase;
     }
 
     /**
@@ -881,7 +952,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * This method is called when the network service method
      * AbstractPlugin#start() is called
      */
-    protected abstract void onStart();
+    protected abstract void onStart() throws CantStartPluginException;
 
     /**
      * This method is automatically called when the network service receive
@@ -1064,4 +1135,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * @return LogManager
      */
     public abstract LogManager getLogManager();
+
+    public ECCKeyPair getIdentity() {
+        return identity;
+    }
 }

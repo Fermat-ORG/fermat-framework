@@ -178,23 +178,23 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
         int resultKey = executor.execute();
 
-        new Thread() {
-            @Override
-            public void run() {
-                try {
-
-                    appSession.getModuleManager().publishCryptoCustomerIdentity(executor.getIdentity().getPublicKey());
-
-                } catch(CouldNotPublishCryptoCustomerException e) {
-
-                    Toast.makeText(getActivity(), "Error al publicar la identidad", Toast.LENGTH_LONG).show();
-
-                }
-            }
-        }.start();
-
         switch (resultKey) {
             case SUCCESS:
+
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+
+                            appSession.getModuleManager().publishCryptoCustomerIdentity(executor.getIdentity().getPublicKey());
+
+                        } catch(CouldNotPublishCryptoCustomerException e) {
+
+                            Toast.makeText(getActivity(), "Error al publicar la identidad", Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                }.start();
                 changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode(), appSession.getAppPublicKey());
                 break;
             case EXCEPTION_THROWN:

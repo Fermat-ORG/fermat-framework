@@ -1,14 +1,17 @@
 package com.bitdubai.fermat_dap_plugin.layer.module.asset.user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_transfer.exceptions.CantTransferDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_transfer.interfaces.AssetTransferManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.NotEnoughAcceptsException;
@@ -24,26 +27,23 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by franklin on 16/10/15.
  */
 public class AssetUserWalletModule {
-    private AssetUserWalletManager assetUserWalletManager;
-    private AssetAppropriationManager assetAppropriationManager;
-    private UserRedemptionManager userRedemptionManager;
-    private IdentityAssetUserManager identityAssetUserManager;
-    private UUID pluginId;
-    private PluginFileSystem pluginFileSystem;
+    private final AssetUserWalletManager assetUserWalletManager;
+    private final AssetAppropriationManager assetAppropriationManager;
+    private final UserRedemptionManager userRedemptionManager;
+    private final IdentityAssetUserManager identityAssetUserManager;
+    private final AssetTransferManager assetTransferManager;
 
-    public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager, AssetAppropriationManager assetAppropriationManager, UserRedemptionManager userRedemptionManager, IdentityAssetUserManager identityAssetUserManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
+    public AssetUserWalletModule(AssetUserWalletManager assetUserWalletManager, AssetAppropriationManager assetAppropriationManager, UserRedemptionManager userRedemptionManager, IdentityAssetUserManager identityAssetUserManager, AssetTransferManager assetTransferManager) {
         this.assetUserWalletManager = assetUserWalletManager;
         this.assetAppropriationManager = assetAppropriationManager;
         this.userRedemptionManager = userRedemptionManager;
         this.identityAssetUserManager = identityAssetUserManager;
-        this.pluginId = pluginId;
-        this.pluginFileSystem = pluginFileSystem;
+        this.assetTransferManager = assetTransferManager;
     }
 
     public List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
@@ -86,6 +86,39 @@ public class AssetUserWalletModule {
         return hashMap;
     }
 
+
+    public void transferAsset(String assetPublicKey, String walletPublicKey, List<ActorAssetUser> actorAssetUsers, int assetsAmount, BlockchainNetworkType networkType) throws CantTransferDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
+        try {
+            String context = "Asset PublicKey: " + assetPublicKey + " - Wallet PublicKey: " + walletPublicKey + " - Users: " + actorAssetUsers.toString();
+            if (actorAssetUsers.isEmpty()) {
+                throw new CantDistributeDigitalAssetsException(null, context, "THE USER LIST IS EMPTY.");
+            }
+            System.out.println("******* ASSET DISTRIBUTION TEST (Init Transfer)******");
+            walletPublicKey = "walletPublicKeyTest"; //TODO: DELETE HARDCODE
+            HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = createTransferMap(walletPublicKey, assetPublicKey, actorAssetUsers, assetsAmount, networkType);
+            assetTransferManager.transferAssets(hashMap, walletPublicKey);
+
+        } catch (Exception exception) {
+            throw new CantLoadWalletException("Error transfer Assets", exception, "Method: Transfer Assets", "Class: AssetIssuerWalletModuleManager");
+        }
+    }
+
+
+    private HashMap<DigitalAssetMetadata, ActorAssetUser> createTransferMap(String walletPublicKey, String assetPublicKey, List<ActorAssetUser> actorAssetUsers, int assetsAmount, BlockchainNetworkType networkType) throws CantGetTransactionsException, FileNotFoundException, CantCreateFileException, CantLoadWalletException, CantGetDigitalAssetFromLocalStorageException {
+        HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = new HashMap<>();
+        AssetUserWallet wallet = assetUserWalletManager.loadAssetUserWallet(walletPublicKey, networkType);
+        List<AssetUserWalletTransaction> transactions = wallet.getAllAvailableTransactions(assetPublicKey);
+        if (assetsAmount > transactions.size())
+            throw new IllegalStateException("WE DON'T HAVE ENOUGH ASSETS!!");
+
+        int assetsPerUser = assetsAmount / actorAssetUsers.size();
+        for (int j = 0, i = 0; j < actorAssetUsers.size(); j++) {
+            for (int k = 0; k < assetsPerUser; i++, k++) {
+                hashMap.put(wallet.getDigitalAssetMetadata(transactions.get(i).getGenesisTransaction()), actorAssetUsers.get(j));
+            }
+        }
+        return hashMap;
+    }
 
     public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey, BlockchainNetworkType networkType) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - BTC Wallet Public Key: " + bitcoinWalletPublicKey;

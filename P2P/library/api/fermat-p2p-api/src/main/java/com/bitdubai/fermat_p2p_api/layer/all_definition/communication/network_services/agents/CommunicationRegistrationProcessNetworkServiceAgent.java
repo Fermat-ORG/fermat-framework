@@ -6,7 +6,6 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 
 import java.util.concurrent.ExecutorService;
@@ -37,12 +36,6 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
      *  Represent the network service plugin root
      */
     private AbstractNetworkServiceBase networkServiceRoot;
-
-    /**
-     * Represent the networkService
-     */
-    private NetworkService networkService;
-
 
     /**
      * Represent the active
@@ -80,33 +73,30 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
      */
     private void processRegistration() {
 
+        System.out.println("Cloud Client is Registered " + networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isRegister() +
+                networkServiceRoot.getNetworkServiceProfile().getAlias() + " is Registered " + networkServiceRoot.isRegister());
+
             try{
 
-                System.out.println(networkService.getName()+" isRegister "+networkService.isRegister());
-
-                if (networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
+                if (networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isRegister() && !networkServiceRoot.isRegister()){
 
                     /*
                      * Register me
                      */
-                    networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), networkService.getPlatformComponentProfilePluginRoot());
+                    networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(networkServiceRoot.getNetworkServiceProfile().getNetworkServiceType(), networkServiceRoot.getNetworkServiceProfile());
 
                     /*
                      * Stop the internal threads
                      */
                     stop();
 
-                }else if (!networkService.isRegister()){
-                   try {
+                }else if (!networkServiceRoot.isRegister()){
 
-                        if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
-                            Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
-
-                    } catch (InterruptedException e) {
-                        active = Boolean.FALSE;
-                    }
+                    if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
+                        Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
 
                 }else {
+
                     /*
                      * Stop the internal threads
                      */
@@ -114,6 +104,7 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
                 }
 
             }catch (Exception e){
+                e.printStackTrace();
                 try {
                     if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
                         Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
