@@ -44,7 +44,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
@@ -631,7 +631,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                     platformComponentProfileRegistered.getIdentityPublicKey().equals(identity.getPublicKey())) {
 
                 System.out.print("-----------------------\n NEGOTIATION TRANSMISSION REGISTERED \n-----------------------\n TO: " + getName()
-                                    +"\nIDENTITY: "+identity.getPublicKey()
+                                +"\nIDENTITY: "+identity.getPublicKey()
                 );
 
                 //Mark as register
@@ -1363,7 +1363,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                time.getTime()
+
         );
     }
 
@@ -1389,7 +1391,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                time.getTime()
         );
     }
 
@@ -1397,13 +1400,13 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
         Collection<Clause> clauses = new ArrayList<>();
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY,
-                MoneyType.BANK.getCode()));
+                CurrencyType.BANK_MONEY.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY_QUANTITY,
                 "1961"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_CURRENCY,
-                MoneyType.BANK.getCode()));
+                CurrencyType.BANK_MONEY.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.BROKER_DATE_TIME_TO_DELIVER,
                 "1000"));
@@ -1412,7 +1415,7 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 "2000"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_CURRENCY,
-                MoneyType.CASH_ON_HAND.getCode()));
+                CurrencyType.CASH_ON_HAND_MONEY.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
                 "100"));
