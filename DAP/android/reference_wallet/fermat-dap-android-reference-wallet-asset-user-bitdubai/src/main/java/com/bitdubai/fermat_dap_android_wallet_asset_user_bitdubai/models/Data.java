@@ -101,7 +101,7 @@ public class Data {
         return actorAssetRedeemPoints;
     }
 
-    public static List<Transaction> getTransactionsSent(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+    public static List<Transaction> getTransactions(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
 //        List<Transaction> transactions = new ArrayList<>();
 //        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet("walletPublicKeyTest").getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, digitalAsset.getAssetPublicKey());
 //        ActorAssetUser actorAssetUser;
@@ -120,33 +120,9 @@ public class Data {
         Transaction transaction = new Transaction();
         transaction.setUserName("Prueba");
         transaction.setAmount(1.12);
-        transaction.setTransactionUserName("Prueba");
         transaction.setDate(new Timestamp(new Date().getTime()));
-        transactions.add(transaction);
-        return transactions;
-    }
-
-    public static List<Transaction> getTransactionsRecieved(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
-//        List<Transaction> transactions = new ArrayList<>();
-//        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet("walletPublicKeyTest").getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, digitalAsset.getAssetPublicKey());
-//        ActorAssetUser actorAssetUser;
-//        for (AssetUserWalletTransaction assetUserWalletTransaction :
-//                assetUserWalletTransactions) {
-//            actorAssetUser = moduleManager.getActorByPublicKey(assetUserWalletTransaction.getActorFromPublicKey());
-//            Transaction transaction = new Transaction();
-//            transaction.setAssetUserWalletTransaction(assetUserWalletTransaction);
-//            transaction.setUserName(moduleManager.getActorRegisteredByPublicKey(assetUserWalletTransaction.getActorFromPublicKey()).getName());
-//            transaction.setAmount(assetUserWalletTransaction.getAmount());
-//            transaction.setTransactionUserName(moduleManager.getActorByPublicKey(assetUserWalletTransaction.getActorToPublicKey()).getName());
-//            transaction.setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
-//            transaction.setImagePerson(actorAssetUser.getProfileImage());
-//        }
-        List<Transaction> transactions = new ArrayList<>();
-        Transaction transaction = new Transaction();
-        transaction.setUserName("Prueba");
-        transaction.setAmount(1.12);
-        transaction.setTransactionUserName("Prueba");
-        transaction.setDate(new Timestamp(new Date().getTime()));
+        transaction.setTransactionType(com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType.CREDIT);
+        transaction.setBalanceType(BalanceType.AVAILABLE);
         transactions.add(transaction);
         return transactions;
     }

@@ -10,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +24,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.SizeUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
@@ -43,11 +41,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.AssetDetailSentAdapter;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.AssetRedeemSelectRedeemPointsAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.AssetDetailTransactionAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemPoint;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Transaction;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
@@ -68,7 +64,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by frank on 12/15/15.
  */
-public class AssetDetailSentTabFragment extends FermatWalletListFragment<Transaction>
+public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Transaction>
         implements FermatListItemListeners<Transaction> {
 
     private AssetUserSession assetUserSession;
@@ -97,12 +93,12 @@ public class AssetDetailSentTabFragment extends FermatWalletListFragment<Transac
     private View noTransactionsView;
     private List<Transaction> transactions;
 
-    public AssetDetailSentTabFragment() {
+    public AssetDetailTransactionsFragment() {
 
     }
 
-    public static AssetDetailSentTabFragment newInstance() {
-        return new AssetDetailSentTabFragment();
+    public static AssetDetailTransactionsFragment newInstance() {
+        return new AssetDetailTransactionsFragment();
     }
 
     @Override
@@ -197,7 +193,7 @@ public class AssetDetailSentTabFragment extends FermatWalletListFragment<Transac
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.dap_wallet_asset_user_asset_detail_transaction_sent;
+        return R.layout.dap_wallet_asset_user_asset_detail_transaction;
     }
 
     @Override
@@ -497,7 +493,7 @@ public class AssetDetailSentTabFragment extends FermatWalletListFragment<Transac
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AssetDetailSentAdapter(getActivity(), transactions, moduleManager);
+            adapter = new AssetDetailTransactionAdapter(getActivity(), transactions, moduleManager);
             adapter.setFermatListEventListener(this);
         }
         return adapter;
@@ -516,7 +512,7 @@ public class AssetDetailSentTabFragment extends FermatWalletListFragment<Transac
         List<Transaction> transactions = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                transactions = Data.getTransactionsSent(moduleManager, digitalAsset);
+                transactions = Data.getTransactions(moduleManager, digitalAsset);
 
                 appSession.setData("transactions_sent", transactions);
 
