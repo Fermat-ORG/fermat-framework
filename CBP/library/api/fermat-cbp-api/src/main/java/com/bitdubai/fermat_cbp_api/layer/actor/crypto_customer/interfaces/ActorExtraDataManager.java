@@ -69,7 +69,7 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
 
     /**
      *
-     * @param actorExtraData este parametro debe ser una clase que implemente ActorExtraData pero solo la parte de la identidad Ej: new ActorExtraDataImpl(ActorIdentity);
+     * @param actorExtraData
      * @throws CantSendActorNetworkServiceException
      */
     void requestBrokerExtraData(ActorExtraData actorExtraData) throws CantSendActorNetworkServiceException;

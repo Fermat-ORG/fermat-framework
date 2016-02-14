@@ -122,6 +122,7 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
         mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             if (actualizable) {
                 editIdentityInfoInBackDevice();
                 actualizable = false;
@@ -170,15 +171,6 @@ public class EditCryptoBrokerIdentityFragment extends AbstractFermatFragment imp
             }
         });
         ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if(actualizable){
-            editIdentityInfoInBackDevice();
-            actualizable = false;
-        }
     }
 
     @Override
