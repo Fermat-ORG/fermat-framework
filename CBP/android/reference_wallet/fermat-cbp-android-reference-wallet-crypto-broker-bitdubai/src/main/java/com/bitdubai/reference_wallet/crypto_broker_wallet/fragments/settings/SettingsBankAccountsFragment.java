@@ -119,6 +119,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
 
         return layout;
     }
+
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -169,9 +170,11 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
 
             for (BankAccountNumber accountNumber : accounts) {
                 for (InstalledWallet wallet : filteredList) {
-                    if (accountNumber.getAccount().equals(walletManager.getAccounts(wallet.getWalletPublicKey()))) {
-                        walletPublicKey = wallet.getWalletPublicKey();
-                        break;
+                    for (BankAccountNumber auxAccountNumber1 : walletManager.getAccounts(wallet.getWalletPublicKey())) {
+                        if (accountNumber.getAccount().equals(auxAccountNumber1.getAccount())) {
+                            walletPublicKey = wallet.getWalletPublicKey();
+                            break;
+                        }
                     }
                 }
                 Platforms platform = Platforms.BANKING_PLATFORM;
