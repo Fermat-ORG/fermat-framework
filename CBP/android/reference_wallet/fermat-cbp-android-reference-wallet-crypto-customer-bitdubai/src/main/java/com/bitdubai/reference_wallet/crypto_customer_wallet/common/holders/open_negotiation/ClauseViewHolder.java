@@ -90,11 +90,11 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
 
                 if ((valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
                     actualStatus = NegotiationStepStatus.CHANGED;
-//                    putClause(clause.getType(),clause.getValue(),ClauseStatus.CHANGED);
+                    putClause(clause, ClauseStatus.CHANGED);
 
                 }else if ((!valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
                     actualStatus = NegotiationStepStatus.ACCEPTED;
-//                    putClause(clause.getType(),clause.getValue(),ClauseStatus.CHANGED);
+                    putClause(clause, ClauseStatus.ACCEPTED);
 
                 }
 
@@ -143,23 +143,34 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
         setStatus(status);
     }
 
-    public void putClause(final ClauseType clauseType, final String value, final ClauseStatus status) {
+    //PUT CLAUSE
+    public void putClause(final ClauseInformation clause, final ClauseStatus status) {
+
+        final ClauseType type = clause.getType();
 
         ClauseInformation clauseInformation = new ClauseInformation() {
             @Override
-            public UUID getClauseID() { return UUID.randomUUID(); }
+            public UUID getClauseID() {
+                return clause.getClauseID();
+            }
 
             @Override
-            public ClauseType getType() { return clauseType; }
+            public ClauseType getType() {
+                return type;
+            }
 
             @Override
-            public String getValue() { return (value != null) ? value : ""; }
+            public String getValue() {
+                return clause.getValue();
+            }
 
             @Override
-            public ClauseStatus getStatus() { return status; }
+            public ClauseStatus getStatus() {
+                return status;
+            }
         };
 
-        negotiationInformation.getClauses().put(clauseType, clauseInformation);
+        negotiationInformation.getClauses().put(type, clauseInformation);
     }
 
 }

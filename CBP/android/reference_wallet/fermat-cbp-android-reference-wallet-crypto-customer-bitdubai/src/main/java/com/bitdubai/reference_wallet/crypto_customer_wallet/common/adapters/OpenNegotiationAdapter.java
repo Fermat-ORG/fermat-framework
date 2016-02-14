@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -209,54 +211,84 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
             //BASIC CLAUSES
             case BROKER_CURRENCY:
                 clauseViewHolder.setViewResources(R.string.ccw_currency_to_pay, clauseNumberImageRes, R.string.ccw_currency_description);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case EXCHANGE_RATE:
                 clauseViewHolder.setViewResources(R.string.exchange_rate_reference, clauseNumberImageRes);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case CUSTOMER_CURRENCY_QUANTITY:
                 clauseViewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes, R.string.ccw_amount_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_CURRENCY_QUANTITY:
                 clauseViewHolder.setViewResources(R.string.ccw_amount_to_pay, clauseNumberImageRes, R.string.ccw_amount_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //PAYMENT METHOD CLAUSES
             case CUSTOMER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.reception_methods_title, clauseNumberImageRes, R.string.payment_method);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //CRYPTO CLAUSES
             case CUSTOMER_CRYPTO_ADDRESS:
                 clauseViewHolder.setViewResources(R.string.ccw_crypto_address_customer, clauseNumberImageRes, R.string.ccw_crypto_address_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_CRYPTO_ADDRESS:
                 clauseViewHolder.setViewResources(R.string.ccw_crypto_address_broker, clauseNumberImageRes, R.string.ccw_crypto_address_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //BANK CLAUSES
             case CUSTOMER_BANK_ACCOUNT:
                 clauseViewHolder.setViewResources(R.string.ccw_bank_account_customer, clauseNumberImageRes, R.string.ccw_bank_account_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_BANK_ACCOUNT:
                 clauseViewHolder.setViewResources(R.string.ccw_bank_account_broker, clauseNumberImageRes, R.string.ccw_bank_account_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //CASH CLAUSES
             case CUSTOMER_PLACE_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_customer, clauseNumberImageRes, R.string.ccw_cash_place_to_delivery_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_PLACE_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_broker, clauseNumberImageRes, R.string.ccw_cash_place_to_delivery_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //DATE CLAUSES
             case CUSTOMER_DATE_TIME_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_customer, clauseNumberImageRes, R.string.delivery_date_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_DATE_TIME_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_broker, clauseNumberImageRes, R.string.delivery_date_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //OTHER
             case CUSTOMER_CURRENCY:
                 clauseViewHolder.setViewResources(R.string.ccw_currency_to_buy, clauseNumberImageRes, R.string.payment_method);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
         }
 
@@ -349,6 +381,8 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         return clause;
     }
+
+    private NegotiationStepStatus negotiationStepStatus(ClauseStatus statusClause){ return NegotiationStepStatus.getByCode(statusClause.getCode()); }
 
     private int getItemPosition(int position) {
         return haveNote ? position - 1 : position;

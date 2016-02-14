@@ -113,10 +113,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             brokerCurrencyQuotationlist = TestData.getMarketRateForCurrencyTest();
             brokerCurrencyQuotation = new BrokerCurrencyQuotation(brokerCurrencyQuotationlist);
 
-            //REMOVE CURRENCY TO PAY OF CURRENCY LIST
-            //no lo esta quitando
-//            removeCurrency();
-
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
