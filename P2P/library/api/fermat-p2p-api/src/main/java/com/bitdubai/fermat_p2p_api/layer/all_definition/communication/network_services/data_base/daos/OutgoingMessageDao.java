@@ -198,9 +198,6 @@ public final class OutgoingMessageDao {
         return list;
     }
 
-    ;
-
-
     /**
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>CommunicationNetworkServiceDatabaseConstants</code>
@@ -276,7 +273,7 @@ public final class OutgoingMessageDao {
         return list;
     }
 
-    ;
+
 
 
     /**
@@ -370,7 +367,7 @@ public final class OutgoingMessageDao {
         return list;
     }
 
-    ;
+
 
     /**
      * Method that create a new entity in the data base.
@@ -463,6 +460,97 @@ public final class OutgoingMessageDao {
         }
 
     }
+
+    /**
+     * Method that list the all entities on the data base. The valid value of
+     * the column name are the att of the <code>CommunicationNetworkServiceDatabaseConstants</code>
+     *
+     * @return All FermatMessage.
+     * @throws CantReadRecordDataBaseException
+     * @see CommunicationNetworkServiceDatabaseConstants
+     */
+    public List<FermatMessage> findByFailCount(Integer countFailMin, Integer countFailMax) throws CantReadRecordDataBaseException {
+
+        List<FermatMessage> list = null;
+
+        try {
+
+            /*
+             * 1 - load the data base to memory with filters
+             */
+            DatabaseTable templateTable = getDatabaseTable();
+
+            /*
+             * 2 - prepare the filters
+             */
+            List<DatabaseTableFilter> filtersTable = new ArrayList<>();
+
+            if (countFailMin != null){
+
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.GREATER_OR_EQUAL_THAN);
+                newFilter.setColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
+                newFilter.setValue(countFailMin.toString());
+                filtersTable.add(newFilter);
+            }
+
+            if (countFailMax != null){
+
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.LESS_OR_EQUAL_THAN);
+                newFilter.setColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
+                newFilter.setValue(countFailMax.toString());
+                filtersTable.add(newFilter);
+            }
+
+            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
+            templateTable.loadToMemory();
+
+            /*
+             * 3 - read all records
+             */
+            List<DatabaseTableRecord> records = templateTable.getRecords();
+
+            /*
+             * 4 - Create a list of FermatMessage objects
+             */
+            list = new ArrayList<>();
+            list.clear();
+
+            /*
+             * 5 - Convert into FermatMessage objects
+             */
+            for (DatabaseTableRecord record : records) {
+
+                /*
+                 * 5.1 - Create and configure a  FermatMessage
+                 */
+                FermatMessage outGoingTemplateNetworkServiceMessage = constructFrom(record);
+
+                /*
+                 * 5.2 - Add to the list
+                 */
+                list.add(outGoingTemplateNetworkServiceMessage);
+
+            }
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+        }
+
+        /*
+         * return the list
+         */
+        return list;
+    }
+
 
     /**
      * Method that delete a entity in the data base.

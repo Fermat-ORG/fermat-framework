@@ -105,18 +105,14 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
      * validate is pending message to send, and request new connection for
      * the remote agent send the message
      */
-    private void processPendingOutgoingMessage(Integer countFail) {
+    private void processPendingOutgoingMessage(Integer countFail, Integer countFailMax) {
 
         try {
 
             /*
              * Read all pending message from database
              */
-            Map<String, Object> filters = new HashMap<>();
-            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
-            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, countFail);
-
-            List<FermatMessage> messages = networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().findAll(filters);
+            List<FermatMessage> messages = networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().findByFailCount(countFail, countFailMax);
 
             /*
              * For all destination in the message request a new connection
@@ -154,9 +150,9 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
         try {
 
             scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingIncomingMessageProcessorTask(),  15, 15, TimeUnit.SECONDS));
-            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(0), 15, 15, TimeUnit.SECONDS));
-            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5),  5,  5, TimeUnit.MINUTES));
-            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10), 1, 1, TimeUnit.HOURS));
+            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(0, 4), 15, 15, TimeUnit.SECONDS));
+            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5, 9),  5,  5, TimeUnit.MINUTES));
+            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10, null), 1, 1, TimeUnit.HOURS));
 
             this.status = AgentStatus.STARTED;
 
@@ -174,9 +170,9 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
             try {
 
                 scheduledThreadPool.scheduleAtFixedRate(new PendingIncomingMessageProcessorTask()  , 15, 15, TimeUnit.SECONDS);
-                scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(0) , 15, 15, TimeUnit.SECONDS);
-                scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5) ,  5,  5, TimeUnit.MINUTES);
-                scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10),  1,  1, TimeUnit.HOURS);
+                scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(0, 4), 15, 15, TimeUnit.SECONDS));
+                scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5, 9), 5, 5, TimeUnit.MINUTES));
+                scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10, null), 1, 1, TimeUnit.HOURS));
 
                 this.status = AgentStatus.STARTED;
 
@@ -259,15 +255,22 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
         /**
          * Represent the count fail
          */
-        private int countFail;
+        private Integer countFailMin;
+
+        /**
+         * Represent the count fail
+         */
+        private Integer countFailMax;
 
         /**
          * Constructor with parameters
-         * @param countFail
+         * @param countFailMin
+         * @param countFailMax
          */
-        public PendingOutgoingMessageProcessorTask(int countFail){
+        public PendingOutgoingMessageProcessorTask(Integer countFailMin, Integer countFailMax){
             super();
-            this.countFail = countFail;
+            this.countFailMin = countFailMin;
+            this.countFailMax = countFailMax;
         }
 
         /**
@@ -276,7 +279,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
          */
         @Override
         public void run() {
-            processPendingOutgoingMessage(countFail);
+            processPendingOutgoingMessage(countFailMin, countFailMax);
         }
     }
 
