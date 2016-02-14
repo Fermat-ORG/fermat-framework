@@ -1,5 +1,6 @@
-package com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces;
+package com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces;
 
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantSingMessageException;
 
 /**
  * This interface let you access to the Developer public Information
@@ -25,5 +26,5 @@ public interface DeveloperIdentity {
      * @param mensage unsigned
      * @return signed message
      */
-    String createMessageSignature(String mensage) throws com.bitdubai.fermat_api.layer.pip_Identity.developer.exceptions.CantSingMessageException;
+    String createMessageSignature(String mensage) throws CantSingMessageException;
 }

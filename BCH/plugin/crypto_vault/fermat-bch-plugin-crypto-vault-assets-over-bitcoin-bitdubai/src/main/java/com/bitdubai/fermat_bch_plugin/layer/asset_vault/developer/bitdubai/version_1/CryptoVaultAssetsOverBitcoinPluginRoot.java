@@ -318,7 +318,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      */
     @Override
     public String createBitcoinTransaction(DraftTransaction draftTransaction) throws CantCreateBitcoinTransactionException {
-        return null;
+        return assetCryptoVaultManager.createBitcoinTransaction(draftTransaction);
     }
 
     /**
@@ -330,7 +330,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      */
     @Override
     public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
-        return null;
+        return assetCryptoVaultManager.createDraftTransaction(inputTransaction, addressTo);
     }
 
     /**
@@ -341,7 +341,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      */
     @Override
     public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
-        return null;
+        return assetCryptoVaultManager.signTransaction(draftTransaction);
     }
 
 

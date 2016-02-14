@@ -17,6 +17,8 @@ public enum AssetSellStatus implements FermatEnum {
     PARTIALLY_SIGNED("PASI"),
     SIGNATURE_REJECTED("SIRE"),
     COMPLETE_SIGNATURE("COSI"),
+    WALLET_DEBITED("WLDB"),
+    BROADCASTING("BCT"),
     SELL_FINISHED("SEFI"),
     NO_ACTION_REQUIRED("NO");
 
