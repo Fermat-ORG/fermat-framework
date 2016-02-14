@@ -427,9 +427,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUserActorsException {
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException {
         try {
-            return this.assetUserActorDao.getListActorAssetUserByGroups(groupId);
+            return this.assetUserActorDao.getListActorAssetUserByGroups(groupId, blockchainNetworkType);
         } catch (CantGetAssetUsersListException ex) {
             throw new CantGetAssetUserActorsException("You can not get users by group", ex, "Error", "");
         }

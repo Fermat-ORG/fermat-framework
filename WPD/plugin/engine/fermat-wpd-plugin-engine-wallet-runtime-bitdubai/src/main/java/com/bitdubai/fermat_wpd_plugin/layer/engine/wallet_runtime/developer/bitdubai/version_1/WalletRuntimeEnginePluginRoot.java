@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -1586,6 +1586,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         StatusBar runtimeStatusBar;
         Header runtimeHeader;
         Fragment runtimeFragment;
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
 
         final String publicKey = "asset_user";
 
@@ -1691,10 +1693,14 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        runtimeHeader = new Header();
+        runtimeHeader.setLabel("root");
+        runtimeActivity.setHeader(runtimeHeader);
+
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL.getKey());
-        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL.getKey());
+        runtimeFragment.setType(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_TRANSACTIONS.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_TRANSACTIONS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_WALLET_ASSET_USER_ASSET_DETAIL_TRANSACTIONS.getKey());
 
         // BEG Settings activity from DAP WALLET USER
         runtimeActivity = new Activity();

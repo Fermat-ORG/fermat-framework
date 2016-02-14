@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.
 
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
@@ -18,6 +19,7 @@ public class RedeemPointViewHolder extends FermatViewHolder {
     public FermatTextView name;
     public FermatTextView status;
     public FermatTextView crypto;
+    public ImageView connectionState;
 
     /**
      * Constructor
@@ -32,5 +34,6 @@ public class RedeemPointViewHolder extends FermatViewHolder {
 
         status = (FermatTextView) itemView.findViewById(R.id.status);
         crypto = (FermatTextView) itemView.findViewById(R.id.crypto);
+        connectionState=  (ImageView) itemView.findViewById(R.id.connection_state);
     }
 }
