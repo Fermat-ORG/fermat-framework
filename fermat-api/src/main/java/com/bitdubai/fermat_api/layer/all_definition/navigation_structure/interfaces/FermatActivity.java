@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -9,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 
 import java.io.Serializable;
 import java.util.Map;
