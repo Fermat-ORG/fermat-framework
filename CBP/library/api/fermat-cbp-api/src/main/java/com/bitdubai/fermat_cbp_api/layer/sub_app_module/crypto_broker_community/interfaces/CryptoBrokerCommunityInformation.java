@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+
 import java.util.List;
 
 /**
@@ -36,6 +38,12 @@ public interface CryptoBrokerCommunityInformation {
      * @return
      */
     List listCryptoBrokerWallets();
+
+    /**
+     * The method <code>getConnectionState</code> returns the Connection State Status
+     * @return ConnectionState object
+     */
+    ConnectionState getConnectionState();
 
 }
 

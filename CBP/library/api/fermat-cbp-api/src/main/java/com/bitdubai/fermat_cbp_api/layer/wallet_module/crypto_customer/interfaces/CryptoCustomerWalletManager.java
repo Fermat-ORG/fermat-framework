@@ -107,7 +107,7 @@ public interface CryptoCustomerWalletManager extends WalletManager {
      * @param customerWalletPublicKey the wallet public key
      * @return true if configure, false otherwise
      */
-    boolean isWalletConfigured(String customerWalletPublicKey);
+    boolean isWalletConfigured(String customerWalletPublicKey) throws CantGetSettingsException, SettingsNotFoundException;
 
     /**
      * Start a new negotiation with a crypto broker
