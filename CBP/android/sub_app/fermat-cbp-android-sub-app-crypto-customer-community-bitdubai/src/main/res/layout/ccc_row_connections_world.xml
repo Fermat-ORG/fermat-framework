@@ -37,6 +37,15 @@
             app:typeface="ROBOTO_REGULAR"
             tools:ignore="HardcodedText" />
 
+        <ImageView
+            android:id="@+id/ccc_connection_state"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/ic_home_friend"
+            android:visibility="gone"
+            tools:ignore="ContentDescription,RtlHardcoded" />
 
     </RelativeLayout>
 

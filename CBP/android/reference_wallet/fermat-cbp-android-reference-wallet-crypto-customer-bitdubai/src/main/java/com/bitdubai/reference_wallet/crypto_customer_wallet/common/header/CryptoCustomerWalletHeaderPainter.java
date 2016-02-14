@@ -80,6 +80,7 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
                     List<IndexInfoSummary> summaries = (List<IndexInfoSummary>) result[0];
+                    session.setActualExchangeRates(summaries);
 
                     progressBar.setVisibility(View.GONE);
 

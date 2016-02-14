@@ -84,7 +84,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                 while (isRunning())
                     process();
             }
-        });
+        }, this.getClass().getSimpleName());
     }
 
     /**
@@ -130,6 +130,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
             }
         }
     }
+
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
@@ -168,7 +169,6 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
 //            }
 //        }
 //    }
-
     private void doTheMainTask() {
         try {
             // I define the filter to null for all

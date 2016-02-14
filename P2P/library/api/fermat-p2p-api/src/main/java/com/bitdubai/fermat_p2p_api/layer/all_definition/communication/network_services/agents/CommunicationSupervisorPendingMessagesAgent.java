@@ -131,8 +131,14 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
              * For all destination in the message request a new connection
              */
             for (FermatMessage fermatMessage: messages) {
-
                 networkServiceRoot.onNewMessagesReceive(fermatMessage);
+            }
+
+            /*
+             * Sleep for a while
+             */
+            if(!Thread.currentThread().isInterrupted()){
+                Thread.sleep(SLEEP_TIME);
             }
 
         }catch (Exception e){
@@ -174,7 +180,13 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
 
                     }
                 }
+            }
 
+            /*
+             * Sleep for a while
+             */
+            if(!Thread.currentThread().isInterrupted()){
+                Thread.sleep(SLEEP_TIME);
             }
 
         } catch (Exception e) {
@@ -272,20 +284,18 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
     }
 
     /**
-     * Notify to the agent that a request connection fail
+     * Notify to the agent that remove a specific connection
      *
      * @param identityPublicKey
      */
-    public void connectionFailure(String identityPublicKey){
+    public void removeConnectionWaitingForResponse(String identityPublicKey){
         this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
     }
 
     /**
-     * Get the poolConnectionsWaitingForResponse instance
-     *
-     * @return Map<String, PlatformComponentProfile>
+     * Notify to the agent that remove all connection
      */
-    public Map<String, PlatformComponentProfile> getPoolConnectionsWaitingForResponse() {
-        return poolConnectionsWaitingForResponse;
+    public void removeAllConnectionWaitingForResponse(){
+        this.poolConnectionsWaitingForResponse.clear();
     }
 }
