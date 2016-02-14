@@ -372,7 +372,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                        moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.redeem_point_identity) : brokerImageByteArray);
                     else
                         moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
                 } catch (CantCreateNewRedeemPointException e) {
