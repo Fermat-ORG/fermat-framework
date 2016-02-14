@@ -288,13 +288,13 @@ public class WizardActivity extends FermatActivity
     }
 
     @Override
-    protected FermatStructure getAppInUse() {
+    public FermatStructure getAppInUse() {
         //TODO: a implementar
         return null;
     }
 
     @Override
-    protected FermatSession getFermatSessionInUse(String appPublicKey) {
+    public FermatSession getFermatSessionInUse(String appPublicKey) {
         //TODO: obtener la session de forma indistinta
         return null;
     }
@@ -348,11 +348,6 @@ public class WizardActivity extends FermatActivity
     @Override
     public void nextScreen() {
         doNext();
-    }
-
-    @Override
-    public void changeActivityBack(String appBackPublicKey, String activityCode) {
-
     }
 
     @Override
