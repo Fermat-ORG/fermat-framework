@@ -190,7 +190,7 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
 //            createCustomerBrokerCancelSaleNegotiationTest();
 
             //TEST EVENT REGISTER
-            registerEventTest();
+//            registerEventTest();
 
             //TEST GET ALL EVENT
 //            getAllEvent();
