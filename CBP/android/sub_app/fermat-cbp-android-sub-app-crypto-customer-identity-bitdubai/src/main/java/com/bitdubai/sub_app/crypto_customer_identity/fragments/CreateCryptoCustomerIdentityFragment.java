@@ -100,6 +100,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (actualizable) {
+                    getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                     createNewIdentityInBackDevice();
                     actualizable = false;
                 }
@@ -136,7 +137,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.getItem(0).setVisible(false);
+        menu.clear();
     }
 
     @Override
@@ -174,10 +175,6 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (actualizable) {
-            createNewIdentityInBackDevice();
-            actualizable = false;
-        }
     }
 
     @Override
@@ -205,7 +202,6 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
-
                         new Thread() {
                             @Override
                             public void run() {
@@ -216,15 +212,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                                 }
                             }
                         }.start();
-
-                        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                        break;
-                    case EXCEPTION_THROWN:
-                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
-                        break;
-                    case INVALID_ENTRY_DATA:
-                        Toast.makeText(getActivity(), "Los datos para crear la indentidad no son validos", Toast.LENGTH_LONG).show();
-                        break;
+                    break;
                 }
             }
         }
