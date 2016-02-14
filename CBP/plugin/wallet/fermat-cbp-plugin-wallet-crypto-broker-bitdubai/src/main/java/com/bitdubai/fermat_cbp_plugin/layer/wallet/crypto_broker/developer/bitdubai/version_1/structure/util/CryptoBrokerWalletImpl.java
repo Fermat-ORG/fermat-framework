@@ -26,6 +26,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetTransactionCryptoBrokerWalletMatchingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
@@ -148,6 +149,18 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
         cryptoBrokerWalletDatabaseDao.setProviderFilter(this.providerFilter);
         return cryptoBrokerWalletDatabaseDao.getQuote(merchandise, quantity, payment);
+    }
+
+    /**
+     * This method load the list CryptoBrokerStockTransaction
+     *
+     * @param transactionId
+     * @return void
+     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
+     */
+    @Override
+    public void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
+
     }
 
     /**
