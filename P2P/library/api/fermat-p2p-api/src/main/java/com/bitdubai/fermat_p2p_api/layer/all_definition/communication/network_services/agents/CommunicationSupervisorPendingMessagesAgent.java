@@ -114,6 +114,8 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
              */
             List<FermatMessage> messages = networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().findByFailCount(countFail, countFailMax);
 
+            System.out.println("processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
+
             /*
              * For all destination in the message request a new connection
              */
