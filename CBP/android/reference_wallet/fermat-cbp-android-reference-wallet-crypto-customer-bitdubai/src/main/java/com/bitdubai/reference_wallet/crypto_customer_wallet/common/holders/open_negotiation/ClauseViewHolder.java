@@ -9,10 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+
+import java.util.UUID;
 
 /**
  *Created by Yordin Alayn on 22.01.16.
@@ -71,11 +75,8 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
 
     public interface Listener {
         void onClauseCLicked(Button triggerView, ClauseInformation clause, int clausePosition);
-        boolean setValuesHasChanged();
-    }
-
-    public void setValuesHasChanged(){
-        valuesHasChanged = listener.setValuesHasChanged();
+        boolean getValuesHasChanged();
+        ClauseType getClauseType();
     }
 
     private void configClauseViews(View itemView) {
@@ -84,15 +85,18 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
             @Override
             public void onClick(View view) {
 
-                if ((listener.setValuesHasChanged()) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
-                    actualStatus = NegotiationStepStatus.CHANGED;
-                else if ((!listener.setValuesHasChanged()) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
-                    actualStatus = NegotiationStepStatus.ACCEPTED;
+                if(clause.getType() == listener.getClauseType())
+                    valuesHasChanged = listener.getValuesHasChanged();
 
-//                if ((valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
-//                    actualStatus = NegotiationStepStatus.CHANGED;
-//                else if ((!valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
-//                    actualStatus = NegotiationStepStatus.ACCEPTED;
+                if ((valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
+                    actualStatus = NegotiationStepStatus.CHANGED;
+//                    putClause(clause.getType(),clause.getValue(),ClauseStatus.CHANGED);
+
+                }else if ((!valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
+                    actualStatus = NegotiationStepStatus.ACCEPTED;
+//                    putClause(clause.getType(),clause.getValue(),ClauseStatus.CHANGED);
+
+                }
 
                 valuesHasChanged = false;
 
@@ -137,6 +141,25 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
 
     protected void modifyData(NegotiationStepStatus status) {
         setStatus(status);
+    }
+
+    public void putClause(final ClauseType clauseType, final String value, final ClauseStatus status) {
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() { return UUID.randomUUID(); }
+
+            @Override
+            public ClauseType getType() { return clauseType; }
+
+            @Override
+            public String getValue() { return (value != null) ? value : ""; }
+
+            @Override
+            public ClauseStatus getStatus() { return status; }
+        };
+
+        negotiationInformation.getClauses().put(clauseType, clauseInformation);
     }
 
 }
