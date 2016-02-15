@@ -147,11 +147,15 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public ActorAssetRedeemPoint getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException,
+    public ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException,
             CantAssetRedeemPointActorNotFoundException {
-
         try {
-            return this.redeemPointActorDao.getActorRegisteredByPublicKey(actorPublicKey);
+            ActorAssetRedeemPoint currentRedeem = getActorAssetRedeemPoint();
+            if (currentRedeem != null && currentRedeem.getActorPublicKey().equals(actorPublicKey)) {
+                return currentRedeem;
+            } else {
+                return this.redeemPointActorDao.getActorRegisteredByPublicKey(actorPublicKey);
+            }
         } catch (CantGetAssetRedeemPointActorsException e) {
             throw new CantGetAssetRedeemPointActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
         }
