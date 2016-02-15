@@ -149,6 +149,13 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
 
     /**
+     * cache identities to register
+     */
+
+    private List<PlatformComponentProfile> actorsToRegisterCache;
+
+
+    /**
      * DAO
      */
     private CryptoTransmissionMetadataDAO_V2 incomingNotificationsDao;
@@ -181,6 +188,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                 "Crypto Transmission Network Service",
                 null);
 
+        this.actorsToRegisterCache = new ArrayList<>();
     }
 
     @Override
@@ -460,6 +468,15 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     @Override
     protected void onNetworkServiceRegistered() {
 
+        try {
+            for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
+                getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
+                System.out.println("CryptoTransmissionNetworkServicePluginRootNew - Trying to register to: " + platformComponentProfile.getAlias());
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     @Override
@@ -479,7 +496,9 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
     @Override
     protected void onFailureComponentConnectionRequest(PlatformComponentProfile remoteParticipant) {
-
+        System.out.println("----------------------------------\n" +
+                "CRYPTO TRANSMISSION FAILED CONNECTION " + "\n" +
+                "--------------------------------------------------------");
         //I check my time trying to send the message
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
 
