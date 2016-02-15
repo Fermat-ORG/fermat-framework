@@ -10,14 +10,15 @@ import java.util.UUID;
 /**
  * Created by nelson on 27/01/16.
  */
-public class EarningsPairTestData implements EarningsPair {
+public class EarningsWizardData {
 
     private final Currency selectedCurrency;
-    private final Currency linkedCurrency  ;
-    private final UUID     id              ;
+    private final Currency linkedCurrency;
+    private String earningWalletPublicKey;
+    private String earningWalletName;
+    private final UUID id;
 
-    public EarningsPairTestData(final Currency selectedCurrency,
-                                final Currency linkedCurrency  ) {
+    public EarningsWizardData(final Currency selectedCurrency, final Currency linkedCurrency) {
 
         id = UUID.randomUUID();
 
@@ -26,29 +27,34 @@ public class EarningsPairTestData implements EarningsPair {
 
     }
 
-    @Override
+
     public UUID getId() {
         return id;
     }
 
-
-    @Override
     public Currency getEarningCurrency() {
         return selectedCurrency;
     }
 
-    @Override
     public Currency getLinkedCurrency() {
         return linkedCurrency;
     }
 
-    @Override
-    public WalletReference getWalletReference() {
-        return new WalletReference("earningWalletPublicKey");
+    public String getWalletPublicKey() {
+        return earningWalletPublicKey;
     }
 
-    @Override
-    public EarningsSearch getSearch() {
-        return null;
+    public String getWalletName() {
+        return earningWalletName;
+    }
+
+    public void setWalletInfo(String earningWalletPublicKey, String earningWalletName) {
+        this.earningWalletPublicKey = earningWalletPublicKey;
+        this.earningWalletName = earningWalletName;
+    }
+
+    public void clearWalletInfo() {
+        this.earningWalletPublicKey = null;
+        this.earningWalletName = null;
     }
 }
