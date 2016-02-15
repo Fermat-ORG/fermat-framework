@@ -6,4 +6,6 @@ package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_draft;
 public interface OutgoingDraftManager {
 
 
+
+
 }
