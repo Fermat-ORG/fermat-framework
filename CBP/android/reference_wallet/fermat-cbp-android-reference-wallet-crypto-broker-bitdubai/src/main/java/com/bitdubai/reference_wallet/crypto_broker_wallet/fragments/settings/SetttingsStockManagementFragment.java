@@ -157,6 +157,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
             }
         });
+
         showOrHideNoSelectedWalletsView();
     }
 

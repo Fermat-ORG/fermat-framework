@@ -127,7 +127,7 @@
     <string name="cbw_bank">Bank</string>
     <string name="cbw_wizard_stock_merchandise_title">Select Stock Merchandises</string>
     <string name="cbw_wizard_stock_merchandise_description">You must select the wallets will work depending on the merchandise</string>
-    <string name="cbw_select_stock_merchandise">Select a Stock Merchandise</string>
+    <string name="cbw_select_stock_merchandise">Select a Stock Operation</string>
     <string name="cbw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="cbw_settings_locations_title">Manage Your Locations</string>
     <string name="cbw_save">Save</string>
