@@ -374,7 +374,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send to ");
                 connectDialog.setUsername((actorsSelected.size() > 1) ? "" + actorsSelected.size() +
-                        " Redeem Points" : actorsSelected.get(0).getName());
+                        " Users" : actorsSelected.get(0).getName());
                 connectDialog.setSecondDescription("a connection request");
                 connectDialog.show();
                 return true;
