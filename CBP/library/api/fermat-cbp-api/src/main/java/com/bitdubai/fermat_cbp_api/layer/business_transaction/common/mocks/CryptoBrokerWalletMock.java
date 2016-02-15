@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 
 import java.util.List;
 import java.util.UUID;
@@ -60,5 +61,16 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
     @Override
     public void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
 
+    }
+
+    /**
+     * This method load the list CurrencyMatching
+     *
+     * @return CurrencyMatching
+     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
+     */
+    @Override
+    public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
+        return null;
     }
 }
