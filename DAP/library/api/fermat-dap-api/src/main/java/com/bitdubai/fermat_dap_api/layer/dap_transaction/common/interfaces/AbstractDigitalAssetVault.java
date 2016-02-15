@@ -37,6 +37,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -61,7 +62,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
     protected PluginFileSystem pluginFileSystem;
     protected String digitalAssetFileStoragePath;
     protected AssetIssuerWalletManager assetIssuerWalletManager;
-    protected String walletPublicKey = "walletPublicKeyTest";
+    protected String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
     protected ActorAssetIssuerManager actorAssetIssuerManager;
     protected ActorAssetUserManager actorAssetUserManager;
     protected BitcoinNetworkManager bitcoinNetworkManager;
@@ -229,7 +230,6 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         if (walletPublicKey == null) {
             throw new CantSetObjectException("walletPublicKey is null");
         }
-        this.walletPublicKey = "walletPublicKeyTest"; //TODO hardcoded value
         System.out.println("The wallet public key in vault is " + this.walletPublicKey);
     }
 

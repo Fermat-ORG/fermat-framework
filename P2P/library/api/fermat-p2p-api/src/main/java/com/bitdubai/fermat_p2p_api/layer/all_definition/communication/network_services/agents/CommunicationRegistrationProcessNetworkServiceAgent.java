@@ -11,7 +11,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent</code>
  * <p/>
@@ -73,17 +72,17 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
      */
     private void processRegistration() {
 
-        System.out.println("Cloud Client is Registered " + networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isRegister() +
+        System.out.println("Cloud Client is Registered " + networkServiceRoot.getCommunicationsClientConnection().isRegister() +
                 networkServiceRoot.getNetworkServiceProfile().getAlias() + " is Registered " + networkServiceRoot.isRegister());
 
             try{
 
-                if (networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isRegister() && !networkServiceRoot.isRegister()){
+                if (networkServiceRoot.getCommunicationsClientConnection().isRegister() && !networkServiceRoot.isRegister()){
 
                     /*
                      * Register me
                      */
-                    networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(networkServiceRoot.getNetworkServiceProfile().getNetworkServiceType(), networkServiceRoot.getNetworkServiceProfile());
+                    networkServiceRoot.getCommunicationsClientConnection().registerComponentForCommunication(networkServiceRoot.getNetworkServiceProfile().getNetworkServiceType(), networkServiceRoot.getNetworkServiceProfile());
 
                     /*
                      * Stop the internal threads
