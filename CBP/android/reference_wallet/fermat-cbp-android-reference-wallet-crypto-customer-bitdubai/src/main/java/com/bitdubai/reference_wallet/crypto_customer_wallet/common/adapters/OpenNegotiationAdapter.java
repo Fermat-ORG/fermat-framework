@@ -312,13 +312,13 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
 
 //        final int TOTAL_STEPS = getTotalSteps(clauses);
-        int TOTAL_STEPS = 8;
-        int contInd = TOTAL_STEPS - 1;
+        int TOTAL_STEPS = 10;
+//        int contInd = TOTAL_STEPS - 1;
         ClauseInformation brokerPaymentMethod = getCustomerPaymentInfo(clauses);
         ClauseInformation customerReceivedMethod = getBrokerPaymentInfo(clauses);
 
-        if(brokerPaymentMethod != null)     TOTAL_STEPS = TOTAL_STEPS + 1;
-        if(customerReceivedMethod != null)  TOTAL_STEPS = TOTAL_STEPS + 1;
+//        if(brokerPaymentMethod != null)     TOTAL_STEPS = TOTAL_STEPS + 1;
+//        if(customerReceivedMethod != null)  TOTAL_STEPS = TOTAL_STEPS + 1;
 
 
         final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
@@ -329,9 +329,12 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         data[3] = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
         data[4] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
         data[5] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
-        data[6] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
-        data[7] = clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
+        data[6] = getBrokerPaymentInfo(clauses);
+        data[7] = getCustomerPaymentInfo(clauses);
+        data[8] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+        data[9] = clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
 
+        /*
         if(brokerPaymentMethod != null){
             contInd = contInd + 1;
             data[contInd] = brokerPaymentMethod;
@@ -340,7 +343,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         if(customerReceivedMethod != null){
             contInd = contInd + 1;
             data[contInd] = customerReceivedMethod;
-        }
+        }*/
 //
         return Arrays.asList(data);
     }
@@ -383,7 +386,12 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         return clause;
     }
 
-    private NegotiationStepStatus negotiationStepStatus(ClauseStatus statusClause){ return NegotiationStepStatus.getByCode(statusClause.getCode()); }
+    private NegotiationStepStatus negotiationStepStatus(ClauseStatus statusClause){
+        if(NegotiationStepStatus.codeExists(statusClause.getCode()))
+            return NegotiationStepStatus.getByCode(statusClause.getCode());
+        else
+            return null;
+    }
 
     private int getItemPosition(int position) {
         return haveNote ? position - 1 : position;
