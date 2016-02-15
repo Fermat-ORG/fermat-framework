@@ -17,6 +17,7 @@ import java.util.UUID;
 
 /**
  * Created by natalia on 16/09/15.
+ * Modified by Alejandro Bicelis 08/02/16
  */
 
 /**
@@ -92,7 +93,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      *
      * @return a searching interface
      */
-    public CryptoCustomerCommunitySearch searchNewCryptoCustomer(CryptoCustomerCommunitySelectableIdentity cryptoCustomerCommunitySelectableIdentity);
+    public CryptoCustomerCommunitySearch getCryptoCustomerSearch(CryptoCustomerCommunitySelectableIdentity cryptoCustomerCommunitySelectableIdentity);
 
     /**
      * The method <code>requestConnectionToCryptoBroker</code> initialize the request of contact between

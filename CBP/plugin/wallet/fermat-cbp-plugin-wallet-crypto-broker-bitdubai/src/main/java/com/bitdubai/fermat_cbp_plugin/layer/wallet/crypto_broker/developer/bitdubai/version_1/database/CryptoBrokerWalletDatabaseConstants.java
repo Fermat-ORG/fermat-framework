@@ -77,6 +77,8 @@ public class CryptoBrokerWalletDatabaseConstants {
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_MEMO_COLUMN_NAME = "memo";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_COLUMN_NAME = "origin_transaction";
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_PRICE_REFERENCE_COLUMN_NAME = "price_reference";
+    static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME = "origin_transaction_id";
+    static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME = "seen";
 
     static final String CRYPTO_BROKER_STOCK_TRANSACTIONS_FIRST_KEY_COLUMN = "transaction_id";
 
