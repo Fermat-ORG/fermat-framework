@@ -64,7 +64,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     /**
      * Represent the failCount
      */
-    private Integer failCount;
+    private int failCount = 0;
 
     /**
      * Represent the status
@@ -256,7 +256,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
      * (no-javadoc)
      * @see FermatMessage#getFailCount()
      */
-    public Integer getFailCount() {
+    public int getFailCount() {
         return failCount;
     }
 

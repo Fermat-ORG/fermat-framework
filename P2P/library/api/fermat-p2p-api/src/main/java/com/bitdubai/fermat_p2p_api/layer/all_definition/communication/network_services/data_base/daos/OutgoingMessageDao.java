@@ -308,7 +308,7 @@ public final class OutgoingMessageDao {
                 DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
                 newFilter.setColumn(key);
-                newFilter.setValue((String) filters.get(key));
+                newFilter.setValue(filters.get(key).toString());
 
                 filtersTable.add(newFilter);
             }

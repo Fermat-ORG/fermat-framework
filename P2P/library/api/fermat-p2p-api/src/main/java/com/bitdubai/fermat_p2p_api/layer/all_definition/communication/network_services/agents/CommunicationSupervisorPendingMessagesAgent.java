@@ -21,9 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -97,6 +95,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
 
         }catch (Exception e){
             System.out.println("CommunicationSupervisorPendingMessagesAgent - processPendingIncomingMessage detect a error: "+e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -138,6 +137,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
 
         } catch (Exception e) {
             System.out.println("CommunicationSupervisorPendingMessagesAgent - processPendingOutgoingMessage detect a error: "+e.getMessage());
+            e.printStackTrace();
         }
 
     }
