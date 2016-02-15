@@ -14,7 +14,9 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler</code>
  * <p/>
- * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 23/11/15.
+ *
+ * Create Yordin Alayn 02.12.15
+ * Based in ClientConnectionCloseNotificationEventHandler by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 23/11/15.
  *
  * @version 1.0
  * @since Java JDK 1.7

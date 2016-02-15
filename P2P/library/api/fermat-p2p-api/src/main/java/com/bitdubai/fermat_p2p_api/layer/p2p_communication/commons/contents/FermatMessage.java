@@ -70,7 +70,7 @@ public interface FermatMessage {
      *
      * @return
      */
-    public Integer getFailCount();
+    public int getFailCount();
 
     /**
      * Get the FermatMessagesStatus

@@ -162,7 +162,14 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
         cashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showWalletsDialog(Platforms.CASH_PLATFORM);
+                String cashWalletPublicKey = "cash_wallet";
+                if (walletManager.cashMoneyWalletExists(cashWalletPublicKey)==false){
+                    InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
+                    inputDialogCBP.DialogType(2);
+                    inputDialogCBP.show();
+                }else {
+                    showWalletsDialog(Platforms.CASH_PLATFORM);
+                }
             }
         });
 
@@ -447,7 +454,9 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
     public void onDismiss(DialogInterface dialog) {
         try {
             //Buscar la identidad
-            selectedIdentity = walletManager.getListOfIdentities().get(0);
+            List<CryptoBrokerIdentity> listOfIdentities = walletManager.getListOfIdentities();
+            if (listOfIdentities != null)
+                selectedIdentity = listOfIdentities.get(0);
         } catch (FermatException e) {
             Log.e(TAG, e.getMessage(), e);
             if (errorManager != null)

@@ -26,6 +26,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.e
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
@@ -102,6 +103,18 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
         }
     }
 
+    public CryptoCustomerIdentity getCryptoCustomerIdentity(String publickey) throws CantListCryptoCustomerIdentityException{
+        try {
+            return cryptoCustomerIdentityDatabaseDao.getIdentity(publickey);
+        } catch (CantGetIdentityException e) {
+            throw new CantListCryptoCustomerIdentityException("CAN'T GET CRYPTO CUSTOMER IDENTITIE", e, "Error get Identity", "");
+        } catch (IdentityNotFoundException e) {
+            throw new CantListCryptoCustomerIdentityException("CAN'T GET CRYPTO CUSTOMER IDENTITIE", e, "", "");
+        } catch (Exception e) {
+            throw new CantListCryptoCustomerIdentityException("CAN'T GET CRYPTO CUSTOMER IDENTITIE", FermatException.wrapException(e), "", "");
+        }
+    }
+
     public CryptoCustomerIdentity createCryptoCustomerIdentity(String alias, byte[] profileImage) throws CantCreateCryptoCustomerIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
@@ -120,6 +133,11 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements
             throw new CantCreateCryptoCustomerIdentityException("CAN'T CREATE NEW CRYPTO CUSTOMER IDENTITY", FermatException.wrapException(e), "", "");
         }
 
+    }
+
+    @Override
+    public void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateCustomerIdentityException {
+        cryptoCustomerIdentityDatabaseDao.updateCryptoCustomerIdentity(alias, publicKey, imageProfile);
     }
 
     @Override
