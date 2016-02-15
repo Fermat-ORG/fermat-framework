@@ -173,6 +173,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                             }
                         }).build().show();
                 return true;
+            } else if (id == R.id.action_wallet_user_sell) {
+                //TODO include sell asset action
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
