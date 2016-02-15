@@ -659,12 +659,10 @@ public final class AssetFactoryMiddlewareManager {
             if (assetFactory.getState() == State.DRAFT) {
                 DigitalAsset digitalAsset = new DigitalAsset();
                 DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
-                ContractProperty redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, null);
-                redeemable.setValue(assetFactory.getIsRedeemable());
-                ContractProperty expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, null);
-                expirationDate.setValue(assetFactory.getExpirationDate());
-                digitalAssetContract.setContractProperty(redeemable);
-                digitalAssetContract.setContractProperty(expirationDate);
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.SALEABLE, assetFactory.getIsRedeemable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.TRANSFERABLE, assetFactory.getIsRedeemable());
                 digitalAsset.setContract(digitalAssetContract);
                 digitalAsset.setName(assetFactory.getName());
                 digitalAsset.setDescription(assetFactory.getDescription());
