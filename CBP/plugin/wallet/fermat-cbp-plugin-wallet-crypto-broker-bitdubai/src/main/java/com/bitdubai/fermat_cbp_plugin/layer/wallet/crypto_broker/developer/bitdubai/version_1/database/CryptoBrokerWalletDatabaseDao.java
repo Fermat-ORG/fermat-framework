@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetTransactionCryptoBrokerWalletMatchingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
@@ -36,6 +38,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.util.CurrencyMatchingImp;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantExecuteCryptoBrokerTransactionException;
@@ -89,6 +93,27 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
     public CryptoBrokerWalletDatabaseDao(Database database) {
         this.database = database;
+    }
+
+    public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
+        List<CurrencyMatching> currencyMatchings = new ArrayList<>();
+
+        return currencyMatchings;
+    }
+
+    public void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
+        DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
+        try {
+            for (DatabaseTableRecord record : getCryptoBrokerWalletStockTransactionData(transactionId)) {
+                record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME, "true");
+                table.updateRecord(record);
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetTransactionCryptoBrokerWalletMatchingException("Cant Load Table Memory", e, "", "");
+        } catch (CantUpdateRecordException e) {
+            throw new CantGetTransactionCryptoBrokerWalletMatchingException("Cant Update Record", e, "", "");
+        }
     }
 
     public float getBookedBalance(FermatEnum merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException {
@@ -665,6 +690,15 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_TABLE_NAME);
 
         //table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_SPREAD_ID_COLUMN_NAME, Id, DatabaseFilterType.EQUAL);
+        table.loadToMemory();
+
+        return table.getRecords();
+    }
+
+    private List<DatabaseTableRecord> getCryptoBrokerWalletStockTransactionData(UUID transactionId) throws CantLoadTableToMemoryException {
+        DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
+
+        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
         table.loadToMemory();
 
         return table.getRecords();
