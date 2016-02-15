@@ -43,8 +43,10 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
             holder.name.setText(String.format("%s", data.getRecord().getName()));
             if (data.getRecord().getExtendedPublicKey() != null) {
                 holder.connectedState.setVisibility(View.VISIBLE);
+                holder.connect.setVisibility(View.GONE);
             } else {
                 holder.connectedState.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.VISIBLE);
             }
 
             if (data.getRecord().getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getRecord().getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {

@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -20,12 +19,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TransactionMetadataState;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.FermatCryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -41,7 +38,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
@@ -56,11 +52,9 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exc
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
-
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -473,7 +467,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
         try {
             for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
-                getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
+                getCommunicationsClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
                 System.out.println("CryptoTransmissionNetworkServicePluginRootNew - Trying to register to: " + platformComponentProfile.getAlias());
             }
         }catch (Exception e){
@@ -524,7 +518,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
     @Override
     public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
+        return getCommunicationsClientConnection()
                 .constructPlatformComponentProfileFactory(identityPublicKeySender,
                         "sender_alias",
                         "sender_name",
@@ -535,7 +529,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
     @Override
     public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
+        return getCommunicationsClientConnection()
                 .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
                         "destination_alias",
                         "destionation_name",
@@ -599,44 +593,44 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     }
 
     @Override
-    protected CommunicationsClientConnection getCommunicationsClientConnection() {
+    public CommunicationsClientConnection getCommunicationsClientConnection() {
         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
     }
 
-    @Override
-    public ErrorManager getErrorManager() {
-        return errorManager;
-    }
-
-    @Override
-    public EventManager getEventManager() {
-        return eventManager;
-    }
-
-    @Override
-    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-        return wsCommunicationsCloudClientManager;
-    }
-
-    @Override
-    public PluginDatabaseSystem getPluginDatabaseSystem() {
-        return pluginDatabaseSystem;
-    }
-
-    @Override
-    public PluginFileSystem getPluginFileSystem() {
-        return pluginFileSystem;
-    }
-
-    @Override
-    public Broadcaster getBroadcaster() {
-        return broadcaster;
-    }
-
-    @Override
-    public LogManager getLogManager() {
-        return logManager;
-    }
+//    @Override
+//    public ErrorManager getErrorManager() {
+//        return errorManager;
+//    }
+//
+//    @Override
+//    public EventManager getEventManager() {
+//        return eventManager;
+//    }
+//
+//    @Override
+//    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
+//        return wsCommunicationsCloudClientManager;
+//    }
+//
+//    @Override
+//    public PluginDatabaseSystem getPluginDatabaseSystem() {
+//        return pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public PluginFileSystem getPluginFileSystem() {
+//        return pluginFileSystem;
+//    }
+//
+//    @Override
+//    public Broadcaster getBroadcaster() {
+//        return broadcaster;
+//    }
+//
+//    @Override
+//    public LogManager getLogManager() {
+//        return logManager;
+//    }
 
 
     /**
@@ -1164,7 +1158,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                 });
                 break;
             case RESPONSE:
-
                 executorService.submit(new Runnable() {
                     @Override
                     public void run() {

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.event_handler;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/12/15.
  */
-public class BrokerSubmitOnlineMerchandiseRecorderService implements CBPService {
+public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPService {
     /**
      * DealsWithEvents Interface member variables.
      */
@@ -59,15 +60,19 @@ public class BrokerSubmitOnlineMerchandiseRecorderService implements CBPService 
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.brokerSubmitOnlineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
+        if(event.getRemoteBusinessTransaction()== Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE) {
+            this.brokerSubmitOnlineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+            //LOG.info("CHECK THE DATABASE");
+        }
     }
 
     public void incomingConfirmBusinessTransactionResponse(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.brokerSubmitOnlineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
+        if(event.getRemoteBusinessTransaction()== Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE) {
+            this.brokerSubmitOnlineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+            //LOG.info("CHECK THE DATABASE");
+        }
     }
 
     @Override

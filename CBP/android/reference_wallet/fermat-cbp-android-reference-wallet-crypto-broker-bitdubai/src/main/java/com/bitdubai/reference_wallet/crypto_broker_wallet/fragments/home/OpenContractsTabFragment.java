@@ -188,7 +188,8 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
         appSession.setData("contract_data", data);
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS, appSession.getAppPublicKey());
+        //changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 
     @Override

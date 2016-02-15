@@ -21,6 +21,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObject
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -202,12 +203,12 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
             System.out.println("ASSET TRANSFER Sender Actor name: " + actorAssetUserManager.getActorAssetUser().getName());
             System.out.println("ASSET TRANSFER Before deliver - remote asset user ");
             assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), remoteActorAssetUser.getActorPublicKey(), networkType);
-            assetTransmissionNetworkServiceManager.sendDigitalAssetMetadata(new DAPMessage(new AssetMetadataContentMessage(digitalAssetMetadata), actorAssetUserManager.getActorAssetUser(), remoteActorAssetUser));
+            assetTransmissionNetworkServiceManager.sendMessage(new DAPMessage(new AssetMetadataContentMessage(digitalAssetMetadata), actorAssetUserManager.getActorAssetUser(), remoteActorAssetUser));
         } catch (CantExecuteQueryException | CantStartDeliveringException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
         } catch (UnexpectedResultReturnedFromDatabaseException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
-        } catch (CantGetAssetUserActorsException | CantSetObjectException e) {
+        } catch (CantGetAssetUserActorsException | CantSetObjectException | CantSendMessageException e) {
             e.printStackTrace();
         }
     }
