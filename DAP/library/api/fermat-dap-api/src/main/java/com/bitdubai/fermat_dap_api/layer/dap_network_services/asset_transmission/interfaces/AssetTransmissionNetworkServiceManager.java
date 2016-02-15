@@ -9,9 +9,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmissio
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPNetworkService;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 
 /**
@@ -24,17 +22,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface AssetTransmissionNetworkServiceManager extends TransactionProtocolManager<DigitalAssetMetadataTransaction> {
-
-    /**
-     * This method sends the digital asset metadata to a remote device.
-     *
-     * @param dapMessage {@link DAPMessage<AssetMetadataContentMessage>} instance, which should contain all the information to send
-     *                                                                  this metadata to the destination device.
-     * @throws CantSendDigitalAssetMetadataException
-     */
-    void sendDigitalAssetMetadata(DAPMessage dapMessage) throws CantSendDigitalAssetMetadataException;
-
+public interface AssetTransmissionNetworkServiceManager extends TransactionProtocolManager<DigitalAssetMetadataTransaction>, DAPNetworkService {
     /**
      * Method that send the Transaction New Status Notification
      *

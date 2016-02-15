@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 
 /**
  * Created by Matias Furszyfer on 2015.07.29..

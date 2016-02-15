@@ -55,6 +55,9 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerC
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantHandleDapNewMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessageGson;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageAccept;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageDeny;
@@ -63,10 +66,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantGetIssuerNetworkServiceMessageListException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.agents.AssetIssuerActorNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
@@ -305,7 +306,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             /*
              * Initialize connection manager
              */
-            initializeCommunicationNetworkServiceConnectionManager();
+                    initializeCommunicationNetworkServiceConnectionManager();
 
             /*
              * Verify if the communication cloud client is active
@@ -315,14 +316,14 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 /*
                  * Construct my profile and register me
                  */
-                PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
-                        getAlias().toLowerCase(),
-                        getName(),
-                        getNetworkServiceType(),
-                        getPlatformComponentType(),
-                        getExtraData());
+                        PlatformComponentProfile platformComponentProfilePluginRoot = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                                getAlias().toLowerCase(),
+                                getName(),
+                                getNetworkServiceType(),
+                                getPlatformComponentType(),
+                                getExtraData());
 
-                setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
+                        setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
 
                 /*
                  * Initialize the agent and start
@@ -1486,7 +1487,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
         return communicationNetworkServiceConnectionManager.getIncomingMessageDao().findAll(filters);
     }
 
-    public List<DAPMessage> getUnreadDAPMessagesByType(DAPMessageType type) throws CantGetIssuerNetworkServiceMessageListException {
+    public List<DAPMessage> getUnreadDAPMessagesByType(DAPMessageType type) throws CantGetDAPMessagesException {
         String context = "Message Type: " + type;
         List<DAPMessage> listToReturn = new ArrayList<>();
         try {
@@ -1505,8 +1506,13 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
             }
             return listToReturn;
         } catch (CantReadRecordDataBaseException | CantUpdateRecordDataBaseException e) {
-            throw new CantGetIssuerNetworkServiceMessageListException(e, context);
+            throw new CantGetDAPMessagesException(context, e);
         }
+    }
+
+    @Override
+    public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
+
     }
 
     /**
