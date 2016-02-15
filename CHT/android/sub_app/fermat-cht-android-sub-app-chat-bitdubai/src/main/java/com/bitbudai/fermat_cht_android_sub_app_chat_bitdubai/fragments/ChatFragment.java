@@ -38,6 +38,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 
@@ -110,18 +111,14 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             moduleManager = chatSession.getModuleManager();
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
-
             //whattodo();
             //     Chat chat=chatSession.getSelectedChat();
-
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
                 setHasOptionsMenu(true);
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-
-
     }
 //
 //    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
@@ -200,7 +197,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 .addAppSession(appSession)
                 .addChatManager(chatManager)
                 .build();
-
 
         // Inflate the layout for this fragment
 //        final View layout = inflater.inflate(R.layout.chat, container, false);
@@ -328,7 +324,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //            }
 //        });
 //        return layout;
-
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

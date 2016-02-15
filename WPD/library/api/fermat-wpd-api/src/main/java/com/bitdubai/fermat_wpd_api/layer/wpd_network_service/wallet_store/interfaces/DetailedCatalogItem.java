@@ -5,7 +5,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.except
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetLanguagesException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.exceptions.CantGetSkinsException;
-import com.bitdubai.fermat_api.layer.pip_Identity.developer.interfaces.DeveloperIdentity;
+import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import java.util.List;
 

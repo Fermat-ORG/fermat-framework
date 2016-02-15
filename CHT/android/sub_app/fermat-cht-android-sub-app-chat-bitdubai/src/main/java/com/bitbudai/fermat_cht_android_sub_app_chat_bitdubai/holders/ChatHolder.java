@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders;
 
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -17,8 +18,8 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
  */
 public class ChatHolder extends FermatViewHolder {
 
-    public FermatTextView txtMessage;//TextView
-    public FermatTextView txtInfo;//TextView
+    public TextView txtMessage;//TextView
+    public TextView txtInfo;//TextView
     public LinearLayout content;
     public LinearLayout contentWithBG;
 
@@ -32,20 +33,20 @@ public class ChatHolder extends FermatViewHolder {
     public ChatHolder(View itemView) {
         super(itemView);
 
-        txtMessage      = (FermatTextView)  itemView.findViewById(R.id.txtMessage);
+        txtMessage      = (TextView)  itemView.findViewById(R.id.txtMessage);
         content         = (LinearLayout)    itemView.findViewById(R.id.content);
         contentWithBG   = (LinearLayout)    itemView.findViewById(R.id.contentWithBackground);
-        txtInfo         = (FermatTextView)  itemView.findViewById(R.id.txtInfo);
+        txtInfo         = (TextView)  itemView.findViewById(R.id.txtInfo);
 
         /*rowView = (LinearLayout) itemView.findViewById(R.id.row_view);
         bitcoins = (FermatTextView) itemView.findViewById(R.id.asset_bitcoins);*/
     }
 
-    public FermatTextView getTxtMessage() {
+    public TextView getTxtMessage() {
         return txtMessage;
     }
 
-    public FermatTextView getTxtInfo() {
+    public TextView getTxtInfo() {
         return txtInfo;
     }
 

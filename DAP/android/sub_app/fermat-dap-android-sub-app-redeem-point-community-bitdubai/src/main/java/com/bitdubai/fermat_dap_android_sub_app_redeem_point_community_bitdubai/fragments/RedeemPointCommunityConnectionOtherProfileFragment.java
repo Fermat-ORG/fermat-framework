@@ -34,6 +34,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.Date;
+
 //import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.AssetUserWalletSubAppModuleManager;
 //import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetActiveLoginIdentityException;
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.Actor;
@@ -165,7 +167,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                 userCryptoCurrency.setText("None");
             }
 
-            redeemRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(actor.getRegistrationDate()));
+            redeemRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
 
             /*if(actor.getBlockchainNetworkType() != null) {
                 userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().getCode());

@@ -26,7 +26,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.MessageType;
+//import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.MessageType;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
@@ -153,13 +153,10 @@ public class ChatAdapterView extends LinearLayout {
         ChatMessage msg;
         int messsize;
         try {
-            //chatHistory.clear();
             setChatHistory(null);
             Chat chat=chatSession.getSelectedChat();
             if(chat!=null)
                 chatid=chat.getChatId();
-            //historialmensaje.clear();
-            //chatHistory.clear();
             if (chatHistory == null) {
                 chatHistory = new ArrayList<ChatMessage>();
             }
@@ -171,24 +168,16 @@ public class ChatAdapterView extends LinearLayout {
                     msg = new ChatMessage();
                     message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
                     inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
-                    ///historialmensaje.add(inorout + "@#@#" + message);
                     msg.setId(chatManager.getMessageByChatId(chatid).get(i).getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
-                    else   msg.setMe(false);
+                    else msg.setMe(false);
                     msg.setDate(chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString());
                     msg.setUserId(chatManager.getMessageByChatId(chatid).get(i).getContactId());
                     msg.setMessage(message);
-                    //displayMessage(msg);
-                    chatHistory.add(msg);//displayMessage(msg);
-                    //displayMessage(msg);
+                    chatHistory.add(msg);
                 }
                 adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                 messagesContainer.setAdapter(adapter);
-                int size = chatHistory.size();
-                for (int i = 0; i < size-1; i++) {
-                    msg = chatHistory.get(i);
-                    //displayMessage(msg);
-                }
             }else{
                 Toast.makeText(getContext(),"Waiting for chat message", Toast.LENGTH_SHORT).show();
             }
@@ -212,7 +201,7 @@ public class ChatAdapterView extends LinearLayout {
 
         if(chatSession!= null){
             whattodo();
-            //findmessage();
+            findmessage();
         }
         if (rightName != null) {
             meLabel.setText(rightName);
@@ -221,7 +210,7 @@ public class ChatAdapterView extends LinearLayout {
         }
 
         if (leftName != null ) {
-            companionLabel.setText(leftName);// Hard Coded
+            companionLabel.setText(leftName);
         } else {
             companionLabel.setText("Contacto");
         }
@@ -229,8 +218,6 @@ public class ChatAdapterView extends LinearLayout {
         if (background != -1) {
             container.setBackgroundColor(background);
         }
-
-        loadHistory();
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,9 +244,6 @@ public class ChatAdapterView extends LinearLayout {
                         message.setType(TypeMessage.OUTGOING);
                         message.setContactId(contactid);
                         chatManager.saveMessage(message);
-                        //findmessage();
-                        // adaptador.refreshEvents(historialmensaje);
-                        //Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
                     } else {
                         UUID newchatid = UUID.randomUUID();
                         chat.setChatId(newchatid);
@@ -282,10 +266,6 @@ public class ChatAdapterView extends LinearLayout {
                         message.setType(TypeMessage.OUTGOING);
                         message.setContactId(contactid);
                         chatManager.saveMessage(message);
-
-//                        findmessage();
-//                        adaptador.refreshEvents(historialmensaje);
-//                        Toast.makeText(getActivity(),"Sending message", Toast.LENGTH_SHORT).show();
                     }
 
                     ChatMessage chatMessage = new ChatMessage();
@@ -326,15 +306,6 @@ public class ChatAdapterView extends LinearLayout {
                 }, 2500);
             }
         });
-    }
-
-    private void loadHistory() {
-
-        findmessage();
-//        for (int i = 0; i < chatHistory.size(); i++) {
-//            ChatMessage message = chatHistory.get(i);
-//            displayMessage(message);
-//        }
     }
 
     private void loadDummyHistory() {

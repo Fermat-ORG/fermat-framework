@@ -243,8 +243,10 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
             running = false;
             Thread.currentThread().interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            e.printStackTrace();
         } catch (CantInsertRecordDataBaseException e) {
             communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getErrorManager().reportUnexpectedPluginException(communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
+            e.printStackTrace();
         }
 
     }
@@ -319,6 +321,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
                 }catch (Exception e){
                     System.out.println("CommunicationNetworkServiceRemoteAgent - Error sending message: " + e.getMessage());
+                    e.printStackTrace();
                 }
 
 
@@ -336,6 +339,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
             running = false;
             Thread.currentThread().interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            e.printStackTrace();
         }
     }
 }

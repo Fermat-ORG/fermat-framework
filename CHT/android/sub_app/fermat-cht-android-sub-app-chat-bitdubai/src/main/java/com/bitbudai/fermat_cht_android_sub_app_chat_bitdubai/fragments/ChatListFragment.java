@@ -273,18 +273,14 @@ public class ChatListFragment extends AbstractFermatFragment{
                 try{
                     appSession.setData("whocallme", "chatlist");
                     appSession.setData("contactid", chatManager.getContactByContactId(UUID.fromString(converter.get(4))));//esto no es necesario, haces click a un chat
-
                     //appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(UUID.fromString(converter.get(3))));//este si hace falta
-
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 } catch (CantGetContactException e) {
                     CommonLogger.exception(TAG+"clickoncontact", e.getMessage(), e);
                     Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
                 //} catch (CantGetChatException e) {
                     //CommonLogger.exception(TAG+"clickonchat", e.getMessage(), e);
                     //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
@@ -301,9 +297,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                             //System.out.println("Threar UI corriendo");
                             //TODO: fix this
                             if (!chatManager.getContacts().isEmpty()) {
-
                                // specialfilldatabase();
-
                                 updatevalues();
                                 adapter.refreshEvents(infochat, imgid);
                             } else {
@@ -364,7 +358,6 @@ public class ChatListFragment extends AbstractFermatFragment{
             //Chat
             if(!chatManager.getContacts().isEmpty()) {
                 if(chatManager.getMessages().isEmpty()) {
-
                     for (int i = 0; i < chatManager.getContacts().size(); i++) {
 
                         if(chatManager.getContacts().get(i).getRemoteName().contains("chatlight")) {
