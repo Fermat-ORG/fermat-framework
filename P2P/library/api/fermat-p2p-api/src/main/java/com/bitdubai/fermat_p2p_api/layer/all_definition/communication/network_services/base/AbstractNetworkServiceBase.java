@@ -1152,4 +1152,11 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         return identity;
     }
 
+    public ErrorManager getErrorManager() {
+        return errorManager;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
 }

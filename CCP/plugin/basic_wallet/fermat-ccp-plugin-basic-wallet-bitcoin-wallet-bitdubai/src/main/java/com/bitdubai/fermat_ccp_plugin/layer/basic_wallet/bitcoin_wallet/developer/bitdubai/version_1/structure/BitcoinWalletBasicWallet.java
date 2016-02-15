@@ -363,4 +363,15 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
+
+    @Override
+    public BitcoinWalletTransaction getTransactionById(UUID transactionID) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException{
+        try {
+            BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(database);
+            return bitcoinWalletBasicWalletDao.selectTransaction(transactionID);
+        } catch (CantFindTransactionException e) {
+            throw new CantFindTransactionException("Could not get transaction information", e, "Database error" , "");
+        }
+    }
+
 }
