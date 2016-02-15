@@ -252,7 +252,6 @@ public interface CryptoWallet extends Serializable {
      * @return boolean value, true if positive, false if negative.
      */
     boolean isValidAddress(CryptoAddress cryptoAddress);
-    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
 
     CryptoAddress requestAddressToKnownUser(String deliveredByActorPublicKey,
