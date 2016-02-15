@@ -313,7 +313,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             cryptoMoneyDeStockRecord.getAmount(),
                             cryptoMoneyDeStockRecord.getMemo(),
                             cryptoMoneyDeStockRecord.getPriceReference(),
-                            cryptoMoneyDeStockRecord.getOriginTransaction());
+                            cryptoMoneyDeStockRecord.getOriginTransaction(),
+                            pendingToDeStockTransaction.getContractHash());
                     pendingToDeStockTransaction.setContractTransactionStatus(
                             ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE);
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
