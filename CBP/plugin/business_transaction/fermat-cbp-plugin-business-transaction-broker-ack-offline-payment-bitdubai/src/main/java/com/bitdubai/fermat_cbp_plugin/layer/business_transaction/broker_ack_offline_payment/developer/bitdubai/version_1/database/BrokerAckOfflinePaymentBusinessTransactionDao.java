@@ -403,13 +403,21 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                             ACK_OFFLINE_PAYMENT_PAYMENT_AMOUNT_COLUMN_NAME);
             businessTransactionRecord.setPaymentAmount(paymentAmount);
-            paymentType= MoneyType.getByCode(record.getStringValue(
+            String paymentTypeString=record.getStringValue(
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                            ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME));
+                            ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME);
+            if(paymentTypeString==null||paymentTypeString.isEmpty()){
+                throw new InvalidParameterException("The paymentType is null");
+            }
+            paymentType= MoneyType.getByCode(paymentTypeString);
             businessTransactionRecord.setPaymentType(paymentType);
-            currencyType= FiatCurrency.getByCode(record.getStringValue(
+            String currencyTypeString=record.getStringValue(
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                            ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME));
+                            ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
+            if(currencyTypeString==null||currencyTypeString.isEmpty()){
+                throw new InvalidParameterException("The currencyType is null");
+            }
+            currencyType= FiatCurrency.getByCode(currencyTypeString);
             businessTransactionRecord.setCurrencyType(currencyType);
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
