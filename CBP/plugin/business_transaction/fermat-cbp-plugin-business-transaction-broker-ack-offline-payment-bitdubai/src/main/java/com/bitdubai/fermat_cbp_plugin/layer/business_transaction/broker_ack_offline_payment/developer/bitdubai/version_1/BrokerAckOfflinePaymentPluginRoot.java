@@ -27,6 +27,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankMoneyTransaction;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleManagerMock;
@@ -84,6 +87,9 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
     private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION)
+    private DepositManager depositManager;
 
     /**
      * Represents the plugin manager.
@@ -238,7 +244,9 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager);
+                    customerBrokerContractSaleManager,
+                    customerBrokerSaleNegotiationManager,
+                    depositManager);
             brokerAckOfflinePaymentMonitorAgent.start();
 
             /**
@@ -250,7 +258,8 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
                     BrokerAckOfflinePaymentTransactionManager(
                     brokerAckOfflinePaymentBusinessTransactionDao,
                     customerBrokerContractSaleManager,
-                    errorManager);
+                    errorManager,
+                    customerBrokerSaleNegotiationManager);
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Broker Ack Offline Payment Starting");

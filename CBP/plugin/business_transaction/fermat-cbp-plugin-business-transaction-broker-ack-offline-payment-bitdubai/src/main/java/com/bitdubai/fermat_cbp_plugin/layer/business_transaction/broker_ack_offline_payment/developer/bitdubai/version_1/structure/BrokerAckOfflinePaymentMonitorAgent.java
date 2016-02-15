@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
@@ -91,6 +92,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
     CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    DepositManager depositManager;
 
     public BrokerAckOfflinePaymentMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
@@ -101,7 +103,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
             TransactionTransmissionManager transactionTransmissionManager,
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager)  {
+            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+            DepositManager depositManager)  {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -111,6 +114,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
         this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
         this.customerBrokerSaleNegotiationManager=customerBrokerSaleNegotiationManager;
+        this.depositManager=depositManager;
     }
 
     @Override
@@ -272,8 +276,20 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 String contractHash;
 
                 /**
+                 * Check pending bank transactions to credit - Broker Side
+                 * The status to verify is PENDING_CREDIT_BANK_WALLET, it represents that the payment
+                 * is "physically" acknowledge by the broker.
+                 */
+                List<BusinessTransactionRecord> pendingToBankCreditList=
+                        brokerAckOfflinePaymentBusinessTransactionDao.getPendingToBankCreditList();
+                for(BusinessTransactionRecord pendingToBakCreditRecord : pendingToBankCreditList){
+                    contractHash=pendingToBakCreditRecord.getTransactionHash();
+                    //depositManager.makeDeposit()
+                }
+
+                /**
                  * Check contract status to send. - Broker Side
-                 * The status to verify is PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION, it represents that the payment is
+                 * The status to verify is PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION, it represents that the payment is fully
                  * acknowledge by the broker.
                  */
                 List<BusinessTransactionRecord> pendingToSubmitNotificationList=
