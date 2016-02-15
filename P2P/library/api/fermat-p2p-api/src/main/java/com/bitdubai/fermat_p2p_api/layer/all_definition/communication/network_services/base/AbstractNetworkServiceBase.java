@@ -61,6 +61,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -71,7 +72,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -724,6 +727,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
         try {
 
             communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteParticipant().getIdentityPublicKey());
+            checkFailedSendMessage(event.getRemoteParticipant().getIdentityPublicKey());
             onFailureComponentConnectionRequest(event.getRemoteParticipant());
 
         } catch (Exception e) {
@@ -846,9 +850,62 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
         }catch (Exception e){
 
-            System.out.println("Error sending message: "+e.getMessage());
+            System.out.println("Error sending message: " + e.getMessage());
             throw new CantSendMessageException(CantSendMessageException.DEFAULT_MESSAGE, e);
         }
+    }
+
+    /**
+     * Check fail send message
+     *
+     * @param destinationPublicKey
+     */
+    private void checkFailedSendMessage(String destinationPublicKey){
+
+        try{
+
+            /*
+             * Read all pending message from database
+             */
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, destinationPublicKey);
+            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+            List<FermatMessage> messages = getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().findAll(filters);
+
+            for (FermatMessage fermatMessage: messages) {
+
+                /*
+                 * Increment the fail count field
+                 */
+                FermatMessageCommunication fermatMessageCommunication = (FermatMessageCommunication) fermatMessage;
+                fermatMessageCommunication.setFailCount(fermatMessageCommunication.getFailCount() + 1);
+
+                if(fermatMessageCommunication.getFailCount() > 10 ) {
+
+                    /*
+                     * Calculate the date
+                     */
+                    long sentDate = fermatMessageCommunication.getShippingTimestamp().getTime();
+                    long currentTime = System.currentTimeMillis();
+                    long dif = currentTime - sentDate;
+                    double dias = Math.floor(dif / (1000 * 60 * 60 * 24));
+
+                    /*
+                     * if have mora that 3 days
+                     */
+                    if ((int) dias > 3) {
+                        getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().delete(fermatMessage.getId());
+                    }
+                }else {
+                    getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().update(fermatMessage);
+                }
+
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**
