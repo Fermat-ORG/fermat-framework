@@ -199,7 +199,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                     logManager.log(CryptoTransmissionNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoTransmissionNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting");
 
 
-            executorService = Executors.newFixedThreadPool(3);
+            executorService = Executors.newFixedThreadPool(1);
 
                             /*
                              * Create a new key pair for this execution
@@ -463,6 +463,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     @Override
     public void stop() {
         super.stop();
+        executorService.shutdownNow();
     }
 
     @Override
@@ -1131,19 +1132,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                 break;
             case RESPONSE:
 
-                switch (cpr.getCryptoTransmissionMetadataState()) {
-                    //TODO: falta hacer lo mismo con los demás mensajes
-                    case SEEN_BY_DESTINATION_NETWORK_SERVICE:
-
-                        cpr.setCryptoTransmissionMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE);
-                        cpr.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
-                        cpr.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.SENT);
-                        cpr.setCryptoTransmissionMessageType(CryptoTransmissionMessageType.RESPONSE);
-
-                        break;
-
-                }
-
                 executorService.submit(new Runnable() {
                     @Override
                     public void run() {
@@ -1151,7 +1139,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                             sendNewMessage(
                                     getProfileSenderToRequestConnection(cpr.getSenderPublicKey()),
                                     getProfileDestinationToRequestConnection(cpr.getDestinationPublicKey()),
-                                    cpr.toJson());
+                                    buildJsonMetadataResponseMessage(cpr));
                         } catch (CantSendMessageException e) {
                             e.printStackTrace();
                         }
@@ -1164,4 +1152,38 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     }
 
 
+
+    private String buildJsonMetadataResponseMessage(final CryptoTransmissionMetadataRecord cpr) {
+
+        //TODO: falta hacer lo mismo con los demás mensajes
+        if (cpr.getCryptoTransmissionMetadataState() == CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE)
+        {
+            return  new CryptoTransmissionResponseMessage(
+                    cpr.getTransactionId(),
+                    CryptoTransmissionMessageType.RESPONSE,
+                    CryptoTransmissionProtocolState.SENT,
+                    CryptoTransmissionMetadataType.METADATA_SEND,
+                    CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE,
+                    cpr.getSenderPublicKey(),
+                    cpr.getDestinationPublicKey(),
+                    false,
+                    0).toJson();
+        }
+        else
+        {
+            return new CryptoTransmissionResponseMessage(
+                    cpr.getTransactionId(),
+                    cpr.getCryptoTransmissionMessageType(),
+                    cpr.getCryptoTransmissionProtocolState(),
+                    cpr.getCryptoTransmissionMetadataType(),
+                    cpr.getCryptoTransmissionMetadataState(),
+                    cpr.getSenderPublicKey(),
+                    cpr.getDestinationPublicKey(),
+                    false,
+                    0).toJson();
+        }
+
+
+
+    }
 }
