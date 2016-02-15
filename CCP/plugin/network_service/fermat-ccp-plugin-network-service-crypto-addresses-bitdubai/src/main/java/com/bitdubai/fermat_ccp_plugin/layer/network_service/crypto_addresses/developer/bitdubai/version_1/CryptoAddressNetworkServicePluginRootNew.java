@@ -1,13 +1,11 @@
 package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.*;
 import com.bitdubai.fermat_api.layer.all_definition.enums.*;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -22,12 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
@@ -37,20 +30,16 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.*;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.communication.event_handlers.*;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.*;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.*;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.AddressesConstants;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.CryptoAddressesExecutorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceConnectionManager_V2;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -102,10 +91,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
      */
     private CopyOnWriteArrayList<PlatformComponentProfile> remoteNetworkServicesRegisteredList;
 
-    /**
-     * Represent the cryptoPaymentRequestNetworkServiceConnectionManager
-     */
-    private CommunicationNetworkServiceConnectionManager_V2 communicationNetworkServiceConnectionManager;
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -143,12 +128,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
     ExecutorService executorService;
 
 
-    /**
-     * Represent the registrationProcessNetworkServiceAgent
-     */
-    private CommunicationRegistrationProcessNetworkServiceAgent communicationRegistrationProcessNetworkServiceAgent;
-
-    private CryptoAddressesExecutorAgent cryptoAddressesExecutorAgent;
 
     /**
      * Represents the CryptoAddressesNetworkServiceDao
@@ -253,7 +232,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
         try {
 
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -262,11 +241,11 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
         } catch (DatabaseNotFoundException e) {
 
-            CommunicationNetworkServiceDatabaseFactory communicationLayerNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CryptoAddressesNetworkServiceDatabaseFactory communicationLayerNetworkServiceDatabaseFactory = new CryptoAddressesNetworkServiceDatabaseFactory(pluginDatabaseSystem);
 
             try {
 
-                this.dataBase = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
@@ -349,19 +328,12 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
                     receiveAcceptance(acceptMessage);
 
 
-                    //close connection - end message
-                  //  communicationNetworkServiceConnectionManager.closeConnection(acceptMessage.getActorDestination());
-                   // cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(acceptMessage.getActorDestination());
-
                     break;
 
                 case DENY:
                     DenyMessage denyMessage = gson.fromJson(jsonMessage, DenyMessage.class);
                     receiveDenial(denyMessage);
 
-                    //close connection - end message
-                  //  communicationNetworkServiceConnectionManager.closeConnection(denyMessage.getActorDestination());
-                  //  cryptoAddressesExecutorAgent.getPoolConnectionsWaitingForResponse().remove(denyMessage.getActorDestination());
                     break;
 
                 case REQUEST:
@@ -589,10 +561,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
             cryptoAddressesNetworkServiceDao.changeActionState(receivedMessage.getRequestId(), RequestAction.NONE);
             cryptoAddressesNetworkServiceDao.changeProtocolState(receivedMessage.getRequestId(),ProtocolState.DONE);
-
-//            communicationNetworkServiceConnectionManager.closeConnection(receivedMessage.getIdentitySender());
-//            //remove from the waiting pool
-//            cryptoAddressesExecutorAgent.connectionFailure(receivedMessage.getIdentitySender());
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1038,8 +1006,10 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
             //only the record you request the address
 
-            if(cryptoAddressesNetworkServiceDao.getPendingRequest(requestId).getMessageType().equals(AddressesConstants.OUTGOING_MESSAGE))
+            if(cryptoAddressesNetworkServiceDao.getPendingRequest(requestId).getMessageType().equals(AddressesConstants.OUTGOING_MESSAGE)) {
                 cryptoAddressesNetworkServiceDao.confirmAddressExchangeRequest(requestId);
+                cryptoAddressesNetworkServiceDao.markReadAndDone(requestId);
+            }
 
         } catch (CantConfirmAddressExchangeRequestException | PendingRequestNotFoundException e){
             // PendingRequestNotFoundException - THIS SHOULD' HAPPEN.
