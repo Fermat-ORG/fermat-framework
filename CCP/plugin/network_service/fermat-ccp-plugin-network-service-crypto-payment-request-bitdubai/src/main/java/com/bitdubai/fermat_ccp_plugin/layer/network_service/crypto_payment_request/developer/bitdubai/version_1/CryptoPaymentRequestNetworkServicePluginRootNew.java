@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Platfo
 import com.bitdubai.fermat_api.layer.all_definition.developer.*;
 import com.bitdubai.fermat_api.layer.all_definition.enums.*;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -19,6 +20,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestProtocolState;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestType;
@@ -34,10 +37,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_reque
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.structure.PaymentConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -236,6 +238,34 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
             for(CryptoPaymentRequest record : cryptoAddressRequestList) {
 
                 cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(), RequestProtocolState.PROCESSING_SEND);
+
+                final CryptoPaymentRequest cryptoPaymentRequest  = record;
+
+
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            String json = "";
+                            if (cryptoPaymentRequest.getAction().getCode().equals(RequestAction.REQUEST.getCode())){
+                                json = buildJsonRequestMessage(cryptoPaymentRequest);
+                            }else{
+                                json = buildJsonInformationMessage(cryptoPaymentRequest);
+                            }
+
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cryptoPaymentRequest.getIdentityPublicKey()),
+                                    getProfileDestinationToRequestConnection(cryptoPaymentRequest.getActorPublicKey()),
+                                    json);
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedException(e);
+                        }
+                    }
+                });
+
+
+
+
             }
         }
         catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
@@ -292,9 +322,10 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     receiveCryptoPaymentRequest(requestMessage);
                     System.out.println(" CPR NS - Request Message Received: " + requestMessage.toString());
                     break;
-
             }
 
+
+            raiseEvents();
 
 
         } catch (Exception e) {
@@ -486,6 +517,31 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
             for(CryptoPaymentRequest record : cryptoAddressRequestList) {
 
                 cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
+
+                final CryptoPaymentRequest cryptoPaymentRequest  = record;
+
+
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            String json = "";
+                            if (cryptoPaymentRequest.getAction().getCode().equals(RequestAction.REQUEST.getCode())){
+                                json = buildJsonRequestMessage(cryptoPaymentRequest);
+                            }else{
+                                json = buildJsonInformationMessage(cryptoPaymentRequest);
+                            }
+
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cryptoPaymentRequest.getIdentityPublicKey()),
+                                    getProfileDestinationToRequestConnection(cryptoPaymentRequest.getActorPublicKey()),
+                                    json);
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedException(e);
+                        }
+                    }
+                });
+
             }
         }
         catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
@@ -505,6 +561,32 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
             for(CryptoPaymentRequest record : cryptoAddressRequestList) {
 
                 cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
+
+                final CryptoPaymentRequest cryptoPaymentRequest  = record;
+
+
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            String json = "";
+                            if (cryptoPaymentRequest.getAction().getCode().equals(RequestAction.REQUEST.getCode())){
+                                json = buildJsonRequestMessage(cryptoPaymentRequest);
+                            }else{
+                                json = buildJsonInformationMessage(cryptoPaymentRequest);
+                            }
+
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cryptoPaymentRequest.getIdentityPublicKey()),
+                                    getProfileDestinationToRequestConnection(cryptoPaymentRequest.getActorPublicKey()),
+                                    json);
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedException(e);
+                        }
+                    }
+                });
+
+
             }
         }
         catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
@@ -550,6 +632,25 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     0, PaymentConstants.OUTGOING_MESSAGE
             );
 
+
+            final CryptoPaymentRequest cryptoPaymentRequest = cryptoPaymentRequestNetworkServiceDao.getRequestById(requestId);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(cryptoPaymentRequest.getIdentityPublicKey()),
+                                getProfileDestinationToRequestConnection(cryptoPaymentRequest.getActorPublicKey()),
+                                buildJsonRequestMessage(cryptoPaymentRequest));
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedException(e);
+                    }
+                }
+            });
+
+            toWaitingResponse(requestId);
+
             System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT - OK.");
 
         } catch(CantCreateCryptoPaymentRequestException e) {
@@ -579,6 +680,26 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     RequestAction.INFORM_REFUSAL,
                     RequestProtocolState.PROCESSING_SEND
             );
+
+
+            final CryptoPaymentRequest cryptoPaymentRequest = cryptoPaymentRequestNetworkServiceDao.getRequestById(requestId);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(cryptoPaymentRequest.getIdentityPublicKey()),
+                                getProfileDestinationToRequestConnection(cryptoPaymentRequest.getActorPublicKey()),
+                                buildJsonInformationMessage(cryptoPaymentRequest));
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedException(e);
+                    }
+                }
+            });
+
+
+
 
         } catch(CantTakeActionException e) {
             // i inform to error manager the error.
@@ -610,6 +731,23 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     RequestAction.INFORM_DENIAL,
                     RequestProtocolState.PROCESSING_SEND
             );
+
+            final CryptoPaymentRequest cryptoPaymentRequest = cryptoPaymentRequestNetworkServiceDao.getRequestById(requestId);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(cryptoPaymentRequest.getIdentityPublicKey()),
+                                getProfileDestinationToRequestConnection(cryptoPaymentRequest.getActorPublicKey()),
+                                buildJsonInformationMessage(cryptoPaymentRequest));
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedException(e);
+                    }
+                }
+            });
+
 
         } catch(CantTakeActionException e) {
             // i inform to error manager the error.
@@ -643,6 +781,23 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     RequestProtocolState.PROCESSING_SEND
             );
 
+            final CryptoPaymentRequest cryptoPaymentRequest = cryptoPaymentRequestNetworkServiceDao.getRequestById(requestId);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(cryptoPaymentRequest.getIdentityPublicKey()),
+                                getProfileDestinationToRequestConnection(cryptoPaymentRequest.getActorPublicKey()),
+                                buildJsonInformationMessage(cryptoPaymentRequest));
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedException(e);
+                    }
+                }
+            });
+
+
         } catch(CantTakeActionException e) {
             // i inform to error manager the error.
             reportUnexpectedException(e);
@@ -673,6 +828,24 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     RequestAction.INFORM_RECEPTION,
                     RequestProtocolState.PROCESSING_SEND
             );
+
+            final CryptoPaymentRequest cryptoPaymentRequest = cryptoPaymentRequestNetworkServiceDao.getRequestById(requestId);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(cryptoPaymentRequest.getIdentityPublicKey()),
+                                getProfileDestinationToRequestConnection(cryptoPaymentRequest.getActorPublicKey()),
+                                buildJsonInformationMessage(cryptoPaymentRequest));
+                    } catch (CantSendMessageException e) {
+                        reportUnexpectedException(e);
+                    }
+                }
+            });
+
+
 
         } catch(CantTakeActionException e) {
             // i inform to error manager the error.
@@ -895,4 +1068,63 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                         PlatformComponentType.ACTOR_INTRA_USER,
                         "");
     }
+
+    private String buildJsonInformationMessage(CryptoPaymentRequest cpr) {
+
+        return new InformationMessage(
+                cpr.getRequestId(),
+                cpr.getAction(),
+                cpr.getIdentityPublicKey(),
+                cpr.getActorPublicKey()
+        ).toJson();
+    }
+
+    private String buildJsonRequestMessage(CryptoPaymentRequest cpr) {
+
+        return new RequestMessage(
+                cpr.getRequestId()        ,
+                cpr.getIdentityPublicKey(),
+                cpr.getIdentityType()     ,
+                cpr.getActorPublicKey()   ,
+                cpr.getActorType()        ,
+                cpr.getDescription()      ,
+                cpr.getCryptoAddress()    ,
+                cpr.getAmount()           ,
+                cpr.getStartTimeStamp()   ,
+                cpr.getAction()           ,
+                cpr.getNetworkType(),
+                cpr.getReferenceWallet(),
+                cpr.getIdentityPublicKey(),
+                cpr.getActorPublicKey()
+
+        ).toJson();
+    }
+
+    private void toWaitingResponse(final UUID requestId) throws CantChangeRequestProtocolStateException,
+            RequestNotFoundException               {
+
+        cryptoPaymentRequestNetworkServiceDao.changeProtocolState(
+                requestId,
+                RequestProtocolState.WAITING_RESPONSE
+        );
+    }
+
+    private void raiseEvents(){
+        try {
+
+            // if there is pending actions i raise a crypto address news event.
+            if(cryptoPaymentRequestNetworkServiceDao.isPendingRequestByProtocolState(RequestProtocolState.PENDING_ACTION)) {
+                System.out.println("************* Crypto Payment Request -> Pending Action detected!");
+                FermatEvent eventToRaise = getEventManager().getNewEvent(EventType.CRYPTO_PAYMENT_REQUEST_NEWS);
+                eventToRaise.setSource(this.eventSource);
+                getEventManager().raiseEvent(eventToRaise);
+            }
+
+        } catch(CantListRequestsException e) {
+
+            reportUnexpectedException(e);
+        }
+
+    }
+
 }
