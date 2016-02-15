@@ -289,8 +289,9 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                 @Override
                 public void onItemSelected(CurrencyPairAndProvider selectedItem) {
                     if (!containProvider(selectedItem)) {
-                        selectedProviders.add(selectedItem);
+                     selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
+                        Log.i("DATA PROVIDERSS:",""+selectedProviders+" Item seleccionado: "+selectedItem);
                         showOrHideNoProvidersView();
                     }
                 }
@@ -391,11 +392,16 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             for (CurrencyPairAndProvider provider : selectedProviders) {
                 CurrencyExchangeRateProviderManager providerManager = provider.getProvider();
                 UUID providerId = providerManager.getProviderId();
-
                 CurrencyExchangeRateProviderManager selectedProviderManager = selectedProvider.getProvider();
                 UUID selectedProviderId = selectedProviderManager.getProviderId();
 
-                if (providerId.equals(selectedProviderId))
+                Currency providerFrom = provider.getCurrencyFrom();
+                Currency providerTo = provider.getCurrencyTo();
+
+                Currency SelectedFrom = selectedProvider.getCurrencyFrom();
+                Currency SelectedTo = selectedProvider.getCurrencyTo();
+
+                if (providerId.equals(selectedProviderId) && providerFrom == SelectedFrom && providerTo == SelectedTo)
                     return true;
             }
         } catch (CantGetProviderInfoException ex) {
@@ -456,7 +462,6 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         for (InstalledWallet wallet : bitcoinWallets) {
             data.add(wallet.getWalletName());
         }
-
         return data;
     }
 }
