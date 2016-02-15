@@ -1132,7 +1132,8 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                         cpr.setCryptoTransmissionMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE);
                         cpr.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_SEND);
                         cpr.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.SENT);
-                        cpr.setCryptoTransmissionMessageType(CryptoTransmissionMessageType.RESPONSE);
+                        //TODO : lo comenté
+                  //      cpr.setCryptoTransmissionMessageType(CryptoTransmissionMessageType.RESPONSE);
 
                         break;
 
