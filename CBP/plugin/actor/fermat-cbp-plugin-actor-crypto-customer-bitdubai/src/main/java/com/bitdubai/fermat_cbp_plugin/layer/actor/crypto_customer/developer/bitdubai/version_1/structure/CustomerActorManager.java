@@ -88,8 +88,8 @@ public class CustomerActorManager implements ActorExtraDataManager {
         }
 
         @Override
-        public ActorExtraData getActorExtraDataByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException {
-            return this.dao.getActorExtraDataByPublicKey(identity.getPublicKey());
+        public ActorExtraData getActorExtraDataByIdentity(String customerPublicKey, String brokerPublicKey) throws CantGetListActorExtraDataException {
+            return this.dao.getActorExtraDataByPublicKey(customerPublicKey, brokerPublicKey);
         }
 
         @Override

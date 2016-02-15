@@ -4,9 +4,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotationImpl;
@@ -28,7 +31,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private TextView yourExchangeRateValueLeftSide;
     private TextView yourExchangeRateValueRightSide;
     private FermatButton yourExchangeRateValue;
-    private List<BrokerCurrencyQuotationImpl> marketRateList;
+    private List<IndexInfoSummary> marketRateList;
 
     public ExchangeRateViewHolder(View itemView) {
         super(itemView);
@@ -47,20 +50,15 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
 
         final Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
 
-        final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
-        final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
+        final String currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+        final String currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
-//        double marketRate = 212.48; // TODO cambiar por valor que devuelve el proveedor asociado a la wallet para este par de monedas
-//        double marketRate = Double.parseDouble(getMarketRate(clauses));
-//        String formattedMarketRate = NumberFormat.getInstance().format(marketRate);
+        String marketRate = getMarketRate(clauses);
 
-        final BigDecimal marketRate = new BigDecimal(getMarketRate(clauses).replace("," ,""));
-        String formattedMarketRate  = DecimalFormat.getInstance().format(marketRate.doubleValue());
-
-        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), formattedMarketRate, currencyToPay.getValue()));
-        yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
+        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy, marketRate, currencyToPay));
+        yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy));
         yourExchangeRateValue.setText(clause.getValue());
-        yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
+        yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay));
     }
 
     @Override
@@ -73,6 +71,10 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     public void setViewResources(int titleRes, int positionImgRes, int... stringResources) {
         titleTextView.setText(titleRes);
         clauseNumberImageView.setImageResource(positionImgRes);
+    }
+
+    public void setMarketRateList(List<IndexInfoSummary> marketRateList) {
+        this.marketRateList = marketRateList;
     }
 
     @Override
@@ -90,19 +92,12 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         return R.id.ccw_card_view_title;
     }
 
-    public void setMarketRateList(List <BrokerCurrencyQuotationImpl> marketRateList){
-        this.marketRateList = marketRateList;
-    }
-
-    private String getMarketRate(Map<ClauseType, ClauseInformation> clauses){
-
+    private String getMarketRate(Map<ClauseType, ClauseInformation> clauses) {
         BrokerCurrencyQuotation brokerCurrencyQuotation = new BrokerCurrencyQuotation(marketRateList);
-        String brokerMarketRate = brokerCurrencyQuotation.getExchangeRate(
-                clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue(),
-                clauses.get(ClauseType.BROKER_CURRENCY).getValue()
-        );
+        String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+        String brokerCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
-        return brokerMarketRate;
+        return brokerCurrencyQuotation.getExchangeRate(customerCurrency, brokerCurrency);
     }
 
 }

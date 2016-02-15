@@ -46,11 +46,12 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
 
     /**
      *
-     * @param identity
+     * @param customerPublicKey
+     * @param brokerPublicKey
      * @return
      * @throws CantGetListActorExtraDataException
      */
-    ActorExtraData getActorExtraDataByIdentity(ActorIdentity identity) throws CantGetListActorExtraDataException;
+    ActorExtraData getActorExtraDataByIdentity(String customerPublicKey, String brokerPublicKey) throws CantGetListActorExtraDataException;
 
     /**
      *
@@ -68,7 +69,7 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
 
     /**
      *
-     * @param actorExtraData este parametro debe ser una clase que implemente ActorExtraData pero solo la parte de la identidad Ej: new ActorExtraDataImpl(ActorIdentity);
+     * @param actorExtraData
      * @throws CantSendActorNetworkServiceException
      */
     void requestBrokerExtraData(ActorExtraData actorExtraData) throws CantSendActorNetworkServiceException;

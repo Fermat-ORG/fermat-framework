@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.MyAssetsAdapter;
+import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.filters.MyAssetsAdapterFilter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.RedeemPointSession;
@@ -72,6 +73,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     //UI
     private View noAssetsView;
     private SearchView searchView;
+    private boolean showNoBalance;
 
     public static RedeemPointMainActivityFragment newInstance() {
         return new RedeemPointMainActivityFragment();
@@ -201,7 +203,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
-                    ((MyAssetsAdapter) getAdapter()).getFilter().filter(s);
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter(s);
                 }
                 return false;
             }
@@ -219,6 +221,10 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
+            } else if (id == R.id.action_wallet_redeem_point_show_no_balance) {
+                showNoBalance = item.getTitle().equals(getResources().getString(R.string.dap_redeem_point_wallet_show_no_balance));
+                item.setTitle((showNoBalance) ? getResources().getString(R.string.dap_redeem_point_wallet_show_all) : getResources().getString(R.string.dap_redeem_point_wallet_show_no_balance));
+                ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter(searchView.getQuery());
             }
 
         } catch (Exception e) {

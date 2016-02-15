@@ -12,7 +12,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
@@ -67,7 +67,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexIn
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.WalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
@@ -116,7 +116,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     /**
      * @param brokerWalletPublicKey the wallet public key
      * @return A summary of the current market rate for the different selected providers
-     * @throws CantGetCurrentIndexSummaryForStockCurrenciesException Cant get current Index Summary for the selected providers
+     * @throws CantGetProvidersCurrentExchangeRatesException Cant get current Index Summary for the selected providers
      * @throws CryptoBrokerWalletNotFoundException                   Cant find the installed wallet data
      * @throws CantGetCryptoBrokerWalletSettingException             Cant find the settings for the wallet with the public key
      * @throws CantGetProviderException                              Cant get the provider from the CER platform
@@ -124,7 +124,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @throws CantGetExchangeRateException                          Cant get current the exchange rate for the currency pair in the provider
      * @throws InvalidParameterException                             Invalid parameters
      */
-    Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String brokerWalletPublicKey) throws CantGetCurrentIndexSummaryForStockCurrenciesException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, InvalidParameterException;
+    Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String brokerWalletPublicKey) throws CantGetProvidersCurrentExchangeRatesException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, InvalidParameterException;
 
     boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoBrokerIdentitiesException, CantGetListBrokerIdentityWalletRelationshipException;
 
@@ -240,7 +240,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
 
     /**
@@ -267,7 +268,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateBankMoneyDestockException;
 
     /**
@@ -293,7 +295,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
 
     /**
@@ -319,7 +322,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateCashMoneyDestockException;
 
     /**
@@ -343,7 +347,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateCryptoMoneyRestockException;
 
 
@@ -368,7 +373,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateCryptoMoneyDestockException;
 
     /**
@@ -376,11 +382,11 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      *
      * @param merchandise
      * @param fiatCurrency
-     * @param currencyType
+     * @param moneyType
      * @return FiatIndex
      * @throws CantGetCryptoBrokerMarketRateException
      */
-    FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType, String walletPublicKey) throws CantGetCryptoBrokerMarketRateException, CryptoBrokerWalletNotFoundException;
+    FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, MoneyType moneyType, String walletPublicKey) throws CantGetCryptoBrokerMarketRateException, CryptoBrokerWalletNotFoundException;
 
     CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);
 
@@ -442,13 +448,13 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * This method load the list CryptoBrokerStockTransaction
      *
      * @param merchandise
-     * @param currencyType
+     * @param moneyType
      * @param offset
      * @param timeStamp
      * @return List<CryptoBrokerStockTransaction>
      * @throws CantGetCryptoBrokerStockTransactionException
      */
-    List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, CurrencyType currencyType, int offset, long timeStamp, String walletPublicKey) throws CantGetCryptoBrokerStockTransactionException;
+    List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp, String walletPublicKey) throws CantGetCryptoBrokerStockTransactionException;
 
     float getAvailableBalance(Currency merchandise, String walletPublicKey) throws CantGetAvailableBalanceCryptoBrokerWalletException, CryptoBrokerWalletNotFoundException, CantGetStockCryptoBrokerWalletException;
 
@@ -525,7 +531,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @return
      * @throws CantGetListSaleNegotiationsException
      */
-    CurrencyType getCurrencyTypeFromContract(
+    MoneyType getMoneyTypeFromContract(
             CustomerBrokerContractSale customerBrokerContractSale,
             ContractDetailType contractDetailType) throws
             CantGetListSaleNegotiationsException;

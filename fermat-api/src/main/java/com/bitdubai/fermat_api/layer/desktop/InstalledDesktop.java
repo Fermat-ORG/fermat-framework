@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.desktop;
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 
 /**
@@ -18,5 +19,10 @@ public class InstalledDesktop implements FermatApp {
     @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return null;
     }
 }

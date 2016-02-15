@@ -29,7 +29,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
@@ -154,7 +154,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
             @Override
             public String getCode() {
-                return CurrencyType.CRYPTO_MONEY.getCode();
+                return MoneyType.CRYPTO.getCode();
             }
 
             @Override
@@ -217,7 +217,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //Customer Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.CUSTOMER_DETAIL,
-                CurrencyType.BANK_MONEY.getCode(),
+                MoneyType.BANK.getCode(),
                 FiatCurrency.CHINESE_YUAN.getFriendlyName(),
                 12,
                 ContractStatus.PAYMENT_SUBMIT,
@@ -230,7 +230,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //Testing Broker
         contractDetail=new ContractDetail(
                 ContractDetailType.BROKER_DETAIL,
-                CurrencyType.CRYPTO_MONEY.getCode(),
+                MoneyType.CRYPTO.getCode(),
                 CryptoCurrency.BITCOIN.getFriendlyName(),
                 12,
                 ContractStatus.PENDING_MERCHANDISE,

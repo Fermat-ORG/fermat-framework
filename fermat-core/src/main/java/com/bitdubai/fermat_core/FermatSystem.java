@@ -139,6 +139,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new PIPPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
 
+
         } catch(CantRegisterPlatformException e) {
 
             throw new CantStartSystemException(e, "", "There was a problem registering a Platform.");

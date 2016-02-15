@@ -44,17 +44,18 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public void sendContractHash(UUID transactionId,
-                                                 String cryptoBrokerActorSenderPublicKey,
-                                                 String cryptoCustomerActorReceiverPublicKey,
-                                                 String transactionHash,
-                                                 String negotiationId) throws CantSendBusinessTransactionHashException {
+    public void sendContractHash(
+            UUID transactionId,
+            String cryptoBrokerActorSenderPublicKey,
+            String cryptoCustomerActorReceiverPublicKey,
+            String transactionHash,
+            String negotiationId,
+            Plugins remoteBusinessTransaction
+            ) throws CantSendBusinessTransactionHashException {
         //TODO: check the correct PlatformComponentType for sender and receiver
         //TODO: Check is contractId is necessary
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
-        //TODO: wait the interface refactor
-        Plugins remoteBusiness=Plugins.TRANSACTION_TRANSMISSION;
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 transactionHash,
                 ContractTransactionStatus.PENDING_CONFIRMATION,
@@ -68,7 +69,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 timestamp.getTime(),
                 transactionId,
                 TransactionTransmissionStates.PRE_PROCESSING_SEND,
-                remoteBusiness
+                remoteBusinessTransaction
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -85,16 +86,16 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public void sendContractStatusNotification(String cryptoBrokerActorSenderPublicKey,
-                                                               String cryptoCustomerActorReceiverPublicKey,
-                                                               String transactionHash,
-                                                               String transactionId,
-                                                               ContractTransactionStatus contractStatus) throws CantSendContractNewStatusNotificationException {
+    public void sendContractStatusNotification(
+            String cryptoBrokerActorSenderPublicKey,
+            String cryptoCustomerActorReceiverPublicKey,
+            String transactionHash,
+            String transactionId,
+            ContractTransactionStatus contractStatus,
+            Plugins remoteBusinessTransaction) throws CantSendContractNewStatusNotificationException {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
-        //TODO: wait the interface refactor
-        Plugins remoteBusiness=Plugins.TRANSACTION_TRANSMISSION;
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 transactionHash,
                 contractStatus,
@@ -108,7 +109,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 timestamp.getTime(),
                 uuidTransactionId,
                 TransactionTransmissionStates.PRE_PROCESSING_SEND,
-                remoteBusiness
+                remoteBusinessTransaction
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -129,15 +130,15 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public void confirmNotificationReception(String cryptoBrokerActorSenderPublicKey,
-                                             String cryptoCustomerActorReceiverPublicKey,
-                                             String contractHash,
-                                             String transactionId) throws CantConfirmNotificationReception {
+    public void confirmNotificationReception(
+            String cryptoBrokerActorSenderPublicKey,
+            String cryptoCustomerActorReceiverPublicKey,
+            String contractHash,
+            String transactionId,
+            Plugins remoteBusinessTransaction) throws CantConfirmNotificationReception {
         Date date=new Date();
         Timestamp timestamp=new Timestamp(date.getTime());
         UUID uuidTransactionId=UUID.fromString(transactionId);
-        //TODO: wait the interface refactor
-        Plugins remoteBusiness=Plugins.TRANSACTION_TRANSMISSION;
         BusinessTransactionMetadata businessTransactionMetadata =new BusinessTransactionMetadataRecord(
                 contractHash,
                 null,
@@ -151,7 +152,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 timestamp.getTime(),
                 uuidTransactionId,
                 TransactionTransmissionStates.PRE_PROCESSING_SEND,
-                remoteBusiness
+                remoteBusinessTransaction
         );
         try {
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
@@ -201,7 +202,8 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
     }
 
     @Override
-    public List<Transaction<BusinessTransactionMetadata>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+    public List<Transaction<BusinessTransactionMetadata>> getPendingTransactions(
+            Specialist specialist) throws CantDeliverPendingTransactionsException {
         List<Transaction<BusinessTransactionMetadata>> pendingTransaction=new ArrayList<>();
         try {
 

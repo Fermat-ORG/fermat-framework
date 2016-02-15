@@ -2,7 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
@@ -20,7 +20,7 @@ public class CryptoBrokerStockTransactionTestData implements CryptoBrokerStockTr
     private BigDecimal previousAvailableBalance;
     private BigDecimal priceReference;
     private Currency merchandise;
-    private CurrencyType currencyType;
+    private MoneyType moneyType;
     private String walletPublicKey;
     private String brokerPublicKey;
     private String memo;
@@ -28,6 +28,7 @@ public class CryptoBrokerStockTransactionTestData implements CryptoBrokerStockTr
     private long timestamp;
     private BalanceType balanceType;
     private TransactionType transactionType;
+    private String originTransactionId;
 
 
     public CryptoBrokerStockTransactionTestData(Random random, Currency merchandise, Calendar calendar) {
@@ -39,7 +40,7 @@ public class CryptoBrokerStockTransactionTestData implements CryptoBrokerStockTr
         previousAvailableBalance = new BigDecimal(random.nextDouble() * 100);
         priceReference = new BigDecimal(random.nextDouble() * 100);
         this.merchandise = merchandise;
-        this.currencyType = CurrencyType.BANK_MONEY;
+        this.moneyType = MoneyType.BANK;
         walletPublicKey = "walletPublicKey";
         brokerPublicKey = "brokerPublicKey";
         memo = "memo";
@@ -47,6 +48,7 @@ public class CryptoBrokerStockTransactionTestData implements CryptoBrokerStockTr
         timestamp = calendar.getTimeInMillis();
         balanceType = BalanceType.AVAILABLE;
         transactionType = TransactionType.CREDIT;
+        originTransactionId = "originTransactionId";
     }
 
     @Override
@@ -85,8 +87,8 @@ public class CryptoBrokerStockTransactionTestData implements CryptoBrokerStockTr
     }
 
     @Override
-    public CurrencyType getCurrencyType() {
-        return currencyType;
+    public MoneyType getMoneyType() {
+        return moneyType;
     }
 
     @Override
@@ -129,6 +131,26 @@ public class CryptoBrokerStockTransactionTestData implements CryptoBrokerStockTr
         return null;
     }
 
+    /**
+     * The method <code>getOriginTransactionId</code> returns the origin transaction
+     *
+     * @return String
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return originTransactionId;
+    }
+
+    /**
+     * The method <code>getSeen</code> returns the origin transaction
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean getSeen() {
+        return false;
+    }
+
     public void setBookBalance(BigDecimal bookBalance) {
         this.bookBalance = bookBalance;
     }
@@ -145,8 +167,8 @@ public class CryptoBrokerStockTransactionTestData implements CryptoBrokerStockTr
         this.previousAvailableBalance = previousAvailableBalance;
     }
 
-    public void setCurrencyType(CurrencyType currencyType) {
-        this.currencyType = currencyType;
+    public void setMoneyType(MoneyType moneyType) {
+        this.moneyType = moneyType;
     }
 
     public void setMerchandise(Currency merchandise) {

@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -81,13 +82,12 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             errorManager = appSession.getErrorManager();
             identityInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-
             if (errorManager != null) {
                 errorManager.reportUnexpectedSubAppException(
-                        SubApps.CBP_CRYPTO_BROKER_IDENTITY,
-                        UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
-                        ex);
+                    SubApps.CBP_CRYPTO_BROKER_IDENTITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                    ex
+                );
             }
         }
     }
@@ -122,7 +122,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             try {
                 moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),subappSettings);
             }catch (Exception e){
-                e.printStackTrace();
+
             }
         }
 
@@ -136,6 +136,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override
