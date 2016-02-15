@@ -43,4 +43,6 @@ public interface ModuleManager<Z extends FermatSettings, Y extends ActiveActorId
     void setAppPublicKey(String publicKey);
 
     int[] getMenuNotifications();
+
+
 }

@@ -170,6 +170,13 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     }
 
     @Override
+    public List<AssetUserWalletTransaction> getAllTransactions(String assetPublicKey) throws CantGetTransactionsException {
+        assetUserWalletDao = new AssetUserWalletDao(database);
+        List<AssetUserWalletTransaction> all = assetUserWalletDao.listsTransactionsByAssets(assetPublicKey);
+        return all;
+    }
+
+    @Override
     public List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException {
         List<AssetUserWalletTransaction> allCreditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
         List<AssetUserWalletTransaction> alldebitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
