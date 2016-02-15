@@ -86,7 +86,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                 while (isRunning())
                     process();
             }
-        });
+        }, this.getClass().getSimpleName());
     }
 
     /**
@@ -175,7 +175,6 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
 //            }
 //        }
 //    }
-
     private void doTheMainTask() {
         try {
             // I define the filter to null for all
@@ -203,13 +202,11 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                         break;
                     case IN_EJECUTION:
                         //Luego cambiar el status al registro de la transaccion leido
-                        if (holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode() == BankTransactionStatus.CONFIRMED.getCode())
-                        {
+                        if (holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode() == BankTransactionStatus.CONFIRMED.getCode()) {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
                             stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
                         }
-                        if (holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode() == BankTransactionStatus.REJECTED.getCode())
-                        {
+                        if (holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode() == BankTransactionStatus.REJECTED.getCode()) {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
                         }
@@ -234,7 +231,9 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                                     new Date().getTime() / 1000,
                                     bankMoneyTransaction.getConcept(),
                                     bankMoneyTransaction.getPriceReference(),
-                                    bankMoneyTransaction.getOriginTransaction());
+                                    bankMoneyTransaction.getOriginTransaction(),
+                                    bankMoneyTransaction.getOriginTransactionId(),
+                                    false);
 
                             WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
                                     bankMoneyTransaction.getTransactionId(),
@@ -248,7 +247,9 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                                     new Date().getTime() / 1000,
                                     bankMoneyTransaction.getConcept(),
                                     bankMoneyTransaction.getPriceReference(),
-                                    bankMoneyTransaction.getOriginTransaction());
+                                    bankMoneyTransaction.getOriginTransaction(),
+                                    bankMoneyTransaction.getOriginTransactionId(),
+                                    false);
 
                             //TODO:Solo para testear
                             bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");

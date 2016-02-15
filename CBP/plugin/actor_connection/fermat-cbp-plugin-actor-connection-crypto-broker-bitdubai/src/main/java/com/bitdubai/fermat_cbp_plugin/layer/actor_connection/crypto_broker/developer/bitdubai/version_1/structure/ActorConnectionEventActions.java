@@ -16,6 +16,9 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
@@ -27,6 +30,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.devel
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,16 +47,19 @@ public class ActorConnectionEventActions {
     private final CryptoBrokerManager            cryptoBrokerNetworkService;
     private final CryptoBrokerActorConnectionDao dao                       ;
     private final ErrorManager                   errorManager              ;
+    private final EventManager                   eventManager              ;
     private final PluginVersionReference         pluginVersionReference    ;
 
     public ActorConnectionEventActions(final CryptoBrokerManager            cryptoBrokerNetworkService,
                                        final CryptoBrokerActorConnectionDao dao                       ,
                                        final ErrorManager                   errorManager              ,
+                                       final EventManager                   eventManager              ,
                                        final PluginVersionReference         pluginVersionReference    ) {
 
         this.cryptoBrokerNetworkService = cryptoBrokerNetworkService;
         this.dao                        = dao                       ;
         this.errorManager               = errorManager              ;
+        this.eventManager               = eventManager              ;
         this.pluginVersionReference     = pluginVersionReference    ;
     }
 
@@ -347,8 +354,8 @@ public class ActorConnectionEventActions {
     }
 
     public void handleAcceptConnection(final UUID connectionId) throws CantAcceptActorConnectionRequestException,
-                                                                 ActorConnectionNotFoundException         ,
-                                                                 UnexpectedConnectionStateException       {
+                                                                       ActorConnectionNotFoundException         ,
+                                                                       UnexpectedConnectionStateException       {
 
         try {
 
@@ -374,6 +381,10 @@ public class ActorConnectionEventActions {
                 default:
                     throw new UnexpectedConnectionStateException("connectionId: "+connectionId + " - currentConnectionState: "+currentConnectionState, "Unexpected contact state for cancelling.");
             }
+
+            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_ACTOR_CONNECTION_NEW_CONNECTION);
+            eventToRaise.setSource(EventSource.CRYPTO_BROKER_ACTOR_CONNECTION);
+            eventManager.raiseEvent(eventToRaise);
 
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
 

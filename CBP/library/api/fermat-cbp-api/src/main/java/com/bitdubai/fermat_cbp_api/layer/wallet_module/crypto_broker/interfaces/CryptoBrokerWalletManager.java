@@ -240,7 +240,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
 
     /**
@@ -267,7 +268,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateBankMoneyDestockException;
 
     /**
@@ -293,7 +295,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
 
     /**
@@ -319,7 +322,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateCashMoneyDestockException;
 
     /**
@@ -343,7 +347,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateCryptoMoneyRestockException;
 
 
@@ -368,7 +373,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateCryptoMoneyDestockException;
 
     /**
