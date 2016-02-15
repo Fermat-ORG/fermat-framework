@@ -60,10 +60,10 @@ public final class CommunicationNetworkServiceLocal implements Observer, Network
      *
      * @param communicationNetworkServiceConnectionManager
      */
-    public CommunicationNetworkServiceLocal(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, PlatformComponentProfile remoteComponentProfile) {
+    public CommunicationNetworkServiceLocal(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, PlatformComponentProfile remoteComponentProfile, ErrorManager errorManager) {
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
         this.remoteComponentProfile                       = remoteComponentProfile;
-        this.errorManager                                 = communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getErrorManager();
+        this.errorManager                                 = errorManager;
         this.outgoingMessageDao                           = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
     }
 

@@ -372,7 +372,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewIdentityAssetIssuer(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                        moduleManager.createNewIdentityAssetIssuer(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.asset_issuer_identity) : brokerImageByteArray);
                     else
                         moduleManager.updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
                 } catch (CantCreateNewIdentityAssetIssuerException e) {

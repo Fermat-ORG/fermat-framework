@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_offline_merchandise.developer.bitdubai.version_1.event_handler;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -61,15 +62,19 @@ public class CustomerAckOfflineMerchandiseRecorderService implements CBPService 
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerAckOfflineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
+        if(event.getRemoteBusinessTransaction()== Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE) {
+            this.customerAckOfflineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+            //LOG.info("CHECK THE DATABASE");
+        }
     }
 
     public void incomingConfirmBusinessTransactionResponseEventHandler(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.customerAckOfflineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
+        if(event.getRemoteBusinessTransaction()== Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE) {
+            this.customerAckOfflineMerchandiseBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+            //LOG.info("CHECK THE DATABASE");
+        }
     }
 
     public void BrokerSubmitMerchandiseConfirmedEventHandler(BrokerSubmitMerchandiseConfirmed event)throws CantSaveEventException {
