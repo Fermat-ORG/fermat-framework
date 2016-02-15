@@ -265,7 +265,6 @@ public interface CryptoWallet extends Serializable {
                                             String walletPublicKey,
                                             ReferenceWallet walletType,
                                             BlockchainNetworkType blockchainNetworkType) throws CantRequestCryptoAddressException;
-    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
     CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,
                                                Actors deliveredByActorType,
@@ -275,7 +274,7 @@ public interface CryptoWallet extends Serializable {
                                                String vaultIdentifier,
                                                String walletPublicKey,
                                                ReferenceWallet walletType) throws CantRequestCryptoAddressException;
-    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
+
 
     void send(long cryptoAmount,
               CryptoAddress destinationAddress,
@@ -498,7 +497,16 @@ public interface CryptoWallet extends Serializable {
 
     void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
 
-    public void registerIdentities();
+     void registerIdentities();
 
-    public CryptoWalletWalletContact findWalletContactByName(String alias,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
+     CryptoWalletWalletContact findWalletContactByName(String alias,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
+
+    /**
+     *
+     * @param transactionId
+     * @return
+     * @throws CantListTransactionsException
+     */
+    CryptoWalletTransaction getTransaction(UUID transactionId,String walletPublicKey) throws CantListTransactionsException;
+
 }
