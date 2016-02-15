@@ -232,6 +232,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         } else {
                             invalidate();
                         }
+
                     } catch (CantGetCryptoCustomerIdentityListException e) {
                         e.printStackTrace();
                     } catch (CantListCryptoCustomerIdentityException e) {
