@@ -922,7 +922,7 @@ public class AssetIssuerWalletDao {
                 case DAP_ASSET_USER:
                     return actorAssetUserManager.getActorByPublicKey(publicKey);
                 case DAP_ASSET_REDEEM_POINT:
-                    return actorAssetRedeemPointManager.getActorRegisteredByPublicKey(publicKey);
+                    return actorAssetRedeemPointManager.getActorByPublicKey(publicKey);
                 default:
                     throw new RuntimeException("UNKNOWN TYPE!!!");
             }

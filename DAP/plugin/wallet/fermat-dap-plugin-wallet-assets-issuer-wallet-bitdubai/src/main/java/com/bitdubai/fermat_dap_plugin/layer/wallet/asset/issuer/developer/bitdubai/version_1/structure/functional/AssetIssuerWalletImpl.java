@@ -411,7 +411,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         assetStatistic.setAssetName(assetIssuerWalletDao.getAssetName(transactionId));
 
         try {
-            assetStatistic.setOwner(actorAssetUserManager.getActorRegisteredByPublicKey(assetIssuerWalletDao.getUserPublicKey(transactionId)));
+            assetStatistic.setOwner(actorAssetUserManager.getActorByPublicKey(assetIssuerWalletDao.getUserPublicKey(transactionId)));
         } catch (Exception e) {
             e.printStackTrace();
             //If this happen it means we couldn't get the user or there were none. So we'll keep it as null.
@@ -425,7 +425,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
             assetStatistic.setUsageDate(assetUsageDate);
             if (status == AssetCurrentStatus.ASSET_REDEEMED) {
                 try {
-                    ActorAssetRedeemPoint redeemPoint = actorAssetRedeemPointManager.getActorRegisteredByPublicKey(assetIssuerWalletDao.getRedeemPointPublicKey(transactionId));
+                    ActorAssetRedeemPoint redeemPoint = actorAssetRedeemPointManager.getActorByPublicKey(assetIssuerWalletDao.getRedeemPointPublicKey(transactionId));
                     assetStatistic.setRedeemPoint(redeemPoint);
                 } catch (Exception e) {
                     e.printStackTrace();
