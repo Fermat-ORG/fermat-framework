@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -90,4 +91,8 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<Fermat
     List<ActorAssetUser> getSelectedUsersToDeliver();
 
     void transferAssets(String assetPublicKey, String walletPublicKey, int assetsAmount) throws CantTransferDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException;
+
+    ActorAssetUser getActorByPublicKey(String publicKey) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException;
+
+    ActorAssetUser getActorRegisteredByPublicKey(String publicKey) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException;
 }

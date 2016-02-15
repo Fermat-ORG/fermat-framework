@@ -32,7 +32,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceQuotesRequest;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerExecutorAgent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBaseTemp;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -44,8 +44,12 @@ import java.util.List;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
+
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkServiceBaseTemp implements DatabaseManagerForDevelopers {
+public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements DatabaseManagerForDevelopers {
 
     /**
      * Crypto Broker Actor Network Service member variables.
@@ -174,16 +178,23 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
     @Override
     public void onNewMessagesReceive(FermatMessage fermatMessage) {
+
+        System.out.println("****** CRYPTO BROKER ACTOR NETWORK SERVICE NEW MESSAGE RECEIVED: " + fermatMessage);
         try {
 
             String jsonMessage = fermatMessage.getContent();
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
 
+            System.out.println("********************* Message Type:  " + networkServiceMessage.getMessageType());
+
             switch (networkServiceMessage.getMessageType()) {
 
                 case CONNECTION_INFORMATION:
                     InformationMessage informationMessage = InformationMessage.fromJson(jsonMessage);
+
+                    System.out.println("********************* Content:  " + informationMessage);
+
                     receiveConnectionInformation(informationMessage);
 
                     String destinationPublicKey = cryptoBrokerActorNetworkServiceDao.getDestinationPublicKey(informationMessage.getRequestId());
@@ -194,7 +205,11 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
                 case CONNECTION_REQUEST:
                     // update the request to processing receive state with the given action.
+
                     RequestMessage requestMessage = RequestMessage.fromJson(jsonMessage);
+
+                    System.out.println("********************* Content:  " + requestMessage);
+
                     receiveRequest(requestMessage);
 
                     getCommunicationNetworkServiceConnectionManager().closeConnection(requestMessage.getSenderPublicKey());
@@ -204,6 +219,9 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                 case QUOTES_REQUEST:
 
                     CryptoBrokerActorNetworkServiceQuotesRequest quotesRequestMessage = CryptoBrokerActorNetworkServiceQuotesRequest.fromJson(jsonMessage);
+
+                    System.out.println("********************* Content:  " + quotesRequestMessage);
+
                     receiveQuotesRequest(quotesRequestMessage);
 
                     getCommunicationNetworkServiceConnectionManager().closeConnection(quotesRequestMessage.getRequesterPublicKey());
@@ -220,6 +238,12 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         } catch (Exception e) {
             System.out.println(e.toString());
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+
+        try {
+            getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(fermatMessage);
+        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
+            e.printStackTrace();
         }
     }
 
@@ -335,7 +359,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             );
 
             cryptoBrokerActorNetworkServiceDao.createConnectionRequest(
-                    requestMessage.getRequestId(),
                     connectionInformation,
                     state,
                     type,

@@ -286,7 +286,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                 bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.redeem_point_identity);
 
                 //Picasso.with(getActivity()).load(R.drawable.profile_image).into(mBrokerImage);
             }

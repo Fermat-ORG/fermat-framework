@@ -134,6 +134,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
         List<AssetUserActorRecord> allUserRegisteredFiltered = new ArrayList<>();
         for (AssetUserActorRecord record : allUserRegistered)
         {
+            // Obtain all user connected and not in the current group
             if (record.getCryptoAddress() != null && (!userInGroup(record.getActorPublicKey(), allUserRegisteredInGroup)))
             {
                 allUserRegisteredFiltered.add(record);
@@ -237,7 +238,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUserActorsException {
         try {
-            return actorAssetUserManager.getListActorAssetUserByGroups(groupId);
+            return actorAssetUserManager.getListActorAssetUserByGroups(groupId, assetIssuerWalletSupAppModuleManager.getSelectedNetwork());
         } catch (CantGetAssetUserActorsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;

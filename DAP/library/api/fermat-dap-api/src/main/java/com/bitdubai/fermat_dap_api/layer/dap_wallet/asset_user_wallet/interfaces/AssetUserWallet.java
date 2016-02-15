@@ -25,7 +25,6 @@ public interface AssetUserWallet {
 
     List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
 
-
     List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
                                                      TransactionType transactionType,
                                                      String assetPublicKey) throws CantGetTransactionsException;
@@ -44,6 +43,10 @@ public interface AssetUserWallet {
                                                                                 TransactionType transactionType,
                                                                                 int max,
                                                                                 int offset) throws CantGetTransactionsException;
+
+    void lockFunds(DigitalAssetMetadata metadata);
+
+    void unlockFunds(DigitalAssetMetadata metadata);
 
     void setTransactionDescription(UUID transactionID,
                                    String description) throws CantFindTransactionException, CantStoreMemoException;

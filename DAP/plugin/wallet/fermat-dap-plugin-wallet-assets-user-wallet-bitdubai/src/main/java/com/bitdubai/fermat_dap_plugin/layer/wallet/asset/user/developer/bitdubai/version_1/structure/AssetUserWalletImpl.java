@@ -232,6 +232,16 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     }
 
     @Override
+    public void lockFunds(DigitalAssetMetadata metadata) {
+        //TODO
+    }
+
+    @Override
+    public void unlockFunds(DigitalAssetMetadata metadata) {
+        //TODO
+    }
+
+    @Override
     public void setTransactionDescription(UUID transactionID, String description) throws CantFindTransactionException, CantStoreMemoException {
         try {
             assetUserWalletDao = new AssetUserWalletDao(database);
