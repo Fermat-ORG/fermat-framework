@@ -448,6 +448,21 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public IntraWalletUserActor getLastNotification(String intraUserConnectedPublicKey) throws CantGetIntraUserException {
+
+        try {
+
+            return intraWalletUserActorDao.getLastNotification(intraUserConnectedPublicKey);
+
+        } catch (CantGetIntraWalletUsersListException e) {
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER LAST NOTIFICATION", e, "Error get database info", "");
+        } catch (Exception e) {
+            throw new CantGetIntraUserException("CAN'T GET INTRA USER LAST NOTIFICATION", FermatException.wrapException(e), "", "");
+        }
+    }
+
+
+    @Override
     public ConnectionState getIntraUsersConnectionStatus(String intraUserConnectedPublicKey) throws CantGetIntraUsersConnectedStateException {
 
         try {
@@ -456,10 +471,10 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
 
             intraWalletUserActor = intraWalletUserActorDao.getIntraUserConnectedInfo(intraUserConnectedPublicKey);
 
-                    if(intraWalletUserActor != null)
-                        return intraWalletUserActor.getContactState();
-                    else
-                        return ConnectionState.NO_CONNECTED;
+            if(intraWalletUserActor != null)
+                return intraWalletUserActor.getContactState();
+            else
+                return ConnectionState.NO_CONNECTED;
 
 
         } catch (CantGetIntraWalletUsersListException e) {
@@ -468,7 +483,6 @@ public class IntraWalletUserActorPluginRoot extends AbstractPlugin implements
             throw new CantGetIntraUsersConnectedStateException("CAN'T GET INTRA USER CONNECTED STATUS", FermatException.wrapException(e), "", "");
         }
     }
-
 
 
     private void persistPrivateKey(String privateKey, String publicKey) throws CantPersistPrivateKeyException {

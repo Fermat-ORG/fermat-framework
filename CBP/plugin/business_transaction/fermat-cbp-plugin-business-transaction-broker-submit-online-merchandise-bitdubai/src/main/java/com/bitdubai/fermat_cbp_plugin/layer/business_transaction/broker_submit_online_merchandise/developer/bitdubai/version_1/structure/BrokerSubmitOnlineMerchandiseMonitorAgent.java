@@ -154,7 +154,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                     exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
@@ -313,7 +313,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             cryptoMoneyDeStockRecord.getAmount(),
                             cryptoMoneyDeStockRecord.getMemo(),
                             cryptoMoneyDeStockRecord.getPriceReference(),
-                            cryptoMoneyDeStockRecord.getOriginTransaction());
+                            cryptoMoneyDeStockRecord.getOriginTransaction(),
+                            pendingToDeStockTransaction.getContractHash());
                     pendingToDeStockTransaction.setContractTransactionStatus(
                             ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE);
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
@@ -363,7 +364,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED
+                            ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED,
+                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE
                     );
                     //Updating the business transaction record
                     pendingToSubmitNotificationRecord.setContractTransactionStatus(
@@ -384,7 +386,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT
+                            ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT,
+                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE
                     );
                     //Updating the business transaction record
                     pendingToSubmitConfirmationRecord.setContractTransactionStatus(

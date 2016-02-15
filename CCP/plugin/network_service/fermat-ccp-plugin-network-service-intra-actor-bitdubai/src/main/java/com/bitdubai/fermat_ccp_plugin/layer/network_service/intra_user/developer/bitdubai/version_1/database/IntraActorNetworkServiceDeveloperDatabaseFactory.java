@@ -98,7 +98,7 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(pluginId.toString(), this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
         return databases;
     }
 
@@ -107,6 +107,54 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
 
 
+        /**
+         * Table incoming_notification columns.
+         */
+        List<String> intraUsersIncomingColumns = new ArrayList<String>();
+
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
+        intraUsersIncomingColumns.add(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+
+
+        /**
+         * Table incoming messages addition.
+         */
+        DeveloperDatabaseTable intraUsersIncomingTable = developerObjectFactory.getNewDeveloperDatabaseTable(IntraActorNetworkServiceDataBaseConstants.INCOMING_NOTIFICATION_TABLE_NAME, intraUsersIncomingColumns);
+        tables.add(intraUsersIncomingTable);
+
+
+        /**
+         * Table outgoing_notification columns.
+         */
+        List<String> intraUsersOutgoingColumns = new ArrayList<String>();
+
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
+        intraUsersOutgoingColumns.add(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+
+        /**
+         * Table incoming messages addition.
+         */
+        DeveloperDatabaseTable intraUsersOutgoingTable = developerObjectFactory.getNewDeveloperDatabaseTable(IntraActorNetworkServiceDataBaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME, intraUsersOutgoingColumns);
+        tables.add(intraUsersOutgoingTable);
         /**
          * Table intra users online cache columns.
          */

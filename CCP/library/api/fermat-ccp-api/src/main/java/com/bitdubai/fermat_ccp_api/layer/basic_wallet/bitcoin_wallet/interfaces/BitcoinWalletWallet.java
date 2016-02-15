@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
@@ -26,6 +27,8 @@ public interface BitcoinWalletWallet {
      * @return an instance of BitcoinWalletBalance.
      */
     BitcoinWalletBalance getBalance(BalanceType balanceType);
+
+
 
     /**
      * Throw the method <code>listTransactions</code> you can list all the transactions made with the loaded wallet.
