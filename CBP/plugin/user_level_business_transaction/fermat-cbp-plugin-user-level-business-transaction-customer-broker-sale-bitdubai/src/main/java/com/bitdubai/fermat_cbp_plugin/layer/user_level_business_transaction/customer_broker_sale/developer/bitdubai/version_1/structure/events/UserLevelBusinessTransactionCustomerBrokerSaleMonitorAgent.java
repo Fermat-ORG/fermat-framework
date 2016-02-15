@@ -331,7 +331,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         amount,
                                         "RESTOCK AUTOMATIC",
                                         priceReference,
-                                        OriginTransaction.RESTOCK_AUTOMATIC);
+                                        OriginTransaction.RESTOCK_AUTOMATIC,
+                                        customerBrokerContractSale.getContractId());
                             }
                             //
                             else if (sw == 2) {
@@ -343,7 +344,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         amount,
                                         "RESTOCK AUTOMATIC",
                                         priceReference,
-                                        OriginTransaction.RESTOCK_AUTOMATIC);
+                                        OriginTransaction.RESTOCK_AUTOMATIC,
+                                        customerBrokerContractSale.getContractId());
                             }
                             //
                             else if (sw == 3) {
@@ -355,7 +357,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         amount,
                                         "memo",
                                         priceReference,
-                                        OriginTransaction.RESTOCK_AUTOMATIC);
+                                        OriginTransaction.RESTOCK_AUTOMATIC,
+                                        customerBrokerContractSale.getContractId());
                             }
                         }
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
