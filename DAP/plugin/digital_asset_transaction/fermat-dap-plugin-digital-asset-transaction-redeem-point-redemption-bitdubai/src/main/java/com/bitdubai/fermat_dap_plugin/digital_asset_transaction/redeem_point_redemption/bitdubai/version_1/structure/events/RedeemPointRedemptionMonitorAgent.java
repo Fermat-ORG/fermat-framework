@@ -41,6 +41,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interface
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDAO;
@@ -119,7 +120,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
             logManager.log(RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: starting...", null, null);
             latch = new CountDownLatch(1);
             agent = new RedemptionAgent(pluginId, pluginFileSystem, actorAssetUserManager, actorAssetIssuerManager, bitcoinNetworkManager);
-            Thread agentThread = new Thread(agent);
+            Thread agentThread = new Thread(agent, "Redeem Point Redemption MonitorAgent");
             agentThread.start();
         } catch (Exception e) {
             throw new CantStartAgentException();
@@ -265,7 +266,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading redeem point wallet, public key is hardcoded");
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType());
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet(WalletUtilities.WALLET_PUBLIC_KEY, cryptoTransaction.getBlockchainNetworkType());
 
                                 String userPublicKey = dao.getSenderPublicKeyById(transactionId);
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
@@ -299,7 +300,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading wallet, public key is hardcoded");
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType());
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet(WalletUtilities.WALLET_PUBLIC_KEY, cryptoTransaction.getBlockchainNetworkType());
 
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
                                 assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(

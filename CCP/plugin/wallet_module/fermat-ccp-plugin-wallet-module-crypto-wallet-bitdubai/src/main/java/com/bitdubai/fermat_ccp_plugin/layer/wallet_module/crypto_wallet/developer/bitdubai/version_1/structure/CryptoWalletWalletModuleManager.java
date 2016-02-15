@@ -301,7 +301,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
             for(WalletContactRecord r : walletContactsSearch.getResult(max, offset)){
 
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),intraUserLoggedInPublicKey);
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(), intraUserLoggedInPublicKey);
 
                 finalRecordList.add(new CryptoWalletWalletModuleWalletContact(r, image));
             }
@@ -664,10 +664,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                                                    VaultType vaultType,
                                                    String vaultIdentifier,
                                                    String walletPublicKey,
-                                                   ReferenceWallet walletType) throws CantRequestCryptoAddressException {
+                                                   ReferenceWallet walletType,
+                                                   BlockchainNetworkType blockchainNetworkType) throws CantRequestCryptoAddressException {
         try {
             CryptoAddress deliveredCryptoAddress;
-            deliveredCryptoAddress = requestCryptoAddressByReferenceWallet(walletType);
+            deliveredCryptoAddress = requestCryptoAddressByReferenceWallet(walletType,blockchainNetworkType);
             cryptoAddressBookManager.registerCryptoAddress(
                     deliveredCryptoAddress,
                     deliveredByActorPublicKey,
@@ -723,10 +724,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
     @Override
     public long getBalance(BalanceType balanceType,
-                           String walletPublicKey) throws CantGetBalanceException {
+                           String walletPublicKey,
+                           BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-            return bitcoinWalletWallet.getBalance(balanceType).getBalance();
+            return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType);
         } catch (CantLoadWalletException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e, "", "Cant Load Wallet.");
         }  catch (CantCalculateBalanceException e) {
@@ -796,22 +798,22 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
             List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
             List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
 
-            //
-//                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
-//
-//                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-//
-//                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-//                        bitcoinWalletTransactionList1.add(bwt);
-//                    }
-//                }
+
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+
+                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
+                        bitcoinWalletTransactionList1.add(bwt);
+                    }
+                }
 
 
 
 
 
 
-            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList1) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
@@ -860,19 +862,19 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                         max,
                         offset
                 );
-//
-//                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
-//
-//                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
-//
-//                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-//                        bitcoinWalletTransactionList1.add(bwt);
-//                    }
-//                }
 
-
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
 
                 for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
+
+                    if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
+                        bitcoinWalletTransactionList1.add(bwt);
+                    }
+                }
+
+
+
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList1) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }
             }
@@ -1264,10 +1266,10 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         }
     }
 
-    private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet) throws CantRequestOrRegisterCryptoAddressException {
+    private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet,BlockchainNetworkType blockchainNetworkType) throws CantRequestOrRegisterCryptoAddressException {
         switch (referenceWallet){
             case BASIC_WALLET_BITCOIN_WALLET:
-                return cryptoVaultManager.getAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                return cryptoVaultManager.getAddress(blockchainNetworkType);
             default:
                 throw new CantRequestOrRegisterCryptoAddressException(CantRequestOrRegisterCryptoAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");
         }
@@ -1277,12 +1279,27 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
         try {
             Actor involvedActor = null;
             UUID contactId = null;
+            WalletContactRecord walletContactRecord =  null;
+
             switch (bitcoinWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
-                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(),walletPublicKey);
-                        if (walletContactRecord != null)
+                        if(bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER)
+                        {
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+
+                        }
+                         else
+                        {
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+
+                           walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+
+                        }
+
+                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 
                     } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
@@ -1298,7 +1315,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                 case DEBIT:
                     try {
                         involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),intraUserLoggedInPublicKey);
-                        WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+                         walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 

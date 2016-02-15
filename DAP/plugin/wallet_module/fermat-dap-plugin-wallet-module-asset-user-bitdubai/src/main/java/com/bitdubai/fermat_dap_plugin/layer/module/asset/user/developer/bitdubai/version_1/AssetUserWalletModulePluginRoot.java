@@ -23,6 +23,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
@@ -35,6 +41,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interf
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_transfer.exceptions.CantTransferDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_transfer.interfaces.AssetTransferManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.NotEnoughAcceptsException;
@@ -44,7 +52,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.interfa
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.module.asset.user.developer.bitdubai.version_1.structure.AssetUserWalletModule;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -53,6 +63,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -80,6 +91,12 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.USER_REDEMPTION)
     private UserRedemptionManager userRedemptionManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
+    private ActorAssetUserManager actorAssetUserManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.DIGITAL_ASSET_TRANSACTION, plugin = Plugins.ASSET_TRANSFER)
+    private AssetTransferManager assetTransferManager;
+
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
     private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
@@ -96,7 +113,13 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
     private BlockchainNetworkType selectedNetwork;
 
-    //TODO MAKE USE OF THE ERROR MANAGER
+    private List<ActorAssetUser> selectedUsersToDeliver;
+
+    {
+        selectedUsersToDeliver = new ArrayList<>();
+    }
+
+    //TODO MAKE USE OF THE ERROR MANAGER ... Someday, over the rainbow
 
     private AssetUserWalletModule assetUserWalletModule;
 
@@ -116,8 +139,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
                     assetAppropriationManager,
                     userRedemptionManager,
                     identityAssetUserManager,
-                    pluginId,
-                    pluginFileSystem
+                    assetTransferManager
             );
             selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
             System.out.println("******* Asset User Wallet Module Init ******");
@@ -143,7 +165,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     public List<ActorAssetRedeemPoint> getRedeemPointsConnectedForAsset(String assetPublicKey) throws CantGetAssetRedeemPointActorsException {
         String context = "Asset PK: " + assetPublicKey;
         try {
-            loadAssetUserWallet("walletPublicKeyTest");
+            loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY);
             DigitalAsset digitalAsset = wallet.getDigitalAsset(assetPublicKey);
             return actorAssetRedeemPointManager.getAllRedeemPointActorConnectedForIssuer(digitalAsset.getIdentityAssetIssuer().getPublicKey());
         } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException e) {
@@ -215,6 +237,108 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public List<ActorAssetUser> getAllActorUserRegistered() throws CantGetAssetUserActorsException {
+        return actorAssetUserManager.getAllAssetUserActorInTableRegistered();
+    }
+
+    @Override
+    public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException {
+        try {
+            return actorAssetUserManager.getAllAssetUserActorConnected(getSelectedNetwork());
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetAssetUserActorsException(e);
+        }
+    }
+
+    @Override
+    public List<ActorAssetUserGroup> getAssetUserGroupsList() throws CantGetAssetUserGroupException {
+        try {
+            return actorAssetUserManager.getAssetUserGroupsList();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetAssetUserGroupException(e);
+        }
+    }
+
+    @Override
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException {
+        try {
+            return actorAssetUserManager.getListActorAssetUserByGroups(groupName,selectedNetwork);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetAssetUserActorsException(e);
+        }
+    }
+
+    @Override
+    public void addUserToDeliver(ActorAssetUser user) {
+        if (!selectedUsersToDeliver.contains(user)) {
+            selectedUsersToDeliver.add(user);
+        }
+    }
+
+    @Override
+    public void addGroupToDeliver(ActorAssetUserGroup group) throws
+            CantGetAssetUserActorsException {
+        for (ActorAssetUser user : getListActorAssetUserByGroups(group.getGroupName())) {
+            selectedUsersToDeliver.add(user);
+        }
+    }
+
+    @Override
+    public void removeUserToDeliver(ActorAssetUser user) {
+        selectedUsersToDeliver.remove(user);
+    }
+
+    @Override
+    public void removeGroupToDeliver(ActorAssetUserGroup group) throws
+            CantGetAssetUserActorsException {
+        for (ActorAssetUser user : getListActorAssetUserByGroups(group.getGroupName())) {
+            selectedUsersToDeliver.remove(user);
+        }
+    }
+
+    @Override
+    public void clearDeliverList() {
+        selectedUsersToDeliver.clear();
+    }
+
+    @Override
+    public void addAllRegisteredUsersToDeliver() throws CantGetAssetUserActorsException {
+        for (ActorAssetUser user : getAllActorUserRegistered()) {
+            addUserToDeliver(user);
+        }
+    }
+
+    @Override
+    public List<ActorAssetUser> getSelectedUsersToDeliver() {
+        return selectedUsersToDeliver;
+    }
+
+    @Override
+    public void transferAssets(String assetPublicKey, String walletPublicKey, int assetsAmount) throws CantTransferDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
+        try {
+            //TODO HARDCODE FOR TESTING.
+            selectedUsersToDeliver = getAllAssetUserActorConnected().subList(0, 1);
+            assetsAmount = 1;
+            assetUserWalletModule.transferAsset(assetPublicKey, walletPublicKey, selectedUsersToDeliver, assetsAmount, selectedNetwork);
+        } catch (CantGetAssetUserActorsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public ActorAssetUser getActorByPublicKey(String publicKey) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
+        return actorAssetUserManager.getActorByPublicKey(publicKey);
+    }
+
+    @Override
+    public ActorAssetUser getActorRegisteredByPublicKey(String publicKey) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
+        return actorAssetUserManager.getActorRegisteredByPublicKey(publicKey);
+    }
+
+    @Override
     public SettingsManager getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
@@ -253,7 +377,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
             settings = null;
         }
 
-        if(settings != null && settings.getBlockchainNetwork() != null) {
+        if (settings != null && settings.getBlockchainNetwork() != null) {
             settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
         } else {
             int position = 0;
@@ -261,7 +385,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
             for (BlockchainNetworkType networkType : list) {
 
-                if(Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
                     settings.setBlockchainNetworkPosition(position);
                     break;
                 } else {

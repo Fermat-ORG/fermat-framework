@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerStockTransactionRecordImpl;
@@ -29,7 +29,7 @@ public class ConstructionTest {
     private String ownerPublicKey = new String();
     private BalanceType balanceType = BalanceType.AVAILABLE;
     private TransactionType transactionType = TransactionType.CREDIT;
-    private CurrencyType currencyType = CurrencyType.BANK_MONEY;
+    private MoneyType moneyType = MoneyType.BANK;
     private FermatEnum merchandise = BalanceType.BOOK;
     private BigDecimal amount = BigDecimal.ONE;
     private BigDecimal runningBookBalance = BigDecimal.ONE;
@@ -48,7 +48,7 @@ public class ConstructionTest {
                 this.ownerPublicKey,
                 this.balanceType,
                 this.transactionType,
-                this.currencyType,
+                this.moneyType,
                 this.merchandise,
                 this.amount,
                 this.runningBookBalance,

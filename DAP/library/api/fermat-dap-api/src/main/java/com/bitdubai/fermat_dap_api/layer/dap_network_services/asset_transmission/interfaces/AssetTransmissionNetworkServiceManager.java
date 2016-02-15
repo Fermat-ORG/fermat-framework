@@ -8,10 +8,8 @@ package com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmissio
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPNetworkService;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 
 /**
@@ -24,18 +22,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface AssetTransmissionNetworkServiceManager extends TransactionProtocolManager<DigitalAssetMetadataTransaction> {
-
-    /**
-     * This method sends the digital asset metadata to a remote device.
-     *
-     * @param actorSender                The {@link DAPActor} that is sending the metadata
-     * @param actorReceiver              The {@link DAPActor} that will receive the metadata
-     * @param digitalAssetMetadataToSend The {@link DigitalAssetMetadata} that is going to be sent.
-     * @throws CantSendDigitalAssetMetadataException
-     */
-    void sendDigitalAssetMetadata(DAPActor actorSender, DAPActor actorReceiver, DigitalAssetMetadata digitalAssetMetadataToSend) throws CantSendDigitalAssetMetadataException;
-
+public interface AssetTransmissionNetworkServiceManager extends TransactionProtocolManager<DigitalAssetMetadataTransaction>, DAPNetworkService {
     /**
      * Method that send the Transaction New Status Notification
      *

@@ -38,6 +38,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptio
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.AssetIssuingDigitalAssetTransactionPluginRoot;
@@ -89,7 +90,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
     public void start() throws CantStartAgentException {
         try {
             MonitorAgent monitorAgent = new MonitorAgent();
-            this.agentThread = new Thread(monitorAgent);
+            this.agentThread = new Thread(monitorAgent,  "Asset Issuing MonitorAgent");
             this.agentThread.start();
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantStartAgentException(e, null, null);
@@ -300,7 +301,7 @@ public class AssetIssuingTransactionMonitorAgent implements Agent {
                 assetIssuingTransactionDao.persistGenesisTransaction(outgoingId, genesisTransaction);
                 String internalId = assetIssuingTransactionDao.getTransactionIdByGenesisTransaction(genesisTransaction);
                 DigitalAssetMetadata metadata = digitalAssetIssuingVault.setGenesisTransaction(internalId, genesisTransaction);
-                assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType()).createdNewAsset(metadata);
+                assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, cryptoTransaction.getBlockchainNetworkType()).createdNewAsset(metadata);
             }
 
             for (String genesisTransaction : assetIssuingTransactionDao.getGenesisTransactionsByCryptoStatus(CryptoStatus.PENDING_SUBMIT)) {

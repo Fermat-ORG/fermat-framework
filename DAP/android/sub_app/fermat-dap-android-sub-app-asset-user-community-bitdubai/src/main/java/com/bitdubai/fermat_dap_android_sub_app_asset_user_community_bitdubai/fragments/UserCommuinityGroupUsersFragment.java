@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.dialogs.ConfirmDeleteDialog;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.holders.UserViewHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
@@ -53,7 +54,8 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Home Fragment
+ * UserCommuinityGroupUsersFragment, Show all the users in the selected group
+ *
  */
 public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -109,7 +111,13 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new UserCommunityAdapter(getActivity());
+        adapter = new UserCommunityAdapter(getActivity()) {
+            @Override
+            protected void bindHolder(UserViewHolder holder, Actor data, int position) {
+                super.bindHolder(holder, data, position);
+                holder.connect.setVisibility(View.VISIBLE);
+            }
+        };
         adapter.setAdapterChangeListener(new AdapterChangeListener<Actor>() {
             @Override
             public void onDataSetChanged(List<Actor> dataSet) {
@@ -348,7 +356,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
 
-        resultAux = manager.getListActorAssetUserByGroups(group.getGroupName());
+        resultAux = manager.getListActorAssetUserByGroups(group.getGroupId());
 
 
         if (resultAux != null && resultAux.size() > 0) {

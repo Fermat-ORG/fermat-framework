@@ -470,7 +470,7 @@ public final class OutgoingMessageDao {
      * @param id Long id.
      * @throws CantDeleteRecordDataBaseException
      */
-    public void delete(Long id) throws CantDeleteRecordDataBaseException {
+    public void delete(UUID id) throws CantDeleteRecordDataBaseException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required can not be null");
@@ -478,23 +478,24 @@ public final class OutgoingMessageDao {
 
         try {
 
-            /*
-             * Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
+            DatabaseTable table = getDatabaseTable();
+            table.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
 
-            //falta configurar la llamada para borrar la entidad
+            List<DatabaseTableRecord> records = table.getRecords();
 
-            getDataBase().executeTransaction(transaction);
+            for (DatabaseTableRecord record : records) {
+                table.deleteRecord(record);
+            }
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (Exception exception) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
-            CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, exception, context, possibleCause);
             throw cantDeleteRecordDataBaseException;
 
         }
@@ -519,11 +520,10 @@ public final class OutgoingMessageDao {
             outgoingTemplateNetworkServiceMessage.setFermatMessageContentType(FermatMessageContentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME)));
             outgoingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
             outgoingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME)));
+            outgoingTemplateNetworkServiceMessage.setFailCount(record.getIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME));
             outgoingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {
-            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
-            //this should not happen, but if it happens return null
             e.printStackTrace();
             return null;
         }
@@ -566,6 +566,7 @@ public final class OutgoingMessageDao {
             entityRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, new Long(0));
         }
 
+        entityRecord.setIntegerValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFailCount());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
 
         /*

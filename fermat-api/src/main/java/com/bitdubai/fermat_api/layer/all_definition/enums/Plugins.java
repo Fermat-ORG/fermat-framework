@@ -194,6 +194,8 @@ public enum Plugins implements FermatPluginsEnum {
     ASSET_ISSUER_COMMUNITY      ("ASIC"),
     ASSET_ISSUING               ("ASIS"),
     ASSET_RECEPTION             ("ASR"),
+    ASSET_SELLER("ASSE"),
+    ASSET_BUYER("ASBU"),
     ASSET_USER                  ("ASU"),
     ASSET_USER_COMMUNITY        ("ASUC"),
     ASSET_TRANSMISSION          ("AST"),
@@ -277,6 +279,7 @@ public enum Plugins implements FermatPluginsEnum {
     NEGOTIATION_TRANSMISSION            ("NGTR"),
     OPEN_CONTRACT                       ("OPC"),
     TRANSACTION_TRANSMISSION            ("TRTX"),
+    MATCHING_ENGINE                     ("MAEN"),
     CLOSE_CONTRACT                      ("CLC"),
     CUSTOMER_ONLINE_PAYMENT             ("CONP"),
     CUSTOMER_OFFLINE_PAYMENT            ("COFP"),
@@ -319,6 +322,10 @@ public enum Plugins implements FermatPluginsEnum {
             case "ASIC" :   return ASSET_ISSUER_COMMUNITY   ;
             case "ASIS" :   return ASSET_ISSUING            ;
             case "ASR"  :   return ASSET_RECEPTION          ;
+            case "ASSE":
+                return ASSET_SELLER;
+            case "ASBU":
+                return ASSET_BUYER;
             case "ASU"  :   return ASSET_USER               ;
             case "ASUC" :   return ASSET_USER_COMMUNITY     ;
             case "AST"  :   return ASSET_TRANSMISSION       ;
@@ -422,6 +429,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
             case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
+            case "MAEN":    return MATCHING_ENGINE;
 
             case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
             case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;

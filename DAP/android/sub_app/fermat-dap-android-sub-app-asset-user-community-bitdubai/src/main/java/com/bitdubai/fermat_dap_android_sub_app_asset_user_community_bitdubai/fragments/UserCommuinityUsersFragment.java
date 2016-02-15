@@ -24,6 +24,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.holders.UserViewHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Group;
@@ -41,7 +42,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Home Fragment
+ * UserCommuinityUsersFragment, Shows all the users in current network not in the seleted group for adding
+ *
  */
 public class UserCommuinityUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -95,7 +97,13 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new UserCommunityAdapter(getActivity());
+        adapter = new UserCommunityAdapter(getActivity()) {
+            @Override
+            protected void bindHolder(UserViewHolder holder, Actor data, int position) {
+                super.bindHolder(holder, data, position);
+                holder.connect.setVisibility(View.VISIBLE);
+            }
+        };
         adapter.setAdapterChangeListener(new AdapterChangeListener<Actor>() {
             @Override
             public void onDataSetChanged(List<Actor> dataSet) {
@@ -150,8 +158,8 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
                     protected Object doInBackground() throws Exception {
 
                         for (Actor actor : actors) {
-                            if (actor.selected)
-                            {   AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
+                            if (actor.selected) {
+                                AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
                                 actorGroup.setGroupId(group.getGroupId());
                                 actorGroup.setActorPublicKey(actor.getActorPublicKey());
                                 manager.addActorAssetUserToGroup(actorGroup);
@@ -273,27 +281,15 @@ public class UserCommuinityUsersFragment extends AbstractFermatFragment implemen
 
         if (manager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        result = manager.getAllActorAssetUserRegistered();
-        usersInGroup = manager.getListActorAssetUserByGroups(group.getGroupName());
+
+        result = manager.getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(group.getGroupId());
+
         if (result != null && result.size() > 0) {
             for (AssetUserActorRecord record : result) {
-                if (!userInGroup(record.getActorPublicKey(),usersInGroup) && record.getCryptoAddress() != null)
-                {
                     dataSet.add((new Actor(record)));
-                }
-
             }
         }
         return dataSet;
     }
 
-    private boolean userInGroup(String actorPublicKey, List<ActorAssetUser> usersInGroup) {
-        for (ActorAssetUser record : usersInGroup) {
-            if (record.getActorPublicKey().equals(actorPublicKey))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 }

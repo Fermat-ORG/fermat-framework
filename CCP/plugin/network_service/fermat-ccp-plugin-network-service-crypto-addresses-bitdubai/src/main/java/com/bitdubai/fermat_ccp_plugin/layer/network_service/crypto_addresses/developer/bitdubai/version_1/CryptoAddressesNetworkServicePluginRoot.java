@@ -270,16 +270,17 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
                      */
                     if (!wsCommunicationsCloudClientManager.isDisable()){
 
-
                         /*
                          * Construct my profile and register me
                          */
-                        PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
-                                                                                                                                                                                                            getAlias().toLowerCase(),
-                                                                                                                                                                                                            getName(),
-                                                                                                                                                                                                            getNetworkServiceType(),
-                                                                                                                                                                                                            getPlatformComponentType(),
-                                                                                                                                                                                                            getExtraData());
+                        PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(
+                                getIdentityPublicKey(),
+                                getAlias().toLowerCase(),
+                                getName(),
+                                getNetworkServiceType(),
+                                getPlatformComponentType(),
+                                getExtraData()
+                        );
 
                         setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
 

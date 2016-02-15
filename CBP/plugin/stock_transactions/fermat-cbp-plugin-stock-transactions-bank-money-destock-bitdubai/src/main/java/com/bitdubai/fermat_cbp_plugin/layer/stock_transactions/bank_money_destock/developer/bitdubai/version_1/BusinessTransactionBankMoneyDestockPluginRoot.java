@@ -78,14 +78,16 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
 
             //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             System.out.println("******* Init Bank Money Destock ******");
-            startMonitorAgent();
 
+            startMonitorAgent();
             database.closeDatabase();
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e) {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException  e) {
             try {
+                System.out.println("******* Init Bank Money Destock CATCH******");
+                startMonitorAgent();
                 BusinessTransactionBankMoneyDestockDatabaseFactory businessTransactionBankMoneyDestockDatabaseFactory = new BusinessTransactionBankMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
                 businessTransactionBankMoneyDestockDatabaseFactory.createDatabase(this.pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+            } catch (CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             } catch (Exception exception) {

@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
@@ -107,11 +107,11 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
 
         SubAppSessionManager subAppSessionManager = ((ApplicationSession) getApplication()).getSubAppSessionManager();
-        FermatSession subAppsSession = subAppSessionManager.getSubAppsSession(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey());
+        FermatSession subAppsSession = subAppSessionManager.getSubAppsSession(getSubAppRuntimeMiddleware().getLastApp().getAppPublicKey());
 
 
         try {
-            //getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getFragment(fragmentType);
+            //getSubAppRuntimeMiddleware().getLastApp().getLastActivity().getFragment(fragmentType);
             //com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppFragmentFactory subAppFragmentFactory = SubAppFragmentFactory.getFragmentFactoryBySubAppType(subApp);
 
             FermatFragmentsEnumType fermatFragmentsEnumType = fermatFragmentFactory.getFermatFragmentEnumType(fragmentType);
@@ -187,7 +187,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Activity activity = null;
             WeakReference<FermatAppConnection> fermatAppConnection = null;
             try{
-                SubApp subApp = subAppRuntimeManager.getLastSubApp();
+                SubApp subApp = subAppRuntimeManager.getLastApp();
                 activity= subApp.getLastActivity();
                 fragment  = activity.getLastFragment();
                 FermatSession fermatSession = getSubAppSessionManager().getSubAppsSession(subApp.getAppPublicKey());
@@ -210,13 +210,13 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             if (frgBackType != null) {
 
-                Activity activities = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
+                Activity activities = getSubAppRuntimeMiddleware().getLastApp().getLastActivity();
                 com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = activities.getFragment(frgBackType); //set back fragment to actual fragment to run
                 //TODO: ver como hacer para obtener el id del container
                 if(fragmentBack.getType().equals("CSADDTD") || fragmentBack.getType().equals("CSADDTT") || fragmentBack.getType().equals("CSADDTR")  || fragmentBack.getType().equals("CSADDT")){
-                    loadFragment(subAppRuntimeManager.getLastSubApp().getType(), R.id.logContainer,frgBackType,fermatAppConnection.get().getFragmentFactory());
+                    loadFragment(subAppRuntimeManager.getLastApp().getType(), R.id.logContainer,frgBackType,fermatAppConnection.get().getFragmentFactory());
                 }else {
-                    loadFragment(subAppRuntimeManager.getLastSubApp().getType(), R.id.startContainer,frgBackType,fermatAppConnection.get().getFragmentFactory());
+                    loadFragment(subAppRuntimeManager.getLastApp().getType(), R.id.startContainer,frgBackType,fermatAppConnection.get().getFragmentFactory());
                 }
 
             }else if(activity!=null && activity.getBackActivity()!=null){
@@ -226,12 +226,12 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             } else {
                 // set Desktop current activity
-                activity = getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity();
+                activity = getSubAppRuntimeMiddleware().getLastApp().getLastActivity();
                 if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN) {
 //                    resetThisActivity();
 //                    //getSubAppRuntimeMiddleware().getHomeScreen();
 //                    getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-//                    getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+//                    getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
                     //cleanWindows();
 
                     Intent intent = new Intent(this, DesktopActivity.class);
@@ -267,7 +267,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
             SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
 
-            SubApp subApp = subAppRuntimeManager.getLastSubApp();
+            SubApp subApp = subAppRuntimeManager.getLastApp();
 
 
 
@@ -335,7 +335,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
                     Activity nextActivity = null;
                     SubApp subApp = null;
                     try {
-                        SubApp subAppNavigationStructure = getSubAppRuntimeMiddleware().getLastSubApp();
+                        SubApp subAppNavigationStructure = getSubAppRuntimeMiddleware().getLastApp();
                         if(subAppNavigationStructure.getPublicKey().equals(appBackPublicKey)) {
                             lastActivity = subAppNavigationStructure.getLastActivity();
                             nextActivity = subAppNavigationStructure.getActivity(Activities.getValueFromString(activityName));
@@ -365,9 +365,9 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
                     //resetThisActivity();
 
-                    Activity a =  getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.getValueFromString(activityName));
+                    Activity a =  getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.getValueFromString(activityName));
 
-                    loadUI(getSubAppSessionManager().getSubAppsSession(getSubAppRuntimeMiddleware().getLastSubApp().getAppPublicKey()));
+                    loadUI(getSubAppSessionManager().getSubAppsSession(getSubAppRuntimeMiddleware().getLastApp().getAppPublicKey()));
 
 
                 }catch (Exception e){
@@ -413,7 +413,35 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
     }
 
     @Override
-    public void connectWithOtherApp(Engine emgine, String fermatAppPublicKey,Object[] objectses) {
+    public void connectWithOtherApp(Engine engine, String fermatAppPublicKey,Object[] objectses) {
+        WalletNavigationStructure walletNavigationStructure = getWalletRuntimeManager().getLastWallet();
+        SubApp installedSubApp = getSubAppRuntimeMiddleware().getSubAppByPublicKey(fermatAppPublicKey);
+        switch (engine){
+            case BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY:
+
+                //subApp runtime
+                try {
+                    connectWithSubApp(engine,objectses,installedSubApp);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            case BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY:
+
+                try {
+
+                    connectWithSubApp(engine,objectses,installedSubApp);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -515,7 +543,7 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
 
     @Override
     protected List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> getNavigationMenu() {
-        return getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().getSideMenu().getMenuItems();
+        return getSubAppRuntimeMiddleware().getLastApp().getLastActivity().getSideMenu().getMenuItems();
     }
 
     @Override
@@ -531,25 +559,27 @@ public class SubAppActivity extends FermatActivity implements FermatScreenSwappe
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
     }
+
     @Override
-    public void changeActivityBack(String appBackPublicKey,String activityCode){
-        try {
-            getSubAppRuntimeMiddleware().getLastSubApp().getLastActivity().changeBackActivity(appBackPublicKey,activityCode);
-        }catch (InvalidParameterException e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivityBack"));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
-        }
+    public FermatStructure getAppInUse() {
+        return getSubAppRuntimeMiddleware().getLastApp();
     }
 
     @Override
-    protected FermatStructure getAppInUse() {
-        return getSubAppRuntimeMiddleware().getLastSubApp();
-    }
-
-    @Override
-    protected FermatSession getFermatSessionInUse(String appPublicKey) {
+    public FermatSession getFermatSessionInUse(String appPublicKey) {
         return getSubAppSessionManager().getSubAppsSession(appPublicKey);
     }
 
 
+    private void connectWithSubApp(Engine engine, Object[] objects,SubApp subApp){
+        Intent intent = new Intent(this, SubAppActivity.class);
+        intent.putExtra(ConnectionConstants.ENGINE_CONNECTION, engine);
+        intent.putExtra(ConnectionConstants.SEARCH_NAME,objects);
+        intent.putExtra(ConnectionConstants.SUB_APP_CONNECTION,subApp.getAppPublicKey());
+        intent.putExtra(ConnectionConstants.SUB_APP_CONNECTION_TYPE,subApp.getType());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        startActivity(intent);
+    }
 }

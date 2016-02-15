@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -45,9 +44,8 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
@@ -429,7 +427,9 @@ public class ChatMiddlewareMonitorAgent implements
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
                       //  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
-                        chatNetworkServiceManager.sendChatMessageNewStatusNotification(
+                      //This happen when recive a message check first the message sent from here and then the recive message
+                       //when response some wrong with this code down here
+                      /*  chatNetworkServiceManager.sendChatMessageNewStatusNotification(
                                 chatNetworkServiceManager.getNetWorkServicePublicKey(),
                                 PlatformComponentType.NETWORK_SERVICE,
                                 incomingChatMetadata.getLocalActorPublicKey(),
@@ -437,8 +437,8 @@ public class ChatMiddlewareMonitorAgent implements
                                 DistributionStatus.DELIVERED,
                                 incomingChatMetadata.getChatId(),
                                 incomingChatMetadata.getMessageId()
-                        );
-                        break;
+                        );*/
+             //           break;
                     }
                 }
                 eventRecord.setEventStatus(EventStatus.NOTIFIED);
@@ -467,12 +467,13 @@ public class ChatMiddlewareMonitorAgent implements
                         "Checking the incoming chat pending transactions",
                         "Cannot get the message from database"
                 );
-            } catch (CantSendChatMessageNewStatusNotificationException e) {
+            /*}
+            catch (CantSendChatMessageNewStatusNotificationException e) {
                 throw new CantGetPendingTransactionException(
                         e,
                         "Checking the incoming chat pending transactions",
                         "Cannot send the message to TX"
-                );
+                );*/
             } catch (CantConfirmTransactionException e) {
                 throw new CantGetPendingTransactionException(
                         e,
@@ -636,12 +637,36 @@ public class ChatMiddlewareMonitorAgent implements
          * @throws DatabaseOperationException
          */
         private void saveChat(ChatMetadata chatMetadata) throws DatabaseOperationException, CantGetChatException, CantSaveChatException {
-
+            String remotepk="";
+            String localpk="";
+      //      String newmessage="gone";
+/*            try {
+                for (int i = 0; i < chatMiddlewareDatabaseDao.getMessages().size(); i++) {
+                    if (chatMiddlewareDatabaseDao.getMessageByChatId(chatMetadata.getChatId()).get(i).getMessage().equals("troy")) {
+                        newmessage = "probe";
+                    }
+                }
+            }catch(CantGetMessageException e){
+            }*/
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatMetadata.getChatId());
+
+            // change to put in the remote device in the correct place of table chat
             if(chat == null){
                 chat = getChatFromChatMetadata(chatMetadata);
+                remotepk=chat.getRemoteActorPublicKey();
+                localpk=chat.getLocalActorPublicKey();
+                chat.setLocalActorPublicKey(remotepk);
+                chat.setRemoteActorPublicKey(localpk);
+            }else{
+                remotepk=chatMetadata.getRemoteActorPublicKey();
+                if(!remotepk.equals(chat.getRemoteActorPublicKey())) {
+                    chat.setLocalActorPublicKey(remotepk);
+                }
+
             }
+
             chat.setStatus(ChatStatus.VISSIBLE);
+
             chatMiddlewareDatabaseDao.saveChat(chat);
         }
 

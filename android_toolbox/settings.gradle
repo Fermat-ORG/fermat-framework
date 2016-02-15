@@ -2,3 +2,13 @@
 
 include ':chat'
 project(':chat').projectDir = new File('android_toolbox/chat')
+
+
+include ':currency-selector'
+project(':currency-selector').projectDir = new File('android_toolbox/currency-selector')
+
+
+include ':fermat_preference_settings'
+project(':fermat_preference_settings').projectDir = new File('android_toolbox/fermat_preference_settings')
+
+

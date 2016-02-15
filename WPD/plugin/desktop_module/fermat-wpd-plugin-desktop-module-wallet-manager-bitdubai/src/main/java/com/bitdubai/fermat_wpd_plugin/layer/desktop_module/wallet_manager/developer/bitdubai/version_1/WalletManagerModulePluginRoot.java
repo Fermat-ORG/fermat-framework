@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.developer.bitdubai.version_1;
 
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -303,7 +304,8 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         wallet.getWalletName(),
                         wallet.getWalletPublicKey(),
                         wallet.getWalletPlatformIdentifier(),
-                        wallet.getWalletVersion()
+                        wallet.getWalletVersion(),
+                        AppsStatus.getDefaultStatus()
                 );
 
                 lstInstalledWallet.add(installedWallet);
@@ -473,7 +475,8 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                 "Bitcoin Wallet",
                 "reference_wallet",
                 "wallet_platform_identifier",
-                new Version(1,0,0)
+                new Version(1,0,0),
+                AppsStatus.getDefaultStatus()
         );
 
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
@@ -539,7 +542,8 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         "Bitcoin Reference Wallet",
                         "reference_wallet",
                         "wallet_platform_identifier",
-                        new Version(1,0,0));
+                        new Version(1,0,0),
+                        AppsStatus.getDefaultStatus());
                 break;
             case "asset_issuer":
                 installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -550,7 +554,8 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         "asset issuer",
                         "asset_issuer",
                         "wallet_platform_identifier",
-                        new Version(1,0,0));
+                        new Version(1,0,0),
+                        AppsStatus.getDefaultStatus());
                 break;
             case "asset_user":
                 installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -561,7 +566,8 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         "asset user",
                         "asset_user",
                         "wallet_platform_identifier",
-                        new Version(1,0,0));
+                        new Version(1,0,0),
+                        AppsStatus.getDefaultStatus());
                 break;
             case "redeem_point":
                 installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -572,7 +578,8 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         "redeem point",
                         "redeem_point",
                         "wallet_platform_identifier",
-                        new Version(1,0,0));
+                        new Version(1,0,0),
+                        AppsStatus.getDefaultStatus());
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
@@ -598,7 +605,8 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         "Bitcoin Reference Wallet",
                         "reference_wallet",
                         FermatApps.BITCOIN_REFERENCE_WALLET.getCode(),
-                        new Version(1,0,0));
+                        new Version(1,0,0),
+                        AppsStatus.getDefaultStatus());
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
