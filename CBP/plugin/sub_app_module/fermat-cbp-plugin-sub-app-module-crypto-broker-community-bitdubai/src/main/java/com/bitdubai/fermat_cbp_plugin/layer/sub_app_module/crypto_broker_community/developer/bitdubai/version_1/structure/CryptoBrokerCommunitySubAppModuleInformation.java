@@ -19,6 +19,8 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
     private final String publicKey;
     private final String alias    ;
     private final byte[] image    ;
+    private final ConnectionState connectionState;
+
 
     public CryptoBrokerCommunitySubAppModuleInformation(final String publicKey,
                                                         final String alias,
@@ -27,6 +29,18 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.publicKey = publicKey;
         this.alias     = alias    ;
         this.image     = image    ;
+        this.connectionState = null;
+    }
+
+    public CryptoBrokerCommunitySubAppModuleInformation(final String publicKey,
+                                                          final String alias,
+                                                          final byte[] image,
+                                                          final ConnectionState connectionState) {
+
+        this.publicKey          = publicKey      ;
+        this.alias              = alias          ;
+        this.image              = image          ;
+        this.connectionState    = connectionState;
     }
 
     public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerActorConnection actorConnection) {
@@ -34,6 +48,8 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.publicKey = actorConnection.getPublicKey();
         this.alias     = actorConnection.getAlias()    ;
         this.image     = actorConnection.getImage()    ;
+        this.connectionState = null;
+
     }
 
     public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerExposingData exposingData) {
@@ -41,6 +57,8 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.publicKey = exposingData.getPublicKey();
         this.alias     = exposingData.getAlias()    ;
         this.image     = exposingData.getImage()    ;
+        this.connectionState = null;
+
     }
 
     @Override
@@ -65,7 +83,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
 
     @Override
     public ConnectionState getConnectionState() {
-        return null;
+        return this.connectionState;
     }
 
     @Override
@@ -73,6 +91,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         return "CryptoBrokerCommunitySubAppModuleInformation{" +
                 "publicKey='" + publicKey + '\'' +
                 ", alias='" + alias + '\'' +
+                ", connectionState='" + connectionState + '\'' +
                 ", image=" + (image != null) +
                 '}';
     }

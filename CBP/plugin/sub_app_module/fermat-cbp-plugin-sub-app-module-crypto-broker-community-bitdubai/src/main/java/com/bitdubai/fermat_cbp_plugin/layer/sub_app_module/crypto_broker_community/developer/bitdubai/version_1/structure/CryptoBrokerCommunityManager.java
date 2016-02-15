@@ -36,6 +36,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.Cry
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantAcceptRequestException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantGetCryptoBrokerSearchResult;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantRequestConnectionException;
@@ -94,6 +95,50 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
         this.pluginVersionReference                 = pluginVersionReference                ;
     }
 
+
+
+    @Override
+    public List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListCryptoBrokersException {
+
+        //List<CryptoBrokerCommunityInformation> result2 = new ArrayList<>();
+        List<CryptoBrokerCommunityInformation> worldBrokerList;
+        List<CryptoBrokerActorConnection> actorConnections;
+        List<CryptoBrokerCommunityInformation> finalList = new ArrayList<>();;
+
+        try{
+            worldBrokerList = getCryptoBrokerSearch().getResult();
+        } catch (CantGetCryptoBrokerSearchResult e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoBrokersException(e, "", "Error in listWorldCryptoBrokers trying to list world brokers");
+        }
+
+
+        try {
+
+            final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
+            final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
+            search.addConnectionState(ConnectionState.CONNECTED);
+
+            actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+
+        } catch (final CantListActorConnectionsException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoBrokersException(e, "", "Error trying to list actor connections.");
+        }
+
+
+        for(CryptoBrokerCommunityInformation worldBroker : worldBrokerList){
+            for(CryptoBrokerActorConnection connectedBroker : actorConnections){
+                if(worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
+                    finalList.add(new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), ConnectionState.CONNECTED));
+                else
+                    finalList.add(worldBroker);
+            }
+        }
+
+        return finalList;
+     }
+
     /**
      * We are listing here all crypto brokers and all crypto customer identities found in the device.
      */
@@ -128,7 +173,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
-    public CryptoBrokerCommunitySearch getCryptoBrokerSearch(final CryptoBrokerCommunitySelectableIdentity selectedIdentity) {
+    public CryptoBrokerCommunitySearch getCryptoBrokerSearch() {
         return new CryptoBrokerCommunitySubAppModuleCommunitySearch(cryptoBrokerActorNetworkServiceManager);
     }
 
@@ -393,7 +438,9 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     public boolean isActorConnected(String publicKey) throws CantValidateConnectionStateException {
 
         try {
-            final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(publicKey, Actors.CBP_CRYPTO_BROKER);
+            CryptoBrokerCommunitySelectableIdentity selectedIdentity  =  getSelectedActorIdentity();
+
+            final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
             //search.addConnectionState(ConnectionState.CONNECTED);
             //search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
@@ -408,7 +455,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
         } catch (final CantListActorConnectionsException e) {
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantValidateConnectionStateException(e, "", "Error trying to list actor connections.");
-        }
+        } catch (Exception e) {}
         return false;
     }
 

@@ -29,6 +29,18 @@ import java.util.UUID;
 public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity> {
 
     /**
+     * The method <code>listWorldCryptoBrokers</code> returns the list of all crypto brokers in the world,
+     * setting their status (CONNECTED, for example) with respect to the selectedIdentity parameter
+     * logged in crypto broker
+     *
+     * @return a list of all crypto brokers in the world
+     *
+     * @throws CantListCryptoBrokersException if something goes wrong.
+     */
+    List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, final int max, final int offset) throws CantListCryptoBrokersException;
+
+
+    /**
      * The method <code>listSelectableIdentities</code> lists all the Crypto Broker identities
      * stored locally in the device.
      *
@@ -44,7 +56,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      *
      * @return a searching interface
      */
-    CryptoBrokerCommunitySearch getCryptoBrokerSearch(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
+    CryptoBrokerCommunitySearch getCryptoBrokerSearch();
 
     /**
      * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
