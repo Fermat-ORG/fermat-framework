@@ -107,7 +107,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         UUID currencyGivingId;
         UUID currencyReceivingId;
         Currency currencyGiving;
-        float getAmountGiving;
+        float amountGiving;
         Currency currencyReceiving;
         float amountReceiving;
         try {
@@ -169,7 +169,6 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }
-
 
         return currencyMatchings;
     }
