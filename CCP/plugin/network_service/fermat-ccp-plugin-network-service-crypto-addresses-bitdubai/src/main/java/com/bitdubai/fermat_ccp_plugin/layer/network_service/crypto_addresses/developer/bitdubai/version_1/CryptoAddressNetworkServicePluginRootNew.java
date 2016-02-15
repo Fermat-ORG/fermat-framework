@@ -84,8 +84,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    private List<FermatEventListener> listenersAdded;
-
     /**
      *  Represent the remoteNetworkServicesRegisteredList
      */
