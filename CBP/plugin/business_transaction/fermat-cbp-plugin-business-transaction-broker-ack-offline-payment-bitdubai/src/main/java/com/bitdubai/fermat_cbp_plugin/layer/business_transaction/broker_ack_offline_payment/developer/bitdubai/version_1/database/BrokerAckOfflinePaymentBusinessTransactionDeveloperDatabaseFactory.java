@@ -113,7 +113,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory 
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_PAYMENT_AMOUNT_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
-
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EXTERNAL_TRANSACTION_ID);
         /**
          * Table Online Payment addition.
          */
