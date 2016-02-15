@@ -22,6 +22,8 @@ public class CryptoTransmissionMetadataRecord extends CryptoTransmissionMessage 
     private CryptoTransmissionMetadataType cryptoTransmissionMetadataType;
     private long timestamp;
 
+    private CryptoTransmissionMessageType cryptoTransmissionMessageType;
+
     public CryptoTransmissionMetadataRecord(UUID transactionId, CryptoTransmissionMessageType cryptoTransmissionMessage, UUID requestId, CryptoCurrency cryptoCurrency, long cryptoAmount, String senderPublicKey, String destinationPublicKey, String associatedCryptoTransactionHash, String paymentDescription, CryptoTransmissionProtocolState cryptoTransmissionProtocolState, CryptoTransmissionMetadataType cryptoTransmissionMetadataType, long timestamp, boolean pendingFlag, int sentCount, CryptoTransmissionMetadataState cryptoTransmissionMetadataState) {
         super(transactionId, cryptoTransmissionMessage,senderPublicKey,destinationPublicKey,cryptoTransmissionProtocolState,cryptoTransmissionMetadataState,pendingFlag,sentCount);
         this.requestId = requestId;
@@ -98,6 +100,11 @@ public class CryptoTransmissionMetadataRecord extends CryptoTransmissionMessage 
     @Override
     public void setTypeMetadata(CryptoTransmissionMetadataType cryptoTransmissionMetadataType) {
         this.cryptoTransmissionMetadataType =cryptoTransmissionMetadataType;
+    }
+
+
+    public void setCryptoTransmissionMessageType(CryptoTransmissionMessageType cryptoTransmissionMessageType) {
+        this.cryptoTransmissionMessageType =cryptoTransmissionMessageType;
     }
 
     @Override

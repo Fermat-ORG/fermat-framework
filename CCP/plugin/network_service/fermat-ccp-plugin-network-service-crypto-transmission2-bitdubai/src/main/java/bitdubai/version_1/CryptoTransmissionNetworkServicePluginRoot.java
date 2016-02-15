@@ -1439,7 +1439,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     @Override
     public void informTransactionCreditedInWallet(UUID transaction_id) throws CantSetToCreditedInWalletException {
-        try {
+    /*    try {
             //change status to send , to inform Seen
             CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = incomingNotificationsDao.changeCryptoTransmissionProtocolStateAndNotificationState(
                     transaction_id,
@@ -1460,7 +1460,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
             throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
         } catch (PendingRequestNotFoundException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
@@ -1604,7 +1604,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
     @Override
     public void confirmNotification(final UUID transactionID) throws CantConfirmMetaDataNotificationException {
 
-        try {
+       /* try {
 
             incomingNotificationsDao.confirmReception(transactionID);
 
@@ -1618,7 +1618,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         } catch (Exception e) {
 
             throw new CantConfirmMetaDataNotificationException("CAN'T CHANGE METADATA FLAG", FermatException.wrapException(e), "TRANSACTION ID: "+transactionID, "Unhandled error.");
-        }
+        }*/
     }
 
     @Override
@@ -1632,15 +1632,15 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
 
     private void reprocessMessage()
     {
-        try {
+       /* try {
 
          /*
          * Read all pending CryptoTransmissionMetadata message from database
          */
-            List<CryptoTransmissionMetadataRecord> lstCryptoTransmissionMetadata = outgoingNotificationDao.getNotSentRecord();
+          //  List<CryptoTransmissionMetadataRecord> lstCryptoTransmissionMetadata = outgoingNotificationDao.getNotSentRecord();
 
 
-            for(CryptoTransmissionMetadataRecord record : lstCryptoTransmissionMetadata) {
+         /*   for(CryptoTransmissionMetadataRecord record : lstCryptoTransmissionMetadata) {
 
                 outgoingNotificationDao.changeCryptoTransmissionProtocolState(record.getTransactionId(), CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
 
@@ -1653,18 +1653,18 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         } catch (Exception  e) {
             System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO MESSAGES");
             e.printStackTrace();
-        }
+        }*/
     }
 
 
     private void reprocessMessage(String receiveIdentityKey)
     {
-        try {
+      /*  try {
 
          /*
          * Read all pending CryptoTransmissionMetadata message from database
          */
-            List<CryptoTransmissionMetadataRecord> lstCryptoTransmissionMetadata = outgoingNotificationDao.getNotSentRecord(receiveIdentityKey);
+         /*   List<CryptoTransmissionMetadataRecord> lstCryptoTransmissionMetadata = outgoingNotificationDao.getNotSentRecord(receiveIdentityKey);
 
 
             for(CryptoTransmissionMetadataRecord record : lstCryptoTransmissionMetadata) {
@@ -1680,7 +1680,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         } catch (Exception  e) {
             System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO MESSAGES");
             e.printStackTrace();
-        }
+        }*/
     }
     private void reprocessWaitingMessage() {
         try {
