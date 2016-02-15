@@ -25,7 +25,7 @@ public class CashMoneyDeStockRecord extends AbstractDeStockRecord {
         this.amount = parseLongToBigDecimal(businessTransactionRecord.getPaymentAmount());
         this.memo = generateMemo(businessTransactionRecord.getContractHash());
         this.priceReference = businessTransactionRecord.getPriceReference();
-        this.originTransaction = OriginTransaction.STOCK_INITIAL;
+        this.originTransaction = OriginTransaction.SALE;
 
     }
 

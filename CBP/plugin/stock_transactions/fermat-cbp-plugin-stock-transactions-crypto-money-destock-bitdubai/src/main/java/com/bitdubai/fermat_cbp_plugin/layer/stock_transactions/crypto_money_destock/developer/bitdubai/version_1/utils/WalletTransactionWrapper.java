@@ -29,6 +29,8 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     private final String memo;
     private final BigDecimal priceReference;
     private final OriginTransaction originTransaction;
+    private String originTransactionId;
+    private boolean seen;
 
     public WalletTransactionWrapper(UUID transactionId,
                                     Currency merchandise,
@@ -41,7 +43,9 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
                                     long timeStamp,
                                     String memo,
                                     BigDecimal priceReference,
-                                    OriginTransaction originTransaction) {
+                                    OriginTransaction originTransaction,
+                                    String originTransactionId,
+                                    boolean seen) {
 
         this.transactionId = transactionId;
         this.merchandise = merchandise;
@@ -55,6 +59,8 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
         this.memo = memo;
         this.priceReference = priceReference;
         this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
+        this.seen = seen;
     }
 
     @Override
@@ -125,5 +131,21 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     @Override
     public BigDecimal getRunningAvailableBalance() {
         return new BigDecimal(0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return this.originTransactionId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getSeen() {
+        return this.seen;
     }
 }

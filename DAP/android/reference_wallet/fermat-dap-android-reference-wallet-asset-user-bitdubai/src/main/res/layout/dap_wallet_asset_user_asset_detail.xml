@@ -2,8 +2,9 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="428dp"
+    android:orientation="vertical"
+    android:layout_marginTop="?attr/actionBarSize">
 
         <ImageView
             android:layout_width="match_parent"
@@ -117,89 +118,5 @@
                 android:layout_alignParentRight="true" />
 
         </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#093A90">
-
-        <RelativeLayout
-            android:id="@+id/assetDetailRedeemLayout"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:paddingTop="10dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/bg_delivery_button_redeem"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/assetDetailRedeemText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Redeem"
-                android:layout_centerInParent="true"
-                android:fontFamily="regular"
-                android:textSize="17sp"
-                android:textColor="#00aeef"
-                android:paddingTop="10dp"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/assetDetailAppropriateLayout"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@+id/assetDetailRedeemLayout"
-            android:paddingTop="10dp">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/assetDetailAppropriateText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Appropriate"
-                android:layout_centerInParent="true"
-                android:fontFamily="regular"
-                android:textSize="17sp"
-                android:textColor="#00aeef"
-                android:paddingTop="10dp"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/bg_delivery_button"/>
-
-        </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/assetDetailTransferLayout"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_below="@+id/assetDetailAppropriateLayout"
-            android:paddingTop="10dp">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/assetDetailTransferText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Transfer"
-                android:layout_centerInParent="true"
-                android:fontFamily="regular"
-                android:textSize="17sp"
-                android:textColor="#00aeef"
-                android:paddingTop="10dp"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/bg_delivery_button"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"></RelativeLayout>
-
-    </RelativeLayout>
 
 </LinearLayout>
