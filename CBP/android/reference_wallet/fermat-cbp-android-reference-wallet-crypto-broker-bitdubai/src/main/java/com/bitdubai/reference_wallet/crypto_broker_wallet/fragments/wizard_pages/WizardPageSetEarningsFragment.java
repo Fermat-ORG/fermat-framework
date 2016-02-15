@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_page
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.ArraySet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,9 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -36,9 +40,12 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.Simpl
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by nelson on 22/12/15.
@@ -69,14 +76,14 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        earningDataList = createEarningDataList();
-        bankCurrencies = new HashMap<>();
-        bankAccounts = new HashMap<>();
-
         try {
             CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
+
+            earningDataList = createEarningDataList();
+            bankCurrencies = new HashMap<>();
+            bankAccounts = new HashMap<>();
 
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -96,11 +103,16 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_earning_wallets_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
-        adapter = new EarningsWizardAdapter(getActivity(), earningDataList);
-        adapter.setCheckboxListener(this);
-        recyclerView.setAdapter(adapter);
-
         emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_earning_wallets_empty_view);
+
+        if (earningDataList.isEmpty()) {
+            emptyView.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        } else {
+            adapter = new EarningsWizardAdapter(getActivity(), earningDataList);
+            adapter.setCheckboxListener(this);
+            recyclerView.setAdapter(adapter);
+        }
 
         final View nextStepButton = layout.findViewById(R.id.cbw_next_step_button);
         nextStepButton.setOnClickListener(new View.OnClickListener() {
@@ -177,7 +189,6 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                         if (!containWallet(selectedWallet)) {
                             data.setWalletInfo(selectedWallet.getWalletPublicKey(), selectedWallet.getWalletName());
                             adapter.changeDataSet(earningDataList);
-                            showOrHideNoSelectedWalletsView();
                         }
 
                     } else {
@@ -218,7 +229,6 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                     if (!containWallet(selectedWallet)) {
                         data.setWalletInfo(selectedWallet.getWalletPublicKey(), selectedWallet.getWalletName());
                         adapter.changeDataSet(earningDataList);
-                        showOrHideNoSelectedWalletsView();
                     }
                 }
             });
@@ -262,18 +272,30 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_PROVIDERS, appSession.getAppPublicKey());
     }
 
-    private void showOrHideNoSelectedWalletsView() {
-        if (earningDataList.isEmpty()) {
-            emptyView.setVisibility(View.VISIBLE);
-            recyclerView.setVisibility(View.GONE);
-        } else {
-            emptyView.setVisibility(View.GONE);
-            recyclerView.setVisibility(View.VISIBLE);
-        }
-    }
 
     private List<EarningsWizardData> createEarningDataList() {
         ArrayList<EarningsWizardData> list = new ArrayList<>();
+
+        try {
+            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(appSession.getAppPublicKey());
+
+            for (CryptoBrokerWalletAssociatedSetting associatedWallet1 : associatedWallets) {
+                for (CryptoBrokerWalletAssociatedSetting associatedWallet2 : associatedWallets) {
+                    Currency merchandise1 = associatedWallet1.getMerchandise();
+                    Currency merchandise2 = associatedWallet2.getMerchandise();
+
+                    if (!merchandise1.equals(merchandise2))
+                        list.add(new EarningsWizardData(merchandise1, merchandise2));
+                }
+            }
+
+        } catch (FermatException ex) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            else
+                Log.e(TAG, ex.getMessage(), ex);
+        }
 
         return list;
     }

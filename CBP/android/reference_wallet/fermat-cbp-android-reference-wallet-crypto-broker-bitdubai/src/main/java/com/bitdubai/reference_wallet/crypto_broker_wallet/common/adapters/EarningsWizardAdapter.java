@@ -27,6 +27,6 @@ public class EarningsWizardAdapter extends SingleCheckableItemAdapter<EarningsWi
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.cbw_wizard_recycler_view_item;
+        return R.layout.cbw_wizard_earnings_item;
     }
 }

@@ -118,7 +118,7 @@
     <string name="cbw_no_locations_added">No Locations Added</string>
     <string name="cbw_add_bank_account">Add Bank Account</string>
     <string name="cbw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
-    <string name="cbw_wizard_earning_merchandise_description">For the merchandises you're going to receive and give, assign them a wallet to put the earnings</string>
+    <string name="cbw_wizard_earning_merchandise_description">For the merchandises you\'re going to receive and give, assign them a wallet to put the earnings</string>
     <string name="cbw_select_earnings_merchandise">Select the pairs their wallets</string>
     <string name="cbw_crypto">Crypto</string>
     <string name="cbw_cash">Cash</string>

@@ -70,9 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
-                android:visibility="gone"
-                tools:listitem="@layout/cbw_wizard_earnings_item"
-                tools:visibility="visible"/>
+                tools:listitem="@layout/cbw_wizard_earnings_item"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_selected_earning_wallets_empty_view"
@@ -83,8 +81,7 @@
                 android:text="@string/cbw_no_selected_wallets"
                 android:textColor="#888"
                 android:textSize="16sp"
-                android:visibility="visible"
-                tools:visibility="gone"/>
+                android:visibility="gone"/>
         </FrameLayout>
 
     </LinearLayout>
