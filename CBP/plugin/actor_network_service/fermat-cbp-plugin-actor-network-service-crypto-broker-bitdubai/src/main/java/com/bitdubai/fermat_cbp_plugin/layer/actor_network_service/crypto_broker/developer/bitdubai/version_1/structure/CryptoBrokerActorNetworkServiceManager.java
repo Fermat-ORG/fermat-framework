@@ -177,14 +177,11 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
         try {
 
-            final UUID newId = UUID.randomUUID();
-
             final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
             final RequestType             type   = RequestType            .SENT           ;
             final ConnectionRequestAction action = ConnectionRequestAction.REQUEST        ;
 
             cryptoBrokerActorNetworkServiceDao.createConnectionRequest(
-                    brokerInformation.getConnectionId(),
                     brokerInformation,
                     state            ,
                     type             ,

@@ -342,8 +342,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public final void createConnectionRequest(final UUID                              newId            ,
-                                              final CryptoBrokerConnectionInformation brokerInformation,
+    public final void createConnectionRequest(final CryptoBrokerConnectionInformation brokerInformation,
                                               final ProtocolState                     state            ,
                                               final RequestType                       type             ,
                                               final ConnectionRequestAction           action           ) throws CantRequestConnectionException {
@@ -351,7 +350,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         try {
 
             final CryptoBrokerConnectionRequest connectionNew = new CryptoBrokerConnectionRequest(
-                    newId                                      ,
+                    brokerInformation.getConnectionId()        ,
                     brokerInformation.getSenderPublicKey()     ,
                     brokerInformation.getSenderActorType()     ,
                     brokerInformation.getSenderAlias()         ,

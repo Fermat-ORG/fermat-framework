@@ -359,7 +359,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
             );
 
             cryptoBrokerActorNetworkServiceDao.createConnectionRequest(
-                    requestMessage.getRequestId(),
                     connectionInformation,
                     state,
                     type,
