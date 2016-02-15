@@ -422,6 +422,7 @@ public class ChatMiddlewareMonitorAgent implements
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         saveChat(incomingChatMetadata);
                         //If message exists in database, this message will be update
+                        saveChat(incomingChatMetadata);
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
@@ -670,6 +671,8 @@ public class ChatMiddlewareMonitorAgent implements
         }
 
         /**
+<<<<<<< HEAD
+=======
          * This method add a new contact to the incoming chat
          * @param chat
          * @param contact
@@ -694,6 +697,7 @@ public class ChatMiddlewareMonitorAgent implements
         }
 
         /**
+>>>>>>> 7d89e61ca780089e7397f21cdc9b68bb6b1a68bf
          * This method creates a new Message from incoming metadata
          * @param chatMetadata
          * @return
@@ -712,6 +716,7 @@ public class ChatMiddlewareMonitorAgent implements
                 if(contact==null){
                     contact = createUnregisteredContact(chatMetadata);
                 }
+
                 //I'll associated the contact, message and chat with the following method
                 addContactToChat(chatFromDatabase, contact);
                 UUID contactId=contact.getContactId();
@@ -734,6 +739,7 @@ public class ChatMiddlewareMonitorAgent implements
                 throw new CantGetMessageException(e,
                         "Getting message from ChatMetadata",
                         "Cannot save the contact");
+
             } catch (CantGetChatException e) {
                 throw new CantGetMessageException(e,
                         "Getting message from ChatMetadata",
