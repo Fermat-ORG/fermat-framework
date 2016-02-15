@@ -184,7 +184,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             final ConnectionRequestAction action = ConnectionRequestAction.REQUEST        ;
 
             cryptoBrokerActorNetworkServiceDao.createConnectionRequest(
-                    newId            ,
+                    brokerInformation.getConnectionId(),
                     brokerInformation,
                     state            ,
                     type             ,
@@ -324,11 +324,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
         try {
 
-            List<ConnectionRequestAction> actions = new ArrayList<>();
-
-            actions.add(ConnectionRequestAction.REQUEST   );
-
-            return cryptoBrokerActorNetworkServiceDao.listAllPendingRequestsByActorType(actorType, actions);
+            return cryptoBrokerActorNetworkServiceDao.listPendingConnectionNews(actorType);
 
         } catch (final CantListPendingConnectionRequestsException e){
 
@@ -352,12 +348,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
         try {
 
-            List<ConnectionRequestAction> actions = new ArrayList<>();
-
-            actions.add(ConnectionRequestAction.ACCEPT);
-            actions.add(ConnectionRequestAction.DENY  );
-
-            return cryptoBrokerActorNetworkServiceDao.listAllPendingRequests(actions);
+            return cryptoBrokerActorNetworkServiceDao.listPendingConnectionUpdates();
 
         } catch (final CantListPendingConnectionRequestsException e){
 

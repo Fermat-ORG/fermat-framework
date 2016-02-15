@@ -125,14 +125,12 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
     /**
      * Return all the pending requests depending on the action informed through parameters.
-     *
-     * @param actions  the list of actions that we need to bring.
-     *
+     **
      * @return a list of CryptoBrokerConnectionRequest instances.
      *
      * @throws CantListPendingConnectionRequestsException  if something goes wrong.
      */
-    public final List<CryptoBrokerConnectionRequest> listAllPendingRequests(final List<ConnectionRequestAction> actions) throws CantListPendingConnectionRequestsException {
+    public final List<CryptoBrokerConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException {
 
         try {
 
@@ -141,6 +139,11 @@ public final class CryptoBrokerActorNetworkServiceDao {
             final DatabaseTable connectionNewsTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
 
             connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, protocolState, DatabaseFilterType.EQUAL);
+
+            List<ConnectionRequestAction> actions = new ArrayList<>();
+
+            actions.add(ConnectionRequestAction.ACCEPT);
+            actions.add(ConnectionRequestAction.DENY);
 
             final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
@@ -199,6 +202,43 @@ public final class CryptoBrokerActorNetworkServiceDao {
             final DatabaseTableFilterGroup filterGroup = connectionNewsTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
 
             connectionNewsTable.setFilterGroup(filterGroup);
+
+            connectionNewsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
+
+            final List<CryptoBrokerConnectionRequest> cryptoAddressRequests = new ArrayList<>();
+
+            for (final DatabaseTableRecord record : records)
+                cryptoAddressRequests.add(buildConnectionNewRecord(record));
+
+            return cryptoAddressRequests;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantListPendingConnectionRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
+        }
+    }
+
+    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews(final Actors actorType) throws CantListPendingConnectionRequestsException {
+
+        try {
+
+            final ProtocolState protocolState = ProtocolState.PENDING_LOCAL_ACTION;
+
+            final ConnectionRequestAction action = ConnectionRequestAction.REQUEST;
+
+            final DatabaseTable connectionNewsTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, protocolState, DatabaseFilterType.EQUAL);
+
+            if (actorType != null)
+                connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME, actorType, DatabaseFilterType.EQUAL);
+
+            connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action, DatabaseFilterType.EQUAL);
 
             connectionNewsTable.loadToMemory();
 
@@ -493,21 +533,12 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
     public boolean isPendingConnectionUpdates() throws CantListPendingConnectionRequestsException {
 
-        List<ConnectionRequestAction> actions = new ArrayList<>();
-
-        actions.add(ConnectionRequestAction.ACCEPT);
-        actions.add(ConnectionRequestAction.DENY  );
-
-        return this.listAllPendingRequests(actions) != null && !(this.listAllPendingRequests(actions).isEmpty());
+        return this.listPendingConnectionUpdates() != null && !(this.listPendingConnectionUpdates().isEmpty());
     }
 
     public boolean isPendingConnectionRequests() throws CantListPendingConnectionRequestsException {
 
-        List<ConnectionRequestAction> actions = new ArrayList<>();
-
-        actions.add(ConnectionRequestAction.REQUEST   );
-
-        return this.listAllPendingRequests(actions) != null && !(this.listAllPendingRequests(actions).isEmpty());
+        return this.listPendingConnectionNews(null) != null && !(this.listPendingConnectionNews(null).isEmpty());
     }
 
     /**
