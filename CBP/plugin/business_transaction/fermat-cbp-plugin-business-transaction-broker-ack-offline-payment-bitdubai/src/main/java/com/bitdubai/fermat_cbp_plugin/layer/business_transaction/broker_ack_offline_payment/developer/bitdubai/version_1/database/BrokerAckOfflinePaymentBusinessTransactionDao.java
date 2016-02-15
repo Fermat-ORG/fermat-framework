@@ -282,15 +282,17 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
-            CustomerBrokerContractSale customerBrokerContractSale)
+            CustomerBrokerContractSale customerBrokerContractSale,
+            MoneyType paymentType)
             throws CantInsertRecordException {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-            databaseTableRecord= buildDatabaseTableRecord(
+            databaseTableRecord = buildDatabaseTableRecord(
                     databaseTableRecord,
-                    customerBrokerContractSale
+                    customerBrokerContractSale,
+                    paymentType
             );
             databaseTable.insertRecord(databaseTableRecord);
         } catch (ObjectNotSetException exception) {
@@ -311,7 +313,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerBrokerContractSale customerBrokerContractSale) throws ObjectNotSetException {
+            CustomerBrokerContractSale customerBrokerContractSale,
+            MoneyType paymentType) throws ObjectNotSetException {
 
         ObjectChecker.checkArgument(
                 customerBrokerContractSale,
@@ -333,6 +336,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         record.setStringValue(
                 BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_CONFIRMATION.getCode());
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME,
+                paymentType.getCode());
 
         return record;
     }
