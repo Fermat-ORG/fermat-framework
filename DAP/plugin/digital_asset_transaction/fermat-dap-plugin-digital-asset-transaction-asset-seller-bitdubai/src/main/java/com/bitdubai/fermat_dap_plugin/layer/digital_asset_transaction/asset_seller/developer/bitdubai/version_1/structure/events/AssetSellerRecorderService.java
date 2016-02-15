@@ -31,6 +31,7 @@ public class AssetSellerRecorderService implements AssetTransactionService {
     private final EventManager eventManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
+    private final AssetSellerDAO dao;
     private List<FermatEventListener> listenersAdded;
 
     {
@@ -39,10 +40,11 @@ public class AssetSellerRecorderService implements AssetTransactionService {
 
     //CONSTRUCTORS
 
-    public AssetSellerRecorderService(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public AssetSellerRecorderService(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, AssetSellerDAO assetSellerDAO) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
+        this.dao = assetSellerDAO;
     }
 
     //PUBLIC METHODS
@@ -61,7 +63,6 @@ public class AssetSellerRecorderService implements AssetTransactionService {
     void receiveNewEvent(FermatEvent event) throws CantSaveEventException {
         String context = "pluginDatabaseSystem: " + pluginDatabaseSystem + " - pluginId: " + pluginId + " - event: " + event;
         try {
-            AssetSellerDAO dao = new AssetSellerDAO(pluginDatabaseSystem, pluginId);
             dao.saveNewEvent(event);
         } catch (Exception e) {
             throw new CantSaveEventException(FermatException.wrapException(e), context, CantSaveEventException.DEFAULT_MESSAGE);
