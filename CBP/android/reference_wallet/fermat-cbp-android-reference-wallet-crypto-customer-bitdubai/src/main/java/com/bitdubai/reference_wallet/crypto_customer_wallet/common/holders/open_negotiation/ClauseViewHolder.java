@@ -85,7 +85,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
             @Override
             public void onClick(View view) {
 
-                if(clause.getType() == listener.getClauseType())
+                if(clause.getType().equals(listener.getClauseType()))
                     valuesHasChanged = listener.getValuesHasChanged();
 
                 if ((valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
