@@ -113,8 +113,9 @@
     <string name="cbw_wizard_exchange_rate_providers_description">You must select the providers according to the wallet of merchandise, chosen in the previous step</string>
     <string name="cbw_choose_provider">Choose Provider</string>
     <string name="cbw_wizard_locations_description">You must add at least one location to make your transactions</string>
-    <string name="cbw_add_location">Add a Location</string>
+    <string name="cbw_add_location">+ Add a Location</string>
     <string name="cbw_your_location">Your Locations</string>
+    <string name="cbw_your_location_text">You must add at least one location to deliver or receive the merchandise</string>
     <string name="cbw_no_locations_added">No Locations Added</string>
     <string name="cbw_add_bank_account">Add Bank Account</string>
     <string name="cbw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
