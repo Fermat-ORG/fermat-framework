@@ -63,6 +63,15 @@ public class ConnectDialog extends FermatDialog<AssetUserCommunitySubAppSession,
         this.identity             = identity            ;
     }
 
+    public ConnectDialog(Activity a,
+                         final AssetUserCommunitySubAppSession         actorUserSubAppSession,
+                         final SubAppResourcesProviderManager subAppResources ) {
+        super(a, actorUserSubAppSession, subAppResources);
+        this.actor  =   null;
+        this.identity = null;
+    }
+
+
 
     @SuppressLint("SetTextI18n")
     @Override

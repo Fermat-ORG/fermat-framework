@@ -11,6 +11,9 @@
     <string name="dap_user_wallet_search_hint">Asset name</string>
     <string name="dap_user_wallet_show_no_balance">Show no balance assets</string>
     <string name="dap_user_wallet_show_all">Show all assets</string>
+    <string name="dap_user_wallet_action_redeem">Redeem</string>
+    <string name="dap_user_wallet_action_appropriate">Appropriate</string>
+    <string name="dap_user_wallet_action_transfer">Transfer</string>
     <!-- -->
 
     <!-- empty list views -->
@@ -21,6 +24,7 @@
     <string name="no_assets_redeem_point">No Assets?</string>
     <string name="no_assets_redeem_point_message">Don\'t worry, as a redeem point you need to connect your device to other Assets Issuers using the Asset Issuer Community application. Once you are connected, you will be eligible to redeem assets from any user!</string>
     <string name="no_redeempoints">No Redeem Points</string>
+    <string name="no_transactions">No Transactions</string>
     <!-- -->
 
     <!-- error messages -->

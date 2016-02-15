@@ -519,7 +519,10 @@ public class BitcoinWalletBasicWalletDao {
 
             BitcoinWalletBasicWalletDaoTransaction bitcoinWalletBasicWalletDaoTransaction = new BitcoinWalletBasicWalletDaoTransaction(database);
 
-            bitcoinWalletBasicWalletDaoTransaction.executeTransaction(getBitcoinWalletTable(), bitcoinWalletRecord, getBalancesTable(), balanceRecord);
+            //Balance table - add filter by network type,
+            DatabaseTable balanceTable = getBalancesTable();
+            balanceTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE,transactionRecord.getBlockchainNetworkType().getCode(),DatabaseFilterType.EQUAL);
+            bitcoinWalletBasicWalletDaoTransaction.executeTransaction(getBitcoinWalletTable(), bitcoinWalletRecord, balanceTable, balanceRecord);
         } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException exception){
             throw new CantExecuteBitconTransactionException(CantExecuteBitconTransactionException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         }
@@ -629,6 +632,34 @@ public class BitcoinWalletBasicWalletDao {
             throw new CantFindTransactionException("Transaction Memo Update Error",cantLoadTableToMemory,"Error load Transaction table" + transactionID.toString(), "");
         } catch (CantDeleteRecordException e) {
             e.printStackTrace();
+        }
+    }
+
+    public BitcoinWalletTransaction selectTransaction(UUID transactionID)throws CantFindTransactionException{
+
+        try {
+
+            BitcoinWalletTransaction bitcoinWalletTransaction = null;
+            // create the database objects
+            DatabaseTable bitcoinwalletTable = getBitcoinWalletTable();
+            /**
+             *  I will load the information of table into a memory structure, filter for transaction id
+             */
+            bitcoinwalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
+
+            bitcoinwalletTable.loadToMemory();
+
+            // Read record data and create transactions list
+            for(DatabaseTableRecord record : bitcoinwalletTable.getRecords()){
+                bitcoinWalletTransaction = constructBitcoinWalletTransactionFromRecord(record);
+            }
+
+            return bitcoinWalletTransaction;
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantFindTransactionException("Select Transaction Data Error",cantLoadTableToMemory,"Error load Transaction table" + transactionID.toString(), "");
+        } catch (Exception e) {
+            throw new CantFindTransactionException("Select Transaction Data Error",e,"unknown Error" + transactionID.toString(), "");
+
         }
     }
 }

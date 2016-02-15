@@ -211,7 +211,9 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
                                     new Date().getTime() / 1000,
                                     cryptoMoneyTransaction.getConcept(),
                                     cryptoMoneyTransaction.getPriceReference(),
-                                    cryptoMoneyTransaction.getOriginTransaction());
+                                    cryptoMoneyTransaction.getOriginTransaction(),
+                                    cryptoMoneyTransaction.getOriginTransactionId(),
+                                    false);
 
                             //TODO:Solo para testear
                             cryptoMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.adapters.IssuerCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.models.ActorIssuer;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
@@ -285,7 +287,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT, 0, "Connect")//.setIcon(R.drawable.dap_community_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         menu.add(1, SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_community_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -295,49 +297,80 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-//        if (item.getItemId() == R.id.action_connect) {
         if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_CONNECT) {
-            final ProgressDialog dialog = new ProgressDialog(getActivity());
-            dialog.setMessage("Connecting please wait...");
-            dialog.setCancelable(false);
-            dialog.show();
-            FermatWorker worker = new FermatWorker() {
-                @Override
-                protected Object doInBackground() throws Exception {
-                    List<ActorAssetIssuer> toConnect = new ArrayList<>();
-                    for (ActorIssuer actorIssuer : actors) {
-                        if (actorIssuer.selected)
-                            toConnect.add(actorIssuer.getRecord());
-                    }
-                    //// TODO: 20/11/15 get Actor asset issuer
-                    manager.connectToActorAssetIssuer(null, toConnect);
-                    return true;
-                }
-            };
-            worker.setContext(getActivity());
-            worker.setCallBack(new FermatWorkerCallBack() {
-                @Override
-                public void onPostExecute(Object... result) {
-                    dialog.dismiss();
-                    if (swipeRefreshLayout != null)
-                        swipeRefreshLayout.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                onRefresh();
-                            }
-                        });
-                }
+            List<ActorAssetIssuer> toConnect = new ArrayList<>();
+            for (ActorIssuer actorIssuer : actors) {
+                if (actorIssuer.selected)
+                    toConnect.add(actorIssuer.getRecord());
+            }
 
-                @Override
-                public void onErrorOccurred(Exception ex) {
-                    dialog.dismiss();
-//                    Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                    Toast.makeText(getActivity(), "Redeem Point or Asset Issuer Identities must be created before using this app.", Toast.LENGTH_LONG).show();
-//                    ex.printStackTrace();
-                }
-            });
-            worker.execute();
-            return true;
+            if (toConnect.size() > 0)
+            {
+                ConnectDialog connectDialog;
+                connectDialog = new ConnectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null){
+                    @Override
+                    public void onClick(View v) {
+                        int i = v.getId();
+                        if (i == R.id.positive_button) {
+                            final ProgressDialog dialog = new ProgressDialog(getActivity());
+                            dialog.setMessage("Connecting please wait...");
+                            dialog.setCancelable(false);
+                            dialog.show();
+                            FermatWorker worker = new FermatWorker() {
+                                @Override
+                                protected Object doInBackground() throws Exception {
+                                    List<ActorAssetIssuer> toConnect = new ArrayList<>();
+                                    for (ActorIssuer actorIssuer : actors) {
+                                        if (actorIssuer.selected)
+                                            toConnect.add(actorIssuer.getRecord());
+                                    }
+                                    //// TODO: 20/11/15 get Actor asset issuer
+                                    manager.connectToActorAssetIssuer(null, toConnect);
+                                    return true;
+                                }
+                            };
+                            worker.setContext(getActivity());
+                            worker.setCallBack(new FermatWorkerCallBack() {
+                                @Override
+                                public void onPostExecute(Object... result) {
+                                    dialog.dismiss();
+                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                    if (swipeRefreshLayout != null)
+                                        swipeRefreshLayout.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                onRefresh();
+                                            }
+                                        });
+                                }
+
+                                @Override
+                                public void onErrorOccurred(Exception ex) {
+                                    dialog.dismiss();
+                                    Toast.makeText(getActivity(), "Redeem Point or Asset Issuer Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+
+                                }
+                            });
+                            worker.execute();
+
+                        } else if (i == R.id.negative_button) {
+                            dismiss();
+                        }
+
+                    }
+                };
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setDescription("Do you want to send to");
+                connectDialog.setUsername((toConnect.size() > 1) ? "" + toConnect.size() +
+                        " Issuers" : toConnect.get(0).getName());
+                connectDialog.setSecondDescription("a connection request");
+                connectDialog.show();
+                return true;
+            }
+            else{
+                Toast.makeText(getActivity(), "No Issuers selected to Connect", Toast.LENGTH_LONG).show();
+                return false;
+            }
         }
         try {
 

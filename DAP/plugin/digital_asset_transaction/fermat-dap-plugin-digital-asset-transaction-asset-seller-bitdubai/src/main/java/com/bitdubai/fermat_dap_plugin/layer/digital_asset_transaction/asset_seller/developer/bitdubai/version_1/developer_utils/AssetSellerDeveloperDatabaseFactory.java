@@ -8,15 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_redemption.exceptions.CantInitializeAssetRedeemPointRedemptionTransactionDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database.AssetSellerDatabaseConstants;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database.AssetSellerDatabaseFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,60 +19,7 @@ import java.util.UUID;
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
  */
 public class AssetSellerDeveloperDatabaseFactory {
-
-    //VARIABLE DECLARATION
-    private PluginDatabaseSystem pluginDatabaseSystem;
-    private UUID pluginId;
-    //CONSTRUCTORS
-
-    public AssetSellerDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) throws CantSetObjectException {
-        this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
-        this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
-    }
-
-    public AssetSellerDeveloperDatabaseFactory() {
-    }
-
     //PUBLIC METHODS
-
-
-    public void initializeDatabase() throws CantInitializeAssetRedeemPointRedemptionTransactionDatabaseException {
-        try {
-
-             /*
-              * Open new database connection
-              */
-            pluginDatabaseSystem.openDatabase(pluginId, AssetSellerDatabaseConstants.ASSET_SELLER_DATABASE);
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-             /*
-              * The database exists but cannot be open. I can not handle this situation.
-              */
-            throw new CantInitializeAssetRedeemPointRedemptionTransactionDatabaseException(cantOpenDatabaseException.getMessage());
-
-        } catch (DatabaseNotFoundException e) {
-
-             /*
-              * The database no exist may be the first time the plugin is running on this device,
-              * We need to create the new database
-              */
-            AssetSellerDatabaseFactory assetAppropriationDatabaseFactory = new AssetSellerDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-                  /*
-                   * We create the new database
-                   */
-                assetAppropriationDatabaseFactory.createDatabase(pluginId);
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                  /*
-                   * The database cannot be created. I can not handle this situation.
-                   */
-                throw new CantInitializeAssetRedeemPointRedemptionTransactionDatabaseException(cantCreateDatabaseException.getMessage());
-            }
-        }
-    }
-
     public static List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
@@ -103,14 +42,27 @@ public class AssetSellerDeveloperDatabaseFactory {
 
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_ENTRY_ID_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_GENESIS_TRANSACTION_COLUMN_NAME);
-        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_METADATA_ID_COLUMN_NAME);
+        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NETWORK_TYPE_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_PUBLICKEY_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_SELL_STATUS_COLUMN_NAME);
+        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME);
+        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME);
+        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_TRANSACTION_COLUMN_NAME);
+        assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_TX_HASH_COLUMN_NAME);
         assetSellerColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_TIMESTAMP_COLUMN_NAME);
 
         DeveloperDatabaseTable transactionMetadataTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetSellerDatabaseConstants.ASSET_SELLER_TABLE_NAME, assetSellerColumns);
         tables.add(transactionMetadataTable);
 
+        List<String> assetNegotiationColumns = new ArrayList<>();
+
+
+        assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_ID_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_OBJECT_XML_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_STATUS_COLUMN_NAME);
+        assetNegotiationColumns.add(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_TIMESTAMP_COLUMN_NAME);
+        DeveloperDatabaseTable assetNegotiationTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_TABLE_NAME, assetNegotiationColumns);
+        tables.add(assetNegotiationTable);
 
         return tables;
     }

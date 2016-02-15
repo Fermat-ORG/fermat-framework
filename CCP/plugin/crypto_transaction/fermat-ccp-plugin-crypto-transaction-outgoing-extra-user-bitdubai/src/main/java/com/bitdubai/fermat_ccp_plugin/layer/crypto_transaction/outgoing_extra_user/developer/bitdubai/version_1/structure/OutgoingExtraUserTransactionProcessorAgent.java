@@ -148,7 +148,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
             try {
                 BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
-                funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+                funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(transaction.getBlockchainNetworkType());
                 if (funds < transaction.getAmount()) {
                     dao.cancelTransaction(transaction, "Insufficient founds.");
                     // TODO: Lanzar un evento de fondos insuficientes
