@@ -113,6 +113,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
         this.sender = sender;
         this.shippingTimestamp = shippingTimestamp;
         this.signature = signature;
+        this.failCount = new Integer(0);
     }
 
     /**
