@@ -87,7 +87,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     public FermatMessageCommunication() {
        super();
        this.id = UUID.randomUUID();
-       this.failCount = 0;
+       this.failCount = new Integer(0);
     }
 
     /**
