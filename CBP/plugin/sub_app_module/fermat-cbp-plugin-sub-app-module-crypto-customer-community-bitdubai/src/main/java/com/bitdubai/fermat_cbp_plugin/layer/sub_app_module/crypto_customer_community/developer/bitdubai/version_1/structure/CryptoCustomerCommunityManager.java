@@ -85,7 +85,7 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     }
 
     @Override
-    public CryptoCustomerCommunitySearch searchNewCryptoCustomer(CryptoCustomerCommunitySelectableIdentity cryptoCustomerCommunitySelectableIdentity) {
+    public CryptoCustomerCommunitySearch getCryptoCustomerSearch(CryptoCustomerCommunitySelectableIdentity cryptoCustomerCommunitySelectableIdentity) {
         return new CryptoCustomerCommunitySubAppModuleCommunitySearch(cryptoCustomerActorNetworkServiceManager);
     }
 

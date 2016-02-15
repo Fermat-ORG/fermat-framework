@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <!-- Fermat Color Scheme-->
+    <color name="green_light">#2BC0AC</color>
+    <color name="grey_dark">#3F3C4F</color>
+    <color name="grey_light">#9e9e9e</color>
+    <color name="black_light">#2B2936</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+
+    <!-- Test Colors -->
+    <color name="test_yellow">#ffffac</color>
+    <color name="test_blue">#0000ac</color>
+    <color name="test_red">#dc1818</color>
+</resources>

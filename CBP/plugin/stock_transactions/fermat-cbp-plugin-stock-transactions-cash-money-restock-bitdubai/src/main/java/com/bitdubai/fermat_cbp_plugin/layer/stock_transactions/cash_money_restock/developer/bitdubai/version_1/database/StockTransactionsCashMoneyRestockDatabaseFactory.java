@@ -73,6 +73,7 @@ public class StockTransactionsCashMoneyRestockDatabaseFactory {
             table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME,    DatabaseDataType.STRING, 15, Boolean.FALSE);
             table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME,       DatabaseDataType.MONEY, 0, Boolean.FALSE);
             table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME,    DatabaseDataType.STRING, 15, Boolean.FALSE);
+            table.addColumn(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME,    DatabaseDataType.STRING, 255, Boolean.FALSE);
 
             table.addIndex(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_FIRST_KEY_COLUMN);
 
