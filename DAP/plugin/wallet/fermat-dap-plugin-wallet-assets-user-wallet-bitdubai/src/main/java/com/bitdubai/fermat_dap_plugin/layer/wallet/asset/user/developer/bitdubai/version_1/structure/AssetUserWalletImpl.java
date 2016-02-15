@@ -141,8 +141,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException {
         try {
-            AssetUserWalletDatabaseFactory databaseFactory = new AssetUserWalletDatabaseFactory();
-            databaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
+            AssetUserWalletDatabaseFactory databaseFactory = new AssetUserWalletDatabaseFactory(pluginDatabaseSystem);
             database = databaseFactory.createDatabase(this.pluginId, internalWalletId);
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
             throw new CantCreateWalletException("Database could not be created", cantCreateDatabaseException, "internalWalletId: " + internalWalletId.toString(), "");
