@@ -436,6 +436,8 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     @Override
     public void onSentMessage(FermatMessage messageSent) {
 
+        System.out.println("-----------------------\n" +
+                "CRYPTO METADATA ENVIADA----------------------- ");
         CryptoTransmissionMessage cryptoTransmissionMetadata = new Gson().fromJson(messageSent.getContent(), CryptoTransmissionMessage.class);
         try {
             if (cryptoTransmissionMetadata.getCryptoTransmissionMetadataState() == CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET) {
@@ -550,6 +552,16 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
          */
         try {
             outgoingNotificationDao.changeStatusNotSentMessage();
+
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionProtocolState.PRE_PROCESSING_SEND.getCode());
+            List<CryptoTransmissionMetadataRecord> lstActorRecord = outgoingNotificationDao.findAll(
+                    filters
+            );
+
+            for (CryptoTransmissionMetadataRecord cpr : lstActorRecord) {
+                sendMessageToActor(cpr);
+            }
         } catch (CantReadRecordDataBaseException e) {
             System.out.println("CRYPTO TRANSMISSION NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
@@ -566,6 +578,17 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
          */
         try {
             outgoingNotificationDao.changeStatusNotSentMessage(identityPublicKey);
+
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionProtocolState.PRE_PROCESSING_SEND.getCode());
+            List<CryptoTransmissionMetadataRecord> lstActorRecord = outgoingNotificationDao.findAll(
+                    filters
+            );
+
+            for (CryptoTransmissionMetadataRecord cpr : lstActorRecord) {
+                sendMessageToActor(cpr);
+            }
+
         } catch (CantReadRecordDataBaseException e) {
             System.out.println("CRYPTO TRANSMISSION NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
@@ -971,6 +994,16 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
          * Read all pending CryptoTransmissionMetadata message from database
          */
            outgoingNotificationDao.changeStatusNotSentMessage();
+
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionProtocolState.PRE_PROCESSING_SEND.getCode());
+            List<CryptoTransmissionMetadataRecord> lstActorRecord = outgoingNotificationDao.findAll(
+                    filters
+            );
+
+            for (CryptoTransmissionMetadataRecord cpr : lstActorRecord) {
+                sendMessageToActor(cpr);
+            }
         } catch (Exception  e) {
             System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO MESSAGES");
             e.printStackTrace();
