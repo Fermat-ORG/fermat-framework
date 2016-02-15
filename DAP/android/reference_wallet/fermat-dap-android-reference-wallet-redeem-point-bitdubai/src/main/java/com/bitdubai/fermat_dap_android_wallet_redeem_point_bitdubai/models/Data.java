@@ -6,6 +6,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.in
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.RedeemPointStatistic;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 public class Data {
     public static List<DigitalAsset> getAllDigitalAssets(AssetRedeemPointWalletSubAppModule moduleManager) throws Exception {
-        List<AssetRedeemPointWalletList> assets = moduleManager.getAssetRedeemPointWalletBalances("walletPublicKeyTest");
+        List<AssetRedeemPointWalletList> assets = moduleManager.getAssetRedeemPointWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
 

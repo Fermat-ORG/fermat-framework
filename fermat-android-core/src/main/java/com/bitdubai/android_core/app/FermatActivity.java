@@ -23,7 +23,6 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -62,6 +61,7 @@ import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
 import com.bitdubai.android_core.app.common.version_1.classes.NetworkStateReceiver;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
+import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager.RuntimeStructureManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
@@ -83,6 +83,7 @@ import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -99,7 +100,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -110,12 +110,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatNotifications;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -125,12 +123,11 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -139,12 +136,8 @@ import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Queue;
 import java.util.Set;
 import java.util.Vector;
 
@@ -163,19 +156,16 @@ import static java.lang.System.gc;
 public abstract class FermatActivity extends AppCompatActivity
         implements
         WizardConfiguration,
-        FermatNotifications,
         PaintActivityFeatures,
-        Observer,
-        FermatNotificationListener,
         NavigationView.OnNavigationItemSelectedListener,
-        FermatRuntime,
         NetworkStateReceiver.NetworkStateReceiverListener,
         FermatStates,
-        FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>, ServiceCallback {
+        FermatActivityManager,
+        FermatListItemListeners<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>,
+        ServiceCallback {
 
 
     private static final String TAG = "fermat-core";
-    private static final int NOTIFICATION_ID = 3;
     private MainMenu mainMenu;
 
     /**
@@ -239,6 +229,7 @@ public abstract class FermatActivity extends AppCompatActivity
      * Listeners
      */
     private AppStatusListener appStatusListener;
+    private RuntimeStructureManager runtimeStructureManager;
 
     /**
      * Service
@@ -268,6 +259,8 @@ public abstract class FermatActivity extends AppCompatActivity
         }
         broadcastManager = new BroadcastManager(this);
         AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
+        runtimeStructureManager = new RuntimeStructureManager(this);
+
 
 //        try {
 //            networkStateReceiver = new NetworkStateReceiver();
@@ -636,7 +629,7 @@ public abstract class FermatActivity extends AppCompatActivity
     public Activity getActivityUsedType() {
         Activity activity = null;
         if (ActivityType.ACTIVITY_TYPE_SUB_APP == activityType) {
-            SubApp subApp = getSubAppRuntimeMiddleware().getLastSubApp();
+            SubApp subApp = getSubAppRuntimeMiddleware().getLastApp();
             activity = subApp.getLastActivity();
         } else if (ActivityType.ACTIVITY_TYPE_WALLET == activityType) {
             //activity = getWalletRuntimeManager().getLasActivity();
@@ -1225,12 +1218,6 @@ public abstract class FermatActivity extends AppCompatActivity
     protected void removecallbacks() {
         try {
 
-            try {
-                this.getNotificationManager().deleteObserver(this);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
             if(adapter!=null) adapter.destroyCurrentFragments();
             this.adapter = null;
             paintStatusBar(null);
@@ -1293,7 +1280,7 @@ public abstract class FermatActivity extends AppCompatActivity
                         //por ahora va esto
                             WalletManager manager = getWalletManager();
                             //WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
-                            DesktopFragment desktopFragment = DesktopFragment.newInstance(manager);
+                            DesktopFragment desktopFragment = DesktopFragment.newInstance((WalletManagerModule) manager);
                             fragments.add(desktopFragment);
 
                         break;
@@ -1423,7 +1410,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
 
     public SubAppRuntimeManager getSubAppRuntimeMiddleware() {
-        return FermatSystemUtils.getSubAppRuntimeMiddleware(getApplication());
+        return FermatSystemUtils.getSubAppRuntimeMiddleware();
     }
 
     /**
@@ -1433,7 +1420,7 @@ public abstract class FermatActivity extends AppCompatActivity
      */
 
     public WalletRuntimeManager getWalletRuntimeManager() {
-        return FermatSystemUtils.getWalletRuntimeManager(getApplication());
+        return FermatSystemUtils.getWalletRuntimeManager();
     }
 
     /**
@@ -1581,6 +1568,9 @@ public abstract class FermatActivity extends AppCompatActivity
         //navigationDrawerFragment.onDetach();
         if(appStatusListener != null)
              appStatusListener.clear();
+        if(runtimeStructureManager!=null){
+            runtimeStructureManager.clear();
+        }
 
         resetThisActivity();
         super.onDestroy();
@@ -1591,28 +1581,6 @@ public abstract class FermatActivity extends AppCompatActivity
         if(linearLayout!=null)
         linearLayout.setVisibility(View.GONE);
     }
-
-    @Override
-    public void changeActivityBack(String appBackPublicKey, String activityCode) {
-
-    }
-
-    @Override
-    public void changeStartActivity(int optionActivity){
-        FermatStructure fermatStructure = getAppInUse();
-        fermatStructure.changeActualStartActivity(optionActivity);
-        switch (activityType){
-            case ACTIVITY_TYPE_WALLET:
-                getWalletRuntimeManager().recordNAvigationStructure(fermatStructure);
-                break;
-            case ACTIVITY_TYPE_SUB_APP:
-                getSubAppRuntimeMiddleware().recordNAvigationStructure(fermatStructure);
-                break;
-            case ACTIVITY_TYPE_DESKTOP:
-                break;
-        }
-    }
-
 
 
     public void notificateBroadcast(String appPublicKey,String code){
@@ -1670,17 +1638,6 @@ public abstract class FermatActivity extends AppCompatActivity
     }
 
 
-    @Override
-    public void launchWalletNotification(String walletPublicKey, String notificationTitle, String notificationImageText, String notificationTextBody) {
-        //try {
-        //getWalletRuntimeManager().getWallet(walletPublicKey).getLastActivity();
-        notificateWallet(walletPublicKey, notificationTitle, notificationImageText, notificationTextBody);
-
-        //} catch (WalletRuntimeExceptions walletRuntimeExceptions) {
-        //    walletRuntimeExceptions.printStackTrace();
-        // }
-
-    }
     private FermatStructure getAppForPublicKey(String appPublicKey) {
         FermatStructure fermatStructure = null;
         try {
@@ -1692,76 +1649,6 @@ public abstract class FermatActivity extends AppCompatActivity
             walletRuntimeExceptions.printStackTrace();
         }
         return fermatStructure;
-    }
-
-    public void notificateWallet(String walletPublicKey, String notificationTitle, String notificationImageText, String notificationTextBody) {
-        //Log.i(TAG, "Got a new result: " + notification_title);
-        PendingIntent pi = null;
-        if (walletPublicKey != null) {
-            Intent intent = new Intent(this, WalletActivity.class);
-            intent.putExtra(WalletActivity.WALLET_PUBLIC_KEY, walletPublicKey);
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-
-            pi = PendingIntent
-                    .getActivity(this, 0, intent, 0);
-
-        }
-        Notification notification = new NotificationCompat.Builder(this)
-                .setTicker(notificationTitle)
-                .setSmallIcon(android.R.drawable.ic_menu_report_image)
-                .setContentTitle(notificationImageText)
-                .setContentText(notificationTextBody)
-                .setContentIntent(pi)
-                .setAutoCancel(true)
-                .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
-                .setLights(Color.YELLOW, 3000, 3000)
-                .build();
-        NotificationManager notificationManager = (NotificationManager)
-                getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notification);
-
-    }
-
-
-
-    @Override
-    public void update(Observable observable, Object o) {
-        try {
-
-            for (NotificationEvent notificationEvent : getNotificationManager().getPoolNotification()) {
-
-                switch (NotificationType.getByCode(notificationEvent.getNotificationType())) {
-                    case INCOMING_MONEY:
-                        launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        break;
-                    case INCOMING_CONNECTION:
-                        //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        break;
-                    case INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION:
-                        launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        break;
-                    case MONEY_REQUEST:
-                        break;
-                    case CLOUD_CLIENT_CLOSED:
-                    case CLOUD_CLIENT_CONNECTION_LOOSE:
-                    case CLOUD_CONNECTED_NOTIFICATION:
-                        //launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        launchIntent(notificationEvent.getTextBody());
-                        break;
-                    default:
-                        //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        launchIntent(notificationEvent.getTextBody());
-                        break;
-
-                }
-
-            }
-
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
-        }
-
     }
 
     public void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback ){
@@ -1786,62 +1673,6 @@ public abstract class FermatActivity extends AppCompatActivity
         }
         paintSideMenu(activity,activity.getSideMenu(),appsConnections);
         paintFooter(activity.getFooter(),appsConnections.getFooterViewPainter());
-
-    }
-
-    @Override
-    public synchronized void notificate(NotificationEvent notification) {
-        try {
-
-            Queue<NotificationEvent> queue = getNotificationManager().getPoolNotification();
-            Iterator<NotificationEvent> ite = queue.iterator();
-
-            while(ite.hasNext()){
-                NotificationEvent notificationEvent = ite.next();
-                switch (NotificationType.getByCode(notificationEvent.getNotificationType())) {
-                    case INCOMING_MONEY:
-                        launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        break;
-                    case INCOMING_CONNECTION:
-                        //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        break;
-                    case INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION:
-                        launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        break;
-                    case MONEY_REQUEST:
-
-                        break;
-                    case CLOUD_CONNECTED_NOTIFICATION:
-                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        break;
-                    case OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION:
-                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        break;
-                    case RECEIVE_REQUEST_PAYMENT_NOTIFICATION:
-                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        refreshSideMenu();
-                        break;
-                    case DENIED_REQUEST_PAYMENT_NOTIFICATION:
-                        launchWalletNotification(null, notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        refreshSideMenu();
-                        break;
-                    case CLOUD_CLIENT_CONNECTION_LOOSE:
-                    case CLOUD_CLIENT_CLOSED:
-                    case CLOUD_CLIENT_CONNECTED:
-                       // launchIntent(notification.getTextBody());
-                        break;
-                    default:
-                      //  launchIntent(notification.getTextBody());
-                        //launchWalletNotification(notificationEvent.getWalletPublicKey(), notificationEvent.getAlertTitle(), notificationEvent.getTextTitle(), notificationEvent.getTextBody());
-                        break;
-
-                }
-
-            }
-
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
-        }
 
     }
 
@@ -1874,8 +1705,8 @@ public abstract class FermatActivity extends AppCompatActivity
     private FermatListItemListeners getLisItemListenerMenu(){
         return this;
     }
-    protected abstract FermatStructure getAppInUse();
-    protected abstract FermatSession getFermatSessionInUse(String appPublicKey);
+    public abstract FermatStructure getAppInUse();
+    public abstract FermatSession getFermatSessionInUse(String appPublicKey);
 
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
@@ -1999,21 +1830,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
     public abstract void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses);
 
-    protected final void launchIntent(String s){
-        RemoteViews mContentView = new RemoteViews(getPackageName(), R.layout.test_tt);
-        mContentView.setTextViewText(R.id.txt_cloud, s);
-        Notification.Builder notification = new Notification.Builder(this).setSmallIcon(R.drawable.fermat_bitcoin2).setTicker("ticker")
-                .setPriority(Notification.PRIORITY_LOW).setAutoCancel(true)
-               // .setAutoCancel(false)
-              //  .setOngoing(true)
-                .setContent(mContentView)
-                .setWhen(System.currentTimeMillis());
-
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NOTIFICATION_ID,notification.build());
-    }
-
 
     @Override
     public void networkAvailable() {
@@ -2092,8 +1908,16 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public FermatRuntime getRuntimeManager(){
+        return runtimeStructureManager;
+    }
 
     public ScreenPagerAdapter getScreenAdapter() {
         return screenPagerAdapter;
+    }
+
+    public ActivityType getType() {
+        return activityType;
     }
 }
