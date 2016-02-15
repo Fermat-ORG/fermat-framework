@@ -22,6 +22,7 @@ public interface AssetUserWallet {
 
     AssetUserWalletBalance getBalance() throws CantGetTransactionsException;
 
+    List<AssetUserWalletTransaction> getAllTransactions(String assetPublicKey) throws CantGetTransactionsException;
 
     List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
 
