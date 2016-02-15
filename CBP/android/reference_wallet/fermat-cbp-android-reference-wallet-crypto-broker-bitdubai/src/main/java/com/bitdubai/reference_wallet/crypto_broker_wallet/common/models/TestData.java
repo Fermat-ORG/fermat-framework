@@ -365,9 +365,9 @@ public class TestData {
 
     public static List<EarningsPair> getEarningsPairs() {
         ArrayList<EarningsPair> earningsPairs = new ArrayList<>();
-        earningsPairs.add(new EarningsWizardData(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
-        earningsPairs.add(new EarningsWizardData(FiatCurrency.US_DOLLAR, CryptoCurrency.BITCOIN));
-        earningsPairs.add(new EarningsWizardData(CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR));
+        earningsPairs.add(new EarningsPairTestData(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
+        earningsPairs.add(new EarningsPairTestData(FiatCurrency.US_DOLLAR, CryptoCurrency.BITCOIN));
+        earningsPairs.add(new EarningsPairTestData(CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR));
 
         return earningsPairs;
     }
