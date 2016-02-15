@@ -655,7 +655,7 @@ public class AssetRedeemPointWalletDao implements DealsWithPluginFileSystem {
     private ActorAssetUser getActorAssetUser(final String userPublicKey) {
         ActorAssetUser actorAssetUser = null;
         try {
-            actorAssetUser = actorAssetUserManager.getActorRegisteredByPublicKey(userPublicKey);
+            actorAssetUser = actorAssetUserManager.getActorByPublicKey(userPublicKey);
         } catch (CantGetAssetUserActorsException | CantAssetUserActorNotFoundException e) {
                 System.out.println("COULDN'T FIND THE ACTOR ASSET USER, RETRIEVING AN UNKNOWN USER.");
             e.printStackTrace();
