@@ -253,6 +253,8 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
             e.printStackTrace();
+        } catch(Exception e){
+            errorManager.reportUnexpectedPluginException(communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
         }
 
     }

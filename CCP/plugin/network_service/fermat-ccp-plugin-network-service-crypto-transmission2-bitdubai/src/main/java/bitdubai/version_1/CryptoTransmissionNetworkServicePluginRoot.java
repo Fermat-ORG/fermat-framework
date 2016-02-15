@@ -9,8 +9,6 @@ package bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.CantStopAgentException;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -68,7 +66,6 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exc
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadata;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure.CryptoTransmissionMetadataType;
-
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceConnectionManager_V2;
@@ -114,8 +111,8 @@ import bitdubai.version_1.event_handlers.communication.VPNConnectionCloseNotific
 import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
 import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
-import bitdubai.version_1.structure.CryptoTransmissionTransactionRecordedAgent;
 import bitdubai.version_1.structure.CryptoTransmissionTransactionProtocolManager;
+import bitdubai.version_1.structure.CryptoTransmissionTransactionRecordedAgent;
 import bitdubai.version_1.structure.structure.CryptoTransmissionMessage;
 import bitdubai.version_1.structure.structure.CryptoTransmissionMessageType;
 import bitdubai.version_1.structure.structure.CryptoTransmissionMetadataRecord;
