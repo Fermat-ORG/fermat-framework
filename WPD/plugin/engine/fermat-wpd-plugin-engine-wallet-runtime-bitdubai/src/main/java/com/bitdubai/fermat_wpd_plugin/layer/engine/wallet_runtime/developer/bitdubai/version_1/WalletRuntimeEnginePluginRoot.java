@@ -279,6 +279,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         setNavigationStructureXml((WalletNavigationStructure)fermatStructure);
     }
 
+    @Override
+    public FermatStructure getLastApp() {
+        return lstWalletNavigationStructureOpen.get(lastWalletPublicKey);
+    }
+
     /**
      * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the
      * factory structure.

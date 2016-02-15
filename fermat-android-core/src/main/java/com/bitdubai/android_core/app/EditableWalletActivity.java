@@ -218,7 +218,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
             //changeActivity(activity.getBackActivity().getCode());
         } else {
 //            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-//            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+//            getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
 //            resetThisActivity();
 //            Intent intent = new Intent(this, SubAppActivity.class);
 //            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -231,7 +231,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
 //        if (getWalletRuntimeManager().getLastWallet().getLastActivity().getType()!= Activities.CWP_WALLET_MANAGER_MAIN){
 //            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
-//            getSubAppRuntimeMiddleware().getLastSubApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+//            getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
 //            resetThisActivity();
 //
 //            // TODO : Esto debe ir hacia la subAppActivity en caso de querer ver el home, en un futuro cuando se quiera ver la lista de walletAbiertas va ser distinto
@@ -445,12 +445,12 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     }
 
     @Override
-    protected FermatStructure getAppInUse() {
+    public FermatStructure getAppInUse() {
         return null;
     }
 
     @Override
-    protected FermatSession getFermatSessionInUse(String appPublicKey) {
+    public FermatSession getFermatSessionInUse(String appPublicKey) {
         return null;
     }
 
@@ -554,8 +554,4 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     }
 
 
-    @Override
-    public void changeActivityBack(String appBackPublicKey, String activityCode) {
-
-    }
 }

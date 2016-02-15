@@ -124,7 +124,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
      * AppRuntime Interface implementation.
      */
     @Override
-    public SubApp getLastSubApp() {
+    public SubApp getLastApp() {
         if (lastSubapPublicKey != null) {
             return listSubApp.get(lastSubapPublicKey);
         }

@@ -16,7 +16,7 @@ public interface SubAppRuntimeManager extends RuntimeManager {
      * @return Wallet in use
      */
 
-    public SubApp getLastSubApp ();
+    public SubApp getLastApp();
 
     /**
      *  Search SubApp in the subApp installed list
