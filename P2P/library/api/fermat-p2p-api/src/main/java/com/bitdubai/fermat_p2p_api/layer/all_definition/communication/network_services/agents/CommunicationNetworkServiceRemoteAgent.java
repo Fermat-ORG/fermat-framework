@@ -186,7 +186,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
              */
             if (communicationsVPNConnection.isConnected()){
 
-                System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
+                //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
