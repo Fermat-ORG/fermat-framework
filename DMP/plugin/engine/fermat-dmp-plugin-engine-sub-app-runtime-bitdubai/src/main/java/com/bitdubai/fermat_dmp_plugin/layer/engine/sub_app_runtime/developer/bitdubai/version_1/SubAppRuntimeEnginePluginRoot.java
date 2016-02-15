@@ -2345,11 +2345,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        /*runtimeMenuItem = new MenuItem();
+        runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Notifications");
         runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS);
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
 
 
