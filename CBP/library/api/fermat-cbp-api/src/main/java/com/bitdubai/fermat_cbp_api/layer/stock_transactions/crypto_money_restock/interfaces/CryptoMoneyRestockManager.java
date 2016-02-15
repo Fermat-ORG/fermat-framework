@@ -21,6 +21,7 @@ public interface CryptoMoneyRestockManager  extends FermatManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateCryptoMoneyRestockException;
 }

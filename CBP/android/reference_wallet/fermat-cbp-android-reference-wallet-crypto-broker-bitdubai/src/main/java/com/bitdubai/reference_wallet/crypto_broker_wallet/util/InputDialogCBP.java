@@ -144,8 +144,7 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     public String getName(){ return BankNameV; }
     public String getAlias(){ return AliasV; }
     public String getAccount(){ return AccountV; }
-    private void CustomInfo(){
-       BankNameV = BankName.getText().toString();
+    private void CustomInfo(){BankNameV = BankName.getText().toString();
         AliasV = Alias.getText().toString();
         AccountV = Account.getText().toString();
     }
@@ -165,32 +164,25 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     }
     public void onClick(View v) {
         int id = v.getId();
-
         if (id == R.id.btn_action_bank) {
             CustomInfo();
-            try {
-
+              try {
                     BankAccountNumber accountnumber =   WalletManager.newEmptyBankAccountNumber(BankNameV, TipoV, AliasV, AccountV, CurrencyV);
                     String bankWalletPublicKey = "banking_wallet"; //TODO:Revisar como podemos obtener el public key de la wallet Bank
                     WalletManager.addNewAccount(accountnumber, bankWalletPublicKey);
-
                     dismiss();
                 }catch(Exception e){
                   Log.e(TAG,"Error on:"+ e +" ------------VALORES DE VARIABLES----------->" +BankNameV+"->"+TipoV+"->"+AliasV+"->"+AccountV+"->"+CurrencyV);
                 }
             }
-
-
             if (id == R.id.btn_action_cash) {
                 try {
-                    String cashWalletPublicKey = "cash_wallet"; //TODO:Revisar como podemos obtener el public key de la wallet Cash
-                    WalletManager.createCashMoneyWallet(cashWalletPublicKey, CurrencyCash);
+                    String cashWalletPublicKey = "cash_wallet";
+                    WalletManager.createCashMoneyWallet(cashWalletPublicKey,CurrencyCash);
                     dismiss();
                 } catch (Exception e) {
                     Log.e(TAG, "Error on:" + e + " ------------VALORES DE VARIABLES----------->" + CurrencyCash);
                 }
-
-
             }
 
     }
