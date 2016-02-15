@@ -171,7 +171,6 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     @Override
     public List<AssetUserWalletTransaction> getAllTransactions(String assetPublicKey) throws CantGetTransactionsException {
-        assetUserWalletDao = new AssetUserWalletDao(database);
         List<AssetUserWalletTransaction> all = assetUserWalletDao.listsTransactionsByAssets(assetPublicKey);
         return all;
     }
