@@ -80,7 +80,7 @@ public class AmountToSellStepViewHolder extends StepViewHolder
 
             actualAmountToReceive = calculateBrokerCurrencyAmount(actualAmountToSell, exchangeRateValue);
             youWillReceiveTextValue.setText(String.format("%1$s %2$s", actualAmountToReceive, currencyToReceive));
-
+/*
             if (!valuesHasChanged) {
                 valuesHasChanged = !actualAmountToSell.equals(sourceAmountToSell);
                 setStatus(NegotiationStepStatus.CHANGED);
@@ -89,7 +89,7 @@ public class AmountToSellStepViewHolder extends StepViewHolder
                 setStatus(NegotiationStepStatus.ACCEPTED);
 
             }
-
+*/
         }
     }
 
