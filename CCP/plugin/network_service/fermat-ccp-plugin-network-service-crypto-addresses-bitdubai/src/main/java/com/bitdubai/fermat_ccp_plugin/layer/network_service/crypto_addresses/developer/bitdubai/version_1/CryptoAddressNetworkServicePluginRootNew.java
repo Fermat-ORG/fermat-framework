@@ -85,7 +85,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
     private LogManager logManager;
 
 
-
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
