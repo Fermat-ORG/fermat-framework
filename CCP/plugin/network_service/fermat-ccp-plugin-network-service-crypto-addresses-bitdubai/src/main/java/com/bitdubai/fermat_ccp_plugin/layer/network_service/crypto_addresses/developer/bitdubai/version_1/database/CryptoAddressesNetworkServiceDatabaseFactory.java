@@ -30,8 +30,8 @@ public final class CryptoAddressesNetworkServiceDatabaseFactory  {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    protected Database createDatabase(UUID   ownerId     ,
-                                      String databaseName) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId,
+                                   String databaseName) throws CantCreateDatabaseException {
 
         try {
 
