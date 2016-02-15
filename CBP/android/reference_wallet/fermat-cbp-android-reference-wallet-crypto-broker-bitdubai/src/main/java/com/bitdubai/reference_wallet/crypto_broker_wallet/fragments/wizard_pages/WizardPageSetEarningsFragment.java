@@ -184,16 +184,12 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                 @Override
                 public void onItemSelected(InstalledWallet selectedWallet) {
                     final Platforms platform = selectedWallet.getPlatform();
+
                     if (!platform.equals(Platforms.BANKING_PLATFORM)) {
-
-                        if (!containWallet(selectedWallet)) {
-                            data.setWalletInfo(selectedWallet.getWalletPublicKey(), selectedWallet.getWalletName());
-                            adapter.changeDataSet(earningDataList);
-                        }
-
-                    } else {
+                        data.setWalletInfo(selectedWallet.getWalletPublicKey(), selectedWallet.getWalletName());
+                        adapter.changeDataSet(earningDataList);
+                    } else
                         showBankAccountsDialog(selectedWallet, data);
-                    }
                 }
             });
 
@@ -226,10 +222,8 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                     bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
                     bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
 
-                    if (!containWallet(selectedWallet)) {
-                        data.setWalletInfo(selectedWallet.getWalletPublicKey(), selectedWallet.getWalletName());
-                        adapter.changeDataSet(earningDataList);
-                    }
+                    data.setWalletInfo(selectedWallet.getWalletPublicKey(), selectedWallet.getWalletName());
+                    adapter.changeDataSet(earningDataList);
                 }
             });
 
@@ -298,20 +292,5 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         }
 
         return list;
-    }
-
-    private boolean containWallet(InstalledWallet selectedWallet) {
-        if (earningDataList.isEmpty())
-            return false;
-
-        for (EarningsWizardData earningsData : earningDataList) {
-            String walletPublicKey = earningsData.getWalletPublicKey();
-            String selectedWalletPublicKey = selectedWallet.getWalletPublicKey();
-
-            if (walletPublicKey.equals(selectedWalletPublicKey))
-                return true;
-        }
-
-        return false;
     }
 }
