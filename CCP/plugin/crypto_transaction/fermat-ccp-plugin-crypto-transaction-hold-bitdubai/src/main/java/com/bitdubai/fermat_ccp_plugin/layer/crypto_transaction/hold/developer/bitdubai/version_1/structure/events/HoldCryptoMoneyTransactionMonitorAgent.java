@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.Agent;
@@ -143,7 +144,7 @@ public class HoldCryptoMoneyTransactionMonitorAgent implements Agent{
             long availableBalance = 0;
             for (CryptoHoldTransaction cryptoHoldTransaction : holdCryptoMoneyTransactionManager.getHoldCryptoMoneyTransactionList(filter)){
                 //TODO: Buscar el saldo disponible en la Bitcoin Wallet
-                availableBalance = bitcoinWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).getBalance();
+                availableBalance = bitcoinWalletManager.loadWallet(cryptoHoldTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).getBalance(BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
                 if(availableBalance >= cryptoHoldTransaction.getAmount()) {
                     //TODO: llamar metodo Hold de la wallet que se implementara luego que se pruebe las wallet CSH y BNK;
