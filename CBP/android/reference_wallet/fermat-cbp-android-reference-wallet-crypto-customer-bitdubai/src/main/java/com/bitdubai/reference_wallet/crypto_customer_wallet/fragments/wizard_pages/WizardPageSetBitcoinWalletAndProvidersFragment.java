@@ -289,9 +289,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                 @Override
                 public void onItemSelected(CurrencyPairAndProvider selectedItem) {
                     if (!containProvider(selectedItem)) {
-                       // selectedProviders.add((CurrencyPairAndProvider) selectedItem.getCurrencyFrom());
-                      //  selectedProviders.add((CurrencyPairAndProvider) selectedItem.getCurrencyTo());
-                        selectedProviders.add(selectedItem);
+                     selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
                         Log.i("DATA PROVIDERSS:",""+selectedProviders+" Item seleccionado: "+selectedItem);
                         showOrHideNoProvidersView();
