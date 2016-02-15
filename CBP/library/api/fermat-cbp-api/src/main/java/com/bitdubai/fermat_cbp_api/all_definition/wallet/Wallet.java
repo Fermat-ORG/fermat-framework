@@ -15,6 +15,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 
 import java.util.List;
 import java.util.UUID;
@@ -68,9 +69,16 @@ public interface Wallet {
     Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException;
 
     /**
-     * This method load the list CryptoBrokerStockTransaction
+     * This method load the update the transaction mark field seen in true
      * @return void
      * @exception CantGetTransactionCryptoBrokerWalletMatchingException
      */
     void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException;
+
+    /**
+     * This method load the list CurrencyMatching
+     * @return CurrencyMatching
+     * @exception CantGetTransactionCryptoBrokerWalletMatchingException
+     */
+    List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException;
 }
