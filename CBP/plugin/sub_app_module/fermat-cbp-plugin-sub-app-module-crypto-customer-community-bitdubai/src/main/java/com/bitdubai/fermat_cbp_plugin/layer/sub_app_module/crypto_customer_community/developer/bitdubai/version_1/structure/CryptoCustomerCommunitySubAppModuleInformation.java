@@ -81,4 +81,14 @@ public class CryptoCustomerCommunitySubAppModuleInformation implements CryptoCus
     public ConnectionState getConnectionState() {
         return this.connectionState;
     }
+
+    @Override
+    public String toString() {
+        return "CryptoCustomerCommunitySubAppModuleInformation{" +
+                "publicKey='" + publicKey + '\'' +
+                ", alias='" + alias + '\'' +
+                ", connectionState='" + connectionState + '\'' +
+                ", image=" + (image != null) +
+                '}';
+    }
 }

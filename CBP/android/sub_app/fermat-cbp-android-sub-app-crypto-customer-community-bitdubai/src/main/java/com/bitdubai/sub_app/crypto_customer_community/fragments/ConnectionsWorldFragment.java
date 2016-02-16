@@ -280,17 +280,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
         List<CryptoCustomerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoCustomerCommunitySearch cryptoCustomerCommunitySearch = moduleManager.getCryptoCustomerSearch(moduleManager.getSelectedActorIdentity());
-            List<CryptoCustomerCommunityInformation> result = cryptoCustomerCommunitySearch.getResult();
-
-            List<CryptoCustomerCommunityInformation> result2 = new ArrayList<>();
-            for(CryptoCustomerCommunityInformation i : result)
-                result2.add(new CryptoCustomerCommunitySubAppModuleInformation(i.getPublicKey(), i.getAlias(), i.getImage(), ConnectionState.CONNECTED));
-
-
-            dataSet.addAll(result2);
+            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            dataSet.addAll(result);
             offset = dataSet.size();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
