@@ -100,10 +100,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     @Override
     public List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListCryptoBrokersException {
 
-        //List<CryptoBrokerCommunityInformation> result2 = new ArrayList<>();
         List<CryptoBrokerCommunityInformation> worldBrokerList;
         List<CryptoBrokerActorConnection> actorConnections;
-        List<CryptoBrokerCommunityInformation> finalList = new ArrayList<>();;
 
         try{
             worldBrokerList = getCryptoBrokerSearch().getResult();
@@ -126,17 +124,17 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             throw new CantListCryptoBrokersException(e, "", "Error trying to list actor connections.");
         }
 
-
-        for(CryptoBrokerCommunityInformation worldBroker : worldBrokerList){
-            for(CryptoBrokerActorConnection connectedBroker : actorConnections){
+        CryptoBrokerCommunityInformation worldBroker;
+        for(int i = 0; i < worldBrokerList.size(); i++)
+        {
+            worldBroker = worldBrokerList.get(i);
+            for(CryptoBrokerActorConnection connectedBroker : actorConnections)
+            {
                 if(worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
-                    finalList.add(new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), ConnectionState.CONNECTED));
-                else
-                    finalList.add(worldBroker);
+                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), ConnectionState.CONNECTED));
             }
         }
-
-        return finalList;
+        return worldBrokerList;
      }
 
     /**
