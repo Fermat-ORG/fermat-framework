@@ -14,6 +14,8 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.Ope
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.open_negotiation_details.OpenNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.open_negotiation_details.OpenNegotiationAddNoteFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings.SettingsBankAccountsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings.SettingsProvidersFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_negotiation.StartNegotiationActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contracts_history.ContractsHistoryActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.MarketRateStatisticsFragment;
@@ -81,7 +83,10 @@ public class CryptoCustomerWalletFragmentFactory extends FermatFragmentFactory<C
                 return SettingsMylocationsFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS:
                 return CreateNewLocationFragment.newInstance();
-
+            case CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS:
+                return SettingsBankAccountsFragment.newInstance();
+            case CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS:
+                return SettingsProvidersFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS:
                 return ContractDetailActivityFragment.newInstance();
             default:
