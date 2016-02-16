@@ -27,7 +27,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -288,13 +288,13 @@ public class WizardActivity extends FermatActivity
     }
 
     @Override
-    protected FermatStructure getAppInUse() {
+    public FermatStructure getAppInUse() {
         //TODO: a implementar
         return null;
     }
 
     @Override
-    protected FermatSession getFermatSessionInUse(String appPublicKey) {
+    public FermatSession getFermatSessionInUse(String appPublicKey) {
         //TODO: obtener la session de forma indistinta
         return null;
     }
@@ -348,11 +348,6 @@ public class WizardActivity extends FermatActivity
     @Override
     public void nextScreen() {
         doNext();
-    }
-
-    @Override
-    public void changeActivityBack(String appBackPublicKey, String activityCode) {
-
     }
 
     @Override

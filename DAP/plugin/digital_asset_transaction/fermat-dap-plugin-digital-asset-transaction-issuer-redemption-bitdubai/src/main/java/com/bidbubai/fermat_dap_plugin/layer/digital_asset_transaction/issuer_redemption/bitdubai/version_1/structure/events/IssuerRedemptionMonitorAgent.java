@@ -24,6 +24,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerifi
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.issuer_appropriation.interfaces.IssuerAppropriationManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -51,7 +52,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
     private AssetVaultManager assetVaultManager;
     private IssuerAppropriationManager issuerAppropriationManager;
     //TODO REMOVE HARDCODE!!!
-    private String issuerPublicKeyWallet = "walletPublicKeyTest";
+    private String issuerPublicKeyWallet = WalletUtilities.WALLET_PUBLIC_KEY;
     private String btcWallet;
 
     public IssuerRedemptionMonitorAgent(AssetIssuerWalletManager assetIssuerWalletManager,

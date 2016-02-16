@@ -23,6 +23,7 @@ public class AppStatusListener implements AppStatusCallbackChanges {
         for (AbstractFermatFragment fragment : activityWeakReference.get().getScreenAdapter().getLstCurrentFragments()) {
             fragment.onUpdateViewUIThred(appsStatus.getCode());
         }
+        //FermatSystemUtils.getAndroidCoreModule().getSettingsManager().
     }
 
     public void clear() {

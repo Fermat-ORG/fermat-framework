@@ -603,7 +603,7 @@ public class AssetUserActorDao implements Serializable {
                 }
                 else
                 {
-                    createActorAssetUserActorCryptoNetwork(actorAssetPublicKey,blockchainNetworkType,cryptoAddress);
+                    createActorAssetUserActorCryptoNetwork(actorAssetPublicKey, blockchainNetworkType, cryptoAddress);
                 }
 
                 if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
@@ -642,7 +642,7 @@ public class AssetUserActorDao implements Serializable {
             }
                     table.loadToMemory();
                     DatabaseTableRecord record = table.getEmptyRecord();
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME,actorAssetPublicKey);
+                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME, actorAssetPublicKey);
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
                     record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
@@ -1439,7 +1439,7 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
-    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUsersListException {
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUsersListException {
         DatabaseTable tableGroupMember;
 
         String actorAssetUserPublicKey = "";
@@ -1456,8 +1456,13 @@ public class AssetUserActorDao implements Serializable {
             tableGroupMember.loadToMemory();
             for (DatabaseTableRecord record : tableGroupMember.getRecords()) {
                 actorAssetUserPublicKey = record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME);
-                ActorAssetUser actorAssetUser = getActorAssetUserRegisteredByPublicKey(actorAssetUserPublicKey);
-                actorAssetUserList.add(actorAssetUser);
+                AssetUserActorRecord actorAssetUser = (AssetUserActorRecord) getActorAssetUserRegisteredByPublicKey(actorAssetUserPublicKey);
+
+                //I will add on the group only if I have a crypto address in current network
+                getCryptoAddressNetwork(actorAssetUser, blockchainNetworkType);
+                if(actorAssetUser.getCryptoAddress() != null) {
+                    actorAssetUserList.add(actorAssetUser);
+                }
             }
 
             // Return the list values.
