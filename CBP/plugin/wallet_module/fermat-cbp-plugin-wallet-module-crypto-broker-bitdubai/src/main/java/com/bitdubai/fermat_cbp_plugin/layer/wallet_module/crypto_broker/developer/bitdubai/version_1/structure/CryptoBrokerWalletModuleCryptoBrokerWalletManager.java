@@ -576,8 +576,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException {
-        List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
-        return cryptoBrokerIdentities;//getListOfIdentitiesTestData();
+        return cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
     }
 
     @Override
