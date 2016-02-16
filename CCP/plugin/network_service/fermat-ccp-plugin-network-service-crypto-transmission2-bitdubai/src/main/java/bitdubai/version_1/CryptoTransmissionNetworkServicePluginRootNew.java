@@ -57,14 +57,13 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -74,10 +73,10 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 import java.util.regex.Pattern;
 
 import bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseFactory;
@@ -100,35 +99,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         CryptoTransmissionNetworkServiceManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
-
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
-    private EventManager eventManager;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
-    private PluginDatabaseSystem pluginDatabaseSystem;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
-    private Broadcaster broadcaster;
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
-
-    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
-    private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
-
-
-
-    /**
-     * Represent the flag to start only once
-     */
-    private AtomicBoolean flag = new AtomicBoolean(false);
 
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
@@ -190,9 +160,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         try {
 
 
-                    logManager.log(CryptoTransmissionNetworkServicePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoTransmissionNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting", "TemplateNetworkServicePluginRoot - Starting");
-
-
             executorService = Executors.newFixedThreadPool(1);
 
                             /*
@@ -220,15 +187,15 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
                     outgoingNotificationDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
 
-                    // change message state to process again first time
-                    reprocessMessage();
-
                     //declare a schedule to process waiting request message
                     this.startTimer();
 
 
+            System.out.println("-----------------------\n" +
+                    "CRYPTO TRANSMISSION INICIADO -----------------------");
 
-                }catch(Exception exception){
+
+        }catch(Exception exception){
 
                     exception.printStackTrace();
 
@@ -273,6 +240,10 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                     if (!incomingNotificationsDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord)) {
                         try {
                             CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord1 = incomingNotificationsDao.getMetadata(cryptoTransmissionMetadata.getTransactionId());
+                            System.out.println("-----------------------\n" +
+                                    "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                    "-----------------------\n STATE: " + cryptoTransmissionMetadataRecord1.getCryptoTransmissionProtocolState());
+
                             switch (cryptoTransmissionMetadataRecord1.getCryptoTransmissionMetadataState()) {
                                 case CREDITED_IN_OWN_WALLET:
                                     // send inform to other ns
@@ -287,6 +258,38 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                                     sendMessageToActor(cryptoTransmissionMetadataRecord);
 
                                     break;
+                                case SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE:
+                                    lauchNotification();
+
+                                    // El destination soy yo porque me lo estan enviando
+                                    // El sender es el otro y es a quien le voy a responder
+                                    // Notifico recepcion de metadata
+                                    cryptoTransmissionMetadataRecord = new CryptoTransmissionMetadataRecord(
+                                            cryptoTransmissionMetadata.getTransactionId(),
+                                            CryptoTransmissionMessageType.RESPONSE,
+                                            cryptoTransmissionMetadata.getRequestId(),
+                                            cryptoTransmissionMetadata.getCryptoCurrency(),
+                                            cryptoTransmissionMetadata.getCryptoAmount(),
+                                            cryptoTransmissionMetadata.getDestinationPublicKey(),
+                                            cryptoTransmissionMetadata.getSenderPublicKey(),
+                                            cryptoTransmissionMetadata.getAssociatedCryptoTransactionHash(),
+                                            cryptoTransmissionMetadata.getPaymentDescription(),
+                                            CryptoTransmissionProtocolState.PRE_PROCESSING_SEND,
+                                            CryptoTransmissionMetadataType.METADATA_SEND,
+                                            cryptoTransmissionMetadata.getTimestamp(),
+                                            false,
+                                            0,
+                                            CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE
+                                    );
+                                    outgoingNotificationDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
+
+                                    sendMessageToActor(cryptoTransmissionMetadataRecord);
+
+                                    System.out.print("-----------------------\n" +
+                                            "GUARDANDO RESPUESTA CRYPTO METADATA PARA ENVIAR, LO VI Y AHORA LE DIGO QUE YA TENGO LA METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
+                                        break;
+
                             }
                         } catch (CantGetCryptoTransmissionMetadataException e) {
                             e.printStackTrace();
@@ -294,9 +297,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
                     }
 
-                    System.out.println("-----------------------\n" +
-                            "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
-                            "-----------------------\n STATE: " + cryptoTransmissionMetadataRecord.getCryptoTransmissionProtocolState());
 
                     break;
                 case RESPONSE:
@@ -476,20 +476,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
     }
 
-    @Override
-    protected void onClientConnectionClose() {
-        // This network service don t need to do anything in this method
-    }
 
-    @Override
-    protected void onClientSuccessfulReconnect() {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
-    protected void onClientConnectionLoose() {
-        // This network service don t need to do anything in this method
-    }
 
     @Override
     protected void onFailureComponentConnectionRequest(PlatformComponentProfile remoteParticipant) {
@@ -501,20 +488,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
     }
 
-    @Override
-    protected void onReceivePlatformComponentProfileRegisteredList(CopyOnWriteArrayList<PlatformComponentProfile> remotePlatformComponentProfileRegisteredList) {
-
-    }
-
-    @Override
-    protected void onCompleteActorProfileUpdate(PlatformComponentProfile platformComponentProfileUpdate) {
-
-    }
-
-    @Override
-    protected void onFailureComponentRegistration(PlatformComponentProfile platformComponentProfile) {
-
-    }
 
     @Override
     public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
@@ -547,7 +520,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         try {
             outgoingNotificationDao.changeStatusNotSentMessage();
 
-            Map<String, Object> filters = new HashMap<>();
+           Map<String, Object> filters = new HashMap<>();
             filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionProtocolState.PRE_PROCESSING_SEND.getCode());
             List<CryptoTransmissionMetadataRecord> lstActorRecord = outgoingNotificationDao.findAll(
                     filters
@@ -592,45 +565,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         }
     }
 
-    @Override
-    public CommunicationsClientConnection getCommunicationsClientConnection() {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
-    }
-
-//    @Override
-//    public ErrorManager getErrorManager() {
-//        return errorManager;
-//    }
-//
-//    @Override
-//    public EventManager getEventManager() {
-//        return eventManager;
-//    }
-//
-//    @Override
-//    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-//        return wsCommunicationsCloudClientManager;
-//    }
-//
-//    @Override
-//    public PluginDatabaseSystem getPluginDatabaseSystem() {
-//        return pluginDatabaseSystem;
-//    }
-//
-//    @Override
-//    public PluginFileSystem getPluginFileSystem() {
-//        return pluginFileSystem;
-//    }
-//
-//    @Override
-//    public Broadcaster getBroadcaster() {
-//        return broadcaster;
-//    }
-//
-//    @Override
-//    public LogManager getLogManager() {
-//        return logManager;
-//    }
 
 
     /**
@@ -658,6 +592,8 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
             cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
             cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
             outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
+
+            sendMessageToActor(cryptoTransmissionMetadataRecord);
         }
         catch(CantUpdateRecordDataBaseException e) {
             throw  new CantSetToCreditedInWalletException("Can't Set Metadata To Credited In Wallet Exception",e,"","Can't update record");
@@ -733,6 +669,8 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                 0,
                 CryptoTransmissionMetadataState.SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE
         );
+
+        sendMessageToActor(cryptoTransmissionMetadata);
 
         try {
             outgoingNotificationDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadata);
@@ -989,7 +927,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
          */
            outgoingNotificationDao.changeStatusNotSentMessage();
 
-            Map<String, Object> filters = new HashMap<>();
+          /*  Map<String, Object> filters = new HashMap<>();
             filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionProtocolState.PRE_PROCESSING_SEND.getCode());
             List<CryptoTransmissionMetadataRecord> lstActorRecord = outgoingNotificationDao.findAll(
                     filters
@@ -997,7 +935,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
             for (CryptoTransmissionMetadataRecord cpr : lstActorRecord) {
                 sendMessageToActor(cpr);
-            }
+            }*/
         } catch (Exception  e) {
             System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO MESSAGES");
             e.printStackTrace();
@@ -1172,7 +1110,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                     }
                 });
                 break;
-
         }
 
     }

@@ -35,6 +35,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
         }
     }
 
+
     @Override
     public int getAmountToPay() {
         return 100;
