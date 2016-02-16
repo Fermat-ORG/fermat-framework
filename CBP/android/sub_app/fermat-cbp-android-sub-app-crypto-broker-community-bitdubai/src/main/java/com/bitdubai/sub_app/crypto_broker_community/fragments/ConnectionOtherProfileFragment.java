@@ -96,10 +96,9 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
         disconnect.setVisibility(View.GONE);
         cancel.setVisibility(View.GONE);
 
-        //try{
-            ConnectionState connectionState = this.cryptoBrokerCommunityInformation.getConnectionState();
-            //ConnectionState connectionState = moduleManager.getActorConnectionState(cryptoBrokerCommunityInformation.getPublicKey());
-
+        ConnectionState connectionState = this.cryptoBrokerCommunityInformation.getConnectionState();
+        if(connectionState != null)
+        {
             switch (connectionState) {
                 case CONNECTED:
                     disconnect.setVisibility(View.VISIBLE);
@@ -110,9 +109,9 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
                 default:
                     connect.setVisibility(View.VISIBLE);
             }
-        //}catch (CantValidateConnectionStateException e) {
-        //    e.printStackTrace();
-        //}
+        }
+        else
+            connect.setVisibility(View.VISIBLE);
 
 
         //Show user image if it has one, otherwise show default user image
@@ -168,18 +167,21 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
                 Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
         } else if(i == R.id.btn_cancel) {
-            try {
-                CancelDialog cancelDialog = new CancelDialog(getActivity(), appSession, null,
-                        cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
-                cancelDialog.setTitle("Cancel");
-                cancelDialog.setDescription("Want to cancel connection with");
-                cancelDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
-                cancelDialog.setOnDismissListener(this);
-                cancelDialog.show();
-            } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
-                errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
-            }
+
+            //TODO: verificar el getModuleManager().cancelCryptoBroker(cryptoBrokerCommunityInformation.getConnectionId());
+            //TODO: antes de habilitar esto.
+//            try {
+//                CancelDialog cancelDialog = new CancelDialog(getActivity(), appSession, null,
+//                        cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
+//                cancelDialog.setTitle("Cancel");
+//                cancelDialog.setDescription("Want to cancel connection with");
+//                cancelDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
+//                cancelDialog.setOnDismissListener(this);
+//                cancelDialog.show();
+//            } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
+//                errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+//                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+//            }
         }
     }
 
