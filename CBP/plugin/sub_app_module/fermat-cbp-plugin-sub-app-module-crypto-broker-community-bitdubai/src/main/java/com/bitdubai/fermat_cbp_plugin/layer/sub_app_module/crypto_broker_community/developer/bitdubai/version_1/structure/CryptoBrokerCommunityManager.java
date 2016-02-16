@@ -115,7 +115,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
             final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
-            search.addConnectionState(ConnectionState.CONNECTED);
+            //search.addConnectionState(ConnectionState.CONNECTED);
+            //search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
 
             actorConnections = search.getResult(Integer.MAX_VALUE, 0);
 
@@ -131,7 +132,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             for(CryptoBrokerActorConnection connectedBroker : actorConnections)
             {
                 if(worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
-                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), ConnectionState.CONNECTED, connectedBroker.getConnectionId()));
+                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), connectedBroker.getConnectionState(), connectedBroker.getConnectionId()));
             }
         }
         return worldBrokerList;
