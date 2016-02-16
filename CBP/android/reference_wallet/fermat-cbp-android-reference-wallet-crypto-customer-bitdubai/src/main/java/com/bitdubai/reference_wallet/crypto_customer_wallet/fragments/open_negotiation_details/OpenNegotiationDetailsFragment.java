@@ -20,9 +20,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -34,6 +31,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
@@ -42,7 +41,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.CancelTextDialog;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.SingleTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseDateTimeDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
@@ -355,23 +354,28 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onCancelNegotiationClicked() {
-//        Toast.makeText(getActivity(), "CANCEL NEGOTIATION", Toast.LENGTH_LONG).show();
-        CancelTextDialog cancelTextDialog = null;
 
-        cancelTextDialog = new CancelTextDialog(getActivity(), appSession, appResourcesProviderManager);
-        cancelTextDialog.setAcceptBtnListener(new CancelTextDialog.OnClickAcceptListener() {
+        SingleTextDialog singleTextDialog = null;
+
+        singleTextDialog = new SingleTextDialog(getActivity(), appSession, appResourcesProviderManager);
+        singleTextDialog.setAcceptBtnListener(new SingleTextDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
 
-                Toast.makeText(getActivity(), "CANCEL NEGOTIATION. REASON: " + newValue, Toast.LENGTH_LONG).show();
+                try {
+                    CustomerBrokerNegotiationInformation negotiationInformation = walletManager.cancelNegotiation(negotiationInfo,newValue);
+                    Toast.makeText(getActivity(), "NEGOTIATION IS CANCELATED" + newValue, Toast.LENGTH_LONG).show();
+
+                } catch (CouldNotCancelNegotiationException | CantCancelNegotiationException e){
+                    Toast.makeText(getActivity(), "ERROR IN CANCELLATION OF NEGOTIATION: "+ e.DEFAULT_MESSAGE, Toast.LENGTH_LONG).show();
+                }
 
             }
         });
 
-        cancelTextDialog.setEditTextValue("");
-        cancelTextDialog.configure(R.string.ccw_cancellation_negotiation, R.string.ccw_cancellation_reason_title);
-
-        cancelTextDialog.show();
+        singleTextDialog.setEditTextValue("");
+        singleTextDialog.configure(R.string.ccw_cancellation_negotiation, R.string.ccw_cancellation_reason_title);
+        singleTextDialog.show();
 
     }
     /*-------------------------------------------------------------------------------------------------
