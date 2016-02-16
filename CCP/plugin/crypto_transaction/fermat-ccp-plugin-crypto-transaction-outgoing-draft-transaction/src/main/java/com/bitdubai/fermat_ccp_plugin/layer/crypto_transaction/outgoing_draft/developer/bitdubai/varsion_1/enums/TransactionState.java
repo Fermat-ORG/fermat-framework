@@ -6,11 +6,12 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by eze on 2015.09.21..
  */
 public enum TransactionState {
+
+
     NEW("NEW"),
-    PERSISTED_IN_AVAILABLE ("PIA"),
-    PERSISTED_IN_WALLET ("PIW"),
+    DEBITED_IN_WALLET ("DIW"),
     SENT_TO_CRYPTO_VOULT("STCV"),
-    SUCCESSFUL_SENT("SS"),
+    SUCCESSFUL_SIG("SS"),
     CANCELED("CLD");
 
 
@@ -25,10 +26,9 @@ public enum TransactionState {
     public static TransactionState getByCode(String code) throws InvalidParameterException {
         switch (code){
             case "NEW":  return TransactionState.NEW;
-            case "PIA":  return TransactionState.PERSISTED_IN_AVAILABLE;
-            case "PIW":  return TransactionState.PERSISTED_IN_WALLET;
+            case "DIW":  return TransactionState.DEBITED_IN_WALLET;
             case "STCV": return TransactionState.SENT_TO_CRYPTO_VOULT;
-            case "SS":   return TransactionState.SUCCESSFUL_SENT;
+            case "SS":   return TransactionState.SUCCESSFUL_SIG;
             case "CLD":  return TransactionState.CANCELED;
             default:
                 /**
