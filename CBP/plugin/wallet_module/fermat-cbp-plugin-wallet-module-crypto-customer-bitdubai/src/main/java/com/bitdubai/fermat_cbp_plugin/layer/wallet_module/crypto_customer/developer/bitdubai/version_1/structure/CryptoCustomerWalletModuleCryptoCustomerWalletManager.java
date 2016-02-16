@@ -450,7 +450,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     public CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException {
         negotiation.setCancelReason(reason);
 
-        System.out.print("\nREFERENCE WALLET - CRYPTO CUSTOMER: CANCELLATION NEGOTIATION. REASON: "+negotiation.getCancelReason());
+        System.out.print("\nREFERENCE WALLET - CRYPTO CUSTOMER: CANCELLATION NEGOTIATION. REASON: "+reason+" vs "+negotiation.getCancelReason());
         return negotiation;
     }
 
