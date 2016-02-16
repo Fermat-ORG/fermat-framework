@@ -242,7 +242,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                             CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord1 = incomingNotificationsDao.getMetadata(cryptoTransmissionMetadata.getTransactionId());
                             System.out.println("-----------------------\n" +
                                     "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: " + cryptoTransmissionMetadataRecord1.getCryptoTransmissionProtocolState());
+                                    "-----------------------\n STATE: " + cryptoTransmissionMetadataRecord1.getCryptoTransmissionMetadataState());
 
                             switch (cryptoTransmissionMetadataRecord1.getCryptoTransmissionMetadataState()) {
                                 case CREDITED_IN_OWN_WALLET:
@@ -290,6 +290,50 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                                             "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
                                         break;
 
+                                case CREDITED_IN_DESTINATION_WALLET:
+                                    // Guardo estado
+                                    //update message in DONE and Close connection with another device - End message
+                                    outgoingNotificationDao.changeCryptoTransmissionProtocolStateAndNotificationState(
+                                            cryptoTransmissionMetadataRecord.getTransactionId(),
+                                            CryptoTransmissionProtocolState.DONE,
+                                            cryptoTransmissionMetadataRecord.getCryptoTransmissionMetadataState()
+                                    );
+
+                                    System.out.print("CryptoTransmission Close Connection - End Message");
+
+                                    getCommunicationNetworkServiceConnectionManager().closeConnection(cryptoTransmissionMetadata.getSenderPublicKey());
+
+                                    System.out.println("-----------------------\n" +
+                                            "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET \n" +
+                                            "----CERRANDO CONEXION");
+                                    // deberia ver si tengo que lanzar un evento acá
+
+                                    break;
+
+                                case SEEN_BY_DESTINATION_VAULT:
+                                    // deberia ver si tengo que lanzar un evento acá
+                                    outgoingNotificationDao.changeCryptoTransmissionProtocolStateAndNotificationState(
+                                            cryptoTransmissionMetadataRecord.getTransactionId(),
+                                            cryptoTransmissionMetadataRecord.getCryptoTransmissionProtocolState(),
+                                            cryptoTransmissionMetadataRecord.getCryptoTransmissionMetadataState()
+                                    );
+
+                                    cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.RECEIVED);
+                                    cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
+                                    cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
+                                    outgoingNotificationDao.update(cryptoTransmissionMetadata);
+
+
+                                    lauchNotification();
+
+                                    System.out.println("-----------------------\n" +
+                                            "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: SEEN_BY_DESTINATION_VAULT ");
+                                    System.out.println("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
+                                    break;
+
+
                             }
                         } catch (CantGetCryptoTransmissionMetadataException e) {
                             e.printStackTrace();
@@ -335,82 +379,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                             System.out.println("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
 
                             break;
-                        case SEEN_BY_DESTINATION_VAULT:
-                            // deberia ver si tengo que lanzar un evento acá
-                            outgoingNotificationDao.changeCryptoTransmissionProtocolStateAndNotificationState(
-                                    cryptoTransmissionResponseMessage.getTransactionId(),
-                                    cryptoTransmissionResponseMessage.getCryptoTransmissionProtocolState(),
-                                    cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()
-                            );
 
-                            cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.RECEIVED);
-                            cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
-                            cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
-                            outgoingNotificationDao.update(cryptoTransmissionMetadata);
-
-
-                            lauchNotification();
-
-                            System.out.println("-----------------------\n" +
-                                    "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: SEEN_BY_DESTINATION_VAULT ");
-                            System.out.println("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
-                            break;
-
-                        case CREDITED_IN_DESTINATION_WALLET:
-                            // Guardo estado
-                            //update message in DONE and Close connection with another device - End message
-                            outgoingNotificationDao.changeCryptoTransmissionProtocolStateAndNotificationState(
-                                    cryptoTransmissionResponseMessage.getTransactionId(),
-                                    CryptoTransmissionProtocolState.DONE,
-                                    cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()
-                            );
-
-                            System.out.print("CryptoTransmission Close Connection - End Message");
-
-                               getCommunicationNetworkServiceConnectionManager().closeConnection(cryptoTransmissionMetadata.getSenderPublicKey());
-
-                            System.out.println("-----------------------\n" +
-                                    "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: CREDITED_IN_DESTINATION_WALLET \n" +
-                                    "----CERRANDO CONEXION");
-                            // deberia ver si tengo que lanzar un evento acá
-
-                            break;
-
-                        case SEEN_BY_OWN_NETWORK_SERVICE_WAITING_FOR_RESPONSE:
-
-                            lauchNotification();
-
-                            // El destination soy yo porque me lo estan enviando
-                            // El sender es el otro y es a quien le voy a responder
-                            // Notifico recepcion de metadata
-                         cryptoTransmissionMetadataRecord = new CryptoTransmissionMetadataRecord(
-                                    cryptoTransmissionMetadata.getTransactionId(),
-                                    CryptoTransmissionMessageType.RESPONSE,
-                                    cryptoTransmissionMetadata.getRequestId(),
-                                    cryptoTransmissionMetadata.getCryptoCurrency(),
-                                    cryptoTransmissionMetadata.getCryptoAmount(),
-                                    cryptoTransmissionMetadata.getDestinationPublicKey(),
-                                    cryptoTransmissionMetadata.getSenderPublicKey(),
-                                    cryptoTransmissionMetadata.getAssociatedCryptoTransactionHash(),
-                                    cryptoTransmissionMetadata.getPaymentDescription(),
-                                    CryptoTransmissionProtocolState.PRE_PROCESSING_SEND,
-                                    CryptoTransmissionMetadataType.METADATA_SEND,
-                                 cryptoTransmissionMetadata.getTimestamp(),
-                                    false,
-                                    0,
-                                    CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_NETWORK_SERVICE
-                            );
-                            outgoingNotificationDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
-
-                            sendMessageToActor(cryptoTransmissionMetadataRecord);
-
-                            System.out.print("-----------------------\n" +
-                                    "GUARDANDO RESPUESTA CRYPTO METADATA PARA ENVIAR, LO VI Y AHORA LE DIGO QUE YA TENGO LA METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
-
-                            break;
                     }
 
                     break;
@@ -430,8 +399,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     @Override
     public void onSentMessage(FermatMessage messageSent) {
 
-        System.out.println("-----------------------\n" +
-                "CRYPTO METADATA ENVIADA----------------------- ");
+
         CryptoTransmissionMessage cryptoTransmissionMetadata = new Gson().fromJson(messageSent.getContent(), CryptoTransmissionMessage.class);
         try {
             if (cryptoTransmissionMetadata.getCryptoTransmissionMetadataState() == CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET) {
@@ -451,6 +419,11 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        System.out.println("-----------------------\n" +
+                "CRYPTO METADATA ENVIADA----------------------- \n" +
+                "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
+
 
     }
 
@@ -591,6 +564,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
             String pkAux = cryptoTransmissionMetadataRecord.getDestinationPublicKey();
             cryptoTransmissionMetadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
             cryptoTransmissionMetadataRecord.setSenderPublicKey(pkAux);
+
             outgoingNotificationDao.update(cryptoTransmissionMetadataRecord);
 
             sendMessageToActor(cryptoTransmissionMetadataRecord);
