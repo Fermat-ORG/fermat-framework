@@ -42,6 +42,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.CancelTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseDateTimeDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseTextDialog;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
@@ -355,10 +356,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onCancelNegotiationClicked() {
 //        Toast.makeText(getActivity(), "CANCEL NEGOTIATION", Toast.LENGTH_LONG).show();
-        ClauseTextDialog clauseTextDialog = null;
+        CancelTextDialog cancelTextDialog = null;
 
-        clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
-        clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+        cancelTextDialog = new CancelTextDialog(getActivity(), appSession, appResourcesProviderManager);
+        cancelTextDialog.setAcceptBtnListener(new CancelTextDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
 
@@ -367,10 +368,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             }
         });
 
-        clauseTextDialog.setEditTextValue("");
-        clauseTextDialog.configure(R.string.ccw_cancellation_negotiation, R.string.ccw_cancellation_reason_title);
+        cancelTextDialog.setEditTextValue("");
+        cancelTextDialog.configure(R.string.ccw_cancellation_negotiation, R.string.ccw_cancellation_reason_title);
 
-        clauseTextDialog.show();
+        cancelTextDialog.show();
 
     }
     /*-------------------------------------------------------------------------------------------------
