@@ -363,8 +363,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             public void onClick(String newValue) {
 
                 try {
-                    CustomerBrokerNegotiationInformation negotiationInformation = walletManager.cancelNegotiation(negotiationInfo,newValue);
-                    Toast.makeText(getActivity(), "NEGOTIATION IS CANCELATED" + newValue, Toast.LENGTH_LONG).show();
+                    git 
+                    CustomerBrokerNegotiationInformation negotiation = walletManager.cancelNegotiation(negotiationInfo,newValue);
+                    Toast.makeText(getActivity(), "NEGOTIATION IS CANCELATED. REASON: " + negotiation.getCancelReason(), Toast.LENGTH_LONG).show();
+                    changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
 
                 } catch (CouldNotCancelNegotiationException | CantCancelNegotiationException e){
                     Toast.makeText(getActivity(), "ERROR IN CANCELLATION OF NEGOTIATION: "+ e.DEFAULT_MESSAGE, Toast.LENGTH_LONG).show();
