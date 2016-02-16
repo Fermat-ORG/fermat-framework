@@ -669,6 +669,21 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
     }
 
     /**
+     * This method returns the pending to bank credit list.
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetContractListException
+     */
+    public List<BusinessTransactionRecord> getPendingToCashCreditList() throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetContractListException {
+        return getBusinessTransactionRecordList(
+                ContractTransactionStatus.PENDING_CREDIT_CASH_WALLET.getCode(),
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+    }
+
+    /**
      * This method returns a CustomerOnlinePaymentRecordList according the arguments.
      * @param key String with the search key.
      * @param keyColumn String with the key column name.
