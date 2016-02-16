@@ -204,7 +204,6 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         clauseViewHolder.bindData(negotiationInformation, clause, position);
         clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
         clauseViewHolder.setListener(clauseListener);
-        negotiationInformation = clauseViewHolder.getNegotiationInformation();
 
         final int clauseNumber = position + 1;
         final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);

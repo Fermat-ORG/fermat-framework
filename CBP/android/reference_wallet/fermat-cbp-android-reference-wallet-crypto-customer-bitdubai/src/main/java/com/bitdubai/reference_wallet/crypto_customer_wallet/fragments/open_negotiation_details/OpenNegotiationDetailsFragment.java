@@ -64,7 +64,7 @@ import java.util.UUID;
  */
 //FermatWalletExpandableListFragment<GrouperItem>
 public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
-        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener{
+        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener/*, ClauseViewHolder.ListenerConfirm*/{
 
     private static final String TAG = "OpenNegotiationFrag";
 
@@ -114,6 +114,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
+            valuesHasChanged = false;
 
             //LIST OF MAKET RATE OF BROKER
             brokerCurrencyQuotationlist = TestData.getMarketRateForCurrencyTest();
@@ -151,6 +152,24 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         bindData();
 
         return layout;
+    }
+
+    @Override
+    public void onConfirmCLicked(final ClauseInformation clause){
+        if ((clause.getStatus().getCode() != NegotiationStepStatus.ACCEPTED.getCode()) && (clause.getStatus().getCode() != NegotiationStepStatus.CHANGED.getCode())){
+
+            if(clauseInformationType != clause.getType())
+                valuesHasChanged = false;
+
+            if (valuesHasChanged)
+                putClause(clause, ClauseStatus.CHANGED);
+            else
+                putClause(clause, ClauseStatus.ACCEPTED);
+
+            valuesHasChanged = false;
+        }
+
+        adapter.changeDataSet(negotiationInfo);
     }
 
     @Override
@@ -242,8 +261,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
                         @Override
                         public void onItemSelected(BankAccountNumber newValue) {
-                            String bankAccount = newValue.getAlias() + " - " + newValue.getAccount();
-                            putClause(clause.getType(), bankAccount);
+                            putClause(clause, newValue.getAccount(), getStatusClauseChange(clause.getStatus().getCode()));
                             adapter.changeDataSet(negotiationInfo);
                         }
                     });
@@ -260,7 +278,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                         @Override
                         public void onItemSelected(String newValue) {
-                            putClause(clause.getType(), newValue);
+                            putClause(clause, newValue, getStatusClauseChange(clause.getStatus().getCode()));
                             adapter.changeDataSet(negotiationInfo);
                         }
                     });
@@ -287,15 +305,15 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         }
     }
 
-    @Override
-    public boolean getValuesHasChanged(){
-        return valuesHasChanged;
-    }
-
-    @Override
-    public ClauseType getClauseType(){
-        return clauseInformationType;
-    }
+//    @Override
+//    public boolean getValuesHasChanged(){
+//        return valuesHasChanged;
+//    }
+//
+//    @Override
+//    public ClauseType getClauseType(){
+//        return clauseInformationType;
+//    }
 
     @Override
     public void onSendButtonClicked() {
@@ -583,9 +601,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void validateChange(String oldValue, String newValue) {
         valuesHasChanged = false;
 
-//        Toast.makeText(getActivity(), "VALIDATE CHAGE: " + oldValue + " != " + newValue, Toast.LENGTH_LONG).show();
         if (oldValue != newValue) {
-//            Toast.makeText(getActivity(), "CHANGE VALUE", Toast.LENGTH_LONG).show();
             valuesHasChanged = true;
         }
     }
@@ -731,7 +747,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
                     String bankAccount = "INSERT BANK ACCOUNT IN SETTINGS WALLET.";
                     if(bankAccountList.size() > 0)
-                        bankAccount = bankAccountList.get(0).getAlias()+" - "+bankAccountList.get(0).getAccount();
+                        bankAccount = bankAccountList.get(0).getAccount();
 
                     putClause(ClauseType.CUSTOMER_BANK_ACCOUNT, bankAccount);
                 }
@@ -825,14 +841,37 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
+    public void putClause(final ClauseInformation clause, final ClauseStatus status) {
+
+        final ClauseType type = clause.getType();
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() { return clause.getClauseID(); }
+
+            @Override
+            public ClauseType getType() { return type; }
+
+            @Override
+            public String getValue() { return clause.getValue(); }
+
+            @Override
+            public ClauseStatus getStatus() { return status; }
+        };
+
+        this.negotiationInfo.getClauses().put(type, clauseInformation);
+    }
+
     private ClauseStatus getStatusClauseChange(String statusClauseCode){
 
         ClauseStatus statusClause = null;
-        String valuesH = "FALSE";
-        if(valuesHasChanged) valuesH = "TRUE";
-        Toast.makeText(getActivity(), "CHANGE STATUS valuesH: "+valuesH+" StatusClause: " +statusClauseCode +" = "+ NegotiationStepStatus.ACCEPTED.getCode(), Toast.LENGTH_LONG).show();
+//        String valuesH = "FALSE";
+//        if(valuesHasChanged) valuesH = "TRUE";
+//        Toast.makeText(getActivity(), "CHANGE STATUS valuesH: "+valuesH+" StatusClause: " +statusClauseCode +" = "+ NegotiationStepStatus.ACCEPTED.getCode(), Toast.LENGTH_LONG).show();
         if(valuesHasChanged && statusClauseCode.equals(NegotiationStepStatus.ACCEPTED.getCode()))
             statusClause = ClauseStatus.CHANGED;
+
+//        valuesHasChanged = false;
 
         return statusClause;
     }

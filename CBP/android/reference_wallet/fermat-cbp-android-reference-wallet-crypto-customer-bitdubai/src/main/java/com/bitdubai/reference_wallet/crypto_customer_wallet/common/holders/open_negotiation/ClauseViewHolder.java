@@ -33,6 +33,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected TextView titleTextView;
 
     protected Listener listener;
+//    protected ListenerConfirm listenerConfirm;
     protected ClauseInformation clause;
     protected CustomerBrokerNegotiationInformation negotiationInformation;
     protected int clausePosition;
@@ -75,13 +76,24 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
 
     public interface Listener {
         void onClauseCLicked(Button triggerView, ClauseInformation clause, int clausePosition);
-        boolean getValuesHasChanged();
-        ClauseType getClauseType();
+        void onConfirmCLicked(ClauseInformation clause);
+//        boolean getValuesHasChanged();
+//        ClauseType getClauseType();
     }
+/*
+    public interface ListenerConfirm{
+        void onConfirmCLicked();
+    }*/
 
     private void configClauseViews(View itemView) {
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { listener.onConfirmCLicked(clause); }
+        });
+
+/*
+            confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -106,6 +118,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
                 modifyData(actualStatus);
             }
         });
+        */
     }
 
     public void setStatus(NegotiationStepStatus stepStatus) {
