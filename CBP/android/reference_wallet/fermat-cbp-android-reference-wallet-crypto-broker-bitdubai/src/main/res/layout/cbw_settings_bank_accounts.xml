@@ -96,16 +96,9 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="4"
             android:gravity="center"
-            android:text="@string/cbw_finish"
+            android:text="@string/cbw_save"
             android:textColor="@color/white"/>
 
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/arrow_right_selected"
-            tools:ignore="contentDescription"
-            android:visibility="gone"/>
     </LinearLayout>
 
 </LinearLayout>

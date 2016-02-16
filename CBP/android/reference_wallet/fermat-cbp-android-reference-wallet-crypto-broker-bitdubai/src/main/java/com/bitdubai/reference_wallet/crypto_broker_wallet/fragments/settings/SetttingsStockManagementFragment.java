@@ -464,7 +464,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     @Override
     public FermatAdapter getAdapter() {
         if(adapter == null){
-            adapter = new StockDestockAdapter(getActivity(), associatedSettings);
+            adapter = new StockDestockAdapter(getActivity(), associatedSettings,walletManager);
             adapter.setFermatListEventListener(this);
         }
         return adapter;
