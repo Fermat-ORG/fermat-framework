@@ -157,8 +157,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
         // change message state to process again first time
         reprocessMessage();
-
-
     }
 
     @Override
