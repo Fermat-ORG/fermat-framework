@@ -408,7 +408,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     }*/
 
     /*@Override
-    public void deleteButtonClicked(InstalledWallet data, final int position) {
+    public void checkedChanged(InstalledWallet data, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle(R.string.cbw_delete_wallet_dialog_title).setMessage(R.string.cbw_delete_wallet_dialog_msg);
