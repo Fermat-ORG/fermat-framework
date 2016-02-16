@@ -87,9 +87,8 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
             String transactionId = params[1];
             //find last transaction
             switch (notificationType){
-                case "TRANSACTION":
-                        CryptoWalletTransaction transaction= moduleManager.getTransaction(UUID.fromString(transactionId), referenceWalletSession.getAppPublicKey());
-
+                case "TRANSACTION_ARRIVE":
+                    CryptoWalletTransaction transaction= moduleManager.getTransaction(UUID.fromString(transactionId), referenceWalletSession.getAppPublicKey());
                     notification = new BitcoinWalletNotificationPainter("Received money","Fulano send "+ WalletUtils.formatBalanceString(transaction.getAmount()) ,"","");
 
 
