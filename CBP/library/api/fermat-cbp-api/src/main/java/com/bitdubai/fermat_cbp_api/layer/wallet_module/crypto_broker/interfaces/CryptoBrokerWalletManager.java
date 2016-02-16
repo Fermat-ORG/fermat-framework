@@ -30,6 +30,10 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantC
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteBankAccountSaleException;
@@ -117,12 +121,12 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @param brokerWalletPublicKey the wallet public key
      * @return A summary of the current market rate for the different selected providers
      * @throws CantGetProvidersCurrentExchangeRatesException Cant get current Index Summary for the selected providers
-     * @throws CryptoBrokerWalletNotFoundException                   Cant find the installed wallet data
-     * @throws CantGetCryptoBrokerWalletSettingException             Cant find the settings for the wallet with the public key
-     * @throws CantGetProviderException                              Cant get the provider from the CER platform
-     * @throws UnsupportedCurrencyPairException                      The Currency pair fot the selected provider is not supported
-     * @throws CantGetExchangeRateException                          Cant get current the exchange rate for the currency pair in the provider
-     * @throws InvalidParameterException                             Invalid parameters
+     * @throws CryptoBrokerWalletNotFoundException           Cant find the installed wallet data
+     * @throws CantGetCryptoBrokerWalletSettingException     Cant find the settings for the wallet with the public key
+     * @throws CantGetProviderException                      Cant get the provider from the CER platform
+     * @throws UnsupportedCurrencyPairException              The Currency pair fot the selected provider is not supported
+     * @throws CantGetExchangeRateException                  Cant get current the exchange rate for the currency pair in the provider
+     * @throws InvalidParameterException                     Invalid parameters
      */
     Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String brokerWalletPublicKey) throws CantGetProvidersCurrentExchangeRatesException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, InvalidParameterException;
 
@@ -424,9 +428,10 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * This method load the instance saveCryptoBrokerWalletSpreadSetting
+     *
      * @param
      * @return CryptoBrokerWalletSettingSpread
-     * @exception CantSaveCryptoBrokerWalletSettingException
+     * @throws CantSaveCryptoBrokerWalletSettingException
      */
     CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
@@ -504,7 +509,6 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * Checks if wallet exists in wallet database
-     *
      */
     boolean cashMoneyWalletExists(String walletPublicKey);
 
@@ -517,6 +521,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * This method returns the CustomerBrokerContractSale associated to a negotiationId
+     *
      * @param negotiationId
      * @return
      * @throws CantGetListCustomerBrokerContractSaleException
@@ -526,6 +531,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * This method returns the currency type from a contract
+     *
      * @param customerBrokerContractSale
      * @param contractDetailType
      * @return
@@ -538,6 +544,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
 
     /**
      * This method returns the ContractStatus by contractHash/Id
+     *
      * @param contractHash
      * @return
      * @throws CantGetListCustomerBrokerContractSaleException
@@ -559,4 +566,19 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @throws CantAckPaymentException
      */
     ContractStatus ackPayment(String contractHash) throws CantAckPaymentException;
+
+    /**
+     * Through the method <code>associatePair</code> you can associate an earnings pair to the wallet in which we're working.
+     * Automatically will be generated an UUID to the earnings pair, with it, we can identify the same.
+     *
+     * @param earningCurrency        the currency which we decided to extract the earnings.
+     * @param linkedCurrency         the currency that we're linking to the previous selected currency to conform the pair.
+     * @param earningWalletPublicKey the wallet's public key that we're associating and where we will deposit the earnings.
+     * @param brokerWalletPublicKey  the broker wallet's public key who we're associating this earning setting
+     * @return an instance of the well formed associated EarningPair-
+     * @throws CantAssociatePairException     if something goes wrong.
+     * @throws PairAlreadyAssociatedException if the pair is already associated.
+     * @throws CantLoadEarningSettingsException if something goes wrong trying to get the earning settings.
+     */
+    EarningsPair addEarningsPairToEarningSettings(Currency earningCurrency, Currency linkedCurrency, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantAssociatePairException, PairAlreadyAssociatedException, CantLoadEarningSettingsException;
 }

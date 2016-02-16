@@ -23,8 +23,10 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
@@ -198,13 +200,14 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
 
             if (walletManager.getListOfIdentities().isEmpty()) {
                 presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                        .setBannerRes(R.drawable.banner_crypto_broker)
-                        .setIconRes(R.drawable.crypto_broker)
-                        .setBody(R.string.cbw_wizard_merchandise_dialog_body)
-                        .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
-                        .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
-                        .build();
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                            .setBannerRes(R.drawable.banner_crypto_broker)
+                            .setIconRes(R.drawable.crypto_broker)
+                            .setBody(R.string.cbw_wizard_merchandise_dialog_body)
+                            .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
+                            .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
+                            .build();
+
             } else {
                 presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                         .setSubTitle(R.string.cbw_crypto_broker_wallet_merchandises_subTitle)
@@ -216,11 +219,26 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                         .build();
             }
 
-            presentationDialog.setOnDismissListener(this);
+
+            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                                        public void onDismiss(DialogInterface pre) {
+                                                            try {
+                                                                if (walletManager.getListOfIdentities().isEmpty()) {
+                                                                    getActivity().onBackPressed();
+                                                                } else {
+                                                                    invalidate();
+                                                                }
+                                                            } catch (CantGetCryptoBrokerIdentityListException e) {
+                                                                e.printStackTrace();
+                                                            } catch (CantListCryptoBrokerIdentitiesException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    });
+
 
             final SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager = moduleManager.getSettingsManager();
             final CryptoBrokerWalletPreferenceSettings preferenceSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
-
             final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
             if (showDialog)
                 presentationDialog.show();
