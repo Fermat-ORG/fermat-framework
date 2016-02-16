@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -52,6 +53,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
     private CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation;
     private Button connect;
     private Button disconnect;
+    private Button cancel;
 
     /**
      * Create a new instance of this fragment
@@ -85,15 +87,25 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
         connect.setOnClickListener(this);
         disconnect = (Button) rootView.findViewById(R.id.btn_disconect);
         disconnect.setOnClickListener(this);
+        cancel = (Button) rootView.findViewById(R.id.btn_cancel);
+        cancel.setOnClickListener(this);
 
         //Show connect or disconnect button depending on actor's connection
+        connect.setVisibility(View.GONE);
+        disconnect.setVisibility(View.GONE);
+        cancel.setVisibility(View.GONE);
         try{
-            if(moduleManager.isActorConnected(cryptoBrokerCommunityInformation.getPublicKey())) {
-                disconnect.setVisibility(View.VISIBLE);
-                connect.setVisibility(View.GONE);
-            }else {
-                connect.setVisibility(View.VISIBLE);
-                disconnect.setVisibility(View.GONE);
+            ConnectionState connectionState = moduleManager.getActorConnectionState(cryptoBrokerCommunityInformation.getPublicKey());
+
+            switch (connectionState) {
+                case CONNECTED:
+                    disconnect.setVisibility(View.VISIBLE);
+                    break;
+                case PENDING_REMOTELY_ACCEPTANCE:
+                    cancel.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    connect.setVisibility(View.VISIBLE);
             }
         }catch (CantValidateConnectionStateException e) {
             e.printStackTrace();

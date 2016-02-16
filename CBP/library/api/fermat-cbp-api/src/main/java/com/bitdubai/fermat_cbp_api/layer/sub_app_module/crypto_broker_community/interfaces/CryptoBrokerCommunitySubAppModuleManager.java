@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
@@ -169,13 +170,14 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
     int getCryptoBrokersWaitingYourAcceptanceCount();
 
     /**
-     *
+     * The method <code>getActorConnectionState</code> returns the ConnectionState of a given actor
+     * with respect to the selected actor
      * @param publicKey
      *
      * @return
      *
      * @throws CantValidateConnectionStateException if something goes wrong.
      */
-    boolean isActorConnected(String publicKey) throws CantValidateConnectionStateException;
+    ConnectionState getActorConnectionState(String publicKey) throws CantValidateConnectionStateException;
 
 }
