@@ -1,10 +1,13 @@
 package com.mati.image_slider;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.support.v13.app.FragmentPagerAdapter;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import android.content.Context;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -15,38 +18,55 @@ import java.util.List;
 /**
  * ScreenPagerAdapter to add new subApp
  */
-public class ScreenPagerAdapter extends FragmentPagerAdapter {
+public abstract class ScreenPagerAdapter<I> extends PagerAdapter {
 
+    private List<I> lstItems;
+    private Context context;
+    private LayoutInflater layoutInflater;
 
-    private List<AbstractFermatFragment> fragments;
+    public ScreenPagerAdapter(Context context,List<I> lstItems) {
+        this.context = context;
+        this.lstItems = lstItems;
 
-    /**
-     * @param fm
-     * @param fragments
-     */
-
-    public ScreenPagerAdapter(FragmentManager fm, List<AbstractFermatFragment> fragments) {
-        super(fm);
-        this.fragments = fragments;
-    }
-    /*
-     * Return the Fragment associated with a specified position.
-     */
-    @Override
-    public Fragment getItem(int position) {
-        return this.fragments.get(position);
     }
 
-    /*
-     * Return the number of views available.
-     */
+    public ScreenPagerAdapter(Context context) {
+        this.context = context;
+        this.lstItems = new ArrayList<>();
+    }
+
     @Override
     public int getCount() {
-        return this.fragments.size();
+        return lstItems.size();
     }
 
-    public List<AbstractFermatFragment> getLstCurrentFragments() {
-        return fragments;
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return view == ((View)object);
     }
 
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        container.removeView((View) object);
+        super.destroyItem(container, position, object);
+    }
+
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View item_view = layoutInflater.inflate(getItemLayout(lstItems.get(position),position),container,false);
+        bindHolder(item_view);
+        ((ViewPager)container).addView(item_view);
+        return item_view;
+    }
+
+    protected abstract void bindHolder(View item_view);
+
+
+    protected abstract int getItemLayout(I item,int position);
+
+
+    public void changeListItems(List<I> listItems) {
+        this.lstItems = listItems;
+    }
 }
