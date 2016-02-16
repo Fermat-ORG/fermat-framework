@@ -102,6 +102,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
                 "publicKey='" + publicKey + '\'' +
                 ", alias='" + alias + '\'' +
                 ", connectionState='" + connectionState + '\'' +
+                ", connectionId='" + connectionId + '\'' +
                 ", image=" + (image != null) +
                 '}';
     }
