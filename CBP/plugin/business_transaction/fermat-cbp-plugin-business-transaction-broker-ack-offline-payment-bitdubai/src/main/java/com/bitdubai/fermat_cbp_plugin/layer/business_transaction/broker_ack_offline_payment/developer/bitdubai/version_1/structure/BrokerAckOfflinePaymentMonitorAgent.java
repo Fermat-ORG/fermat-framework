@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_off
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -543,18 +544,26 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
                 ClauseType clauseType;
                 FiatCurrency customerCurrency=FiatCurrency.US_DOLLAR;
-                BigDecimal customerAmount;
+                BigDecimal customerAmount=BigDecimal.ZERO;
+                String customerAmountString;
+                long customerAmountLong;
+                String account="bankAccount";
                 for (Clause clause : clauses) {
                     clauseType = clause.getType();
                     if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY)) {
                         customerCurrency=FiatCurrency.getByCode(clause.getValue());
                     }
                     if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)) {
-                        customerCurrency=FiatCurrency.getByCode(clause.getValue());
+                        customerAmountString=clause.getValue();
+                        customerAmountLong=parseToLong(customerAmountString);
+                        customerAmount=BigDecimal.valueOf(customerAmountLong);
+                    }
+                    if (clauseType.equals(ClauseType.BROKER_BANK_ACCOUNT)) {
+                        account=clause.getValue();
                     }
                 }
                 //Get the Bank wallet public key
-                String bankWalletPublicKey;
+                String bankWalletPublicKey="bankWalletPublicKey";
                 CryptoBrokerWallet cryptoBrokerWallet=cryptoBrokerWalletManager.
                         loadCryptoBrokerWallet(
                                 cryptoWalletPublicKey);
@@ -572,17 +581,21 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         walletBankCurrency=cryptoBrokerWalletAssociatedSetting.getMerchandise();
                         if(customerCurrency.getCode().equals(walletBankCurrency.getCode())){
                             bankWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
-
                         }
                     }
                 }
                 //Create the BankTransactionParametersRecord
-                /*BankTransactionParametersRecord bankTransactionParametersRecord=
+                BankTransactionParametersRecord bankTransactionParametersRecord=
                         new BankTransactionParametersRecord(
                                 pluginId.toString(),
                                 bankWalletPublicKey,
                                 actorPublicKey,
-                                )*/
+                                customerAmount,
+                                account,
+                                customerCurrency,
+                                "Payment from Contract "+contractHash
+                                );
+                return bankTransactionParametersRecord;
             } catch (CantGetListCustomerBrokerContractSaleException e) {
                 throw new CantGetBankTransactionParametersRecordException(
                         e,
@@ -590,19 +603,63 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         "Cannot get the CustomerBrokerContractSale by contractHash/Id:\n"+
                                 contractHash);
             } catch (ObjectNotSetException e) {
-                e.printStackTrace();
+                throw new CantGetBankTransactionParametersRecordException(
+                        e,
+                        "Getting the BankTransactionParametersRecord",
+                        "An object to set is null");
             } catch (CantGetListSaleNegotiationsException e) {
-                e.printStackTrace();
+                throw new CantGetBankTransactionParametersRecordException(
+                        e,
+                        "Getting the BankTransactionParametersRecord",
+                        "Cannot get the negotiation list");
             } catch (CryptoBrokerWalletNotFoundException e) {
-                e.printStackTrace();
+                throw new CantGetBankTransactionParametersRecordException(
+                        e,
+                        "Getting the BankTransactionParametersRecord",
+                        "Cannot get the crypto wallet");
             } catch (CantGetCryptoBrokerWalletSettingException e) {
-                e.printStackTrace();
+                throw new CantGetBankTransactionParametersRecordException(
+                        e,
+                        "Getting the BankTransactionParametersRecord",
+                        "Cannot get the wallet setting");
             } catch (InvalidParameterException e) {
-                e.printStackTrace();
+                throw new CantGetBankTransactionParametersRecordException(
+                        e,
+                        "Getting the BankTransactionParametersRecord",
+                        "An invalid parameter is detected");
             } catch (CantGetListClauseException e) {
-                e.printStackTrace();
+                throw new CantGetBankTransactionParametersRecordException(
+                        e,
+                        "Getting the BankTransactionParametersRecord",
+                        "Cannot get the clauses");
+            } catch (Exception exception){
+                throw new CantGetBankTransactionParametersRecordException(
+                        exception,
+                        "Getting the BankTransactionParametersRecord",
+                        "Unexpected exception");
             }
-return null;
+        }
+
+        /**
+         * This method parse a String object to a long object
+         * @param stringValue
+         * @return
+         * @throws InvalidParameterException
+         */
+        public long parseToLong(String stringValue) throws InvalidParameterException {
+            if(stringValue==null){
+                throw new InvalidParameterException("Cannot parse a null string value to long");
+            }else{
+                try{
+                    return Long.valueOf(stringValue);
+                }catch (Exception exception){
+                    throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
+                            FermatException.wrapException(exception),
+                            "Parsing String object to long",
+                            "Cannot parse "+stringValue+" string value to long");
+                }
+
+            }
         }
 
         /**
