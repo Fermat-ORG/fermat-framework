@@ -165,11 +165,11 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             @Override
             public void onClick(View view) {
                 String cashWalletPublicKey = "cash_wallet";
-                if (walletManager.cashMoneyWalletExists(cashWalletPublicKey)==false){
+                if (walletManager.cashMoneyWalletExists(cashWalletPublicKey) == false) {
                     InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
                     inputDialogCBP.DialogType(2);
                     inputDialogCBP.show();
-                }else {
+                } else {
                     showWalletsDialog(Platforms.CASH_PLATFORM);
                 }
             }
@@ -200,13 +200,13 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
 
             if (walletManager.getListOfIdentities().isEmpty()) {
                 presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                            .setBannerRes(R.drawable.banner_crypto_broker)
-                            .setIconRes(R.drawable.crypto_broker)
-                            .setBody(R.string.cbw_wizard_merchandise_dialog_body)
-                            .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
-                            .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
-                            .build();
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                        .setBannerRes(R.drawable.banner_crypto_broker)
+                        .setIconRes(R.drawable.crypto_broker)
+                        .setBody(R.string.cbw_wizard_merchandise_dialog_body)
+                        .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
+                        .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
+                        .build();
 
             } else {
                 presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -220,21 +220,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             }
 
 
-            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                                        public void onDismiss(DialogInterface pre) {
-                                                            try {
-                                                                if (walletManager.getListOfIdentities().isEmpty()) {
-                                                                    getActivity().onBackPressed();
-                                                                } else {
-                                                                    invalidate();
-                                                                }
-                                                            } catch (CantGetCryptoBrokerIdentityListException e) {
-                                                                e.printStackTrace();
-                                                            } catch (CantListCryptoBrokerIdentitiesException e) {
-                                                                e.printStackTrace();
-                                                            }
-                                                        }
-                                                    });
+            presentationDialog.setOnDismissListener(this);
 
 
             final SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager = moduleManager.getSettingsManager();
@@ -473,8 +459,12 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
         try {
             //Buscar la identidad
             List<CryptoBrokerIdentity> listOfIdentities = walletManager.getListOfIdentities();
-            if (listOfIdentities != null)
+            if (listOfIdentities.isEmpty())
+                getActivity().onBackPressed();
+            else {
+                invalidate();
                 selectedIdentity = listOfIdentities.get(0);
+            }
         } catch (FermatException e) {
             Log.e(TAG, e.getMessage(), e);
             if (errorManager != null)
