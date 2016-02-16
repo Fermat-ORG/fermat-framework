@@ -106,7 +106,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
-            assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database, pluginFileSystem, walletId, actorAssetUserManager, issuerManager, redeemPointManager);
+            assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database, pluginFileSystem, pluginId, actorAssetUserManager, issuerManager, redeemPointManager);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeRedeemPointWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
