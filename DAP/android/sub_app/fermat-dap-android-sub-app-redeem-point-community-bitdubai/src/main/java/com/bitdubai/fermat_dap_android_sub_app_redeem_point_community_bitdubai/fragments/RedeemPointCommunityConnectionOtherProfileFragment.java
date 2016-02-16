@@ -59,6 +59,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     private FermatTextView userCryptoAddres;
     private FermatTextView userCryptoCurrency;
     private FermatTextView redeemRegistrationDate;
+    private FermatTextView redeemLastConnectionDate;
     //private FermatTextView userBlockchainNetworkType;
     //private IntraUserModuleManager manager;
     private static RedeemPointCommunitySubAppModuleManager manager;
@@ -110,7 +111,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         //userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         userCryptoAddres = (FermatTextView) rootView.findViewById(R.id.cryptoAddress);
         userCryptoCurrency = (FermatTextView) rootView.findViewById(R.id.cryptoCurrency);
-        redeemRegistrationDate = (FermatTextView) rootView.findViewById(R.id.redeemRegistrationDate);
+        //redeemRegistrationDate = (FermatTextView) rootView.findViewById(R.id.redeemRegistrationDate);
+        redeemLastConnectionDate= (FermatTextView) rootView.findViewById(R.id.redeemLastConnectionDate);
         //userBlockchainNetworkType = (FermatTextView) rootView.findViewById(R.id.blockchainNetworkType);
         connectionRequestSend = (Button) rootView.findViewById(R.id.btn_connection_request_send);
         connectionRequestRejected = (Button) rootView.findViewById(R.id.btn_connection_request_reject);
@@ -167,8 +169,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                 userCryptoCurrency.setText("None");
             }
 
-            redeemRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
-
+            //redeemRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
+            redeemLastConnectionDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
             /*if(actor.getBlockchainNetworkType() != null) {
                 userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().getCode());
             }else {
