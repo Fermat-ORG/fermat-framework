@@ -5,7 +5,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="#FFFFFF"
-              android:orientation="vertical">
+              android:orientation="vertical"
+    android:weightSum="1">
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/ccw_text_dialog_title"
@@ -22,6 +23,24 @@
         tools:text="Title"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+        android:layout_width="328dp"
+        android:layout_height="100dp"
+        android:inputType="text"
+        android:ems="50"
+        android:id="@+id/editText"
+        android:layout_weight="2.18"
+        android:layout_marginBottom="26dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="26dp"
+        android:singleLine="true"
+        android:textColor="#1d1d26"
+        android:textColorHint="#9a9a9c"
+        android:textSize="16sp"
+        app:typeface="ROBOTO_REGULAR"
+        tools:hint="Cancellation Reason"/>
+
+    <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
         android:id="@+id/ccw_text_dialog_edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,13 +51,13 @@
         android:layout_marginTop="26dp"
         android:ellipsize="end"
         android:ems="10"
-        android:inputType="numberDecimal"
+        android:inputType="textLongMessage"
         android:singleLine="true"
         android:textColor="#1d1d26"
         android:textColorHint="#9a9a9c"
         android:textSize="16sp"
         app:typeface="ROBOTO_REGULAR"
-        tools:hint="Amount"/>
+        tools:hint="Amount"/>-->
 
     <View
         android:layout_width="match_parent"
