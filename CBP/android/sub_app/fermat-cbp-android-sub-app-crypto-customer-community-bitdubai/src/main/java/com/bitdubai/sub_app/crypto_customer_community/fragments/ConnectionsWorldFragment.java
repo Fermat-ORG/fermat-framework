@@ -346,8 +346,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
 
     @Override
     public void onItemClickListener(CryptoCustomerCommunityInformation data, int position) {
-        //appSession.setData(ACTOR_SELECTED, data);
-        //changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        appSession.setData(ACTOR_SELECTED, data);
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

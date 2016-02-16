@@ -53,8 +53,8 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
         this.publicKey = actorConnection.getPublicKey();
         this.alias     = actorConnection.getAlias()    ;
         this.image     = actorConnection.getImage()    ;
-        this.connectionState = null;
-        this.connectionId = null;
+        this.connectionState = actorConnection.getConnectionState();
+        this.connectionId = actorConnection.getConnectionId();
     }
 
     public CryptoBrokerCommunitySubAppModuleInformation(final CryptoBrokerExposingData exposingData) {
@@ -102,6 +102,7 @@ public class CryptoBrokerCommunitySubAppModuleInformation implements CryptoBroke
                 "publicKey='" + publicKey + '\'' +
                 ", alias='" + alias + '\'' +
                 ", connectionState='" + connectionState + '\'' +
+                ", connectionId='" + connectionId + '\'' +
                 ", image=" + (image != null) +
                 '}';
     }
