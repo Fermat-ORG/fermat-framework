@@ -22,6 +22,9 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.int
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDao;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetBrokersConnectedException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantNewConnectionEventException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantNewsEventException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +34,7 @@ import java.util.UUID;
 /**
  * Created by angel on 4/02/16.
  */
+
 public class ActorCustomerExtraDataEventActions {
 
     private CryptoBrokerManager cryptoBrokerANSManager;
@@ -43,15 +47,15 @@ public class ActorCustomerExtraDataEventActions {
         this.cryptoCustomerActorConnectionManager = cryptoCustomerActorConnectionManager;
     }
 
-    public void handleNewsEvent(){
+    public void handleNewsEvent() throws CantNewsEventException {
         try {
             this.setExtraData();
         } catch (CantGetExtraDataActorException e) {
-
+            throw new CantNewsEventException(e.getMessage(), e, "", "");
         }
     }
 
-    public void handleNewConnectionEvent(){
+    public void handleNewConnectionEvent() throws CantNewConnectionEventException {
         try {
             Collection<CustomerIdentityWalletRelationship> relationships = cryptoCustomerActorDao.getAllCustomerIdentityWalletRelationship();
             for(CustomerIdentityWalletRelationship relationship : relationships){
@@ -63,29 +67,32 @@ public class ActorCustomerExtraDataEventActions {
                             this.cryptoCustomerActorDao.createCustomerExtraData(new ActorExtraDataInformation(relationship.getCryptoCustomer(), brokerIdentity, null, null));
                             this.cryptoBrokerANSManager.requestQuotes(relationship.getCryptoCustomer(), Actors.CBP_CRYPTO_CUSTOMER, broker.getPublicKey());
                         } catch (CantCreateNewActorExtraDataException e) {
+                            throw new CantNewConnectionEventException(e.getMessage(), e, "", "");
                         } catch (CantRequestQuotesException e) {
+                            throw new CantNewConnectionEventException(e.getMessage(), e, "", "");
                         }
                     }
                 }
             }
         } catch (CantGetListCustomerIdentityWalletRelationshipException e) {
-
+            throw new CantNewConnectionEventException(e.getMessage(), e, "", "");
+        } catch (CantGetBrokersConnectedException e) {
+            throw new CantNewConnectionEventException(e.getMessage(), e, "", "");
         }
     }
 
-    private List<CryptoCustomerActorConnection> getBrokersConnects(CustomerIdentityWalletRelationship relationship){
+    private List<CryptoCustomerActorConnection> getBrokersConnects(CustomerIdentityWalletRelationship relationship) throws CantGetBrokersConnectedException {
         CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(
-                relationship.getCryptoCustomer(),
-                Actors.CBP_CRYPTO_CUSTOMER
+            relationship.getCryptoCustomer(),
+            Actors.CBP_CRYPTO_CUSTOMER
         );
         final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
         search.addConnectionState(ConnectionState.CONNECTED);
         try {
             return search.getResult();
         } catch (CantListActorConnectionsException e) {
-
+            throw new CantGetBrokersConnectedException(e.getMessage(), e, "", "");
         }
-        return null;
     }
 
     public void setExtraData() throws CantGetExtraDataActorException {
@@ -108,7 +115,12 @@ public class ActorCustomerExtraDataEventActions {
                     }
                 }
             }
-        } catch (CantUpdateActorExtraDataException | CantCreateNewActorExtraDataException | CantListPendingQuotesRequestsException ignore) {
+        } catch (CantUpdateActorExtraDataException e) {
+            throw new CantGetExtraDataActorException(e.getMessage(), e, "", "");
+        } catch (CantCreateNewActorExtraDataException e) {
+            throw new CantGetExtraDataActorException(e.getMessage(), e, "", "");
+        } catch (CantListPendingQuotesRequestsException e) {
+            throw new CantGetExtraDataActorException(e.getMessage(), e, "", "");
         }
     }
 }
