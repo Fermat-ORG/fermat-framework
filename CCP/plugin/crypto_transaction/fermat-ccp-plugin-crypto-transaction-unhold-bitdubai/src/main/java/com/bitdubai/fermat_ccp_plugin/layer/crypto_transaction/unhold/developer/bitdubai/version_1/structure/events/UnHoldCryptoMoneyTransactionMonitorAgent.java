@@ -166,7 +166,7 @@ public class UnHoldCryptoMoneyTransactionMonitorAgent implements Agent{
                             cryptoAddress, //addressTo
                             (long)cryptoUnholdTransaction.getAmount(),
                             new Date().getTime() / 1000,
-                            "HOLD",
+                            "UNHOLD",
                             BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
 
                     bitcoinWalletManager.loadWallet(cryptoUnholdTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionRecord);
