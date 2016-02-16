@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions;
+package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions;
 
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
 
