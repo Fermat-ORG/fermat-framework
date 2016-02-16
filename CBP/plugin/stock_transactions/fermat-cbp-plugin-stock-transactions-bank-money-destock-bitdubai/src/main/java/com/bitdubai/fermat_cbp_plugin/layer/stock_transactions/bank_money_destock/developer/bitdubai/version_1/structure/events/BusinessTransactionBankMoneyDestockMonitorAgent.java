@@ -197,7 +197,9 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                                 new Date().getTime() / 1000,
                                 bankMoneyTransaction.getConcept(),
                                 bankMoneyTransaction.getPriceReference(),
-                                bankMoneyTransaction.getOriginTransaction());
+                                bankMoneyTransaction.getOriginTransaction(),
+                                bankMoneyTransaction.getOriginTransactionId(),
+                                false);
 
                         WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
                                 bankMoneyTransaction.getTransactionId(),
@@ -211,7 +213,9 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                                 new Date().getTime() / 1000,
                                 bankMoneyTransaction.getConcept(),
                                 bankMoneyTransaction.getPriceReference(),
-                                bankMoneyTransaction.getOriginTransaction());
+                                bankMoneyTransaction.getOriginTransaction(),
+                                bankMoneyTransaction.getOriginTransactionId(),
+                                false);
                         //TODO:Solo para testear
                         bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
                         cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordBook, BalanceType.BOOK);

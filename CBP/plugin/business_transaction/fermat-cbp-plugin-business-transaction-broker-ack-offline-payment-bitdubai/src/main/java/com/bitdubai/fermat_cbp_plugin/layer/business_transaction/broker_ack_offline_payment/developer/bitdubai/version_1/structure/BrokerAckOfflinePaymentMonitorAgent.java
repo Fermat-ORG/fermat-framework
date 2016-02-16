@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
@@ -19,15 +20,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
@@ -41,6 +47,10 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -54,6 +64,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -80,6 +91,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
     TransactionTransmissionManager transactionTransmissionManager;
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
+    CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    DepositManager depositManager;
 
     public BrokerAckOfflinePaymentMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
@@ -89,7 +102,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
             UUID pluginId,
             TransactionTransmissionManager transactionTransmissionManager,
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManager)  {
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
+            CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
+            DepositManager depositManager)  {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -98,6 +113,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         this.transactionTransmissionManager=transactionTransmissionManager;
         this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
         this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
+        this.customerBrokerSaleNegotiationManager=customerBrokerSaleNegotiationManager;
+        this.depositManager=depositManager;
     }
 
     @Override
@@ -259,8 +276,20 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 String contractHash;
 
                 /**
+                 * Check pending bank transactions to credit - Broker Side
+                 * The status to verify is PENDING_CREDIT_BANK_WALLET, it represents that the payment
+                 * is "physically" acknowledge by the broker.
+                 */
+                List<BusinessTransactionRecord> pendingToBankCreditList=
+                        brokerAckOfflinePaymentBusinessTransactionDao.getPendingToBankCreditList();
+                for(BusinessTransactionRecord pendingToBakCreditRecord : pendingToBankCreditList){
+                    contractHash=pendingToBakCreditRecord.getTransactionHash();
+                    //depositManager.makeDeposit()
+                }
+
+                /**
                  * Check contract status to send. - Broker Side
-                 * The status to verify is PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION, it represents that the payment is
+                 * The status to verify is PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION, it represents that the payment is fully
                  * acknowledge by the broker.
                  */
                 List<BusinessTransactionRecord> pendingToSubmitNotificationList=
@@ -402,8 +431,13 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     CustomerBrokerContractSale customerBrokerContractSale=
                             customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
                                     eventId);
+                    ObjectChecker.checkArgument(
+                            customerBrokerContractSale,
+                            "The customerBrokerContractSale is null");
+                    MoneyType paymentType=getMoneyTypeFromContract(customerBrokerContractSale);
                     brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
-                            customerBrokerContractSale);
+                            customerBrokerContractSale,
+                            paymentType);
 
                 }
 
@@ -451,9 +485,54 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,
                         "Checking pending events",
-                        "The customerBrokerContractPurchase is null");
+                        "The customerBrokerContractSale is null");
+            } catch (CantGetListSaleNegotiationsException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "The customerBrokerContractSale is null");
             }
 
+        }
+
+        /**
+         * This method returns the currency type from a contract
+         *
+         * @param customerBrokerContractSale
+         * @return
+         * @throws CantGetListSaleNegotiationsException
+         */
+        public MoneyType getMoneyTypeFromContract(
+                CustomerBrokerContractSale customerBrokerContractSale) throws
+                CantGetListSaleNegotiationsException {
+            try {
+                String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+                CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
+                        customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                                UUID.fromString(negotiationId));
+                ObjectChecker.checkArgument(customerBrokerSaleNegotiation,"The customerBrokerSaleNegotiation is null");
+                Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+                ClauseType clauseType;
+                for (Clause clause : clauses) {
+                    clauseType = clause.getType();
+                    if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                        return MoneyType.getByCode(clause.getValue());
+                    }
+                }
+                throw new CantGetListSaleNegotiationsException(
+                        "Cannot find the proper clause");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListSaleNegotiationsException(
+                        "Cannot get the negotiation list",
+                        e);
+            } catch (CantGetListClauseException e) {
+                throw new CantGetListSaleNegotiationsException(
+                        "Cannot find clauses list");
+            } catch (ObjectNotSetException e) {
+                throw new CantGetListSaleNegotiationsException(
+                        "The customerBrokerSaleNegotiation is null",
+                        e);
+            }
 
         }
 
