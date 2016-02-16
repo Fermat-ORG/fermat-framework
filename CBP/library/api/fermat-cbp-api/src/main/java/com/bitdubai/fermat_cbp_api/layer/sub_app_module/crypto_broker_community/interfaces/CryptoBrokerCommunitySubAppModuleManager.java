@@ -39,15 +39,15 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
     List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
 
     /**
-     * The method <code>searchNewCryptoBroker</code> returns an interface that allows searching for remote
+     * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
      * Crypto Brokers that are not linked to the local selectedIdentity
      *
      * @return a searching interface
      */
-    CryptoBrokerCommunitySearch searchNewCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
+    CryptoBrokerCommunitySearch getCryptoBrokerSearch(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
 
     /**
-     * The method <code>searchNewCryptoBroker</code> returns an interface that allows searching for remote
+     * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
      * Crypto Brokers that are linked to the local selectedIdentity
      *
      * @return a searching interface

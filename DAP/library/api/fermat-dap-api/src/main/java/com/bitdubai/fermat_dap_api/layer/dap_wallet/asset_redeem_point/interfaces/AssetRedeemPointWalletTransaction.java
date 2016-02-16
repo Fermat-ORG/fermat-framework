@@ -1,45 +1,35 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
-
-import java.util.UUID;
 
 /**
  * Created by franklin on 14/10/15.
  */
 public interface AssetRedeemPointWalletTransaction {
-    public String getAssetPublicKey();
 
-    public String getTransactionId();
+    String getAssetPublicKey();
 
-    public String getTransactionHash();
+    String getTransactionId();
 
-    public CryptoAddress getAddressFrom();
+    String getTransactionHash();
 
-    public Actors getActorFromType();
+    DAPActor getActorFrom();
 
-    public CryptoAddress getAddressTo();
+    DAPActor getActorTo();
 
-    public Actors getActorToType();
+    BalanceType getBalanceType();
 
-    public String getActorToPublicKey();
+    TransactionType getTransactionType();
 
-    public String getActorFromPublicKey();
+    long getTimestamp();
 
-    public BalanceType getBalanceType();
+    long getAmount();
 
-    public TransactionType getTransactionType();
+    long getRunningBookBalance();
 
-    public long getTimestamp();
+    long getRunningAvailableBalance();
 
-    public long getAmount();
-
-    public long getRunningBookBalance();
-
-    public long getRunningAvailableBalance();
-
-    public String getMemo();
+    String getMemo();
 }

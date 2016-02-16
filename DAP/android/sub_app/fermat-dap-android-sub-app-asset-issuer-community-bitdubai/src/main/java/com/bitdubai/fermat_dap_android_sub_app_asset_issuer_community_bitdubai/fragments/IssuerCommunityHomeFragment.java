@@ -352,7 +352,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                 }
                             });
                             worker.execute();
-
+                            dismiss();
                         } else if (i == R.id.negative_button) {
                             dismiss();
                         }

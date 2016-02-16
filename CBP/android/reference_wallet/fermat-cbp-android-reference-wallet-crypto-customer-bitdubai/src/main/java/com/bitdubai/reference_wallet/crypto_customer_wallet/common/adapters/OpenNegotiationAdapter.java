@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.AmountToBuyViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
@@ -46,7 +47,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private OpenNegotiationDetailsFragment footerListener;
     private ClauseViewHolder.Listener clauseListener;
-    private List <BrokerCurrencyQuotationImpl> marketRateList;
+    private List <IndexInfoSummary> marketRateList;
 
     private boolean haveNote;
 
@@ -60,8 +61,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         dataSet.addAll(buildListOfItems());
 
         haveNote = false;
-        haveNote = (negotiationInformation.getMemo() != "");
-//        haveNote = (negotiationInformation.getMemo() != null && negotiationInformation.getMemo() != "");
+        haveNote = (!negotiationInformation.getMemo().isEmpty());
     }
 
     public void changeDataSet(CustomerBrokerNegotiationInformation negotiationInfo) {
@@ -271,7 +271,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         this.clauseListener = clauseListener;
     }
 
-    public void setMarketRateList(List <BrokerCurrencyQuotationImpl> marketRateList){
+    public void setMarketRateList(List <IndexInfoSummary> marketRateList){
         this.marketRateList = marketRateList;
     }
 

@@ -119,6 +119,8 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY("DWAUSA"),
     DAP_WALLET_ASSET_USER_SETTINGS_MAIN_NETWORK("DWAUSMN"),
     DAP_WALLET_ASSET_USER_SETTINGS_NOTIFICATIONS("DWAUSN"),
+    DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY("DWAUASA"),
+    DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY("DWAUASSUA"),
 
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
     DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
@@ -174,6 +176,7 @@ public enum Activities implements FermatEnum {
     CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT("CBPCBWSSBA"),
     CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES("CBPCBWSSM"),
     CBP_CRYPTO_BROKER_WALLET_OTHER_SETTINGS("CBPCBWOS"),
+    CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS("CBPCBWCD"),
 
     // Crypto Customer Wallet
     CBP_CRYPTO_CUSTOMER_WALLET_HOME("CBPCCWH"),
@@ -536,6 +539,8 @@ public enum Activities implements FermatEnum {
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
             case "CBPSACCIEI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY;
+            case "CBPCBWCD":
+                return CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS;
 
             case "CBPSACBCCF":
                 return CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTIONS;
@@ -707,6 +712,10 @@ public enum Activities implements FermatEnum {
                 return DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST;
             case "DARPCCL":
                 return DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTIONS_LIST;
+            case "DWAUASA":
+                return DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY;
+            case "DWAUASSUA":
+                return DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

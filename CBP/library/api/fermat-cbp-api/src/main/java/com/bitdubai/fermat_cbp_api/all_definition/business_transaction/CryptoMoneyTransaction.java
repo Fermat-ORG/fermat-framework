@@ -110,4 +110,12 @@ public interface CryptoMoneyTransaction {
     OriginTransaction getOriginTransaction();
     void setOriginTransaction(OriginTransaction originTransaction);
 
+    /**
+     * The property <code>OriginTransactionId</code>  represented the Origin Transaction
+     *
+     * @return the String
+     */
+    String getOriginTransactionId();
+    void setOriginTransactionId(String originTransactionId);
+
 }

@@ -62,11 +62,8 @@ public class ActorConnectionEventActions {
 
         try {
 
-            System.out.println("******** CRYPTO BROKER NEWS -> CUSTOMER ACTOR CONNECTION");
-
             final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews(Actors.CBP_CRYPTO_CUSTOMER);
 
-            System.out.println("******** CRYPTO BROKER NEWS -> CUSTOMER ACTOR CONNECTION -> there is "+list.size() + " request from customers.");
             for (final CryptoBrokerConnectionRequest request : list)
                 this.handleRequestConnection(request, Actors.CBP_CRYPTO_BROKER);
 

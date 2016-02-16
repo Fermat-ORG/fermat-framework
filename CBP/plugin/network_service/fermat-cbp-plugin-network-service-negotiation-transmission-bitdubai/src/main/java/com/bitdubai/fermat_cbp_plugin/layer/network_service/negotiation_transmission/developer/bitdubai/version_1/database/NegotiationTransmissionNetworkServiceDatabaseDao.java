@@ -26,8 +26,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
 
 import java.util.ArrayList;
@@ -46,10 +46,9 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
 
     private Database database;
 
-    public NegotiationTransmissionNetworkServiceDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Database database) {
+    public NegotiationTransmissionNetworkServiceDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem   = pluginDatabaseSystem;
         this.pluginId               = pluginId;
-        this.database               = database;
     }
 
     /*INITIALIZE DATABASE*/
@@ -59,7 +58,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
         } catch (DatabaseNotFoundException e) {
             try {
                 NegotiationTransmissionNetworkServiceDatabaseFactory databaseFactory = new NegotiationTransmissionNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-                database = databaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = databaseFactory.createDatabase(pluginId, NegotiationTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
             } catch (CantCreateDatabaseException f) {
                 throw new CantInitializeDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {

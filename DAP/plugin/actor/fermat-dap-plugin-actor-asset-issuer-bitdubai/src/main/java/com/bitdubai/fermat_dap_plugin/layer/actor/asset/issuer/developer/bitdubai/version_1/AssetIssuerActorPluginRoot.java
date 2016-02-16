@@ -163,13 +163,16 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @Override
     public ActorAssetIssuer getActorByPublicKey(String actorPublicKey) throws CantGetAssetIssuerActorsException,
             CantAssetIssuerActorNotFoundException {
-
         try {
-            return this.assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
+            ActorAssetIssuer currentIssuer = getActorAssetIssuer();
+            if (currentIssuer != null && currentIssuer.getActorPublicKey().equals(actorPublicKey)) {
+                return currentIssuer;
+            } else {
+                return assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
+            }
         } catch (CantGetAssetIssuerActorsException e) {
             throw new CantGetAssetIssuerActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset Issuer from Data Base", null);
         }
-
     }
 
     @Override
