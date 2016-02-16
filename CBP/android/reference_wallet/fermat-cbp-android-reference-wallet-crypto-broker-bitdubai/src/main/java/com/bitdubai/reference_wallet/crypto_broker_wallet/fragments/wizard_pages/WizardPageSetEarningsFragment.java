@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_page
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.ArraySet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +20,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
@@ -40,12 +34,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.Simpl
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by nelson on 22/12/15.
@@ -56,16 +45,13 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
     // Constants
     private static final String TAG = "WizardPageSetEarning";
 
+    //Data
     private List<EarningsWizardData> earningDataList;
-    private Map<String, FiatCurrency> bankCurrencies;
-    private Map<String, String> bankAccounts;
 
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
     private EarningsWizardAdapter adapter;
-    private RecyclerView recyclerView;
-    private FermatTextView emptyView;
 
 
     public static WizardPageSetEarningsFragment newInstance() {
@@ -82,8 +68,6 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             errorManager = appSession.getErrorManager();
 
             earningDataList = createEarningDataList();
-            bankCurrencies = new HashMap<>();
-            bankAccounts = new HashMap<>();
 
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -100,10 +84,10 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
 
         final View layout = inflater.inflate(R.layout.cbw_wizard_step_set_earnings, container, false);
 
-        recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_earning_wallets_recycler_view);
+        RecyclerView recyclerView = (RecyclerView) layout.findViewById(R.id.cbw_selected_earning_wallets_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
-        emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_earning_wallets_empty_view);
+        FermatTextView emptyView = (FermatTextView) layout.findViewById(R.id.cbw_selected_earning_wallets_empty_view);
 
         if (earningDataList.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
@@ -138,15 +122,17 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
     @Override
     public void checkedChanged(boolean isChecked, EarningsWizardData data, final int position) {
 
-        if (isChecked) {
-            showWalletsDialog(data);
-        } else {
+        if (isChecked && !data.isChecked()) {
+            showWalletsDialog(data, position);
+        }
+
+        if (!isChecked && data.isChecked()) {
             data.clearWalletInfo();
             adapter.changeDataSet(earningDataList);
         }
     }
 
-    private void showWalletsDialog(final EarningsWizardData data) {
+    private void showWalletsDialog(final EarningsWizardData data, final int position) {
         try {
             List<InstalledWallet> installedWallets = walletManager.getInstallWallets();
             List<InstalledWallet> filteredList = new ArrayList<>();
@@ -187,9 +173,9 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
 
                     if (!platform.equals(Platforms.BANKING_PLATFORM)) {
                         data.setWalletInfo(selectedWallet.getWalletPublicKey(), selectedWallet.getWalletName());
-                        adapter.changeDataSet(earningDataList);
+                        adapter.notifyItemChanged(position);
                     } else
-                        showBankAccountsDialog(selectedWallet, data);
+                        showBankAccountsDialog(selectedWallet, data, position);
                 }
             });
 
@@ -206,7 +192,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         }
     }
 
-    private void showBankAccountsDialog(final InstalledWallet selectedWallet, final EarningsWizardData data) {
+    private void showBankAccountsDialog(final InstalledWallet selectedWallet, final EarningsWizardData data, final int position) {
         try {
             List<BankAccountNumber> accounts = walletManager.getAccounts(selectedWallet.getWalletPublicKey());
 
@@ -216,14 +202,8 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                 @Override
                 public void onItemSelected(BankAccountNumber selectedAccount) {
 
-                    FiatCurrency currency = selectedAccount.getCurrencyType();
-                    String account = selectedAccount.getAccount();
-
-                    bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
-                    bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
-
                     data.setWalletInfo(selectedWallet.getWalletPublicKey(), selectedWallet.getWalletName());
-                    adapter.changeDataSet(earningDataList);
+                    adapter.notifyItemChanged(position);
                 }
             });
 

@@ -10,7 +10,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
  */
 public abstract class SingleCheckableItemViewHolder<T> extends FermatViewHolder {
 
-    private FermatCheckBox checkBox;
+    protected FermatCheckBox checkBox;
 
 
     protected SingleCheckableItemViewHolder(View itemView) {

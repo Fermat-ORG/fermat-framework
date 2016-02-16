@@ -45,6 +45,11 @@ public class EarningsWizardData {
         return earningWalletName;
     }
 
+    public boolean isChecked() {
+        return earningWalletPublicKey != null;
+    }
+
+
     public void setWalletInfo(String earningWalletPublicKey, String earningWalletName) {
         this.earningWalletPublicKey = earningWalletPublicKey;
         this.earningWalletName = earningWalletName;

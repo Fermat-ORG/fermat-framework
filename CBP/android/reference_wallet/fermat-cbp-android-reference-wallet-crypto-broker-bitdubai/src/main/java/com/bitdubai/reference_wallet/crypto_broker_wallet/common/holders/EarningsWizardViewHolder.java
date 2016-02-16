@@ -26,6 +26,8 @@ public class EarningsWizardViewHolder extends SingleCheckableItemViewHolder<Earn
     public void bind(EarningsWizardData data) {
         title.setText(String.format("%s / %s", data.getLinkedCurrency().getCode(), data.getEarningCurrency().getCode()));
 
+        checkBox.setChecked(data.isChecked());
+
         if (data.getWalletName() != null) {
             subTitle.setText(data.getWalletName());
             subTitle.setTextColor(subTitle.getResources().getColor(R.color.cbw_wizard_color));
