@@ -127,10 +127,9 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * The method <code>disconnectCryptoCustomerr</code> disconnect an crypto Customer from the list managed by this
      * plugin
      *
-     * @param cryptoCustomerToDisconnectPublicKey the public key of the crypto Customer to disconnect
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException
      */
-    public void disconnectCryptoCustomer(String cryptoCustomerToDisconnectPublicKey) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException;
+    public void disconnectCryptoCustomer(final UUID requestId) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException;
 
     /**
      * The method <code>cancelCryptoCustomer</code> cancels an crypto Customer from the list managed by this
