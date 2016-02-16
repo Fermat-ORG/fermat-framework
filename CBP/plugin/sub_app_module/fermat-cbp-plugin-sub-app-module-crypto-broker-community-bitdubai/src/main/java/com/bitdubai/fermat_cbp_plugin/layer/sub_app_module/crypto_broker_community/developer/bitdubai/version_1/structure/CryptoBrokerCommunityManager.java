@@ -131,7 +131,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             for(CryptoBrokerActorConnection connectedBroker : actorConnections)
             {
                 if(worldBroker.getPublicKey().equals(connectedBroker.getPublicKey()))
-                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), ConnectionState.CONNECTED));
+                    worldBrokerList.set(i, new CryptoBrokerCommunitySubAppModuleInformation(worldBroker.getPublicKey(), worldBroker.getAlias(), worldBroker.getImage(), ConnectionState.CONNECTED, connectedBroker.getConnectionId()));
             }
         }
         return worldBrokerList;
