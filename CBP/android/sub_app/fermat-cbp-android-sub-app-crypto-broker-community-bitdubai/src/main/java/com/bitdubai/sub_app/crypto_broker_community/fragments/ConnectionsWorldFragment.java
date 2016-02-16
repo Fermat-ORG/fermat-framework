@@ -33,12 +33,12 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunitySubAppModuleInformation;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.CryptoBrokerCommunityInformationImpl;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
@@ -88,7 +88,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     public static ConnectionsWorldFragment newInstance() {
         return new ConnectionsWorldFragment();
     }
-
 
 
 
@@ -190,9 +189,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                             @Override
                             public void onDismiss(DialogInterface dialog) {
                                 //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-                                invalidate();            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
+                                invalidate();
+                                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                                 onRefresh();
                             }
                         });
@@ -201,9 +199,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             else
             {
                 //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-                invalidate();            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
+                invalidate();
+                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                 onRefresh();
             }
 
@@ -289,17 +286,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.getCryptoBrokerSearch(moduleManager.getSelectedActorIdentity());
-            List<CryptoBrokerCommunityInformation> result = cryptoBrokerCommunitySearch.getResult();
-
-            List<CryptoBrokerCommunityInformation> result2 = new ArrayList<>();
-            for(CryptoBrokerCommunityInformation i : result)
-                result2.add(new CryptoBrokerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), i.getImage(), ConnectionState.CONNECTED));
-
-
-            dataSet.addAll(result2);
+            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            dataSet.addAll(result);
             offset = dataSet.size();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -309,10 +298,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
     @Override
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
-
         appSession.setData(ACTOR_SELECTED, data);
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
     }
 
     @Override

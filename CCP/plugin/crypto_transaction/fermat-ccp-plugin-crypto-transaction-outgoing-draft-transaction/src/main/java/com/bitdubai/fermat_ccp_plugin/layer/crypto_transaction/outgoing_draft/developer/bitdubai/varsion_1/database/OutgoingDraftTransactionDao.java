@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetCryptoStatusException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
@@ -41,13 +42,13 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.09.21..
  */
-public class OutgoingIntraActorDao {
+public class OutgoingDraftTransactionDao {
 
     private Database             database;
     private ErrorManager errorManager;
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    public OutgoingIntraActorDao(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
+    public OutgoingDraftTransactionDao(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
         this.errorManager         = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
@@ -104,19 +105,24 @@ public class OutgoingIntraActorDao {
         }
     }
 
-    public List<OutgoingIntraActorTransactionWrapper> getNewTransactions() throws OutgoingIntraActorCantGetTransactionsException {
+    public void registerNewTransaction(BitcoinWalletTransaction bitcoinWalletTransaction, String walletPublicKey,ReferenceWallet referenceWallet) throws OutgoingIntraActorCantInsertRecordException {
         try {
-            return getAllInState(TransactionState.NEW);
-        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
-            throw new OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
+            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
+            DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
+            loadRecordAsNew(recordToInsert, bitcoinWalletTransaction.getTransactionId(), null, walletPublicKey, bitcoinWalletTransaction.getAddressTo(), bitcoinWalletTransaction.getAmount(), null, bitcoinWalletTransaction.getMemo(),
+                    bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),
+                    referenceWallet, true,bitcoinWalletTransaction.getBlockchainNetworkType());
+            transactionTable.insertRecord(recordToInsert);
+        } catch (CantInsertRecordException e) {
+            throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
         } catch (Exception exception) {
-            throw new OutgoingIntraActorCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+            throw new OutgoingIntraActorCantInsertRecordException(OutgoingIntraActorCantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
 
-    public List<OutgoingIntraActorTransactionWrapper> getPersistedInAvailable() throws OutgoingIntraActorCantGetTransactionsException {
+    public List<OutgoingIntraActorTransactionWrapper> getNewTransactions() throws OutgoingIntraActorCantGetTransactionsException {
         try {
-            return getAllInState(TransactionState.PERSISTED_IN_AVAILABLE);
+            return getAllInState(TransactionState.NEW);
         } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
             throw new OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
         } catch (Exception exception) {
@@ -154,19 +160,10 @@ public class OutgoingIntraActorDao {
         }
     }
 
-    public void setToPIA(OutgoingIntraActorTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
-        try {
-            setToState(bitcoinTransaction, TransactionState.PERSISTED_IN_AVAILABLE);
-        } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
-        } catch (Exception exception) {
-            throw new OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
-        }
-    }
 
-    public void setToPIW(OutgoingIntraActorTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
+    public void setToDIW(OutgoingIntraActorTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
         try {
-            setToState(bitcoinTransaction, TransactionState.PERSISTED_IN_WALLET);
+            setToState(bitcoinTransaction, TransactionState.DEBITED_IN_WALLET);
         } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
             throw new OutgoingIntraActorCantCancelTransactionException("An exception happened",exception,"","");
         } catch (Exception exception) {
@@ -183,7 +180,7 @@ public class OutgoingIntraActorDao {
             throw new OutgoingIntraActorCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
         }
     }
-    
+
     public void setTransactionHash(OutgoingIntraActorTransactionWrapper bitcoinTransaction, String hash) throws OutgoingIntraActorCantSetTranactionHashException {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
@@ -281,7 +278,7 @@ public class OutgoingIntraActorDao {
         return records.get(0);
     }
 
-    private List<OutgoingIntraActorTransactionWrapper> getAllInState(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
+    public List<OutgoingIntraActorTransactionWrapper> getAllInState(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
 
         DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
         transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
@@ -422,4 +419,6 @@ public class OutgoingIntraActorDao {
         }
 
     }
+
+
 }

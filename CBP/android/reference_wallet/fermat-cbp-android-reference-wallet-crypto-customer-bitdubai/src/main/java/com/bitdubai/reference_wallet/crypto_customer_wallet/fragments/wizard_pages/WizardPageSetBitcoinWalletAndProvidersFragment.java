@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
@@ -224,22 +225,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         .build();
             }
 
-            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                public void onDismiss(DialogInterface pre) {
-                    try {
-                        if (walletManager.getListOfIdentities().isEmpty()) {
-                            getActivity().onBackPressed();
-                        } else {
-                            invalidate();
-                        }
-
-                    } catch (CantGetCryptoCustomerIdentityListException e) {
-                        e.printStackTrace();
-                    } catch (CantListCryptoCustomerIdentityException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
+            presentationDialog.setOnDismissListener(this);
 
             final SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager = moduleManager.getSettingsManager();
             final CryptoCustomerWalletPreferenceSettings preferenceSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
@@ -260,7 +246,14 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     public void onDismiss(DialogInterface dialogInterface) {
 
         try {
-            selectedIdentity = walletManager.getListOfIdentities().get(0);
+            List<CryptoCustomerIdentity> listOfIdentities = walletManager.getListOfIdentities();
+            if (listOfIdentities.isEmpty())
+                getActivity().onBackPressed();
+            else {
+                invalidate();
+                selectedIdentity = listOfIdentities.get(0);
+            }
+
         } catch (FermatException e) {
             Log.e(TAG, e.getMessage(), e);
             if (errorManager != null)
@@ -306,9 +299,9 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                 @Override
                 public void onItemSelected(CurrencyPairAndProvider selectedItem) {
                     if (!containProvider(selectedItem)) {
-                     selectedProviders.add(selectedItem);
+                        selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
-                        Log.i("DATA PROVIDERSS:",""+selectedProviders+" Item seleccionado: "+selectedItem);
+                        Log.i("DATA PROVIDERSS:", "" + selectedProviders + " Item seleccionado: " + selectedItem);
                         showOrHideNoProvidersView();
                     }
                 }
