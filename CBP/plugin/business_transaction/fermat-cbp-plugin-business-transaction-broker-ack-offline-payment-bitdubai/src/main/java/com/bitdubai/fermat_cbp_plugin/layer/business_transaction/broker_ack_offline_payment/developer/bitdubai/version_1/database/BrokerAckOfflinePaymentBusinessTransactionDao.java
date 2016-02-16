@@ -283,7 +283,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      */
     public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale,
-            MoneyType paymentType)
+            MoneyType paymentType,
+            String actorPublicKey)
             throws CantInsertRecordException {
 
         try{
@@ -292,7 +293,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             databaseTableRecord = buildDatabaseTableRecord(
                     databaseTableRecord,
                     customerBrokerContractSale,
-                    paymentType
+                    paymentType,
+                    actorPublicKey
             );
             databaseTable.insertRecord(databaseTableRecord);
         } catch (ObjectNotSetException exception) {
@@ -320,7 +322,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
             CustomerBrokerContractSale customerBrokerContractSale,
-            MoneyType paymentType) throws
+            MoneyType paymentType,
+            String actorPublicKey) throws
             ObjectNotSetException,
             InvalidParameterException {
 
@@ -345,6 +348,10 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                 BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                         ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractSale.getPublicKeyBroker());
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY,
+                actorPublicKey);
         switch (paymentType){
             case BANK:
                 record.setStringValue(

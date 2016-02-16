@@ -51,6 +51,8 @@ public class BusinessTransactionRecord {
 
     private MoneyType paymentType;
 
+    private String actorPublicKey;
+
     //Getters
 
     public String getBrokerPublicKey() {
@@ -191,6 +193,14 @@ public class BusinessTransactionRecord {
         this.externalTransactionId = externalTransactionId;
     }
 
+    public String getActorPublicKey() {
+        return actorPublicKey;
+    }
+
+    public void setActorPublicKey(String actorPublicKey) {
+        this.actorPublicKey = actorPublicKey;
+    }
+
     @Override
     public String toString() {
         return "BusinessTransactionRecord{" +
@@ -211,6 +221,7 @@ public class BusinessTransactionRecord {
                 ", currencyType=" + currencyType +
                 ", paymentAmount=" + paymentAmount +
                 ", paymentType=" + paymentType +
+                ", actorPublicKey='" + actorPublicKey + '\'' +
                 '}';
     }
 }

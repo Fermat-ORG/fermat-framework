@@ -73,7 +73,8 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
      */
     @Override
     public void ackPayment(String walletPublicKey,
-                           String contractHash) throws
+                           String contractHash,
+                           String actorPublicKey) throws
             CantAckPaymentException {
         try{
             //Checking the arguments
@@ -103,7 +104,8 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                 MoneyType paymentType=getMoneyTypeFromContract(customerBrokerContractSale);
                 this.brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
                         customerBrokerContractSale,
-                        paymentType);
+                        paymentType,
+                        actorPublicKey);
 
             } else{
                 /**

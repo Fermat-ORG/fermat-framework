@@ -2,10 +2,13 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_off
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.money.Money;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
@@ -20,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -33,7 +37,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActor;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
@@ -56,7 +62,12 @@ import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmissio
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.BrokerAckOfflinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants;
@@ -67,6 +78,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -280,6 +292,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         database);
 
                 String contractHash;
+                String cryptoWalletPublicKey;
 
                 /**
                  * Check pending bank transactions to credit - Broker Side
@@ -290,7 +303,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         brokerAckOfflinePaymentBusinessTransactionDao.getPendingToBankCreditList();
                 for(BusinessTransactionRecord pendingToBakCreditRecord : pendingToBankCreditList){
                     contractHash=pendingToBakCreditRecord.getTransactionHash();
-                    depositManager.makeDeposit()
+                    cryptoWalletPublicKey=pendingToBakCreditRecord.getCBPWalletPublicKey();
+                    //depositManager.makeDeposit()
                 }
 
                 /**
@@ -443,7 +457,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     MoneyType paymentType=getMoneyTypeFromContract(customerBrokerContractSale);
                     brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
                             customerBrokerContractSale,
-                            paymentType);
+                            paymentType,
+                            customerBrokerContractSale.getPublicKeyBroker());
 
                 }
 
@@ -507,7 +522,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          * @return
          */
         private BankTransactionParametersRecord getBankTransactionParametersRecordFromContractId(
-                String contractHash) throws CantGetBankTransactionParametersRecordException {
+                String contractHash,
+                String cryptoWalletPublicKey,
+                String actorPublicKey) throws CantGetBankTransactionParametersRecordException {
             try{
                 CustomerBrokerContractSale customerBrokerContractSale=
                         customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
@@ -523,12 +540,49 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 ObjectChecker.checkArgument(
                         customerBrokerSaleNegotiation,
                         "The customerBrokerSaleNegotiation by Id"+negotiationId+" is null");
+                Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+                ClauseType clauseType;
+                FiatCurrency customerCurrency=FiatCurrency.US_DOLLAR;
+                BigDecimal customerAmount;
+                for (Clause clause : clauses) {
+                    clauseType = clause.getType();
+                    if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY)) {
+                        customerCurrency=FiatCurrency.getByCode(clause.getValue());
+                    }
+                    if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)) {
+                        customerCurrency=FiatCurrency.getByCode(clause.getValue());
+                    }
+                }
                 //Get the Bank wallet public key
-                cryptoBrokerWalletManager.loadCryptoBrokerWallet("")
+                String bankWalletPublicKey;
+                CryptoBrokerWallet cryptoBrokerWallet=cryptoBrokerWalletManager.
+                        loadCryptoBrokerWallet(
+                                cryptoWalletPublicKey);
+                CryptoBrokerWalletSetting cryptoBrokerWalletSetting=cryptoBrokerWallet.
+                        getCryptoWalletSetting();
+                List<CryptoBrokerWalletAssociatedSetting> cryptoBrokerWalletAssociatedSettingList=
+                        cryptoBrokerWalletSetting.getCryptoBrokerWalletAssociatedSettings();
+                MoneyType moneyType;
+                //TODO: Refactor currency to FiatCurrency
+                Currency walletBankCurrency;
+                for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
+                        cryptoBrokerWalletAssociatedSettingList){
+                    moneyType=cryptoBrokerWalletAssociatedSetting.getMoneyType();
+                    if(moneyType== MoneyType.BANK){
+                        walletBankCurrency=cryptoBrokerWalletAssociatedSetting.getMerchandise();
+                        if(customerCurrency.getCode().equals(walletBankCurrency.getCode())){
+                            bankWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
+
+                        }
+                    }
+                }
                 //Create the BankTransactionParametersRecord
-                BankTransactionParametersRecord bankTransactionParametersRecord=
+                /*BankTransactionParametersRecord bankTransactionParametersRecord=
                         new BankTransactionParametersRecord(
-                                pluginId.toString())
+                                pluginId.toString(),
+                                bankWalletPublicKey,
+                                actorPublicKey,
+                                )*/
             } catch (CantGetListCustomerBrokerContractSaleException e) {
                 throw new CantGetBankTransactionParametersRecordException(
                         e,
@@ -539,8 +593,16 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 e.printStackTrace();
             } catch (CantGetListSaleNegotiationsException e) {
                 e.printStackTrace();
+            } catch (CryptoBrokerWalletNotFoundException e) {
+                e.printStackTrace();
+            } catch (CantGetCryptoBrokerWalletSettingException e) {
+                e.printStackTrace();
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            } catch (CantGetListClauseException e) {
+                e.printStackTrace();
             }
-
+return null;
         }
 
         /**

@@ -1645,7 +1645,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     contractClauseType.getCode() == ContractClauseType.CASH_ON_HAND.getCode()) {
                 //TODO: this is a hardcoded public key
                 String cryptoBrokerPublicKey = "walletPublicKeyTest";
-                this.brokerAckOfflinePaymentManager.ackPayment(cryptoBrokerPublicKey, contractHash);
+                this.brokerAckOfflinePaymentManager.ackPayment(
+                        cryptoBrokerPublicKey,
+                        contractHash,
+                        customerBrokerContractSale.getPublicKeyBroker()
+                );
                 return customerBrokerContractSale.getStatus();
             }
 
