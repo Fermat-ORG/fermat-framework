@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.header.BitcoinWalletHeaderPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceWalletFragmentFactory;
@@ -82,34 +83,35 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
         try
         {
             moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
+            CryptoWalletTransaction transaction;
+            PaymentRequest  paymentRequest;
+
             String[] params = code.split("|");
             String notificationType = params[0];
             String transactionId = params[1];
             //find last transaction
             switch (notificationType){
                 case "TRANSACTION_ARRIVE":
-                    CryptoWalletTransaction transaction= moduleManager.getTransaction(UUID.fromString(transactionId), referenceWalletSession.getAppPublicKey());
-                    notification = new BitcoinWalletNotificationPainter("Received money","Fulano send "+ WalletUtils.formatBalanceString(transaction.getAmount()) ,"","");
+                     transaction= moduleManager.getTransaction(UUID.fromString(transactionId), referenceWalletSession.getAppPublicKey(),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                    notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) ,"","");
 
 
                     break;
                 case "PAYMENT_REQUEST":
-                  //  notification = new BitcoinWalletNotificationPainter("","You have received a Payment Request, for" + senderActor.getName(),"","");
+                    paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
+                    notification = new BitcoinWalletNotificationPainter("","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()),"","");
 
                     break;
 
                 case "PAYMENT_DENIED":
-                  //  notification = new BitcoinWalletNotificationPainter("","You have received a Payment Request, for" + senderActor.getName() + "was deny.","","");
-
-                    break;
-
-                case "PAYMENT_ACCEPT":
-                    //notification = new BitcoinWalletNotificationPainter("","You have received a Payment Request, for" + senderActor.getName() + "was deny.","","");
+                    paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
+                    notification = new BitcoinWalletNotificationPainter("","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + "was deny.","","");
 
                     break;
 
                 case "TRANSACTION_REVERSE":
-                   // notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed","Sending " + WalletUtils.formatBalanceString(amount)  + " BTC could not be completed.","","");
+                    transaction= moduleManager.getTransaction(UUID.fromString(transactionId), referenceWalletSession.getAppPublicKey(),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                    notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed","Sending " + WalletUtils.formatBalanceString(transaction.getAmount())  + " BTC could not be completed.","","");
 
                     break;
 

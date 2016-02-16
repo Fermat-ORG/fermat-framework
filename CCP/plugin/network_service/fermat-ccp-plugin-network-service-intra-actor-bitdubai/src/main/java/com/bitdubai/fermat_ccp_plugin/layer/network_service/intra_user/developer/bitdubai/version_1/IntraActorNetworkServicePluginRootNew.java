@@ -110,9 +110,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
      */
     private List<PlatformComponentProfile> actorsToRegisterCache;
 
-    private long reprocessTimer =  300000; //five minutes
 
-    private Timer timer = new Timer();
 
     /**
      * Executor
@@ -158,12 +156,6 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
             executorService = Executors.newFixedThreadPool(3);
 
-            // change message state to process again first time
-            reprocessMessages();
-
-            //declare a schedule to process waiting request message
-
-            this.startTimer();
 
 
         }catch (Exception e){
@@ -388,6 +380,28 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
         try {
            outgoingNotificationDao.changeStatusNotSentMessage();
 
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndNotDone(
+                    ActorProtocolState.PROCESSING_SEND
+            );
+
+
+            for (final ActorNetworkServiceRecord cpr : lstActorRecord) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
+                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
+                                    cpr.toJson());
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedError(e);
+                        }
+                    }
+                });
+            }
+
         }
         catch(CantListIntraWalletUsersException e)
         {
@@ -403,6 +417,27 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     protected void reprocessMessages(String identityPublicKey) {
         try {
            outgoingNotificationDao.changeStatusNotSentMessage(identityPublicKey);
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndNotDone(
+                    ActorProtocolState.PROCESSING_SEND
+            );
+
+
+            for (final ActorNetworkServiceRecord cpr : lstActorRecord) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
+                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
+                                    cpr.toJson());
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedError(e);
+                        }
+                    }
+                });
+            }
 
         }
         catch(CantListIntraWalletUsersException  e)
@@ -1174,16 +1209,6 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
         }
     }
 
-
-    private void startTimer(){
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // change message state to process retry later
-                reprocessMessages();
-            }
-        },0, reprocessTimer);
-    }
 
 
     //DatabaseManagerForDevelopers Implementation

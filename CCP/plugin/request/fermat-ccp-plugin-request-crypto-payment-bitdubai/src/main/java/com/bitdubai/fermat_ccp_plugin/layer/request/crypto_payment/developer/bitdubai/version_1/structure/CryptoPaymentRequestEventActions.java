@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bi
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantConfirmRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformDenialException;
@@ -52,6 +54,7 @@ public class CryptoPaymentRequestEventActions {
     private final UUID                        pluginId                   ;
     private final WalletManagerManager        walletManagerManager       ;
     private final   EventManager eventManager;
+    private final Broadcaster                 broadcaster;
 
     private CryptoPaymentRequestDao cryptoPaymentRequestDao;
 
@@ -59,13 +62,15 @@ public class CryptoPaymentRequestEventActions {
                                             final PluginDatabaseSystem        pluginDatabaseSystem       ,
                                             final UUID                        pluginId                   ,
                                             final WalletManagerManager        walletManagerManager       ,
-                                            final   EventManager eventManager) {
+                                            final   EventManager eventManager,
+                                            final Broadcaster broadcaster) {
 
         this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
         this.pluginDatabaseSystem        = pluginDatabaseSystem       ;
         this.pluginId                    = pluginId                   ;
         this.walletManagerManager        = walletManagerManager       ;
         this.eventManager                = eventManager               ;
+        this.broadcaster                = broadcaster;
     }
 
     public void initialize() throws CantInitializeCryptoPaymentRequestEventActionsException {
@@ -354,13 +359,16 @@ public class CryptoPaymentRequestEventActions {
     {
         //send notification to device
 
-        FermatEvent platformEvent = eventManager.getNewEvent(EventType.RECEIVE_PAYMENT_REQUEST_NOTIFICATION);
+       /* FermatEvent platformEvent = eventManager.getNewEvent(EventType.RECEIVE_PAYMENT_REQUEST_NOTIFICATION);
         ReceivePaymentRequestNotificationEvent receivePaymentRequestNotificationEvent = (ReceivePaymentRequestNotificationEvent) platformEvent;
         receivePaymentRequestNotificationEvent.setSource(EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST);
         receivePaymentRequestNotificationEvent.setAmount(cryptoPaymentRequest.getAmount());
         receivePaymentRequestNotificationEvent.setCryptoCurrency(cryptoPaymentRequest.getCryptoAddress().getCryptoCurrency());
 
-        eventManager.raiseEvent(platformEvent);
+        eventManager.raiseEvent(platformEvent);*/
+
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "PAYMENT_REQUEST|" + cryptoPaymentRequest.getRequestId().toString());
+
     }
 
 
@@ -368,12 +376,15 @@ public class CryptoPaymentRequestEventActions {
     {
         //send notification to device
 
-        FermatEvent platformEvent = eventManager.getNewEvent(EventType.DENIED_PAYMENT_REQUEST_NOTIFICATION);
+       /* FermatEvent platformEvent = eventManager.getNewEvent(EventType.DENIED_PAYMENT_REQUEST_NOTIFICATION);
         DeniedPaymentRequestNotificationEvent incomingMoneyNotificationEvent = (DeniedPaymentRequestNotificationEvent) platformEvent;
         incomingMoneyNotificationEvent.setSource(EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST);
         incomingMoneyNotificationEvent.setAmount(cryptoPaymentRequest.getAmount());
         incomingMoneyNotificationEvent.setCryptoCurrency(cryptoPaymentRequest.getCryptoAddress().getCryptoCurrency());
 
-        eventManager.raiseEvent(platformEvent);
+        eventManager.raiseEvent(platformEvent);*/
+
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "PAYMENT_DENIED|" + cryptoPaymentRequest.getRequestId().toString());
+
     }
 }
