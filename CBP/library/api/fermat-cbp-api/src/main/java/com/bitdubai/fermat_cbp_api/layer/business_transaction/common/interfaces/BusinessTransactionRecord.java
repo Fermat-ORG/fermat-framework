@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatu
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * This class represents the Contract Basic information persisted in Business Transactions plugins database.
@@ -40,12 +41,17 @@ public class BusinessTransactionRecord {
 
     private BigDecimal priceReference;
 
+
+    private UUID externalTransactionId;
+
     //Offline fields
     private FiatCurrency currencyType;
 
     private long paymentAmount;
 
     private MoneyType paymentType;
+
+    private String actorPublicKey;
 
     //Getters
 
@@ -111,6 +117,9 @@ public class BusinessTransactionRecord {
 
     public String getExternalWalletPublicKey() {
         return externalWalletPublicKey;
+    }
+    public UUID getExternalTransactionId() {
+        return externalTransactionId;
     }
 
     //Setters
@@ -180,6 +189,18 @@ public class BusinessTransactionRecord {
         this.externalWalletPublicKey = externalWalletPublicKey;
     }
 
+    public void setExternalTransactionId(UUID externalTransactionId) {
+        this.externalTransactionId = externalTransactionId;
+    }
+
+    public String getActorPublicKey() {
+        return actorPublicKey;
+    }
+
+    public void setActorPublicKey(String actorPublicKey) {
+        this.actorPublicKey = actorPublicKey;
+    }
+
     @Override
     public String toString() {
         return "BusinessTransactionRecord{" +
@@ -196,9 +217,11 @@ public class BusinessTransactionRecord {
                 ", transactionId='" + transactionId + '\'' +
                 ", externalWalletPublicKey='" + externalWalletPublicKey + '\'' +
                 ", priceReference=" + priceReference +
+                ", externalTransactionId=" + externalTransactionId +
                 ", currencyType=" + currencyType +
                 ", paymentAmount=" + paymentAmount +
                 ", paymentType=" + paymentType +
+                ", actorPublicKey='" + actorPublicKey + '\'' +
                 '}';
     }
 }

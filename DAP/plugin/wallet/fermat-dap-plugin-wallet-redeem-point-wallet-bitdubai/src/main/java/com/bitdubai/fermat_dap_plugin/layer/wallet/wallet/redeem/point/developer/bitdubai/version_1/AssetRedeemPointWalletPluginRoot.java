@@ -78,7 +78,7 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
 
     private static final String WALLET_REDEEM_POINT_FILE_NAME = "walletsIds";
     private List<UUID> redeemWallets = new ArrayList<>();
-    private String walletPublicKey = "walletPublicKeyTest";
+    private String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
     private boolean existsWallet = false;
     private AssetRedeemPointWallet redeemPointWallet;
 

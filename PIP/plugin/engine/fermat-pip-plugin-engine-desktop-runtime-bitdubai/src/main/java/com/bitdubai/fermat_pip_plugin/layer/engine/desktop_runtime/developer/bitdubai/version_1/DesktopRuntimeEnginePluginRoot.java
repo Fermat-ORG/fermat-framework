@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
@@ -335,5 +336,13 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     }
 
 
+    @Override
+    public void recordNAvigationStructure(FermatStructure fermatStructure) {
 
+    }
+
+    @Override
+    public FermatStructure getLastApp() {
+        return null;
+    }
 }

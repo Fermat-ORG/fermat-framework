@@ -27,7 +27,9 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
@@ -222,7 +224,22 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         .build();
             }
 
-            presentationDialog.setOnDismissListener(this);
+            presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                public void onDismiss(DialogInterface pre) {
+                    try {
+                        if (walletManager.getListOfIdentities().isEmpty()) {
+                            getActivity().onBackPressed();
+                        } else {
+                            invalidate();
+                        }
+
+                    } catch (CantGetCryptoCustomerIdentityListException e) {
+                        e.printStackTrace();
+                    } catch (CantListCryptoCustomerIdentityException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
             final SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager = moduleManager.getSettingsManager();
             final CryptoCustomerWalletPreferenceSettings preferenceSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
@@ -289,8 +306,9 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                 @Override
                 public void onItemSelected(CurrencyPairAndProvider selectedItem) {
                     if (!containProvider(selectedItem)) {
-                        selectedProviders.add(selectedItem);
+                     selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
+                        Log.i("DATA PROVIDERSS:",""+selectedProviders+" Item seleccionado: "+selectedItem);
                         showOrHideNoProvidersView();
                     }
                 }
@@ -391,11 +409,16 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             for (CurrencyPairAndProvider provider : selectedProviders) {
                 CurrencyExchangeRateProviderManager providerManager = provider.getProvider();
                 UUID providerId = providerManager.getProviderId();
-
                 CurrencyExchangeRateProviderManager selectedProviderManager = selectedProvider.getProvider();
                 UUID selectedProviderId = selectedProviderManager.getProviderId();
 
-                if (providerId.equals(selectedProviderId))
+                Currency providerFrom = provider.getCurrencyFrom();
+                Currency providerTo = provider.getCurrencyTo();
+
+                Currency SelectedFrom = selectedProvider.getCurrencyFrom();
+                Currency SelectedTo = selectedProvider.getCurrencyTo();
+
+                if (providerId.equals(selectedProviderId) && providerFrom == SelectedFrom && providerTo == SelectedTo)
                     return true;
             }
         } catch (CantGetProviderInfoException ex) {
@@ -456,7 +479,6 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         for (InstalledWallet wallet : bitcoinWallets) {
             data.add(wallet.getWalletName());
         }
-
         return data;
     }
 }
