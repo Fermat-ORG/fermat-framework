@@ -21,6 +21,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
@@ -76,7 +77,6 @@ public class AssetIssuerWalletModuleManager {
                 throw new CantDistributeDigitalAssetsException(null, context, "THE USER LIST IS EMPTY.");
             }
             System.out.println("******* ASSET DISTRIBUTION TEST (Init Distribution)******");
-            walletPublicKey = "walletPublicKeyTest"; //TODO: Solo para la prueba del Distribution
             HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = createMapDistribution(walletPublicKey, assetPublicKey, actorAssetUsers, assetsAmount, networkType);
             assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
 
@@ -88,22 +88,22 @@ public class AssetIssuerWalletModuleManager {
     public void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey, BlockchainNetworkType networkType) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException, NotEnoughAcceptsException {
         String context = "Asset Public Key: " + digitalAssetPublicKey + " - BTC Wallet Public Key: " + bitcoinWalletPublicKey;
         try {
-            AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet("walletPublicKeyTest", networkType);
+            AssetIssuerWallet wallet = assetIssuerWalletManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY, networkType);
             List<AssetIssuerWalletTransaction> transactions = wallet.getAvailableTransactions(digitalAssetPublicKey);
             if (transactions.isEmpty())
                 throw new NotEnoughAcceptsException(null, context, "We don't have any asset to appropriate.");
             for (AssetIssuerWalletTransaction transaction : transactions) {
                 DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transaction.getTransactionHash());
-                issuerAppropriationManager.appropriateAsset(assetMetadata, "walletPublicKeyTest", bitcoinWalletPublicKey, networkType);
+                issuerAppropriationManager.appropriateAsset(assetMetadata, WalletUtilities.WALLET_PUBLIC_KEY, bitcoinWalletPublicKey, networkType);
             }
         } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException | CantGetTransactionsException e) {
             throw new CantExecuteAppropriationTransactionException(e, context, null);
         }
     }
 
-    public List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException {
+    public List<ActorAssetUser> getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException {
         try {
-            return actorAssetUserManager.getAllAssetUserActorConnected();
+            return actorAssetUserManager.getAllAssetUserActorConnected(blockchainNetworkType);
         } catch (Exception exception) {
             throw new CantGetAssetUserActorsException("Error Get Actor Connected", exception, "Method: getAllAssetUserActorConnected", "Class: AssetIssuerWalletModuleManager");
         }

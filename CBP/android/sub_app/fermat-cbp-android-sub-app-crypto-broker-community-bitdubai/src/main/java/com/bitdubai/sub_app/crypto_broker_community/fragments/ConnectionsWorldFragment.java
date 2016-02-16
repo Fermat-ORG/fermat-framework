@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -288,16 +289,15 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
-
+            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.getCryptoBrokerSearch(moduleManager.getSelectedActorIdentity());
             List<CryptoBrokerCommunityInformation> result = cryptoBrokerCommunitySearch.getResult();
 
-            //MOCK!
-            for(int i = 1 ; i <= 5 ; i++){
-                result.add(new CryptoBrokerCommunityInformationImpl("pk-"+i, "broker"+i, new byte[0]));
-            }
+            List<CryptoBrokerCommunityInformation> result2 = new ArrayList<>();
+            for(CryptoBrokerCommunityInformation i : result)
+                result2.add(new CryptoBrokerCommunityInformationImpl(i.getPublicKey(), i.getAlias(), i.getImage(), ConnectionState.CONNECTED));
 
-            dataSet.addAll(result);
+
+            dataSet.addAll(result2);
             offset = dataSet.size();
 
         } catch (Exception e) {

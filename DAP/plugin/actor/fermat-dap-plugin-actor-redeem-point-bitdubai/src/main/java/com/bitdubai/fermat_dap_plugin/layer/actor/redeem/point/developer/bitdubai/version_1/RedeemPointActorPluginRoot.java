@@ -33,11 +33,11 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublickKeyContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublicKeyContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -48,7 +48,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
@@ -148,11 +147,15 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public ActorAssetRedeemPoint getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException,
+    public ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException,
             CantAssetRedeemPointActorNotFoundException {
-
         try {
-            return this.redeemPointActorDao.getActorRegisteredByPublicKey(actorPublicKey);
+            ActorAssetRedeemPoint currentRedeem = getActorAssetRedeemPoint();
+            if (currentRedeem != null && currentRedeem.getActorPublicKey().equals(actorPublicKey)) {
+                return currentRedeem;
+            } else {
+                return this.redeemPointActorDao.getActorRegisteredByPublicKey(actorPublicKey);
+            }
         } catch (CantGetAssetRedeemPointActorsException e) {
             throw new CantGetAssetRedeemPointActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
         }
@@ -341,9 +344,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     public void sendMessage(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetUserException {
         for (ActorAssetIssuer actorAssetIssuer : actorAssetIssuers) {
             try {
-                AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage();
+                AssetExtendedPublicKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublicKeyContentMessage();
                 DAPMessage dapMessage = new DAPMessage(
-                        DAPMessageType.EXTENDED_PUBLIC_KEY,
                         assetExtendedPublickKeyContentMessage,
                         requester,
                         actorAssetIssuer);
@@ -447,7 +449,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         ActorAssetIssuer dapActorSender = (ActorAssetIssuer) dapMessage.getActorSender();
         System.out.println("*****Actor Asset Redeem Point Recibe*****");
         System.out.println("Actor Asset Redeem Point Sender name: " + dapActorSender.getName());
-        System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageType());
+        System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageContent().messageType());
         System.out.println("***************************************************************");
 
         /**
@@ -455,7 +457,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
          */
         ExtendedPublicKey extendedPublicKey = null;
         try {
-            AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = (AssetExtendedPublickKeyContentMessage) dapMessage.getMessageContent();
+            AssetExtendedPublicKeyContentMessage assetExtendedPublickKeyContentMessage = (AssetExtendedPublicKeyContentMessage) dapMessage.getMessageContent();
             extendedPublicKey = assetExtendedPublickKeyContentMessage.getExtendedPublicKey();
 
         } catch (Exception e) {

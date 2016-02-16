@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -162,7 +162,14 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
         cashButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showWalletsDialog(Platforms.CASH_PLATFORM);
+                String cashWalletPublicKey = "cash_wallet";
+                if (walletManager.cashMoneyWalletExists(cashWalletPublicKey)==false){
+                    InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
+                    inputDialogCBP.DialogType(2);
+                    inputDialogCBP.show();
+                }else {
+                    showWalletsDialog(Platforms.CASH_PLATFORM);
+                }
             }
         });
 
@@ -357,18 +364,18 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                 associatedSetting.setPlatform(platform);
 
                 if (platform.equals(Platforms.BANKING_PLATFORM)) {
-                    associatedSetting.setCurrencyType(CurrencyType.BANK_MONEY);
+                    associatedSetting.setMoneyType(MoneyType.BANK);
                     associatedSetting.setMerchandise(bankCurrencies.get(walletPublicKey));
                     associatedSetting.setBankAccount(bankAccounts.get(walletPublicKey));
 
                 } else if (platform.equals(Platforms.CRYPTO_CURRENCY_PLATFORM)) {
-                    associatedSetting.setCurrencyType(CurrencyType.CRYPTO_MONEY);
+                    associatedSetting.setMoneyType(MoneyType.CRYPTO);
                     associatedSetting.setMerchandise(wallet.getCryptoCurrency());
 
                 } else {
                     FiatCurrency cashCurrency = walletManager.getCashCurrency(walletPublicKey);
                     associatedSetting.setMerchandise(cashCurrency);
-                    associatedSetting.setCurrencyType(CurrencyType.CASH_ON_HAND_MONEY);
+                    associatedSetting.setMoneyType(MoneyType.CASH_ON_HAND);
                 }
 
                 walletManager.saveWalletSettingAssociated(associatedSetting, appSession.getAppPublicKey());
@@ -447,7 +454,9 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
     public void onDismiss(DialogInterface dialog) {
         try {
             //Buscar la identidad
-            selectedIdentity = walletManager.getListOfIdentities().get(0);
+            List<CryptoBrokerIdentity> listOfIdentities = walletManager.getListOfIdentities();
+            if (listOfIdentities != null)
+                selectedIdentity = listOfIdentities.get(0);
         } catch (FermatException e) {
             Log.e(TAG, e.getMessage(), e);
             if (errorManager != null)

@@ -114,6 +114,7 @@ public final class CommunicationNetworkServiceDatabaseFactory {
             table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME                 , DatabaseDataType.STRING,       100, Boolean.FALSE);
             table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME          , DatabaseDataType.STRING,         5, Boolean.FALSE);
+            table.addColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION       , DatabaseDataType.STRING,        10, Boolean.FALSE);
 
             table.addIndex(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_FIRST_KEY_COLUMN);
 

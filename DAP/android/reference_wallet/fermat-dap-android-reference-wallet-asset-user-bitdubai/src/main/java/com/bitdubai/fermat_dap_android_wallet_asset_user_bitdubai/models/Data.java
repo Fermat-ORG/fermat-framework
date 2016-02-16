@@ -2,14 +2,23 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,7 +26,7 @@ import java.util.List;
  */
 public class Data {
     public static List<DigitalAsset> getAllDigitalAssets(AssetUserWalletSubAppModuleManager moduleManager) throws Exception {
-        List<AssetUserWalletList> assets = moduleManager.getAssetUserWalletBalances("walletPublicKeyTest");
+        List<AssetUserWalletList> assets = moduleManager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
 
@@ -41,7 +50,7 @@ public class Data {
     }
 
     public static DigitalAsset getDigitalAsset(AssetUserWalletSubAppModuleManager moduleManager, String digitalAssetPublicKey) throws CantLoadWalletException {
-        List<AssetUserWalletList> balances = moduleManager.getAssetUserWalletBalances("walletPublicKeyTest");
+        List<AssetUserWalletList> balances = moduleManager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         DigitalAsset digitalAsset;
         String publicKey;
         for (AssetUserWalletList balance : balances) {
@@ -89,5 +98,30 @@ public class Data {
             actorAssetRedeemPoints.add(redeemPoint.getActorAssetRedeemPoint());
         }
         return actorAssetRedeemPoints;
+    }
+
+    public static List<Transaction> getTransactions(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
+//        List<Transaction> transactions = new ArrayList<>();
+//        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet("walletPublicKeyTest").getAllTransactions(digitalAsset.getAssetPublicKey());
+//        ActorAssetUser actorAssetUser;
+//        String actorPublicKey;
+//        for (AssetUserWalletTransaction assetUserWalletTransaction :
+//             assetUserWalletTransactions) {
+////            actorPublicKey = (assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) ? assetUserWalletTransaction.getActorFromPublicKey() : assetUserWalletTransaction.getActorToPublicKey();
+//            assetUserWalletTransaction.getA
+//            actorPublicKey = assetUserWalletTransaction.getActorToPublicKey();
+//            actorAssetUser = moduleManager.getActorRegisteredByPublicKey(actorPublicKey);
+//            Transaction transaction = new Transaction(assetUserWalletTransaction, actorAssetUser);
+//            transactions.add(transaction);
+//        }
+        List<Transaction> transactions = new ArrayList<>();
+        Transaction transaction = new Transaction();
+        transaction.setActorName("Prueba");
+        transaction.setAmount(1.12);
+        transaction.setDate(new Timestamp(new Date().getTime()));
+        transaction.setTransactionType(com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType.CREDIT);
+        transaction.setBalanceType(BalanceType.AVAILABLE);
+        transactions.add(transaction);
+        return transactions;
     }
 }

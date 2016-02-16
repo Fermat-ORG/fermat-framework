@@ -88,6 +88,7 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
         record.setStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME, bankMoneyTransaction.getTransactionStatus().getCode());
         record.setStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME, bankMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, bankMoneyTransaction.getOriginTransaction().getCode());
+        record.setStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, bankMoneyTransaction.getOriginTransactionId());
 
         return record;
     }
@@ -129,6 +130,7 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
         bankMoneyDestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
         bankMoneyDestockTransaction.setPriceReference(new BigDecimal(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         bankMoneyDestockTransaction.setOriginTransaction(OriginTransaction.getByCode(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
+        bankMoneyDestockTransaction.setOriginTransactionId(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_ID_COLUMN_NAME));
 
         return bankMoneyDestockTransaction;
     }

@@ -35,12 +35,12 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Ass
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.interfaces.WatchOnlyVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublickKeyContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublicKeyContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
@@ -53,7 +53,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.ActorAssetIssuerMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.RedeemerAddressesMonitorAgent;
@@ -164,13 +163,16 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @Override
     public ActorAssetIssuer getActorByPublicKey(String actorPublicKey) throws CantGetAssetIssuerActorsException,
             CantAssetIssuerActorNotFoundException {
-
         try {
-            return this.assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
+            ActorAssetIssuer currentIssuer = getActorAssetIssuer();
+            if (currentIssuer != null && currentIssuer.getActorPublicKey().equals(actorPublicKey)) {
+                return currentIssuer;
+            } else {
+                return assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
+            }
         } catch (CantGetAssetIssuerActorsException e) {
             throw new CantGetAssetIssuerActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset Issuer from Data Base", null);
         }
-
     }
 
     @Override
@@ -308,9 +310,8 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     public void sendMessage(ActorAssetIssuer requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException {
         for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
             try {
-                AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage();
+                AssetExtendedPublicKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublicKeyContentMessage();
                 DAPMessage dapMessage = new DAPMessage(
-                        DAPMessageType.EXTENDED_PUBLIC_KEY,
                         assetExtendedPublickKeyContentMessage,
                         requester,
                         actorAssetRedeemPoint);
@@ -366,7 +367,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     }
 
     public void handleNewReceiveMessageActorNotificationEvent(DAPMessage dapMessage) {
-        switch (dapMessage.getMessageType()) {
+        switch (dapMessage.getMessageContent().messageType()) {
             case EXTENDED_PUBLIC_KEY:
                 receiveNewRequestExtendedPublicKey(dapMessage);
                 break;
@@ -386,7 +387,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
         System.out.println("*****Actor Asset Redeem Point Solicita*****");
         System.out.println("Actor Asset Redeem Point name: " + redeemPoint.getName());
-        System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageType());
+        System.out.println("Actor Asset Redeem Point message: " + dapMessage.getMessageContent().messageType());
 
         /**
          * I will request a new ExtendedPublicKey from the Asset Vault.
@@ -409,7 +410,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
          * I will create a new Message with the extended public Key.
          */
         if (extendedPublicKey != null) {
-            AssetExtendedPublickKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublickKeyContentMessage(extendedPublicKey, redeemPoint.getActorPublicKey());
+            AssetExtendedPublicKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublicKeyContentMessage(extendedPublicKey, redeemPoint.getActorPublicKey());
             /**
              * once the extended Key has been generated, I will start the agent that will register any derived key from this extended KEy
              * into the address book.
@@ -430,7 +431,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
              */
             try {
                 DAPMessage dapMessageSend = new DAPMessage(
-                        DAPMessageType.EXTENDED_PUBLIC_KEY,
                         assetExtendedPublickKeyContentMessage,
                         issuer,
                         redeemPoint);

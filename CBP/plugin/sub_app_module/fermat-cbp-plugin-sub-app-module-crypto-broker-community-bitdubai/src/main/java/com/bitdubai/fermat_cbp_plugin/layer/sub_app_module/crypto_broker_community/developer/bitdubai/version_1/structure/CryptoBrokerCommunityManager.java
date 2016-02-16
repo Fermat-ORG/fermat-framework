@@ -29,6 +29,8 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.Crypt
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
@@ -126,7 +128,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     }
 
     @Override
-    public CryptoBrokerCommunitySearch searchNewCryptoBroker(final CryptoBrokerCommunitySelectableIdentity selectedIdentity) {
+    public CryptoBrokerCommunitySearch getCryptoBrokerSearch(final CryptoBrokerCommunitySelectableIdentity selectedIdentity) {
         return new CryptoBrokerCommunitySubAppModuleCommunitySearch(cryptoBrokerActorNetworkServiceManager);
     }
 
@@ -393,8 +395,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
         try {
             final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(publicKey, Actors.CBP_CRYPTO_BROKER);
             final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
-            search.addConnectionState(ConnectionState.CONNECTED);
-
+            //search.addConnectionState(ConnectionState.CONNECTED);
             //search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
 
             final List<CryptoBrokerActorConnection> actorConnections = search.getResult(Integer.MAX_VALUE, 0);
@@ -469,7 +470,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             else
             {
 
-                if(identitiesInDevice.size() > 0)
+                if(identitiesInDevice != null && identitiesInDevice.size() > 0)
                 {
                     CryptoBrokerCommunitySelectableIdentityImpl selectedIdentity
                             = new CryptoBrokerCommunitySelectableIdentityImpl(identitiesInDevice.get(0).getPublicKey(),
@@ -562,6 +563,22 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
         CryptoCustomerIdentity createdIdentity = null;
         try{
             createdIdentity = cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img);
+
+            final String publicKey = createdIdentity.getPublicKey();
+
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+
+                        cryptoCustomerIdentityManager.publishIdentity(publicKey);
+
+                    } catch(CantPublishIdentityException | IdentityNotFoundException e) {
+
+                        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                    }
+                }
+            }.start();
         }catch(CantCreateCryptoCustomerIdentityException e) {
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;

@@ -111,15 +111,12 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             assetUserActorRecords = new ArrayList<>();
 
             try {
-                for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered()) {
-                    blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+                BlockchainNetworkType blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+                for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered(blockchainNetworkType)) {
 
                     AssetUserActorRecord assetUserActorRecord = (AssetUserActorRecord) actorAssetUser;
-                    if (assetUserActorRecord.getCryptoAddress() == null) {
-                        assetUserActorRecords.add(assetUserActorRecord);
-                    } else if (Objects.equals(assetUserActorRecord.getBlockchainNetworkType().getCode(), blockchainNetworkType.getCode())) {
-                        assetUserActorRecords.add(assetUserActorRecord);
-                    }
+                    assetUserActorRecords.add(assetUserActorRecord);
+
                 }
 
             } catch (CantGetAssetUserActorsException e) {
@@ -128,6 +125,33 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             }
         }
         return assetUserActorRecords;
+    }
+
+    @Override
+    public List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupId) throws CantGetAssetUserActorsException {
+        List<AssetUserActorRecord> allUserRegistered = this.getAllActorAssetUserRegistered();
+        List<ActorAssetUser> allUserRegisteredInGroup = this.getListActorAssetUserByGroups(groupId);
+        List<AssetUserActorRecord> allUserRegisteredFiltered = new ArrayList<>();
+        for (AssetUserActorRecord record : allUserRegistered)
+        {
+            // Obtain all user connected and not in the current group
+            if (record.getCryptoAddress() != null && (!userInGroup(record.getActorPublicKey(), allUserRegisteredInGroup)))
+            {
+                allUserRegisteredFiltered.add(record);
+            }
+        }
+
+        return allUserRegisteredFiltered;
+    }
+
+    private boolean userInGroup(String actorPublicKey, List<ActorAssetUser> usersInGroup) {
+        for (ActorAssetUser record : usersInGroup) {
+            if (record.getActorPublicKey().equals(actorPublicKey))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -212,9 +236,9 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException {
+    public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUserActorsException {
         try {
-            return actorAssetUserManager.getListActorAssetUserByGroups(groupName);
+            return actorAssetUserManager.getListActorAssetUserByGroups(groupId, assetIssuerWalletSupAppModuleManager.getSelectedNetwork());
         } catch (CantGetAssetUserActorsException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;

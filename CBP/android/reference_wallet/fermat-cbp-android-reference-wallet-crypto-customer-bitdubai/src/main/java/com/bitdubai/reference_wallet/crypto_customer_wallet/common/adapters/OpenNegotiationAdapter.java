@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.AmountToBuyViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ClauseViewHolder;
@@ -46,7 +47,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private OpenNegotiationDetailsFragment footerListener;
     private ClauseViewHolder.Listener clauseListener;
-    private List <BrokerCurrencyQuotationImpl> marketRateList;
+    private List <IndexInfoSummary> marketRateList;
 
     private boolean haveNote;
 
@@ -60,8 +61,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         dataSet.addAll(buildListOfItems());
 
         haveNote = false;
-        haveNote = (negotiationInformation.getMemo() != "");
-//        haveNote = (negotiationInformation.getMemo() != null && negotiationInformation.getMemo() != "");
+        haveNote = (!negotiationInformation.getMemo().isEmpty());
     }
 
     public void changeDataSet(CustomerBrokerNegotiationInformation negotiationInfo) {
@@ -271,7 +271,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         this.clauseListener = clauseListener;
     }
 
-    public void setMarketRateList(List <BrokerCurrencyQuotationImpl> marketRateList){
+    public void setMarketRateList(List <IndexInfoSummary> marketRateList){
         this.marketRateList = marketRateList;
     }
 
@@ -319,13 +319,13 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         ClauseInformation clause = null;
 
         if(currencyType != null) {
-            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyName()))
+            if (currencyType.equals(MoneyType.CRYPTO.getFriendlyName()))
                 clause = clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
 
-            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyName()))
+            else if (currencyType.equals(MoneyType.BANK.getFriendlyName()))
                 clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
 
-            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyName()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyName())))
+            else if (currencyType.equals(MoneyType.CASH_DELIVERY.getFriendlyName()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getFriendlyName())))
                 clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
         }
 
@@ -338,13 +338,13 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         ClauseInformation clause = null;
 
         if(currencyType != null) {
-            if (currencyType.equals(CurrencyType.CRYPTO_MONEY.getFriendlyName()))
+            if (currencyType.equals(MoneyType.CRYPTO.getFriendlyName()))
                 clause = clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
 
-            else if (currencyType.equals(CurrencyType.BANK_MONEY.getFriendlyName()))
+            else if (currencyType.equals(MoneyType.BANK.getFriendlyName()))
                 clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
 
-            else if (currencyType.equals(CurrencyType.CASH_DELIVERY_MONEY.getFriendlyName()) || (currencyType.equals(CurrencyType.CASH_ON_HAND_MONEY.getFriendlyName())))
+            else if (currencyType.equals(MoneyType.CASH_DELIVERY.getFriendlyName()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getFriendlyName())))
                 clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
         }
 

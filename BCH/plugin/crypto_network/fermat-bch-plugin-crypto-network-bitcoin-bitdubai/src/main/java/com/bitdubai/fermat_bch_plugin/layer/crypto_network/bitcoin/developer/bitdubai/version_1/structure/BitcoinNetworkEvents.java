@@ -56,7 +56,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     BitcoinCryptoNetworkDatabaseDao dao;
     File walletFilename;
-    final BlockchainNetworkType blockchainNetworkType;
+    final BlockchainNetworkType NETWORK_TYPE;
 
     /**
      * Platform variables
@@ -69,7 +69,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      * @param pluginDatabaseSystem
      */
     public BitcoinNetworkEvents(BlockchainNetworkType blockchainNetworkType, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, File walletFilename) {
-        this.blockchainNetworkType = blockchainNetworkType;
+        this.NETWORK_TYPE = blockchainNetworkType;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.walletFilename = walletFilename;
@@ -83,7 +83,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, FilteredBlock filteredBlock, int blocksLeft) {
         if (blocksLeft % 1000 == 0)
-            System.out.println("*****CryptoNetwork Block downloaded. Pending blocks: " + blocksLeft);
+            System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft);
         //System.out.println("*****CryptoNetwork " + filteredBlock.toString());
     }
 
@@ -91,14 +91,14 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
     @Override
     public void onChainDownloadStarted(Peer peer, int blocksLeft) {
-        System.out.println("***CryptoNetwork*** Blockchain Download started. Blocks left: " + blocksLeft);
+        System.out.println("***CryptoNetwork*** Blockchain Download started for " + NETWORK_TYPE.getCode() + " network. Blocks left: " + blocksLeft);
     }
 
     @Override
     public void onPeerConnected(Peer peer, int peerCount) {
-        StringBuilder logAggresive = new StringBuilder("New connection on CryptoNetwork2 to Peer " + peer.toString());
+        StringBuilder logAggresive = new StringBuilder("***CryptoNetwork*** New Peer connection on " + NETWORK_TYPE.getCode() + "  to " + peer.toString());
         logAggresive.append(System.getProperty("line.separator"));
-        logAggresive.append("Total connected peers: " + peerCount);
+        logAggresive.append("Total connected peers for Network " + NETWORK_TYPE.getCode() + ": " + peerCount);
         System.out.println(logAggresive.toString());
     }
 
@@ -157,7 +157,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             getDao().saveNewOutgoingTransaction(transactionId,
                     tx.getHashAsString(),
                     getBlockHash(tx),
-                    blockchainNetworkType,
+                    NETWORK_TYPE,
                     CryptoStatus.ON_CRYPTO_NETWORK,
                     tx.getConfidence().getDepthInBlocks(),
                     getOutgoingTransactionAddressTo(wallet,tx),
@@ -189,7 +189,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                 getDao().saveNewOutgoingTransaction(transactionId,
                         tx.getHashAsString(),
                         getBlockHash(tx),
-                        blockchainNetworkType,
+                        NETWORK_TYPE,
                         getTransactionCryptoStatus(tx),
                         0,
                         errorAddress,
@@ -508,7 +508,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
             try {
                 getDao().saveNewIncomingTransaction(tx.getHashAsString(),
                         getBlockHash(tx),
-                        blockchainNetworkType,
+                        NETWORK_TYPE,
                         cryptoStatus,
                         tx.getConfidence().getDepthInBlocks(),
                         getIncomingTransactionAddressTo(wallet, tx),
@@ -527,7 +527,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
                     CryptoAddress errorAddress = new CryptoAddress("error", CryptoCurrency.BITCOIN);
                     getDao().saveNewIncomingTransaction(tx.getHashAsString(),
                             getBlockHash(tx),
-                            blockchainNetworkType,
+                            NETWORK_TYPE,
                             getTransactionCryptoStatus(tx),
                             0,
                             errorAddress,
@@ -569,7 +569,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     private void saveMissingIncomingTransaction(Wallet wallet, Transaction tx, CryptoStatus missedCryptoStatus) throws CantExecuteDatabaseOperationException {
         getDao().saveNewIncomingTransaction(tx.getHashAsString(),
                 getBlockHash(tx),
-                blockchainNetworkType,
+                NETWORK_TYPE,
                 missedCryptoStatus,
                 tx.getConfidence().getDepthInBlocks(),
                 getIncomingTransactionAddressTo(wallet, tx),
@@ -609,7 +609,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     private void saveMissingOutgoingTransaction(Wallet wallet, Transaction tx, CryptoStatus missedCryptoStatus) throws CantExecuteDatabaseOperationException {
         getDao().saveNewOutgoingTransaction(null, tx.getHashAsString(),
                 getBlockHash(tx),
-                blockchainNetworkType,
+                NETWORK_TYPE,
                 missedCryptoStatus,
                 tx.getConfidence().getDepthInBlocks(),
                 getOutgoingTransactionAddressTo(wallet, tx),

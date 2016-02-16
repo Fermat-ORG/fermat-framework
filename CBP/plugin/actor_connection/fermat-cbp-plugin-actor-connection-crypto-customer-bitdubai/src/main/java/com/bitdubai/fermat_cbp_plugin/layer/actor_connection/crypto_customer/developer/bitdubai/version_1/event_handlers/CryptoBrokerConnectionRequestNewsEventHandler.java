@@ -42,8 +42,6 @@ public class CryptoBrokerConnectionRequestNewsEventHandler implements FermatEven
 
             if (fermatEvent instanceof CryptoBrokerConnectionRequestNewsEvent) {
 
-                System.out.println("************* EVENT RECEIVED *************"+fermatEvent);
-
                 actorConnectionEventActions.handleCryptoBrokerNewsEvent();
 
             } else {
