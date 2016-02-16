@@ -379,7 +379,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 connectDialog.show();
                 return true;
             }else {
-                Toast.makeText(getActivity(), "No Redeem Point selected to connect.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "No User selected to connect.", Toast.LENGTH_LONG).show();
                 return false;
             }
 
