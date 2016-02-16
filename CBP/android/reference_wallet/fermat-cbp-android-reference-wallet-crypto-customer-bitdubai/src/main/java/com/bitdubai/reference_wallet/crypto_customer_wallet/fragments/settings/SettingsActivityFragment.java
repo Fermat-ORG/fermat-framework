@@ -69,7 +69,7 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
         settingsBankAccountsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS,appSession.getAppPublicKey());
             }
         });
 
@@ -77,7 +77,7 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
         settingsProvidersBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS, appSession.getAppPublicKey());
             }
         });
 
