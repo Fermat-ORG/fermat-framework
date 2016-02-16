@@ -27,7 +27,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.crypto_module.Crypto;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
@@ -1530,7 +1529,6 @@ public class AssetUserActorDao implements Serializable {
 
     public ActorAssetUser getActorAssetUserRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException {
         DatabaseTable table;
-
         // Get Asset Users identities list.
         try {
             /**
@@ -1544,7 +1542,6 @@ public class AssetUserActorDao implements Serializable {
             table.addStringFilter(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
 
             table.loadToMemory();
-
             // Return the values.
             return addRecordsTableRegisteredToActorAssetUser(table.getRecords());
         } catch (CantLoadTableToMemoryException e) {

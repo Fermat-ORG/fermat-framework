@@ -5,8 +5,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
@@ -62,6 +65,22 @@ public final class ActorUtils {
         }
         if (dapActor instanceof ActorAssetUser) {
             return PlatformComponentType.ACTOR_ASSET_USER;
+        }
+        return null;
+    }
+
+    public static DAPActor getActorFromPublicKey(String actorPublicKey, Actors actorType, ActorAssetUserManager userManager, ActorAssetRedeemPointManager redeemPointManager, ActorAssetIssuerManager issuerManager) {
+        try {
+            switch (actorType) {
+                case DAP_ASSET_ISSUER:
+                    return issuerManager.getActorByPublicKey(actorPublicKey);
+                case DAP_ASSET_USER:
+                    return userManager.getActorByPublicKey(actorPublicKey);
+                case DAP_ASSET_REDEEM_POINT:
+                    return redeemPointManager.getActorByPublicKey(actorPublicKey);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
