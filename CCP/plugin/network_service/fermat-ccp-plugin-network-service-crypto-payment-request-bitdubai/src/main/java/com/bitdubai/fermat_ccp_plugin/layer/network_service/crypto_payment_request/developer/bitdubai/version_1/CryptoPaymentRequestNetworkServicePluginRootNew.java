@@ -957,10 +957,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
     }
 
 
-    @Override
-    protected CommunicationsClientConnection getCommunicationsClientConnection() {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
-    }
+
 
     @Override
     public ErrorManager getErrorManager() {
@@ -972,37 +969,13 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
         return eventManager;
     }
 
-    @Override
-    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-        return wsCommunicationsCloudClientManager;
-    }
-
-    @Override
-    public PluginDatabaseSystem getPluginDatabaseSystem() {
-        return pluginDatabaseSystem;
-    }
-
-    @Override
-    public PluginFileSystem getPluginFileSystem() {
-        return pluginFileSystem;
-    }
-
-    @Override
-    public Broadcaster getBroadcaster() {
-        return broadcaster;
-    }
-
-    @Override
-    public LogManager getLogManager() {
-        return logManager;
-    }
 
     @Override
     protected void onNetworkServiceRegistered() {
 
         try {
             for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
-                getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
                 System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
             }
         }catch (Exception e){
@@ -1049,7 +1022,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
     @Override
     public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
                 .constructPlatformComponentProfileFactory(identityPublicKeySender,
                         "sender_alias",
                         "sender_name",
@@ -1060,7 +1033,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
     @Override
     public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
                 .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
                         "destination_alias",
                         "destionation_name",
