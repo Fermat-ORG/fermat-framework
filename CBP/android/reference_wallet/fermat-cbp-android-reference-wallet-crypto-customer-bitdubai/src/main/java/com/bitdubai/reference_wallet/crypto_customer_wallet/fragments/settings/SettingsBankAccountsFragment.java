@@ -22,6 +22,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout=inflater.inflate(R.layout.fragment_main,container,false);
+        System.out.println("customer settings bank");
         return layout;
     }
 }

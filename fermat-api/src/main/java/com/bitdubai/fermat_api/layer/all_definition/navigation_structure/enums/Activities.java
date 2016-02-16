@@ -196,6 +196,8 @@ public enum Activities implements FermatEnum {
     CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_WIZARD("CBPCCWCNBAW"),
     CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS("CBPCCWSML"),
     CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS("CBPCCWCNLIS"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS("CBPCCWSBAS"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS("CBPCCWP"),
     CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS("CBPCCWCD"),
 
 
@@ -713,6 +715,10 @@ public enum Activities implements FermatEnum {
                 return DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST;
             case "DARPCCL":
                 return DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTIONS_LIST;
+            case "CBPCCWSBAS":
+                return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS;
+            case "CBPCCWP":
+                return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
