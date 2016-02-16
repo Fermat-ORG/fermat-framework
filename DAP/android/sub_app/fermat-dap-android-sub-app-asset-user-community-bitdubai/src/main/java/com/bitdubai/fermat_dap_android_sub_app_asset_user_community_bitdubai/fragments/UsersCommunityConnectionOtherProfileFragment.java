@@ -59,6 +59,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     private FermatTextView userCryptoCurrency;
     private FermatTextView userBlockchainNetworkType;
     private FermatTextView userRegistrationDate;
+    private FermatTextView userLastConnectionDate;
     //private IntraUserModuleManager manager;
     private static AssetUserCommunitySubAppModuleManager manager;
     private ErrorManager errorManager;
@@ -110,7 +111,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         userCryptoAddres = (FermatTextView) rootView.findViewById(R.id.cryptoAddress);
         userCryptoCurrency = (FermatTextView) rootView.findViewById(R.id.cryptoCurrency);
         userBlockchainNetworkType = (FermatTextView) rootView.findViewById(R.id.blockchainNetworkType);
-        userRegistrationDate = (FermatTextView) rootView.findViewById(R.id.userRegistrationDate);
+        //userRegistrationDate = (FermatTextView) rootView.findViewById(R.id.userRegistrationDate);
+        userLastConnectionDate = (FermatTextView) rootView.findViewById(R.id.userLastConnectionDate);
         connectionRequestSend = (Button) rootView.findViewById(R.id.btn_connection_request_send);
         connectionRequestRejected = (Button) rootView.findViewById(R.id.btn_connection_request_reject);
         connect = (Button) rootView.findViewById(R.id.btn_conect);
@@ -172,7 +174,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 userBlockchainNetworkType.setText("None");
             }
 
-            userRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
+            //userRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
+            userLastConnectionDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
 
             if (actor.getProfileImage() != null) {
                 Bitmap bitmap;
