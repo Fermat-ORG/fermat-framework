@@ -311,15 +311,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
 
-//        final int TOTAL_STEPS = getTotalSteps(clauses);
         int TOTAL_STEPS = 10;
-//        int contInd = TOTAL_STEPS - 1;
-//        ClauseInformation brokerPaymentMethod = getCustomerPaymentInfo(clauses);
-//        ClauseInformation customerReceivedMethod = getBrokerPaymentInfo(clauses);
-
-//        if(brokerPaymentMethod != null)     TOTAL_STEPS = TOTAL_STEPS + 1;
-//        if(customerReceivedMethod != null)  TOTAL_STEPS = TOTAL_STEPS + 1;
-
 
         final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
 
@@ -334,17 +326,6 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         data[8] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
         data[9] = clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
 
-        /*
-        if(brokerPaymentMethod != null){
-            contInd = contInd + 1;
-            data[contInd] = brokerPaymentMethod;
-        }
-
-        if(customerReceivedMethod != null){
-            contInd = contInd + 1;
-            data[contInd] = customerReceivedMethod;
-        }*/
-//
         return Arrays.asList(data);
     }
 

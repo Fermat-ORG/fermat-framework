@@ -20,6 +20,9 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -64,6 +67,7 @@ import java.util.UUID;
  */
 //FermatWalletExpandableListFragment<GrouperItem>
 public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
+//public class OpenNegotiationDetailsFragment extends FermatWalletExpandableListFragment<CryptoCustomerWalletSession, ResourceProviderManager>
         implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener/*, ClauseViewHolder.ListenerConfirm*/{
 
     private static final String TAG = "OpenNegotiationFrag";
@@ -97,6 +101,36 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     public static OpenNegotiationDetailsFragment newInstance() {
         return new OpenNegotiationDetailsFragment();
     }
+
+
+    /*FermatWalletExpandableListFragment IMPLEMENTATION*/
+    /*
+    @Override
+    public ExpandableRecyclerAdapter getAdapter(){
+        return null;
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager(){
+        return null;
+    }
+
+    @Override
+    public void onRefresh(){
+
+    }
+
+    @Override
+    public void onPostExecute(Object... result){
+
+    }
+
+    public void onErrorOccurred(Exception ex){
+
+    }
+    */
+    /*END FermatWalletExpandableListFragment IMPLEMENTATION*/
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -174,7 +208,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, final int position) {
-//        Toast.makeText(getActivity(), "PROCESS CLAUSE.", Toast.LENGTH_LONG).show();
         SimpleListDialogFragment dialogFragment;
         final ClauseType type = clause.getType();
         ClauseTextDialog clauseTextDialog = null;
@@ -233,6 +266,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     clauseDateTimeDialog.getDateDialog();
                 else
                     clauseDateTimeDialog.getTimeDialog();
+
                 clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
                     @Override
                     public void getDate(long newValue) { actionListenerDatetime(clause, String.valueOf(newValue)); }
@@ -246,6 +280,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     clauseDateTimeDialog.getDateDialog();
                 else
                     clauseDateTimeDialog.getTimeDialog();
+
                 clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
                     @Override
                     public void getDate(long newValue) { actionListenerDatetime(clause, String.valueOf(newValue));}
@@ -261,8 +296,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
                         @Override
                         public void onItemSelected(BankAccountNumber newValue) {
-                            putClause(clause, newValue.getAccount(), getStatusClauseChange(clause.getStatus().getCode()));
-                            adapter.changeDataSet(negotiationInfo);
+                        putClause(clause, newValue.getAccount(), getStatusClauseChange(clause.getStatus().getCode()));
+                        adapter.changeDataSet(negotiationInfo);
                         }
                     });
                     dialogFragment.show(getFragmentManager(), "bankAccountDialog");
@@ -305,16 +340,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         }
     }
 
-//    @Override
-//    public boolean getValuesHasChanged(){
-//        return valuesHasChanged;
-//    }
-//
-//    @Override
-//    public ClauseType getClauseType(){
-//        return clauseInformationType;
-//    }
-
     @Override
     public void onSendButtonClicked() {
         Map<ClauseType, ClauseInformation> mapClauses = negotiationInfo.getClauses();
@@ -324,13 +349,34 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onAddNoteButtonClicked() {
-//        Toast.makeText(getActivity(), "ADD NOTE", Toast.LENGTH_LONG).show();
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_ADD_NOTE, this.appSession.getAppPublicKey());
     }
 
-    /*------------------------------------- PRIVATE METHOD  -------------------------------------*/
+    @Override
+    public void onCancelNegotiationClicked() {
+//        Toast.makeText(getActivity(), "CANCEL NEGOTIATION", Toast.LENGTH_LONG).show();
+        ClauseTextDialog clauseTextDialog = null;
 
-    /*------------------------------------- VIEW METHODS  -------------------------------------*/
+        clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+        clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+            @Override
+            public void onClick(String newValue) {
+
+                Toast.makeText(getActivity(), "CANCEL NEGOTIATION. REASON: " + newValue, Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+        clauseTextDialog.setEditTextValue("");
+        clauseTextDialog.configure(R.string.ccw_cancellation_negotiation, R.string.ccw_cancellation_reason_title);
+
+        clauseTextDialog.show();
+
+    }
+    /*-------------------------------------------------------------------------------------------------
+                                            VIEW METHODS
+    ---------------------------------------------------------------------------------------------------*/
+
     //VIEW TOOLBAR
     private void configureToolbar() {
 
@@ -438,9 +484,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         return cont;
 
     }
-    /*------------------------------------- END VIEW METHODS  -------------------------------------*/
+    /*-------------------------------------------------------------------------------------------------
+                                            VIEW METHODS
+    ---------------------------------------------------------------------------------------------------*/
 
-    /* ------------------------------------- ACTION LISTENER  -------------------------------------*/
+    /*-------------------------------------------------------------------------------------------------
+                                            ACTION LISTENER
+    ---------------------------------------------------------------------------------------------------*/
+
     //ACTION LISTENER FOR CUSTOMER PAYMENT METHOD
     private void actionListenerCustomerPaymentMethod(ClauseInformation clause, String selectedItem){
 
@@ -595,16 +646,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         adapter.changeDataSet(negotiationInfo);
     }
-    /*------------------------------------------ END ACTION LISTENER -------------------------------------*/
 
-    /*------------------------------------------ VALIDATE OF DATE -------------------------------------*/
-    private void validateChange(String oldValue, String newValue) {
-        valuesHasChanged = false;
+    /*-------------------------------------------------------------------------------------------------
+                                                END ACTION LISTENER
+    ---------------------------------------------------------------------------------------------------*/
 
-        if (oldValue != newValue) {
-            valuesHasChanged = true;
-        }
-    }
+    /*-------------------------------------------------------------------------------------------------
+                                                VALIDATE OF DATE
+    --------------------------------------------------------------------------------------------------*/
 
     //VALIDATE CLAUSE
     private Boolean validateClauses(Map<ClauseType, ClauseInformation> clauses){
@@ -711,7 +760,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void putPaymentInfo(Map<ClauseType, ClauseInformation> clauses){
 
         String currencyType = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
-//        Toast.makeText(getActivity(), "PutPaymentInfo. "+currencyType, Toast.LENGTH_LONG).show();
         if(currencyType != null) {
             if (currencyType.equals(MoneyType.CRYPTO.getFriendlyName())) {
                 if (clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null) {
@@ -736,7 +784,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void putReceptionInfo(Map<ClauseType, ClauseInformation> clauses){
 
         String currencyType = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
-//        Toast.makeText(getActivity(), "PutReceptionInfo. "+currencyType, Toast.LENGTH_LONG).show();
         if(currencyType != null) {
             if (currencyType.equals(MoneyType.CRYPTO.getFriendlyName())) {
                 if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null) {
@@ -748,7 +795,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     String bankAccount = "INSERT BANK ACCOUNT IN SETTINGS WALLET.";
                     if(bankAccountList.size() > 0)
                         bankAccount = bankAccountList.get(0).getAccount();
-
                     putClause(ClauseType.CUSTOMER_BANK_ACCOUNT, bankAccount);
                 }
 
@@ -764,11 +810,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     }
 
-    //PUT CLAUSE
+    //PUT CLAUSE CLAUSE AND VALUE
     public void putClause(final ClauseInformation clause, final String value) {
 
         final ClauseType type = clause.getType();
-
         ClauseInformation clauseInformation = new ClauseInformation() {
             @Override
             public UUID getClauseID() {
@@ -786,34 +831,25 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             }
 
             @Override
-            public ClauseStatus getStatus() {
-                return clause.getStatus();
-            }
+            public ClauseStatus getStatus() { return clause.getStatus(); }
         };
 
         negotiationInfo.getClauses().put(type, clauseInformation);
     }
 
-    //PUT CLAUSE
+    //PUT CLAUSE CLAUSE, VALUE AND STATUS
     public void putClause(final ClauseInformation clause, final String value, final ClauseStatus status) {
 
         final ClauseType type = clause.getType();
-
         ClauseInformation clauseInformation = new ClauseInformation() {
             @Override
-            public UUID getClauseID() {
-                return clause.getClauseID();
-            }
+            public UUID getClauseID() { return clause.getClauseID(); }
 
             @Override
-            public ClauseType getType() {
-                return type;
-            }
+            public ClauseType getType() { return type; }
 
             @Override
-            public String getValue() {
-                return value;
-            }
+            public String getValue() { return value; }
 
             @Override
             public ClauseStatus getStatus() { return (status != null) ? status : clause.getStatus(); }
@@ -822,6 +858,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         negotiationInfo.getClauses().put(type, clauseInformation);
     }
 
+    //PUT CLAUSE CLAUSE TYPE, VALUE
     public void putClause(final ClauseType clauseType, final String value) {
 
         ClauseInformation clauseInformation = new ClauseInformation() {
@@ -841,10 +878,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
+    //PUT CLAUSE CLAUSE AND STATUS
     public void putClause(final ClauseInformation clause, final ClauseStatus status) {
 
         final ClauseType type = clause.getType();
-
         ClauseInformation clauseInformation = new ClauseInformation() {
             @Override
             public UUID getClauseID() { return clause.getClauseID(); }
@@ -859,19 +896,22 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             public ClauseStatus getStatus() { return status; }
         };
 
-        this.negotiationInfo.getClauses().put(type, clauseInformation);
+        negotiationInfo.getClauses().put(type, clauseInformation);
+    }
+
+    private void validateChange(String oldValue, String newValue) {
+
+        valuesHasChanged = false;
+        if (oldValue != newValue)
+            valuesHasChanged = true;
+
     }
 
     private ClauseStatus getStatusClauseChange(String statusClauseCode){
 
         ClauseStatus statusClause = null;
-//        String valuesH = "FALSE";
-//        if(valuesHasChanged) valuesH = "TRUE";
-//        Toast.makeText(getActivity(), "CHANGE STATUS valuesH: "+valuesH+" StatusClause: " +statusClauseCode +" = "+ NegotiationStepStatus.ACCEPTED.getCode(), Toast.LENGTH_LONG).show();
         if(valuesHasChanged && statusClauseCode.equals(NegotiationStepStatus.ACCEPTED.getCode()))
             statusClause = ClauseStatus.CHANGED;
-
-//        valuesHasChanged = false;
 
         return statusClause;
     }
