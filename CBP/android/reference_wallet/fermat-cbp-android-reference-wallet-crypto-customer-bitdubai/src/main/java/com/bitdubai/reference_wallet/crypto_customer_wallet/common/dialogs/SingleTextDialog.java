@@ -17,7 +17,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 /**
  * Created by Yordin Alayn on 16.02.16.
  */
-public class CancelTextDialog extends FermatDialog<CryptoCustomerWalletSession, ResourceProviderManager>
+public class SingleTextDialog extends FermatDialog<CryptoCustomerWalletSession, ResourceProviderManager>
         implements View.OnClickListener {
 
     private FermatEditText editTextView;
@@ -32,7 +32,7 @@ public class CancelTextDialog extends FermatDialog<CryptoCustomerWalletSession, 
     }
 
 
-    public CancelTextDialog(Activity activity, CryptoCustomerWalletSession fermatSession, ResourceProviderManager resources) {
+    public SingleTextDialog(Activity activity, CryptoCustomerWalletSession fermatSession, ResourceProviderManager resources) {
         super(activity, fermatSession, resources);
 
         hintStringResource = R.string.hint;
@@ -83,7 +83,7 @@ public class CancelTextDialog extends FermatDialog<CryptoCustomerWalletSession, 
 
     @Override
     protected int setLayoutId() {
-        return R.layout.ccw_cancel_text_dialog;
+        return R.layout.ccw_single_text_dialog;
     }
 
     @Override
