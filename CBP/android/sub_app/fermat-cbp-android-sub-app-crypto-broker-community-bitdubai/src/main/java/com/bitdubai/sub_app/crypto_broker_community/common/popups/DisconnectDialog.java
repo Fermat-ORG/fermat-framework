@@ -121,11 +121,8 @@ public class DisconnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSe
                     Toast.makeText(getContext(), "Disconnected successfully", Toast.LENGTH_SHORT).show();
 
                     //set flag so that the preceding fragment reads it on dismiss()
-                    getSession().setData("connectionresult", false);
+                    getSession().setData("connectionresult", 1);
 
-
-
-                    Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
