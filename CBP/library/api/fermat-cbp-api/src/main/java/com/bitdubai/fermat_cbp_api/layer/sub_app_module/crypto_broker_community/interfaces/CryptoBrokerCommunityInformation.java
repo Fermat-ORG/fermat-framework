@@ -45,6 +45,7 @@ public interface CryptoBrokerCommunityInformation {
      * @return ConnectionState object
      */
     ConnectionState getConnectionState();
+
     /**
      * The method <code>getConnectionId</code> returns the Connection UUID this actor has with the selected actor
      * @return UUID object
