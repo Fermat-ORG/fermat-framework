@@ -32,13 +32,13 @@ import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetUserWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
@@ -86,7 +86,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
     private String searchName;
     private List<InstalledWallet> lstInstalledWallet;
     private DesktopSession desktopSession;
-    private WalletManager moduleManager;
+    private WalletManagerModule moduleManager;
 
     ArrayList<Item> lstItems;
 
@@ -106,7 +106,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
      * Provisory method
      */
     @Deprecated
-    public static DesktopFragment newInstance(WalletManager manager) {
+    public static DesktopFragment newInstance(WalletManagerModule manager) {
         DesktopFragment desktopFragment = new DesktopFragment();
         desktopFragment.setModuleManager(manager);
         return desktopFragment;
@@ -189,15 +189,19 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
     private void setUpData() {
         if (moduleManager != null)
             try {
-                lstInstalledWallet = moduleManager.getUserWallets();
-            } catch (CantGetUserWalletException e) {
+                lstInstalledWallet = moduleManager.getInstalledWallets();
+
+            } catch (WalletsListFailedToLoadException e) {
                 e.printStackTrace();
             }
         if(lstInstalledWallet!=null)
             for(InstalledWallet installedWallet: lstInstalledWallet){
-                Item item = new Item(installedWallet);
-                item.setIconResource(R.drawable.bitcoin_wallet);
-                lstItems.add(item);
+                if(installedWallet.getWalletPublicKey().equals("reference_wallet")) {
+                    Item item = new Item(installedWallet);
+                    item.setIconResource(R.drawable.bitcoin_wallet);
+                    lstItems.add(item);
+                }
+
             }
 
         InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_INTRA_USER_IDENTITY,null,null,"intra_user_identity_sub_app","Intra user Identity","public_key_ccp_intra_user_identity","intra_user_identity_sub_app",new Version(1,0,0));
@@ -321,16 +325,18 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
         try {
             lstItems = new ArrayList<>();
 
-            lstInstalledWallet = moduleManager.getUserWallets();
+            lstInstalledWallet = moduleManager.getInstalledWallets();
             lstItemsWithIcon = new ArrayList<>();
             Item[] arrItemsWithoutIcon = new Item[12];
 
 
             for(InstalledWallet installedWallet: lstInstalledWallet) {
-                Item item = new Item(installedWallet);
-                item.setIconResource(R.drawable.bitcoin_wallet);
-                item.setPosition(0);
-                lstItemsWithIcon.add(item);
+                    if(installedWallet.getWalletPublicKey().equals("reference_wallet")) {
+                        Item item = new Item(installedWallet);
+                        item.setIconResource(R.drawable.bitcoin_wallet);
+                        item.setPosition(0);
+                        lstItemsWithIcon.add(item);
+                    }
             }
 
             InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -341,7 +347,8 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                     "Crypto Broker",
                     "crypto_broker_wallet",
                     "wallet_crypto_broker_platform_identifier",
-                    new Version(1,0,0));
+                    new Version(1,0,0),
+                    AppsStatus.getDefaultStatus());
             lstInstalledWallet.add(installedWallet);
             Item item = new Item(installedWallet);
             item.setIconResource(R.drawable.crypto_broker);
@@ -356,7 +363,8 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                     "Crypto Customer",
                     "crypto_customer_wallet",
                     "wallet_crypto_customer_platform_identifier",
-                    new Version(1,0,0));
+                    new Version(1,0,0),
+                    AppsStatus.getDefaultStatus());
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.crypto_customer);
@@ -372,7 +380,8 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                     "Asset Issuer",
                     "asset_issuer",
                     "wallet_platform_identifier",
-                    new Version(1,0,0));
+                    new Version(1,0,0),
+                    AppsStatus.getDefaultStatus());
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.asset_issuer);
@@ -387,7 +396,8 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                     "Asset User",
                     "asset_user",
                     "wallet_platform_identifier",
-                    new Version(1,0,0));
+                    new Version(1,0,0),
+                    AppsStatus.getDefaultStatus());
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.asset_user_wallet);
@@ -402,7 +412,8 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                     "Redeem Point",
                     "redeem_point",
                     "wallet_platform_identifier",
-                    new Version(1,0,0));
+                    new Version(1,0,0),
+                    AppsStatus.getDefaultStatus());
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.redeem_point);
@@ -418,7 +429,8 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                     "Banking Wallet",
                     "banking_wallet",
                     "wallet_banking_platform_identifier",
-                    new Version(1,0,0));
+                    new Version(1,0,0),
+                    AppsStatus.DEV);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.bank_wallet_xxhdpi);
@@ -434,7 +446,8 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                     "Cash Wallet",
                     "cash_wallet",
                     "wallet_cash_platform_identifier",
-                    new Version(1,0,0));
+                    new Version(1,0,0),
+                    AppsStatus.DEV);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.cash_wallet_xxhdpi);
@@ -475,8 +488,6 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
 
             dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
 
-        } catch (CantGetUserWalletException e) {
-                    e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -486,7 +497,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
 
 
 
-    public void setModuleManager(WalletManager moduleManager) {
+    public void setModuleManager(WalletManagerModule moduleManager) {
         this.moduleManager = moduleManager;
     }
 
@@ -536,7 +547,6 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                 list.add(installedWallet);
             }
         }
-        lstItemsWithIcon = list;
         Item[] arrItemsWithoutIcon = new Item[12];
         for(int i=0;i<12;i++){
             Item emptyItem = new Item(new EmptyItem(0,i));
@@ -544,7 +554,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
             arrItemsWithoutIcon[i] = emptyItem;
         }
 
-        for(Item itemIcon: lstItemsWithIcon){
+        for(Item itemIcon: list){
             arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
         }
 

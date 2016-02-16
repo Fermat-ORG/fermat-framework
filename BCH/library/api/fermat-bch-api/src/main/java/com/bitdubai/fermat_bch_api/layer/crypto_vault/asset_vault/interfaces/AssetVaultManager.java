@@ -118,11 +118,10 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
     /**
      * generates a final transaction based on a draft transaction and prepares it to be broadcasted.
      * @param draftTransaction the completed and signed transaction
-     * @param fermatTrId the internal transaction id
      * @return the final transactionHash
      * @throws CantCreateBitcoinTransactionException
      */
-    String createBitcoinTransaction (DraftTransaction draftTransaction, UUID fermatTrId) throws CantCreateBitcoinTransactionException;
+    String createBitcoinTransaction (DraftTransaction draftTransaction) throws CantCreateBitcoinTransactionException;
 
 
     /**

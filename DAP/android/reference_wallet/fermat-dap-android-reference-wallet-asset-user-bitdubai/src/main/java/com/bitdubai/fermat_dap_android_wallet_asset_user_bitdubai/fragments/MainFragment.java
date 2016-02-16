@@ -25,6 +25,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.Asset
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -78,7 +79,7 @@ public class MainFragment extends AbstractFermatFragment
             protected Object doInBackground() throws Exception {
                 if (manager == null)
                     throw new NullPointerException("AssetUserWalletModuleManager is null");
-                assetUserWalletList = manager.getAssetUserWalletBalances("walletPublicKeyTest");
+                assetUserWalletList = manager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
                 if (assetUserWalletList != null && !assetUserWalletList.isEmpty()) {
                     bookAssets = new ArrayList<>();
                     for (AssetUserWalletList assetUserWallet : assetUserWalletList) {
