@@ -128,7 +128,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
 
         if (!isChecked && data.isChecked()) {
             data.clearWalletInfo();
-            adapter.changeDataSet(earningDataList);
+            adapter.notifyItemChanged(position);
         }
     }
 
