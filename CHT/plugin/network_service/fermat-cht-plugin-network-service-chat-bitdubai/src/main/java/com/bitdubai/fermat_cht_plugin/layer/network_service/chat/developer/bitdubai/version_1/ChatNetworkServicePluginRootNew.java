@@ -88,7 +88,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by mati on 2016.02.05..
+ * Created by Gabriel Araujo 15/02/16.
  */
 public class ChatNetworkServicePluginRootNew extends AbstractNetworkServiceBase implements NetworkServiceChatManager,
         LogManagerForDevelopers,
