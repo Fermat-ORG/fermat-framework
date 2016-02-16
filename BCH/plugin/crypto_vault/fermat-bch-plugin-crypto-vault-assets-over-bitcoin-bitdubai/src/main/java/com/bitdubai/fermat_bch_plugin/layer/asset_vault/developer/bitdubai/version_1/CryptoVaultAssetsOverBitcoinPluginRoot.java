@@ -313,13 +313,12 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     /**
      * generates a final transaction based on a draft transaction and prepares it to be broadcasted.
      * @param draftTransaction the completed and signed transaction
-     * @param fermatTrId the internal transaction id
      * @return the final transactionHash
      * @throws CantCreateBitcoinTransactionException
      */
     @Override
-    public String createBitcoinTransaction(DraftTransaction draftTransaction, UUID fermatTrId) throws CantCreateBitcoinTransactionException {
-        return null;
+    public String createBitcoinTransaction(DraftTransaction draftTransaction) throws CantCreateBitcoinTransactionException {
+        return assetCryptoVaultManager.createBitcoinTransaction(draftTransaction);
     }
 
     /**
@@ -331,7 +330,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      */
     @Override
     public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
-        return null;
+        return assetCryptoVaultManager.createDraftTransaction(inputTransaction, addressTo);
     }
 
     /**
@@ -342,7 +341,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      */
     @Override
     public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
-        return null;
+        return assetCryptoVaultManager.signTransaction(draftTransaction);
     }
 
 

@@ -68,7 +68,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     private static final String WALLET_USER_FILE_NAME = "walletsIds";
     private List<UUID> userWallets = new ArrayList<>();
     public static final String PATH_DIRECTORY = "asset-user-swap/";
-    private static final String walletPublicKey = "walletPublicKeyTest";
+    private static final String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
     private boolean existsWallet = false;
     private AssetUserWallet assetUserWallet; //We will use this, I swear.
 

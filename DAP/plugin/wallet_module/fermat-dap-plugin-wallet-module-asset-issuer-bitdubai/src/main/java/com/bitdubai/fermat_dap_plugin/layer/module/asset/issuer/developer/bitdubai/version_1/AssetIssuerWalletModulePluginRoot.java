@@ -169,7 +169,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
         } else {
             try {
                 for (ActorAssetUserGroup group : actorAssetUserManager.getAssetUserGroupsList()) {
-                    allUsers.removeAll(actorAssetUserManager.getListActorAssetUserByGroups(group.getGroupId()));
+                    allUsers.removeAll(actorAssetUserManager.getListActorAssetUserByGroups(group.getGroupId(),selectedNetwork));
                 }
                 return allUsers;
             } catch (CantGetAssetUserGroupException cantGetAssetUserGroupException) {
@@ -202,7 +202,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId) throws CantGetAssetUserActorsException {
         try {
-            return actorAssetUserManager.getListActorAssetUserByGroups(groupId);
+            return actorAssetUserManager.getListActorAssetUserByGroups(groupId,selectedNetwork);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException(e);
