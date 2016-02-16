@@ -48,7 +48,7 @@ import java.util.UUID;
  * Created by nelson on 22/12/15.
  */
 public class WizardPageSetProvidersFragment extends AbstractFermatFragment
-        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CurrencyExchangeRateProviderManager>, AdapterView.OnItemSelectedListener {
+        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CurrencyPairAndProvider>, AdapterView.OnItemSelectedListener {
 
     // Constants
     private static final String TAG = "WizardPageSetEarning";
@@ -238,7 +238,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     }
 
     @Override
-    public void deleteButtonClicked(CurrencyExchangeRateProviderManager data, final int position) {
+    public void deleteButtonClicked(CurrencyPairAndProvider data, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         builder.setTitle(R.string.cbw_delete_provider_dialog_title).setMessage(R.string.cbw_delete_provider_dialog_msg);
