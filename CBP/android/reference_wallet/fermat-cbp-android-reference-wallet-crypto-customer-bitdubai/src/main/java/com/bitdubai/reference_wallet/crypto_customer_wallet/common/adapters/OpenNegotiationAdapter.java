@@ -204,6 +204,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         clauseViewHolder.bindData(negotiationInformation, clause, position);
         clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
         clauseViewHolder.setListener(clauseListener);
+        negotiationInformation = clauseViewHolder.getNegotiationInformation();
 
         final int clauseNumber = position + 1;
         final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);
@@ -314,8 +315,8 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 //        final int TOTAL_STEPS = getTotalSteps(clauses);
         int TOTAL_STEPS = 10;
 //        int contInd = TOTAL_STEPS - 1;
-        ClauseInformation brokerPaymentMethod = getCustomerPaymentInfo(clauses);
-        ClauseInformation customerReceivedMethod = getBrokerPaymentInfo(clauses);
+//        ClauseInformation brokerPaymentMethod = getCustomerPaymentInfo(clauses);
+//        ClauseInformation customerReceivedMethod = getBrokerPaymentInfo(clauses);
 
 //        if(brokerPaymentMethod != null)     TOTAL_STEPS = TOTAL_STEPS + 1;
 //        if(customerReceivedMethod != null)  TOTAL_STEPS = TOTAL_STEPS + 1;

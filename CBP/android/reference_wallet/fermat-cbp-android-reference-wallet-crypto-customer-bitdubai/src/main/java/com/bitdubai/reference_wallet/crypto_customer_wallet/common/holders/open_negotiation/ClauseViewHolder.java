@@ -89,15 +89,18 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
                     valuesHasChanged = listener.getValuesHasChanged();
 
                 if ((valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
+                    System.out.print("\nTEST REFERENCE WALLET: Clause Type: "+clause.getType().getCode()+" ClauseStatus = "+ClauseStatus.CHANGED );
                     actualStatus = NegotiationStepStatus.CHANGED;
                     putClause(clause, ClauseStatus.CHANGED);
 
                 }else if ((!valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
+                    System.out.print("\nTEST REFERENCE WALLET: Clause Type: "+clause.getType().getCode()+" ClauseStatus = "+ClauseStatus.ACCEPTED );
                     actualStatus = NegotiationStepStatus.ACCEPTED;
                     putClause(clause, ClauseStatus.ACCEPTED);
 
                 }
 
+                System.out.print("\nTEST REFERENCE WALLET: ClauseStatus = "+clause.getStatus().getCode() );
                 valuesHasChanged = false;
 
                 modifyData(actualStatus);
@@ -170,7 +173,11 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
             }
         };
 
-        negotiationInformation.getClauses().put(type, clauseInformation);
+        this.negotiationInformation.getClauses().put(type, clauseInformation);
+    }
+
+    public CustomerBrokerNegotiationInformation getNegotiationInformation(){
+        return this.negotiationInformation;
     }
 
 }
