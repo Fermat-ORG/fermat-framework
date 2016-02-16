@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -66,7 +67,6 @@ import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by Joaquin Carrasquero on 12/02/16, email: jc.juaco@gmail.com.
@@ -586,24 +586,58 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
     @Override
     public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                .constructPlatformComponentProfileFactory(identityPublicKeySender,
-                        "sender_alias",
-                        "sender_name",
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_INTRA_USER,
-                        "");
+        try {
+
+            Actors actors = cryptoAddressesNetworkServiceDao.getActorTypeFromRequest(identityPublicKeySender);
+            return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                    .constructPlatformComponentProfileFactory(identityPublicKeySender,
+                            "sender_alias",
+                            "sender_name",
+                            NetworkServiceType.UNDEFINED,
+                            platformComponentTypeSelectorByActorType(actors),
+                            "");
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
-                        "destination_alias",
-                        "destionation_name",
-                        NetworkServiceType.UNDEFINED,
-                        PlatformComponentType.ACTOR_INTRA_USER,
-                        "");
+        try {
+
+            Actors actors = cryptoAddressesNetworkServiceDao.getActorTypeToRequest(identityPublicKeyDestination);
+            return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                    .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
+                            "destination_alias",
+                            "destionation_name",
+                            NetworkServiceType.UNDEFINED,
+                            platformComponentTypeSelectorByActorType(actors),
+                            "");
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) throws InvalidParameterException {
+
+        switch (type) {
+
+            case INTRA_USER            : return PlatformComponentType.ACTOR_INTRA_USER          ;
+            case CCM_INTRA_WALLET_USER : return PlatformComponentType.ACTOR_INTRA_USER          ;
+            case CCP_INTRA_WALLET_USER : return PlatformComponentType.ACTOR_INTRA_USER          ;
+            case DAP_ASSET_ISSUER      : return PlatformComponentType.ACTOR_ASSET_ISSUER        ;
+            case DAP_ASSET_USER        : return PlatformComponentType.ACTOR_ASSET_USER          ;
+            case DAP_ASSET_REDEEM_POINT: return PlatformComponentType.ACTOR_ASSET_REDEEM_POINT  ;
+
+            default: throw new InvalidParameterException(
+                    " actor type: "+type.name()+"  type-code: "+type.getCode(),
+                    " type of actor not expected."
+            );
+        }
     }
 
     @Override
