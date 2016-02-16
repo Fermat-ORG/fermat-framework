@@ -158,9 +158,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
         // change message state to process again first time
         reprocessMessage();
 
-        //declare a schedule to process waiting request message
-        startTimer();
-
 
     }
 
