@@ -25,6 +25,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -236,7 +238,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                     logManager.log(BrokerAckOfflinePaymentPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
-                } catch (CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
+                } catch (CantMakeDepositTransactionException| CannotSendContractHashException | CantUpdateRecordException | CantSendContractNewStatusNotificationException e) {
                     errorManager.reportUnexpectedPluginException(
                             Plugins.BROKER_ACK_OFFLINE_PAYMENT,
                             UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -284,7 +286,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         private void doTheMainTask() throws
                 CannotSendContractHashException,
                 CantUpdateRecordException,
-                CantSendContractNewStatusNotificationException {
+                CantSendContractNewStatusNotificationException, CantMakeDepositTransactionException {
 
             try{
                 brokerAckOfflinePaymentBusinessTransactionDao =new BrokerAckOfflinePaymentBusinessTransactionDao(
@@ -294,6 +296,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                 String contractHash;
                 String cryptoWalletPublicKey;
+                BankTransactionParametersRecord bankTransactionParametersRecord;
+                BankTransaction bankTransaction;
+                UUID externalTransactionId;
 
                 /**
                  * Check pending bank transactions to credit - Broker Side
@@ -305,7 +310,16 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 for(BusinessTransactionRecord pendingToBakCreditRecord : pendingToBankCreditList){
                     contractHash=pendingToBakCreditRecord.getTransactionHash();
                     cryptoWalletPublicKey=pendingToBakCreditRecord.getCBPWalletPublicKey();
-                    //depositManager.makeDeposit()
+                    bankTransactionParametersRecord=getBankTransactionParametersRecordFromContractId(
+                            contractHash, cryptoWalletPublicKey);
+                    bankTransaction=depositManager.makeDeposit(bankTransactionParametersRecord);
+                    externalTransactionId=bankTransaction.getTransactionId();
+                    pendingToBakCreditRecord.setExternalTransactionId(externalTransactionId);
+                    pendingToBakCreditRecord.setContractTransactionStatus(
+                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION);
+                    pendingToBakCreditRecord.setPaymentType(MoneyType.BANK);
+                    brokerAckOfflinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(
+                            pendingToBakCreditRecord);
                 }
 
                 /**
@@ -371,6 +385,11 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         e,
                         "Sending contract hash",
                         "Unexpected result in database");
+            } catch (CantGetBankTransactionParametersRecordException e) {
+                throw new CannotSendContractHashException(
+                        e,
+                        "Sending contract hash",
+                        "Cannot get Bank Transaction Parameter Exception");
             }
 
         }
@@ -524,8 +543,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          */
         private BankTransactionParametersRecord getBankTransactionParametersRecordFromContractId(
                 String contractHash,
-                String cryptoWalletPublicKey,
-                String actorPublicKey) throws CantGetBankTransactionParametersRecordException {
+                String cryptoWalletPublicKey) throws CantGetBankTransactionParametersRecordException {
             try{
                 CustomerBrokerContractSale customerBrokerContractSale=
                         customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
@@ -533,6 +551,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 ObjectChecker.checkArgument(
                         customerBrokerContractSale,"The customerBrokerContractSale is null");
                 String negotiationId=customerBrokerContractSale.getNegotiatiotId();
+                String actorPublicKey=customerBrokerContractSale.getPublicKeyBroker();
                 ObjectChecker.checkArgument(
                         negotiationId,"The negotiationId for contractHash "+contractHash+" is null");
                 CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation=
