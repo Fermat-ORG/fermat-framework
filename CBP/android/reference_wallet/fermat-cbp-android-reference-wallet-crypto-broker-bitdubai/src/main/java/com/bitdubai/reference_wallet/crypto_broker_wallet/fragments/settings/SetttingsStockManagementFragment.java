@@ -33,6 +33,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SettingsStockManagementMerchandisesAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.StockDestockAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.CreateRestockDestockFragmentDialog;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
@@ -157,6 +158,11 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
             }
         });
+        SettingsStockManagementMerchandisesAdapter merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(),associatedSettings,walletManager);
+        merchandisesAdapter.setFermatListEventListener(this);
+        RecyclerView merchandisesRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_settings_current_merchandises);
+        merchandisesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        merchandisesRecyclerView.setAdapter(merchandisesAdapter);
 
         showOrHideNoSelectedWalletsView();
     }
