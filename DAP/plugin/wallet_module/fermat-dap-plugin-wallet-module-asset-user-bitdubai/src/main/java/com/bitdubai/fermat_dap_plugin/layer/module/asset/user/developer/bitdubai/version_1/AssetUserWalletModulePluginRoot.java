@@ -334,11 +334,6 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public ActorAssetUser getActorRegisteredByPublicKey(String publicKey) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
-        return actorAssetUserManager.getActorRegisteredByPublicKey(publicKey);
-    }
-
-    @Override
     public SettingsManager getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;

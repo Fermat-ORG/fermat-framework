@@ -49,8 +49,7 @@
         <ImageView
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:src="@drawable/sad_face" />
+            android:layout_gravity="center" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"

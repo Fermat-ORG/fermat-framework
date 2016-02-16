@@ -40,11 +40,12 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
         this.database = database;
         this.broadcaster = broadcaster;
     }
+
     @Override
     public long getBalance() throws CantCalculateBalanceException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-            return bitcoinWalletBasicWalletDao.getAvailableBalance();
+            return bitcoinWalletBasicWalletDao.getAvailableBalance(BlockchainNetworkType.REG_TEST); //TODO red harcoder
         } catch(CantCalculateBalanceException exception){
             throw exception;
         } catch(Exception exception){

@@ -35,7 +35,6 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -274,150 +273,9 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
         return null;
     }
 
-
-    /**
-     * This method is automatically called  when the client connection is close
-     * for the network service when need to update message state,
-     * is his define protocol are no complete
-     * and change incomplete message process to his original state
-     * for reprocessing again
-     */
-    @Override
-    protected void reprocessMessages() {
-
-    }
-
-    /**
-     * This method is automatically called  when the vpn connection is close
-     * for the network service when need to update message state,
-     * is his define protocol are no complete
-     * and change incomplete message process to his original state
-     * for reprocessing again
-     *
-     * @param identityPublicKey
-     */
-    @Override
-    protected void reprocessMessages(String identityPublicKey) {
-
-    }
     //PRIVATE METHODS
 
     //GETTER AND SETTERS
-
-    /**
-     * Get the CommunicationsClientConnection instance
-     *
-     * @return CommunicationsClientConnection
-     */
-    @Override
-    protected CommunicationsClientConnection getCommunicationsClientConnection() {
-        return null;
-    }
-
-    /**
-     * Get the ErrorManager instance
-     *
-     * @return ErrorManager
-     */
-    @Override
-    public ErrorManager getErrorManager() {
-        return null;
-    }
-
-    /**
-     * Get the EventManager instance
-     *
-     * @return EventManager
-     */
-    @Override
-    public EventManager getEventManager() {
-        return null;
-    }
-
-    /**
-     * Get the WsCommunicationsCloudClientManager instance
-     *
-     * @return WsCommunicationsCloudClientManager
-     */
-    @Override
-    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-        return null;
-    }
-
-    /**
-     * Get the PluginDatabaseSystem instance
-     *
-     * @return PluginDatabaseSystem
-     */
-    @Override
-    public PluginDatabaseSystem getPluginDatabaseSystem() {
-        return null;
-    }
-
-    /**
-     * Get the PluginFileSystem instance
-     *
-     * @return PluginFileSystem
-     */
-    @Override
-    public PluginFileSystem getPluginFileSystem() {
-        return null;
-    }
-
-    /**
-     * Get the Broadcaster instance
-     *
-     * @return Broadcaster
-     */
-    @Override
-    public Broadcaster getBroadcaster() {
-        return null;
-    }
-
-    /**
-     * Get the LogManager instance
-     *
-     * @return LogManager
-     */
-    @Override
-    public LogManager getLogManager() {
-        return null;
-    }
-
-    @Override
-    public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        return null;
-    }
-
-    /**
-     * This method is automatically called when the CommunicationSupervisorPendingMessagesAgent is trying to request
-     * a new connection for a message pending to send. This method need construct the profile specific to
-     * the network service work.
-     * <p/>
-     * Example: Is the network service work with actor this profile has to mach with the actor.
-     * <p/>
-     * <code>
-     *
-     * @param identityPublicKeyDestination
-     * @return PlatformComponentProfile
-     * @overray public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-     * <p/>
-     * return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
-     * .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
-     * actor.getAlias(),
-     * actor.getName(),
-     * NetworkServiceType.UNDEFINED,
-     * PlatformComponentType.ACTOR_INTRA_USER,
-     * "");
-     * <p/>
-     * }
-     * <p/>
-     * </code>
-     */
-    @Override
-    public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        return null;
-    }
 
     //INNER CLASSES
 }

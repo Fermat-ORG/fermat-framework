@@ -110,7 +110,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             //LIST OF MAKET RATE OF BROKER
             brokerCurrencyQuotationlist = TestData.getMarketRateForCurrencyTest();
-            brokerCurrencyQuotation = new BrokerCurrencyQuotation(brokerCurrencyQuotationlist);
+            brokerCurrencyQuotation = new BrokerCurrencyQuotation(appSession.getActualExchangeRates());
 
             valuesHasChanged = false;
 
@@ -383,7 +383,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         adapter = new OpenNegotiationAdapter(getActivity(), negotiationInfo);
         adapter.setClauseListener(this);
         adapter.setFooterListener(this);
-        adapter.setMarketRateList(brokerCurrencyQuotationlist);
+        adapter.setMarketRateList(appSession.getActualExchangeRates());
 
         recyclerView.setAdapter(adapter);
     }

@@ -135,4 +135,12 @@ public interface BitcoinWalletWallet {
      */
     void deleteTransaction(UUID   transactionID) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
 
+    /**
+     * Throw the method <code>getTransactionById</code> return transaction information.
+     * @param transactionID
+     * @return
+     * @throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException
+     */
+    BitcoinWalletTransaction getTransactionById(UUID   transactionID) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
+
 }

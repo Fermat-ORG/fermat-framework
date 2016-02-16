@@ -696,7 +696,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     public void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName, BlockchainNetworkType blockchainNetworkType) throws CantUpdateWalletContactException {
         try {
             HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses = new HashMap<>();
-            cryptoAddresses.put(blockchainNetworkType,receivedCryptoAddress);
+            cryptoAddresses.put(blockchainNetworkType, receivedCryptoAddress);
             walletContactsRegistry.updateWalletContact(
                     contactId,
                     actorName,
@@ -885,6 +885,28 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
+    public CryptoWalletTransaction getTransaction(UUID transactionId, String walletPublicKey) throws CantListTransactionsException
+    {
+
+        try {
+            CryptoWalletTransaction cryptoWalletTransaction = null;
+            BitcoinWalletWallet bitcoinWalletWallet = null;
+            bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+
+            BitcoinWalletTransaction bwt = bitcoinWalletWallet.getTransactionById(transactionId);
+            cryptoWalletTransaction = new CryptoWalletWalletModuleTransaction(bwt,null,null);
+
+            return  cryptoWalletTransaction;
+
+        } catch (CantLoadWalletException e) {
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
+        } catch (CantFindTransactionException e) {
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
+        }
+
+    }
+
+    @Override
     public void setTransactionDescription(String walletPublicKey,
                                           UUID   transactionID,
                                           String description) throws CantSaveTransactionDescriptionException, TransactionNotFoundException {
@@ -975,17 +997,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                 lst.add(cryptoWalletPaymentRequest);
             }
 
-
-            //TODO: Harcoder
-            /*if(lst.size() == 0){
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-                lst.add(cryptoWalletPaymentRequest);
-                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-
-                lst.add(cryptoWalletPaymentRequest);
-            }*/
-
-
             return lst;
         } catch (Exception e) {
             throw new CantListSentPaymentRequestException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -1041,14 +1052,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                 lst.add(cryptoWalletPaymentRequest);
             }
 
-            //TODO: Harcoder
-           /* if(lst.size() == 0) {
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago", "Starbucks coffe", 500000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
-                lst.add(cryptoWalletPaymentRequest);
-                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago", "Hamburguer from MC donald", 100000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
-
-                lst.add(cryptoWalletPaymentRequest);
-            }*/
 
             return lst;
         } catch (Exception e) {
@@ -1172,16 +1175,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 //                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
 //                lst.add(cryptoWalletPaymentRequest);
 //            }
-//            //TODO: Harcoder
-//            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-//            lst.add(cryptoWalletPaymentRequest);
-//            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-//            lst.add(cryptoWalletPaymentRequest);
-//
-//            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-//            lst.add(cryptoWalletPaymentRequest);
-//            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-//            lst.add(cryptoWalletPaymentRequest);
+
 
 
             return lst;

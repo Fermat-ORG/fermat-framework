@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.agents.CommunicationNetworkServiceRemoteAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.daos.IncomingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.daos.OutgoingMessageDao;
@@ -9,11 +8,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager</code>
@@ -30,6 +29,10 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
      */
     private AbstractNetworkServiceBase networkServiceRoot;
 
+    /**
+     * Represents the error manager
+     */
+    private final ErrorManager errorManager;
     /**
      * Holds all references to the communication network service locals
      */
@@ -54,9 +57,11 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
      * Constructor with parameter
      * @param networkServiceRoot
      */
-    public CommunicationNetworkServiceConnectionManager(AbstractNetworkServiceBase networkServiceRoot) {
+    public CommunicationNetworkServiceConnectionManager(AbstractNetworkServiceBase networkServiceRoot, ErrorManager errorManager) {
         super();
+        
         this.networkServiceRoot = networkServiceRoot;
+        this.errorManager       = errorManager      ;
         this.incomingMessageDao = new IncomingMessageDao(networkServiceRoot.getDataBase());
         this.outgoingMessageDao = new OutgoingMessageDao(networkServiceRoot.getDataBase());
         this.communicationNetworkServiceLocalsCache = new HashMap<>();
@@ -80,7 +85,7 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
 
 
         } catch (Exception e) {
-            networkServiceRoot.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+            errorManager.reportUnexpectedPluginException(networkServiceRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
         }
 
     }
@@ -153,12 +158,12 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
                  /*
                  * Instantiate the local reference
                  */
-                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(this, remoteComponentProfile);
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(this, remoteComponentProfile, errorManager);
 
                 /*
                  * Instantiate the remote reference
                  */
-                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(this, communicationsVPNConnection);
+                CommunicationNetworkServiceRemoteAgent communicationNetworkServiceRemoteAgent = new CommunicationNetworkServiceRemoteAgent(this, communicationsVPNConnection, errorManager);
 
                 /*
                  * Register the observer to the observable agent
@@ -180,7 +185,7 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
 
         } catch (Exception e) {
             e.printStackTrace();
-            networkServiceRoot.getErrorManager().reportUnexpectedPluginException(networkServiceRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
+            errorManager.reportUnexpectedPluginException(networkServiceRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
         }
     }
 

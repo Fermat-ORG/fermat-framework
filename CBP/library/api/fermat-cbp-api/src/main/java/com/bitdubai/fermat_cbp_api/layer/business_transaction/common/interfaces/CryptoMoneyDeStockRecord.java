@@ -25,7 +25,7 @@ public class CryptoMoneyDeStockRecord extends AbstractDeStockRecord {
                 businessTransactionRecord.getCryptoAmount());
         this.memo=generateMemo(businessTransactionRecord.getContractHash());
         this.priceReference=businessTransactionRecord.getPriceReference();
-        this.originTransaction=OriginTransaction.STOCK_INITIAL;
+        this.originTransaction=OriginTransaction.SALE;
 
     }
 
