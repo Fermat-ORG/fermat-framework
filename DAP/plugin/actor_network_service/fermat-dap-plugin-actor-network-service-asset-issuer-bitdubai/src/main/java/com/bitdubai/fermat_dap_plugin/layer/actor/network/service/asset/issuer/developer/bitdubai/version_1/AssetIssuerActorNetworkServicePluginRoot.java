@@ -813,7 +813,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
 
     @Override
     public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
-        switch (dapMessage.getMessageType()) {
+        switch (dapMessage.getMessageContent().messageType()) {
             case ASSET_APPROPRIATION:
                 assetAppropriated(dapMessage);
                 break;
@@ -1494,7 +1494,7 @@ public class AssetIssuerActorNetworkServicePluginRoot extends AbstractNetworkSer
                 Gson gson = DAPMessageGson.getGson();
                 try {
                     DAPMessage dapMessage = gson.fromJson(message.getContent(), DAPMessage.class);
-                    if (dapMessage.getMessageType() == type) {
+                    if (dapMessage.getMessageContent().messageType() == type) {
                         listToReturn.add(dapMessage);
                         markAsRead(message);
                     }

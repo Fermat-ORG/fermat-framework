@@ -20,9 +20,11 @@ import com.bitdubai.sub_app.intra_user_community.common.utils.FragmentsCommons;
 public class IntraUserCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private Activity activity;
+    private final ActiveActorIdentityInformation intraUserLoginIdentity;
 
-    public IntraUserCommunityNavigationViewPainter(Activity activity) {
+    public IntraUserCommunityNavigationViewPainter(Activity activity,ActiveActorIdentityInformation intraUserLoginIdentity) {
         this.activity = activity;
+        this.intraUserLoginIdentity = intraUserLoginIdentity;
     }
 
     @Override
@@ -67,6 +69,6 @@ public class IntraUserCommunityNavigationViewPainter implements NavigationViewPa
 
     @Override
     public boolean hasClickListener() {
-        return false;
+        return true;
     }
 }

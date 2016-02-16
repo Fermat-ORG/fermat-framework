@@ -63,6 +63,16 @@ public interface FermatMessage {
     public Timestamp getShippingTimestamp();
 
     /**
+     * Get the FailCount, this value indicate
+     * when try to send a message an fail
+     *
+     * Note: This is only for outgoing message
+     *
+     * @return
+     */
+    public Integer getFailCount();
+
+    /**
      * Get the FermatMessagesStatus
      *
      * @return FermatMessagesStatus

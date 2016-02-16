@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
@@ -23,48 +22,31 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
-import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.ErrorBroadcastingTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.XML;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.google.common.util.concurrent.MoreExecutors;
 
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
-import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.NetworkParameters;
-import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
-import org.bitcoinj.core.StoredBlock;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
-import org.bitcoinj.core.TransactionConfidence;
-import org.bitcoinj.core.TransactionInput;
-import org.bitcoinj.core.TransactionOutPoint;
-import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
-import org.bitcoinj.store.BlockStore;
-import org.bitcoinj.store.BlockStoreException;
-import org.bitcoinj.store.MemoryBlockStore;
-import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
-import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -120,11 +102,19 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         //todo move this to the correct new thread format.
-        try {
-            doTheMainTask();
-        } catch (BlockchainException e) {
-            e.printStackTrace();
-        }
+        System.out.println("***CryptoNetwork*** Monitor started for Network " + this.BLOCKCHAIN_NETWORKTYPE.getCode());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    doTheMainTask();
+                } catch (BlockchainException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
     }
 
     @Override
@@ -262,7 +252,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, "No transaction was found to broadcast.", null);
             }
 
-            wallet.commitTx(transaction);
+            // commit and save
+            try {
+                wallet.commitTx(transaction);
+                wallet.saveToFile(walletFileName);
+            } catch (IOException e) {
+                throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, "There was an error saving the wallet to disk.", "IO issue");
+            }
         }
 
         final int connectedPeers = peerGroup.getConnectedPeers().size();
@@ -281,6 +277,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
          TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
          transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
+
+        transactionBroadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
+            @Override
+            public void onBroadcastProgress(double progress) {
+                System.out.println("***CryptoNetwork*** Broadcast progress for transaction " + txHash + ": " + progress * 100 + " %");
+            }
+        });
+
 
          ListenableFuture<Transaction> future = transactionBroadcast.future();
         /**
@@ -305,7 +309,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                      */
                     wallet.saveToFile(walletFileName);
 
-                    System.out.println("***CryptoNetwork***  Transaction succesfully broadcasted: " + finalTransaction.getHashAsString());
+                    System.out.println("***CryptoNetwork***  Transaction successfully broadcasted: " + finalTransaction.getHashAsString());
                 } catch (CantExecuteDatabaseOperationException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -324,37 +328,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             }
         });
 
-
-//        /**
-//         * Will set the time out for this broadcast attempt.
-//         */
-//        try {
-//            future.get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
-//        } catch (InterruptedException e) {
-//            try {
-//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-//            } catch (CantExecuteDatabaseOperationException e1) {
-//                e1.printStackTrace();
-//            }
-//        } catch (ExecutionException e) { a
-//            try {
-//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-//            } catch (CantExecuteDatabaseOperationException e1) {
-//                e1.printStackTrace();
-//            }
-//        } catch (TimeoutException e) {
-//            try {
-//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-//            } catch (CantExecuteDatabaseOperationException e1) {
-//                e1.printStackTrace();
-//            }
-//        } catch (Exception e){
-//            try {
-//                getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, e, txHash);
-//            } catch (CantExecuteDatabaseOperationException e1) {
-//                e1.printStackTrace();
-//            }
-//        }
+        /**
+         * starts the broadcasting.
+         */
+        transactionBroadcast.broadcast();
     }
 
     /**
@@ -431,34 +408,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      */
     public PeerGroup getPeerGroup() {
         return peerGroup;
-    }
-
-    /**
-     * Will get the CryptoTransaction directly from the blockchain by requesting it to a peer.
-     * If the transaction is not part of any of our vaults, we will ask it to a connected peer to retrieve it.
-     * @param txHash the Hash of the transaction we are going to look for.
-     * @param blockHash the Hash of block where this transaction was stored..
-     * @return a CryptoTransaction with the information of the transaction.
-     * @throws CantGetCryptoTransactionException
-     */
-
-    public CryptoTransaction getCryptoTransactionFromBlockChain(String txHash, String blockHash) throws CantGetCryptoTransactionException {
-        Transaction transaction = null;
-        try {
-            transaction = this.getTransactionFromBlockChain(txHash, blockHash);
-        } catch (Exception e) {
-            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "Error getting the transaction from the blockchain.", null);
-        }
-        return this.getCryptoTransactionFromBitcoinTransaction(transaction);
-    }
-
-    /**
-     * Transform a Bitcoin Transaction into a Crypto Transaction
-     * @param transaction
-     * @return
-     */
-    private CryptoTransaction getCryptoTransactionFromBitcoinTransaction(Transaction transaction) {
-        return CryptoTransaction.getCryptoTransaction(transaction);
     }
 
     /**
