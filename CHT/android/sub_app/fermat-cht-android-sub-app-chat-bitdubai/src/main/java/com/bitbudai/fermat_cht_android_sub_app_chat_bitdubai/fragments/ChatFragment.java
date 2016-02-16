@@ -91,7 +91,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             moduleManager = chatSession.getModuleManager();
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
-            //whattodo();
+            whattodo();
             //     Chat chat=chatSession.getSelectedChat();
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
                 setHasOptionsMenu(true);
@@ -101,43 +101,41 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         }
     }
 //
-//    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
-    //    try {
-    //        if (contact != null){
-    //            remotepk = contact.getRemoteActorPublicKey();
-    //            remotepct = contact.getRemoteActorType();
-    //            contactid=contact.getContactId();
-    //            for (int i = 0; i < chatManager.getMessages().size(); i++) {
-    //                if (contactid.equals(chatManager.getMessages().get(i).getContactId())) {
-    //                    chatid = chatManager.getMessages().get(i).getChatId();
-    //                }
-    //            }
-    //        }
-    //
-    //    }catch (CantGetMessageException e) {
-    //        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-    //    }catch(Exception e){
-    //        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-    //    }
-    //}
-//
-//    void whattodo(){
-    //    try {
-    //        if (appSession.getData("whocallme").equals("chatlist")) {
-    //            findvalues((Contact)appSession.getData("contactid"));//if I choose a chat, this will retrieve the chatid
-    //            chatwascreate = true;
-    //        } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
-    //            findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
-    //            if (chatid != null) {//Here it is define if we need to create a new chat or just add the message to chat created previously
-    //                chatwascreate = true;
-    //            } else {
-    //                chatwascreate = false;
-    //            }
-    //        }
-    //    }catch(Exception e){
-    //        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-    //    }
-    //}
+    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
+        try {
+            if (contact != null){
+                remotepk = contact.getRemoteActorPublicKey();
+                remotepct = contact.getRemoteActorType();
+                contactid=contact.getContactId();
+                for (int i = 0; i < chatManager.getMessages().size(); i++) {
+                    if (contactid.equals(chatManager.getMessages().get(i).getContactId())) {
+                        chatid = chatManager.getMessages().get(i).getChatId();
+                    }
+                }
+            }
+
+        }catch(Exception e){
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+    }
+
+    void whattodo(){
+        try {
+            if (appSession.getData("whocallme").equals("chatlist")) {
+                findvalues((Contact)appSession.getData("contactid"));//if I choose a chat, this will retrieve the chatid
+                chatwascreate = true;
+            } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
+                findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
+                if (chatid != null) {//Here it is define if we need to create a new chat or just add the message to chat created previously
+                    chatwascreate = true;
+                } else {
+                    chatwascreate = false;
+                }
+            }
+        }catch(Exception e){
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+    }
 //
 //    void findmessage(){
 //        String message;
