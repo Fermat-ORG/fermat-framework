@@ -51,6 +51,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     private FermatTextView userEmail;
     private FermatTextView issuerExtendedKey;
     private FermatTextView issuerRegistrationDate;
+    private FermatTextView issuerLastConnectionDate;
 
 
     private static AssetIssuerCommunitySubAppModuleManager manager;
@@ -100,8 +101,8 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
         //issuerStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         issuerName = (FermatTextView) rootView.findViewById(R.id.username);
         issuerExtendedKey = (FermatTextView) rootView.findViewById(R.id.userExtendedKey);
-        issuerRegistrationDate = (FermatTextView) rootView.findViewById(R.id.userRegistrationDate);
-
+        //issuerRegistrationDate = (FermatTextView) rootView.findViewById(R.id.userRegistrationDate);
+        issuerLastConnectionDate= (FermatTextView) rootView.findViewById(R.id.issuerLastConnectionDate);
         //userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         connectionRequestSend = (Button) rootView.findViewById(R.id.btn_connection_request_send);
         connectionRequestRejected = (Button) rootView.findViewById(R.id.btn_connection_request_reject);
@@ -170,8 +171,9 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
             }else {
                 issuerExtendedKey.setText("None");
             }
-            //TODO Format this to a legible date please
-            issuerRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actorIssuer.getRecord().getRegistrationDate())));
+
+            //issuerRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actorIssuer.getRecord().getRegistrationDate())));
+            issuerLastConnectionDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actorIssuer.getRecord().getRegistrationDate())));
 
 
 
