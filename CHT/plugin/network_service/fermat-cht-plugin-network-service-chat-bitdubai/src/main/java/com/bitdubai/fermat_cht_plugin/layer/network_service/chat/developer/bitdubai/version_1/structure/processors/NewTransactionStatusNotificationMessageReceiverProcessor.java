@@ -15,7 +15,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.Distribution
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -68,20 +68,20 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
             UUID messageID                          = gson.fromJson(jsonMsjContent.get(ChatTransmissionJsonAttNames.MESSAGE_ID).getAsString(), UUID.class);
 
             /*
-             * Get the ChatMetadataTransactionRecord
+             * Get the ChatMetadataRecord
              */
 
             String transactionHash = CryptoHasher.performSha256(chatID.toString() + messageID.toString());
-            ChatMetadataTransactionRecord chatMetadataTransactionRecord =  getChatNetworkServicePluginRoot().getChatMetaDataDao().findByTransactionHash(transactionHash);
+            ChatMetadataRecord chatMetadataRecord =  getChatNetworkServicePluginRoot().getChatNetworkServiceMetadataDao().findByTransactionHash(transactionHash);
 
-            if(chatMetadataTransactionRecord != null){
+            if(chatMetadataRecord != null){
 
                 if(distributionStatus != null)
-                    chatMetadataTransactionRecord.setDistributionStatus(distributionStatus);
+                    chatMetadataRecord.setDistributionStatus(distributionStatus);
                 if(messageStatus != null)
-                    chatMetadataTransactionRecord.setMessageStatus(messageStatus);
-                chatMetadataTransactionRecord.setProcessed(ChatMetadataTransactionRecord.NO_PROCESSED);
-                getChatNetworkServicePluginRoot().getChatMetaDataDao().update(chatMetadataTransactionRecord);
+                    chatMetadataRecord.setMessageStatus(messageStatus);
+                chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
+                getChatNetworkServicePluginRoot().getChatNetworkServiceMetadataDao().update(chatMetadataRecord);
 
 
                 /*
@@ -96,7 +96,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 */
 
                 IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getChatNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.INCOMING_STATUS);
-                event.setChatId(chatMetadataTransactionRecord.getChatId());
+                event.setChatId(chatMetadataRecord.getChatId());
                 event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
                 getChatNetworkServicePluginRoot().getEventManager().raiseEvent(event);
              //   System.out.println("ChatNetworkServicePluginRoot - Incoming Status fired!");

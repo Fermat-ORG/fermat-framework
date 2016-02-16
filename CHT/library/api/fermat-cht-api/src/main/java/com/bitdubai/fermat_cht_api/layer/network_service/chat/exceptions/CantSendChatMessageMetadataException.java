@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 
 /**
- * Created by root on 06/10/15.
+ * Created by Gabriel Araujo on 06/10/15.
  */
 public class CantSendChatMessageMetadataException extends CHTException {
 

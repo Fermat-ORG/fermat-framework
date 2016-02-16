@@ -3,10 +3,10 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.UUID;
@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo on 06/01/16.
  */
-public class ChatMetadataTransactionRecord implements ChatMetadata{
+public class ChatMetadataRecord implements ChatMetadata{
 
     private UUID transactionId;
 
@@ -46,13 +46,63 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
 
     private DistributionStatus distributionStatus;
 
+    private ChatProtocolState chatProtocolState;
+
+    private Timestamp sentDate;
+
+    private boolean flagReadead;
+
+    private int sentCount;
+
+    private UUID responseToNotificationId;
+
+    public ChatProtocolState getChatProtocolState() {
+        return chatProtocolState;
+    }
+
+    public void changeState(ChatProtocolState chatProtocolState) {
+        this.chatProtocolState = chatProtocolState;
+    }
+
     /**
      * Represent the value of processed
      */
     private String processed;
 
+    public Timestamp getSentDate() {
+        return sentDate;
+    }
+
+    public void setSentDate(Timestamp sentDate) {
+        this.sentDate = sentDate;
+    }
+
+    public boolean isFlagReadead() {
+        return flagReadead;
+    }
+
+    public void setFlagReadead(boolean flagReadead) {
+        this.flagReadead = flagReadead;
+    }
+
+    public int getSentCount() {
+        return sentCount;
+    }
+
+    public void setSentCount(int sentCount) {
+        this.sentCount = sentCount;
+    }
+
+    public UUID getResponseToNotificationId() {
+        return responseToNotificationId;
+    }
+
+    public void setResponseToNotificationId(UUID responseToNotificationId) {
+        this.responseToNotificationId = responseToNotificationId;
+    }
+
     /**
-     * This method checks if the ChatMetadataTransactionRecord if completed filled before sending.
+     * This method checks if the ChatMetadataRecord if completed filled before sending.
      * @return
      */
     public boolean isFilled(){
@@ -88,6 +138,12 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
             return false;
         if(this.processed == null || processed.isEmpty())
             return false;
+        if(this.chatProtocolState == null)
+            return false;
+        if(this.sentDate == null)
+            return false;
+        if(this.responseToNotificationId == null)
+            return false;
         return true;
     }
 
@@ -95,39 +151,39 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
     public boolean equals(Object obj) {
         if(obj == null)
             return false;
-        if(!(obj instanceof ChatMetadataTransactionRecord))
+        if(!(obj instanceof ChatMetadataRecord))
             return false;
-        if(this.chatId != ((ChatMetadataTransactionRecord) obj).getChatId())
+        if(this.chatId != ((ChatMetadataRecord) obj).getChatId())
             return false;
-        if(this.transactionId != ((ChatMetadataTransactionRecord) obj).getTransactionId())
+        if(this.transactionId != ((ChatMetadataRecord) obj).getTransactionId())
             return false;
-        if(!Objects.equals(this.transactionHash, ((ChatMetadataTransactionRecord) obj).getTransactionHash()))
+        if(!Objects.equals(this.transactionHash, ((ChatMetadataRecord) obj).getTransactionHash()))
             return false;
-        if(this.objectId != ((ChatMetadataTransactionRecord) obj).getObjectId())
+        if(this.objectId != ((ChatMetadataRecord) obj).getObjectId())
             return false;
-        if(this.localActorType != ((ChatMetadataTransactionRecord) obj).getLocalActorType())
+        if(this.localActorType != ((ChatMetadataRecord) obj).getLocalActorType())
             return false;
-        if(!Objects.equals(this.localActorPublicKey, ((ChatMetadataTransactionRecord) obj).getLocalActorPublicKey()))
+        if(!Objects.equals(this.localActorPublicKey, ((ChatMetadataRecord) obj).getLocalActorPublicKey()))
             return false;
-        if(this.remoteActorType != ((ChatMetadataTransactionRecord) obj).getRemoteActorType())
+        if(this.remoteActorType != ((ChatMetadataRecord) obj).getRemoteActorType())
             return false;
-        if(!Objects.equals(this.remoteActorPublicKey, ((ChatMetadataTransactionRecord) obj).getRemoteActorPublicKey()))
+        if(!Objects.equals(this.remoteActorPublicKey, ((ChatMetadataRecord) obj).getRemoteActorPublicKey()))
             return false;
-        if(!Objects.equals(this.chatName, ((ChatMetadataTransactionRecord) obj).getChatName()))
+        if(!Objects.equals(this.chatName, ((ChatMetadataRecord) obj).getChatName()))
             return false;
-        if(this.chatMessageStatus != ((ChatMetadataTransactionRecord) obj).getChatMessageStatus())
+        if(this.chatMessageStatus != ((ChatMetadataRecord) obj).getChatMessageStatus())
             return false;
-        if(this.messageStatus != ((ChatMetadataTransactionRecord) obj).getMessageStatus())
+        if(this.messageStatus != ((ChatMetadataRecord) obj).getMessageStatus())
             return false;
-        if(this.date != ((ChatMetadataTransactionRecord) obj).getDate())
+        if(this.date != ((ChatMetadataRecord) obj).getDate())
             return false;
-        if(this.messageId != ((ChatMetadataTransactionRecord) obj).getMessageId())
+        if(this.messageId != ((ChatMetadataRecord) obj).getMessageId())
             return false;
-        if(!Objects.equals(this.message, ((ChatMetadataTransactionRecord) obj).getMessage()))
+        if(!Objects.equals(this.message, ((ChatMetadataRecord) obj).getMessage()))
             return false;
-        if(this.distributionStatus != ((ChatMetadataTransactionRecord) obj).getDistributionStatus())
+        if(this.distributionStatus != ((ChatMetadataRecord) obj).getDistributionStatus())
             return false;
-        if(!Objects.equals(this.processed, ((ChatMetadataTransactionRecord) obj).getProcessed()))
+        if(!Objects.equals(this.processed, ((ChatMetadataRecord) obj).getProcessed()))
             return false;
         return true;
     }
@@ -243,7 +299,7 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
 
     @Override
     public String toString() {
-        return "ChatMetadataTransactionRecord{" +
+        return "ChatMetadataRecord{" +
                 "chatId=" + chatId +
                 ", objectId=" + objectId +
                 ", localActorType='" + localActorType + '\'' +

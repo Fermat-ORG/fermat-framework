@@ -15,7 +15,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageT
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataTransactionRecord;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataRecord;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatTransmissionJsonAttNames;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
@@ -52,7 +52,6 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
      *
      * @see FermatMessageProcessor#processingMessage(FermatMessage, JsonObject)
      */
-    @Override
     public void processingMessage(FermatMessage fermatMessage, JsonObject jsonMsjContent) {
 
         try {
@@ -64,7 +63,7 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
             /*
              * Convert the xml to object
              */
-            ChatMetadataTransactionRecord chatMetadataTransactionRecord = (ChatMetadataTransactionRecord) XMLParser.parseXML(chatMetadataXml, new ChatMetadataTransactionRecord());
+            ChatMetadataRecord chatMetadataRecord = (ChatMetadataRecord) XMLParser.parseXML(chatMetadataXml, new ChatMetadataRecord());
 
 
             /*
@@ -75,14 +74,14 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
              * Save into data base for audit control
              */
             //get the transactions an UUID
-            chatMetadataTransactionRecord.setTransactionId(getChatNetworkServicePluginRoot().getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
-            String transactionHash = CryptoHasher.performSha256(chatMetadataTransactionRecord.getChatId().toString() + chatMetadataTransactionRecord.getMessageId().toString());
-            chatMetadataTransactionRecord.setTransactionHash(transactionHash);
-            chatMetadataTransactionRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
-            chatMetadataTransactionRecord.setMessageStatus(MessageStatus.CREATED);
-            chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.DELIVERING);
-            chatMetadataTransactionRecord.setProcessed(ChatMetadataTransactionRecord.NO_PROCESSED);
-            getChatNetworkServicePluginRoot().getChatMetaDataDao().create(chatMetadataTransactionRecord);
+            chatMetadataRecord.setTransactionId(getChatNetworkServicePluginRoot().getChatNetworkServiceMetadataDao().getNewUUID(UUID.randomUUID().toString()));
+            String transactionHash = CryptoHasher.performSha256(chatMetadataRecord.getChatId().toString() + chatMetadataRecord.getMessageId().toString());
+            chatMetadataRecord.setTransactionHash(transactionHash);
+            chatMetadataRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
+            chatMetadataRecord.setMessageStatus(MessageStatus.CREATED);
+            chatMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERING);
+            chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
+            getChatNetworkServicePluginRoot().getChatNetworkServiceMetadataDao().create(chatMetadataRecord);
 
             /*
              * Mark the message as read
@@ -94,7 +93,7 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
              * Notify to the interested
              */
             IncomingChat event = (IncomingChat) getChatNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.INCOMING_CHAT);
-            event.setChatId(chatMetadataTransactionRecord.getChatId());
+            event.setChatId(chatMetadataRecord.getChatId());
             event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
             getChatNetworkServicePluginRoot().getEventManager().raiseEvent(event);
             //System.out.println("ChatNetworkServicePluginRoot - Incoming Chat fired!");
@@ -105,7 +104,6 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
 
     }
 
-    @Override
     public ChatMessageTransactionType getChatMessageTransactionType() {
         return ChatMessageTransactionType.CHAT_METADATA_TRASMIT;
     }
