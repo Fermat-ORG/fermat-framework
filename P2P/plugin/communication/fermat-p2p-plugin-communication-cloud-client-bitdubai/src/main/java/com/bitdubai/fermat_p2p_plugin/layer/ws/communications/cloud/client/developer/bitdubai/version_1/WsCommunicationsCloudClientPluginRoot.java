@@ -369,13 +369,32 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
          * Set the ipAddress and the port in the File Text
          */
         try {
-            editIpAndPortProperties(ipAddress, port);
+            editServerIpAndPortProperties(ipAddress, port);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
+    /*
+     * change default values the ipAddress and the port to connect to the Cloud Server
+     */
+    @Override
+    public void resetIpAndPortDefault() {
+
+        this.SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+        this.PORT = ServerConf.DEFAULT_PORT;
+
+        /*
+         * Set the ipAddress and the port in the File Text
+         */
+        try {
+            editServerIpAndPortProperties(ServerConf.SERVER_IP_PRODUCTION, ServerConf.DEFAULT_PORT);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      * Initialize the clientIdentity of this plugin
@@ -526,7 +545,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /*
      * Set the ipAddress and the port in the File Text
      */
-    private void editIpAndPortProperties(String ipAddress, Integer port) throws Exception{
+    private void editServerIpAndPortProperties(String ipAddress, Integer port) throws Exception{
 
         try{
 

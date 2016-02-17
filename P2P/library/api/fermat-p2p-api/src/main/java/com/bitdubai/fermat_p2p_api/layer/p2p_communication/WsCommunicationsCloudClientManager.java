@@ -43,5 +43,9 @@ public interface WsCommunicationsCloudClientManager extends FermatManager {
      */
     void changeIpAndPortProperties(String ipAddress, Integer port);
 
+    /*
+     * change default values the ipAddress and the port to connect to the Cloud Server
+     */
+    void resetIpAndPortDefault();
 
 }
