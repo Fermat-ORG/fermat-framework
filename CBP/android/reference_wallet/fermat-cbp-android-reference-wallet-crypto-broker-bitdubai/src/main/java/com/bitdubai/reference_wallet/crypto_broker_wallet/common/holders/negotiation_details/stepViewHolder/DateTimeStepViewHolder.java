@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details;
+package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder;
 
 import android.app.Activity;
 import android.app.DialogFragment;
@@ -13,7 +13,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Negotia
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NegotiationDetailsAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.StepViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.DatePickerFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.TimePickerFragment;
 

@@ -28,6 +28,7 @@
     <string name="sell_text_and_price">Sell: %1$s</string>
     <string name="buy_text_and_price">Buy: %1$s</string>
     <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
+    <string name="market_exchange_rate_text">Market Exchange Rate</string>
     <string name="cbw_exchange_rate_summary">1 %1$s @ %2$s %3$s</string>
     <string name="cbw_buying_details">Buying %1$s %2$s</string>
     <string name="cbw_sold_quantity_and_currency">%1$s %2$s %3$s</string>
