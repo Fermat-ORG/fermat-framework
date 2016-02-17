@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_offline_payment.interfaces.BrokerAckOfflinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
@@ -126,7 +127,6 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                                 contractHash+"\n" +
                                 "is null");
                     }
-                    //TODO: get the payment type
                     MoneyType paymentType=getMoneyTypeFromContract(customerBrokerContractSale);
                     switch (paymentType){
                         case BANK:
@@ -142,6 +142,10 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                             throw new InvalidParameterException(
                                     paymentType+" value from MoneyType is not valid in this plugin");
                     }
+                    this.brokerAckOfflinePaymentBusinessTransactionDao.
+                            updateRecordPaymentTypeByContractHash(
+                                    contractHash,
+                                    paymentType);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
                             contractTransactionStatus);
