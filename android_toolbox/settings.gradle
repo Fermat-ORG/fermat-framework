@@ -12,3 +12,10 @@ include ':fermat_preference_settings'
 project(':fermat_preference_settings').projectDir = new File('android_toolbox/fermat_preference_settings')
 
 
+include ':image_slider'
+project(':image_slider').projectDir = new File('android_toolbox/image_slider')
+
+
+
+
+

@@ -23,7 +23,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @throws CantGetAssetRedeemPointActorsException
      * @throws CantAssetRedeemPointActorNotFoundException
      */
-    ActorAssetRedeemPoint getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
+    ActorAssetRedeemPoint getActorByPublicKey(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
 
     /**
      * The method <code>createActorAssetRedeemPointFactory</code> create Actor by a Identity

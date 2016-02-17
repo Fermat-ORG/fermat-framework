@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * The enum <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState</code>
- * enumerates all the possible types of an earning transaction.
+ * The enum <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningPairState</code>
+ * enumerates all the possible types of an earning pair.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/02/2016.
  */
@@ -36,7 +36,7 @@ public enum EarningPairState implements FermatEnum {
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
-                        "The code received is not valid for the EarningTransactionState enum."
+                        "The code received is not valid for the EarningPairState enum."
                 );
         }
     }
