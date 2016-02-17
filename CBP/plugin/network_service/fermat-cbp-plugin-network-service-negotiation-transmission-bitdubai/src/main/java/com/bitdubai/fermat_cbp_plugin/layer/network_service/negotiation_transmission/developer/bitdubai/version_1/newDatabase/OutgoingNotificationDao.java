@@ -68,13 +68,13 @@ public class OutgoingNotificationDao {
 
         try {
 
-            if (!existNotification(negotiationTransmission)) {
+//            if (!existNotification(negotiationTransmission)) {
                 DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
 
                 DatabaseTableRecord entityRecord = cryptoPaymentRequestTable.getEmptyRecord();
 
                 cryptoPaymentRequestTable.insertRecord(loadRecordAsSendNegotiationTransmission(entityRecord, negotiationTransmission, negotiationTransmissionState));
-            }
+//            }
 
 
         } catch (CantInsertRecordException e) {
@@ -264,10 +264,11 @@ public class OutgoingNotificationDao {
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NEGOTIATION_TYPE_COLUMN_NAME, negotiationTransmission.getNegotiationType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NEGOTIATION_XML_COLUMN_NAME, negotiationTransmission.getNegotiationXML());
         record.setLongValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, negotiationTransmission.getTimestamp());
-        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, negotiationTransmission.getActorProtocolState().getCode());
+//        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, negotiationTransmission.getActorProtocolState().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(negotiationTransmission.isFlagRead()));
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, String.valueOf(negotiationTransmission.isPendingFlag()));
         record.setIntegerValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, negotiationTransmission.getSentCount());
+        if(negotiationTransmission.getResponseToNotificationId() != null)
         record.setUUIDValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, negotiationTransmission.getResponseToNotificationId());
         return record;
     }
@@ -286,7 +287,7 @@ public class OutgoingNotificationDao {
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NEGOTIATION_TYPE_COLUMN_NAME, negotiationTransmission.getNegotiationType().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NEGOTIATION_XML_COLUMN_NAME, negotiationTransmission.getNegotiationXML());
         record.setLongValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, negotiationTransmission.getTimestamp());
-        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, negotiationTransmission.getActorProtocolState().getCode());
+//        record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, negotiationTransmission.getActorProtocolState().getCode());
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(negotiationTransmission.isFlagRead()));
         record.setStringValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_NETWORK_SERVICE_PENDING_FLAG_COLUMN_NAME, String.valueOf(negotiationTransmission.isPendingFlag()));
         record.setIntegerValue(NegotiationTransmissionNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME, negotiationTransmission.getSentCount());
