@@ -120,7 +120,7 @@ We must think of Fermat as a system with no visible end, so it must be designed 
 
 **Master Plan**
 
-We define a long term master plan with everything that needs to be done, and considering all possible use cases. Then we all collaborate building the pieces of that master plan, in order, phase by phase. The master excludes duplicate functionality thus we eliminate duplicate efforts and save time and money.
+We define a long term master plan with everything that needs to be done, and considering all possible use cases. Then we all collaborate building the pieces of that master plan, in order, phase by phase. The master plan excludes duplicate functionality thus we eliminate duplicate efforts and save time and money.
 
 #### Promote Collaboration
 
