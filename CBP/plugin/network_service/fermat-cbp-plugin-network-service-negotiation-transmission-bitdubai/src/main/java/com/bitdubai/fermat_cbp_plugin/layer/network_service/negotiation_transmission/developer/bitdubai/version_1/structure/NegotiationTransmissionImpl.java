@@ -30,7 +30,6 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
     private final long timestamp;
     private boolean pendingFlag;
     private boolean flagRead;
-    private ActorProtocolState actorProtocolState;
     private int sentCount;
 
     private UUID responseToNotificationId;
@@ -103,7 +102,6 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
         this.pendingFlag = false;
         this.pendingFlag = pendingFlag;
         this.flagRead = flagRead;
-        this.actorProtocolState = actorProtocolState;
         this.sentCount = sentCount;
         this.responseToNotificationId = responseToNotificationId;
     }
@@ -204,14 +202,6 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
 
     public void setFlagRead(boolean flagRead) {
         this.flagRead = flagRead;
-    }
-
-    public ActorProtocolState getActorProtocolState() {
-        return actorProtocolState;
-    }
-
-    public void setActorProtocolState(ActorProtocolState actorProtocolState) {
-        this.actorProtocolState = actorProtocolState;
     }
 
     public int getSentCount() {
