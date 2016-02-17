@@ -9,10 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+
+import java.util.UUID;
 
 /**
  *Created by Yordin Alayn on 22.01.16.
@@ -29,6 +33,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected TextView titleTextView;
 
     protected Listener listener;
+//    protected ListenerConfirm listenerConfirm;
     protected ClauseInformation clause;
     protected CustomerBrokerNegotiationInformation negotiationInformation;
     protected int clausePosition;
@@ -71,34 +76,49 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
 
     public interface Listener {
         void onClauseCLicked(Button triggerView, ClauseInformation clause, int clausePosition);
-        boolean setValuesHasChanged();
+        void onConfirmCLicked(ClauseInformation clause);
+//        boolean getValuesHasChanged();
+//        ClauseType getClauseType();
     }
-
-    public void setValuesHasChanged(){
-        valuesHasChanged = listener.setValuesHasChanged();
-    }
+/*
+    public interface ListenerConfirm{
+        void onConfirmCLicked();
+    }*/
 
     private void configClauseViews(View itemView) {
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
+            public void onClick(View view) { listener.onConfirmCLicked(clause); }
+        });
+
+/*
+            confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View view) {
 
-                if ((listener.setValuesHasChanged()) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
+                if(clause.getType().equals(listener.getClauseType()))
+                    valuesHasChanged = listener.getValuesHasChanged();
+
+                if ((valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
+                    System.out.print("\nTEST REFERENCE WALLET: Clause Type: "+clause.getType().getCode()+" ClauseStatus = "+ClauseStatus.CHANGED );
                     actualStatus = NegotiationStepStatus.CHANGED;
-                else if ((!listener.setValuesHasChanged()) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
+                    putClause(clause, ClauseStatus.CHANGED);
+
+                }else if ((!valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM)) {
+                    System.out.print("\nTEST REFERENCE WALLET: Clause Type: "+clause.getType().getCode()+" ClauseStatus = "+ClauseStatus.ACCEPTED );
                     actualStatus = NegotiationStepStatus.ACCEPTED;
+                    putClause(clause, ClauseStatus.ACCEPTED);
 
-//                if ((valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
-//                    actualStatus = NegotiationStepStatus.CHANGED;
-//                else if ((!valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
-//                    actualStatus = NegotiationStepStatus.ACCEPTED;
+                }
 
+                System.out.print("\nTEST REFERENCE WALLET: ClauseStatus = "+clause.getStatus().getCode() );
                 valuesHasChanged = false;
 
                 modifyData(actualStatus);
             }
         });
+        */
     }
 
     public void setStatus(NegotiationStepStatus stepStatus) {
@@ -137,6 +157,40 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
 
     protected void modifyData(NegotiationStepStatus status) {
         setStatus(status);
+    }
+
+    //PUT CLAUSE
+    public void putClause(final ClauseInformation clause, final ClauseStatus status) {
+
+        final ClauseType type = clause.getType();
+
+        ClauseInformation clauseInformation = new ClauseInformation() {
+            @Override
+            public UUID getClauseID() {
+                return clause.getClauseID();
+            }
+
+            @Override
+            public ClauseType getType() {
+                return type;
+            }
+
+            @Override
+            public String getValue() {
+                return clause.getValue();
+            }
+
+            @Override
+            public ClauseStatus getStatus() {
+                return status;
+            }
+        };
+
+        this.negotiationInformation.getClauses().put(type, clauseInformation);
+    }
+
+    public CustomerBrokerNegotiationInformation getNegotiationInformation(){
+        return this.negotiationInformation;
     }
 
 }
