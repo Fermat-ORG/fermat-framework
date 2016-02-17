@@ -7,9 +7,8 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 
 
 /**
@@ -20,6 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends AbstractNetworkService> extends Thread {
 
     /*
@@ -36,7 +36,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
     /**
      * Represent the communicationsClientConnection
      */
-    private CommunicationsClientConnection communicationsClientConnection;
+    private WsCommunicationsCloudClientManager communicationsClientConnection;
 
     /**
      * Represent the active
@@ -48,7 +48,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
      * @param networkService
      * @param communicationsClientConnection
      */
-    public CommunicationRegistrationProcessNetworkServiceAgent(NS networkService, CommunicationsClientConnection communicationsClientConnection) {
+    public CommunicationRegistrationProcessNetworkServiceAgent(NS networkService, WsCommunicationsCloudClientManager communicationsClientConnection) {
         this.networkService = networkService;
         this.communicationsClientConnection = communicationsClientConnection;
         this.active = Boolean.FALSE;
@@ -64,12 +64,12 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
         while (active){
             try{
 
-                if (communicationsClientConnection.isRegister() && !networkService.isRegister()){
+                if (communicationsClientConnection.getCommunicationsCloudClientConnection().isRegister() && !networkService.isRegister()){
 
                     /*
                      * Construct my profile and register me
                      */
-                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
+                    PlatformComponentProfile platformComponentProfile =  communicationsClientConnection.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(networkService.getIdentityPublicKey(),
                                                                                                                                                  networkService.getAlias().toLowerCase(),
                                                                                                                                                   networkService.getName(),
                                                                                                                                                  networkService.getNetworkServiceType(),
@@ -79,7 +79,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
                     /*
                      * Register me
                      */
-                    communicationsClientConnection.registerComponentForCommunication(networkService.getNetworkServiceType(), platformComponentProfile);
+                    communicationsClientConnection.getCommunicationsCloudClientConnection().registerComponentForCommunication(networkService.getNetworkServiceType(), platformComponentProfile);
 
                     /*
                      * Configure my new profile
@@ -101,7 +101,7 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
                     try {
                         sleep(CommunicationRegistrationProcessNetworkServiceAgent.SLEEP_TIME);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        System.out.println(e.getMessage());
                         active = Boolean.FALSE;
                     }
 
@@ -111,10 +111,10 @@ public class CommunicationRegistrationProcessNetworkServiceAgent<NS extends Abst
 
             }catch (Exception e){
                 try {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                     sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
                 } catch (InterruptedException e1) {
-                    e1.printStackTrace();
+                    System.out.println(e1.getMessage());
                     active = Boolean.FALSE;
                 }
             }

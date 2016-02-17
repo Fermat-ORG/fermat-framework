@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
@@ -30,29 +30,49 @@ import java.util.UUID;
 public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity> {
 
     /**
-     * The method <code>listSelectableIdentities</code> lists the login identities that can be used
-     * to log in as an Crypto Broker for the current Device User.
+     * The method <code>listWorldCryptoBrokers</code> returns the list of all crypto brokers in the world,
+     * setting their status (CONNECTED, for example) with respect to the selectedIdentity parameter
+     * logged in crypto broker
      *
-     * @return the list of identities the current Device User can use to log in
+     * @return a list of all crypto brokers in the world
+     *
+     * @throws CantListCryptoBrokersException if something goes wrong.
+     */
+    List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, final int max, final int offset) throws CantListCryptoBrokersException;
+
+
+    /**
+     * The method <code>listSelectableIdentities</code> lists all the Crypto Broker identities
+     * stored locally in the device.
+     *
+     * @return a list of broker identities the current device user can use to log in.
      *
      * @throws CantListIdentitiesToSelectException if something goes wrong.
      */
     List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
 
     /**
-     * The method <code>searchCryptoBroker</code> gives us an interface to manage a search for a particular
-     * crypto broker
+     * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
+     * Crypto Brokers that are not linked to the local selectedIdentity
      *
      * @return a searching interface
      */
-    CryptoBrokerCommunitySearch searchCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
+    CryptoBrokerCommunitySearch getCryptoBrokerSearch();
 
     /**
-     * The method <code>requestConnectionToCryptoBroker</code> initialize the request of contact between
+     * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
+     * Crypto Brokers that are linked to the local selectedIdentity
+     *
+     * @return a searching interface
+     */
+    CryptoBrokerCommunitySearch searchConnectedCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
+
+    /**
+     * The method <code>requestConnectionToCryptoBroker</code> initialises a contact request between
      * two crypto brokers.
      *
-     * @param selectedIdentity       The identity selected to work with.
-     * @param cryptoBrokerToContact  the information of the broker to add.
+     * @param selectedIdentity       The selected local broker identity.
+     * @param cryptoBrokerToContact  The information of the remote broker to connect to.
      *
      * @throws CantRequestConnectionException           if something goes wrong.
      * @throws ActorConnectionAlreadyRequestedException if the connection already exists.
@@ -150,13 +170,14 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
     int getCryptoBrokersWaitingYourAcceptanceCount();
 
     /**
-     *
+     * The method <code>getActorConnectionState</code> returns the ConnectionState of a given actor
+     * with respect to the selected actor
      * @param publicKey
      *
      * @return
      *
      * @throws CantValidateConnectionStateException if something goes wrong.
      */
-    boolean isActorConnected(String publicKey) throws CantValidateConnectionStateException;
+    ConnectionState getActorConnectionState(String publicKey) throws CantValidateConnectionStateException;
 
 }

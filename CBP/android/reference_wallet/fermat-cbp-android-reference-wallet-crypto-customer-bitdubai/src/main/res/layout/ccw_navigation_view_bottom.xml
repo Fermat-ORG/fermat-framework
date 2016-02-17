@@ -13,7 +13,7 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/logo_customer_wallet_navigation_drawer"
+        android:src="@drawable/ccw_logo_customer_wallet_navigation_drawer"
         tools:ignore="contentDescription"/>
 
     <LinearLayout

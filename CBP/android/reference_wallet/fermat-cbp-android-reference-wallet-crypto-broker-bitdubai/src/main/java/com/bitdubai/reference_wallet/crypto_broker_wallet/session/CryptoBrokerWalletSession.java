@@ -8,21 +8,13 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.preference_settings.CryptoBrokerWalletPreferenceSettings;
 
-public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWallet, CryptoBrokerWalletModuleManager, WalletResourcesProviderManager> implements WalletSession {
+public class CryptoBrokerWalletSession extends AbstractFermatSession<InstalledWallet, CryptoBrokerWalletModuleManager, WalletResourcesProviderManager> {
     public static final String NEGOTIATION_DATA = "negotiation_data";
     public static final String CONTRACT_DATA = "contract_data";
     public static final String CONFIGURED_DATA = "configured_data";
+    public static final String LOCATION_LIST = "list_of_new_location";
 
     public CryptoBrokerWalletSession() {
-    }
-    @Override
-    public WalletSettings getWalletSettings() {
-        return new CryptoBrokerWalletPreferenceSettings();
-    }
-
-    @Override
-    public String getIdentityConnection() {
-        return null;
     }
 
 }

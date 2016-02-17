@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.event_handler;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -17,6 +19,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 16/12/15.
@@ -61,22 +64,29 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.brokerAckOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
+        if(event.getRemoteBusinessTransaction()== Plugins.BROKER_ACK_ONLINE_PAYMENT) {
+            this.brokerAckOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+            //LOG.info("CHECK THE DATABASE");
+        }
     }
 
     public void incomingConfirmBusinessTransactionResponseEventHandler(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.brokerAckOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
+        if(event.getRemoteBusinessTransaction()== Plugins.BROKER_ACK_ONLINE_PAYMENT) {
+            this.brokerAckOnlinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+            //LOG.info("CHECK THE DATABASE");
+        }
     }
 
     public void incomingMoneyNotification(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.brokerAckOnlinePaymentBusinessTransactionDao.saveIncomingMoneyEvent(event);
-        //LOG.info("CHECK THE DATABASE");
+        Logger LOG = Logger.getGlobal();
+        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        if(event.getActorType().getCode().equals(Actors.CBP_CRYPTO_BROKER.getCode())){
+            this.brokerAckOnlinePaymentBusinessTransactionDao.saveIncomingMoneyEvent(event);
+        }
+
+        LOG.info("CHECK THE DATABASE");
     }
 
     public void newContractOpenedEvenHandler(NewContractOpened event)throws CantSaveEventException {

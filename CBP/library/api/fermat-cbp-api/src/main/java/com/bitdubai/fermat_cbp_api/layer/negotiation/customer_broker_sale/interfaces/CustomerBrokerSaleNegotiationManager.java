@@ -3,11 +3,12 @@ package com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.inter
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationPaymentCurrency;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
@@ -109,6 +110,12 @@ public interface CustomerBrokerSaleNegotiationManager extends FermatManager {
 
     /**
      *
+     * @return
+     * @throws CantGetListPurchaseNegotiationsException
+     */
+    Collection<CustomerBrokerSaleNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListSaleNegotiationsException;
+    /**
+     *
      * @param type
      * @return the following ClauseType to specify
      * @throws CantGetNextClauseTypeException
@@ -121,7 +128,7 @@ public interface CustomerBrokerSaleNegotiationManager extends FermatManager {
      * @return the following ClauseType to specify depending on the paymentMethod
      * @throws CantGetNextClauseTypeException
      */
-    ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException;
+    ClauseType getNextClauseTypeByCurrencyType(MoneyType paymentMethod) throws CantGetNextClauseTypeException;
 
     /**
      *
@@ -201,4 +208,11 @@ public interface CustomerBrokerSaleNegotiationManager extends FermatManager {
      * @throws CantGetListPaymentCurrencySaleException
      */
     Collection<NegotiationPaymentCurrency> getAllPaymentCurrencies() throws CantGetListPaymentCurrencySaleException;
+
+    /**
+     *
+     * @return Collection<FiatCurrency> with the currencies available in the Bank Wallet
+     * @throws CantGetListBankAccountsSaleException
+     */
+    Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException;
 }

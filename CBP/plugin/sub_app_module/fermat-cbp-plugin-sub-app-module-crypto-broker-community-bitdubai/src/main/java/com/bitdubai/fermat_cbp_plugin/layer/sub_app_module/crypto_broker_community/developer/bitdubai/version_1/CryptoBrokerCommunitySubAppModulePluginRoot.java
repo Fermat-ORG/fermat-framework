@@ -61,7 +61,6 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractPlugin 
     public void start() throws CantStartPluginException {
 
         try {
-
             fermatManager = new CryptoBrokerCommunityManager(
                     cryptoBrokerIdentityManager,
                     cryptoBrokerActorConnectionManager,
@@ -74,8 +73,14 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractPlugin 
             );
 
             this.serviceStatus = ServiceStatus.STARTED;
+
         } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+
+            throw new CantStartPluginException(
+                    exception,
+                    null,
+                    "Crypto broker Community SubApp Module error while starting."
+            );
         }
     }
 

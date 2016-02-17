@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.BusinessTransactionTransactionType;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
 
 import java.util.UUID;
 
@@ -77,16 +79,50 @@ public interface BusinessTransactionMetadata {
      */
     Long getTimestamp();
 
+    /**
+     * This method returns the transaction id
+     * @return
+     */
     UUID getTransactionId();
 
+    /**
+     * This method sets the BusinessTransactionTransactionType
+     * @param businessTransactionTransactionType
+     */
     void setBusinessTransactionTransactionType(BusinessTransactionTransactionType businessTransactionTransactionType);
 
-    void setState(com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates transactionTransmissionStates);
+    /**
+     * This method returns the TransactionTransmissionStates
+     * @param transactionTransmissionStates
+     */
+    void setState(TransactionTransmissionStates transactionTransmissionStates);
 
-    com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates getState();
+    /**
+     * This method returns the TransactionTransmissionStates
+     * @return
+     */
+    TransactionTransmissionStates getState();
 
+    /**
+     * This method returns the parameter isPendingToRead
+     * @return
+     */
     boolean isPendingToRead();
 
+    /**
+     * This method sets the parameter isPendingToRead
+     */
     void confirmRead();
+
+    /**
+     * This method sets the Remote Business Transaction.
+     * @return
+     */
+    Plugins getRemoteBusinessTransaction();
+
+    /**
+     * This method returns the Remote Business Transaction.
+     */
+    void setRemoteBusinessTransaction(Plugins remoteBusinessTransaction);
 
 }

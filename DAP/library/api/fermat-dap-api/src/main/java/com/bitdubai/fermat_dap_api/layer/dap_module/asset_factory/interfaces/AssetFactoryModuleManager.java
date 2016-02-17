@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.settings.BasicSubAppSettings;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
@@ -42,7 +44,7 @@ public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSett
     /**
      * TThis method publishes the asset digital object with the number and amount of Asset, start the transaction
      */
-    void publishAsset(AssetFactory assetFactory,BlockchainNetworkType blockchainNetworkType) throws CantSaveAssetFactoryException;;
+    void publishAsset(AssetFactory assetFactory) throws CantSaveAssetFactoryException;
 
     /**
      * This method create an empty object AssetFactory
@@ -77,10 +79,16 @@ public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSett
     /**
      * TThis method list all wallet installed in device, start the transaction
      */
-    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets()  throws CantListWalletsException;
+    List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
     /**
      * TThis method verified all value in asset factory not null, start the transaction
      */
     boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy;
+
+    long getBitcoinWalletBalance(String walletPublicKey) throws CantLoadWalletException, CantCalculateBalanceException;
+
+    void changeNetworkType(BlockchainNetworkType networkType);
+
+    BlockchainNetworkType getSelectedNetwork();
 }

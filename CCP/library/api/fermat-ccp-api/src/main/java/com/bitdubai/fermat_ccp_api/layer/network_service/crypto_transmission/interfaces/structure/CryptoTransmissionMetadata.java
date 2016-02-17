@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionStates;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionMetadataState;
+import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.enums.CryptoTransmissionProtocolState;
 
 import java.util.UUID;
 
@@ -26,13 +27,17 @@ public interface CryptoTransmissionMetadata {
 
     public String getPaymentDescription();
 
-    public CryptoTransmissionStates getCryptoTransmissionStates();
-
     public CryptoTransmissionMetadataType getCryptoTransmissionMetadataType();
 
-    public void changeState(CryptoTransmissionStates cryptoTransmissionStates);
-
     public void setTypeMetadata(CryptoTransmissionMetadataType cryptoTransmissionMetadataType);
+
+    public CryptoTransmissionProtocolState getCryptoTransmissionProtocolState();
+
+    public void changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState cryptoTransmissionProtocolState);
+
+    void changeMetadataState(CryptoTransmissionMetadataState cryptoTransmissionNotificationStates);
+
+    CryptoTransmissionMetadataState getCryptoTransmissionMetadataStates();
 
     public boolean isPendigToRead();
 
@@ -40,6 +45,8 @@ public interface CryptoTransmissionMetadata {
 
     public long getTimestamp();
 
+    int getSentCount();
 
     void setPendingToRead(boolean pending);
+
 }

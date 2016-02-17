@@ -28,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ContractHistoryAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
@@ -97,19 +98,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
         noContractsView = layout.findViewById(R.id.cbw_no_contracts);
 
         showOrHideNoContractsView(contractHistoryList.isEmpty());
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        try {
-            CryptoBrokerNavigationViewPainter navigationViewPainter = new CryptoBrokerNavigationViewPainter(getActivity(), null);
-//            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
-        } catch (Exception e) {
-            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-        }
     }
 
     @Override
@@ -221,15 +209,14 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         if (moduleManager != null) {
             try {
-                data.addAll(walletManager.getContractsHistory(filterContractStatus, 0, 20));
+                data.addAll(TestData.getContractsHistory(filterContractStatus));
+                // TODO data.addAll(walletManager.getContractsHistory(filterContractStatus, 0, 20));
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(
-                            Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                            ex);
+                    errorManager.reportUnexpectedWalletException( Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
         } else {
             Toast.makeText(getActivity(),

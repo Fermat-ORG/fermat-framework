@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.BusinessTransactionTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
@@ -26,19 +27,21 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
     UUID transactionId;
     TransactionTransmissionStates transactionTransmissionStates;
     boolean pendingFlag;
+    Plugins remoteBusinessTransaction;
 
     public BusinessTransactionMetadataRecord(String contractHash,
                                              ContractTransactionStatus contractTransactionStatus,
-                                             String receiverId,
-                                             PlatformComponentType receiverType,
                                              String senderId,
+                                             PlatformComponentType receiverType,
+                                             String receiverId,
                                              PlatformComponentType senderType,
                                              String contractId,
                                              String negotiationId,
                                              BusinessTransactionTransactionType transactionType,
                                              Long timestamp,
                                              UUID transactionId,
-                                             TransactionTransmissionStates transactionTransmissionStates
+                                             TransactionTransmissionStates transactionTransmissionStates,
+                                             Plugins remoteBusinessTransaction
     ){
         this.contractHash=contractHash;
         this.contractTransactionStatus=contractTransactionStatus;
@@ -46,14 +49,18 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
         this.receiverType = receiverType;
         this.senderId=senderId;
         this.senderType=senderType;
-        this.contractId=contractId;
+        if(contractId==null){
+            this.contractId=contractHash;
+        } else {
+            this.contractId=contractId;
+        }
         this.negotiationId=negotiationId;
         this.transactionType=transactionType;
         this.timestamp=timestamp;
         this.transactionId=transactionId;
         this.transactionTransmissionStates = transactionTransmissionStates;
         this.pendingFlag=false;
-
+        this.remoteBusinessTransaction=remoteBusinessTransaction;
     }
 
     @Override
@@ -132,6 +139,16 @@ public class BusinessTransactionMetadataRecord implements BusinessTransactionMet
     @Override
     public void confirmRead() {
         this.pendingFlag=true;
+    }
+
+    @Override
+    public Plugins getRemoteBusinessTransaction() {
+        return this.remoteBusinessTransaction;
+    }
+
+    @Override
+    public void setRemoteBusinessTransaction(Plugins remoteBusinessTransaction) {
+        this.remoteBusinessTransaction=remoteBusinessTransaction;
     }
 
 }

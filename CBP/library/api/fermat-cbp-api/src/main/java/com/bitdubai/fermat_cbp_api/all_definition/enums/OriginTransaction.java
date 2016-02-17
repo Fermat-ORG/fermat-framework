@@ -8,7 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum OriginTransaction implements FermatEnum {
     STOCK_INITIAL("SINITIAL"),
-    RESTOCK_AUTOMATIC("RAUTOMATIC");
+    RESTOCK_AUTOMATIC("RAUTOMATIC"),
+    RESTOCK("RESTOCK"),
+    DESTOCK("DESTOCK"),
+    PURCHASE("PURC"),
+    SALE("SALE");
 
     OriginTransaction(String code) {
         this.code = code;
@@ -25,6 +29,10 @@ public enum OriginTransaction implements FermatEnum {
         switch (code) {
             case "SINITIAL":    return OriginTransaction.STOCK_INITIAL;
             case "RAUTOMATIC":    return OriginTransaction.RESTOCK_AUTOMATIC;
+            case "RESTOCK":    return OriginTransaction.RESTOCK;
+            case "DESTOCK":    return OriginTransaction.DESTOCK;
+            case "SALE":    return OriginTransaction.SALE;
+            case "PURC":    return OriginTransaction.PURCHASE;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ContactState enum");
         }
     }

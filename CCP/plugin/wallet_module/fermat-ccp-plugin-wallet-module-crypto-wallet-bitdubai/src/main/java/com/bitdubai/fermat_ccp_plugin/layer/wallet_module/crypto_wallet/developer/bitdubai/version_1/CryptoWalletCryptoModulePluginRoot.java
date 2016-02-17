@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -30,6 +31,10 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentType;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantGetCryptoPaymentRegistryException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantListCryptoPaymentRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -100,6 +105,8 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
+
+    private String appPublicKey;
 
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
@@ -213,7 +220,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         try {
             List<IntraWalletUserIdentity> lst = getCryptoWallet().getActiveIdentities();
             if(lst.isEmpty()){
@@ -225,5 +232,28 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractPlugin implement
             e.printStackTrace();
             return null;
         }
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        getCryptoWallet().createIntraUser(name, phrase, profile_img);
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+        this.appPublicKey = publicKey;
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        int[] notifications = new int[5];
+        try {
+            notifications[2] = cryptoPaymentManager.getCryptoPaymentRegistry().listCryptoPaymentRequestsByTypeAndState(appPublicKey, CryptoPaymentState.PENDING_RESPONSE, CryptoPaymentType.RECEIVED,99,0).size();
+        } catch (CantListCryptoPaymentRequestsException e) {
+            e.printStackTrace();
+        } catch (CantGetCryptoPaymentRegistryException e) {
+            e.printStackTrace();
+        }
+        return notifications;
     }
 }

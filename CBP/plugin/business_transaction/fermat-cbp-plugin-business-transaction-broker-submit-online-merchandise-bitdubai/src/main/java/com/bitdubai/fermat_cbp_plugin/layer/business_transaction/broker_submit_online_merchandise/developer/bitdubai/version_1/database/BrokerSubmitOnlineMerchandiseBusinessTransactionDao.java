@@ -227,6 +227,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return null;
+            }
             checkDatabaseRecords(records);
             String value=records
                     .get(0)
@@ -577,7 +580,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
         for(String contractHash : pendingContractHash){
-            businessTransactionRecord = getBussinesTransactionRecord(contractHash);
+            businessTransactionRecord = getBusinessTransactionRecord(contractHash);
             businessTransactionRecordList.add(businessTransactionRecord);
         }
         return businessTransactionRecordList;
@@ -627,7 +630,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
-    public BusinessTransactionRecord getBussinesTransactionRecord(String contractHash)
+    public BusinessTransactionRecord getBusinessTransactionRecord(String contractHash)
             throws
             UnexpectedResultReturnedFromDatabaseException {
 
@@ -674,7 +677,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
-            businessTransactionRecord.setCryptoWalletPublicKey(
+            businessTransactionRecord.setExternalWalletPublicKey(
                     record.getStringValue(
                             BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                                     SUBMIT_ONLINE_MERCHANDISE_CRYPTO_WALLET_PUBLIC_KEY_COLUMN_NAME));
@@ -788,9 +791,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         record.setLongValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME,
                 businessTransactionRecord.getCryptoAmount());
-        record.setStringValue(
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
-                businessTransactionRecord.getCryptoStatus().getCode());
+        //I need to check if crypto status is null
+        CryptoStatus cryptoStatus=businessTransactionRecord.getCryptoStatus();
+        if(cryptoStatus!=null){
+            record.setStringValue(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
+                    cryptoStatus.getCode());
+        }
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getCustomerPublicKey());
@@ -805,10 +812,10 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                 businessTransactionRecord.getTransactionId());
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_WALLET_PUBLIC_KEY_COLUMN_NAME,
-                businessTransactionRecord.getCryptoWalletPublicKey());
+                businessTransactionRecord.getExternalWalletPublicKey());
         record.setDoubleValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME,
-                businessTransactionRecord.getCryptoAmount()
+                businessTransactionRecord.getPriceReference().doubleValue()
         );
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,
@@ -828,7 +835,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
         return getStringList(
-                ContractTransactionStatus.PENDING_PAYMENT.getCode(),
+                ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE.getCode(),
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                         SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.

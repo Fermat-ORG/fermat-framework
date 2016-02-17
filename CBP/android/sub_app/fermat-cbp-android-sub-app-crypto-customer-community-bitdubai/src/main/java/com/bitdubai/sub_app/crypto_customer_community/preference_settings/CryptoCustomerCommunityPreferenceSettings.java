@@ -81,4 +81,9 @@ public class CryptoCustomerCommunityPreferenceSettings implements SubAppSettings
     public String getPreferenceSettings(String walletPublicKey) {
         return null;
     }
+
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
 }

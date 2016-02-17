@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.23..
  */
-public interface FermatWallet extends Serializable{
+public interface FermatWallet extends Serializable,FermatStructure{
 
     public String getPublicKey();
 
@@ -18,7 +18,7 @@ public interface FermatWallet extends Serializable{
 
     public Activity getStartActivity();
 
-    public void setStartActivity(Activities activity);
+    public void addPosibleStartActivity(Activities activity);
 
     public Activity getLastActivity();
 

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_desktop_wallet_manager_bitdubai.fragment.provisory_classes;
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -154,6 +155,11 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     }
 
     @Override
+    public AppsStatus getAppStatus() {
+        return null;
+    }
+
+    @Override
     public int getPosition() {
         return position;
     }
@@ -161,5 +167,10 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    @Override
+    public int getNotifications() {
+        return 0;
     }
 }

@@ -149,11 +149,14 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
 
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME);
+        assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMEOUT_COLUMN_NAME);
         assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME);
+        assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_SENT_GENESISTX_COLUMN_NAME);
+        assetDeliveringColumns.add(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME);
 
         DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME, assetDeliveringColumns);
         tables.add(assetDeliveringTable);
@@ -197,13 +200,13 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
             /**
              * if there was an error, I will returned an empty list.
              */
-            database.closeDatabase();
+
             return returnedRecords;
         } catch (Exception e){
-            database.closeDatabase();
+
             return returnedRecords;
         }
-        database.closeDatabase();
+
         return returnedRecords;
     }
 

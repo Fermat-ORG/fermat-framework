@@ -20,4 +20,8 @@ public class CantSendCustomerBrokerNewNegotiationTransactionException extends Fe
     public CantSendCustomerBrokerNewNegotiationTransactionException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public CantSendCustomerBrokerNewNegotiationTransactionException(String message, String context, String possibleReason) {
+        this(message, null, context, possibleReason);
+    }
 }

@@ -7,11 +7,17 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
@@ -29,24 +35,31 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.MnemonicException;
+import org.bitcoinj.crypto.TransactionSignature;
+import org.bitcoinj.params.Networks;
+import org.bitcoinj.params.RegTestParams;
+import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.KeyChain;
 import org.bitcoinj.wallet.WalletTransaction;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 12/17/15.
  */
-public class BitcoinCurrencyCryptoVaultManager {
+public class BitcoinCurrencyCryptoVaultManager  {
     /**
      * BitcoinCurrencyCryptoVaultManager variables
      */
@@ -205,7 +218,7 @@ public class BitcoinCurrencyCryptoVaultManager {
              * If I can't validate this. I will continue because I may be listening to this network already.
              */
             e.printStackTrace();
-            return BlockchainNetworkType.DEFAULT;
+            return BlockchainNetworkType.getDefaultBlockchainNetworkType();
         } catch (AddressFormatException e) {
             /**
              * If the passed address doesn't have the correct format, I can't go on.
@@ -226,8 +239,18 @@ public class BitcoinCurrencyCryptoVaultManager {
         /**
          * if the network parameters calculated is different that the Default network I will double check
          */
-        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.DEFAULT){
-            return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+        if (BitcoinNetworkSelector.getBlockchainNetworkType(networkParameters) != BlockchainNetworkType.getDefaultBlockchainNetworkType()){
+            try {
+                // If only one network is enabled, then I will return the default
+                if (getDao().getActiveNetworkTypes().size() == 1)
+                    return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                else {
+                    // If I have TestNet and RegTest registered, I may return any of them since they share the same prefix.
+                    return networkParameters;
+                }
+            } catch (CantExecuteDatabaseOperationException e) {
+                return BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            }
         } else
             return networkParameters;
     }
@@ -264,7 +287,7 @@ public class BitcoinCurrencyCryptoVaultManager {
             /**
              * If there is an error, I will use the default parameters.
              */
-            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.DEFAULT);
+            networkParameters = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
         }
 
         /**
@@ -281,9 +304,9 @@ public class BitcoinCurrencyCryptoVaultManager {
     /**
      * gets a fresh un used crypto Address from the vault
      */
-    public CryptoAddress getAddress() {
+    public CryptoAddress getAddress(BlockchainNetworkType blockchainNetworkType) {
         try {
-            return this.getNewBitcoinVaultCryptoAddress(BlockchainNetworkType.DEFAULT);
+            return this.getNewBitcoinVaultCryptoAddress(blockchainNetworkType);
         } catch (GetNewCryptoAddressException e) {
             e.printStackTrace();
             return null;
@@ -304,7 +327,7 @@ public class BitcoinCurrencyCryptoVaultManager {
      * @throws CouldNotSendMoneyException
      * @throws CryptoTransactionAlreadySentException
      */
-    public String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return)
+    public synchronized String sendBitcoins (String walletPublicKey, UUID FermatTrId,  CryptoAddress addressTo, long satoshis, String op_Return, boolean broadcast)
             throws InsufficientCryptoFundsException,
             InvalidSendToAddressException,
             CouldNotSendMoneyException,
@@ -338,7 +361,7 @@ public class BitcoinCurrencyCryptoVaultManager {
         /**
          * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
          */
-        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransaction(networkType, VaultType.CRYPTO_CURRENCY_VAULT);
+        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
 
         /**
          * Create the bitcoinj wallet from the keys of this account
@@ -346,6 +369,7 @@ public class BitcoinCurrencyCryptoVaultManager {
         com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
         //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
         Wallet wallet = null;
+
         try {
              wallet = Wallet.fromSeed(networkParameters, getBitcoinVaultSeed());
         } catch (InvalidSeedException e) {
@@ -369,6 +393,15 @@ public class BitcoinCurrencyCryptoVaultManager {
          */
         Coin fee = Coin.valueOf(10000);
         final Coin coinToSend = Coin.valueOf(satoshis);
+
+        if (coinToSend.isNegative() || coinToSend.isZero()){
+            StringBuilder output = new StringBuilder("The resulting value to be send is insufficient.");
+            output.append(System.lineSeparator());
+            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + satoshis + " - " + fee.getValue() + ")");
+
+
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
 
         /**
          * creates the send request and broadcast it on the network.
@@ -401,15 +434,253 @@ public class BitcoinCurrencyCryptoVaultManager {
             throw new InsufficientCryptoFundsException(InsufficientCryptoFundsException.DEFAULT_MESSAGE, e, output.toString(), null);
         }
 
+        /**
+         * I will store the transaction in the crypto network
+         */
         try {
-            bitcoinNetworkManager.broadcastTransaction(networkType, sendRequest.tx, FermatTrId);
-        } catch (CantBroadcastTransactionException e) {
-            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
-        } catch (Exception e){
-            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, FermatTrId, true);
+        } catch (CantStoreBitcoinTransactionException e) {
+            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
+        }
+
+        /**
+         * If I'm requested to broadcast it now, then I will
+         */
+        if (broadcast){
+            try {
+                bitcoinNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
+            } catch (CantBroadcastTransactionException e) {
+                throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, e, "There was an error broadcasting the transaction.", "Crypto Network error");
+            }
         }
 
         return sendRequest.tx.getHashAsString();
     }
 
+    /**
+     * Gets the Mnemonic code generated for this vault.
+     * It can be used to export and import it somewhere else.
+     * @return
+     * @throws CantLoadExistingVaultSeed
+     */
+    public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
+        try {
+            return this.getBitcoinVaultSeed().getMnemonicCode();
+        } catch (InvalidSeedException e) {
+            throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");
+        }
+    }
+
+    /**
+     * Signs the owned inputs of the passed Draft transaction
+     * @param draftTransaction the transaction to sign
+     * @return the signed Transaction
+     * @throws CantSignTransactionException
+     */
+    public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
+        Transaction transaction = draftTransaction.getBitcoinTransaction();
+        final NetworkParameters NETWORK_PARAMETERS  = transaction.getParams();
+
+        if (transaction == null)
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "Bitcoin Transaction can't be null", null);
+
+        /**
+         * Create the bitcoinj wallet from the keys of all accounts
+         */
+        final Wallet wallet;
+        try {
+            wallet = Wallet.fromSeed(NETWORK_PARAMETERS, getBitcoinVaultSeed());
+        } catch (InvalidSeedException e) {
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
+        }
+
+        HierarchyAccount hierarchyAccount = new HierarchyAccount(0, "Bitcoin Vault Accoun", HierarchyAccountType.MASTER_ACCOUNT);
+        try {
+            wallet.importKeys(vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(hierarchyAccount));
+        } catch (Exception e) {
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+        }
+
+        /**
+         * Once I get the wallet, I will get the output of the transaction that is mine.
+         * Should be the second one.
+         */
+        Script script = null;
+        for (TransactionOutput output : transaction.getOutputs()){
+            if (output.isMine(wallet)){
+                script = output.getScriptPubKey();
+            }
+        }
+        /**
+         * If I couldn't get an output that was ours, I can't go on.
+         */
+        if (script == null)
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "The draft Transaction doesn't have an output that is ours.", null);
+
+        /**
+         * I get the signature hash for my output.
+         */
+        Sha256Hash sigHash = transaction.hashForSignature(0, script, Transaction.SigHash.ALL, false);
+
+        /**
+         * Get the private Key I will use to sign the hash
+         */
+        ECKey privateKey = null;
+        try {
+            privateKey = this.getNextAvailableECKey(hierarchyAccount);
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Can't get private key to sign", "hierarchy error");
+        }
+
+        /**
+         * I create the signature
+         */
+        ECKey.ECDSASignature signature = privateKey.sign(sigHash);
+        TransactionSignature transactionSignature = new TransactionSignature(signature, Transaction.SigHash.ALL, false);
+        Script inputScript = ScriptBuilder.createInputScript(transactionSignature);
+
+        /**
+         * Add the signature to the input that is ours. Should be the second one.
+         */
+        TransactionInput inputToSign = null;
+        for (TransactionInput input : transaction.getInputs()){
+            if (input.getConnectedOutput().isMine(wallet)){
+                inputToSign = input;
+            }
+        }
+
+        if (inputToSign == null)
+            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "No inputs that we own were found in the draft transaction.", "wrong draft transaction");
+
+        inputToSign.setScriptSig(inputScript);
+
+        /**
+         * return a signed draft transaction
+         */
+        return draftTransaction;
+    }
+
+    /**
+     * Adds more inputs and outputs to a draft transaction
+     * @param draftTransaction the incomplete draft transaction
+     * @param valueToSend the amount of bitcoins in satoshis to add to the transaction
+     * @param addressTo the address to that will receive the bitcoins.
+     * @return the draft transaction with the added values.
+     * @throws CantCreateDraftTransactionException
+     */
+    public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
+        if (draftTransaction == null || addressTo == null || valueToSend == 0)
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Parameters can't be null", null);
+
+        /**
+         * I get the network for this address and validate that is active
+         */
+        BlockchainNetworkType networkType = null;
+        try {
+            networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
+        } catch (CantValidateCryptoNetworkIsActiveException e) {
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "The network to which this address belongs to, is not active!", null);
+        }
+
+        /**
+         * I get the networkParameter
+         */
+        final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
+
+        /**
+         * I get the bitcoin address
+         */
+        Address address = null;
+        try {
+            address = getBitcoinAddress(networkParameters,addressTo);
+        } catch (AddressFormatException e) {
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE,e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+        }
+
+        /**
+         * I get the Bitcoin Transactions stored in the CryptoNetwork for this vault.
+         */
+        List<Transaction> transactions = bitcoinNetworkManager.getBitcoinTransactions(networkType);
+
+        /**
+         * Create the bitcoinj wallet from the keys of this account
+         */
+        com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount vaultAccount = new com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount(0, "Bitcoin Vault account", HierarchyAccountType.MASTER_ACCOUNT);
+        //final Wallet wallet = getWalletForAccount(vaultAccount, networkParameters);
+        Wallet wallet = null;
+
+        try {
+            wallet = Wallet.fromSeed(networkParameters, getBitcoinVaultSeed());
+        } catch (InvalidSeedException e) {
+            e.printStackTrace();
+        }
+
+        wallet.importKeys(vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(vaultAccount));
+
+        /**
+         * Add transactions to the wallet that we can use to spend.
+         */
+        for (Transaction transaction : transactions){
+            if (!transaction.isEveryOwnedOutputSpent(wallet)){
+                WalletTransaction walletTransaction = new WalletTransaction(WalletTransaction.Pool.UNSPENT, transaction);
+                wallet.addWalletTransaction(walletTransaction);
+            }
+        }
+
+        /**
+         * sets the fee and value to send
+         */
+        Coin fee = Coin.valueOf(10000);
+        final Coin coinToSend = Coin.valueOf(valueToSend);
+
+        if (coinToSend.isNegative() || coinToSend.isZero()){
+            StringBuilder output = new StringBuilder("The resulting value to be send is insufficient.");
+            output.append(System.lineSeparator());
+            output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + valueToSend + " - " + fee.getValue() + ")");
+
+
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+        }
+
+        /**
+         * I will add the outputs to the Draft transaction
+         */
+        Transaction transaction = draftTransaction.getBitcoinTransaction();
+        transaction.addOutput(coinToSend, address);
+        Wallet.SendRequest sendRequest = Wallet.SendRequest.forTx(transaction);
+
+        /**
+         * I set SendRequest properties
+         */
+        sendRequest.fee = fee;
+        sendRequest.feePerKb = Coin.ZERO;
+        sendRequest.shuffleOutputs = false;
+
+        try {
+            // this will add the inputs to fill the transaction.
+            wallet.completeTx(sendRequest);
+        } catch (InsufficientMoneyException e) {
+            StringBuilder output = new StringBuilder("Not enought money to send bitcoins.");
+            output.append(System.lineSeparator());
+            output.append("Current balance available for this vault: " + wallet.getBalance().getValue());
+            output.append(System.lineSeparator());
+            output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, output.toString(), null);
+        }
+
+        /**
+         * I will store the transaction in the crypto network
+         */
+        try {
+            bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID(), true);
+        } catch (CantStoreBitcoinTransactionException e) {
+            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the Crypto Network-", "Crypto Network error or database error.");
+        }
+
+        /**
+         * updates the bitcoin transaction
+         */
+        draftTransaction.setBitcoinTransaction(sendRequest.tx);
+        return draftTransaction;
+    }
 }

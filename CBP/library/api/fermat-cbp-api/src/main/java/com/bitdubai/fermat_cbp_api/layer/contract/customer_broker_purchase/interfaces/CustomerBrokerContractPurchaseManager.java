@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 
 import java.util.Collection;
 
@@ -55,15 +55,15 @@ public interface CustomerBrokerContractPurchaseManager extends FermatManager{
      *
      * @param contractId
      * @param status
-     * @throws CantupdateCustomerBrokerContractPurchaseException
+     * @throws CantUpdateCustomerBrokerContractPurchaseException
      */
-    void updateStatusCustomerBrokerPurchaseContractStatus(String contractId, ContractStatus status) throws CantupdateCustomerBrokerContractPurchaseException;
+    void updateStatusCustomerBrokerPurchaseContractStatus(String contractId, ContractStatus status) throws CantUpdateCustomerBrokerContractPurchaseException;
 
     /**
      *
      * @param contractId
      * @param status
-     * @throws CantupdateCustomerBrokerContractPurchaseException
+     * @throws CantUpdateCustomerBrokerContractPurchaseException
      */
-    void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantupdateCustomerBrokerContractPurchaseException;
+    void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantUpdateCustomerBrokerContractPurchaseException;
 }

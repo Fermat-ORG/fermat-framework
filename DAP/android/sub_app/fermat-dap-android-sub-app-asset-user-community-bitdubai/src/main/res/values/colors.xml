@@ -13,6 +13,9 @@
     <color name="wallet_store_activities_background">#fbf7ed</color>
     <color name="green">#8bba9e</color>
     <color name="nav_drawer_color">#0072bb</color>
+
+    <color name="dap_community_user_view_color">#0072bb</color>
+
     <color name="background_status_online">#0072bb</color>
     <color name="background_status_offline">#d70407</color>
     <color name="color_black">#000000</color>
@@ -27,4 +30,6 @@
     <color name="cbw_list_divider">#a7a7a7</color>
     <color name="cbw_header_start_background">#097168</color>
     <color name="cbw_header_end_background">#09364d</color>
+    <color name="bg_community_user">#010c12</color>
+
 </resources>

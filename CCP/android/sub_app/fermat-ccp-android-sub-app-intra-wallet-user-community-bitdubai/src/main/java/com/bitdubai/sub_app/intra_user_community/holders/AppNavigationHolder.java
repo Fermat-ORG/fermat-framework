@@ -17,6 +17,7 @@ public class AppNavigationHolder extends FermatViewHolder {
 
     private TextView label;
     private ImageView icon;
+    private View badge;
 
 
     public AppNavigationHolder(View itemView) {
@@ -24,6 +25,7 @@ public class AppNavigationHolder extends FermatViewHolder {
 
         label = (TextView) itemView.findViewById(R.id.textView_label);
         icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
+        badge = itemView.findViewById(R.id.badge);
 
 
     }
@@ -34,5 +36,9 @@ public class AppNavigationHolder extends FermatViewHolder {
 
     public ImageView getIcon() {
         return icon;
+    }
+
+    public View getBadge() {
+        return badge;
     }
 }

@@ -21,6 +21,7 @@ public class MenuItem implements FermatMenuItem {
     private String appLinkPublicKey;
 
     boolean selected=false;
+    private int notifications;
 
     /**
      * SideMenu class constructors
@@ -82,5 +83,13 @@ public class MenuItem implements FermatMenuItem {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public int getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(int notifications) {
+        this.notifications = notifications;
     }
 }

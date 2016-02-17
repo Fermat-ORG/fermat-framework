@@ -24,7 +24,7 @@
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
             android:scaleType="centerCrop"
-            tools:src="@drawable/cbw_btn_drawer_home_selected"
+            tools:src="@drawable/ccw_btn_drawer_home_selected"
             tools:ignore="contentDescription"
             />
 

@@ -17,7 +17,7 @@ import java.util.UUID;
  * is responsible for creating the tables in the database where it is to keep the information.
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 08/12/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 09/01/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -80,8 +80,10 @@ public class CustomerBrokerPurchaseNegotiationDatabaseFactory implements DealsWi
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_START_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.STRING, 1, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_CANCEL_REASON_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
+            table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_LAST_NEGOTIATION_UPDATE_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
             table.addIndex(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_FIRST_KEY_COLUMN);
 
@@ -97,7 +99,6 @@ public class CustomerBrokerPurchaseNegotiationDatabaseFactory implements DealsWi
 
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CLAUSE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.FALSE);
-            table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_CRYPTO_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 64, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_VALUE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(CustomerBrokerPurchaseNegotiationDatabaseConstants.CLAUSES_PURCHASE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);

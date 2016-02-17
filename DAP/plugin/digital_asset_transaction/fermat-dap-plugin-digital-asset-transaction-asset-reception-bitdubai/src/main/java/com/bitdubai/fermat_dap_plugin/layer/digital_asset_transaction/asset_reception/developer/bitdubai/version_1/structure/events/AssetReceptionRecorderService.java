@@ -1,22 +1,15 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.AssetReceptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceAssetUserEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -35,7 +28,6 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     //Asset Issuing database registry
     AssetReceptionDao assetReceptionDao;
-    AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot;
     /**
      * TransactionService Interface member variables.
      */
@@ -46,124 +38,64 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
             setAssetReceptionDao(assetReceptionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
-            throw new CantStartServiceException(exception, "Cannot set the asset distribution database handler","The database handler is null");
+            throw new CantStartServiceException(exception, "Cannot set the asset distribution database handler", "The database handler is null");
         }
     }
 
-    private void setAssetReceptionDao(AssetReceptionDao assetReceptionDao)throws CantSetObjectException{
-        if(assetReceptionDao==null){
+    private void setAssetReceptionDao(AssetReceptionDao assetReceptionDao) throws CantSetObjectException {
+        if (assetReceptionDao == null) {
             throw new CantSetObjectException("The assetReceptionDao is null");
         }
-        this.assetReceptionDao=assetReceptionDao;
+        this.assetReceptionDao = assetReceptionDao;
     }
 
-    public void setAssetReceptionDigitalAssetTransactionPluginRoot(AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot)throws CantSetObjectException{
-        if(assetReceptionDigitalAssetTransactionPluginRoot ==null){
-            throw new CantSetObjectException("The assetReceptionDigitalAssetTransactionPluginRoot is null");
-        }
-        this.assetReceptionDigitalAssetTransactionPluginRoot = assetReceptionDigitalAssetTransactionPluginRoot;
-
-    }
-
-    public void receivedNewDigitalAssetMetadataNotificationEvent(ReceivedNewDigitalAssetMetadataNotificationEvent event) throws CantSaveEventException {
-        Logger LOG = Logger.getGlobal();
-        LOG.info("ASSET RECEPTION EVENT TEST, I GOT AN EVENT:\n"+event);
-        //startMonitorAgent();
+    void receiveNewEvent(FermatEvent event) throws CantSaveEventException {
         this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        LOG.info("ASSET RECEPTION CHECK THE DATABASE");
-    }
-
-    public void incomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent(IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        //startMonitorAgent();
-        this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
-    }
-
-    public void incomingAssetOnBlockchainWaitingTransferenceAssetUserEvent(IncomingAssetOnBlockchainWaitingTransferenceAssetUserEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        //startMonitorAgent();
-        this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
-    }
-
-    public void incomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEvent(IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
-    }
-
-    public void incomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent(IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.assetReceptionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
-    }
-
-    private void startMonitorAgent() throws CantSaveEventException {
-        try {
-            this.assetReceptionDigitalAssetTransactionPluginRoot.startMonitorAgent();
-        } catch (CantGetLoggedInDeviceUserException exception) {
-            throw new CantSaveEventException(exception, "Starting AssetReceptionMonitorAgent","Cannot get Logged in device user");
-        } catch (CantSetObjectException exception) {
-            throw new CantSaveEventException(exception, "Starting AssetReceptionMonitorAgent","Cannot set an object in AssetReceptionMonitorAgent");
-        } catch (CantStartAgentException exception) {
-            throw new CantSaveEventException(exception, "Starting AssetReceptionMonitorAgent","Cannot start AssetReceptionMonitorAgent");
-        }
     }
 
     @Override
     public void start() throws CantStartServiceException {
         //TODO: finish this
-        try {
-            /**
-             * I will initialize the handling of com.bitdubai.platform events.
-             */
-            FermatEventListener fermatEventListener;
-            FermatEventHandler fermatEventHandler;
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
-            fermatEventHandler = new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler();
-            ((IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventHandler) fermatEventHandler).setAssetReceptionRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+        /**
+         * I will initialize the handling of com.bitdubai.platform events.
+         */
+        FermatEventListener fermatEventListener;
+        FermatEventHandler fermatEventHandler = new AssetReceptionEventHandler(this);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
-            fermatEventHandler = new IncomingAssetOnBlockchainWaitingTransferenceAssetUserEventHandler();
-            ((IncomingAssetOnBlockchainWaitingTransferenceAssetUserEventHandler) fermatEventHandler).setAssetReceptionRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
-            fermatEventHandler = new IncomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventHandler();
-            ((IncomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventHandler) fermatEventHandler).setAssetReceptionRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
-            fermatEventHandler = new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler();
-            ((IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventHandler) fermatEventHandler).setAssetReceptionRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+        fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
-            fermatEventHandler = new ReceivedNewDigitalAssetMetadataNotificationEventHandler();
-            ((ReceivedNewDigitalAssetMetadataNotificationEventHandler) fermatEventHandler).setAssetReceptionRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-            Logger LOG = Logger.getGlobal();
-            LOG.info("ASSET RECEPTION EVENT RECORDER STARTED");
-            this.serviceStatus=ServiceStatus.STARTED;
-        } catch (CantSetObjectException exception){
-            throw new CantStartServiceException(exception,"Starting the AssetReceptionRecorderService", "The AssetReceptionRecorderService is probably null");
-        }
+        fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+
+        fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
+
+        Logger LOG = Logger.getGlobal();
+        LOG.info("ASSET RECEPTION EVENT RECORDER STARTED");
+        this.serviceStatus = ServiceStatus.STARTED;
+
     }
 
     @Override
@@ -172,7 +104,7 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
-    private void removeRegisteredListeners(){
+    private void removeRegisteredListeners() {
         for (FermatEventListener fermatEventListener : listenersAdded) {
             eventManager.removeListener(fermatEventListener);
         }
@@ -186,6 +118,6 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
 
     @Override
     public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
+        this.eventManager = eventManager;
     }
 }

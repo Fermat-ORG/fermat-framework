@@ -77,6 +77,7 @@ class BitcoinCryptoNetworkDatabaseFactory implements DealsWithPluginDatabaseSyst
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
@@ -152,6 +153,55 @@ class BitcoinCryptoNetworkDatabaseFactory implements DealsWithPluginDatabaseSyst
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+
+            /**
+             * Create Broadcast table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
+
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXECUTION_NUMBER_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_NETWORK, DatabaseDataType.STRING, 20, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TRANSACTION_ID, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_COUNT, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_BROADCAST_IP, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT, DatabaseDataType.INTEGER, 5, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, DatabaseDataType.STRING, 5, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXCEPTION, DatabaseDataType.STRING, 300, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_LAST_EXECUTION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 10, Boolean.FALSE);
+
+
+            table.addIndex(BitcoinCryptoNetworkDatabaseConstants.BRTOADCAST_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+
+            /**
+             * Create ACTIVENETWORKS table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_TABLE_NAME);
+
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE, DatabaseDataType.STRING, 20, Boolean.TRUE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_KEYS, DatabaseDataType.INTEGER, 0, Boolean.FALSE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_LAST_UPDATE, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+
+
+            table.addIndex(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

@@ -1,5 +1,6 @@
 package com.bitdubai.desktop.wallet_manager.fragments.provisory_classes;
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -28,6 +29,9 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     private Version version;
     private int iconResource;
     private int position;
+
+
+    private int notifications;
 
     public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.walletCategory = walletCategory;
@@ -108,6 +112,14 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
         this.position = position;
     }
 
+    public void setNotifications(int notifications) {
+        this.notifications = notifications;
+    }
+    @Override
+    public int getNotifications() {
+        return notifications;
+    }
+
     public void setIconResource(int iconResource) {
         this.iconResource = iconResource;
     }
@@ -161,6 +173,11 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return null;
     }
 
 

@@ -25,6 +25,7 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
     TransactionStatusRestockDestock transactionStatus;
     BigDecimal                      priceReference;
     OriginTransaction originTransaction;
+    String                          originTransactionId;
 
     public CryptoMoneyRestockTransactionImpl(){
 
@@ -41,7 +42,8 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
                                              Timestamp timeStamp,
                                              TransactionStatusRestockDestock transactionStatus,
                                              BigDecimal priceReference,
-                                             OriginTransaction originTransaction){
+                                             OriginTransaction originTransaction,
+                                             String originTransactionId){
         this.transactionId      = transactionId;
         this.actorPublicKey     = actorPublicKey;
         this.cryptoCurrency     = cryptoCurrency;
@@ -54,6 +56,7 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
         this.transactionStatus  = transactionStatus;
         this.priceReference     = priceReference;
         this.originTransaction  = originTransaction;
+        this.originTransactionId= originTransactionId;
     }
 
 
@@ -85,7 +88,7 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
 
     @Override
     public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
-
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     @Override
@@ -176,5 +179,20 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
     @Override
     public void setOriginTransaction(OriginTransaction originTransaction) {
         this.originTransaction = originTransaction;
+    }
+
+    /**
+     * The property <code>OriginTransactionId</code>  represented the Origin Transaction
+     *
+     * @return the String
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return this.originTransactionId;
+    }
+
+    @Override
+    public void setOriginTransactionId(String originTransactionId) {
+        this.originTransactionId = originTransactionId;
     }
 }

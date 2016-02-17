@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -19,14 +21,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.TransactionStatus;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistsTransactionUUIDException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartDeliveringException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyDeliveringException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantCheckAssetDistributionProgressException;
@@ -46,22 +47,19 @@ import java.util.UUID;
  */
 public class AssetDistributionDao {
 
+    private final DigitalAssetDistributionVault digitalAssetDistributionVault;
     //VARIABLE DECLARATION
     private UUID pluginId;
     private Database database;
     private PluginDatabaseSystem pluginDatabaseSystem;
-    private final ActorAssetUserManager actorAssetUserManager;
-    private final DigitalAssetDistributionVault digitalAssetDistributionVault;
 
 
     //CONSTRUCTORS
     public AssetDistributionDao(PluginDatabaseSystem pluginDatabaseSystem,
                                 UUID pluginId,
-                                DigitalAssetDistributionVault digitalAssetDistributionVault,
-                                ActorAssetUserManager actorAssetUserManager) throws CantExecuteDatabaseOperationException {
+                                DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantExecuteDatabaseOperationException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-        this.actorAssetUserManager = actorAssetUserManager;
         this.digitalAssetDistributionVault = digitalAssetDistributionVault;
         database = openDatabase();
     }
@@ -69,7 +67,8 @@ public class AssetDistributionDao {
     //PUBLIC METHODS
     public void startDelivering(String genesisTransaction,
                                 String assetPublicKey,
-                                String userPublicKey) throws CantStartDeliveringException, TransactionAlreadyDeliveringException {
+                                String userPublicKey,
+                                BlockchainNetworkType networkType) throws CantStartDeliveringException {
         String context = "Genesis Transaction: " + genesisTransaction + " - Asset Public Key: " + assetPublicKey + " - User Public Key: " + userPublicKey;
 
         String transactionId = UUID.randomUUID().toString();
@@ -77,26 +76,25 @@ public class AssetDistributionDao {
         long timeOut = startTime + AssetDistributionDigitalAssetTransactionPluginRoot.DELIVERING_TIMEOUT;
 
         try {
-            if (isDeliveringGenesisTransaction(genesisTransaction)) {
-                throw new TransactionAlreadyDeliveringException(null, context, "This genesis transaction is already being delivered, chill.");
-            }
-
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME);
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, transactionId);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+            record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME, networkType != null ? networkType.getCode() : BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode());
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME, assetPublicKey);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME, userPublicKey);
             record.setLongValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME, startTime);
             record.setLongValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMEOUT_COLUMN_NAME, timeOut);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME, DistributionStatus.DELIVERING.getCode());
+            record.setLongValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME, 0);
+
             databaseTable.insertRecord(record);
-        } catch (CantInsertRecordException | CantCheckAssetDistributionProgressException exception) {
+        } catch (CantInsertRecordException exception) {
             throw new CantStartDeliveringException(exception, context, "Starting the delivering at distribution");
         }
     }
 
-    public void persistDigitalAsset(String genesisTransaction,
+    public void persistDigitalAsset(String transactionHash,
                                     String localStoragePath,
                                     String digitalAssetHash,
                                     String actorReceiverPublicKey,
@@ -105,7 +103,7 @@ public class AssetDistributionDao {
 
             DatabaseTable databaseTable = getDatabaseTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
             DatabaseTableRecord record = databaseTable.getEmptyRecord();
-            record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction);
+            record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, transactionHash);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_HASH_COLUMN_NAME, digitalAssetHash);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME, localStoragePath);
             record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME, actorReceiverPublicKey);
@@ -120,6 +118,22 @@ public class AssetDistributionDao {
         } catch (Exception exception) {
             throw new CantPersistDigitalAssetException(exception, "Persisting a forming genesis digital asset", "Unexpected exception");
         }
+    }
+
+    public void updateActorAssetUser(ActorAssetUser user, String genesisTransaction) throws CantUpdateRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
+        String context = "User: " + user + " - Genesis Tx: " + genesisTransaction;
+        DatabaseTable databaseTable = this.database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME);
+        databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+        databaseTable.loadToMemory();
+        List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+        if (databaseTableRecords.isEmpty()) {
+            throw new RecordsNotFoundException(null, context, null);
+        }
+
+        DatabaseTableRecord record = databaseTableRecords.get(0);
+        record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME, user.getActorPublicKey());
+        record.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_ACTOR_ASSET_USER_BITCOIN_ADDRESS_COLUMN_NAME, user.getCryptoAddress().getAddress());
+        databaseTable.updateRecord(record);
     }
 
     public void updateDistributionStatusByGenesisTransaction(DistributionStatus distributionStatus, String genesisTransaction) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
@@ -153,12 +167,12 @@ public class AssetDistributionDao {
         }
     }
 
-
-    public void updateDeliveringStatusForGenesisTransaction(String genesisTransaction, DistributionStatus status) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException, RecordsNotFoundException {
+    public void sendingBitcoins(String genesisTransaction, String bitcoinsSentGenesisTx) throws RecordsNotFoundException, CantCheckAssetDistributionProgressException {
         try {
             DatabaseTable databaseTable;
             databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME);
             databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME, genesisTransaction, DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME, DistributionStatus.DELIVERING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.addFilterOrder(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
@@ -169,7 +183,30 @@ public class AssetDistributionDao {
 
             databaseTableRecord = databaseTableRecords.get(0);
 
-            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode());
+            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_SENT_GENESISTX_COLUMN_NAME, bitcoinsSentGenesisTx);
+            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME, DistributionStatus.SENDING_CRYPTO.getCode());
+            databaseTable.updateRecord(databaseTableRecord);
+        } catch (CantLoadTableToMemoryException | CantUpdateRecordException exception) {
+            throw new CantCheckAssetDistributionProgressException(exception, "Updating Crypto Status ", "Cannot load the table into memory");
+        }
+    }
+
+    public void updateDeliveringStatusForTxId(String transactionId, DistributionStatus status) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException, RecordsNotFoundException {
+        try {
+            DatabaseTable databaseTable;
+            databaseTable = database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME);
+            databaseTable.addStringFilter(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            databaseTable.addFilterOrder(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+            DatabaseTableRecord databaseTableRecord;
+            if (databaseTable.getRecords().isEmpty()) {
+                throw new RecordsNotFoundException(null, "Tx Id: " + transactionId, "There is nothing to update.");
+            }
+
+            databaseTableRecord = databaseTableRecords.get(0);
+
+            databaseTableRecord.setStringValue(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME, status.getCode());
             databaseTable.updateRecord(databaseTableRecord);
         } catch (CantLoadTableToMemoryException | CantUpdateRecordException exception) {
             throw new CantCheckAssetDistributionProgressException(exception, "Updating Crypto Status ", "Cannot load the table into memory");
@@ -204,6 +241,9 @@ public class AssetDistributionDao {
         }
     }
 
+    public DistributionStatus getDistributionStatusForGenesisTx(String genesisTx) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException, InvalidParameterException {
+        return DistributionStatus.getByCode(getStringValueFromSelectedTableTableByFieldCode(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME, genesisTx, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DISTRIBUTION_STATUS_COLUMN_NAME, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME));
+    }
 
     public void updateEventStatus(String eventId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         try {
@@ -256,11 +296,20 @@ public class AssetDistributionDao {
         updateDeliveringStatus(DistributionStatus.DELIVERING_CANCELLED, transactionId);
     }
 
+    public void failedToSendCrypto(String transactionId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+        updateDeliveringStatus(DistributionStatus.SENDING_CRYPTO_FAILED, transactionId);
+    }
+
+    public void newAttempt(String transactionId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetDistributionProgressException {
+        long attemptNumber = constructRecordFromTransactionId(transactionId).getAttemptNumber();
+        updateLongValueByStringFieldDeliveringTable(++attemptNumber, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME, transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
+    }
+
     public boolean isFirstTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException {
         return getValueListFromTableByColumn(genesisTransaction,
-                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME,
-                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME,
-                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_TABLE_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_GENESIS_TRANSACTION_COLUMN_NAME
         ).isEmpty();
     }
 
@@ -269,12 +318,27 @@ public class AssetDistributionDao {
     }
 
     public DeliverRecord getLastDelivering(String genesisTx) throws CantCheckAssetDistributionProgressException {
-        return getDeliverRecordsForGenesisTransaction(genesisTx).get(0);
+        List<DeliverRecord> records = getDeliverRecordsForGenesisTransaction(genesisTx);
+        return records.get(records.size() - 1);
     }
 
-    public List<DeliverRecord> getDeliveringRecordsFromGenesisTransaction(String genesisTransaction) throws CantCheckAssetDistributionProgressException {
+    public List<DeliverRecord> getSendingCryptoRecords() throws CantCheckAssetDistributionProgressException {
         List<DeliverRecord> toReturn = new ArrayList<>();
-        for (String txId : getDeliveringIdByStatus(DistributionStatus.DELIVERING, genesisTransaction)) {
+        for (String txId : getValueListFromTableByColumn(DistributionStatus.SENDING_CRYPTO.getCode(),
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME)) {
+            toReturn.add(constructRecordFromTransactionId(txId));
+        }
+        return toReturn;
+    }
+
+    public List<DeliverRecord> getDeliveredRecords() throws CantCheckAssetDistributionProgressException {
+        List<DeliverRecord> toReturn = new ArrayList<>();
+        for (String txId : getValueListFromTableByColumn(DistributionStatus.DELIVERED.getCode(),
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME,
+                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME)) {
             toReturn.add(constructRecordFromTransactionId(txId));
         }
         return toReturn;
@@ -316,7 +380,7 @@ public class AssetDistributionDao {
         return databaseTable.getRecords().get(0).getStringValue(column);
     }
 
-    private Long getLongFieldByDeliveringId(String deliveringId, String column) throws RecordsNotFoundException, CantLoadTableToMemoryException {
+    private long getLongFieldByDeliveringId(String deliveringId, String column) throws RecordsNotFoundException, CantLoadTableToMemoryException {
         String context = "Tx Id: " + deliveringId;
 
         DatabaseTable databaseTable;
@@ -345,13 +409,6 @@ public class AssetDistributionDao {
         return getDeliveringIdByStatus(DistributionStatus.DELIVERING, genesisTransaction);
     }
 
-    private List<String> getDeliveringTransactions() throws CantCheckAssetDistributionProgressException {
-        return getValueListFromTableByColumn(DistributionStatus.DELIVERING.getCode(),
-                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME,
-                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME,
-                AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
-    }
-
     private DatabaseTable getDatabaseTable(String tableName) {
         return database.getTable(tableName);
     }
@@ -377,6 +434,27 @@ public class AssetDistributionDao {
                 databaseTableRecord = databaseTableRecords.get(0);
             }
             databaseTableRecord.setStringValue(columnName, value);
+            databaseTable.updateRecord(databaseTableRecord);
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantExecuteQueryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception, "Trying to update " + columnName, "Check the cause");
+        } catch (Exception exception) {
+            throw new CantExecuteQueryException(CantExecuteQueryException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Trying to update " + columnName, "Check the cause");
+        }
+    }
+
+    private void updateLongValueByStringFieldDeliveringTable(long value, String columnName, String filterValue, String filterColumn) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+        try {
+            DatabaseTable databaseTable = this.database.getTable(AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TABLE_NAME);
+            databaseTable.addStringFilter(filterColumn, filterValue, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            DatabaseTableRecord databaseTableRecord;
+            List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+            if (databaseTableRecords.size() > 1) {
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", filterColumn + ": " + filterColumn);
+            } else {
+                databaseTableRecord = databaseTableRecords.get(0);
+            }
+            databaseTableRecord.setLongValue(columnName, value);
             databaseTable.updateRecord(databaseTableRecord);
         } catch (CantLoadTableToMemoryException exception) {
             throw new CantExecuteQueryException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, exception, "Trying to update " + columnName, "Check the cause");
@@ -543,12 +621,15 @@ public class AssetDistributionDao {
         try {
             DeliverRecord recordToReturn = new DeliverRecord();
             recordToReturn.setTransactionId(transactionId);
-            recordToReturn.setGenesisTransaction(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TRANSACTION_ID_COLUMN_NAME));
-            recordToReturn.setActorAssetUser(actorAssetUserManager.getActorByPublicKey(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME)));
-            recordToReturn.setDigitalAssetMetadata(digitalAssetDistributionVault.getDigitalAssetMetadataFromLocalStorage(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME)));
+            recordToReturn.setGenesisTransaction(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME));
+            recordToReturn.setNetworkType(BlockchainNetworkType.getByCode(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME)));
+            recordToReturn.setActorAssetUserPublicKey(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_USER_PUBLICKEY_COLUMN_NAME));
+            recordToReturn.setDigitalAssetMetadata(digitalAssetDistributionVault.getDigitalAssetMetadataFromWallet(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME), BlockchainNetworkType.getByCode(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_NETWORK_TYPE_COLUMN_NAME))));
             recordToReturn.setStartTime(new Date(getLongFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_START_TIME_COLUMN_NAME)));
             recordToReturn.setTimeOut(new Date(getLongFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_TIMEOUT_COLUMN_NAME)));
             recordToReturn.setState(DistributionStatus.getByCode(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_STATE_COLUMN_NAME)));
+            recordToReturn.setGenesisTransactionSent(getStringFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_SENT_GENESISTX_COLUMN_NAME));
+            recordToReturn.setAttemptNumber(getLongFieldByDeliveringId(transactionId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME));
             return recordToReturn;
         } catch (Exception e) {
             throw new CantCheckAssetDistributionProgressException(e, transactionId, null);
@@ -571,7 +652,7 @@ public class AssetDistributionDao {
     }
 
     public List<String> getPendingCryptoRouterEvents() throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
-        return getPendingEventsBySource(EventSource.ASSETS_OVER_BITCOIN_VAULT);
+        return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);
     }
 
     public String getEventTypeById(String eventId) throws CantCheckAssetDistributionProgressException, UnexpectedResultReturnedFromDatabaseException {
@@ -602,6 +683,10 @@ public class AssetDistributionDao {
 
     public List<String> getGenesisTransactionByAssetAcceptedStatus() throws CantCheckAssetDistributionProgressException {
         return getGenesisTransactionByDistributionStatus(DistributionStatus.ASSET_ACCEPTED);
+    }
+
+    public List<String> getGenesisTransactionByDeliveredStatus() throws CantCheckAssetDistributionProgressException {
+        return getGenesisTransactionByDistributionStatus(DistributionStatus.DELIVERED);
     }
 
     public List<String> getGenesisTransactionByAssetRejectedByContractStatus() throws CantCheckAssetDistributionProgressException {

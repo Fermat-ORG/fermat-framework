@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -18,40 +19,30 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyRestockDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyRestockDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.database.StockTransactionsCashMoneyRestockDeveloperFactory;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.exceptions.MissingCashMoneyRestockDataException;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.structure.CashMoneyRestockTransactionImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyRestockDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.structure.StockTransactionCashMoneyRestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.structure.events.StockTransactionsCashMoneyRestockMonitorAgent;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.hold.interfaces.CashHoldTransactionManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.sql.Timestamp;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by franklin on 16/11/15.
  */
-public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin  implements
+public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers {
 
     public StockTransactionsCashMoneyRestockPluginRoot() {
@@ -85,25 +76,19 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_DATABASE_NAME);
 
-            //Buscar la manera de arrancar el agente solo cuando hayan transacciones diferentes a COMPLETED
             System.out.println("******* Init Cash Money Restock ******");
 
             startMonitorAgent();
 
-            database.closeDatabase();
-        }
-        catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e)
-        {
-            try
-            {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e) {
+            try {
+                startMonitorAgent();
                 StockTransactionsCashMoneyRestockDatabaseFactory stockTransactionsCashMoneyRestockDatabaseFactory = new StockTransactionsCashMoneyRestockDatabaseFactory(this.pluginDatabaseSystem);
                 stockTransactionsCashMoneyRestockDatabaseFactory.createDatabase(this.pluginId, StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_DATABASE_NAME);
-            }
-            catch(CantCreateDatabaseException cantCreateDatabaseException)
-            {
+            } catch (CantCreateDatabaseException | CantStartAgentException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
-            }catch (Exception exception) {
+            } catch (Exception exception) {
                 throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin plugin.", FermatException.wrapException(exception), null, null);
             }
         }
@@ -139,19 +124,21 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
         try {
             businessTransactionBankMoneyRestockDeveloperFactory.initializeDatabase();
             developerDatabaseTableRecordList = businessTransactionBankMoneyRestockDeveloperFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Bank Money Restock ******");
+        } catch (CantInitializeCashMoneyRestockDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return developerDatabaseTableRecordList;
     }
 
     private StockTransactionsCashMoneyRestockMonitorAgent stockTransactionsCashMoneyRestockMonitorAgent;
+
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
+     *
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        if(stockTransactionsCashMoneyRestockMonitorAgent == null) {
+        if (stockTransactionsCashMoneyRestockMonitorAgent == null) {
             stockTransactionsCashMoneyRestockMonitorAgent = new StockTransactionsCashMoneyRestockMonitorAgent(
                     errorManager,
                     stockTransactionCashMoneyRestockManager,
@@ -162,7 +149,12 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
             );
 
             stockTransactionsCashMoneyRestockMonitorAgent.start();
-        }else stockTransactionsCashMoneyRestockMonitorAgent.start();
+            serviceStatus = ServiceStatus.STARTED;
+        }
+        else {
+            stockTransactionsCashMoneyRestockMonitorAgent.start();
+            serviceStatus = ServiceStatus.STARTED;
+        }
     }
 
 }

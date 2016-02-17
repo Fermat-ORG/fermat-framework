@@ -1,6 +1,7 @@
 package unit.com.bitdubai.fermat_dap_api.all_definition.digital_asset;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -19,7 +20,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import org.junit.Test;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -28,6 +28,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
+
+import org.junit.Test;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/11/15.
@@ -54,7 +56,7 @@ public class LocalStorageTest {
         DigitalAsset mockedDigitalAsset=getDigitalAssetForTesting();
         DigitalAssetMetadata mockedDigitalAssetMetadata=new DigitalAssetMetadata();
         mockedDigitalAssetMetadata.setDigitalAsset(mockedDigitalAsset);
-        mockedDigitalAssetMetadata.setGenesisTransaction("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
+//        mockedDigitalAssetMetadata.setGenesisTransaction("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
         String hash=mockedDigitalAssetMetadata.getDigitalAssetHash();
         System.out.println("DAM - HASH: " + hash);
         return mockedDigitalAssetMetadata;
@@ -68,11 +70,21 @@ public class LocalStorageTest {
             }
 
             @Override
+            public byte[] getImage() {
+                return new byte[0];
+            }
+
+            @Override
             public String getPublicKey() {
                 return "ASDS-10087982";
             }
 
             @Override
+            public Actors getActorType() {
+                return null;
+            }
+
+            //@Override
             public byte[] getProfileImage() {
                 return new byte[0];
             }

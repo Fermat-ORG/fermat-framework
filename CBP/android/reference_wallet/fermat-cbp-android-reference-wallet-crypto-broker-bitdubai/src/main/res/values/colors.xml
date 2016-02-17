@@ -34,6 +34,7 @@
     <color name="waiting_for_text">#6b7378</color>
     <color name="waiting_for_broker_list_item_background">#f3f3f3</color>
     <color name="waiting_for_customer_list_item_background">#f3f3f3</color>
+    <color name="contract_paused_list_item_background">#a4a4a4</color>
 
     <color name="option_button_background">#75222222</color>
     <color name="card_title_color_status_confirm">#222</color>
@@ -53,4 +54,13 @@
     <color name="text_value_status_confirm">#27507b</color>
     <color name="text_value_status_accepted">#0e0e0e</color>
     <color name="activity_background">#222</color>
+
+    <color name="cbw_setting_item_color">#dbdbdb</color>
+
+    <color name="cbw_wizard_color">#2c648f</color>
+    <color name="cbw_wizard_border_color">#455077</color>
+    <color name="light_grey">#EEE</color>
+
+    <color name="cbw_contract_details_background">#222</color>
+    <color name="cbw_background_stock_chart_container">#3c70a9</color>
 </resources>

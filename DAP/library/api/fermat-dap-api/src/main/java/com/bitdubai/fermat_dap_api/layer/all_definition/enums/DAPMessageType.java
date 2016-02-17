@@ -12,7 +12,10 @@ public enum DAPMessageType implements FermatEnum {
 
     ASSET_APPROPRIATION("ASAP"),
     EXTENDED_PUBLIC_KEY("EXPK"),
-
+    ASSET_METADATA("ASME"),
+    ASSET_NEGOTIATION("ASSE"),
+    ASSET_SELL("DFTX"),
+    ASSET_TRANSFER("ASTA")
     ;
     //VARIABLE DECLARATION
 

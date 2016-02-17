@@ -1,6 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 
 import java.util.Calendar;
@@ -26,20 +30,37 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private ContractStatus status;
     private String cancellationReason;
 
-    public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status) {
+    public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) {
         this.customerAlias = customerAlias;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
-        this.cancellationReason ="";
-
-        amount = random.nextFloat() * 100;
-        exchangeRateAmount = random.nextFloat();
-
+        if (customerBrokerPurchaseNegotiation != null) {
+            this.cancellationReason = customerBrokerPurchaseNegotiation.getCancelReason();
+            negotiationId = customerBrokerPurchaseNegotiation.getNegotiationId(); //UUID.randomUUID();
+            date = customerBrokerPurchaseNegotiation.getLastNegotiationUpdateDate(); //instance.getTimeInMillis();
+            try {
+                for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
+                    if (clause.getType().getCode() == ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode()) {
+                        amount = Float.valueOf(clause.getValue());
+                    }
+                    if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode()) {
+                        exchangeRateAmount = Float.valueOf(clause.getValue());
+                    }
+                }
+            } catch (CantGetListClauseException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            this.cancellationReason = "";
+            this.amount = 0;
+            this.exchangeRateAmount = 0;
+            negotiationId = UUID.randomUUID();
+            date = instance.getTimeInMillis();
+        }
         imageBytes = new byte[0];
-        negotiationId = UUID.randomUUID();
 
-        date = instance.getTimeInMillis();
         this.status = status;
     }
 
@@ -77,7 +98,7 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     @Override
     public UUID getNegotiationId() {
         //TODO
-        return null;
+        return negotiationId;
     }
 
     @Override

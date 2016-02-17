@@ -148,7 +148,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
             try {
                 BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
-                funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance();
+                funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(transaction.getBlockchainNetworkType());
                 if (funds < transaction.getAmount()) {
                     dao.cancelTransaction(transaction, "Insufficient founds.");
                     // TODO: Lanzar un evento de fondos insuficientes
@@ -234,7 +234,7 @@ public class OutgoingExtraUserTransactionProcessorAgent extends FermatAgent impl
 
             try {
                 BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
-                CryptoStatus cryptoStatus = this.bitcoinNetworkManager.getCryptoStatus(transaction.getTransactionId());
+                CryptoStatus cryptoStatus = this.bitcoinNetworkManager.getCryptoStatus(transaction.getTransactionHash());
                 com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionHandler.handleTransaction(transaction, bitcoinNetworkManager, cryptoStatus, bitcoinWalletWallet, this.dao, this.errorManager);
 
             } catch (Exception exception) {

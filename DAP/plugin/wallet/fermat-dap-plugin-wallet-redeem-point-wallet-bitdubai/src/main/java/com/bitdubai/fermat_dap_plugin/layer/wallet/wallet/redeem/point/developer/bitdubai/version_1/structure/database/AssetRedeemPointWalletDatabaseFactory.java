@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
@@ -16,13 +15,13 @@ import java.util.UUID;
 /**
  * Created by franklin on 14/10/15.
  */
-public class AssetRedeemPointWalletDatabaseFactory  implements DealsWithPluginDatabaseSystem {
+public class AssetRedeemPointWalletDatabaseFactory {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+
+    public AssetRedeemPointWalletDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -32,19 +31,16 @@ public class AssetRedeemPointWalletDatabaseFactory  implements DealsWithPluginDa
             database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
             createAssetRedeemPointWalletTable(ownerId, database.getDatabaseFactory());
             createAssetRedeemPointWalletBalancesTable(ownerId, database.getDatabaseFactory());
+            createStatisticsTable(ownerId, database.getDatabaseFactory());
             //insertInitialBalancesRecord(database);
-            database.closeDatabase();
+
             return database;
         } catch(CantCreateTableException exception){
             //catch(CantCreateTableException | CantInsertRecordException exception){
-            if(database != null)
-                database.closeDatabase();
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch(CantCreateDatabaseException exception){
             throw exception;
         } catch(Exception exception){
-            if(database != null)
-                database.closeDatabase();
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
@@ -54,6 +50,15 @@ public class AssetRedeemPointWalletDatabaseFactory  implements DealsWithPluginDa
             DatabaseTableFactory tableFactory = createAssetRedeemPointWalletTableFactory(ownerId, databaseFactory);
             databaseFactory.createTable(tableFactory);
         } catch(InvalidOwnerIdException exception){
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
+        }
+    }
+
+    private void createStatisticsTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException {
+        try {
+            DatabaseTableFactory tableFactory = createStatisticsTableFactory(ownerId, databaseFactory);
+            databaseFactory.createTable(tableFactory);
+        } catch (InvalidOwnerIdException exception) {
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
         }
     }
@@ -101,6 +106,17 @@ public class AssetRedeemPointWalletDatabaseFactory  implements DealsWithPluginDa
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
         table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_BALANCE_TABLE_QUANTITY_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
 
+        return table;
+    }
+
+
+    private DatabaseTableFactory createStatisticsTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_TABLE_NAME);
+        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, true);
+        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_GENESIS_TRANSACTION_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_USER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_REDEMPTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
         return table;
     }
 

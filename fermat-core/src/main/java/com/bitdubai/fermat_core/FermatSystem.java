@@ -1,10 +1,14 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetRuntimeManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ErrorManagerNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
@@ -23,6 +27,8 @@ import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_bnk_core.BNKPlatform;
 import com.bitdubai.fermat_cbp_core.CBPPlatform;
 import com.bitdubai.fermat_ccp_core.CCPPlatform;
+import com.bitdubai.fermat_cer_core.CERPlatform;
+import com.bitdubai.fermat_cht_core.CHTPlatform;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
@@ -34,6 +40,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_core.PIPPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * The class <code>com.bitdubai.fermat_core.FermatSystem</code>
  * starts all the component of the platform and manage it.
@@ -42,9 +50,55 @@ import com.bitdubai.fermat_wpd_core.WPDPlatform;
  */
 public final class FermatSystem {
 
+    private static FermatSystem INSTANCE = null;
+
     private FermatSystemContext fermatSystemContext;
     private FermatAddonManager  fermatAddonManager ;
     private FermatPluginManager fermatPluginManager;
+    public boolean isStarted;
+
+    private synchronized static void createInstance() {
+
+        if (INSTANCE == null)
+            INSTANCE = new FermatSystem();
+    }
+
+    private synchronized static void createInstance(final Object           osContext  ,
+                                                    final AbstractPlatform osaPlatform) {
+
+        if (INSTANCE == null)
+            INSTANCE = new FermatSystem(osContext, osaPlatform);
+    }
+
+    public static FermatSystem getInstance() {
+        if (INSTANCE == null) createInstance();
+        return INSTANCE;
+    }
+
+    public static FermatSystem getInstance(final Object           osContext  ,
+                                           final AbstractPlatform osaPlatform) {
+
+        if (INSTANCE == null) createInstance(osContext, osaPlatform);
+        return INSTANCE;
+    }
+
+    private FermatSystem() {
+    }
+
+    private FermatSystem(final Object           osContext  ,
+                         final AbstractPlatform osaPlatform) {
+
+
+        try {
+            this.start(osContext, osaPlatform);
+        } catch (FermatException e) {
+
+            System.out.println(e.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Here we start all the platforms of Fermat, one by one.
@@ -55,7 +109,7 @@ public final class FermatSystem {
      *
      * @throws CantStartSystemException if something goes wrong.
      */
-    public final void start(final Object           osContext  ,
+    public void start(final Object           osContext  ,
                             final AbstractPlatform osaPlatform) throws CantStartSystemException {
 
         this.fermatSystemContext = new FermatSystemContext(osContext);
@@ -77,11 +131,14 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new BNKPlatform());
             fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
+            fermatSystemContext.registerPlatform(new CERPlatform());
+            fermatSystemContext.registerPlatform(new CHTPlatform());
             fermatSystemContext.registerPlatform(new CSHPlatform());
             fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
+
 
         } catch(CantRegisterPlatformException e) {
 
@@ -144,6 +201,27 @@ public final class FermatSystem {
         }
     }
 
+    public final ResourcesManager getResourcesManager2(final PluginVersionReference pluginVersionReference) throws CantGetResourcesManagerException  ,
+            ResourcesManagerNotFoundException {
+
+        try {
+
+            final FermatManager resourcesManager = fermatPluginManager.getPlugin(pluginVersionReference);
+
+            if (resourcesManager instanceof ResourcesManager)
+                return (ResourcesManager) resourcesManager;
+            else
+                throw new CantGetResourcesManagerException(pluginVersionReference.toString3(), "The plugin version requested not implements resources manager interface.");
+
+        } catch(final VersionNotFoundException e) {
+
+            throw new ResourcesManagerNotFoundException(e, pluginVersionReference.toString3(), "The resources manager cannot be found.");
+        } catch (final Exception e) {
+
+            throw new CantGetResourcesManagerException(e, pluginVersionReference.toString3(), "Unhandled error.");
+        }
+    }
+
     /**
      * Through the method <code>getModuleManager</code> the graphic interface can access to the modules of
      * its sub-apps and wallets.
@@ -180,6 +258,43 @@ public final class FermatSystem {
     }
 
     /**
+     * Through the method <code>getModuleManager</code> the graphic interface can access to the modules of
+     * its sub-apps and wallets.
+     *
+     * @param pluginVersionReference plugin version reference data.
+     *
+     * @return an instance of the requested module manager.
+     *
+     * @throws CantGetModuleManagerException   if something goes wrong.
+     * @throws ModuleManagerNotFoundException  if we can't find the requested module manager.
+     */
+    public final ModuleManager getModuleManager2(final PluginVersionReference pluginVersionReference) throws CantGetModuleManagerException  ,
+            ModuleManagerNotFoundException {
+
+        try {
+
+            final FermatManager moduleManager = fermatPluginManager.getPlugin(pluginVersionReference);
+
+            if (moduleManager instanceof ModuleManager)
+                return (ModuleManager) moduleManager;
+            else
+                throw new CantGetModuleManagerException(pluginVersionReference.toString3(), "The plugin version requested not implements module manager interface.");
+
+        } catch(final VersionNotFoundException e) {
+
+            throw new ModuleManagerNotFoundException(e, pluginVersionReference.toString3(), "The module manager cannot be found.");
+        } catch(final CantGetModuleManagerException e) {
+
+            throw e;
+        } catch (final Exception e) {
+
+            throw new CantGetModuleManagerException(e, pluginVersionReference.toString3(), "Unhandled error.");
+        }
+    }
+
+
+
+    /**
      * Through the method <code>getRuntimeManager</code> the graphic interface can access to the runtime managers of fermat.
      *
      * @param pluginVersionReference plugin version reference data.
@@ -195,6 +310,40 @@ public final class FermatSystem {
         try {
 
             final FermatManager runtimeManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
+
+            if (runtimeManager instanceof RuntimeManager)
+                return (RuntimeManager) runtimeManager;
+            else
+                throw new CantGetRuntimeManagerException(pluginVersionReference.toString3(), "The plugin version requested not implements runtime manager interface.");
+
+        } catch(final VersionNotFoundException e) {
+
+            throw new RuntimeManagerNotFoundException(e, pluginVersionReference.toString3(), "The runtime manager cannot be found.");
+        } catch(final CantGetRuntimeManagerException e) {
+
+            throw e;
+        } catch (final Exception e) {
+
+            throw new CantGetRuntimeManagerException(e, pluginVersionReference.toString3(), "Unhandled error.");
+        }
+    }
+
+    /**
+     * Through the method <code>getRuntimeManager</code> the graphic interface can access to the runtime managers of fermat.
+     *
+     * @param pluginVersionReference plugin version reference data.
+     *
+     * @return an instance of the requested runtime manager.
+     *
+     * @throws CantGetRuntimeManagerException    if something goes wrong.
+     * @throws RuntimeManagerNotFoundException   if we can't find the requested runtime manager.
+     */
+    public final RuntimeManager getRuntimeManager2(final PluginVersionReference pluginVersionReference) throws RuntimeManagerNotFoundException,
+            CantGetRuntimeManagerException {
+
+        try {
+
+            final FermatManager runtimeManager = fermatPluginManager.getPlugin(pluginVersionReference);
 
             if (runtimeManager instanceof RuntimeManager)
                 return (RuntimeManager) runtimeManager;
@@ -271,4 +420,33 @@ public final class FermatSystem {
         return fermatPluginManager.startPluginAndReferences(pluginVersionReference);
     }
 
+    public final FermatManager getPlugin(final PluginVersionReference pluginVersionReference) throws VersionNotFoundException ,
+            CantStartPluginException {
+
+        return fermatPluginManager.getPlugin(pluginVersionReference);
+    }
+
+
+    // TODO THINK ABOUT THIS.
+    @Deprecated
+    public final void startAllRegisteredPlatforms() throws CantStartAllRegisteredPlatformsException {
+        final ConcurrentHashMap<AddonVersionReference, AbstractAddon> addonList = this.fermatSystemContext.listAddonVersions();
+        final ConcurrentHashMap<PluginVersionReference, AbstractPlugin> pluginList = this.fermatSystemContext.listPluginVersions();
+        for(final ConcurrentHashMap.Entry<AddonVersionReference, AbstractAddon> addon : addonList.entrySet()) {
+            try {
+                fermatAddonManager.startAddonAndReferences(addon.getValue());
+            } catch (Exception e) {
+                System.err.println(e.toString());
+            }
+        }
+        for(ConcurrentHashMap.Entry<PluginVersionReference, AbstractPlugin> plugin : pluginList.entrySet()) {
+            try {
+                fermatPluginManager.startPluginAndReferences(plugin.getKey());
+            } catch (Exception e) {
+                System.out.println(e.toString());
+            }
+        }
+
+        this.isStarted = true;
+    }
 }

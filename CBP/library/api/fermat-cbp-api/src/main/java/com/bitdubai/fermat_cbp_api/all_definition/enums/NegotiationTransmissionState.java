@@ -10,7 +10,9 @@ public enum NegotiationTransmissionState implements FermatEnum {
 
     DONE                                ("DON"), // final state of request.
     PENDING_ACTION                      ("PEA"), // pending local action, is given after raise a crypto addresses event.
+    PENDING_REMOTE_ACTION               ("PRA"), // waiting response from the counterpart
     PROCESSING_SEND                     ("PCS"), // when an action from the network service is needed sending.
+    CONFIRM_RECEPTION                   ("CNR"),
     WAITING_RESPONSE                    ("WRE"), // waiting response from the counterpart.
 
     SEEN_BY_DESTINATION_NETWORK_SERVICE ("SBDNS"),
@@ -18,18 +20,8 @@ public enum NegotiationTransmissionState implements FermatEnum {
     CONFIRM_RESPONSE                    ("CFR"),
     CONFIRM_NEGOTIATION                 ("CFN"),
     SENT                                ("SENT"),
-
     ;
-    /*
-    CONFIRM_CONTRACT("CCX"),
-    CONFIRM_RESPONSE("CRX"),
-    PRE_PROCESSING_SEND("PPS"),
-    SEEN_BY_DESTINATION_NETWORK_SERVICE("SBDNS"),
-    SEEN_BY_OWN_NETWORK_SERVICE("SBONS"),
-    SENT("SENT"),
-    SENDING_HASH("HTX"),
-    UPDATE_CONTRACT("UCX");
-    */
+
 
     private String code;
 
@@ -46,7 +38,9 @@ public enum NegotiationTransmissionState implements FermatEnum {
         switch (code) {
             case "DON"      : return DONE                               ;
             case "PEA"      : return PENDING_ACTION                     ;
+            case "PRA"      : return PENDING_REMOTE_ACTION              ;
             case "PCS"      : return PROCESSING_SEND                    ;
+            case "CNR"      : return CONFIRM_RECEPTION                  ;
             case "WRE"      : return WAITING_RESPONSE                   ;
             case "SBDNS"    : return SEEN_BY_DESTINATION_NETWORK_SERVICE;
             case "SBONS"    : return SEEN_BY_OWN_NETWORK_SERVICE        ;

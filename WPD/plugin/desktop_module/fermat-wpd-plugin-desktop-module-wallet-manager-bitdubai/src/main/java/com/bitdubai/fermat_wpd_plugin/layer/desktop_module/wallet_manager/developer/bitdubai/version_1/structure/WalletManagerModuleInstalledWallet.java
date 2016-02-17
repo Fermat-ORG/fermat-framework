@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -37,9 +38,11 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     private Version version;
     private int iconResource;
     private int position;
+    private int notifications;
+    private AppsStatus appStatus;
 
 
-    public WalletManagerModuleInstalledWallet(WalletCategory walletCategory,WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
+    public WalletManagerModuleInstalledWallet(WalletCategory walletCategory,WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version,AppsStatus appsStatus) {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
         this.languajesId = languajesId;
@@ -49,6 +52,7 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
         this.walletPlatformIdentifier = walletPlatformIdentifier;
         this.version = version;
         this.walletType=walletType;
+        this.appStatus = appsStatus;
     }
 
     public void setIconResource(int iconResource) {
@@ -115,6 +119,15 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
         this.position = position;
     }
 
+    public void setNotifications(int notifications) {
+        this.notifications = notifications;
+    }
+
+    @Override
+    public int getNotifications() {
+        return notifications;
+    }
+
     /**
      * This method gives us the public key of the wallet in this device. It is used as identifier of
      * the wallet
@@ -159,5 +172,10 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return appStatus;
     }
 }

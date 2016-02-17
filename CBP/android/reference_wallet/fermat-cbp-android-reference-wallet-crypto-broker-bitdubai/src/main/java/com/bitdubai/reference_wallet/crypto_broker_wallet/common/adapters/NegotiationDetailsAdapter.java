@@ -1,14 +1,25 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 
 import android.app.Activity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.AmountToSellStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
@@ -23,6 +34,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotia
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.NoteViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.SingleChoiceStepViewHolder;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -36,6 +49,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     private static final int TYPE_ITEM_AMOUNT_TO_SELL = 4;
     private static final int TYPE_FOOTER = 5;
 
+    private FermatSession session;
     private List<NegotiationStep> dataSet;
     private Activity activity;
     private CryptoBrokerWalletManager walletManager;
@@ -45,13 +59,14 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     private ExchangeRateStepViewHolder exchangeRateViewHolder;
     private boolean haveNote;
 
-    public NegotiationDetailsAdapter(Activity activity, CryptoBrokerWalletManager walletManager, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
+    public NegotiationDetailsAdapter(Activity activity, FermatSession session, CryptoBrokerWalletManager walletManager, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
         this.activity = activity;
+        this.session = session;
         this.dataSet = dataSet;
 
         this.walletManager = walletManager;
 
-        haveNote = false;
+        haveNote = true;
         this.data = data;
 
         haveNote = (data.getMemo() != null);
@@ -77,17 +92,18 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     private int getCardViewResource(int type) {
         switch (type) {
             case TYPE_HEADER:
-                return R.layout.notes_item;
+                return R.layout.cbw_notes_item;
             case TYPE_ITEM_SINGLE_CHOICE:
-                return R.layout.single_choice_item;
+                return R.layout.cbw_single_choice_item;
             case TYPE_ITEM_DATE_TIME:
-                return R.layout.date_time_item;
+                return R.layout.cbw_date_time_item;
             case TYPE_ITEM_EXCHANGE_RATE:
-                return R.layout.exchange_rate_item;
+                return R.layout.cbw_exchange_rate_item;
             case TYPE_ITEM_AMOUNT_TO_SELL:
-                return R.layout.amount_to_sell_item;
+                return R.layout.cbw_amount_to_sell_item;
             case TYPE_FOOTER:
-                return R.layout.footer_item;
+                return R.layout.cbw_footer_item;
+
             default:
                 throw new NoSuchElementException("Incorrect type value");
         }
@@ -235,29 +251,37 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
 
         switch (type) {
             case PAYMENT_METHOD:
-                String currencyToSell = data.getClauses().get(ClauseType.CUSTOMER_CURRENCY).getValue();
-                viewHolder.bind(
-                        stepNumber,
-                        R.string.payment_methods_title,
-                        R.string.payment_method,
-                        step.getValue(),
-                        walletManager.getPaymentMethods(currencyToSell));
+                try {
+                    String currencyToSell = data.getClauses().get(ClauseType.CUSTOMER_CURRENCY).getValue();
+                    List<String> paymentMethods = walletManager.getPaymentMethods(currencyToSell, session.getAppPublicKey());
+
+                    viewHolder.bind(stepNumber, R.string.payment_methods_title,
+                            R.string.payment_method, step.getValue(), paymentMethods);
+
+
+                    System.out.println("juanasoPrueba");
+
+                } catch (FermatException ignored) {
+                }
+
                 break;
             case BROKER_BANK_ACCOUNT:
+                //TODO:Revisar Nelson
                 viewHolder.bind(
                         stepNumber,
                         R.string.broker_bank_account_title,
                         R.string.selected_bank_account,
                         step.getValue(),
-                        walletManager.getBrokerBankAccounts());
+                        getBankAccounts());
                 break;
             case BROKER_LOCATION:
+                //TODO:Revisar Nelson
                 viewHolder.bind(
                         stepNumber,
                         R.string.broker_locations_title,
                         R.string.selected_location,
                         step.getValue(),
-                        walletManager.getBrokerLocations());
+                        getLocations());
                 break;
             case CUSTOMER_BANK_ACCOUNT:
                 viewHolder.bind(
@@ -304,5 +328,56 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
                         step.getValue());
                 break;
         }
+    }
+
+    private List<String> getLocations() {
+        List<String> data = new ArrayList<>();
+        try {
+            Collection<NegotiationLocations> locations = walletManager.getAllLocations(NegotiationType.PURCHASE);
+            if (locations != null)
+                for (NegotiationLocations location : locations)
+                    data.add(location.getLocation());
+
+        } catch (FermatException ex) {
+            Log.e("NegotiationDetailsAdapt", ex.getMessage(), ex);
+        }
+
+        return data;
+    }
+
+    private List<String> getBankAccounts() {
+        List<String> data = new ArrayList<>();
+        try {
+            List<BankAccountNumber> accounts = walletManager.getAccounts(session.getAppPublicKey());
+            for (BankAccountNumber account : accounts)
+                data.add(account.getAccount());
+
+        } catch (FermatException ex) {
+            Log.e("NegotiationDetailsAdapt", ex.getMessage(), ex);
+        }
+
+        return data;
+    }
+
+
+    private void AddNote(CardView noticeSubject) {
+///no terminado
+        //dataSet.add(noticeSubject);
+
+    }
+
+
+    private class CustomViewHolder extends RecyclerView.ViewHolder {
+// toda esta clase es una prueba, no pertenecera en la version final, no aqui.
+        private CardView noticeSubject;
+
+        public CustomViewHolder(View itemView) {
+            super(itemView);
+
+            noticeSubject = (CardView) itemView.findViewById(R.id.negotiation_note_layout);
+            AddNote(noticeSubject);
+        }
+
+
     }
 }

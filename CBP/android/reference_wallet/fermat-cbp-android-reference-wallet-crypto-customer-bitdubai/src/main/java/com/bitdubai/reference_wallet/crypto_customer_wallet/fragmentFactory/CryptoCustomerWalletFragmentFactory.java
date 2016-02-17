@@ -8,20 +8,29 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.broker_list.BrokerListActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CloseContractDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CloseNegotiationDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CreateNewBankAccountFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CreateNewLocationFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.OpenContractDetailsFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.OpenNegotiationDetailsFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.StartNegotiationActivityFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.open_negotiation_details.OpenNegotiationDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.open_negotiation_details.OpenNegotiationAddNoteFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.start_negotiation.StartNegotiationActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contracts_history.ContractsHistoryActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.MarketRateStatisticsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.OpenContractsTabFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.home.OpenNegotiationsTabFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings.SettingsActivityFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings.SettingsMylocationsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages.WizardPageSetBankAccountsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages.WizardPageSetIdentityFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages.WizardPageSetBitcoinWalletAndProvidersFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages.WizardPageSetLocationsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class CryptoCustomerWalletFragmentFactory extends FermatFragmentFactory<CryptoCustomerWalletSession,WalletResourcesProviderManager, CryptoCustomerWalletFragmentsEnumType> {
+public class CryptoCustomerWalletFragmentFactory extends FermatFragmentFactory<CryptoCustomerWalletSession, WalletResourcesProviderManager, CryptoCustomerWalletFragmentsEnumType> {
 
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoCustomerWalletFragmentsEnumType fragment) throws FragmentNotFoundException {
@@ -47,12 +56,34 @@ public class CryptoCustomerWalletFragmentFactory extends FermatFragmentFactory<C
                 return StartNegotiationActivityFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_DETAILS:
                 return OpenNegotiationDetailsFragment.newInstance();
+            case CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_ADD_NOTE:
+                return OpenNegotiationAddNoteFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS:
                 return CloseNegotiationDetailsFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS:
                 return OpenContractDetailsFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS:
                 return CloseContractDetailsFragment.newInstance();
+
+            case CBP_CRYPTO_CUSTOMER_WALLET_SET_IDENTITY:
+                return WizardPageSetIdentityFragment.newInstance();
+            case CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS:
+                return WizardPageSetBitcoinWalletAndProvidersFragment.newInstance();
+            case CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS:
+                return WizardPageSetLocationsFragment.newInstance();
+            case CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT:
+                return WizardPageSetBankAccountsFragment.newInstance();
+            case CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD:
+                return CreateNewLocationFragment.newInstance();
+            case CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_WIZARD:
+                return CreateNewBankAccountFragment.newInstance();
+            case CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS:
+                return SettingsMylocationsFragment.newInstance();
+            case CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS:
+                return CreateNewLocationFragment.newInstance();
+
+            case CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS:
+                return ContractDetailActivityFragment.newInstance();
             default:
                 throw createFragmentNotFoundException(fragment);
         }

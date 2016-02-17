@@ -33,14 +33,17 @@ public class ActorIdentityViewHolder extends FermatViewHolder {
 
     public void bind(ActorIdentity data, boolean selected) {
         identityAlias.setText(data.getAlias());
-        if (selected)
-            identityAlias.setTextColor(getColor(R.color.white));
+
+        int colorRes = selected ? R.color.white : R.color.black;
+        identityAlias.setTextColor(getColor(colorRes));
 
         BitmapWorkerTask bitmapWorker = new BitmapWorkerTask(identityImage, res, R.drawable.person, false);
         bitmapWorker.execute(data.getProfileImage());
     }
 
     private int getColor(int colorRes) {
-        return Build.VERSION.SDK_INT < Build.VERSION_CODES.M ? res.getColor(colorRes) : res.getColor(colorRes, null);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return res.getColor(colorRes);
+        return res.getColor(colorRes, null);
     }
 }

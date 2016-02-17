@@ -1,25 +1,21 @@
 package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.params.TestNet3Params;
+import org.bouncycastle.util.test.Test;
 
 /**
  * Created by rodrigo on 9/19/15.
  */
 public interface BitcoinNetworkConfiguration {
     /**
-     * Network that we are using as Default in the platform
+     * The network parameters of the default networt type selected for the platform.
      */
-    public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = RegTestParams.get();
-
-    /**
-     * RegTest client configuration
-     */
-    public static final String BITCOIN_FULL_NODE_1_IP = "52.32.106.35";
-    public static final int  BITCOIN_FULL_NODE_1_PORT = 19020;
-    public static final String BITCOIN_FULL_NODE_2_IP = "52.34.184.168";
-    public static final int  BITCOIN_FULL_NODE_2_PORT = 19030;
+    public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
     /**
      * Agent name and version
@@ -31,6 +27,7 @@ public interface BitcoinNetworkConfiguration {
      * amount of blocks depth to consider transaction IRReversible
      */
     public static final int IRREVERSIBLE_BLOCK_DEPTH = 3;
+    public static final int MIN_BROADCAST_CONNECTIONS = 2;
 
     /**
      * Amount of Timeout minutes for broadcasting transactions

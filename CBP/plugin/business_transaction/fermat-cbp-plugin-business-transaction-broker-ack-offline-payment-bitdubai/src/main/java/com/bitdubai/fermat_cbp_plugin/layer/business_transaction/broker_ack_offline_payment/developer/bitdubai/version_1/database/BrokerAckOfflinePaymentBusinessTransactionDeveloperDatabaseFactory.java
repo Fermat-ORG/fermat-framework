@@ -63,7 +63,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory 
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
              /*
               * The database exists but cannot be open. I can not handle this situation.
@@ -113,7 +113,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDeveloperDatabaseFactory 
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_PAYMENT_AMOUNT_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
-
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EXTERNAL_TRANSACTION_ID);
+        onlinePaymentColumns.add(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY);
         /**
          * Table Online Payment addition.
          */

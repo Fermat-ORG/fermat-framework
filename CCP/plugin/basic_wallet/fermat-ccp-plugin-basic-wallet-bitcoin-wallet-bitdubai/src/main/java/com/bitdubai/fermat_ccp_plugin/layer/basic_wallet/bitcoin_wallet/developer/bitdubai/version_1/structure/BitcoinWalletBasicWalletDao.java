@@ -5,6 +5,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.develop
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionSummary;
@@ -71,12 +72,33 @@ public class BitcoinWalletBasicWalletDao {
         }
     }
 
+    public long getBookBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
+        try{
+            return getCurrentBookBalance(blockchainNetworkType);
+        } catch (CantGetBalanceRecordException exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        } catch (Exception exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+    }
+
+
     /*
      * getBookBalance must get actual Book Balance of wallet, select record from balances table
      */
     public long getAvailableBalance() throws CantCalculateBalanceException {
         try{
             return getCurrentAvailableBalance();
+        } catch (CantGetBalanceRecordException exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
+        } catch (Exception exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+    }
+
+    public long getAvailableBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
+        try{
+            return getCurrentAvailableBalance(blockchainNetworkType);
         } catch (CantGetBalanceRecordException exception){
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception){
@@ -165,7 +187,34 @@ public class BitcoinWalletBasicWalletDao {
 
 
             bitcoinWalletTable.loadToMemory();
+
+            if (createTransactionList(bitcoinWalletTable.getRecords()).size()== 0 && transactionType == TransactionType.CREDIT){
+                bitcoinWalletTable.clearAllFilters();
+                bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+                bitcoinWalletTable.loadToMemory();
+                return createTransactionList(bitcoinWalletTable.getRecords());
+            }
+            if (createTransactionList(bitcoinWalletTable.getRecords()).size()== 0 && transactionType == TransactionType.DEBIT){
+                bitcoinWalletTable.clearAllFilters();
+                bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, actorPublicKey, DatabaseFilterType.EQUAL);
+                bitcoinWalletTable.loadToMemory();
+                return createTransactionList(bitcoinWalletTable.getRecords());
+            }
+
             return createTransactionList(bitcoinWalletTable.getRecords());
+
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
         } catch (Exception exception){
@@ -179,34 +228,65 @@ public class BitcoinWalletBasicWalletDao {
                                                                                      int             offset) throws CantListTransactionsException {
         try {
 
+//            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
+//
+//            String query = "SELECT * FROM " +
+//                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME +
+//                    " WHERE " +
+//                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME +
+//                    " = '" +
+//                    balanceType.getCode() +
+//                    "' AND " +
+//                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME +
+//                    " = '" +
+//                    transactionType.getCode() +
+//                    "' GROUP BY ";
+//
+//            if (transactionType == TransactionType.CREDIT)
+//                query += BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME;
+//            else if (transactionType == TransactionType.DEBIT)
+//                query += BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME;
+//
+//            query += " HAVING MAX(" +
+//                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME +
+//                    ") = " +
+//                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME +
+//                    " LIMIT " + max +
+//                    " OFFSET " + offset;
+//
+
+
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
-            String query = "SELECT * FROM " +
-                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME +
-                    " WHERE " +
-                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME +
-                    " = '" +
-                    balanceType.getCode() +
-                    "' AND " +
-                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME +
-                    " = '" +
-                    transactionType.getCode() +
-                    "' GROUP BY ";
-
-            if (transactionType == TransactionType.CREDIT)
-                query += BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME;
-            else if (transactionType == TransactionType.DEBIT)
-                query += BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME;
-
-            query += " HAVING MAX(" +
-                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME +
-                    ") = " +
-                    BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME +
-                    " LIMIT " + max +
-                    " OFFSET " + offset;
+            bitcoinWalletTable.setFilterTop   (String.valueOf(max)   );
+            bitcoinWalletTable.setFilterOffSet(String.valueOf(offset));
 
 
-            return createTransactionList(bitcoinWalletTable.customQuery(query, false));
+
+            if ( transactionType == TransactionType.CREDIT){
+                bitcoinWalletTable.clearAllFilters();
+                bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
+                bitcoinWalletTable.loadToMemory();
+                return createTransactionList(bitcoinWalletTable.getRecords());
+            }
+            if ( transactionType == TransactionType.DEBIT){
+                bitcoinWalletTable.clearAllFilters();
+                bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
+
+                bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+
+
+                bitcoinWalletTable.loadToMemory();
+                return createTransactionList(bitcoinWalletTable.getRecords());
+            }
+            return createTransactionList(bitcoinWalletTable.getRecords());
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, cantLoadTableToMemory, "Error loading wallet table ", "");
@@ -222,8 +302,8 @@ public class BitcoinWalletBasicWalletDao {
         try {
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
-            long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount);
-            long bookRunningBalance = calculateBookRunningBalance(-bookAmount);
+            long availableRunningBalance = calculateAvailableRunningBalance(-availableAmount, transactionRecord.getBlockchainNetworkType());
+            long bookRunningBalance = calculateBookRunningBalance(-bookAmount,transactionRecord.getBlockchainNetworkType());
 
             //todo update if the record exists. The record might exists if many send request are executed so add an else to this If
 
@@ -250,8 +330,8 @@ public class BitcoinWalletBasicWalletDao {
 
                 long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
                 long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
-                long availableRunningBalance = calculateAvailableRunningBalance(availableAmount);
-                long bookRunningBalance = calculateBookRunningBalance(bookAmount);
+                long availableRunningBalance = calculateAvailableRunningBalance(availableAmount, transactionRecord.getBlockchainNetworkType());
+                long bookRunningBalance = calculateBookRunningBalance(bookAmount,transactionRecord.getBlockchainNetworkType());
                 executeTransaction(transactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance);
 //            }
         } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException | CantExecuteBitconTransactionException exception){
@@ -368,20 +448,26 @@ public class BitcoinWalletBasicWalletDao {
         return database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
     }
 
-    private long calculateAvailableRunningBalance(final long transactionAmount) throws CantGetBalanceRecordException{
-        return  getCurrentAvailableBalance() + transactionAmount;
+    private long calculateAvailableRunningBalance(final long transactionAmount,BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceRecordException{
+        return  getCurrentAvailableBalance(blockchainNetworkType) + transactionAmount;
     }
 
-    private long calculateBookRunningBalance(final long transactionAmount) throws CantGetBalanceRecordException{
-        return  getCurrentBookBalance() + transactionAmount;
+    private long calculateBookRunningBalance(final long transactionAmount,BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceRecordException{
+        return  getCurrentBookBalance(blockchainNetworkType) + transactionAmount;
     }
 
     private long getCurrentBookBalance() throws CantGetBalanceRecordException{
         return getCurrentBalance(BalanceType.BOOK);
     }
+    private long getCurrentBookBalance(BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceRecordException{
+        return getCurrentBalance(BalanceType.BOOK, blockchainNetworkType);
+    }
 
     private long getCurrentAvailableBalance() throws CantGetBalanceRecordException{
         return getCurrentBalance(BalanceType.AVAILABLE);
+    }
+    private long getCurrentAvailableBalance(BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceRecordException{
+        return getCurrentBalance(BalanceType.AVAILABLE ,blockchainNetworkType);
     }
 
     private long getCurrentBalance(final BalanceType balanceType) throws CantGetBalanceRecordException {
@@ -391,9 +477,30 @@ public class BitcoinWalletBasicWalletDao {
             return getBalancesRecord().getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
     }
 
+    private long getCurrentBalance(final BalanceType balanceType, BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceRecordException {
+        if (balanceType == BalanceType.AVAILABLE)
+            return getBalancesRecord(blockchainNetworkType).getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME);
+        else
+            return getBalancesRecord(blockchainNetworkType).getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME);
+    }
+
+
     private DatabaseTableRecord getBalancesRecord() throws CantGetBalanceRecordException{
         try {
             DatabaseTable balancesTable = getBalancesTable();
+            balancesTable.loadToMemory();
+            return balancesTable.getRecords().get(0);
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new CantGetBalanceRecordException("Error to get balances record",exception,"Can't load balance table" , "");
+        }
+    }
+
+    private DatabaseTableRecord getBalancesRecord(BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceRecordException{
+        try {
+            DatabaseTable balancesTable = getBalancesTable();
+
+            balancesTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE,blockchainNetworkType.getCode(),DatabaseFilterType.EQUAL);
+
             balancesTable.loadToMemory();
             return balancesTable.getRecords().get(0);
         } catch (CantLoadTableToMemoryException exception) {
@@ -408,11 +515,14 @@ public class BitcoinWalletBasicWalletDao {
     private void executeTransaction(final BitcoinWalletTransactionRecord transactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance) throws CantExecuteBitconTransactionException {
         try{
             DatabaseTableRecord bitcoinWalletRecord = constructBitcoinWalletRecord(transactionRecord, balanceType,transactionType ,availableRunningBalance, bookRunningBalance);
-            DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance);
+            DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance, transactionRecord.getBlockchainNetworkType());
 
             BitcoinWalletBasicWalletDaoTransaction bitcoinWalletBasicWalletDaoTransaction = new BitcoinWalletBasicWalletDaoTransaction(database);
 
-            bitcoinWalletBasicWalletDaoTransaction.executeTransaction(getBitcoinWalletTable(), bitcoinWalletRecord, getBalancesTable(), balanceRecord);
+            //Balance table - add filter by network type,
+            DatabaseTable balanceTable = getBalancesTable();
+            balanceTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_RUNNING_NETWORK_TYPE,transactionRecord.getBlockchainNetworkType().getCode(),DatabaseFilterType.EQUAL);
+            bitcoinWalletBasicWalletDaoTransaction.executeTransaction(getBitcoinWalletTable(), bitcoinWalletRecord, balanceTable, balanceRecord);
         } catch(CantGetBalanceRecordException | CantLoadTableToMemoryException exception){
             throw new CantExecuteBitconTransactionException(CantExecuteBitconTransactionException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         }
@@ -437,21 +547,21 @@ public class BitcoinWalletBasicWalletDao {
 
         record.setUUIDValue  (BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME                       , UUID.randomUUID());
         record.setUUIDValue  (BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME         , transactionRecord.getTransactionId());
-        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME                     , transactionType.getCode());
-        record.setLongValue  (BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME                   , transactionRecord.getAmount());
-        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME                     , transactionRecord.getMemo());
-        record.setLongValue  (BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME               , transactionRecord.getTimestamp());
-        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME         , transactionRecord.getTransactionHash());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, transactionType.getCode());
+        record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, transactionRecord.getAmount());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, transactionRecord.getMemo());
+        record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, transactionRecord.getTimestamp());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, transactionRecord.getTransactionHash());
         record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME             , transactionRecord.getAddressFrom().getAddress());
         record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME               , transactionRecord.getAddressTo().getAddress());
         record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME             , balanceType.getCode());
-        record.setLongValue  (BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
+        record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
         record.setLongValue  (BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME     , bookRunningBalance);
-        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME               , transactionRecord.getActorFromPublicKey());
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_COLUMN_NAME, transactionRecord.getActorFromPublicKey());
         record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_COLUMN_NAME                 , transactionRecord.getActorToPublicKey());
         record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME          , transactionRecord.getActorFromType().getCode());
         record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME            , transactionRecord.getActorToType().getCode());
-
+        record.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_NETWORK_TYPE                 , transactionRecord.getBlockchainNetworkType().getCode());
         return record;
     }
 
@@ -459,8 +569,8 @@ public class BitcoinWalletBasicWalletDao {
         return getBitcoinWalletTable().getEmptyRecord();
     }
 
-    private DatabaseTableRecord constructBalanceRecord(final long availableRunningBalance, final long bookRunningBalance) throws CantGetBalanceRecordException{
-        DatabaseTableRecord record = getBalancesRecord();
+    private DatabaseTableRecord constructBalanceRecord(final long availableRunningBalance, final long bookRunningBalance, BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceRecordException{
+        DatabaseTableRecord record = getBalancesRecord(blockchainNetworkType);
         record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVAILABLE_BALANCE_COLUMN_NAME, availableRunningBalance);
         record.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, bookRunningBalance);
         return record;
@@ -491,14 +601,15 @@ public class BitcoinWalletBasicWalletDao {
         Actors actorFromType            = Actors.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_FROM_TYPE_COLUMN_NAME));
         Actors actorToType              = Actors.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ACTOR_TO_TYPE_COLUMN_NAME));
         BalanceType balanceType         = BalanceType.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME));
-        long amount                     = record.getLongValue(  BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME);
+        long amount                     = record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME);
         long runningBookBalance         = record.getLongValue(  BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_BOOK_BALANCE_COLUMN_NAME);
         long runningAvailableBalance    = record.getLongValue(  BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
         long timeStamp                  = record.getLongValue(  BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME);
         String memo                     = record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME);
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_RUNNING_NETWORK_TYPE));
 
         return new BitcoinWalletTransactionWrapper(transactionId, transactionHash, transactionType, addressFrom, addressTo,
-                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo);
+                actorFromPublicKey, actorToPublicKey, actorFromType, actorToType, balanceType, amount, runningBookBalance, runningAvailableBalance, timeStamp, memo, blockchainNetworkType);
     }
 
     public void deleteTransaction(UUID transactionID)throws CantFindTransactionException{
@@ -521,6 +632,34 @@ public class BitcoinWalletBasicWalletDao {
             throw new CantFindTransactionException("Transaction Memo Update Error",cantLoadTableToMemory,"Error load Transaction table" + transactionID.toString(), "");
         } catch (CantDeleteRecordException e) {
             e.printStackTrace();
+        }
+    }
+
+    public BitcoinWalletTransaction selectTransaction(UUID transactionID)throws CantFindTransactionException{
+
+        try {
+
+            BitcoinWalletTransaction bitcoinWalletTransaction = null;
+            // create the database objects
+            DatabaseTable bitcoinwalletTable = getBitcoinWalletTable();
+            /**
+             *  I will load the information of table into a memory structure, filter for transaction id
+             */
+            bitcoinwalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
+
+            bitcoinwalletTable.loadToMemory();
+
+            // Read record data and create transactions list
+            for(DatabaseTableRecord record : bitcoinwalletTable.getRecords()){
+                bitcoinWalletTransaction = constructBitcoinWalletTransactionFromRecord(record);
+            }
+
+            return bitcoinWalletTransaction;
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantFindTransactionException("Select Transaction Data Error",cantLoadTableToMemory,"Error load Transaction table" + transactionID.toString(), "");
+        } catch (Exception e) {
+            throw new CantFindTransactionException("Select Transaction Data Error",e,"unknown Error" + transactionID.toString(), "");
+
         }
     }
 }

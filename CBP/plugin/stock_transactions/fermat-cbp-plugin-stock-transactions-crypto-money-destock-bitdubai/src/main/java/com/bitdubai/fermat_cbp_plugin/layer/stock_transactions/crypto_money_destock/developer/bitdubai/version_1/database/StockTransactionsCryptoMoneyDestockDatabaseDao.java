@@ -87,6 +87,7 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
         record.setStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cryptoMoneyTransaction.getTransactionStatus().getCode());
         record.setStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME, cryptoMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransaction().getCode());
+        record.setStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransactionId());
 
         return record;
     }
@@ -127,6 +128,7 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
         cryptoMoneyDestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(bankMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
         cryptoMoneyDestockTransaction.setPriceReference(new BigDecimal(bankMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         cryptoMoneyDestockTransaction.setOriginTransaction(OriginTransaction.getByCode(bankMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
+        cryptoMoneyDestockTransaction.setOriginTransactionId(bankMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME));
 
         return cryptoMoneyDestockTransaction;
     }
@@ -137,6 +139,9 @@ public class StockTransactionsCryptoMoneyDestockDatabaseDao {
         {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
+
+            //TODO: Solo para prueba ya que priceReference viene null desde android revisar con Nelson
+            cryptoMoneyTransaction.setPriceReference(new BigDecimal(0));
 
             DatabaseTable table = getDatabaseTable(StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_TABLE_NAME);
             DatabaseTableRecord bankMoneyRestockRecord = getBankMoneyDestockRecord(cryptoMoneyTransaction);

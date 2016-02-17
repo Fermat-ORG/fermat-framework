@@ -4,9 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public interface ActorAssetIssuerManager extends FermatManager {
 
     /**
-     * The method <code>getActorByPublicKey</code> shows the information associated with the actorPublicKey
+     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
      *
      * @param actorPublicKey                     The public key of the Asset Actor Issuer
      * @return                                   THe information associated with the actorPublicKey.
@@ -30,10 +31,15 @@ public interface ActorAssetIssuerManager extends FermatManager {
      *
      * @param assetIssuerActorPublicKey                 Referred to the Identity publicKey
      * @param assetIssuerActorName                      Referred to the Identity Alias
-     * @param assetIssuerActorprofileImage              Referred to the Identity profileImage
+     * @param assetIssuerImage              Referred to the Identity profileImage
      * @throws CantCreateActorAssetIssuerException
      */
-    void createActorAssetIssuerFactory(String assetIssuerActorPublicKey, String assetIssuerActorName, byte[] assetIssuerActorprofileImage) throws CantCreateActorAssetIssuerException;
+    void createActorAssetIssuerFactory(String assetIssuerActorPublicKey, String assetIssuerActorName, byte[] assetIssuerImage) throws CantCreateActorAssetIssuerException;
+
+    /**
+     * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service
+     */
+    void registerActorInActorNetworkService() throws CantRegisterActorAssetIssuerException;
 
     /**
      * The method <code>createActorAssetIssuerRegisterInNetworkService</code> create Actor Registered
@@ -42,6 +48,8 @@ public interface ActorAssetIssuerManager extends FermatManager {
      * @throws CantCreateActorAssetIssuerException
      */
     void createActorAssetIssuerRegisterInNetworkService(List<ActorAssetIssuer> actorAssetIssuers) throws CantCreateActorAssetIssuerException;
+
+    void createActorAssetIssuerRegisterInNetworkService(ActorAssetIssuer actorAssetIssuer) throws CantCreateActorAssetIssuerException;
 
     /**
      * The method <code>getActorPublicKey</code> get All Information about Actor
@@ -65,6 +73,8 @@ public interface ActorAssetIssuerManager extends FermatManager {
      */
     List<ActorAssetIssuer> getAllAssetIssuerActorConnected() throws CantGetAssetIssuerActorsException;
 
+
+    List<ActorAssetIssuer> getAllAssetIssuerActorConnectedWithExtendedPublicKey() throws CantGetAssetIssuerActorsException;
     /**
      * The method <code>sendMessage</code> Stablish Connection
      * with Requester and Lists Redeem Point associate
@@ -72,4 +82,6 @@ public interface ActorAssetIssuerManager extends FermatManager {
      * @throws CantConnectToActorAssetRedeemPointException
      */
     void sendMessage(ActorAssetIssuer requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetRedeemPointException;
+
+    void updateExtendedPublicKey(String issuerPublicKey, String extendedPublicKey) throws CantUpdateActorAssetIssuerException;
 }

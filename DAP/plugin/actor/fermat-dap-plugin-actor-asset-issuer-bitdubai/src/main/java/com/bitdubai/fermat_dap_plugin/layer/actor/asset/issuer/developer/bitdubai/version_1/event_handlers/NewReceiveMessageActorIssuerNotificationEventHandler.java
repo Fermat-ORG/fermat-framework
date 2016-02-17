@@ -24,7 +24,7 @@ public class NewReceiveMessageActorIssuerNotificationEventHandler implements Fer
 
         if (this.assetActorIssuerPluginRoot.getStatus() == ServiceStatus.STARTED) {
 
-            if(fermatEvent.getSource() == EventSource.ACTOR_ASSET_REDEEM_POINT) {
+            if(fermatEvent.getSource() == EventSource.NETWORK_SERVICE_ACTOR_ASSET_ISSUER) {
                 System.out.println("ACTOR ASSET ISSUER RECEIVE MESSAGE REGISTER - handleEvent = " + fermatEvent);
 
                 NewReceiveMessageActorNotificationEvent newReceiveMessageActorNotificationEvent = (NewReceiveMessageActorNotificationEvent) fermatEvent;
@@ -32,8 +32,6 @@ public class NewReceiveMessageActorIssuerNotificationEventHandler implements Fer
               *  Actor Asset Issuer make the job
               */
                 this.assetActorIssuerPluginRoot.handleNewReceiveMessageActorNotificationEvent(
-                        newReceiveMessageActorNotificationEvent.getActorAssetSender(),
-                        newReceiveMessageActorNotificationEvent.getActorAssetDestination(),
                         newReceiveMessageActorNotificationEvent.getMessage());
             }
         }

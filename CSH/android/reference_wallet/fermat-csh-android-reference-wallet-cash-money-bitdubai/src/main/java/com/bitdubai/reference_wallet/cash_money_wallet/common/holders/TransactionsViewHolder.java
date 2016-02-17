@@ -3,9 +3,10 @@ package com.bitdubai.reference_wallet.cash_money_wallet.common.holders;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -25,6 +26,8 @@ public class TransactionsViewHolder extends FermatViewHolder {
     private Resources res;
     private View itemView;
 
+    private ProgressBar spinner;
+
     public ImageView depositImage;
     public FermatTextView depositText;
     public FermatTextView depositAmount;
@@ -43,6 +46,7 @@ public class TransactionsViewHolder extends FermatViewHolder {
 
         this.itemView = itemView;
         res = itemView.getResources();
+        spinner = (ProgressBar) itemView.findViewById(R.id.cash_transaction_list_spinner);
 
         depositImage = (ImageView) itemView.findViewById(R.id.imageView_deposit);
         depositText = (FermatTextView) itemView.findViewById(R.id.textView_deposit);
@@ -60,24 +64,32 @@ public class TransactionsViewHolder extends FermatViewHolder {
     public void bind(CashMoneyWalletTransaction itemInfo) {
         resetVisibility();
 
+        if(itemInfo.isPending())
+            spinner.setVisibility(View.VISIBLE);
+
         if(itemInfo.getTransactionType() == TransactionType.CREDIT) {
 
             depositItemsVisible();
             depositAmount.setText(getTransactionAmountText(itemInfo.getTransactionType(), itemInfo.getAmount()));
-            depositDate.setText(DateFormat.format("dd MMM yyyy h:mm:ss aa", (itemInfo.getTimestamp() * 1000)));
+            depositDate.setText(getPrettyTime(itemInfo.getTimestamp()));
             depositMemo.setText(itemInfo.getMemo());
         }
         else {
 
             withdrawalItemsVisible();
             withdrawalAmount.setText(getTransactionAmountText(itemInfo.getTransactionType(), itemInfo.getAmount()));
-            withdrawalDate.setText(DateFormat.format("dd MMM yyyy h:mm:ss aa", (itemInfo.getTimestamp() * 1000)));
+            withdrawalDate.setText(getPrettyTime(itemInfo.getTimestamp()));
             withdrawalMemo.setText(itemInfo.getMemo());
         }
 
     }
 
     /* HELPER FUNCTIONS */
+    private String getPrettyTime(long timestamp)
+    {
+        return DateUtils.getRelativeTimeSpanString(timestamp * 1000).toString();
+        //return DateFormat.format("dd MMM yyyy h:mm:ss aa", (timestamp * 1000)).toString();
+    }
     private Bitmap getImgBitmap(TransactionType transactionType) {
         if(transactionType == TransactionType.DEBIT)
             return BitmapFactory.decodeResource(res, R.drawable.csh_withdrawal);
@@ -87,9 +99,9 @@ public class TransactionsViewHolder extends FermatViewHolder {
 
     private String getTransactionTypeText(TransactionType transactionType) {
         if (transactionType == TransactionType.DEBIT)
-            return res.getString(R.string.withdrawal_transaction_text);
+            return res.getString(R.string.csh_withdrawal_transaction_text);
         else
-            return res.getString(R.string.deposit_transaction_text);
+            return res.getString(R.string.csh_deposit_transaction_text);
     }
     private String getTransactionAmountText(TransactionType transactionType, BigDecimal amount)
     {
@@ -99,6 +111,7 @@ public class TransactionsViewHolder extends FermatViewHolder {
     }
 
     private void resetVisibility() {
+        spinner.setVisibility(View.INVISIBLE);
         depositImage.setVisibility(View.INVISIBLE);
         depositText.setVisibility(View.INVISIBLE);
         depositAmount.setVisibility(View.INVISIBLE);

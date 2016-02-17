@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.*;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +25,10 @@ public class DigitalAsset {
     private String assetPublicKey;
     private ActorAssetUser actorAssetUser;
     private byte[] image;
+
+    private int redeemed;
+    private int appropriated;
+    private int unused;
 
     public DigitalAsset() {
     }
@@ -112,12 +116,11 @@ public class DigitalAsset {
     }
 
     public Double getAvailableBalanceBitcoin() {
-        return Double.valueOf(availableBalance) / 100000000;
+        return BitcoinConverter.convert(Double.valueOf(availableBalance), SATOSHI, BITCOIN);
     }
 
     public String getFormattedAvailableBalanceBitcoin() {
-        DecimalFormat df = new DecimalFormat("0.000000");
-        return df.format(getAvailableBalanceBitcoin());
+        return DAPStandardFormats.BITCOIN_FORMAT.format(getAvailableBalanceBitcoin());
     }
 
     public Date getExpDate() {
@@ -126,8 +129,7 @@ public class DigitalAsset {
 
     public String getFormattedExpDate() {
         if (expDate == null) return "No expiration date";
-        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-        return df.format(expDate);
+        return DAPStandardFormats.DATE_FORMAT.format(expDate);
     }
 
     public void setExpDate(Timestamp expDate) {
@@ -140,5 +142,29 @@ public class DigitalAsset {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public int getRedeemed() {
+        return redeemed;
+    }
+
+    public void setRedeemed(int redeemed) {
+        this.redeemed = redeemed;
+    }
+
+    public int getAppropriated() {
+        return appropriated;
+    }
+
+    public void setAppropriated(int appropriated) {
+        this.appropriated = appropriated;
+    }
+
+    public int getUnused() {
+        return unused;
+    }
+
+    public void setUnused(int unused) {
+        this.unused = unused;
     }
 }

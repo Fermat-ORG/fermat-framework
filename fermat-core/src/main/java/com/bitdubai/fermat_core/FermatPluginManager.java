@@ -181,7 +181,7 @@ public final class FermatPluginManager {
             else
                 return (FermatManager) abstractPlugin;
 
-        } catch (CantListNeededReferencesException e) {
+        } catch (final CantListNeededReferencesException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Error listing references for the plugin.");
         } catch(CantAssignReferenceException   |
@@ -198,7 +198,7 @@ public final class FermatPluginManager {
         } catch (final CyclicalRelationshipFoundException e) {
 
             throw new CantStartPluginException(e, pluginVersionReference.toString3(), "Cyclical References found for the plugin.");
-        } catch (Exception e) {
+        } catch (final Exception e) {
 
             throw new CantStartPluginException(
                     e,
@@ -206,6 +206,34 @@ public final class FermatPluginManager {
                     "Unhandled exception trying to start the plugin or one of its references."
             );
         }
+    }
+
+    public final FermatManager getPlugin(final PluginVersionReference pluginVersionReference) throws CantStartPluginException ,
+            VersionNotFoundException {
+
+        try {
+
+            final AbstractPlugin abstractPlugin = systemContext.getPluginVersion(pluginVersionReference);
+
+            if (abstractPlugin.isStarted()) {
+                if (abstractPlugin.getManager() != null)
+                    return abstractPlugin.getManager();
+                else
+                    return (FermatManager) abstractPlugin;
+            }
+
+
+
+        } catch (final Exception e) {
+
+            throw new CantStartPluginException(
+                    e,
+                    pluginVersionReference.toString3(),
+                    "Unhandled exception trying to start the plugin or one of its references."
+            );
+        }
+
+        return null;
     }
 
     public final void startPluginAndReferences(final AbstractPlugin abstractPlugin) throws CantStartPluginException {
@@ -298,7 +326,7 @@ public final class FermatPluginManager {
             return;
 
         try {
-            abstractPlugin.start();
+            abstractPlugin.startPlugin();
         } catch (com.bitdubai.fermat_api.CantStartPluginException e) {
 
             throw new CantStartPluginException(
@@ -430,4 +458,6 @@ public final class FermatPluginManager {
 
         return false;
     }
+
+
 }

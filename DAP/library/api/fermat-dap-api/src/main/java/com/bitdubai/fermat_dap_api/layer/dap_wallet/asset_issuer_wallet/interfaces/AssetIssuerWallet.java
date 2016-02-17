@@ -3,8 +3,8 @@ package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfa
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
@@ -25,7 +25,7 @@ public interface AssetIssuerWallet {
 
     //TODO:Documentar y manejo de excepciones
 
-    AssetIssuerWalletBalance getBookBalance(BalanceType balanceType) throws CantGetTransactionsException;
+    AssetIssuerWalletBalance getBalance() throws CantGetTransactionsException;
 
     List<AssetIssuerWalletTransaction> getTransactionsAll(BalanceType balanceType,
                                                           TransactionType transactionType,
@@ -35,6 +35,8 @@ public interface AssetIssuerWallet {
                                                        TransactionType transactionType,
                                                        int max,
                                                        int offset, String assetPublicKey) throws CantGetTransactionsException;
+
+    List<AssetIssuerWalletTransaction> getAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
 
     List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey,
                                                               BalanceType balanceType,
@@ -54,19 +56,25 @@ public interface AssetIssuerWallet {
 
     List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException;
 
-    DigitalAssetMetadata getDigitalAssetMetadata(String digitalAssetPublicKey) throws CantGetDigitalAssetFromLocalStorageException;
+    DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException;
 
     DigitalAsset getAssetByPublicKey(String assetPublicKey);
 
+    String getUserDeliveredToPublicKey(UUID transactionId) throws RecordsNotFoundException, CantGetAssetStatisticException;
+
+    List<DigitalAssetMetadata> getAllUnusedAssets() throws CantGetDigitalAssetFromLocalStorageException;
+
     //ASSET STATISTIC METHODS
 
-    void createdNewAsset(DigitalAsset asset) throws CantSaveStatisticException;
+    void createdNewAsset(DigitalAssetMetadata assetMetadata) throws CantSaveStatisticException;
 
-    void assetDistributed(String assetPublicKey, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+    void newMovement(DAPActor actorFrom, DAPActor actorTo, UUID metadataId) throws CantSaveStatisticException;
 
-    void assetRedeemed(String assetPublicKey, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+    void assetDistributed(UUID transactionId, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
 
-    void assetAppropriated(String assetPublicKey, String userPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+    void assetRedeemed(UUID transactionId, String userPublicKey, String redeemPointPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
+
+    void assetAppropriated(UUID transactionId, String userPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
 
     List<AssetStatistic> getAllStatisticForAllAssets() throws CantGetAssetStatisticException;
 

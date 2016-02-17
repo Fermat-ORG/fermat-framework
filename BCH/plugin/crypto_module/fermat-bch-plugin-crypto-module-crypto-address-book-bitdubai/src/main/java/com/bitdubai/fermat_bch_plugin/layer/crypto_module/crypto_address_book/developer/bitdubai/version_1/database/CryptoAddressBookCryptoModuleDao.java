@@ -107,8 +107,10 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
             if (!records.isEmpty())
                 return buildCryptoAddressBookRecord(records.get(0));
             else
-                throw new CryptoAddressBookRecordNotFoundException(CryptoAddressBookRecordNotFoundException.DEFAULT_MESSAGE, null, "", "There's no record with that crypto address.");
-
+            /**
+             * if record is empty, then I'm returning null
+             */
+                return null;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetCryptoAddressBookRecordException(CantGetCryptoAddressBookRecordException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException exception) {
@@ -292,5 +294,38 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
     @Override
     public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    /**
+     * gets from database the list of crypto addresses for a given actor type
+     * @param actorType
+     * @return
+     */
+    public List<CryptoAddressBookRecord> listCryptoAddressBookRecordsByDeliveredToActorType(Actors actorType) throws CantListCryptoAddressBookRecordsException{
+        if (actorType == null) {
+            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, null, "", "actorType, can not be null");
+        }
+
+        try {
+            DatabaseTable cryptoAddressBookTable = database.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+            cryptoAddressBookTable.addStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_TYPE_COLUMN_NAME, actorType.getCode(), DatabaseFilterType.EQUAL);
+            cryptoAddressBookTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoAddressBookTable.getRecords();
+
+            List<CryptoAddressBookRecord> cryptoAddressBookRecords = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoAddressBookRecords.add(buildCryptoAddressBookRecord(record));
+            }
+
+            return cryptoAddressBookRecords;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException exception) {
+            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        } catch (InvalidCryptoAddressBookRecordParametersException exception) {
+            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, exception, "", "There's a problem with the data in database.");
+        }
     }
 }

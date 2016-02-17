@@ -31,9 +31,9 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enum
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractSaleRecord;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
@@ -111,7 +111,7 @@ public class OpenContractMonitorAgent implements
             errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
@@ -263,23 +263,25 @@ public class OpenContractMonitorAgent implements
                                 purchaseContract=(ContractPurchaseRecord)XMLParser.parseXML(
                                         contractXML,
                                         purchaseContract);
-                                transactionTransmissionManager.sendContractHashToCryptoBroker(
+                                transactionTransmissionManager.sendContractHash(
                                         transactionId,
                                         purchaseContract.getPublicKeyCustomer(),
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
-                                        purchaseContract.getNegotiationId());
+                                        purchaseContract.getNegotiationId(),
+                                        Plugins.OPEN_CONTRACT);
                                 break;
                             case SALE:
                                 saleContract=(ContractSaleRecord)XMLParser.parseXML(
                                         contractXML,
                                         saleContract);
-                                transactionTransmissionManager.sendContractHashToCryptoCustomer(
+                                transactionTransmissionManager.sendContractHash(
                                         transactionId,
                                         saleContract.getPublicKeyBroker(),
                                         saleContract.getPublicKeyCustomer(),
                                         hashToSubmit,
-                                        saleContract.getNegotiationId());
+                                        saleContract.getNegotiationId(),
+                                        Plugins.OPEN_CONTRACT);
                                 break;
                         }
                         //Update the ContractTransactionStatus
@@ -305,23 +307,25 @@ public class OpenContractMonitorAgent implements
                                 purchaseContract=(ContractPurchaseRecord)XMLParser.parseXML(
                                         contractXML,
                                         purchaseContract);
-                                transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
+                                transactionTransmissionManager.sendContractStatusNotification(
                                         purchaseContract.getPublicKeyCustomer(),
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
                                         transactionId.toString(),
-                                        ContractTransactionStatus.CONTRACT_CONFIRMED);
+                                        ContractTransactionStatus.CONTRACT_CONFIRMED,
+                                        Plugins.OPEN_CONTRACT);
                                 break;
                             case SALE:
                                 saleContract=(ContractSaleRecord)XMLParser.parseXML(
                                         contractXML,
                                         saleContract);
-                                transactionTransmissionManager.sendContractStatusNotificationToCryptoCustomer(
+                                transactionTransmissionManager.sendContractStatusNotification(
                                         purchaseContract.getPublicKeyBroker(),
                                         purchaseContract.getPublicKeyCustomer(),
                                         hashToSubmit,
                                         transactionId.toString(),
-                                        ContractTransactionStatus.CONTRACT_CONFIRMED);
+                                        ContractTransactionStatus.CONTRACT_CONFIRMED,
+                                        Plugins.OPEN_CONTRACT);
                                 break;
                         }
                         //Update the ContractTransactionStatus
@@ -464,15 +468,30 @@ public class OpenContractMonitorAgent implements
                 }
                 //TODO: look a better way to deal with this exceptions
             } catch (CantDeliverPendingTransactionsException e) {
-                e.printStackTrace();
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot deliver pending transaction");
             } catch (CantUpdateRecordException e) {
-                e.printStackTrace();
-            } catch (CantupdateCustomerBrokerContractPurchaseException e) {
-                e.printStackTrace();
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot update the database record");
+            } catch (CantUpdateCustomerBrokerContractPurchaseException e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot update the purchase contract");
             } catch (CantConfirmTransactionException e) {
-                e.printStackTrace();
-            } catch (CantupdateCustomerBrokerContractSaleException e) {
-                e.printStackTrace();
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot confirm transaction");
+            } catch (CantUpdateCustomerBrokerContractSaleException e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot update the sale contract");
             }
 
         }

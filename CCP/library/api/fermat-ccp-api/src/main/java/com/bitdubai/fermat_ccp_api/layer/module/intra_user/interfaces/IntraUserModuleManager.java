@@ -7,10 +7,13 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
 
 import java.util.List;
@@ -19,7 +22,7 @@ import java.util.List;
  * The interface <code>IntraUserModuleManager</code>
  * provides the methods for the Intra Users sub app.
  */
-public interface IntraUserModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSettings, ActiveActorIdentityInformation> {
 
 
     /**
@@ -91,10 +94,11 @@ public interface IntraUserModuleManager extends ModuleManager<FermatSettings, Ac
      *
      * @param intraUserToAddName      The name of the intra user to add
      * @param intraUserToAddPublicKey The public key of the intra user to add
-     * @param profileImage            The profile image that the intra user has
+     * @param OthersProfileImage      The profile image of the other intra user
+     * @param MyProfileImage          The profile image of the logged intra user
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException
      */
-     void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage,String identityPublicKey,String identityAlias) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
+     void askIntraUserForAcceptance(String intraUserToAddName, String intraUserPhrase,String intraUserToAddPublicKey, byte[] OthersProfileImage,byte[] MyProfileImage,String identityPublicKey,String identityAlias) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
 
     /**
      * The method <code>acceptIntraUser</code> takes the information of a connection request, accepts
@@ -202,4 +206,13 @@ public interface IntraUserModuleManager extends ModuleManager<FermatSettings, Ac
     ConnectionState getIntraUsersConnectionStatus(String intraUserConnectedPublicKey) throws CantGetIntraUserConnectionStatusException;
 
     boolean isActorConnected(String publicKey) throws CantCreateNewDeveloperException;
+
+    /**
+     * The method <code>getLastNotification</code> get the last notification received by actor public key
+     * @param intraUserConnectedPublicKey
+     * @return IntraWalletUserActor notification object
+     * @throws CantGetIntraUsersListException
+     */
+
+    IntraWalletUserActor getLastNotification(String intraUserConnectedPublicKey) throws CantGetIntraUsersListException;
 }

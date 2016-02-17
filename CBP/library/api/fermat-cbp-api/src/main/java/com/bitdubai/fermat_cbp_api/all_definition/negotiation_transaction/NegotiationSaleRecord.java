@@ -13,75 +13,49 @@ import java.util.UUID;
  */
 public class NegotiationSaleRecord implements CustomerBrokerSaleNegotiation {
 
-    String              customerPublicKey;
-
-    String              brokerPublicKey;
-
     UUID                negotiationId;
-
+    String              customerPublicKey;
+    String              brokerPublicKey;
+    //    String              publicKeyCustomer;
+//    String              publicKeyBroker;
     Long                startDate;
-
-    Long                lastNegotiationUpdateDate;
-
+    //    Long                startDataTime;
     Long                negotiationExpirationDate;
-
     NegotiationStatus   status;
-
+    //    NegotiationStatus   statusNegotiation;
+    Boolean             nearExpirationDatetime;
     Collection<Clause>  clauses;
-
+    Long                lastNegotiationUpdateDate;
     String              cancelReason;
-
     String              memo;
 
-    // TODO Revisar este campo, lo coloque para implementar el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
-    Boolean nearExpirationDatetime;
+    public UUID getNegotiationId(){ return this.negotiationId; }
 
-    public String getCustomerPublicKey(){
-        return this.customerPublicKey;
-    }
+    //    public String getCustomerPublicKey(){ return this.publicKeyCustomer; }
+    public String getCustomerPublicKey(){ return this.customerPublicKey; }
 
-    public String getBrokerPublicKey(){
-        return this.brokerPublicKey;
-    }
+    //    public String getBrokerPublicKey(){ return this.publicKeyBroker; }
+    public String getBrokerPublicKey(){ return this.brokerPublicKey; }
 
-    public UUID getNegotiationId(){
-        return this.negotiationId;
-    }
+    //    public Long getStartDate(){ return this.startDataTime; }
+    public Long getStartDate(){ return this.startDate; }
 
-    public Long getStartDate(){
-        return this.startDate;
-    }
+    public Long getNegotiationExpirationDate(){ return this.negotiationExpirationDate; }
 
-    public Long getLastNegotiationUpdateDate(){
-        return this.lastNegotiationUpdateDate;
-    }
-
-    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate){
-        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
-    }
-
-    public Long getNegotiationExpirationDate(){
-        return this.negotiationExpirationDate;
-    }
-
+    //    public NegotiationStatus getStatus(){return this.statusNegotiation; }
     public NegotiationStatus getStatus(){
         return this.status;
     }
 
-    @Override
-    public Boolean getNearExpirationDatetime() {
-        //TODO Revisar esta implementacion, este es el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
-        return nearExpirationDatetime;
-    }
+    public Collection<Clause> getClauses() throws CantGetListClauseException{ return this.clauses; }
 
-    public void setNearExpirationDatetime(Boolean nearExpirationDatetime) {
-        //TODO Revisar esta implementacion, lo coloque como un setter para el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
-        this.nearExpirationDatetime = nearExpirationDatetime;
-    }
+    public Boolean getNearExpirationDatetime() { return nearExpirationDatetime; }
 
-    public Collection<Clause> getClauses() throws CantGetListClauseException {
-        return this.clauses;
-    }
+    public Long getLastNegotiationUpdateDate(){ return this.lastNegotiationUpdateDate; }
+
+    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate){ this.lastNegotiationUpdateDate = lastNegotiationUpdateDate; }
+
+    public void setNearExpirationDatetime(Boolean nearExpirationDatetime) { this.nearExpirationDatetime = nearExpirationDatetime; }
 
     public void setCancelReason(String cancelReason){
         this.cancelReason = cancelReason;
@@ -98,4 +72,61 @@ public class NegotiationSaleRecord implements CustomerBrokerSaleNegotiation {
     public String getMemo(){
         return this.memo;
     }
+
+/*    UUID                negotiationId;
+    String              publicKeyCustomer;
+    String              publicKeyBroker;
+    Long                startDataTime;
+    Long                negotiationExpirationDate;
+    NegotiationStatus   statusNegotiation;
+    Collection<Clause>  clauses;
+
+    // TODO Revisar este campo, lo coloque para implementar el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
+    Boolean             nearExpirationDatetime;
+
+    Long                lastNegotiationUpdateDate;
+    String              cancelReason;
+    String              memo;
+
+    public UUID getNegotiationId(){ return this.negotiationId; }
+
+    public String getCustomerPublicKey(){ return this.publicKeyCustomer; }
+
+    public String getBrokerPublicKey(){ return this.publicKeyBroker; }
+
+    public Long getStartDate(){ return this.startDataTime; }
+
+    public Long getNegotiationExpirationDate(){ return this.negotiationExpirationDate; }
+
+    public NegotiationStatus getStatus(){
+        return this.statusNegotiation;
+    }
+
+    public Collection<Clause> getClauses() throws CantGetListClauseException{ return this.clauses; }
+
+    //TODO Revisar esta implementacion, este es el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
+    public Boolean getNearExpirationDatetime() { return nearExpirationDatetime; }
+
+    public Long getLastNegotiationUpdateDate(){ return this.lastNegotiationUpdateDate; }
+
+    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate){ this.lastNegotiationUpdateDate = lastNegotiationUpdateDate; }
+
+    //TODO Revisar esta implementacion, lo coloque como un setter para el nuevo metodo getNearExpirationDatetime() que se agrego a CustomerBrokerPurchaseNegotiation
+    public void setNearExpirationDatetime(Boolean nearExpirationDatetime) { this.nearExpirationDatetime = nearExpirationDatetime; }
+
+    public void setCancelReason(String cancelReason){
+        this.cancelReason = cancelReason;
+    }
+
+    public String getCancelReason(){
+        return this.cancelReason;
+    }
+
+    public void setMemo(String memo){
+        this.memo = memo;
+    }
+
+    public String getMemo(){
+        return this.memo;
+    }*/
 }

@@ -4,11 +4,13 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.RequestAlreadySendException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
@@ -119,6 +121,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     private PluginTextFile intraUserLoginXml;
 
     private IntraUserSettings intraUserSettings = new IntraUserSettings();
+    private String appPublicKey;
 
 
     public IntraWalletUserModulePluginRoot() {
@@ -347,24 +350,33 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
      *
      * @param intraUserToAddName      The name of the intra user to add
      * @param intraUserToAddPublicKey The public key of the intra user to add
-     * @param profileImage            The profile image that the intra user has
+     * @param OthersProfileImage      The profile image of the other intra user
+     * @param MyProfileImage          The profile image of the logged intra user
      * @throws CantStartRequestException
      */
 
     @Override
-    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPublicKey, byte[] profileImage, String identityPublicKey, String identityAlias) throws CantStartRequestException {
+    public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] OthersProfileImage,byte[] MyProfileImage, String identityPublicKey, String identityAlias) throws CantStartRequestException {
 
         try {
             /**
              *Call Actor Intra User to add request connection
              */
-            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPublicKey, profileImage);
+            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase,intraUserToAddPublicKey, OthersProfileImage);
 
             /**
              *Call Network Service Intra User to add request connection
              */
 
-            this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName, intraUserToAddPublicKey, Actors.INTRA_USER, profileImage);
+            if (  this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUserToAddPublicKey)!= ConnectionState.CONNECTED){
+                System.out.println("The User you are trying to connect with is not connected" +
+                        "so we send the message to the intraUserNetworkService");
+                this.intraUserNertwokServiceManager.askIntraUserForAcceptance(identityPublicKey, identityAlias, Actors.INTRA_USER, intraUserToAddName,intraUserToAddPhrase, intraUserToAddPublicKey, Actors.INTRA_USER, MyProfileImage);
+            }else{
+                this.intraUserNertwokServiceManager.acceptIntraUser(identityPublicKey, intraUserToAddPublicKey);
+                System.out.println("The user is connected");
+            }
+
         } catch (CantCreateIntraWalletUserException e) {
             throw new CantStartRequestException("", e, "", "");
         } catch (RequestAlreadySendException e) {
@@ -507,7 +519,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPhrase(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
             }
             return intraUserList;
         } catch (CantGetIntraWalletUsersException e) {
@@ -556,10 +568,17 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
     public int getIntraUsersWaitingYourAcceptanceCount() {
         //TODO: falta que este metodo que devuelva la cantidad de request de conexion que tenes
         try {
-            return getIntraUsersWaitingYourAcceptance(getActiveIntraUserIdentity().getPublicKey(), 100, 0).size();
+
+            if (getActiveIntraUserIdentity() != null){
+                return getIntraUsersWaitingYourAcceptance(getActiveIntraUserIdentity().getPublicKey(), 100, 0).size();
+            }
+
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
         } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
@@ -577,6 +596,20 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         }
 
     }
+
+
+    @Override
+    public IntraWalletUserActor getLastNotification(String intraUserConnectedPublicKey) throws CantGetIntraUsersListException {
+
+        try {
+            return this.intraWalletUserManager.getLastNotification(intraUserConnectedPublicKey);
+        } catch (CantGetIntraUserException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET INTRA USER LAST NOTIFICATION",e,"","Error on IntraUserIdentity Manager");
+
+        }
+
+    }
+
 
     @Override
     public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String identityPhrase, byte[] profileImage) throws CantUpdateIdentityException {
@@ -809,13 +842,56 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
         }
     }
 
+    private SettingsManager<IntraUserWalletSettings> settingsManager;
+
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
+    public SettingsManager<IntraUserWalletSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        return null;
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        try {
+            return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+        } catch (CantListIntraWalletUsersException e) {
+            e.printStackTrace();
+            return null;
+        } catch (Exception e){
+            return null;
+        }
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+        this.appPublicKey = publicKey;
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        int[] notifications = new int[4];
+        try {
+            if(getSelectedActorIdentity() != null)
+                notifications[2] = intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(getSelectedActorIdentity().getPublicKey(),99,0).size();
+            else
+                notifications[2] = 0;
+        } catch (CantGetIntraWalletUsersException e) {
+            e.printStackTrace();
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
+        }
+        return notifications;
     }
 }

@@ -6,6 +6,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSi
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 
+import java.util.Arrays;
+
 /**
  * Created by jorge on 28-09-2015.
  */
@@ -15,13 +17,19 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity {
     private static final int HASH_PRIME_NUMBER_ADD = 3089;
 
     private final String alias;
-    private final KeyPair keyPair;
+    private final String privateKey;
+    private final String publicKey;
     private byte[] profileImage;
     private final boolean published;
 
-    public CryptoCustomerIdentityImpl(final String alias, final KeyPair keyPair, final byte[] profileImage, final boolean published){
+    public CryptoCustomerIdentityImpl(final String alias,
+                                      final String privateKey,
+                                      final String publicKey,
+                                      final byte[] profileImage,
+                                      final boolean published){
         this.alias = alias;
-        this.keyPair = keyPair;
+        this.privateKey = privateKey;
+        this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.published = published;
     }
@@ -34,7 +42,7 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity {
 
     @Override
     public String getPublicKey() {
-        return this.keyPair.getPublicKey();
+        return publicKey;
     }
 
     @Override
@@ -59,7 +67,7 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity {
     @Override
     public String createMessageSignature(String message) throws CantCreateMessageSignatureException{
         try{
-            return AsymmetricCryptography.createMessageSignature(message, keyPair.getPrivateKey());
+            return AsymmetricCryptography.createMessageSignature(message, privateKey);
 
         } catch(Exception ex){
             throw new CantCreateMessageSignatureException(CantCreateMessageSignatureException.DEFAULT_MESSAGE, ex, "Message: "+ message, "The message could be invalid");
@@ -71,14 +79,26 @@ public class CryptoCustomerIdentityImpl implements CryptoCustomerIdentity {
         if(!(o instanceof CryptoCustomerIdentity))
             return false;
         CryptoCustomerIdentity compare = (CryptoCustomerIdentity) o;
-        return alias.equals(compare.getAlias()) && keyPair.getPublicKey().equals(compare.getPublicKey());
+        return alias.equals(compare.getAlias()) && publicKey.equals(compare.getPublicKey());
     }
 
     @Override
     public int hashCode(){
         int c = 0;
         c += alias.hashCode();
-        c += keyPair.hashCode();
+        c += privateKey.hashCode();
+        c += publicKey.hashCode();
         return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
+
+    @Override
+    public String toString() {
+        return "CryptoCustomerIdentityImpl{" +
+                "alias='" + alias + '\'' +
+                ", privateKey='" + privateKey + '\'' +
+                ", publicKey='" + publicKey + '\'' +
+                ", profileImage=" + (profileImage != null) +
+                ", published=" + published +
+                '}';
     }
 }

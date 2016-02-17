@@ -17,9 +17,6 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.AssetTransmissionJsonAttNames;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.structure.DigitalAssetMetadataTransactionImpl;
-
-
-
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -66,8 +63,7 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
             /*
              * Convert the xml to object
              */
-            DigitalAssetMetadata digitalAssetMetadata= null;
-            digitalAssetMetadata  = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXml, digitalAssetMetadata);
+            DigitalAssetMetadata digitalAssetMetadata = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXml, new DigitalAssetMetadata());
 
 
             /*
@@ -93,7 +89,7 @@ public class DigitalAssetMetadataTransmitMessageReceiverProcessor extends Fermat
              * Mark the message as read
              */
             ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-            ((CommunicationNetworkServiceConnectionManager) getAssetTransmissionNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
+            ((CommunicationNetworkServiceConnectionManager) getAssetTransmissionNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().create(fermatMessage);
 
             /*
              * Notify to the interested

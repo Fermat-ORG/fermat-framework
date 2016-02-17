@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAssetUserGroupAlreadyExistException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGet
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 
 import java.util.List;
@@ -23,7 +25,7 @@ import java.util.List;
 public interface ActorAssetUserManager extends FermatManager {
 
     /**
-     * The method <code>getActorByPublicKey</code> shows the information associated with the actorPublicKey
+     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
      *
      * @param actorPublicKey                    The public key of the Asset Actor User
      * @return                                  THe information associated with the actorPublicKey.
@@ -42,6 +44,12 @@ public interface ActorAssetUserManager extends FermatManager {
      */
     void createActorAssetUserFactory(String assetUserActorPublicKey, String assetUserActorName, byte[] assetUserActorprofileImage) throws CantCreateAssetUserActorException;
 
+
+    /**
+     * The method <code>registerActorInActorNetworkService</code> Register Actor in Actor Network Service
+     */
+    void registerActorInActorNetworkService() throws CantRegisterActorAssetUserException;
+
     /**
      * The method <code>createActorAssetUserRegisterInNetworkService</code> create Actor Registered
      *
@@ -50,6 +58,7 @@ public interface ActorAssetUserManager extends FermatManager {
      */
     void createActorAssetUserRegisterInNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantCreateAssetUserActorException;
 
+    void createActorAssetUserRegisterInNetworkService(ActorAssetUser actorAssetUsers) throws CantCreateAssetUserActorException;
     /**
      * The method <code>getActorPublicKey</code> get All Information about Actor
      *
@@ -66,11 +75,19 @@ public interface ActorAssetUserManager extends FermatManager {
     List<ActorAssetUser> getAllAssetUserActorInTableRegistered() throws CantGetAssetUserActorsException;
 
     /**
+     * The method <code>getAllAssetUserActorRegistered</code> get All Actors Registered in Actor Network Service
+     * and used in Sub App Community, Filtering the NetworkType they belong
+     *
+     * @throws CantGetAssetUserActorsException
+     */
+    List<ActorAssetUser> getAllAssetUserActorInTableRegistered(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
+
+    /**
      * The method <code>getAllAssetUserActorConnected</code> receives All Actors with have CryptoAddress in BD
      *
      * @throws CantGetAssetUserActorsException
      */
-    List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
 
     /**
      * The method <code>connectToActorAssetUser</code> Enable Connection
@@ -78,7 +95,7 @@ public interface ActorAssetUserManager extends FermatManager {
      *
      * @throws CantConnectToActorAssetUserException
      */
-    void connectToActorAssetUser(ActorAssetIssuer requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException;
+    void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetUserException;
 
     /**
      * The method <code>connectToActorAssetRedeemPoint</code> Enable Connection
@@ -133,11 +150,11 @@ public interface ActorAssetUserManager extends FermatManager {
 
     /**
      * The method <code>getListActorAssetUserByGroups</code> Returns a list of groups by name
-     * @param groupName
+     * @param groupId
      * @return
      * @throws CantGetAssetUserActorsException
      */
-    List<ActorAssetUser> getListActorAssetUserByGroups (String groupName) throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getListActorAssetUserByGroups (String groupId, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
 
     /**
      * The method <code>getListAssetUserGroupsByActorAssetUser</code> Returns a list of groups by asset user

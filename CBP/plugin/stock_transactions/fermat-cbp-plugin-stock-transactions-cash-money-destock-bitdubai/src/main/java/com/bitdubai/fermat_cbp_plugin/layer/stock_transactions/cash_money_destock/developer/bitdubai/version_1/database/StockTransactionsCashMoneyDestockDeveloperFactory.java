@@ -134,12 +134,13 @@ import java.util.UUID;
         projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CSH_WALLET_PUBLIC_KEY_COLUMN_NAME);
         projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CASH_REFERENCE_COLUMN_NAME);
         projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_CONCEPT_COLUMN_NAME);
-        projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_MEMO_COLUMN_NAME);
         projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_AMOUNT_COLUMN_NAME);
         projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TIMESTAMP_COLUMN_NAME);
+        projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_MEMO_COLUMN_NAME);
         projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME);
         projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME);
         projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME);
+        projectColumns.add(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
 
         DeveloperDatabaseTable bankMoneyRestockTable = developerObjectFactory.getNewDeveloperDatabaseTable(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TABLE_NAME, projectColumns);
         tables.add(bankMoneyRestockTable);

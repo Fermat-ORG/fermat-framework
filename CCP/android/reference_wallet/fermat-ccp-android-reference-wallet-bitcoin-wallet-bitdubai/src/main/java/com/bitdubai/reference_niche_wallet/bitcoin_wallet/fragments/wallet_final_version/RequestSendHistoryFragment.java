@@ -17,18 +17,16 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.identities.ActiveIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.PaymentRequestHistoryAdapter;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -45,32 +43,28 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 public class RequestSendHistoryFragment extends FermatWalletListFragment<PaymentRequest> implements FermatListItemListeners<PaymentRequest>, View.OnClickListener,onRefreshList {
 
     /**
-     * MANAGERS
-     */
-    private CryptoWallet cryptoWallet;
-
-    /**
      * Session
      */
     ReferenceWalletSession referenceWalletSession;
-
+    String walletPublicKey = "reference_wallet";
+    /**
+     * MANAGERS
+     */
+    private CryptoWallet cryptoWallet;
     /**
      * DATA
      */
     private List<PaymentRequest> lstPaymentRequest;
     private PaymentRequest selectedItem;
-
     /**
      * Executor Service
      */
     private ExecutorService executor;
-
     private int MAX_TRANSACTIONS = 20;
     private int offset = 0;
-
-    String walletPublicKey = "reference_wallet";
     private View rootView;
     private LinearLayout empty;
+
 
     /**
      * Create a new instance of this fragment
@@ -89,6 +83,19 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         referenceWalletSession = (ReferenceWalletSession)appSession;
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
+
+        getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+//                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //                      getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
+                    }
+                });
+            }
+        });
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
@@ -111,11 +118,17 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
+            setUp();
             return rootView;
         }catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return container;
+    }
+
+    private void setUp(){
+
+
     }
 
 
@@ -138,7 +151,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.transaction_main_fragment;
+        return R.layout.fragment_transaction_main;
     }
 
     @Override

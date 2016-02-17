@@ -84,8 +84,8 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     @Override
     public void hold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterHoldException {
         try {
-            bankMoneyWalletDao.makeHold(bankMoneyTransactionRecord, BalanceType.AVAILABLE);
-        }catch (CantMakeHoldException e){
+            getAvailableBalance().debit(bankMoneyTransactionRecord);
+        }catch (FermatException e){
 
         }
     }
@@ -93,8 +93,8 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     @Override
     public void unhold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterUnholdException {
         try {
-            bankMoneyWalletDao.makeUnhold(bankMoneyTransactionRecord, BalanceType.AVAILABLE);
-        }catch (CantMakeUnholdException e){
+            getAvailableBalance().credit(bankMoneyTransactionRecord);
+        }catch (FermatException e){
 
         }
     }
@@ -107,5 +107,24 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
         }catch (CantInsertRecordException e){
             throw new CantAddNewAccountException(CantInsertRecordException.DEFAULT_MESSAGE,e,null,null);
         }
+    }
+
+    @Override
+    public void createBankName(String bankName) {
+        try {
+            bankMoneyWalletDao.createBankName(bankName);
+        }catch (FermatException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET,null,e);
+        }
+    }
+
+    @Override
+    public String getBankName() {
+        try {
+            return bankMoneyWalletDao.getBankName();
+        }catch (FermatException e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET,null,e);
+        }
+        return null;
     }
 }

@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_community.fragments;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
@@ -26,10 +28,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
-import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNavigationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
@@ -42,7 +42,8 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectionNotificationsFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation> {
+public class ConnectionNotificationsFragment extends AbstractFermatFragment<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager>
+        implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<CryptoBrokerCommunityInformation>, AcceptDialog.OnDismissListener {
 
     public static final String ACTOR_SELECTED = "actor_selected";
 
@@ -56,7 +57,6 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
     private boolean isRefreshing = false;
     private View rootView;
     private AppNotificationAdapter adapter;
-    private CryptoBrokerCommunitySubAppSession cryptoBrokerCommunitySubAppSession;
     private LinearLayout emptyView;
     private CryptoBrokerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -78,9 +78,8 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        cryptoBrokerCommunitySubAppSession = ((CryptoBrokerCommunitySubAppSession) appSession);
         cryptoBrokerInformation = (CryptoBrokerCommunityInformation) appSession.getData(ACTOR_SELECTED);
-        moduleManager = cryptoBrokerCommunitySubAppSession.getModuleManager();
+        moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         cryptoBrokerInformationList = new ArrayList<>();
     }
@@ -118,7 +117,6 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
-
 
         return rootView;
     }
@@ -205,9 +203,10 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
         try {
             Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
             //moduleManager.acceptCryptoBroker(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), cryptoBrokerCommunitySubAppSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession, appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
+            notificationAcceptDialog.setOnDismissListener(this);
             notificationAcceptDialog.show();
-        } catch (CantGetSelectedActorIdentityException e) {
+        } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
             e.printStackTrace();
             Toast.makeText(getActivity(), "TODO ACCEPT but.. ERROR! ->", Toast.LENGTH_LONG).show();
         }
@@ -234,5 +233,10 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment impl
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        onRefresh();
     }
 }

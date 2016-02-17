@@ -50,4 +50,9 @@ public class EmptyItem implements FermatInterfaceObject {
     public void setPosition(int position) {
         this.position = position;
     }
+
+    @Override
+    public int getNotifications() {
+        return 0;
+    }
 }

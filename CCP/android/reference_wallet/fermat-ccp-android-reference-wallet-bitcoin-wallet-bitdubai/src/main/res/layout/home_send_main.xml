@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/back"
-
+    android:background="@drawable/background_gradient"
     >
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -23,7 +22,6 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"/>
-
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
@@ -36,20 +34,19 @@
         android:orientation="vertical"
         android:visibility="gone">
 
-
         <ImageView
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_marginBottom="16dp"
             android:scaleType="fitXY"
-            android:src="@drawable/img_home_empty_send"/>
+            android:src="@drawable/transaction_icon"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="No transactions"
-            android:textColor="#000"
+            android:text="@string/no_transactions_text"
+            android:textColor="#fff"
             android:textSize="20sp"/>
 
     </LinearLayout>

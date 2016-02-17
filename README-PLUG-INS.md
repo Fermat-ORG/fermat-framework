@@ -1,4 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/Readme%20Image/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
 
 
 <br><br>
@@ -112,7 +112,7 @@ Where we refer to '_Plugin Name_' what we expect is the following information:
 
 All of them separated by " - ". 
 
-##### Linking to parent Issue
+##### Linking to a parent Issue
 
 Issues that need to be linked to its parent must have their first line starting with "Parent: " + http link to parent issue. 
 

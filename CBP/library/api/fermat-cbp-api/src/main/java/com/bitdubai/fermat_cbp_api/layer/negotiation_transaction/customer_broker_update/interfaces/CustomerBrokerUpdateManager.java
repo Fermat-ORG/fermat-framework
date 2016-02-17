@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
@@ -14,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by Yordin Alayn on 17.12.15.
  */
-public interface CustomerBrokerUpdateManager {
+public interface CustomerBrokerUpdateManager extends FermatManager {
 
     /**
      * Create an Update Negotiation Transaction for the customer

@@ -25,7 +25,6 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
      */
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
-    //Asset Issuing database registry
     private AssetDistributionDao assetDistributionDao;
     /**
      * TransactionService Interface member variables.
@@ -65,26 +64,6 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
              */
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler = new AssetDistributionEventHandler(this);
-
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
 
             fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
             fermatEventListener.setEventHandler(fermatEventHandler);

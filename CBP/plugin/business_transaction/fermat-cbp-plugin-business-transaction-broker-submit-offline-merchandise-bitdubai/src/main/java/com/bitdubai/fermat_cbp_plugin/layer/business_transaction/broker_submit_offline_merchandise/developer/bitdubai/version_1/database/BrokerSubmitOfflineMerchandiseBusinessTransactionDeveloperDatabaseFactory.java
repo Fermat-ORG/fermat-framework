@@ -61,7 +61,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseF
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
              /*
               * The database exists but cannot be open. I can not handle this situation.
@@ -112,6 +112,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseF
         onlinePaymentColumns.add(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME);
         /**
          * Table Offline Payment addition.
          */

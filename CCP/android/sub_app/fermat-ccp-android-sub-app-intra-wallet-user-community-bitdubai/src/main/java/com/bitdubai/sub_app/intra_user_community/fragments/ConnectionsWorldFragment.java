@@ -1,9 +1,7 @@
 package com.bitdubai.sub_app.intra_user_community.fragments;
 
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,6 +11,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +23,8 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -31,20 +33,28 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserSearch;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
+import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.intra_user_community.common.popups.PresentationIntraUserCommunityDialog;
+import com.bitdubai.sub_app.intra_user_community.constants.Constants;
+import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
+
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +67,7 @@ import static android.widget.Toast.makeText;
  * modified by Jose Manuel De Sousa Dos Santos on 08/12/2015
  */
 
-
-public class ConnectionsWorldFragment extends AbstractFermatFragment implements SearchView.OnCloseListener,
-        SearchView.OnQueryTextListener,
+public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         AdapterView.OnItemClickListener,
         SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<IntraUserInformation> {
 
@@ -75,19 +83,18 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
 
     protected final String TAG = "Recycler Base";
     FermatWorker worker;
+    SettingsManager<IntraUserWalletSettings> settingsManager;
+    IntraUserWalletSettings intraUserWalletSettings = null;
+    private ErrorConnectingFermatNetwork errorConnectingFermatNetwork;
     private int offset = 0;
     private int mNotificationsCount = 0;
     private SearchView mSearchView;
     private AppListAdapter adapter;
     private boolean isStartList = false;
-
-    //private ProgressDialog mDialog;
-    // recycler
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
-    //private ActorAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
-
+    private View searchView;
     // flags
     private boolean isRefreshing = false;
     private View rootView;
@@ -96,8 +103,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     private LinearLayout emptyView;
     private ArrayList<IntraUserInformation> lstIntraUserInformations;
     private List<IntraUserInformation> dataSet = new ArrayList<>();
-
-    //ProgressDialog dialog;
+    private android.support.v7.widget.Toolbar toolbar;
+    private EditText searchEditText;
+    private List<IntraUserInformation> dataSetFiltered;
+    private ImageView closeSearch;
+    private LinearLayout searchEmptyView;
+    private LinearLayout noNetworkView;
+    private LinearLayout noFermatNetworkView;
+    private Handler handler = new Handler();
 
     /**
      * Create a new instance of this fragment
@@ -113,20 +126,30 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
         super.onCreate(savedInstanceState);
         try {
 
-            // setHasOptionsMenu(true);
+            setHasOptionsMenu(true);
             // setting up  module
-
             intraUserSubAppSession = ((IntraUserSubAppSession) appSession);
             moduleManager = intraUserSubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
+            settingsManager = intraUserSubAppSession.getModuleManager().getSettingsManager();
+
+            try {
+                intraUserWalletSettings = settingsManager.loadAndGetSettings(intraUserSubAppSession.getAppPublicKey());
+            } catch (Exception e) {
+                intraUserWalletSettings = null;
+            }
+
+            if (intraUserSubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            {
+                if (intraUserWalletSettings == null) {
+                    intraUserWalletSettings = new IntraUserWalletSettings();
+                    intraUserWalletSettings.setIsPresentationHelpEnabled(true);
+                    settingsManager.persistSettings(intraUserSubAppSession.getAppPublicKey(), intraUserWalletSettings);
+                }
+            }
+
             mNotificationsCount = moduleManager.getIntraUsersWaitingYourAcceptanceCount();
-
-            //get search name if
-            //searchName = getFermatScreenSwapper().connectBetweenAppsData()[0].toString();
-
-            // TODO: display unread notifications.
-            // Run a task to fetch the notifications count
             new FetchCountTask().execute();
 
         } catch (Exception ex) {
@@ -134,7 +157,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
     }
-
 
     /**
      * Fragment Class implementation.
@@ -145,54 +167,18 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
 
         try {
             rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
-            rootView.setOnKeyListener(new View.OnKeyListener() {
-                @Override
-                public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK) {
-                        worker.shutdownNow();
-                        return true;
-                    }
-                    return false;
-                }
-            });
+            toolbar = getToolbar();
+            toolbar.setTitle("Cripto wallet users");
             setUpScreen(inflater);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
-            recyclerView.setHasFixedSize(true);
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-            adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
-            recyclerView.setAdapter(adapter);
-            adapter.setFermatListEventListener(this);
-
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
-            swipeRefresh.setOnRefreshListener(this);
-            swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-            /**
-             * Code to show cache data
-             */
-            adapter.changeDataSet(dataSet);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    onRefresh();
-                }
-            }, 1500);
-            SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
-            if (!pref.getBoolean("isChecked", false)) {
-                if (moduleManager.getActiveIntraUserIdentity() != null) {
-                    if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
-                        PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
-                        presentationIntraUserCommunityDialog.show();
-                    }
-                } else {
-                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(), intraUserSubAppSession, null, PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
-                    presentationIntraUserCommunityDialog.show();
-                }
+            searchView = inflater.inflate(R.layout.search_edit_text, null);
+            setUpReferences();
+            switch (getFermatState().getFermatNetworkStatus()) {
+                case CONNECTED:
+                   // setUpReferences();
+                    break;
+                case DISCONNECTED:
+                    showErrorFermatNetworkDialog();
+                    break;
             }
 
         } catch (Exception ex) {
@@ -202,35 +188,96 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
         return rootView;
     }
 
-    public void showEmpty(boolean show, View emptyView) {
-        Animation anim = AnimationUtils.loadAnimation(getActivity(),
-                show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
-            if (adapter != null)
-                adapter.changeDataSet(null);
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
+    public void setUpReferences() {
+        rootView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    worker.shutdownNow();
+                    return true;
+                }
+                return false;
+            }
+        });
+        searchEditText = (EditText) searchView.findViewById(R.id.search);
+        closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new AppListAdapter(getActivity(), lstIntraUserInformations);
+        recyclerView.setAdapter(adapter);
+        adapter.setFermatListEventListener(this);
+        swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
+        swipeRefresh.setOnRefreshListener(this);
+        swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
+        rootView.setBackgroundColor(Color.parseColor("#000b12"));
+        emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+        searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
+        noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
+        noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
+        try {
+            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+        } catch (CantGetIntraUsersListException e) {
+            e.printStackTrace();
+        }
+        if (intraUserWalletSettings.isPresentationHelpEnabled()) {
+            showDialogHelp();
+        } else {
+            showCriptoUsersCache();
         }
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+    public void showErrorNetworkDialog() {
+        ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
+        errorConnectingFermatNetworkDialog.setDescription("You are not connected  /n to the Fermat Network");
+        errorConnectingFermatNetworkDialog.setRightButton("Connect", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
+        errorConnectingFermatNetworkDialog.setLeftButton("Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        errorConnectingFermatNetworkDialog.show();
+    }
+
+    public void showErrorFermatNetworkDialog() {
+        final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
+        errorConnectingFermatNetworkDialog.setDescription("The access to the /n Fermat Network is disabled.");
+        errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                errorConnectingFermatNetworkDialog.dismiss();
+                try {
+                    if (getFermatState().getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
+                        Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
+                        //getActivity().onBackPressed();
+                    }
+                } catch (CantGetCommunicationNetworkStatusException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        errorConnectingFermatNetworkDialog.setLeftButton("Cancel", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                errorConnectingFermatNetworkDialog.dismiss();
+            }
+        });
+        errorConnectingFermatNetworkDialog.show();
     }
 
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
-            if (swipeRefresh != null)
-                swipeRefresh.setRefreshing(true);
-            final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Please wait...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
             worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -243,32 +290,46 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
                 @Override
                 public void onPostExecute(Object... result) {
                     isRefreshing = false;
-                    //dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (result != null &&
                             result.length > 0) {
-                        progressDialog.dismiss();
                         if (getActivity() != null && adapter != null) {
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
                             if (lstIntraUserInformations.isEmpty()) {
-                                showEmpty(true, emptyView);
+                                try {
+                                    if (!moduleManager.getCacheSuggestionsToContact(MAX, offset).isEmpty()) {
+                                        lstIntraUserInformations.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+                                        showEmpty(false, emptyView);
+                                        showEmpty(false, searchEmptyView);
+                                    } else {
+                                        showEmpty(true, emptyView);
+                                        showEmpty(false, searchEmptyView);
+                                    }
+                                } catch (CantGetIntraUsersListException e) {
+                                    e.printStackTrace();
+                                }
+
                             } else {
                                 showEmpty(false, emptyView);
+                                showEmpty(false, searchEmptyView);
                             }
                         }
-                    } else
-                        showEmpty(true, emptyView);
-
-
+                    } else {
+                        try {
+                            showEmpty(false, emptyView);
+                            showEmpty(false, searchEmptyView);
+                            lstIntraUserInformations.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+                        } catch (CantGetIntraUsersListException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
 
                 @Override
                 public void onErrorOccurred(Exception ex) {
-                    progressDialog.dismiss();
                     isRefreshing = false;
-                    //dialog.dismiss();
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
@@ -282,75 +343,130 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.cripto_users_menu, menu);
 
-       /* inflater.inflate(R.menu.intra_user_menu, menu);
+        try {
+            final MenuItem searchItem = menu.findItem(R.id.action_search);
+            menu.findItem(R.id.action_help).setVisible(true);
+            menu.findItem(R.id.action_search).setVisible(true);
+            searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    menu.findItem(R.id.action_help).setVisible(false);
+                    menu.findItem(R.id.action_search).setVisible(false);
+                    toolbar = getToolbar();
+                    toolbar.setTitle("");
+                    toolbar.addView(searchView);
+                    if (closeSearch != null)
+                        closeSearch.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                menu.findItem(R.id.action_help).setVisible(true);
+                                menu.findItem(R.id.action_search).setVisible(true);
+                                toolbar = getToolbar();
+                                toolbar.removeView(searchView);
+                                toolbar.setTitle("Cripto wallet users");
+                                onRefresh();
+                            }
+                        });
 
-        //MenuItem menuItem = new SearchView(getActivity());
-        *//*try {
-            MenuItem searchItem = menu.findItem(R.id.action_search);
-            searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-            //MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-            //mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-            mSearchView = (SearchView) searchItem.getActionView();
-            mSearchView.setOnQueryTextListener(this);
-            mSearchView.setSubmitButtonEnabled(true);
-            mSearchView.setOnCloseListener(this);
+                    if (searchEditText != null) {
+                        searchEditText.addTextChangedListener(new TextWatcher() {
+                            @Override
+                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        }catch (Exception e){
+                            }
 
-        }*//*
-//        MenuItem menuItem = menu.add(0, IntraUserCommunityConstants.IC_ACTION_SEARCH, 0, "send");
-//        menuItem.setIcon(R.drawable.ic_action_search).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//        menuItem.setActionProvider(new SearchView(getActivity()))
+                            @Override
+                            public void onTextChanged(final CharSequence s, int start, int before, int count) {
+                                if (s.length() > 0) {
+                                    worker = new FermatWorker() {
+                                        @Override
+                                        protected Object doInBackground() throws Exception {
+                                            return getQueryData(s);
+                                        }
+                                    };
+                                    worker.setContext(getActivity());
+                                    worker.setCallBack(new FermatWorkerCallBack() {
+                                        @SuppressWarnings("unchecked")
+                                        @Override
+                                        public void onPostExecute(Object... result) {
+                                            isRefreshing = false;
+                                            if (swipeRefresh != null)
+                                                swipeRefresh.setRefreshing(false);
+                                            if (result != null &&
+                                                    result.length > 0) {
+                                                if (getActivity() != null && adapter != null) {
+                                                    dataSetFiltered = (ArrayList<IntraUserInformation>) result[0];
+                                                    adapter.changeDataSet(dataSetFiltered);
+                                                    if (dataSetFiltered != null) {
+                                                        if (dataSetFiltered.isEmpty()) {
+                                                            showEmpty(true, searchEmptyView);
+                                                            showEmpty(false, emptyView);
 
+                                                        } else {
+                                                            showEmpty(false, searchEmptyView);
+                                                            showEmpty(false, emptyView);
+                                                        }
+                                                    } else {
+                                                        showEmpty(true, searchEmptyView);
+                                                        showEmpty(false, emptyView);
+                                                    }
+                                                }
+                                            } else {
+                                                showEmpty(true, searchEmptyView);
+                                                showEmpty(false, emptyView);
+                                            }
+                                        }
 
-        //MenuItem action_connection_request = menu.findItem(R.id.action_connection_request);
-        // Get the notifications MenuItem and
-        // its LayerDrawable (layer-list)
-        MenuItem item = menu.findItem(R.id.action_notifications);
-        LayerDrawable icon = (LayerDrawable) item.getIcon();
+                                        @Override
+                                        public void onErrorOccurred(Exception ex) {
+                                            isRefreshing = false;
+                                            if (swipeRefresh != null)
+                                                swipeRefresh.setRefreshing(false);
+                                            showEmpty(true, searchEmptyView);
+                                            if (getActivity() != null)
+                                                Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                                            ex.printStackTrace();
 
-        // Update LayerDrawable's BadgeDrawable
-        Utils.setBadgeCount(getActivity(), icon, mNotificationsCount);
+                                        }
+                                    });
+                                    worker.execute();
+                                } else {
+                                    menu.findItem(R.id.action_help).setVisible(true);
+                                    menu.findItem(R.id.action_search).setVisible(true);
+                                    toolbar = getToolbar();
+                                    toolbar.removeView(searchView);
+                                    toolbar.setTitle("Cripto wallet users");
+                                    onRefresh();
+                                }
+                            }
 
+                            @Override
+                            public void afterTextChanged(Editable s) {
 
-//        List<String> lst = new ArrayList<String>();
-//        lst.add("Matias");
-//        lst.add("Work");
-//        ArrayAdapter<String> itemsAdapter =
-//                new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, lst);
-//        MenuItem item = menu.findItem(R.id.spinner);
-//        Spinner spinner = (Spinner) MenuItemCompat.getActionView(item);
-//
-//        spinner.setAdapter(itemsAdapter); // set the adapter to provide layout of rows and content
-//        //s.setOnItemSelectedListener(onItemSelectedListener); // set the listener, to perform actions based on item selection
-*/
+                            }
+                        });
+                    }
+                    return false;
+                }
+            });
+
+        } catch (Exception e) {
+
+        }
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
-
             int id = item.getItemId();
 
-            CharSequence itemTitle = item.getTitle();
-
-            // Esto podria ser un enum de item menu que correspondan a otro menu
-            if (itemTitle.equals("New Identity")) {
-                changeActivity(Activities.CWP_INTRA_USER_CREATE_ACTIVITY.getCode(), appSession.getAppPublicKey());
-
-            }
-//            if(id == R.id.action_connection_request){
-//                Toast.makeText(getActivity(),"Intra user request",Toast.LENGTH_SHORT).show();
-//            }
-            if (item.getItemId() == R.id.action_notifications) {
-                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_REQUEST.getCode(), appSession.getAppPublicKey());
-                return true;
-            }
-
+            if (id == R.id.action_help)
+                showDialogHelp();
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -360,14 +476,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements 
         return super.onOptionsItemSelected(item);
     }
 
-    /*
-Updates the count of notifications in the ActionBar.
- */
     private void updateNotificationsBadge(int count) {
         mNotificationsCount = count;
-
-        // force the ActionBar to relayout its MenuItems.
-        // onCreateOptionsMenu(Menu) will be called again.
         getActivity().invalidateOptionsMenu();
     }
 
@@ -377,48 +487,21 @@ Updates the count of notifications in the ActionBar.
 
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String name) {
-        //swipeRefreshLayout.setRefreshing(true);
-        IntraUserSearch intraUserSearch = moduleManager.searchIntraUser();
-        intraUserSearch.setNameToSearch(name);
-
-        // This method does not exist
-        mSearchView.onActionViewCollapsed();
-        //TODO: cuando esté el network service, esto va a descomentarse
-//        try {
-//            adapter.changeDataSet(intraUserSearch.getResult());
-//
-//        } catch (CantGetIntraUserSearchResult cantGetIntraUserSearchResult) {
-//            cantGetIntraUserSearchResult.printStackTrace();
-//        }
-
-
-        //adapter.setAddButtonVisible(true);
-        //adapter.changeDataSet(IntraUserConnectionListItem.getTestDataExample(getResources()));
-        //swipeRefreshLayout.setRefreshing(false);
-
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String s) {
-        //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
-        if (s.length() == 0 && isStartList) {
-            //((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(false);
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-            return true;
+    private synchronized List<IntraUserInformation> getQueryData(final CharSequence charSequence) {
+        if (dataSet != null && !dataSet.isEmpty()) {
+            if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
+                //noinspection unchecked
+                dataSetFiltered = (List<IntraUserInformation>) CollectionUtils.find(dataSet, new org.apache.commons.collections.Predicate() {
+                    @Override
+                    public boolean evaluate(Object object) {
+                        IntraUserInformation intraUserInformation = (IntraUserInformation) object;
+                        return intraUserInformation.getName().toLowerCase().contains(charSequence);
+                    }
+                });
+            } else
+                dataSetFiltered = null;
         }
-        return false;
-    }
-
-    @Override
-    public boolean onClose() {
-        if (!mSearchView.isActivated()) {
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-        }
-
-        return true;
+        return dataSetFiltered;
     }
 
 
@@ -436,21 +519,18 @@ Updates the count of notifications in the ActionBar.
         return dataSet;
     }
 
+
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {
-
-        appSession.setData(INTRA_USER_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
-
-        /*ConnectDialog connectDialog = null;
         try {
-            connectDialog = new ConnectDialog(getActivity(), (IntraUserSubAppSession) appSession, appResourcesProviderManager, data, moduleManager.getActiveIntraUserIdentity());
-            connectDialog.show();
+            if (moduleManager.getActiveIntraUserIdentity() != null) {
+                if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty())
+                    appSession.setData(INTRA_USER_SELECTED, data);
+                changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+            }
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
-        }*/
-
+        }
     }
 
     @Override
@@ -458,6 +538,112 @@ Updates the count of notifications in the ActionBar.
 
     }
 
+
+    private void showDialogHelp() {
+        try {
+            if (moduleManager.getActiveIntraUserIdentity() != null) {
+                if (!moduleManager.getActiveIntraUserIdentity().getPublicKey().isEmpty()) {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                            intraUserSubAppSession,
+                            null,
+                            moduleManager,
+                            PresentationIntraUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                    presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            showCriptoUsersCache();
+                        }
+                    });
+                } else {
+                    PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                            intraUserSubAppSession,
+                            null,
+                            moduleManager,
+                            PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                    presentationIntraUserCommunityDialog.show();
+                    presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                            if (isBackPressed != null) {
+                                if (isBackPressed) {
+                                    getActivity().finish();
+                                }
+                            } else {
+                                showCriptoUsersCache();
+                                invalidate();
+                            }
+                        }
+                    });
+                }
+            } else {
+                PresentationIntraUserCommunityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserCommunityDialog(getActivity(),
+                        intraUserSubAppSession,
+                        null,
+                        moduleManager,
+                        PresentationIntraUserCommunityDialog.TYPE_PRESENTATION);
+                presentationIntraUserCommunityDialog.show();
+                presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                        if (isBackPressed != null) {
+                            if (isBackPressed) {
+                                getActivity().onBackPressed();
+                            }
+                        } else
+                            showCriptoUsersCache();
+                    }
+                });
+            }
+        } catch (CantGetActiveLoginIdentityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showCriptoUsersCache() {
+        if (dataSet.isEmpty()) {
+            showEmpty(true, emptyView);
+            swipeRefresh.post(new Runnable() {
+                @Override
+                public void run() {
+                    swipeRefresh.setRefreshing(true);
+                    onRefresh();
+                }
+
+            });
+        } else {
+            adapter.changeDataSet(dataSet);
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            }, 1500);
+        }
+    }
+
+    public void showEmpty(boolean show, View emptyView) {
+        Animation anim = AnimationUtils.loadAnimation(getActivity(),
+                show ? android.R.anim.fade_in : android.R.anim.fade_out);
+        if (show &&
+                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.VISIBLE);
+            if (adapter != null)
+                adapter.changeDataSet(null);
+        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+
+    }
 
     /*
     Sample AsyncTask to fetch the notifications count
@@ -476,8 +662,6 @@ Updates the count of notifications in the ActionBar.
             updateNotificationsBadge(count);
         }
     }
-
-
 
 
 }

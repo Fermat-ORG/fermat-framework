@@ -46,4 +46,8 @@ public interface CryptoPaymentRequest {
 
     ReferenceWallet               getReferenceWallet()  ;
 
+    int                           getSentNumber()   ;
+
+    String                        getMessageType();
+
 }

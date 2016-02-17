@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.crypto_broker_community.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionNotificationsFragment;
@@ -10,7 +9,6 @@ import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionOtherPro
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.crypto_broker_community.fragments.ConnectionsWorldFragment;
-import com.bitdubai.sub_app.crypto_broker_community.preference_settings.CryptoBrokerCommunityPreferenceSettings;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
@@ -22,30 +20,6 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
 public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager, CryptoBrokerCommunityFragmentsEnumType> {
 
 
-   /* @Override
-    public fermatFragment getFermatFragment(final CryptoBrokerCommunityFragmentsEnumType fragment) throws FragmentNotFoundException {
-
-        switch (fragment) {
-
-            case CONNECTIONS               : return ConnectionsFragment            .newInstance();
-            case CONNECTIONS_LIST          : return ConnectionsListFragment        .newInstance();
-            case CONNECTIONS_NOTIFICATIONS : return ConnectionNotificationsFragment.newInstance();
-            case CONNECTIONS_OTHER_PROFILE : return ConnectionOtherProfileFragment .newInstance();
-            case CONNECTIONS_REGISTER_USER : return RegisterUserFragment           .newInstance();
-            case CONNECTIONS_REQUEST       : return RequestConnectionsFragment     .newInstance();
-            case CONNECTIONS_SETTINGS      : return ConnectionSettingsFragment     .newInstance();
-            case CONNECTIONS_WORLD         : return ConnectionsWorldFragment       .newInstance();
-            case MAIN                      : return ConnectionsWorldFragment       .newInstance();
-
-            default:
-                throw new FragmentNotFoundException(
-                        fragment.toString(),
-                        "Switch failed due to missing 'case' sentence for the requested fragment."
-                );
-        }
-    }*/
-
-
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoBrokerCommunityFragmentsEnumType fragments) throws FragmentNotFoundException {
         AbstractFermatFragment currentFragment = null;
@@ -54,22 +28,22 @@ public class CryptoBrokerCommunityFragmentFactory extends FermatFragmentFactory<
             case CWP_WALLET_STORE_ALL_FRAGMENT:
                 currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTIONS_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTIONS:
                 currentFragment = ConnectionsFragment.newInstance();
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_DETAIL_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_DETAIL:
                 currentFragment = null;
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS:
                 currentFragment = ConnectionNotificationsFragment.newInstance();
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE:
                 currentFragment = ConnectionOtherProfileFragment.newInstance();
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD:
                 currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
-            case CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST_FRAGMENT:
+            case CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_FRIEND_LIST:
                 currentFragment = ConnectionsListFragment.newInstance();
                 break;
             default:

@@ -89,6 +89,7 @@ public class StockTransactionsCashMoneyRestockDatabaseDao {
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cashMoneyTransaction.getTransactionStatus().getCode());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, cashMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cashMoneyTransaction.getOriginTransaction().getCode());
+        record.setStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, cashMoneyTransaction.getOriginTransactionId());
 
         return record;
     }
@@ -130,6 +131,7 @@ public class StockTransactionsCashMoneyRestockDatabaseDao {
         cashMoneyRestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
         cashMoneyRestockTransaction.setPriceReference(new BigDecimal(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         cashMoneyRestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
+        cashMoneyRestockTransaction.setOriginTransactionId(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME));
 
         return cashMoneyRestockTransaction;
     }
@@ -140,6 +142,9 @@ public class StockTransactionsCashMoneyRestockDatabaseDao {
         {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
+
+            //TODO: Solo para prueba ya que priceReference viene null desde android revisar con Nelson
+            cashMoneyTransaction.setPriceReference(new BigDecimal(0));
 
             DatabaseTable table = getDatabaseTable(StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_TABLE_NAME);
             DatabaseTableRecord bankMoneyRestockRecord = getCashMoneyRestockRecord(cashMoneyTransaction);

@@ -13,13 +13,6 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 public interface CustomerAckMerchandiseManager extends FermatManager {
 
     /**
-     * This method send a payment according the contract elements.
-     * @param contractHash
-     * @throws CantAckMerchandiseException
-     */
-    void ackMerchandise(String walletPublicKey, String contractHash)throws CantAckMerchandiseException;
-
-    /**
      * This method returns the ContractTransactionStatus by contractHash
      * @param contractHash
      * @return

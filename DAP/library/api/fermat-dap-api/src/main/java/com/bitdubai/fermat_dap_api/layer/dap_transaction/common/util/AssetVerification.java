@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -12,6 +12,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 
@@ -76,21 +77,38 @@ public final class AssetVerification {
 
     public static boolean isDigitalAssetHashValid(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException, DAPException {
         String digitalAssetMetadataHash = digitalAssetMetadata.getDigitalAssetHash();
-        String digitalAssetGenesisTransaction = digitalAssetMetadata.getGenesisTransaction();
-        CryptoTransaction cryptoTransaction = getCryptoTransactionFromCryptoNetwork(bitcoinNetworkManager, digitalAssetGenesisTransaction);
+        CryptoTransaction cryptoTransaction = getCryptoTransactionFromCryptoNetwork(bitcoinNetworkManager, digitalAssetMetadata);
         String hashFromCryptoTransaction = cryptoTransaction.getOp_Return();
         return digitalAssetMetadataHash.equals(hashFromCryptoTransaction);
     }
 
-    private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction) throws DAPException, CantGetCryptoTransactionException {
-        List<CryptoTransaction> cryptoTransactionList =
-                bitcoinNetworkManager.getCryptoTransaction(genesisTransaction);
-        for (CryptoTransaction cryptoTransaction : cryptoTransactionList) {
-            if (cryptoTransaction.getTransactionHash().equals(genesisTransaction)) {
+    private static CryptoTransaction getCryptoTransactionFromCryptoNetwork(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws DAPException, CantGetCryptoTransactionException {
+        return bitcoinNetworkManager.getGenesisCryptoTransaction(digitalAssetMetadata.getNetworkType(), digitalAssetMetadata.getTransactionChain());
+    }
+
+    public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
+        List<CryptoTransaction> transactionListFromCryptoNetwork = bitcoinNetworkManager.getCryptoTransactions(digitalAssetMetadata.getLastTransactionHash());
+        return matchStatus(transactionListFromCryptoNetwork, cryptoStatus);
+    }
+
+    public static CryptoTransaction getCryptoTransactionFromCryptoNetworkByCryptoStatus(BitcoinNetworkManager bitcoinNetworkManager, String genesisTransaction, CryptoStatus cryptoStatus) throws CantGetCryptoTransactionException {
+        return matchStatus(bitcoinNetworkManager.getCryptoTransactions(genesisTransaction), cryptoStatus);
+    }
+
+    private static CryptoTransaction matchStatus(List<CryptoTransaction> allTransactions, CryptoStatus cryptoStatus) {
+        if (allTransactions == null || allTransactions.isEmpty()) {
+            System.out.println("ASSET TRANSACTION transaction List From Crypto Network is null or empty");
+            return null;
+        }
+        System.out.println("ASSET TRANSACTION Now, I'm looking for this crypto status " + cryptoStatus);
+        for (CryptoTransaction cryptoTransaction : allTransactions) {
+            System.out.println("ASSET TRANSACTION CryptoStatus from Crypto Network:" + cryptoTransaction.getCryptoStatus());
+            if (cryptoTransaction.getCryptoStatus() == cryptoStatus) {
                 return cryptoTransaction;
             }
         }
-        throw new DAPException("The genesis transaction doesn't exists in the crypto network");
+        System.out.println("ASSET TRANSACTION COULDN'T FIND THE CRYPTO TRANSACTION.");
+        return null;
     }
 
 
@@ -99,10 +117,23 @@ public final class AssetVerification {
         return availableBalanceForTransaction < genesisAmount;
     }
 
+
+    public static CryptoTransaction foundCryptoTransaction(BitcoinNetworkManager bitcoinNetworkManager, DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
+        CryptoTransaction cryptoTransaction = bitcoinNetworkManager.getCryptoTransaction(digitalAssetMetadata.getLastTransactionHash());
+        if (cryptoTransaction == null) {
+            throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, null, "Getting the genesis transaction from Crypto Network", "The crypto transaction received is null");
+        }
+        return cryptoTransaction;
+    }
+
     public static boolean isValidContract(DigitalAssetContract digitalAssetContract) {
         //For now, we going to check, only, the expiration date
         ContractProperty contractProperty = digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE);
+        return isValidExpirationDate(contractProperty);
+    }
+
+    public static boolean isValidExpirationDate(ContractProperty contractProperty) {
         Timestamp expirationDate = (Timestamp) contractProperty.getValue();
-        return expirationDate.after(new Timestamp(System.currentTimeMillis()));
+        return (expirationDate == null || new Timestamp(System.currentTimeMillis()).before(expirationDate));
     }
 }

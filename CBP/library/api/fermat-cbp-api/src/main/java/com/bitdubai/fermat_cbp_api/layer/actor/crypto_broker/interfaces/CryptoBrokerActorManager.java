@@ -14,10 +14,36 @@ import java.util.UUID;
 
 public interface CryptoBrokerActorManager extends FermatManager {
 
-    BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException;
+    /**
+     *
+     * @param identity
+     * @param walletPublicKey
+     * @return
+     * @throws CantCreateNewBrokerIdentityWalletRelationshipException
+     */
+    BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException;
 
+    /**
+     *
+     * @return
+     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     */
     Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException;
-    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException;
-    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException;
+
+    /**
+     *
+     * @param publicKey
+     * @return
+     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     */
+    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListBrokerIdentityWalletRelationshipException;
+
+    /**
+     *
+     * @param walletPublicKey
+     * @return
+     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     */
+    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListBrokerIdentityWalletRelationshipException;
 
 }

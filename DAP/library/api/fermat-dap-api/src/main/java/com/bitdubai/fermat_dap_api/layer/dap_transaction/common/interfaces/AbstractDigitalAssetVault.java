@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -16,6 +16,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
@@ -36,6 +37,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfac
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -50,20 +52,20 @@ import java.util.UUID;
 public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
 
     //public String LOCAL_STORAGE_PATH="digital-asset-metadata/";
-    public AssetUserWalletManager assetUserWalletManager;
-    public final String digitalAssetFileName = "digital-asset";
-    public final String digitalAssetMetadataFileName = "digital-asset-metadata";
-    public String LOCAL_STORAGE_PATH = "digital-asset-swap";
-    public FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
-    public FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
-    public UUID pluginId;
-    public PluginFileSystem pluginFileSystem;
-    public String digitalAssetFileStoragePath;
-    public AssetIssuerWalletManager assetIssuerWalletManager;
-    public String walletPublicKey = "walletPublicKeyTest";
-    public ActorAssetIssuerManager actorAssetIssuerManager;
-    public ActorAssetUserManager actorAssetUserManager;
-    BitcoinNetworkManager bitcoinNetworkManager;
+    protected AssetUserWalletManager assetUserWalletManager;
+    protected final String digitalAssetFileName = "digital-asset";
+    protected final String digitalAssetMetadataFileName = "digital-asset-metadata";
+    protected String LOCAL_STORAGE_PATH = "digital-asset-swap";
+    protected FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
+    protected FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
+    protected UUID pluginId;
+    protected PluginFileSystem pluginFileSystem;
+    protected String digitalAssetFileStoragePath;
+    protected AssetIssuerWalletManager assetIssuerWalletManager;
+    protected String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
+    protected ActorAssetIssuerManager actorAssetIssuerManager;
+    protected ActorAssetUserManager actorAssetUserManager;
+    protected BitcoinNetworkManager bitcoinNetworkManager;
 
     /**
      * Set the UUID from this plugin
@@ -91,17 +93,11 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException {
-        if (actorAssetUserManager == null) {
-            throw new CantSetObjectException("actorAssetUserManager is null");
-        }
+    public void setActorAssetUserManager(ActorAssetUserManager actorAssetUserManager) {
         this.actorAssetUserManager = actorAssetUserManager;
     }
 
-    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
-        if (actorAssetIssuerManager == null) {
-            throw new CantSetObjectException("actorAssetIssuerManager is null");
-        }
+    public void setActorAssetIssuerManager(ActorAssetIssuerManager actorAssetIssuerManager) {
         this.actorAssetIssuerManager = actorAssetIssuerManager;
     }
 
@@ -142,7 +138,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
 
     }
 
-    private void persistXMLStringInLocalStorage(String innerXML, String directory,  String fileName) throws CantCreateFileException, CantPersistFileException {
+    private void persistXMLStringInLocalStorage(String innerXML, String directory, String fileName) throws CantCreateFileException, CantPersistFileException {
         PluginTextFile digitalAssetFile = this.pluginFileSystem.createTextFile(this.pluginId, directory, fileName, this.FILE_PRIVACY, this.FILE_LIFE_SPAN);
         digitalAssetFile.setContent(innerXML);
         digitalAssetFile.persistToMedia();
@@ -157,43 +153,16 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
      */
     public DigitalAssetMetadata getDigitalAssetMetadataFromLocalStorage(String internalId) throws CantGetDigitalAssetFromLocalStorageException {
         try {
-            DigitalAssetMetadata digitalAssetMetadataObtainedFromFileStorage = new DigitalAssetMetadata();
             PluginTextFile digitalAssetMetadataFile = this.pluginFileSystem.getTextFile(this.pluginId, "digitalAssetMetadata", internalId, FILE_PRIVACY, FILE_LIFE_SPAN);
             String digitalAssetMetadataXMLString = digitalAssetMetadataFile.getContent();
-            digitalAssetMetadataObtainedFromFileStorage = (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXMLString, digitalAssetMetadataObtainedFromFileStorage);
-            return digitalAssetMetadataObtainedFromFileStorage;
+            return (DigitalAssetMetadata) XMLParser.parseXML(digitalAssetMetadataXMLString, new DigitalAssetMetadata());
         } catch (FileNotFoundException exception) {
             throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot find " + internalId + "' file");
         } catch (CantCreateFileException exception) {
             throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot create " + internalId + "' file");
         } catch (Exception exception) {
-            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Unexpected exception getting " +  internalId + "' file");
+            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Unexpected exception getting " + internalId + "' file");
         }
-
-    }
-
-    /**
-     * This method get the XML file and cast the DigitalAsset object
-     *
-     * @param assetPublicKey
-     * @return
-     * @throws com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException
-     */
-    public DigitalAsset getDigitalAssetFromLocalStorage(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
-        try {
-            DigitalAsset digitalAssetObtainedFromFileStorage = new DigitalAsset();
-            PluginTextFile digitalAssetFile = this.pluginFileSystem.getTextFile(this.pluginId, "digitalAsset", assetPublicKey, FILE_PRIVACY, FILE_LIFE_SPAN);
-            String digitalAssetXMLString = digitalAssetFile.getContent();
-            digitalAssetObtainedFromFileStorage = (DigitalAsset) XMLParser.parseXML(digitalAssetXMLString, digitalAssetObtainedFromFileStorage);
-            return digitalAssetObtainedFromFileStorage;
-        } catch (FileNotFoundException exception) {
-            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot find " + assetPublicKey + "' file");
-        } catch (CantCreateFileException exception) {
-            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Cannot create " +assetPublicKey + "' file");
-        } catch (Exception exception) {
-            throw new CantGetDigitalAssetFromLocalStorageException(exception, "Getting Digital Asset file from local storage", "Unexpected exception getting '" + assetPublicKey + "' file");
-        }
-
     }
 
     /**
@@ -235,9 +204,9 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         this.assetUserWalletManager = assetUserWalletManager;
     }
 
-    public boolean isAssetTransactionHashAvailableBalanceInAssetWallet(String genesisTransactionHash, String assetPublicKey) throws DAPException {
+    public boolean isAssetTransactionHashAvailableBalanceInAssetWallet(String genesisTransactionHash, String assetPublicKey, BlockchainNetworkType networkType) throws DAPException {
         try {
-            AssetIssuerWallet assetIssuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
+            AssetIssuerWallet assetIssuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey, networkType);
             List<AssetIssuerWalletTransaction> assetIssuerWalletTransactionList = assetIssuerWallet.getTransactionsAll(
                     BalanceType.AVAILABLE,
                     TransactionType.CREDIT,
@@ -261,7 +230,6 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         if (walletPublicKey == null) {
             throw new CantSetObjectException("walletPublicKey is null");
         }
-        this.walletPublicKey = "walletPublicKeyTest"; //TODO hardcoded value
         System.out.println("The wallet public key in vault is " + this.walletPublicKey);
     }
 
@@ -269,9 +237,8 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
 
-    public void setDigitalAssetMetadataAssetIssuerWalletTransaction(CryptoTransaction genesisTransaction, String internalId, AssetBalanceType assetBalanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantDeliverDigitalAssetToAssetWalletException {
+    public void setDigitalAssetMetadataAssetIssuerWalletTransaction(CryptoTransaction genesisTransaction, DigitalAssetMetadata digitalAssetMetadataToDeliver, AssetBalanceType assetBalanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantDeliverDigitalAssetToAssetWalletException {
         try {
-            DigitalAssetMetadata digitalAssetMetadataToDeliver = getDigitalAssetMetadataFromLocalStorage(internalId);
             BalanceType balanceType = BalanceType.BOOK;
             if (assetBalanceType.getCode().equals(AssetBalanceType.BOOK.getCode())) {
                 balanceType = BalanceType.BOOK;
@@ -280,9 +247,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
                 balanceType = BalanceType.AVAILABLE;
             }
             System.out.println("ASSET Distribution OR RECEPTION - DELIVER TO WALLET TEST - " + balanceType + "\nHash: " + genesisTransaction.getTransactionHash());
-            deliverDigitalAssetMetadata(digitalAssetMetadataToDeliver, genesisTransaction, balanceType, transactionType, dapTransactionType, externalActorPublicKey);
-        } catch (CantGetDigitalAssetFromLocalStorageException exception) {
-            throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the DigitalAssetMetadata from storage");
+            updateWalletBalance(digitalAssetMetadataToDeliver, genesisTransaction, balanceType, transactionType, dapTransactionType, externalActorPublicKey);
         } catch (CantGetTransactionsException exception) {
             throw new CantDeliverDigitalAssetToAssetWalletException(exception, "Delivering DigitalAssetMetadata to Asset Wallet", "Cannot get the Asset Transaction");
         } catch (CantLoadWalletException exception) {
@@ -300,53 +265,61 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         }
     }
 
-    private void deliverDigitalAssetMetadata(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
-        String actorFromPublicKey = "ActorFromPublicKey";
-        String actorToPublicKey = "ActorToPublicKey";
-        if (dapTransactionType.getCode().equals(DAPTransactionType.DISTRIBUTION.getCode())) {
-            AssetIssuerWallet assetWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey);
-            AssetIssuerWalletBalance assetIssuerWalletBalance = assetWallet.getBookBalance(balanceType);
-            actorFromPublicKey = this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
-            System.out.println("ASSET DISTRIBUTION Actor Issuer public key:" + actorFromPublicKey);
-            System.out.println("ASSET Distribution Transaction to deliver: " + genesisTransaction.getTransactionHash());
-            AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
-                    digitalAssetMetadata,
-                    genesisTransaction,
-                    actorFromPublicKey,
-                    actorToPublicKey
-            );
-            System.out.println("ASSET Distribution AssetIssuerWalletTransactionRecordWrapper: " + assetIssuerWalletTransactionRecordWrapper.getDescription());
-            System.out.println("ASSET Distribution Balance Type: " + balanceType);
-            System.out.println("ASSET Distribution Transaction Type: " + transactionType);
-            if (transactionType.getCode().equals(TransactionType.CREDIT.getCode())) {
-                assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
-            }
-            if (transactionType.getCode().equals(TransactionType.DEBIT.getCode())) {
-                assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
-            }
-        }
-        if (dapTransactionType.getCode().equals(DAPTransactionType.RECEPTION.getCode())) {
-            AssetUserWallet assetWallet = this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey);
-            AssetUserWalletBalance assetUserWalletBalance = assetWallet.getBalance();
-            actorToPublicKey = this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
-            System.out.println("ASSET RECEPTION Actor Issuer public key:" + actorToPublicKey);
-            System.out.println("ASSET RECEPTION Transaction to deliver: " + genesisTransaction.getTransactionHash());
-            AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper = new AssetUserWalletTransactionRecordWrapper(
-                    digitalAssetMetadata,
-                    genesisTransaction,
-                    actorFromPublicKey,
-                    actorToPublicKey
-            );
-            System.out.println("ASSET RECEPTION AssetIssuerWalletTransactionRecordWrapper: " + assetUserWalletTransactionRecordWrapper.getDescription());
-            System.out.println("ASSET RECEPTION Balance Type: " + balanceType);
-            System.out.println("ASSET RECEPTION Transaction Type: " + transactionType);
-            if (transactionType.getCode().equals(TransactionType.CREDIT.getCode())) {
-                assetUserWalletBalance.credit(assetUserWalletTransactionRecordWrapper, balanceType);
-            }
-            if (transactionType.getCode().equals(TransactionType.DEBIT.getCode())) {
-                assetUserWalletBalance.debit(assetUserWalletTransactionRecordWrapper, balanceType);
-            }
-        }
+    public DigitalAssetMetadata updateMetadataTransactionChain(String genesisTx, CryptoTransaction cryptoTransaction) throws CantCreateDigitalAssetFileException, CantGetDigitalAssetFromLocalStorageException {
+        return updateMetadataTransactionChain(genesisTx, cryptoTransaction.getTransactionHash(), cryptoTransaction.getBlockHash(), cryptoTransaction.getBlockchainNetworkType());
+    }
 
+
+    public DigitalAssetMetadata updateMetadataTransactionChain(String genesisTx, String txHash, String blockHash, BlockchainNetworkType blockchainNetworkType) throws CantCreateDigitalAssetFileException, CantGetDigitalAssetFromLocalStorageException {
+        DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(genesisTx);
+        digitalAssetMetadata.addNewTransaction(txHash, blockHash);
+        persistDigitalAssetMetadataInLocalStorage(digitalAssetMetadata, genesisTx);
+        return digitalAssetMetadata;
+    }
+
+    public void updateWalletBalance(DigitalAssetMetadata digitalAssetMetadata, CryptoTransaction genesisTransaction, BalanceType balanceType, TransactionType transactionType, DAPTransactionType dapTransactionType, String externalActorPublicKey) throws CantLoadWalletException, CantGetTransactionsException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException {
+        String actorFromPublicKey = "ActorFromPublicKey";
+        String actorToPublicKey = externalActorPublicKey;
+        BlockchainNetworkType networkType = genesisTransaction.getBlockchainNetworkType();
+        switch (dapTransactionType) {
+            case DISTRIBUTION:
+                AssetIssuerWallet issuerWallet = this.assetIssuerWalletManager.loadAssetIssuerWallet(this.walletPublicKey, networkType);
+                AssetIssuerWalletBalance assetIssuerWalletBalance = issuerWallet.getBalance();
+                actorFromPublicKey = this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
+                AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
+                        digitalAssetMetadata,
+                        genesisTransaction,
+                        actorFromPublicKey,
+                        actorToPublicKey
+                );
+                switch (transactionType) {
+                    case CREDIT:
+                        assetIssuerWalletBalance.credit(assetIssuerWalletTransactionRecordWrapper, balanceType);
+                        break;
+                    case DEBIT:
+                        assetIssuerWalletBalance.debit(assetIssuerWalletTransactionRecordWrapper, balanceType);
+                        break;
+                }
+                break;
+            case RECEPTION:
+                AssetUserWallet userWallet = this.assetUserWalletManager.loadAssetUserWallet(this.walletPublicKey, networkType);
+                AssetUserWalletBalance assetUserWalletBalance = userWallet.getBalance();
+                actorToPublicKey = this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
+                AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper = new AssetUserWalletTransactionRecordWrapper(
+                        digitalAssetMetadata,
+                        genesisTransaction,
+                        actorFromPublicKey,
+                        actorToPublicKey
+                );
+                switch (transactionType) {
+                    case DEBIT:
+                        assetUserWalletBalance.debit(assetUserWalletTransactionRecordWrapper, balanceType);
+                        break;
+                    case CREDIT:
+                        assetUserWalletBalance.credit(assetUserWalletTransactionRecordWrapper, balanceType);
+                        break;
+                }
+                break;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.bitdubai.desktop.sub_app_manager.provisory_classes;
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
@@ -122,5 +123,10 @@ public class CbpInstalledSubApp implements InstalledSubApp {
     @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return null;
     }
 }

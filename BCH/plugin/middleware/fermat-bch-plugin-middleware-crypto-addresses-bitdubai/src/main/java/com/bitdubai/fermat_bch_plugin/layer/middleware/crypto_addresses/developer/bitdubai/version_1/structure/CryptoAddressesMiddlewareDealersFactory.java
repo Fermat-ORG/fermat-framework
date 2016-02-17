@@ -4,6 +4,7 @@ import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.develope
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.interfaces.CryptoAddressDealer;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.structure.dealers.CryptoAssetCryptoAddressDealer;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.structure.dealers.CryptoWalletCryptoAddressDealer;
+import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.structure.dealers.CryptoWatchOnlyAddressDealer;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.utils.CryptoVaultSelector;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.utils.WalletManagerSelector;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
@@ -47,6 +48,13 @@ public final class CryptoAddressesMiddlewareDealersFactory {
                 );
             case DAP_ASSET:
                 return new CryptoAssetCryptoAddressDealer(
+                        cryptoAddressesManager,
+                        cryptoAddressBookManager,
+                        cryptoVaultSelector,
+                        walletManagerSelector
+                );
+            case DAP_WATCH_ONLY:
+                return new CryptoWatchOnlyAddressDealer(
                         cryptoAddressesManager,
                         cryptoAddressBookManager,
                         cryptoVaultSelector,

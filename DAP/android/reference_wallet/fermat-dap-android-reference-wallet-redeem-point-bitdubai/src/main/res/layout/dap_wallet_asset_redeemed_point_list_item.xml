@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp">
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/redeemedListUserName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Frank Contreras"
+        android:textSize="16sp"
+        android:fontFamily="regular"
+        android:textColor="#2A3F52"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="16dp"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/redeemedListRedeemedDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="25 Nov 2015"
+        android:textSize="14sp"
+        android:fontFamily="normal"
+        android:textColor="#9E9E9E"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#9E9E9E"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/view" />
+
+</RelativeLayout>

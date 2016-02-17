@@ -4,9 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * This class represents the Contract Basic information persisted in Business Transactions plugins database.
@@ -36,16 +37,21 @@ public class BusinessTransactionRecord {
 
     private String transactionId;
 
-    private String cryptoWalletPublicKey;
+    private String externalWalletPublicKey;
 
     private BigDecimal priceReference;
+
+
+    private UUID externalTransactionId;
 
     //Offline fields
     private FiatCurrency currencyType;
 
     private long paymentAmount;
 
-    private CurrencyType paymentType;
+    private MoneyType paymentType;
+
+    private String actorPublicKey;
 
     //Getters
 
@@ -89,7 +95,7 @@ public class BusinessTransactionRecord {
         return paymentAmount;
     }
 
-    public CurrencyType getPaymentType() {
+    public MoneyType getPaymentType() {
         return paymentType;
     }
 
@@ -109,8 +115,11 @@ public class BusinessTransactionRecord {
         return transactionId;
     }
 
-    public String getCryptoWalletPublicKey() {
-        return cryptoWalletPublicKey;
+    public String getExternalWalletPublicKey() {
+        return externalWalletPublicKey;
+    }
+    public UUID getExternalTransactionId() {
+        return externalTransactionId;
     }
 
     //Setters
@@ -156,7 +165,7 @@ public class BusinessTransactionRecord {
         this.paymentAmount = paymentAmount;
     }
 
-    public void setPaymentType(CurrencyType paymentType) {
+    public void setPaymentType(MoneyType paymentType) {
         this.paymentType = paymentType;
     }
 
@@ -176,8 +185,20 @@ public class BusinessTransactionRecord {
         this.transactionId = transactionId;
     }
 
-    public void setCryptoWalletPublicKey(String cryptoWalletPublicKey) {
-        this.cryptoWalletPublicKey = cryptoWalletPublicKey;
+    public void setExternalWalletPublicKey(String externalWalletPublicKey) {
+        this.externalWalletPublicKey = externalWalletPublicKey;
+    }
+
+    public void setExternalTransactionId(UUID externalTransactionId) {
+        this.externalTransactionId = externalTransactionId;
+    }
+
+    public String getActorPublicKey() {
+        return actorPublicKey;
+    }
+
+    public void setActorPublicKey(String actorPublicKey) {
+        this.actorPublicKey = actorPublicKey;
     }
 
     @Override
@@ -194,11 +215,13 @@ public class BusinessTransactionRecord {
                 ", timestamp=" + timestamp +
                 ", transactionHash='" + transactionHash + '\'' +
                 ", transactionId='" + transactionId + '\'' +
-                ", cryptoWalletPublicKey='" + cryptoWalletPublicKey + '\'' +
+                ", externalWalletPublicKey='" + externalWalletPublicKey + '\'' +
                 ", priceReference=" + priceReference +
+                ", externalTransactionId=" + externalTransactionId +
                 ", currencyType=" + currencyType +
                 ", paymentAmount=" + paymentAmount +
                 ", paymentType=" + paymentType +
+                ", actorPublicKey='" + actorPublicKey + '\'' +
                 '}';
     }
 }

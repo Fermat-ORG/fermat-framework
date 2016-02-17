@@ -88,6 +88,7 @@ public class BusinessTransactionBankMoneyRestockDatabaseDao {
         record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME, bankMoneyTransaction.getTransactionStatus().getCode());
         record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, bankMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, bankMoneyTransaction.getOriginTransaction().getCode());
+        record.setStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, bankMoneyTransaction.getOriginTransactionId());
 
         return record;
     }
@@ -129,6 +130,7 @@ public class BusinessTransactionBankMoneyRestockDatabaseDao {
         bankMoneyRestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
         bankMoneyRestockTransaction.setPriceReference(new BigDecimal(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         bankMoneyRestockTransaction.setOriginTransaction(OriginTransaction.getByCode(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
+        bankMoneyRestockTransaction.setOriginTransactionId(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME));
 
         return bankMoneyRestockTransaction;
     }
@@ -140,6 +142,12 @@ public class BusinessTransactionBankMoneyRestockDatabaseDao {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
+            //TODO: Solo para prueba ya que priceReference viene null desde android revisar con Nelson
+            bankMoneyTransaction.setPriceReference(new BigDecimal(0));
+
+            /*//TODO:Revisar con guillermo que el accountNumber viene null
+            bankMoneyTransaction.setBankAccount("123456");
+            */
             DatabaseTable table = getDatabaseTable(BussinessTransactionBankMoneyRestockDatabaseConstants.BANK_MONEY_STOCK_TABLE_NAME);
             DatabaseTableRecord bankMoneyRestockRecord = getBankMoneyRestockRecord(bankMoneyTransaction);
             DatabaseTableFilter filter = table.getEmptyTableFilter();

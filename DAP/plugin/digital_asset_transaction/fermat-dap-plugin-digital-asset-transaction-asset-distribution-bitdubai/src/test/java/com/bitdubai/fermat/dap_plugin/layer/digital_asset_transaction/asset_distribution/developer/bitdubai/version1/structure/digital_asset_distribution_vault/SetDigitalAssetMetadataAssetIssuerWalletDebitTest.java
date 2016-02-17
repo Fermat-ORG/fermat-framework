@@ -90,7 +90,7 @@ public class SetDigitalAssetMetadataAssetIssuerWalletDebitTest {
     public void setDigitalAssetMetadataAssetIssuerWalletDebitSuccesFullTest() throws Exception {
         System.out.println("Test method setDigitalAssetMetadataAssetIssuerWalletDebitSuccesFullTest()");
 
-        mockDigitalAssetDistributionVault.setDigitalAssetMetadataAssetIssuerWalletDebit(digitalAssetMetadata, genesisTransaction, typeBalance);
+        mockDigitalAssetDistributionVault.updateIssuerWalletBalance(digitalAssetMetadata, genesisTransaction, typeBalance);
     }
 
 

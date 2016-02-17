@@ -57,4 +57,8 @@ public class Item<I extends FermatInterfaceObject> implements FermatInterfaceObj
     public I getInterfaceObject() {
         return object;
     }
+
+    public int getNotifications(){
+        return object.getNotifications();
+    }
 }

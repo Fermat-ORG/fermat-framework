@@ -3,9 +3,11 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -62,6 +64,7 @@ public class CloseContractTransactionManager implements CloseContractManager {
                         this.transactionTransmissionManager,
                         this.closeContractBusinessTransactionDao);*/
         try {
+            ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
             CustomerBrokerContractSale customerBrokerContractSale=
                     this.customerBrokerContractSaleManager.
                             getCustomerBrokerContractSaleForContractId(contractHash);
@@ -69,9 +72,17 @@ public class CloseContractTransactionManager implements CloseContractManager {
                     customerBrokerContractSale,
                     ContractType.SALE);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
-            e.printStackTrace();
+            throw new CantCloseContractException(e,
+                    "Closing Sale Contract",
+                    "Cannot get the Sale contract");
         } catch (CantInsertRecordException e) {
-            e.printStackTrace();
+            throw new CantCloseContractException(e,
+                    "Closing Sale Contract",
+                    "Cannot insert the contract record in database");
+        } catch (ObjectNotSetException e) {
+            throw new CantCloseContractException(e,
+                    "Closing Sale Contract",
+                    "The contract hash/Id is null");
         }
     }
 
@@ -83,6 +94,7 @@ public class CloseContractTransactionManager implements CloseContractManager {
                         this.transactionTransmissionManager,
                         this.closeContractBusinessTransactionDao);*/
         try {
+            ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
             CustomerBrokerContractPurchase customerBrokerContractPurchase=
                     this.customerBrokerContractPurchaseManager.
                             getCustomerBrokerContractPurchaseForContractId(contractHash);
@@ -98,15 +110,32 @@ public class CloseContractTransactionManager implements CloseContractManager {
             }
 
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
-            e.printStackTrace();
+            throw new CantCloseContractException(e,
+                    "Closing Purchase Contract",
+                    "Cannot get the Purchase contract");
         } catch (CantInsertRecordException e) {
-            e.printStackTrace();
+            throw new CantCloseContractException(e,
+                    "Closing Purchase Contract",
+                    "Cannot insert the contract record in database");
+        } catch (ObjectNotSetException e) {
+            throw new CantCloseContractException(e,
+                    "Closing Purchase Contract",
+                    "The contract hash/Id is null");
         }
 
     }
 
     @Override
-    public ContractTransactionStatus getCloseContractStatus(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        return null;
+    public ContractTransactionStatus getCloseContractStatus(
+            String contractHash) throws
+            UnexpectedResultReturnedFromDatabaseException {
+        try{
+            ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
+            return this.closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
+        } catch (ObjectNotSetException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting the contract transaction status",
+                    "The contract hash/Id is null");
+        }
     }
 }

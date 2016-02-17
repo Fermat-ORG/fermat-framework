@@ -1,17 +1,29 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.home;
 
-
+import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
@@ -19,12 +31,20 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MarketRateStatisticsFragment extends AbstractFermatFragment {
+    private final String TAG = "MarketRateStatistics";
+
     private String buy, sell, currencyPair;
+    private IndexInfoSummary indexInfo;
+    private CryptoBrokerWalletSession session;
+    private Activity activity;
 
     public static MarketRateStatisticsFragment newInstance() {
         return new MarketRateStatisticsFragment();
@@ -50,36 +70,98 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         return rootView;
     }
 
-    private void configChart(View rootView) {
+    /**
+     * Get the data and load the chart with that
+     *
+     * @param rootView the Root view
+     */
+    private void configChart(final View rootView) {
+        final ProgressBar progressBar = (ProgressBar) rootView.findViewById(R.id.cbw_market_rate_line_chart_progress_bar);
+        final View noDataMsg = rootView.findViewById(R.id.cbw_market_rate_line_chart_no_data_msg);
         final LineChart mChart = (LineChart) rootView.findViewById(R.id.cbw_market_rate_line_chart);
 
-        mChart.setDescription("");
-        mChart.setData(getData(7, 100));
-        mChart.setDragEnabled(true);
-        mChart.setScaleEnabled(true);
-        mChart.setDrawGridBackground(false);
-        mChart.getLegend().setEnabled(false);
-        mChart.getXAxis().setEnabled(false);
-        mChart.getAxisRight().setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
 
-        YAxis yAxis = mChart.getAxisLeft();
-        yAxis.setDrawAxisLine(true);
-        yAxis.setStartAtZero(true);
-        yAxis.setDrawGridLines(true);
-        yAxis.setGridColor(Color.BLACK);
-        yAxis.setTextColor(Color.WHITE);
+        FermatWorker fermatWorker = new FermatWorker(activity) {
+            @Override
+            protected Object doInBackground() throws Exception {
+                CryptoBrokerWalletModuleManager moduleManager = session.getModuleManager();
+                CryptoBrokerWalletManager walletManager = moduleManager.getCryptoBrokerWallet(session.getAppPublicKey());
+                List<ExchangeRate> exchangeRates = new ArrayList<>();
+                exchangeRates.addAll(walletManager.getDailyExchangeRatesFromCurrentDate(indexInfo, 7));
 
-        mChart.invalidate();
+                return exchangeRates;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+                    List<ExchangeRate> exchangeRates = (List<ExchangeRate>) result[0];
+
+                    progressBar.setVisibility(View.GONE);
+
+                    if (exchangeRates.isEmpty()) {
+                        noDataMsg.setVisibility(View.VISIBLE);
+
+                    } else {
+                        mChart.setVisibility(View.VISIBLE);
+
+                        mChart.setDescription("");
+                        mChart.setData(getData(exchangeRates));
+                        mChart.setDragEnabled(true);
+                        mChart.setScaleEnabled(true);
+                        mChart.setDrawGridBackground(false);
+                        mChart.getLegend().setEnabled(false);
+                        mChart.getXAxis().setEnabled(false);
+                        mChart.getAxisRight().setEnabled(false);
+                        mChart.setAutoScaleMinMaxEnabled(true);
+
+                        YAxis yAxis = mChart.getAxisLeft();
+                        yAxis.setDrawAxisLine(true);
+                        yAxis.setStartAtZero(true);
+                        yAxis.setDrawGridLines(true);
+                        yAxis.setGridColor(Color.BLACK);
+                        yAxis.setTextColor(Color.WHITE);
+
+                        mChart.invalidate();
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                progressBar.setVisibility(View.GONE);
+                noDataMsg.setVisibility(View.VISIBLE);
+
+                ErrorManager errorManager = session.getErrorManager();
+                if (errorManager != null) {
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                } else {
+                    Log.e(TAG, ex.getMessage(), ex);
+                }
+            }
+        });
+
+        Executors.newSingleThreadExecutor().execute(fermatWorker);
     }
 
-    private LineData getData(int count, float range) {
-        ArrayList<Entry> entryList = new ArrayList<Entry>();
+    /**
+     * Get the LineData for the chart based on the ExchangeRate list
+     *
+     * @param exchangeRates the exchange rate list
+     * @return the ListData object
+     */
+    private LineData getData(List<ExchangeRate> exchangeRates) {
+        ArrayList<Entry> entryList = new ArrayList<>();
         ArrayList<String> xValues = new ArrayList<>();
 
-        for (int i = 0; i < count; i++) {
-            float multiplier = range / 2f;
-            float val = (float) (Math.random() * multiplier) + 50;
-            entryList.add(new Entry(val, i));
+        final int size = exchangeRates.size();
+        for (int i = 0; i < size; i++) {
+            ExchangeRate exchangeRate = exchangeRates.get(i);
+            entryList.add(new Entry((float) exchangeRate.getSalePrice(), i));
             xValues.add(String.valueOf(i));
         }
 
@@ -92,7 +174,17 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         return new LineData(xValues, dataSet);
     }
 
-    public void bind(IndexInfoSummary indexInfo) {
+    /**
+     * Set the necessary data to the fragment
+     *
+     * @param indexInfo info for the chart
+     * @param session   the app session
+     */
+    public void bind(IndexInfoSummary indexInfo, CryptoBrokerWalletSession session, Activity activity) {
+        this.indexInfo = indexInfo;
+        this.session = session;
+        this.activity = activity;
+
         sell = indexInfo.getSalePriceAndCurrency();
         currencyPair = indexInfo.getCurrencyAndReferenceCurrency();
         buy = indexInfo.getPurchasePriceAndCurrency();

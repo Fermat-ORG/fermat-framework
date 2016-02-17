@@ -12,9 +12,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.google.gson.Gson;
 
 import java.io.Serializable;
-import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -64,6 +62,11 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     private Timestamp deliveryTimestamp;
 
     /**
+     * Represent the failCount
+     */
+    private int failCount = 0;
+
+    /**
      * Represent the status
      */
     private FermatMessagesStatus fermatMessagesStatus;
@@ -83,7 +86,8 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
      */
     public FermatMessageCommunication() {
        super();
-        this.id = UUID.randomUUID();
+       this.id = UUID.randomUUID();
+       this.failCount = new Integer(0);
     }
 
     /**
@@ -109,6 +113,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
         this.sender = sender;
         this.shippingTimestamp = shippingTimestamp;
         this.signature = signature;
+        this.failCount = new Integer(0);
     }
 
     /**
@@ -249,6 +254,22 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
 
     /**
      * (no-javadoc)
+     * @see FermatMessage#getFailCount()
+     */
+    public int getFailCount() {
+        return failCount;
+    }
+
+    /**
+     * Set the failCount
+     * @param failCount
+     */
+    public void setFailCount(Integer failCount) {
+        this.failCount = failCount;
+    }
+
+    /**
+     * (no-javadoc)
      * @see FermatMessage#getSignature()
      */
     @Override
@@ -295,15 +316,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
         if (this == o) return true;
         if (!(o instanceof FermatMessageCommunication)) return false;
         FermatMessageCommunication that = (FermatMessageCommunication) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getSender(), that.getSender()) &&
-                Objects.equals(getReceiver(), that.getReceiver()) &&
-                Objects.equals(getContent(), that.getContent()) &&
-                Objects.equals(getShippingTimestamp(), that.getShippingTimestamp()) &&
-                Objects.equals(getDeliveryTimestamp(), that.getDeliveryTimestamp()) &&
-                Objects.equals(getFermatMessagesStatus(), that.getFermatMessagesStatus()) &&
-                Objects.equals(getSignature(), that.getSignature()) &&
-                Objects.equals(getFermatMessageContentType(), that.getFermatMessageContentType());
+        return Objects.equals(getId(), that.getId());
     }
 
     /**
@@ -330,6 +343,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
                 ", deliveryTimestamp=" + deliveryTimestamp +
                 ", fermatMessagesStatus=" + fermatMessagesStatus +
                 ", signature='" + signature + '\'' +
+                ", failCount='" + failCount + '\'' +
                 ", fermatMessageContentType=" + fermatMessageContentType +
                 '}';
     }

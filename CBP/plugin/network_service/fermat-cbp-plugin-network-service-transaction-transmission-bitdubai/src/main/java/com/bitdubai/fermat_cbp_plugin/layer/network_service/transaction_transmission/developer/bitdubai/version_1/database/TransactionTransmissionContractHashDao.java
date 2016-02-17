@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -30,12 +31,14 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.BusinessTransactionMetadataRecord;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/11/15.
+ * Updated by Gabriel Araujo (gabe_512@hotmail.com) on 10/02/16.
  */
 public class TransactionTransmissionContractHashDao {
 
@@ -138,8 +141,11 @@ public class TransactionTransmissionContractHashDao {
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME, businessTransactionMetadata.getReceiverId());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME, businessTransactionMetadata.getReceiverType().getCode());
         record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME, businessTransactionMetadata.getNegotiationId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME , businessTransactionMetadata.getType().getCode());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME, businessTransactionMetadata.getType().getCode());
         record.setLongValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME, businessTransactionMetadata.getTimestamp());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME, businessTransactionMetadata.getState().getCode());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, Boolean.FALSE.toString());
+        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION, Boolean.FALSE.toString());
 
         return record;
     }
@@ -251,20 +257,35 @@ public class TransactionTransmissionContractHashDao {
         PlatformComponentType recordSenderType=PlatformComponentType.getByCode(senderType);
         BusinessTransactionTransactionType recordTransactionType=BusinessTransactionTransactionType.getByCode(type);
         TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.getByCode(state);
+        Plugins remoteBusinessTransaction;
+        String pluginCode=record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION);
+        if(pluginCode==null||pluginCode.isEmpty()){
+            //For now, I'll put transaction transmission
+            remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
+        }else{
+            try{
+                remoteBusinessTransaction=Plugins.getByCode(pluginCode);
+            } catch (InvalidParameterException exception){
+                //If the code is invalid, I''l set the Default.
+                remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
+            }
+        }
+
 
         return new BusinessTransactionMetadataRecord(
                 contractHash,
                 recordContractStatus,
-                receiverPublicKey,
-                recordReceiverType,
                 senderPublicKey,
+                recordReceiverType,
+                receiverPublicKey,
                 recordSenderType,
                 contractId,
                 negotiationId,
                 recordTransactionType,
                 timestamp,
                 transactionId,
-                transactionTransmissionStates
+                transactionTransmissionStates,
+                remoteBusinessTransaction
                 );
 
     }
@@ -309,8 +330,16 @@ public class TransactionTransmissionContractHashDao {
             DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
             DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord, businessTransactionMetadata);
+            DatabaseTableFilter filter = getDatabaseTable().getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(businessTransactionMetadata.getTransactionId().toString());
+            filter.setColumn(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_FIRST_KEY_COLUMN);
 
+            /*
+             * 2.- Create a new transaction and execute
+             */
             DatabaseTransaction transaction = getDataBase().newTransaction();
+            getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
             transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
             getDataBase().executeTransaction(transaction);
 
@@ -335,11 +364,81 @@ public class TransactionTransmissionContractHashDao {
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
      *
+     * @return List<FermatMessage>
+     * @throws CantReadRecordDataBaseException
+     */
+    public List<BusinessTransactionMetadata> findAllToSend() throws CantReadRecordDataBaseException {
+
+        Map<String, Object> filters = new HashMap<>();
+        filters.put(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME,
+                TransactionTransmissionStates.PRE_PROCESSING_SEND.getCode());
+        if (filters == null ||
+                filters.isEmpty()) {
+
+            throw new IllegalArgumentException("The filters are required, can not be null or empty");
+        }
+
+        List<BusinessTransactionMetadata> list = null;
+        List<DatabaseTableFilter> filtersTable = new ArrayList<>();
+
+        try {
+            DatabaseTable templateTable = getDatabaseTable();
+
+            for (String key : filters.keySet()) {
+
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.EQUAL);
+                newFilter.setColumn(key);
+                newFilter.setValue((String) filters.get(key));
+
+                filtersTable.add(newFilter);
+            }
+
+            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            templateTable.loadToMemory();
+            List<DatabaseTableRecord> records = templateTable.getRecords();
+
+            list = new ArrayList<>();
+            list.clear();
+
+            for (DatabaseTableRecord record : records) {
+
+
+                BusinessTransactionMetadata outgoingTemplateNetworkServiceMessage = buildBusinessTransactionRecord(record);
+
+                list.add(outgoingTemplateNetworkServiceMessage);
+
+            }
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+        } catch (InvalidParameterException e) {
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, e, "", "invalid parameter");
+            throw cantReadRecordDataBaseException;
+        } catch (Exception e){
+
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        }
+
+        return list;
+    }
+
+    /**
+     * Method that list the all entities on the data base. The valid value of
+     * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
+     *
      * @param filters
      * @return List<FermatMessage>
      * @throws CantReadRecordDataBaseException
      */
-    public List<BusinessTransactionMetadata> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
+    public List<BusinessTransactionMetadata> findAllToReceive(Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()) {

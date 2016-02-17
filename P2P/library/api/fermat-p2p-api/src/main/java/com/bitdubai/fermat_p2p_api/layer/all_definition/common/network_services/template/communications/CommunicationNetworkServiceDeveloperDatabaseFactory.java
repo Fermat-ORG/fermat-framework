@@ -22,7 +22,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +36,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-
+@Deprecated
 public class CommunicationNetworkServiceDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**

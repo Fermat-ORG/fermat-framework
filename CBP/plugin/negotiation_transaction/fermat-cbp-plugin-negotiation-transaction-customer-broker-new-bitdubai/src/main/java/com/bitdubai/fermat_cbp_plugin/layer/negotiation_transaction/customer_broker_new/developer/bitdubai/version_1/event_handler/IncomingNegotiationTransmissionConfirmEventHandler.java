@@ -14,10 +14,10 @@ public class IncomingNegotiationTransmissionConfirmEventHandler extends Abstract
 
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if(this.CustomerBrokerNewServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
+        if(this.customerBrokerNewServiceEventHandler.getStatus()== ServiceStatus.STARTED) {
 
             try {
-                this.CustomerBrokerNewServiceEventHandler.incomingNegotiationTransactionConfirmEventHandler((IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent);
+                this.customerBrokerNewServiceEventHandler.incomingNegotiationTransactionConfirmEventHandler((IncomingNegotiationTransmissionConfirmNegotiationEvent) fermatEvent);
             } catch(CantSaveEventException exception){
                 throw new CantSaveEventException(exception,"Handling the IncomingNegotiationTransmissionConfirmEventHandler", "Check the cause");
             } catch(ClassCastException exception){

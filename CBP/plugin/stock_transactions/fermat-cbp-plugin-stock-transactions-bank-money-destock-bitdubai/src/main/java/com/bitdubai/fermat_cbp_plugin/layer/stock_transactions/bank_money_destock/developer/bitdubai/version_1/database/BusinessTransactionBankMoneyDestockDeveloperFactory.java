@@ -132,14 +132,15 @@ import java.util.UUID;
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_FIAT_CURRENCY_COLUMN_NAME);
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME);
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_BNK_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_BANK_ACCOUNT_COLUMN_NAME);
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_CONCEPT_COLUMN_NAME);
-        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_MEMO_COLUMN_NAME);
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_AMOUNT_COLUMN_NAME);
+        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_BANK_ACCOUNT_COLUMN_NAME);
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TIMESTAMP_COLUMN_NAME);
+        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_MEMO_COLUMN_NAME);
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME);
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME);
         projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME);
+        projectColumns.add(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
 
         DeveloperDatabaseTable bankMoneyRestockTable = developerObjectFactory.getNewDeveloperDatabaseTable(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TABLE_NAME, projectColumns);
         tables.add(bankMoneyRestockTable);

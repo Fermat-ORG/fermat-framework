@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ccw_negotiation_details_background"
+    android:orientation="vertical"
+    android:weightSum="1">
+
+    <!--<RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="95dp"
+        android:background="@drawable/ccw_negotiation_details_gradient_colors"
+        android:paddingBottom="8dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:visibility="visible">-->
+
+
+        <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+            <!--android:id="@+id/ccw_buying_exchange_rate"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="#fff"-->
+            <!--android:textSize="24sp"-->
+            <!--tools:text="Negotiation Note"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_centerHorizontal="true" />-->
+
+        <!--<TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Negotiation Note"
+            android:id="@+id/textView"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:typeface="sans" />
+    </RelativeLayout>-->
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.95"
+            android:background="#E7E7E7">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="137dp"
+                android:inputType="textMultiLine"
+                android:ems="10"
+                android:id="@+id/ccw_open_negotiation_text_note"
+                android:textSize="18dp"
+                android:textColor="#5F5F5F"
+                android:hint="Insert Note"
+                android:textColorHint="#8f8f8f"
+                android:textIsSelectable="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:layout_weight="0.07"
+            android:weightSum="1">
+
+            <Button
+                android:layout_width="192dp"
+                android:layout_height="match_parent"
+                android:text="Cancel"
+                android:id="@+id/ccw_open_negotiation_cancel_note"
+                android:background="#E7E7E7"
+                android:textColor="#5F5F5F"
+                android:textSize="20dp"
+                android:textStyle="normal"
+                android:typeface="sans" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Ok"
+                android:id="@+id/ccw_open_negotiation_save_note"
+                android:background="#E7E7E7"
+                android:textColor="#5F5F5F"
+                android:textSize="20dp"
+                android:textStyle="normal"
+                android:typeface="sans" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

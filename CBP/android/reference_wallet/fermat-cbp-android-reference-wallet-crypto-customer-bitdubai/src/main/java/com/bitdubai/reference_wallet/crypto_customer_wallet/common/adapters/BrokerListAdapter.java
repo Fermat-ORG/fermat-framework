@@ -28,7 +28,7 @@ public class BrokerListAdapter extends FermatAdapter<BrokerIdentityBusinessInfo,
 
     @Override
     protected BrokerListViewHolder createHolder(View itemView, int type) {
-        return new BrokerListViewHolder(itemView, walletManager);
+        return new BrokerListViewHolder(itemView);
     }
 
     @Override

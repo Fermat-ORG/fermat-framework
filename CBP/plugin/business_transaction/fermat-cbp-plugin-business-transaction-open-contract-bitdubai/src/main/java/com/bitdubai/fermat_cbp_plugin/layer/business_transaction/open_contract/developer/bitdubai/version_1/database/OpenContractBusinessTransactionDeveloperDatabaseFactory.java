@@ -59,7 +59,7 @@ public class OpenContractBusinessTransactionDeveloperDatabaseFactory implements 
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, OpenContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
              /*
               * The database exists but cannot be open. I can not handle this situation.
@@ -89,7 +89,7 @@ public class OpenContractBusinessTransactionDeveloperDatabaseFactory implements 
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Open Contract", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(OpenContractBusinessTransactionDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {

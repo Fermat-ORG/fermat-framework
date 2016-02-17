@@ -8,19 +8,17 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Observable;
@@ -41,6 +39,7 @@ import java.util.Observer;
  */
 public class CommunicationNetworkServiceLocal implements Observer, NetworkServiceLocal {
 
+    private final NetworkService networkServicePluginRoot;
     /**
      * Represent the profile of the remote network service
      */
@@ -81,12 +80,14 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile,
                                             ErrorManager errorManager, EventManager eventManager,
                                             OutgoingMessageDao outgoingMessageDao,
-                                            NetworkServiceType networkServiceTypePluginRoot) {
+                                            NetworkServiceType networkServiceTypePluginRoot,
+                                            NetworkService networkService) {
         this.remoteNetworkServiceProfile = remoteNetworkServiceProfile;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.outgoingMessageDao = outgoingMessageDao;
         this.networkServiceTypePluginRoot = networkServiceTypePluginRoot;
+        this.networkServicePluginRoot = networkService;
     }
 
 
@@ -134,16 +135,16 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
          * set the last message received
          */
         this.lastMessageReceived = incomingMessage;
-
         /**
          * Put the message on a event and fire new event
          */
-        FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
-        fermatEvent.setSource(com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraActorNetworkServicePluginRoot.EVENT_SOURCE);
-        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
-        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setNetworkServiceTypeApplicant(networkServiceTypePluginRoot);
-        eventManager.raiseEvent(fermatEvent);
-
+        //FermatEvent fermatEvent = eventManager.getNewEvent(P2pEventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION);
+        //TODO: no source
+//        fermatEvent.setSource();
+//        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setData(incomingMessage);
+//        ((NewNetworkServiceMessageReceivedNotificationEvent) fermatEvent).setNetworkServiceTypeApplicant(networkServiceTypePluginRoot);
+//        eventManager.raiseEvent(fermatEvent);
+        networkServicePluginRoot.handleNewMessages(incomingMessage);
     }
 
     /**

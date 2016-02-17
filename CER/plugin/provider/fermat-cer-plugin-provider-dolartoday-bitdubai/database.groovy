@@ -1,6 +1,6 @@
 String developerName = "Alejandro Bicelis"
 String developerMail = "abicelis@gmail.com"
-String pluginName = "Dolartoday"
+String pluginName = "DolarToday"
 String layerName = "Provider"
 String packageRoot = "com.bitdubai.fermat_cer_plugin"
 String jdkVersion = "1.7"
@@ -9,6 +9,15 @@ String jdkVersion = "1.7"
 List databaseTables = []
 // Los tipos de datos son valores del enum DatabaseDataType, esta en el fermat-api
 // Table Definition Example
+databaseTables << [
+        name: "Provider Info",
+        columns: [
+                ["ID", "STRING", "100", "true"],
+                ["Name", "STRING", "100", "false"]
+        ],
+        firstKey:"ID"
+]
+
 databaseTables << [
         name: "Query History",
         columns: [

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -25,22 +26,24 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CryptoMoneyDeStockRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantupdateCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantupdateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
@@ -151,7 +154,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                     exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
@@ -310,7 +313,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             cryptoMoneyDeStockRecord.getAmount(),
                             cryptoMoneyDeStockRecord.getMemo(),
                             cryptoMoneyDeStockRecord.getPriceReference(),
-                            cryptoMoneyDeStockRecord.getOriginTransaction());
+                            cryptoMoneyDeStockRecord.getOriginTransaction(),
+                            pendingToDeStockTransaction.getContractHash());
                     pendingToDeStockTransaction.setContractTransactionStatus(
                             ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE);
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
@@ -324,9 +328,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                         getPendingToSubmitCryptoList();
                 for(String pendingContractHash : pendingToSubmitCrypto){
                     businessTransactionRecord =brokerSubmitOnlineMerchandiseBusinessTransactionDao.
-                            getBussinesTransactionRecord(pendingContractHash);
+                            getBusinessTransactionRecord(pendingContractHash);
                     outgoingCryptoTransactionId=intraActorCryptoTransactionManager.sendCrypto(
-                            businessTransactionRecord.getCryptoWalletPublicKey(),
+                            businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
@@ -334,7 +338,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             businessTransactionRecord.getCustomerPublicKey(),
                             Actors.CBP_CRYPTO_BROKER,
                             Actors.CBP_CRYPTO_CUSTOMER,
-                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                            BlockchainNetworkType.getDefaultBlockchainNetworkType()
                     );
                     //Updating the business transaction record
                     businessTransactionRecord.setTransactionId(
@@ -354,12 +359,13 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                         brokerSubmitOnlineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
+                    transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED
+                            ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED,
+                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE
                     );
                     //Updating the business transaction record
                     pendingToSubmitNotificationRecord.setContractTransactionStatus(
@@ -375,12 +381,13 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                         brokerSubmitOnlineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotificationToCryptoBroker(
+                    transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT
+                            ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT,
+                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE
                     );
                     //Updating the business transaction record
                     pendingToSubmitConfirmationRecord.setContractTransactionStatus(
@@ -490,11 +497,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
         }
 
         private void raisePaymentConfirmationEvent(String contractHash){
-            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.CUSTOMER_ONLINE_PAYMENT_CONFIRMED);
+            FermatEvent fermatEvent = eventManager.getNewEvent(EventType.BROKER_SUBMIT_MERCHANDISE_CONFIRMED);
             BrokerSubmitMerchandiseConfirmed brokerSubmitMerchandiseConfirmed = (BrokerSubmitMerchandiseConfirmed) fermatEvent;
             brokerSubmitMerchandiseConfirmed.setSource(EventSource.BROKER_SUBMIT_ONLINE_MERCHANDISE);
             brokerSubmitMerchandiseConfirmed.setContractHash(contractHash);
-            brokerSubmitMerchandiseConfirmed.setMerchandiseType(PaymentType.CRYPTO_MONEY);
+            brokerSubmitMerchandiseConfirmed.setMerchandiseType(MoneyType.CRYPTO);
             eventManager.raiseEvent(brokerSubmitMerchandiseConfirmed);
         }
 
@@ -565,9 +572,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             CustomerBrokerContractPurchase customerBrokerContractPurchase=
                                     customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(
                                             contractHash);
+                            //If the contract is null, I cannot handle with this situation
+                            ObjectChecker.checkArgument(customerBrokerContractPurchase);
                             brokerSubmitOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                                     customerBrokerContractPurchase);
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
+                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                     contractHash,
                                     ContractStatus.MERCHANDISE_SUBMIT);
                             raisePaymentConfirmationEvent(contractHash);
@@ -588,11 +597,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                         if(brokerSubmitOnlineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)){
                             businessTransactionRecord =
                                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.
-                                            getBussinesTransactionRecord(contractHash);
+                                            getBusinessTransactionRecord(contractHash);
                             contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
                             if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode())){
                                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
-                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
+                                customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                         contractHash,
                                         ContractStatus.PAYMENT_SUBMIT);
                                 raisePaymentConfirmationEvent(contractHash);
@@ -603,20 +612,46 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
                 //TODO: look a better way to deal with this exceptions
-            } catch (CantDeliverPendingTransactionsException e) {
-                e.printStackTrace();
-            } catch (CantInsertRecordException e) {
-                e.printStackTrace();
-            } catch (CantupdateCustomerBrokerContractPurchaseException e) {
-                e.printStackTrace();
-            } catch (CantupdateCustomerBrokerContractSaleException e) {
-                e.printStackTrace();
-            } catch (CantConfirmTransactionException e) {
-                e.printStackTrace();
-            } catch (CantUpdateRecordException e) {
-                e.printStackTrace();
-            } catch (CantGetListCustomerBrokerContractPurchaseException e) {
-                e.printStackTrace();
+            } catch (CantUpdateRecordException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the database");
+            } catch (CantConfirmTransactionException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot confirm the transaction");
+            } catch (CantUpdateCustomerBrokerContractSaleException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the contract sale status");
+            } catch (CantDeliverPendingTransactionsException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot get the pending transactions from transaction transmission plugin");
+            } catch (CantInsertRecordException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot insert a record in database");
+            } catch (CantGetListCustomerBrokerContractPurchaseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot get the purchase contract");
+            } catch (CantUpdateCustomerBrokerContractPurchaseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the contract purchase status");
+            } catch (ObjectNotSetException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "The customerBrokerContractPurchase is null");
             }
 
         }

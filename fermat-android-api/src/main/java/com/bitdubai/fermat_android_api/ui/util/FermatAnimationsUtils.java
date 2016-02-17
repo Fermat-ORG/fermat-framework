@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_android_api.ui.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -12,7 +13,7 @@ import android.view.animation.AnimationUtils;
  */
 public class FermatAnimationsUtils {
 
-    public static void showEmpty(Activity activity,boolean show, View emptyView) {
+    public static void showEmpty(Context activity,boolean show, View emptyView) {
         if(emptyView!=null) {
             Animation anim = AnimationUtils.loadAnimation(activity,
                     show ? android.R.anim.fade_in : android.R.anim.fade_out);

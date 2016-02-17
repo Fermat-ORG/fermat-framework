@@ -14,8 +14,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Map;
@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public abstract class AbstractCommunicationNetworkServiceConnectionManager<NS extends AbstractNetworkService> implements NetworkServiceConnectionManager {
 
     private final CommunicationsClientConnection communicationsClientConnection;
@@ -155,6 +156,33 @@ public abstract class AbstractCommunicationNetworkServiceConnectionManager<NS ex
 
         communicationNetworkServiceRemoteAgentsCache.clear();
         communicationNetworkServiceLocalsCache.clear();
+    }
+
+    /*
+  * Stop the internal threads of the CommunicationNetworkServiceRemoteAgent
+  */
+    @Override
+    public void stop() {
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //stop his threads
+            communicationNetworkServiceRemoteAgentsCache.get(key).stop();
+
+        }
+    }
+
+    /*
+     * restart the internal threads of the CommunicationNetworkServiceRemoteAgent
+     */
+    @Override
+    public void restart() {
+
+        for (String key : communicationNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //Restart threads
+            communicationNetworkServiceRemoteAgentsCache.get(key).start();
+
+        }
     }
 
     /**

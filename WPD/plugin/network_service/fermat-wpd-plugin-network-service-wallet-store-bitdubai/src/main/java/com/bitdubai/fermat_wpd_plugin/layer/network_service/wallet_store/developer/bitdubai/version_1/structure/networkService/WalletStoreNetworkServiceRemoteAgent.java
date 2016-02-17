@@ -3,19 +3,19 @@ package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.develo
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantSendMessageException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.networkService.database.IncomingMessageDAO;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.networkService.database.OutgoingMessageDAO;
 import com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.networkService.database.WalletStoreNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantSendMessageException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 import java.util.Observable;
@@ -223,13 +223,13 @@ public class WalletStoreNetworkServiceRemoteAgent extends Observable {
 
             //Sleep for a time
             if (!toReceive.isInterrupted()) {
-                toReceive.sleep(WalletStoreNetworkServiceRemoteAgent.SLEEP_TIME);
+                Thread.sleep(WalletStoreNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
+            running = false;
             toReceive.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
-            return;
         } catch (CantInsertRecordDataBaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
         }
@@ -292,15 +292,17 @@ public class WalletStoreNetworkServiceRemoteAgent extends Observable {
 
             }
 
-            if(!toSend.isInterrupted()){
+            if (!toSend.isInterrupted()) {
                 //Sleep for a time
                 Thread.sleep(WalletStoreNetworkServiceRemoteAgent.SLEEP_TIME);
             }
 
         } catch (InterruptedException e) {
+            running = false;
             toSend.interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
-            return;        }
+            return;
+        }
 
     }
 }

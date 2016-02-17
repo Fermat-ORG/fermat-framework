@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.*;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,13 +17,14 @@ public class DigitalAsset {
 
     private String name;
     private String amount;
+    private Long availableBalanceQuantity;
+    private Long bookBalanceQuantity;
     private Long availableBalance;
-    private Long bookBalance;
-    private Double bitcoinAmount;
-    private Date expDate;
+    private Timestamp expDate;
     private String walletPublicKey;
     private String assetPublicKey;
     private ActorAssetUser actorAssetUser;
+    private byte[] image;
 
     public DigitalAsset() {
     }
@@ -39,6 +42,7 @@ public class DigitalAsset {
         assets.add(new DigitalAsset("Free Coupon", "150.457"));
         return (ArrayList<DigitalAsset>) assets;
     }
+
 
     public String getAmount() {
         return amount;
@@ -84,28 +88,36 @@ public class DigitalAsset {
         this.actorAssetUser = actorAssetUser;
     }
 
-    public Long getAvailableBalance() {
-        return availableBalance;
+    public Long getAvailableBalanceQuantity() {
+        return availableBalanceQuantity;
+    }
+
+    public void setAvailableBalanceQuantity(Long availableBalanceQuantity) {
+        this.availableBalanceQuantity = availableBalanceQuantity;
+    }
+
+    public Long getBookBalanceQuantity() {
+        return bookBalanceQuantity;
+    }
+
+    public void setBookBalanceQuantity(Long bookBalanceQuantity) {
+        this.bookBalanceQuantity = bookBalanceQuantity;
     }
 
     public void setAvailableBalance(Long availableBalance) {
         this.availableBalance = availableBalance;
     }
 
-    public Long getBookBalance() {
-        return bookBalance;
+    public Long getAvailableBalance() {
+        return availableBalance;
     }
 
-    public void setBookBalance(Long bookBalance) {
-        this.bookBalance = bookBalance;
+    public Double getAvailableBalanceBitcoin() {
+        return BitcoinConverter.convert(Double.valueOf(availableBalance), SATOSHI, BITCOIN);
     }
 
-    public Double getBitcoinAmount() {
-        return bitcoinAmount;
-    }
-
-    public void setBitcoinAmount(Double bitcoinAmount) {
-        this.bitcoinAmount = bitcoinAmount;
+    public String getFormattedAvailableBalanceBitcoin() {
+        return DAPStandardFormats.BITCOIN_FORMAT.format(getAvailableBalanceBitcoin());
     }
 
     public Date getExpDate() {
@@ -113,11 +125,19 @@ public class DigitalAsset {
     }
 
     public String getFormattedExpDate() {
-        DateFormat df = new SimpleDateFormat("dd MMM yyyy");
-        return df.format(expDate);
+        if (expDate == null) return "No expiration date";
+        return DAPStandardFormats.DATE_FORMAT.format(expDate);
     }
 
-    public void setExpDate(Date expDate) {
+    public void setExpDate(Timestamp expDate) {
         this.expDate = expDate;
+    }
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

@@ -35,6 +35,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCrea
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDao;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.database.IntraWalletUserIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.identity.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeIntraWalletUserIdentityDatabaseException;
@@ -227,7 +228,8 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage) throws CantUpdateIdentityException {
             try {
                 intraWalletUserIdentityDao.updateIdentity(identityPublicKey,identityAlias,phrase,profileImage);
-                registerIdentities();
+                updateIdentity(identityPublicKey,identityAlias,phrase,profileImage);
+
             }
             catch(CantUpdateIntraUserIdentityException e)
             {
@@ -237,6 +239,10 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             {
                 throw new CantUpdateIdentityException("CAN'T UPDATE INTRA USER IDENTITY", FermatException.wrapException(e), "", "");
             }
+    }
+
+    private void updateIdentity(String publicKey,String alias,String phrase,byte[] img){
+        intraActorManager.updateActor(intraActorManager.contructIdentity(publicKey,alias,phrase,Actors.INTRA_USER,img));
     }
 
     @Override
@@ -266,13 +272,9 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
             this.intraWalletUserIdentityDao = new IntraWalletUserIdentityDao(pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
             this.intraWalletUserIdentityDao.initializeDatabase();
 
-        } catch (CantInitializeIntraWalletUserIdentityDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY);
-        }
-
-        try {
+            // Register identities
             registerIdentities();
+
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_INTRA_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
@@ -365,6 +367,7 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         }
     }
 
+
     @Override
     public SettingsManager<FermatSettings> getSettingsManager() {
         return null;
@@ -373,5 +376,20 @@ public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         return null;
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
     }
 }

@@ -20,12 +20,10 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubNotAuthorizedException;
 import com.bitdubai.fermat_api.layer.all_definition.github.exceptions.GitHubRepositoryNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetImageResourceException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetLanguageFileException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.exceptions.CantGetSkinFileException;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkService;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -34,7 +32,6 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.In
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenOrientation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -47,11 +44,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletUninstalledEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.exceptions.CantGetWalletNavigationStructureException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesInstalationException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.WalletResourcesUnninstallException;
@@ -222,6 +223,23 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             //  eventManager.addListener(fermatEventListener);
             //  listenersAdded.add(fermatEventListener);
 
+              /*
+         * Listen and handle Client Connection Loose Notification Event
+         */
+//            fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+//            fermatEventListener.setEventHandler(new ClientConnectionLooseNotificationEventHandler(this));
+//            eventManager.addListener(fermatEventListener);
+//            listenersAdded.add(fermatEventListener);
+
+
+        /*
+         * Listen and handle Client Connection Success Reconnect Notification Event
+         */
+//            fermatEventListener = eventManager.getNewListener(P2pEventType.CLIENT_SUCCESS_RECONNECT);
+//            fermatEventListener.setEventHandler(new ClientSuccessfulReconnectNotificationEventHandler(this));
+//            eventManager.addListener(fermatEventListener);
+//            listenersAdded.add(fermatEventListener);
+
             /**
              *  Create repository in database
              */
@@ -363,6 +381,32 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
     }
 
+    /*
+    * Handles the events ClientConnectionLooseNotificationEvent
+    */
+    @Override
+    public void handleClientConnectionLooseNotificationEvent(FermatEvent fermatEvent) {
+
+//        if(communicationNetworkServiceConnectionManager != null)
+//            communicationNetworkServiceConnectionManager.stop();
+
+    }
+
+    /*
+     * Handles the events ClientSuccessfullReconnectNotificationEvent
+     */
+    @Override
+    public void handleClientSuccessfullReconnectNotificationEvent(FermatEvent fermatEvent) {
+
+//        if(communicationNetworkServiceConnectionManager != null)
+//            communicationNetworkServiceConnectionManager.restart();
+
+//        if(!this.register){
+//           communicationRegistrationProcessNetworkServiceAgent.start();
+//        }
+
+    }
+
     @Override
     public boolean isRegister() {
         return false;
@@ -396,6 +440,16 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     @Override
     public String getExtraData() {
         return null;
+    }
+
+    @Override
+    public void handleNewMessages(FermatMessage incomingMessage) {
+        //TODO: implementar el handle new messages
+    }
+
+    @Override
+    public void handleNewSentMessageNotificationEvent(FermatMessage message) {
+
     }
 
     /**

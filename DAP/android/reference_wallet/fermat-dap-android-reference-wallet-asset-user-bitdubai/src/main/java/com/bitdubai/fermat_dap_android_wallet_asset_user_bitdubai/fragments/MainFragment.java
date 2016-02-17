@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments;
 
 import android.app.ProgressDialog;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -23,7 +25,9 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.Asset
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +45,7 @@ public class MainFragment extends AbstractFermatFragment
     private List<AssetUserWalletList> assetUserWalletList;
     private List<DigitalAsset> bookAssets;
     private DigitalAsset asset;
+    private ImageView assetImageDetail;
 
 
     /**
@@ -74,14 +79,14 @@ public class MainFragment extends AbstractFermatFragment
             protected Object doInBackground() throws Exception {
                 if (manager == null)
                     throw new NullPointerException("AssetUserWalletModuleManager is null");
-                assetUserWalletList = manager.getAssetUserWalletBalances("walletPublicKeyTest");
+                assetUserWalletList = manager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
                 if (assetUserWalletList != null && !assetUserWalletList.isEmpty()) {
                     bookAssets = new ArrayList<>();
                     for (AssetUserWalletList assetUserWallet : assetUserWalletList) {
-                        DigitalAsset asset = new DigitalAsset(assetUserWallet.getName(),
+                        DigitalAsset asset = new DigitalAsset(assetUserWallet.getDigitalAsset().getName(),
                                 String.valueOf(String.format("BookBalance: %d - AvailableBalance: %d",
                                         assetUserWallet.getQuantityBookBalance(), assetUserWallet.getQuantityAvailableBalance())));
-                        asset.setAssetPublicKey(assetUserWallet.getAssetPublicKey());
+                        asset.setAssetPublicKey(assetUserWallet.getDigitalAsset().getPublicKey());
                         asset.setWalletPublicKey("public_key");
                         bookAssets.add(asset);
                     }
@@ -118,6 +123,15 @@ public class MainFragment extends AbstractFermatFragment
         rootView = inflater.inflate(R.layout.dap_wallet_asset_user_main_fragment, container, false);
         assetsView = (RecyclerView) rootView.findViewById(R.id.assets);
         assetsView.setHasFixedSize(true);
+        assetImageDetail = (ImageView) rootView.findViewById(R.id.asset_image);
+
+        if (asset.getImage() != null) {
+            assetImageDetail.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(asset.getImage())));
+        } else {
+            assetImageDetail.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
+        }
+
+
         layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         assetsView.setLayoutManager(layoutManager);
         adapter = new DigitalAssetAdapter(getActivity());
@@ -146,6 +160,7 @@ public class MainFragment extends AbstractFermatFragment
             FermatWorker task = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
+                    //TODO GET THE AMOUNT TO APPROPRIATE.
                     manager.appropriateAsset(asset.getAssetPublicKey(), null);
                     return true;
                 }
@@ -156,7 +171,7 @@ public class MainFragment extends AbstractFermatFragment
                 public void onPostExecute(Object... result) {
                     dialog.dismiss();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), "Everything ok (appropriate)...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -164,7 +179,7 @@ public class MainFragment extends AbstractFermatFragment
                 public void onErrorOccurred(Exception ex) {
                     dialog.dismiss();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), "Fermat Has detected an exception",
+                        Toast.makeText(getActivity(), "Fermat Has detected an exception. Please retry again.",
                                 Toast.LENGTH_SHORT).show();
                 }
             });
@@ -178,7 +193,7 @@ public class MainFragment extends AbstractFermatFragment
             FermatWorker task = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    manager.redeemAssetToRedeemPoint(asset.getAssetPublicKey(), null);
+                    manager.redeemAssetToRedeemPoint(asset.getAssetPublicKey(), null, null, 1);
                     return true;
                 }
             };
@@ -188,7 +203,8 @@ public class MainFragment extends AbstractFermatFragment
                 public void onPostExecute(Object... result) {
                     dialog.dismiss();
                     if (getActivity() != null) {
-                        Toast.makeText(getActivity(), "Everything ok (redeem)...", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "Redemption of the asset has successfully started.\n\n " +
+                                "The process will take some minutes and if not accepted at the destination, it will be rollback.", Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -196,7 +212,7 @@ public class MainFragment extends AbstractFermatFragment
                 public void onErrorOccurred(Exception ex) {
                     dialog.dismiss();
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), "Fermat Has detected an exception",
+                        Toast.makeText(getActivity(), "Fermat Has detected an exception. Please retry again.",
                                 Toast.LENGTH_SHORT).show();
                 }
             });
@@ -204,6 +220,14 @@ public class MainFragment extends AbstractFermatFragment
             return true;
         }
         return false;
+    }
+
+
+    private void setupUI() {
+    }
+
+    private void setupUIData() {
+
     }
 
     public void setAsset(DigitalAsset asset) {

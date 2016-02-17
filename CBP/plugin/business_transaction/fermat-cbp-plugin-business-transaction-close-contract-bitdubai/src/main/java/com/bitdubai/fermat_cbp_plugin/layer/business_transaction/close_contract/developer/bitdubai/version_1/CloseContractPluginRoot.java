@@ -78,10 +78,10 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.TRANSACTION_TRANSMISSION)
     private TransactionTransmissionManager transactionTransmissionManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
     private CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
-    //TODO: Need reference to contract plugin
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_SALE)
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
     /**
@@ -169,25 +169,25 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
-                    "Starting open contract plugin",
+                    "Starting close contract plugin",
                     "Cannot initialize plugin database");
         } catch (CantInitializeCloseContractBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
-                    "Starting open contract plugin",
+                    "Starting close contract plugin",
                     "Unexpected Exception");
         } catch (CantStartServiceException exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
-                    "Starting open contract plugin",
+                    "Starting close contract plugin",
                     "Cannot start recorder service");
         } catch (CantSetObjectException exception) {
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
-                    "Starting open contract plugin",
+                    "Starting close contract plugin",
                     "Cannot set an object");
         } catch (CantStartAgentException exception) {
             throw new CantStartPluginException(

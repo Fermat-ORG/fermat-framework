@@ -2,7 +2,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -16,8 +15,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCreateCryptoBrokerWalletException;
@@ -26,15 +26,18 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetTransactionCryptoBrokerWalletMatchingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantCreateNewCryptoBrokerWalletException;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
@@ -48,65 +51,70 @@ import java.util.UUID;
  * Modified by Yordin Alayn 27.10.15
  * Modified by Franklin Marcano 30.11.2015
  */
-public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
+public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
 
 
     public static final String PATH_DIRECTORY = "cryptobrokerwallet-swap/";
     private static final String CRYPTO_BROKER_WALLET_FILE_NAME = "walletsIds";
     private Database database;
-    private Map<String, UUID> wallet= new HashMap<>();
+    private Map<String, UUID> wallet = new HashMap<>();
     private UUID pluginId;
     private ErrorManager errorManager;
     private PluginDatabaseSystem pluginDatabaseSystem;
     private PluginFileSystem pluginFileSystem;
     private CryptoBrokerWalletDatabaseDao cryptoBrokerWalletDatabaseDao;
+    private CurrencyExchangeProviderFilterManager providerFilter;
 
     /**
      * Constructor
      */
-    public CryptoBrokerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public CryptoBrokerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, CurrencyExchangeProviderFilterManager providerFilter) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.providerFilter = providerFilter;
     }
 
     /**
      * This method load the instance the StockBalance
+     *
      * @return StockBalance
-     * @exception CantGetStockCryptoBrokerWalletException
+     * @throws CantGetStockCryptoBrokerWalletException
      */
     @Override
     public StockBalance getStockBalance() throws CantGetStockCryptoBrokerWalletException {
-        return new StockBalanceImpl(database,pluginId, pluginFileSystem);
+        return new StockBalanceImpl(database, pluginId, pluginFileSystem);
     }
 
     /**
      * This method load the instance the CryptoBrokerWalletSetting
+     *
      * @return StockBalance
-     * @exception CantGetCryptoBrokerWalletSettingException
+     * @throws CantGetCryptoBrokerWalletSettingException
      */
     @Override
     public CryptoBrokerWalletSetting getCryptoWalletSetting() throws CantGetCryptoBrokerWalletSettingException {
-        return new CryptoBrokerWalletSettingImpl(database,pluginId, pluginFileSystem);
+        return new CryptoBrokerWalletSettingImpl(database, pluginId, pluginFileSystem);
     }
 
     /**
      * This method load the list CryptoBrokerStockTransaction
+     *
      * @param merchandise
-     * @param currencyType
+     * @param moneyType
      * @param transactionType
      * @param balanceType
      * @return List<CryptoBrokerStockTransaction>
-     * @exception CantGetCryptoBrokerStockTransactionException
+     * @throws CantGetCryptoBrokerStockTransactionException
      */
     @Override
-    public List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(FermatEnum merchandise, CurrencyType currencyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException {
+    public List<CryptoBrokerStockTransaction> getCryptoBrokerStockTransactionsByMerchandise(Currency merchandise, MoneyType moneyType, TransactionType transactionType, BalanceType balanceType) throws CantGetCryptoBrokerStockTransactionException {
 
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
-        return cryptoBrokerWalletDatabaseDao.getCryptoBrokerStockTransactionsByMerchandise(merchandise, currencyType, transactionType, balanceType);
+        return cryptoBrokerWalletDatabaseDao.getCryptoBrokerStockTransactionsByMerchandise(merchandise, moneyType, transactionType, balanceType);
     }
 
     /**
@@ -114,16 +122,16 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
      *
      * @param merchandise
      * @param fiatCurrency
-     * @param currencyType
+     * @param moneyType
      * @return FiatIndex
      * @throws CantGetCryptoBrokerMarketRateException
      */
     @Override
-    public FiatIndex getMarketRate(FermatEnum merchandise, FiatCurrency fiatCurrency, CurrencyType currencyType) throws CantGetCryptoBrokerMarketRateException {
+    public FiatIndex getMarketRate(Currency merchandise, FiatCurrency fiatCurrency, MoneyType moneyType) throws CantGetCryptoBrokerMarketRateException {
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
-        return cryptoBrokerWalletDatabaseDao.getMarketRate(merchandise, fiatCurrency, currencyType);
+        return cryptoBrokerWalletDatabaseDao.getMarketRate(merchandise, fiatCurrency, moneyType);
     }
 
     /**
@@ -136,13 +144,49 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
      * @throws CantGetCryptoBrokerQuoteException
      */
     @Override
-    public Quote getQuote(FermatEnum merchandise, float quantity, FiatCurrency payment) throws CantGetCryptoBrokerQuoteException {
+    public Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException {
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
-        return cryptoBrokerWalletDatabaseDao.getQuote(merchandise, quantity,payment);
+        cryptoBrokerWalletDatabaseDao.setProviderFilter(this.providerFilter);
+        return cryptoBrokerWalletDatabaseDao.getQuote(merchandise, quantity, payment);
     }
 
+    /**
+     * This method load the list CryptoBrokerStockTransaction
+     *
+     * @param transactionId
+     * @return void
+     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
+     */
+    @Override
+    public void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
+        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
+        cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
+        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
+        cryptoBrokerWalletDatabaseDao.markAsSeen(transactionId);
+    }
+
+    /**
+     * This method load the list CurrencyMatching
+     *
+     * @return CurrencyMatching
+     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
+     */
+    @Override
+    public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
+        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
+        cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
+        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
+        return cryptoBrokerWalletDatabaseDao.getCryptoBrokerTransactionCurrencyMatchings();
+    }
+
+    /**
+     * This method initializes the crypto broker wallet
+     *
+     * @param walletId
+     * @throws CryptoBrokerWalletNotFoundException
+     */
     public void initialize(UUID walletId) throws CryptoBrokerWalletNotFoundException {
         if (walletId == null)
             throw new CryptoBrokerWalletNotFoundException("InternalId is null", null, "Parameter walletId is null", "loadWallet didn't find the asociated id");
@@ -158,6 +202,13 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         }
     }
 
+    /**
+     * This method creates the crypto broker wallet
+     *
+     * @param walletId
+     * @return an UUID of the created wallet
+     * @throws CantCreateCryptoBrokerWalletException
+     */
     public UUID create(String walletId) throws CantCreateCryptoBrokerWalletException {
         try {
             // TODO: Until the Wallet MAnager create the wallets, we will use this internal id
@@ -176,8 +227,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         }
     }
 
-    private PluginTextFile  createWalletFile() throws CantCreateCryptoBrokerWalletException
-    {
+    private PluginTextFile createWalletFile() throws CantCreateCryptoBrokerWalletException {
         try {
             return pluginFileSystem.getTextFile(pluginId, "", CRYPTO_BROKER_WALLET_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         } catch (CantCreateFileException cantCreateFileException) {
@@ -187,8 +237,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         }
     }
 
-    private void loadWalletMap(final PluginTextFile loadWalletMap) throws CantCreateNewCryptoBrokerWalletException
-    {
+    private void loadWalletMap(final PluginTextFile loadWalletMap) throws CantCreateNewCryptoBrokerWalletException {
         try {
             loadWalletMap.loadFromMedia();
             String[] stringWallet = loadWalletMap.getContent().split(";", -1);
@@ -205,8 +254,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         }
     }
 
-    private void createWalletDatabase(final UUID internalWalletId) throws CantCreateNewCryptoBrokerWalletException
-    {
+    private void createWalletDatabase(final UUID internalWalletId) throws CantCreateNewCryptoBrokerWalletException {
         try {
             CryptoBrokerWalletDatabaseFactory databaseFactory = new CryptoBrokerWalletDatabaseFactory();
             databaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
@@ -216,8 +264,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet{
         }
     }
 
-    private void persistWallet(final PluginTextFile pluginTextFile) throws CantCreateNewCryptoBrokerWalletException
-    {
+    private void persistWallet(final PluginTextFile pluginTextFile) throws CantCreateNewCryptoBrokerWalletException {
         StringBuilder stringBuilder = new StringBuilder(wallet.size() * 72);
         Iterator iterator = wallet.entrySet().iterator();
 

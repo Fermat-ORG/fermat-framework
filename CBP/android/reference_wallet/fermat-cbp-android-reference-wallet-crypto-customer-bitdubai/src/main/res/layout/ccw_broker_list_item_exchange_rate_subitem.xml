@@ -8,7 +8,7 @@
     android:layout_marginLeft="8dp"
     android:layout_marginRight="8dp"
     android:layout_marginStart="8dp"
-    android:background="#518ffd"
+    android:background="#c4c4c4"
     android:orientation="vertical"
     android:paddingBottom="4dp"
     android:paddingEnd="8dp"
@@ -21,7 +21,7 @@
         android:id="@+id/ccw_broker_exchange_rate_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#FFF"
+        android:textColor="#121212"
         android:textSize="16sp"
         android:text="@string/ccw_broker_exchange_rate_for_selling_item"
         />

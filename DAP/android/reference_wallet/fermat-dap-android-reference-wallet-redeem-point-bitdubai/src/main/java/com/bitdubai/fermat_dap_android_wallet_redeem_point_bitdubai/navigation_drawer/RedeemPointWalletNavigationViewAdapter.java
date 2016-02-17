@@ -43,32 +43,20 @@ public class RedeemPointWalletNavigationViewAdapter extends FermatAdapter<MenuIt
 
             holder.getLabel().setText(data.getLabel());
 
-            if (data.isSelected()) {
-
+            if (data.isSelected())
                 holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
 
                 switch (position) {
                     case 0:
-                        Picasso.with(context).load(R.drawable.sad_face).into(holder.getIcon());
-
-//                        holder.getIcon().setImageResource(R.drawable.sad_face);
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_home_active : R.drawable.ic_nav_home_normal).into(holder.getIcon());
                         break;
                     case 1:
-                        holder.getIcon().setImageResource(R.drawable.sad_face);
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_history_active : R.drawable.ic_nav_history_normal).into(holder.getIcon());
                         break;
-                    case 2:
-                        holder.getIcon().setImageResource(R.drawable.sad_face);
-                        break;
-                    case 3:
-                        holder.getIcon().setImageResource(R.drawable.sad_face);
-                        break;
+//                    case 2:
+//                        Picasso.with(context).load(R.drawable.ic_nav_stadistics_active).into(holder.getIcon());
+//                        break;
                 }
-            }
-
-            if (position == 4) {
-                holder.getNavigation_row_divider().setVisibility(View.GONE);
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }

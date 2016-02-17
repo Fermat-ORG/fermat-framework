@@ -26,7 +26,7 @@ import java.util.UUID;
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
- * Created by Angel Veloz - (vlzangel91@gmail.com) on 29/11/15.
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 23/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
@@ -123,8 +123,9 @@ public class CustomerBrokerPurchaseContractDeveloperDatabaseFactory implements D
         contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME);
         contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
         contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATA_TIME_COLUMN_NAME);
+        contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME);
         contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME);
+        contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME);
         /**
          * Table Contracts Purchase addition.
          */
@@ -155,7 +156,7 @@ public class CustomerBrokerPurchaseContractDeveloperDatabaseFactory implements D
         clauseStatusLogColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_LOG_ID_COLUMN_NAME);
         clauseStatusLogColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_CLAUSE_ID_COLUMN_NAME);
         clauseStatusLogColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_STATUS_COLUMN_NAME);
-        clauseStatusLogColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_DATA_TIME_COLUMN_NAME);
+        clauseStatusLogColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_DATE_TIME_COLUMN_NAME);
         clauseStatusLogColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_STATUS_LOG_CHANGE_BY_COLUMN_NAME);
         /**
          * Table Clause Status Log addition.
