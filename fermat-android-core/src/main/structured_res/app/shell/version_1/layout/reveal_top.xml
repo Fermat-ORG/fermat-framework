@@ -70,7 +70,6 @@
                         <ImageButton
                             android:layout_width="48dp"
                             android:layout_height="48dp"
-                            android:background="@drawable/ic_drawable_private_network"
                             android:id="@+id/btn_fermat_apps_status"/>
                         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                             android:layout_width="wrap_content"
@@ -78,7 +77,7 @@
                             android:gravity="center"
                             android:textSize="12sp"
                             android:layout_marginTop="2dp"
-                            android:text="Fermat\nNetwork"
+                            android:text="State"
                             android:textColor="#000"/>
 
                     </LinearLayout>
