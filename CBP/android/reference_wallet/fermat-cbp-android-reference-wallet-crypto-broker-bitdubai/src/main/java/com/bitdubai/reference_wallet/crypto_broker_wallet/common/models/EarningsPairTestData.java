@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningPairState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
@@ -14,17 +13,16 @@ import java.util.UUID;
  */
 public class EarningsPairTestData implements EarningsPair {
 
-    private final Currency         selectedCurrency;
-    private final Currency         linkedCurrency  ;
-    private final UUID             id              ;
-    private final EarningPairState state           ;
+    private final Currency earningCurrency;
+    private final Currency linkedCurrency;
+    private final UUID id;
+    private final EarningPairState state;
 
-    public EarningsPairTestData(final Currency selectedCurrency,
-                                final Currency linkedCurrency  ) {
+    public EarningsPairTestData(final Currency earningCurrency, final Currency linkedCurrency) {
 
         id = UUID.randomUUID();
 
-        this.selectedCurrency = selectedCurrency;
+        this.earningCurrency = earningCurrency;
         this.linkedCurrency = linkedCurrency;
         this.state = EarningPairState.ASSOCIATED;
 
