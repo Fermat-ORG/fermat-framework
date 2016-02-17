@@ -187,8 +187,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
                     outgoingNotificationDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
 
-                    //declare a schedule to process waiting request message
-                    this.startTimer();
 
 
             System.out.println("-----------------------\n" +
@@ -242,9 +240,9 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                             CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord1 = incomingNotificationsDao.getMetadata(cryptoTransmissionMetadata.getTransactionId());
                             System.out.println("-----------------------\n" +
                                     "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
-                                    "-----------------------\n STATE: " + cryptoTransmissionMetadataRecord1.getCryptoTransmissionMetadataState());
+                                    "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataState());
 
-                            switch (cryptoTransmissionMetadataRecord1.getCryptoTransmissionMetadataState()) {
+                            switch (cryptoTransmissionMetadata.getCryptoTransmissionMetadataState()) {
                                 case CREDITED_IN_OWN_WALLET:
                                     // send inform to other ns
                                     cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
@@ -291,13 +289,10 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                                         break;
 
                                 case CREDITED_IN_DESTINATION_WALLET:
-                                    // Guardo estado
+
                                     //update message in DONE and Close connection with another device - End message
-                                    outgoingNotificationDao.changeCryptoTransmissionProtocolStateAndNotificationState(
-                                            cryptoTransmissionMetadataRecord.getTransactionId(),
-                                            CryptoTransmissionProtocolState.DONE,
-                                            cryptoTransmissionMetadataRecord.getCryptoTransmissionMetadataState()
-                                    );
+                                    outgoingNotificationDao.doneTransaction(cryptoTransmissionMetadata.getTransactionId());
+                                    incomingNotificationsDao.doneTransaction(cryptoTransmissionMetadata.getTransactionId());
 
                                     System.out.print("CryptoTransmission Close Connection - End Message");
 
@@ -313,24 +308,21 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
                                 case SEEN_BY_DESTINATION_VAULT:
                                     // deberia ver si tengo que lanzar un evento acá
-                                    outgoingNotificationDao.changeCryptoTransmissionProtocolStateAndNotificationState(
-                                            cryptoTransmissionMetadataRecord.getTransactionId(),
-                                            cryptoTransmissionMetadataRecord.getCryptoTransmissionProtocolState(),
-                                            cryptoTransmissionMetadataRecord.getCryptoTransmissionMetadataState()
-                                    );
+                                    System.out.print("-----------------------\n" +
+                                            "ACA DEBERIA LANZAR EVENTO NO CREO -----------------------\n" +
+                                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates());
+                                    System.out.print("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
 
                                     cryptoTransmissionMetadata.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.RECEIVED);
                                     cryptoTransmissionMetadata.changeMetadataState(CryptoTransmissionMetadataState.SEEN_BY_DESTINATION_VAULT);
                                     cryptoTransmissionMetadata.setTypeMetadata(CryptoTransmissionMetadataType.METADATA_RECEIVE);
                                     outgoingNotificationDao.update(cryptoTransmissionMetadata);
 
+                                    System.out.print("-----------------------\n" +
+                                            "RECIVIENDO CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataStates());
 
                                     lauchNotification();
-
-                                    System.out.println("-----------------------\n" +
-                                            "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
-                                            "-----------------------\n STATE: SEEN_BY_DESTINATION_VAULT ");
-                                    System.out.println("CryptoTransmission SEEN_BY_DESTINATION_VAULT event");
                                     break;
 
 
@@ -359,11 +351,13 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                     switch (cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()) {
                         case SEEN_BY_DESTINATION_NETWORK_SERVICE:
 
+
                             outgoingNotificationDao.changeCryptoTransmissionProtocolStateAndNotificationState(
                                     cryptoTransmissionResponseMessage.getTransactionId(),
                                     cryptoTransmissionResponseMessage.getCryptoTransmissionProtocolState(),
                                     cryptoTransmissionResponseMessage.getCryptoTransmissionMetadataState()
                             );
+
 
                             //guardo estado
                             incomingNotificationsDao.changeCryptoTransmissionProtocolState(
@@ -403,8 +397,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         CryptoTransmissionMessage cryptoTransmissionMetadata = new Gson().fromJson(messageSent.getContent(), CryptoTransmissionMessage.class);
         try {
             if (cryptoTransmissionMetadata.getCryptoTransmissionMetadataState() == CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET) {
-                outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.DONE);
-
+                outgoingNotificationDao.doneTransaction(cryptoTransmissionMetadata.getTransactionId());
             } else {
                 outgoingNotificationDao.changeCryptoTransmissionProtocolState(cryptoTransmissionMetadata.getTransactionId(), CryptoTransmissionProtocolState.SENT);
             }
@@ -422,7 +415,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
         System.out.println("-----------------------\n" +
                 "CRYPTO METADATA ENVIADA----------------------- \n" +
-                "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionProtocolState());
+                "-----------------------\n STATE: " + cryptoTransmissionMetadata.getCryptoTransmissionMetadataState());
 
 
     }
@@ -891,42 +884,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
     }
 
-
-    private void reprocessMessage()
-    {
-        try {
-
-         /*
-         * Read all pending CryptoTransmissionMetadata message from database
-         */
-           outgoingNotificationDao.changeStatusNotSentMessage();
-
-          /*  Map<String, Object> filters = new HashMap<>();
-            filters.put(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_STATUS_COLUMN_NAME, CryptoTransmissionProtocolState.PRE_PROCESSING_SEND.getCode());
-            List<CryptoTransmissionMetadataRecord> lstActorRecord = outgoingNotificationDao.findAll(
-                    filters
-            );
-
-            for (CryptoTransmissionMetadataRecord cpr : lstActorRecord) {
-                sendMessageToActor(cpr);
-            }*/
-        } catch (Exception  e) {
-            System.out.println("CRYPTO TRANSMISSION EXCEPCION REPROCESANDO MESSAGES");
-            e.printStackTrace();
-        }
-    }
-
-
-
-    private void startTimer(){
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // change message state to process retry later
-                reprocessMessage();
-            }
-        }, 0,reprocessTimer);
-    }
 
 
     /**

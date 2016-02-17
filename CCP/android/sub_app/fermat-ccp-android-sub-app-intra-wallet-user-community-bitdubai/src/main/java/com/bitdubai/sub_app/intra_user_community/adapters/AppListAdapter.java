@@ -51,12 +51,20 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
             case CANCELLED_LOCALLY:
                 break;
             case CANCELLED_REMOTELY:
+                if (holder.connectionState.getVisibility() == View.GONE){
+                    holder.connectionState.setImageResource(R.drawable.icon_contact_no_conect);
+                    holder.connectionState.setVisibility(View.VISIBLE);
+                }
                 break;
             case NO_CONNECTED:
                 break;
             case DENIED_LOCALLY:
                 break;
             case DENIED_REMOTELY:
+                if (holder.connectionState.getVisibility() == View.GONE){
+                    holder.connectionState.setImageResource(R.drawable.icon_contact_no_conect);
+                    holder.connectionState.setVisibility(View.VISIBLE);
+                }
                 break;
             case DISCONNECTED_LOCALLY:
                 break;
