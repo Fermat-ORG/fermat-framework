@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models;
 
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
@@ -20,12 +21,12 @@ public class Transaction {
 
     private AssetUserWalletTransaction assetUserWalletTransaction;
 
-    public Transaction(AssetUserWalletTransaction assetUserWalletTransaction, ActorAssetUser actorAssetUser) {
+    public Transaction(AssetUserWalletTransaction assetUserWalletTransaction, DAPActor dapActor) {
         setAssetUserWalletTransaction(assetUserWalletTransaction);
-        setActorName(actorAssetUser.getName());
+        setActorName(dapActor.getName());
         setAmount(assetUserWalletTransaction.getAmount());
         setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
-        setActorImage(actorAssetUser.getProfileImage());
+        setActorImage(dapActor.getProfileImage());
         setTransactionType(assetUserWalletTransaction.getTransactionType());
         setBalanceType(assetUserWalletTransaction.getBalanceType());
     }
