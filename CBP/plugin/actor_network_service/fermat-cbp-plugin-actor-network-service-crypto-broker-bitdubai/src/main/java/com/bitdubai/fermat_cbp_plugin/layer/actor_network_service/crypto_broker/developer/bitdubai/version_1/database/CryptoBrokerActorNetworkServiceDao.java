@@ -794,6 +794,8 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             quotesRequestTable.addUUIDFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
+            quotesRequestTable.loadToMemory();
+
             final List<DatabaseTableRecord> records = quotesRequestTable.getRecords();
 
             DatabaseTableRecord quotesRequestRecord;
@@ -830,6 +832,9 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             database.executeTransaction(databaseTransaction);
 
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantAnswerQuotesRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (final DatabaseTransactionFailedException e) {
 
             throw new CantAnswerQuotesRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert all the records.");
