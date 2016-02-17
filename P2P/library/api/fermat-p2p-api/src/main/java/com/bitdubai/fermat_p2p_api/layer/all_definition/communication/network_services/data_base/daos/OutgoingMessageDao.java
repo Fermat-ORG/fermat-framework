@@ -387,8 +387,7 @@ public final class OutgoingMessageDao {
 
             if(findById(String.valueOf(entity.getId()))== null)
             {
-                if(!existPendingNotification(entity.getId())){
-                         /*
+                        /*
                      * 1- Create the record to the entity
                      */
                     DatabaseTableRecord entityRecord = constructFrom(entity);
@@ -399,7 +398,7 @@ public final class OutgoingMessageDao {
                     DatabaseTransaction transaction = getDataBase().newTransaction();
                     transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
                     getDataBase().executeTransaction(transaction);
-                }
+
              }
 
 
@@ -416,8 +415,6 @@ public final class OutgoingMessageDao {
             throw cantInsertRecordDataBaseException;
 
         } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantGetNotificationException e) {
             e.printStackTrace();
         }
 
