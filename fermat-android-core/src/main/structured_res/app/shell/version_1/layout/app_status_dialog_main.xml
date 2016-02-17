@@ -48,7 +48,8 @@
             android:paddingLeft="12dp"
             android:layout_weight="1"
             android:textColor="#666666"
-            android:text="Release"/>
+            android:text="Release"
+            android:id="@+id/txt_release"/>
 
         <RadioButton
             android:layout_width="match_parent"
@@ -64,8 +65,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#666666"
-        android:paddingRight="7dp"
-        android:paddingLeft="7dp"/>
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"/>
     >
 
     <LinearLayout
@@ -91,7 +92,8 @@
             android:paddingLeft="12dp"
             android:textColor="#666666"
             android:layout_weight="1"
-            android:text="Beta"/>
+            android:text="Beta"
+            android:id="@+id/txt_beta"/>
 
         <RadioButton
             android:layout_width="match_parent"
@@ -108,8 +110,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#666666"
-        android:paddingRight="7dp"
-        android:paddingLeft="7dp"/>
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"/>
     >
 
     <LinearLayout
@@ -135,7 +137,8 @@
             android:paddingLeft="12dp"
             android:textColor="#666666"
             android:layout_weight="1"
-            android:text="Alpha"/>
+            android:text="Alpha"
+            android:id="@+id/txt_alpha"/>
 
         <RadioButton
             android:layout_width="match_parent"
@@ -151,8 +154,8 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#666666"
-        android:paddingRight="7dp"
-        android:paddingLeft="7dp"/>
+        android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"/>
     >
 
     <LinearLayout
@@ -178,7 +181,8 @@
             android:textColor="#666666"
             android:paddingLeft="12dp"
             android:layout_weight="1"
-            android:text="Dev"/>
+            android:text="Dev"
+            android:id="@+id/txt_dev"/>
 
         <RadioButton
             android:layout_width="match_parent"

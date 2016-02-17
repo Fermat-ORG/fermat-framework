@@ -20,4 +20,5 @@ public class SessionConstantsAssetUser {
     public static final int IC_ACTION_USER_HELP_SETTINGS = 206;
     public static final int IC_ACTION_USER_HELP_SETTINGS_NETWORK = 207;
     public static final int IC_ACTION_USER_HELP_SETTINGS_NOTIFICATION = 208;
+    public static final int IC_ACTION_USER_ITEM_SELL = 209;
 }

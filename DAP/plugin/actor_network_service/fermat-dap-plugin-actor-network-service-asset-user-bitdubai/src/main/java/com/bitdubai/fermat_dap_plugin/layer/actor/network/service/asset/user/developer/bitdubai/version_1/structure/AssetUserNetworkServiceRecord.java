@@ -34,7 +34,7 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
 
     public AssetUserNetworkServiceRecord(UUID id,
                                          String actorSenderAlias,
-                                         String actorSenderPhrase,
+//                                         String actorSenderPhrase,
                                          byte[] actorSenderProfileImage,
                                          AssetNotificationDescriptor assetNotificationDescriptor,
                                          Actors actorDestinationType,
