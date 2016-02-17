@@ -206,6 +206,11 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
     }
 
     @Override
+    public void publish(BroadcasterType broadcasterType, String appCode, String code) {
+
+    }
+
+    @Override
     public void publish(BroadcasterType broadcasterType, String code, Platforms lauchedPlatform) {
 
     }
