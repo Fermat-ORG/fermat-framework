@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -142,13 +143,22 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                             throw new InvalidParameterException(
                                     paymentType+" value from MoneyType is not valid in this plugin");
                     }
+                    FiatCurrency currencyType=getCurrencyTypeFromContract(customerBrokerContractSale);
+                    BusinessTransactionRecord businessTransactionRecord=
+                            this.brokerAckOfflinePaymentBusinessTransactionDao.
+                                    getBusinessTransactionRecordByContractHash(contractHash);
+                    businessTransactionRecord.setPaymentType(paymentType);
+                    businessTransactionRecord.setCurrencyType(currencyType);
+                    businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.
+                            updateBusinessTransactionRecord(businessTransactionRecord);
+                    /*this.brokerAckOfflinePaymentBusinessTransactionDao.
                             updateRecordPaymentTypeByContractHash(
                                     contractHash,
                                     paymentType);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
-                            contractTransactionStatus);
+                            contractTransactionStatus);*/
 
                 } else{
                     try{
@@ -233,13 +243,55 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
                     customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
                             UUID.fromString(negotiationId));
-            ObjectChecker.checkArgument(customerBrokerSaleNegotiation,"The customerBrokerSaleNegotiation is null");
+            ObjectChecker.checkArgument(customerBrokerSaleNegotiation,
+                    "The customerBrokerSaleNegotiation is null");
             Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
             ClauseType clauseType;
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
                 if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
                     return MoneyType.getByCode(clause.getValue());
+                }
+            }
+            throw new CantGetListSaleNegotiationsException(
+                    "Cannot find the proper clause");
+        } catch (InvalidParameterException e) {
+            throw new CantGetListSaleNegotiationsException(
+                    "Cannot get the negotiation list",
+                    e);
+        } catch (CantGetListClauseException e) {
+            throw new CantGetListSaleNegotiationsException(
+                    "Cannot find clauses list");
+        } catch (ObjectNotSetException e) {
+            throw new CantGetListSaleNegotiationsException(
+                    "The customerBrokerSaleNegotiation is null",
+                    e);
+        }
+
+    }
+    /**
+     * This method returns the currency type from a contract
+     *
+     * @param customerBrokerContractSale
+     * @return
+     * @throws CantGetListSaleNegotiationsException
+     */
+    public FiatCurrency getCurrencyTypeFromContract(
+            CustomerBrokerContractSale customerBrokerContractSale) throws
+            CantGetListSaleNegotiationsException {
+        try {
+            String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
+                    customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                            UUID.fromString(negotiationId));
+            ObjectChecker.checkArgument(customerBrokerSaleNegotiation,
+                    "The customerBrokerSaleNegotiation is null");
+            Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+            ClauseType clauseType;
+            for (Clause clause : clauses) {
+                clauseType = clause.getType();
+                if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY)) {
+                    return FiatCurrency.getByCode(clause.getValue());
                 }
             }
             throw new CantGetListSaleNegotiationsException(
