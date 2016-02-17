@@ -101,6 +101,16 @@ public class Data {
         return actorAssetRedeemPoints;
     }
 
+    public static List<User> getConnectedUsers(AssetUserWalletSubAppModuleManager moduleManager) throws CantGetAssetUserActorsException {
+        List<User> users = new ArrayList<>();
+        List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
+        for (ActorAssetUser actorAssetUser : actorAssetUsers) {
+            User newUser = new User(actorAssetUser.getName(), actorAssetUser);
+            users.add(newUser);
+        }
+        return users;
+    }
+
     public static List<Transaction> getTransactions(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         List<Transaction> transactions = new ArrayList<>();
         List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet("walletPublicKeyTest").getAllTransactions(digitalAsset.getAssetPublicKey());

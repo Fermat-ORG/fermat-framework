@@ -232,10 +232,17 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
+//        inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL, 0, "help").setIcon(R.drawable.dap_asset_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Item Sell")//.setIcon(R.drawable.dap_asset_user_help_icon)
+        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 1, getResources().getString(R.string.dap_user_wallet_action_redeem))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE, 2, getResources().getString(R.string.dap_user_wallet_action_appropriate))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER, 3, getResources().getString(R.string.dap_user_wallet_action_transfer))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 4, getResources().getString(R.string.dap_user_wallet_action_sell))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
@@ -247,14 +254,10 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL) {
                 setUpHelpAssetDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            } else if(id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
-                appSession.setData("asset_data", digitalAsset);
-                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY, appSession.getAppPublicKey());
-                return true;
-            }else if (id == R.id.action_wallet_user_redeem) {
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM) {
                 changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
                 return true;
-            } else if (id == R.id.action_wallet_user_appropriate) {
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE) {
                 new ConfirmDialog.Builder(getActivity(), appSession)
                         .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                         .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
@@ -266,7 +269,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
                             }
                         }).build().show();
                 return true;
-            } else if (id == R.id.action_wallet_user_transfer) {
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER) {
                 new ConfirmDialog.Builder(getActivity(), appSession)
                         .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                         .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
@@ -277,6 +280,9 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
                                 transferAsset(digitalAsset.getAssetPublicKey());
                             }
                         }).build().show();
+                return true;
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
+                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY , appSession.getAppPublicKey());
                 return true;
             }
         } catch (Exception e) {
