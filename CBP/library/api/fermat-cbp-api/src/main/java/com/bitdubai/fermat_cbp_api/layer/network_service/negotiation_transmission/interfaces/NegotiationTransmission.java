@@ -121,10 +121,6 @@ public interface NegotiationTransmission {
 
     public void setFlagRead(boolean flagRead);
 
-    public ActorProtocolState getActorProtocolState();
-
-    public void setActorProtocolState(ActorProtocolState actorProtocolState);
-
     public int getSentCount();
 
     public void setSentCount(int sentCount);
