@@ -31,6 +31,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_reception.interfaces.AssetReceptionManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
@@ -77,6 +78,9 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
     ActorAssetIssuerManager actorAssetIssuerManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
     BitcoinNetworkManager bitcoinNetworkManager;
@@ -196,8 +200,6 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                     pluginFileSystem,
                     errorManager,
                     assetUserWalletManager);
-            printSomething("The wallet public key is hardcoded");
-            digitalAssetReceptionVault.setWalletPublicKey("walletPublicKeyTest");
             digitalAssetReceptor = new DigitalAssetReceptor(this.errorManager,
                     this.pluginId,
                     this.pluginFileSystem,
@@ -254,6 +256,8 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                     bitcoinNetworkManager,
                     assetTransmissionNetworkServiceManager,
                     actorAssetUserManager,
+                    actorAssetIssuerManager,
+                    actorAssetRedeemPointManager,
                     digitalAssetReceptor,
                     digitalAssetReceptionVault);
         }

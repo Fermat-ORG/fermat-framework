@@ -35,16 +35,6 @@ public interface ActorAssetUserManager extends FermatManager {
     ActorAssetUser getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
     /**
-     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the registered actorPublicKey
-     *
-     * @param actorPublicKey                    The public key of the Asset Actor User registered
-     * @return                                  THe information associated with the actorPublicKey.
-     * @throws CantGetAssetUserActorsException
-     * @throws CantAssetUserActorNotFoundException
-     */
-    ActorAssetUser getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
-
-    /**
      * The method <code>createActorAssetUserFactory</code> create Actor by a Identity
      *
      * @param assetUserActorPublicKey                       Referred to the Identity publicKey
@@ -164,7 +154,7 @@ public interface ActorAssetUserManager extends FermatManager {
      * @return
      * @throws CantGetAssetUserActorsException
      */
-    List<ActorAssetUser> getListActorAssetUserByGroups (String groupId) throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getListActorAssetUserByGroups (String groupId, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
 
     /**
      * The method <code>getListAssetUserGroupsByActorAssetUser</code> Returns a list of groups by asset user

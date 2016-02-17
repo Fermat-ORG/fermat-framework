@@ -40,6 +40,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDe
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublicKeyContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
@@ -52,7 +53,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantC
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.ActorAssetIssuerMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.issuer.developer.bitdubai.version_1.agent.RedeemerAddressesMonitorAgent;
@@ -163,13 +163,16 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @Override
     public ActorAssetIssuer getActorByPublicKey(String actorPublicKey) throws CantGetAssetIssuerActorsException,
             CantAssetIssuerActorNotFoundException {
-
         try {
-            return this.assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
+            ActorAssetIssuer currentIssuer = getActorAssetIssuer();
+            if (currentIssuer != null && currentIssuer.getActorPublicKey().equals(actorPublicKey)) {
+                return currentIssuer;
+            } else {
+                return assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
+            }
         } catch (CantGetAssetIssuerActorsException e) {
             throw new CantGetAssetIssuerActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset Issuer from Data Base", null);
         }
-
     }
 
     @Override
@@ -250,6 +253,13 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         } catch (CantAddPendingAssetIssuerException e) {
             throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER REGISTERED", e, "", "");
         }
+    }
+
+    @Override
+    public void createActorAssetIssuerRegisterInNetworkService(ActorAssetIssuer actorAssetIssuer) throws CantCreateActorAssetIssuerException {
+        List<ActorAssetIssuer> list = new ArrayList<>();
+        list.add(actorAssetIssuer);
+        createActorAssetIssuerRegisterInNetworkService(list);
     }
 
     @Override

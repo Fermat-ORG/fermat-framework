@@ -49,11 +49,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetRedeemPointCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantHandleDapNewMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessageGson;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageAccept;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.message.NetworkServiceMessageDeny;
@@ -63,7 +67,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRequestListActorAssetRedeemPointRegisteredException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.agents.AssetRedeemPointActorNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
@@ -340,7 +343,7 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
            /*
             * Initialize connection manager
             */
-            initializeCommunicationNetworkServiceConnectionManager();
+                    initializeCommunicationNetworkServiceConnectionManager();
 
             /*
              * Verify if the communication cloud client is active
@@ -350,14 +353,14 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                 /*
                  * Construct my profile and register me
                  */
-                PlatformComponentProfile platformComponentProfilePluginRoot =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
-                        getAlias().toLowerCase(),
-                        getName(),
-                        getNetworkServiceType(),
-                        getPlatformComponentType(),
-                        getExtraData());
+                        PlatformComponentProfile platformComponentProfilePluginRoot = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(getIdentityPublicKey(),
+                                getAlias().toLowerCase(),
+                                getName(),
+                                getNetworkServiceType(),
+                                getPlatformComponentType(),
+                                getExtraData());
 
-                setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
+                        setPlatformComponentProfilePluginRoot(platformComponentProfilePluginRoot);
 
                 /*
                  * Initialize the agent and start
@@ -625,6 +628,25 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
     @Override
     public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
         receivePublicKeyExtended(dapMessage);
+    }
+
+    //TODO HANDLE THESE!!!!
+
+    /**
+     * This method retrieves the list of new incoming and unread DAP Messages for a specific type.
+     *
+     * @param type The {@link DAPMessageType} of message to search for.
+     * @return {@link List} instance filled with all the {@link DAPMessage} that were found.
+     * @throws CantGetDAPMessagesException If there was an error while querying for the list.
+     */
+    @Override
+    public List<DAPMessage> getUnreadDAPMessagesByType(DAPMessageType type) throws CantGetDAPMessagesException {
+        return null;
+    }
+
+    @Override
+    public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
+
     }
 
     private void receivePublicKeyExtended(DAPMessage dapMessage) {
@@ -1110,11 +1132,11 @@ public class AssetRedeemPointActorNetworkServicePluginRoot extends AbstractNetwo
                  */
             PlatformComponentProfile platformComponentProfileToReconnect = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
                     constructPlatformComponentProfileFactory(this.getIdentityPublicKey(),
-                    this.getAlias().toLowerCase(),
-                    this.getName(),
-                    this.getNetworkServiceType(),
-                    this.getPlatformComponentType(),
-                    this.getExtraData());
+                            this.getAlias().toLowerCase(),
+                            this.getName(),
+                            this.getNetworkServiceType(),
+                            this.getPlatformComponentType(),
+                            this.getExtraData());
 
             try {
                     /*

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
@@ -29,6 +30,18 @@ import java.util.UUID;
 public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity> {
 
     /**
+     * The method <code>listWorldCryptoBrokers</code> returns the list of all crypto brokers in the world,
+     * setting their status (CONNECTED, for example) with respect to the selectedIdentity parameter
+     * logged in crypto broker
+     *
+     * @return a list of all crypto brokers in the world
+     *
+     * @throws CantListCryptoBrokersException if something goes wrong.
+     */
+    List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, final int max, final int offset) throws CantListCryptoBrokersException;
+
+
+    /**
      * The method <code>listSelectableIdentities</code> lists all the Crypto Broker identities
      * stored locally in the device.
      *
@@ -38,13 +51,20 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      */
     List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
 
+
+    /**
+     * Through the method <code>setSelectedActorIdentity</code> we can set the selected actor identity.
+     */
+     public void setSelectedActorIdentity(CryptoBrokerCommunitySelectableIdentity identity);
+
+
     /**
      * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
      * Crypto Brokers that are not linked to the local selectedIdentity
      *
      * @return a searching interface
      */
-    CryptoBrokerCommunitySearch getCryptoBrokerSearch(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
+    CryptoBrokerCommunitySearch getCryptoBrokerSearch();
 
     /**
      * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
@@ -157,13 +177,14 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
     int getCryptoBrokersWaitingYourAcceptanceCount();
 
     /**
-     *
+     * The method <code>getActorConnectionState</code> returns the ConnectionState of a given actor
+     * with respect to the selected actor
      * @param publicKey
      *
      * @return
      *
      * @throws CantValidateConnectionStateException if something goes wrong.
      */
-    boolean isActorConnected(String publicKey) throws CantValidateConnectionStateException;
+    ConnectionState getActorConnectionState(String publicKey) throws CantValidateConnectionStateException;
 
 }
