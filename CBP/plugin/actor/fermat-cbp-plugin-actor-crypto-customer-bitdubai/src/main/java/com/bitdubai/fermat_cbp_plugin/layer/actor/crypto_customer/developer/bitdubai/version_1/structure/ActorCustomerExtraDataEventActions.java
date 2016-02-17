@@ -11,10 +11,10 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUp
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.QuotesExtraData;
-import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
-import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
-import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
-import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
@@ -39,12 +39,12 @@ public class ActorCustomerExtraDataEventActions {
 
     private CryptoBrokerManager cryptoBrokerANSManager;
     private CryptoCustomerActorDao cryptoCustomerActorDao;
-    private CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
+    private CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
 
-    public ActorCustomerExtraDataEventActions(CryptoBrokerManager cryptoBrokerANSManager, CryptoCustomerActorDao cryptoCustomerActorDao, CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager){
+    public ActorCustomerExtraDataEventActions(CryptoBrokerManager cryptoBrokerANSManager, CryptoCustomerActorDao cryptoCustomerActorDao, CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager){
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
         this.cryptoCustomerActorDao = cryptoCustomerActorDao;
-        this.cryptoCustomerActorConnectionManager = cryptoCustomerActorConnectionManager;
+        this.cryptoBrokerActorConnectionManager = cryptoBrokerActorConnectionManager;
     }
 
     public void handleNewsEvent() throws CantNewsEventException {
@@ -59,8 +59,8 @@ public class ActorCustomerExtraDataEventActions {
         try {
             Collection<CustomerIdentityWalletRelationship> relationships = cryptoCustomerActorDao.getAllCustomerIdentityWalletRelationship();
             for(CustomerIdentityWalletRelationship relationship : relationships){
-                List<CryptoCustomerActorConnection> actores = getBrokersConnects(relationship);
-                for(CryptoCustomerActorConnection broker : actores){
+                List<CryptoBrokerActorConnection> actores = getBrokersConnects(relationship);
+                for(CryptoBrokerActorConnection broker : actores){
                     if( !this.cryptoCustomerActorDao.existBrokerExtraData(relationship.getCryptoCustomer(), broker.getPublicKey()) ) {
                         try {
                             ActorIdentity brokerIdentity = new ActorExtraDataIdentity(broker.getAlias(), broker.getPublicKey(), broker.getImage());
@@ -81,12 +81,12 @@ public class ActorCustomerExtraDataEventActions {
         }
     }
 
-    private List<CryptoCustomerActorConnection> getBrokersConnects(CustomerIdentityWalletRelationship relationship) throws CantGetBrokersConnectedException {
-        CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(
+    private List<CryptoBrokerActorConnection> getBrokersConnects(CustomerIdentityWalletRelationship relationship) throws CantGetBrokersConnectedException {
+        CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(
             relationship.getCryptoCustomer(),
             Actors.CBP_CRYPTO_CUSTOMER
         );
-        final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
+        final CryptoBrokerActorConnectionSearch search = cryptoBrokerActorConnectionManager.getSearch(linkedActorIdentity);
         search.addConnectionState(ConnectionState.CONNECTED);
         try {
             return search.getResult();
