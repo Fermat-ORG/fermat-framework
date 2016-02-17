@@ -356,6 +356,27 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         networkState = state;
     }
 
+    /*
+     * set the ipAddress and the port to connect to the Cloud Server
+     */
+    @Override
+    public void changeIpAndPortProperties(String ipAddress, Integer port) {
+
+        this.SERVER_IP = ipAddress;
+        this.PORT = port;
+
+        /*
+         * Set the ipAddress and the port in the File Text
+         */
+        try {
+            editIpAndPortProperties(ipAddress, port);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
     /**
      * Initialize the clientIdentity of this plugin
      */
@@ -429,10 +450,10 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
         try{
 
-            System.out.println("Loading IpAndPort");
+            System.out.println("Loading ServerIpAndPort");
 
             /*
-            * Load the file with the clientIdentity
+            * Load the file with the serveripandport
             */
             PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "serveripandport", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String content = pluginTextFile.getContent();
@@ -453,7 +474,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
              /*
              * The file no exist may be the first time the plugin is running on this device,
-             * We need to create the new clientIdentity
+             * We need to create the new serveripandport
              */
             try {
 
@@ -499,6 +520,41 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
         }
 
+
+    }
+
+    /*
+     * Set the ipAddress and the port in the File Text
+     */
+    private void editIpAndPortProperties(String ipAddress, Integer port) throws Exception{
+
+        try{
+
+             /*
+            * Load the file with the serveripandport
+            */
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "serveripandport", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.loadFromMedia();
+            String content = pluginTextFile.getContent();
+
+            /*
+             * we construct the Json to text file Content
+             */
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("serverip",ipAddress);
+            jsonObject.addProperty("port", port);
+
+            /*
+             * edit the content
+             */
+            pluginTextFile.setContent(gson.toJson(jsonObject));
+            pluginTextFile.persistToMedia();
+
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new Exception(exception.getLocalizedMessage());
+        }
 
     }
 
