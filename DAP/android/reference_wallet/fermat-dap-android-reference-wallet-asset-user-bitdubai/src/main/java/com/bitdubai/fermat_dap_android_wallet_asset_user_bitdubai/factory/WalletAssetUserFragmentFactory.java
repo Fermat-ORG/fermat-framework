@@ -7,6 +7,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetDetailTransactionsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetRedeemFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetRedeemSelectRedeemPointsFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetSellFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.AssetSellSelectUserFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.SettingsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.SettingsMainNetworkFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.SettingsNotificationsFragment;
@@ -57,6 +59,12 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                     break;
                 case DAP_WALLET_ASSET_USER_SETTINGS_NOTIFICATIONS:
                     currentFragment = new SettingsNotificationsFragment();
+                    break;
+                case DAP_WALLET_ASSET_USER_ASSET_SELL_FRAGMENT:
+                    currentFragment = new AssetSellFragment();
+                    break;
+                case DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_FRAGMENT:
+                    currentFragment = new AssetSellSelectUserFragment();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragment.getKey(), "Swith failed");

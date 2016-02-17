@@ -147,22 +147,17 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     @Override
     public ActorAssetUser getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException,
             CantAssetUserActorNotFoundException {
-
         try {
-            return this.assetUserActorDao.getActorByPublicKey(actorPublicKey);
+            ActorAssetUser currentUser = getActorAssetUser();
+            if (currentUser != null && currentUser.getActorPublicKey().equals(actorPublicKey)) {
+                return currentUser;
+            } else {
+                return this.assetUserActorDao.getActorAssetUserRegisteredByPublicKey(actorPublicKey);
+            }
         } catch (CantGetAssetUserActorsException e) {
             throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
         }
 
-    }
-
-    @Override
-    public ActorAssetUser getActorRegisteredByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
-        try {
-            return this.assetUserActorDao.getActorAssetUserRegisteredByPublicKey(actorPublicKey);
-        } catch (CantGetAssetUserActorsException e) {
-            throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
-        }
     }
 
     @Override
@@ -172,8 +167,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
             if (actorAssetUser == null) {
 
-            Double locationLatitude = new Random().nextDouble();
-            Double locationLongitude = new Random().nextDouble();
+                Double locationLatitude = new Random().nextDouble();
+                Double locationLongitude = new Random().nextDouble();
 
                 Genders genders = Genders.INDEFINITE;
                 String age = "-";
@@ -499,7 +494,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.DAP_ASSET)) {
 
                     if (request.getCryptoAddress().getAddress() != null)
-                        if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE)  || request.getAction().equals(RequestAction.RECEIVED)){
+                        if (request.getAction().equals(RequestAction.ACCEPT) || request.getAction().equals(RequestAction.NONE) || request.getAction().equals(RequestAction.RECEIVED)) {
                             this.handleCryptoAddressReceivedEvent(request);
                             cryptoAddressesNetworkServiceManager.markReceivedRequest(request.getRequestId());
                         }

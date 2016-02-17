@@ -29,6 +29,7 @@ public class MatchingEngineMiddlewareDatabaseConstants {
     public static final String EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME              = "linked_currency"           ;
     public static final String EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME         = "linked_currency_type"      ;
     public static final String EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME            = "wallet_public_key"         ;
+    public static final String EARNING_PAIR_STATE_COLUMN_NAME                        = "state"                     ;
 
     public static final String EARNING_PAIR_FIRST_KEY_COLUMN                         = "id"                        ;
 
