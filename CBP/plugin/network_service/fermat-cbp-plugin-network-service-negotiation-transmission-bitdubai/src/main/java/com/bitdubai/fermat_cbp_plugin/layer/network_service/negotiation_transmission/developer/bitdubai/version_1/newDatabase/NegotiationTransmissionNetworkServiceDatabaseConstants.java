@@ -13,7 +13,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmi
  */
 public final class NegotiationTransmissionNetworkServiceDatabaseConstants {
 
-    public static final String DATA_BASE_NAME  = "template_network_service_data_base";
+    public static final String DATA_BASE_NAME  = "negotiation_transmission_data_base";
 
     /**
      *  incoming notification database table definition
