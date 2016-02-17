@@ -184,13 +184,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                         .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
+                        .setImageRight(R.drawable.ic_profile_male)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
-                                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                                 invalidate();
-                                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                                 onRefresh();
                             }
                         });
@@ -198,9 +197,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             }
             else
             {
-                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                 invalidate();
-                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                 onRefresh();
             }
 
