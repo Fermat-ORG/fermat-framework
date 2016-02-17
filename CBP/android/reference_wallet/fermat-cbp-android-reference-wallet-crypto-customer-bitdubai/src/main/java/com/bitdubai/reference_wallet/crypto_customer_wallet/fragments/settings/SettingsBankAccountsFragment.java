@@ -76,7 +76,9 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
                 appSession.setData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST, bankAccountList);
             } else
                 bankAccountList = (List<BankAccountNumber>) data;
-
+                if(bankAccountList.size()==0){
+                    //TODO: obtener las cuentas desde el module que no existe el metodo actualmente
+                }
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)

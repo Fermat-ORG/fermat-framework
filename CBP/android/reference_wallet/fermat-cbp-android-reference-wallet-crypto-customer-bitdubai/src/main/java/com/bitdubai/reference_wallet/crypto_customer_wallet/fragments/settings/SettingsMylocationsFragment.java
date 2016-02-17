@@ -18,6 +18,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
@@ -30,6 +32,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Sing
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -73,6 +76,13 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
                 appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
+                if (locationList.size()==0){
+                    Collection<NegotiationLocations> listAux= walletManager.getAllLocations(NegotiationType.PURCHASE);
+                    for (NegotiationLocations locationAux: listAux){
+                        locationList.add(locationAux.getLocation());
+                    }
+
+                }
             }
             if(locationList.size()>0) {
                 int pos = locationList.size() - 1;
