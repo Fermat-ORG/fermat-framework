@@ -847,6 +847,7 @@ public class RedeemPointActorDao implements Serializable {
             issuerRegisteredTable.loadToMemory();
 
             for (DatabaseTableRecord record : issuerRegisteredTable.getRecords()) {
+                table.clearAllFilters();
                 table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
                 table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, record.getStringValue(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN), DatabaseFilterType.EQUAL);
                 table.loadToMemory();
