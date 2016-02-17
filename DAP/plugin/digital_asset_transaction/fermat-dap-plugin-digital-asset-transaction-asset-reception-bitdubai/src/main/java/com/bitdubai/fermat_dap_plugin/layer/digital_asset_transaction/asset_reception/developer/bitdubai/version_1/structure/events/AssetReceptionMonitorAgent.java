@@ -21,11 +21,15 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
@@ -58,15 +62,17 @@ import java.util.UUID;
 public class AssetReceptionMonitorAgent implements Agent {
 
     private Thread agentThread;
-    private LogManager logManager;
-    private ErrorManager errorManager;
-    private PluginDatabaseSystem pluginDatabaseSystem;
-    private UUID pluginId;
-    private DigitalAssetReceptionVault digitalAssetReceptionVault;
-    private DigitalAssetReceptor digitalAssetReceptor;
-    private AssetTransmissionNetworkServiceManager assetTransmissionManager;
-    private BitcoinNetworkManager bitcoinNetworkManager;
-    private ActorAssetUserManager actorAssetUserManager;
+    private final LogManager logManager;
+    private final ErrorManager errorManager;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID pluginId;
+    private final DigitalAssetReceptionVault digitalAssetReceptionVault;
+    private final DigitalAssetReceptor digitalAssetReceptor;
+    private final AssetTransmissionNetworkServiceManager assetTransmissionManager;
+    private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final ActorAssetUserManager actorAssetUserManager;
+    private final ActorAssetIssuerManager assetIssuerManager;
+    private final ActorAssetRedeemPointManager redeemPointManager;
 
     public AssetReceptionMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                       ErrorManager errorManager,
@@ -75,6 +81,8 @@ public class AssetReceptionMonitorAgent implements Agent {
                                       BitcoinNetworkManager bitcoinNetworkManager,
                                       AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
                                       ActorAssetUserManager actorAssetUserManager,
+                                      ActorAssetIssuerManager issuerManager,
+                                      ActorAssetRedeemPointManager redeemPointManager,
                                       DigitalAssetReceptor digitalAssetReceptor,
                                       DigitalAssetReceptionVault digitalAssetReceptionVault) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -84,6 +92,8 @@ public class AssetReceptionMonitorAgent implements Agent {
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.assetTransmissionManager = assetTransmissionNetworkServiceManager;
         this.actorAssetUserManager = actorAssetUserManager;
+        this.assetIssuerManager = issuerManager;
+        this.redeemPointManager = redeemPointManager;
         this.digitalAssetReceptor = digitalAssetReceptor;
         this.digitalAssetReceptionVault = digitalAssetReceptionVault;
         this.digitalAssetReceptionVault.setActorAssetUserManager(actorAssetUserManager);
@@ -175,6 +185,9 @@ public class AssetReceptionMonitorAgent implements Agent {
                             String genesisTransaction = digitalAssetMetadataReceived.getGenesisTransaction();
                             switch (digitalAssetMetadataTransactionType) {
                                 case META_DATA_TRANSMIT:
+                                    //We store the previous owner on its respective plugin
+                                    ActorUtils.storeDAPActor(digitalAssetMetadataReceived.getLastOwner(), actorAssetUserManager, redeemPointManager, assetIssuerManager);
+                                    //And now I am the last owner!
                                     digitalAssetMetadataReceived.setLastOwner(actorAssetUserManager.getActorAssetUser());
                                     if (assetReceptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
                                         System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: " + genesisTransaction);
@@ -242,7 +255,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot deliver the digital asset metadata to asset user wallet");
             } catch (CantGetCryptoTransactionException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot get the genesis transaction from Crypto Network");
-            } catch (CantCreateDigitalAssetFileException | CantGetDigitalAssetFromLocalStorageException e) {
+            } catch (DAPException e) {
                 e.printStackTrace();
             }
         }
