@@ -51,6 +51,7 @@ import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.b
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -269,6 +270,12 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                 public void run() {
                     try {
 
+                        Calendar exchangeRateFromDateCalendar = Calendar.getInstance();
+                        exchangeRateFromDateCalendar.add(Calendar.YEAR, -1);
+
+                        Calendar exchangeRateFromPeriodEndCalendar = Calendar.getInstance();
+                        exchangeRateFromDateCalendar.add(Calendar.DATE, -10);
+                        Calendar exchangeRateFromPeriodStartCalendar = Calendar.getInstance();
 
                         UUID bitcoinVzlaKey = null;
                         UUID europCentBankKey = null;
@@ -294,9 +301,9 @@ public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements L
                             p = new CurrencyPairImpl(p.getTo(), p.getFrom());
                             System.out.println("ECB    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
                             System.out.println("ECB    Exchange: " + ecbProvider.getCurrentExchangeRate(p).getPurchasePrice());
-                            System.out.println("ECB    Exchange for 2015-09-01: " + ecbProvider.getExchangeRateFromDate(p, 1441065600).getPurchasePrice());
+                            System.out.println("ECB    Exchange for 2015-09-01: " + ecbProvider.getExchangeRateFromDate(p, exchangeRateFromDateCalendar).getPurchasePrice());
                             System.out.println("ECB    Getting daily exchange rates for period 2015-09-01 - 2015-10-07 ");
-                            for( ExchangeRate exr : ecbProvider.getDailyExchangeRatesForPeriod(p, 1441065600, 1444176000))
+                            for( ExchangeRate exr : ecbProvider.getDailyExchangeRatesForPeriod(p, exchangeRateFromPeriodStartCalendar, exchangeRateFromPeriodEndCalendar))
                             {
                                 System.out.println("ECB  Day:" + DateHelper.getDateStringFromTimestamp(exr.getTimestamp()) + " Price: " + exr.getPurchasePrice());
                             }
