@@ -136,7 +136,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         DatabaseManagerForDevelopers {
 
     /**
-     * buen
+     *
      * Represent the EVENT_SOURCE
      */
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_INTRA_ACTOR;
