@@ -91,7 +91,6 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.AndroidCoreManager;
-import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
@@ -527,7 +526,7 @@ public abstract class FermatActivity extends AppCompatActivity
         mRevealView.findViewById(R.id.btn_fermat_apps_status).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AppStatusDialog(view.getContext(), AppsStatus.RELEASE,appStatusListener).show();
+                new AppStatusDialog(view.getContext(), FermatSystemUtils.getAndroidCoreModule(),appStatusListener).show();
             }
         });
 

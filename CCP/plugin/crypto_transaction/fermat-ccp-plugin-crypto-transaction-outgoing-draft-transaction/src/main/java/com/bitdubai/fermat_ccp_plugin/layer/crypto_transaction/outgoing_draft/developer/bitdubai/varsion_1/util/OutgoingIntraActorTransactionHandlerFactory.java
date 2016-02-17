@@ -2,10 +2,10 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.d
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorDao;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantFindHandlerException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.interfaces.OutgoingIntraActorTransactionHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.structure.transactionHandlers.OutgoingIntraActorBitcoinWalletTransactionHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.database.OutgoingDraftTransactionDao;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantFindHandlerException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.interfaces.OutgoingIntraActorTransactionHandler;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.util.transactionHandlers.OutgoingIntraActorBitcoinWalletTransactionHandler;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 /**
@@ -15,11 +15,11 @@ public class OutgoingIntraActorTransactionHandlerFactory {
 
     private EventManager         eventManager;
     private BitcoinWalletManager bitcoinWalletManager;
-    private OutgoingIntraActorDao outgoingIntraActorDao;
+    private OutgoingDraftTransactionDao outgoingIntraActorDao;
 
     public OutgoingIntraActorTransactionHandlerFactory(EventManager eventManager,
                                                        BitcoinWalletManager bitcoinWalletManager,
-                                                       OutgoingIntraActorDao outgoingIntraActorDao) {
+                                                       OutgoingDraftTransactionDao outgoingIntraActorDao) {
         this.eventManager         = eventManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.outgoingIntraActorDao = outgoingIntraActorDao;
