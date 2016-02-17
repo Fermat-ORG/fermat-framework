@@ -5,6 +5,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -100,9 +101,19 @@ public class Data {
         return actorAssetRedeemPoints;
     }
 
+    public static List<User> getConnectedUsers(AssetUserWalletSubAppModuleManager moduleManager) throws CantGetAssetUserActorsException {
+        List<User> users = new ArrayList<>();
+        List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
+        for (ActorAssetUser actorAssetUser : actorAssetUsers) {
+            User newUser = new User(actorAssetUser.getName(), actorAssetUser);
+            users.add(newUser);
+        }
+        return users;
+    }
+
     public static List<Transaction> getTransactions(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         List<Transaction> transactions = new ArrayList<>();
-        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet("walletPublicKeyTest").getAllTransactions(digitalAsset.getAssetPublicKey());
+        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY).getAllTransactions(digitalAsset.getAssetPublicKey());
         DAPActor dapActor;
         for (AssetUserWalletTransaction assetUserWalletTransaction :
                 assetUserWalletTransactions) {
