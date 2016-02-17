@@ -7,7 +7,7 @@
     android:background="@color/white"
     android:orientation="vertical">
 
-    <LinearLayout
+    <!--LinearLayout
         android:id="@+id/ccw_wizard_title_container"
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -35,7 +35,7 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             />
-    </LinearLayout>
+    </LinearLayout-->
 
     <LinearLayout
         android:id="@+id/ccw_selected_bitcoin_wallet_container"
@@ -181,14 +181,10 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="@string/ccw_next_step"
+            android:text="@string/ccw_save"
             android:textColor="@color/white"/>
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ccw_arrow_right_selected"
-            tools:ignore="contentDescription"/>
+
     </LinearLayout>
 
 </LinearLayout>
