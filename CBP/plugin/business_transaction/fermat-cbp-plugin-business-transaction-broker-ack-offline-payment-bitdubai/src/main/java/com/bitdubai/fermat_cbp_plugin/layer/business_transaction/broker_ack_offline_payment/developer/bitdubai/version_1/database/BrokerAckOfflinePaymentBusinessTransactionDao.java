@@ -729,6 +729,42 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
     }
 
     /**
+     * This method update a database record, the payment type field, by contract hash.
+     * @param contractHash
+     * @param paymentType
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantUpdateRecordException
+     */
+    public void updateRecordPaymentTypeByContractHash(
+            String contractHash,
+            MoneyType paymentType) throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            databaseTable.addStringFilter(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME, paymentType.getCode());
+            databaseTable.updateRecord(record);
+        }  catch (CantLoadTableToMemoryException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating parameter ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME",
+                    "");
+        }
+    }
+
+    /**
      * This method returns the pending to submit notification list.
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
