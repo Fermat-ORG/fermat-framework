@@ -55,7 +55,7 @@ public class StockTransactionBankMoneyDestockManager implements BankMoneyDestock
      * @throws CantCreateBankMoneyDestockException
      */
     @Override
-    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction) throws CantCreateBankMoneyDestockException {
+    public void createTransactionDestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String bankWalletPublicKey, String bankAccount, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId) throws CantCreateBankMoneyDestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         BankMoneyDestockTransactionImpl bankMoneyRestockTransaction = new BankMoneyDestockTransactionImpl(
@@ -71,7 +71,8 @@ public class StockTransactionBankMoneyDestockManager implements BankMoneyDestock
                 timestamp,
                 TransactionStatusRestockDestock.INIT_TRANSACTION,
                 priceReference,
-                originTransaction);
+                originTransaction,
+                originTransactionId);
 
         try {
             StockTransactionBankMoneyDestockFactory stockTransactionBankMoneyDestockFactory = new StockTransactionBankMoneyDestockFactory(pluginDatabaseSystem, pluginId);

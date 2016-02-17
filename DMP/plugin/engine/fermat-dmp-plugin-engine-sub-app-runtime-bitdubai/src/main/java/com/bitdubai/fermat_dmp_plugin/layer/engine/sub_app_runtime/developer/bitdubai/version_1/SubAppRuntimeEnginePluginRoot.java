@@ -1987,15 +1987,16 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSubApp.addPosibleStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0288D1");
+        statusBar.setColor("#0e738b");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Crypto Customer Identity");
+        runtimeTitleBar.setLabel("Customer Identity");
         runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setTitleColor("#03A9F4");
+        runtimeTitleBar.setColor("#1189a5");
+        //runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -2012,15 +2013,16 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0288D1");
+        statusBar.setColor("#0e738b");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Create New Identity");
+        runtimeTitleBar.setLabel("New Identity");
         runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setTitleColor("#03A9F4");
+        runtimeTitleBar.setColor("#1189a5");
+        runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -2037,15 +2039,16 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0288D1");
+        statusBar.setColor("#0e738b");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Edit Identity");
         runtimeTitleBar.setLabelSize(16);
-        runtimeTitleBar.setColor("#FFFFFF");
+        runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setTitleColor("#03A9F4");
+        runtimeTitleBar.setColor("#1189a5");
+        runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();

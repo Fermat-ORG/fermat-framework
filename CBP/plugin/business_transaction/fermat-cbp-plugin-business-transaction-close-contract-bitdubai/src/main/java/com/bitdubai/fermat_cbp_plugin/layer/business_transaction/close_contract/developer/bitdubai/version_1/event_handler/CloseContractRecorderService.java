@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.event_handler;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -66,14 +67,18 @@ public class CloseContractRecorderService implements CBPService {
     public void incomingConfirmBusinessTransactionContractEventHandler(IncomingConfirmBusinessTransactionContract event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        this.closeContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        if(event.getRemoteBusinessTransaction()== Plugins.CLOSE_CONTRACT){
+            this.closeContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        }
         //LOG.info("CHECK THE DATABASE");
     }
 
     public void incomingConfirmBusinessTransactionResponse(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        if(event.getRemoteBusinessTransaction()== Plugins.CLOSE_CONTRACT){
         this.closeContractBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        }
         //LOG.info("CHECK THE DATABASE");
     }
 

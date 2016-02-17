@@ -9,6 +9,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.Close
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.CloseNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.CreateNewLocationFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.OpenContractDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contract_detail.ContractDetailActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.open_negotiation_details.OpenNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contracts_history.ContractsHistoryActivityFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.earnings.EarningsActivityFragment;
@@ -85,6 +86,8 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
                 return SettingsBankAccountsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES:
                 return SetttingsStockManagementFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS:
+                return ContractDetailActivityFragment.newInstance();
             default:
                 throw createFragmentNotFoundException(fragment);
         }

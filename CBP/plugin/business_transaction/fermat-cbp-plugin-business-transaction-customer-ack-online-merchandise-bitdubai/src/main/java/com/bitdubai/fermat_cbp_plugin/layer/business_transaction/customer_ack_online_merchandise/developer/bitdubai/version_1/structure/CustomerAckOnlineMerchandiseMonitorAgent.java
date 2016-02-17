@@ -26,11 +26,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.CustomerAckMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -124,7 +126,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                     exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
@@ -284,7 +286,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.ONLINE_MERCHANDISE_ACK
+                            ContractTransactionStatus.ONLINE_MERCHANDISE_ACK,
+                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE
                     );
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -304,7 +307,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE
+                            ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE,
+                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE
                     );
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -449,11 +453,13 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                                     getContractTransactionStatus(contractHash);
                             //TODO: analyze what we need to do here.
                         }else{
-                            CustomerBrokerContractSale customerBrokerContractPurchase=
+                            CustomerBrokerContractSale customerBrokerContractSale=
                                     customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
                                             contractHash);
+                            //If the contract is null, I cannot handle with this situation
+                            ObjectChecker.checkArgument(customerBrokerContractSale);
                             customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(
-                                    customerBrokerContractPurchase);
+                                    customerBrokerContractSale);
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                     contractHash,
                                     ContractStatus.READY_TO_CLOSE);
@@ -550,6 +556,11 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "Cannot get the purchase negotiation list");
+            } catch (ObjectNotSetException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "The customerBrokerContractSale is null");
             }
 
         }

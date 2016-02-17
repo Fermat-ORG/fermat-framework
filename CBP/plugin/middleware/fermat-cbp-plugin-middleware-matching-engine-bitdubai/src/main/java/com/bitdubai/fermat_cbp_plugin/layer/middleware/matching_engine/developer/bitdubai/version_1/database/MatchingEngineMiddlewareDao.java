@@ -104,7 +104,7 @@ public final class MatchingEngineMiddlewareDao {
                     walletReference
             );
 
-            final DatabaseTable earningsPairTable = database.getTable(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME);
+            final DatabaseTable earningsPairTable = database.getTable(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_TABLE_NAME);
 
             DatabaseTableRecord entityRecord = earningsPairTable.getEmptyRecord();
 
@@ -127,7 +127,7 @@ public final class MatchingEngineMiddlewareDao {
 
         try {
 
-            final DatabaseTable earningsPairTable = database.getTable(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME);
+            final DatabaseTable earningsPairTable = database.getTable(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_TABLE_NAME);
 
             earningsPairTable.addStringFilter(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME, walletReference.getPublicKey(), DatabaseFilterType.EQUAL);
 
@@ -162,7 +162,7 @@ public final class MatchingEngineMiddlewareDao {
 
         try {
 
-            final DatabaseTable earningsPairTable = database.getTable(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_ID_COLUMN_NAME);
+            final DatabaseTable earningsPairTable = database.getTable(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_TABLE_NAME);
 
             earningsPairTable.addFermatEnumFilter(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_COLUMN_NAME     , earningCurrency          , DatabaseFilterType.EQUAL);
             earningsPairTable.addFermatEnumFilter(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_EARNING_CURRENCY_TYPE_COLUMN_NAME, earningCurrency.getType(), DatabaseFilterType.EQUAL);
