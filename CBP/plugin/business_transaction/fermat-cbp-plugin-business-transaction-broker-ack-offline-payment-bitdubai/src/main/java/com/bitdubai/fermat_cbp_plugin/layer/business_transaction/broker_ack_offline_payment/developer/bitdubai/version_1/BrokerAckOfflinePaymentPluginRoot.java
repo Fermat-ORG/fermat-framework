@@ -27,13 +27,19 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankMoneyTransaction;
+import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActor;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleManagerMock;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database.BrokerAckOfflinePaymentBusinessTransactionDatabaseFactory;
@@ -42,6 +48,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offl
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.structure.BrokerAckOfflinePaymentTransactionManager;
+import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -81,8 +88,17 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_SALE)
     private CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
-    private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION)
+    private DepositManager depositManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
+    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
+
+    @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.CASH_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT)
+    private CashDepositTransactionManager CashDepositTransactionManager;
 
     /**
      * Represents the plugin manager.
@@ -237,7 +253,11 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager);
+                    customerBrokerContractSaleManager,
+                    customerBrokerSaleNegotiationManager,
+                    depositManager,
+                    cryptoBrokerWalletManager,
+                    CashDepositTransactionManager);
             brokerAckOfflinePaymentMonitorAgent.start();
 
             /**
@@ -249,7 +269,8 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
                     BrokerAckOfflinePaymentTransactionManager(
                     brokerAckOfflinePaymentBusinessTransactionDao,
                     customerBrokerContractSaleManager,
-                    errorManager);
+                    errorManager,
+                    customerBrokerSaleNegotiationManager);
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Broker Ack Offline Payment Starting");
@@ -332,7 +353,7 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     private void testAck(){
         try{
-            brokerAckOfflinePaymentTransactionManager.ackPayment("TestWalletPublicKey","888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
+            brokerAckOfflinePaymentTransactionManager.ackPayment("TestWalletPublicKey","888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2","");
         }catch (Exception e){
             System.out.println("Exception in ACK OFFLINE PAYMENT:");
             e.printStackTrace();

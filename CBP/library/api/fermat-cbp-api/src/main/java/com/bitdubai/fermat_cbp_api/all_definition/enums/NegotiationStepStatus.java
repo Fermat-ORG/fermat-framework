@@ -34,4 +34,13 @@ public enum NegotiationStepStatus {
                         " - This Code Is Not Valid for the ClauseType enum");
         }
     }
+
+    public static boolean codeExists(String code) {
+        try {
+            getByCode(code);
+            return true;
+        } catch(InvalidParameterException e) {
+            return false;
+        }
+    }
 }
