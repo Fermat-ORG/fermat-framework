@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -59,7 +60,8 @@ public class StockTransactionCryptoMoneyRestockManager implements
                 TransactionStatusRestockDestock.INIT_TRANSACTION,
                 priceReference,
                 originTransaction,
-                originTransactionId);
+                originTransactionId,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar esto porque esto viene en el refactor de richard
 
         try {
             StockTransactionCryptoMoneyRestockFactory stockTransactionCryptoMoneyRestockFactory = new StockTransactionCryptoMoneyRestockFactory(pluginDatabaseSystem, pluginId);
