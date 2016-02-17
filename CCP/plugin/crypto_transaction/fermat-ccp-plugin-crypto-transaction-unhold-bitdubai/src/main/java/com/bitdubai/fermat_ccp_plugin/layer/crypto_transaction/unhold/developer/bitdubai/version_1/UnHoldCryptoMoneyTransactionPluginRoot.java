@@ -94,6 +94,7 @@ public class UnHoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  impl
         {
             try
             {
+                startMonitorAgent();
                 UnHoldCryptoMoneyTransactionDatabaseFactory UnHoldCryptoMoneyTransactionDatabaseFactory = new UnHoldCryptoMoneyTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 UnHoldCryptoMoneyTransactionDatabaseFactory.createDatabase(this.pluginId, UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_DATABASE_NAME);
             }

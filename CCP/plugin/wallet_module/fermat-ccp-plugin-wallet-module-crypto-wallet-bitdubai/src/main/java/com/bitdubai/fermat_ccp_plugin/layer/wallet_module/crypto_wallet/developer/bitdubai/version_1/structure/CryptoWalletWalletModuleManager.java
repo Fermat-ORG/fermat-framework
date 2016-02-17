@@ -885,22 +885,24 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
-    public CryptoWalletTransaction getTransaction(UUID transactionId, String walletPublicKey) throws CantListTransactionsException
+    public CryptoWalletTransaction getTransaction(UUID transactionId, String walletPublicKey,String intraUserLoggedInPublicKey) throws CantListTransactionsException
     {
 
         try {
-            CryptoWalletTransaction cryptoWalletTransaction = null;
-            BitcoinWalletWallet bitcoinWalletWallet = null;
+            CryptoWalletTransaction cryptoWalletTransaction;
+            BitcoinWalletWallet bitcoinWalletWallet;
             bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
 
             BitcoinWalletTransaction bwt = bitcoinWalletWallet.getTransactionById(transactionId);
-            cryptoWalletTransaction = new CryptoWalletWalletModuleTransaction(bwt,null,null);
+            cryptoWalletTransaction =enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey);
 
             return  cryptoWalletTransaction;
 
         } catch (CantLoadWalletException e) {
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
         } catch (CantFindTransactionException e) {
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
+        } catch (CantEnrichTransactionException e) {
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
         }
 
@@ -1005,13 +1007,36 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
+    public PaymentRequest getPaymentRequest(UUID requestId) throws CantListReceivePaymentRequestException {
+
+        try {
+
+            CryptoPayment paymentRecord = cryptoPaymentRegistry.getRequestById(requestId);
+
+           return  new CryptoWalletWalletModulePaymentRequest(
+                    paymentRecord.getRequestId(),
+                    convertTime(paymentRecord.getStartTimeStamp()),
+                    paymentRecord.getDescription(),
+                    paymentRecord.getAmount(),
+                    null,
+                    PaymentRequest.RECEIVE_PAYMENT,
+                    paymentRecord.getState());
+
+        } catch (Exception e) {
+            throw new CantListReceivePaymentRequestException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+
+
+    }
+
+
     public List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,int max,int offset) throws CantListReceivePaymentRequestException {
 
         try {
             List<PaymentRequest> lst =  new ArrayList<>();
 
             CryptoWalletWalletModuleWalletContact cryptoWalletWalletContact = null;
-             byte[] profilePicture = null;
+            byte[] profilePicture = null;
 
             //find received payment request
             for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(

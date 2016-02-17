@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
@@ -26,12 +28,14 @@ public class IncomingIntraUserTransactionHandler {
     private BitcoinWalletManager     bitcoinWalletManager;
     private CryptoAddressBookManager cryptoAddressBookManager;
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
+    private Broadcaster broadcaster;
 
-    public IncomingIntraUserTransactionHandler(EventManager eventManager, BitcoinWalletManager bitcoinWalletManager, CryptoAddressBookManager cryptoAddressBookManager,CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
+    public IncomingIntraUserTransactionHandler(EventManager eventManager, BitcoinWalletManager bitcoinWalletManager, CryptoAddressBookManager cryptoAddressBookManager,CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,Broadcaster broadcaster) {
         this.eventManager             = eventManager;
         this.bitcoinWalletManager     = bitcoinWalletManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
+        this.broadcaster = broadcaster;
 
     }
 
@@ -62,7 +66,7 @@ public class IncomingIntraUserTransactionHandler {
     }
 
     private void launchIncomingMoneyNotificationEvent(CryptoAddressBookRecord cryptoAddressBookRecord,Transaction<CryptoTransaction> transaction) {
-        FermatEvent                    platformEvent                  = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
+       /* FermatEvent                    platformEvent                  = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
         IncomingMoneyNotificationEvent incomingMoneyNotificationEvent = (IncomingMoneyNotificationEvent) platformEvent;
         incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_INTRA_USER);
         incomingMoneyNotificationEvent.setActorId(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
@@ -72,6 +76,10 @@ public class IncomingIntraUserTransactionHandler {
         incomingMoneyNotificationEvent.setWalletPublicKey(cryptoAddressBookRecord.getWalletPublicKey());
         incomingMoneyNotificationEvent.setIntraUserIdentityPublicKey(cryptoAddressBookRecord.getDeliveredByActorPublicKey());
 
-        eventManager.raiseEvent(platformEvent);
+        eventManager.raiseEvent(platformEvent);*/
+
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,"TRANSACTION_ARRIVE|" + transaction.getTransactionID().toString());
+
+
     }
 }

@@ -469,6 +469,7 @@ public final class OutgoingMessageDao {
      * @throws CantReadRecordDataBaseException
      * @see CommunicationNetworkServiceDatabaseConstants
      */
+    //TODO: Cambié este metodo para que devuelva solo los que no se enviaron
     public List<FermatMessage> findByFailCount(Integer countFailMin, Integer countFailMax) throws CantReadRecordDataBaseException {
 
         List<FermatMessage> list = null;
@@ -502,6 +503,13 @@ public final class OutgoingMessageDao {
                 newFilter.setValue(countFailMax.toString());
                 filtersTable.add(newFilter);
             }
+
+            //esto lo hice yo
+            DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+            newFilter.setType(DatabaseFilterType.EQUAL);
+            newFilter.setColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
+            newFilter.setValue(FermatMessagesStatus.PENDING_TO_SEND.getCode());
+            filtersTable.add(newFilter);
 
             templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
             templateTable.loadToMemory();
