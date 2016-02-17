@@ -152,7 +152,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                     connectionSend();
                     break;
             }*/
-            connectRequest();
+
 
         try {
             userName.setText(actor.getName());
@@ -163,9 +163,11 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             if(actor.getCryptoAddress() != null){
                 userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
                 userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
+                disconnectRequest();
             } else{
                 userCryptoAddres.setText("No");
                 userCryptoCurrency.setText("None");
+                connectRequest();
             }
 
             if(actor.getBlockchainNetworkType() != null) {
@@ -215,7 +217,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        updateButton();
+                        //TODO Implementar aca que va a pasar con los estados de los botones
+                        //updateButton();
                     }
                 });
                 connectDialog.show();
@@ -235,7 +238,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 disconectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        connectRequest();
+                        //TODO Implementar aca que va a pasar con los estados de los botones
+                        //connectRequest();
                        // updateButton();
                     }
                 });
