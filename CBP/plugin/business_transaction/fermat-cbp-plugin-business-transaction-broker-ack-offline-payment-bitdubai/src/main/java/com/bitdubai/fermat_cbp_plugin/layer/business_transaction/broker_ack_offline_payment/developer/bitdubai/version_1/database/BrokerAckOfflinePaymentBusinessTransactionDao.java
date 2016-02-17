@@ -282,15 +282,19 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
-            CustomerBrokerContractSale customerBrokerContractSale)
+            CustomerBrokerContractSale customerBrokerContractSale,
+            MoneyType paymentType,
+            String actorPublicKey)
             throws CantInsertRecordException {
 
         try{
             DatabaseTable databaseTable=getDatabaseContractTable();
             DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-            databaseTableRecord= buildDatabaseTableRecord(
+            databaseTableRecord = buildDatabaseTableRecord(
                     databaseTableRecord,
-                    customerBrokerContractSale
+                    customerBrokerContractSale,
+                    paymentType,
+                    actorPublicKey
             );
             databaseTable.insertRecord(databaseTableRecord);
         } catch (ObjectNotSetException exception) {
@@ -299,6 +303,12 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     exception,
                     "Persisting a contract in database",
                     "An argument in null");
+        } catch (InvalidParameterException exception) {
+            throw new CantInsertRecordException(
+                    ObjectNotSetException.DEFAULT_MESSAGE,
+                    exception,
+                    "Persisting a contract in database",
+                    "The paymentType is invalid in this plugin");
         }
 
     }
@@ -311,28 +321,63 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerBrokerContractSale customerBrokerContractSale) throws ObjectNotSetException {
+            CustomerBrokerContractSale customerBrokerContractSale,
+            MoneyType paymentType,
+            String actorPublicKey) throws
+            ObjectNotSetException,
+            InvalidParameterException {
 
         ObjectChecker.checkArgument(
                 customerBrokerContractSale,
                 "The customerBrokerContractSale in buildDatabaseTableRecord method is null");
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
         //For the business transaction this value represents the contract hash.
         record.setStringValue(
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                 customerBrokerContractSale.getContractId());
         record.setStringValue(
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractSale.getPublicKeyCustomer());
         record.setStringValue(
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 customerBrokerContractSale.getPublicKeyBroker());
         record.setStringValue(
-                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_CONFIRMATION.getCode());
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY,
+                actorPublicKey);
+        switch (paymentType){
+            case BANK:
+                record.setStringValue(
+                        BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                                ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                        ContractTransactionStatus.PENDING_CREDIT_BANK_WALLET.getCode());
+                break;
+            case CASH_DELIVERY:
+                record.setStringValue(
+                        BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                                ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                        ContractTransactionStatus.PENDING_CREDIT_CASH_WALLET.getCode());
+                break;
+            case CASH_ON_HAND:
+                record.setStringValue(
+                        BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                                ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                        ContractTransactionStatus.PENDING_CREDIT_CASH_WALLET.getCode());
+                break;
+            default:
+                throw new InvalidParameterException(
+                        paymentType+" value from MoneyType is not valid in this plugin");
+        }
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME,
+                paymentType.getCode());
 
         return record;
     }
@@ -403,13 +448,21 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                             ACK_OFFLINE_PAYMENT_PAYMENT_AMOUNT_COLUMN_NAME);
             businessTransactionRecord.setPaymentAmount(paymentAmount);
-            paymentType= MoneyType.getByCode(record.getStringValue(
+            String paymentTypeString=record.getStringValue(
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                            ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME));
+                            ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME);
+            if(paymentTypeString==null||paymentTypeString.isEmpty()){
+                throw new InvalidParameterException("The paymentType is null");
+            }
+            paymentType= MoneyType.getByCode(paymentTypeString);
             businessTransactionRecord.setPaymentType(paymentType);
-            currencyType= FiatCurrency.getByCode(record.getStringValue(
+            String currencyTypeString=record.getStringValue(
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
-                            ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME));
+                            ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
+            if(currencyTypeString==null||currencyTypeString.isEmpty()){
+                throw new InvalidParameterException("The currencyType is null");
+            }
+            currencyType= FiatCurrency.getByCode(currencyTypeString);
             businessTransactionRecord.setCurrencyType(currencyType);
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
@@ -450,6 +503,107 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
 
     }
 
+    public void updateBusinessTransactionRecord(
+            BusinessTransactionRecord businessTransactionRecord)
+            throws CantUpdateRecordException {
+        String contractHash="emptyContractHash";
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            contractHash=businessTransactionRecord.getContractHash();
+            databaseTable.addStringFilter(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record=buildDatabaseTableRecord(
+                    businessTransactionRecord,
+                    record);
+            databaseTable.updateRecord(record);
+        } catch (UnexpectedResultReturnedFromDatabaseException | CantLoadTableToMemoryException exception) {
+            throw new CantUpdateRecordException(
+                    "Updating BusinessTransactionRecord with contractHash "+contractHash,
+                    exception
+                    );
+        }
+    }
+
+    private DatabaseTableRecord buildDatabaseTableRecord(
+            BusinessTransactionRecord businessTransactionRecord, DatabaseTableRecord record){
+        //Set contractHash
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                businessTransactionRecord.getContractHash());
+        //Set customerPublicKey
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
+                businessTransactionRecord.getCustomerPublicKey());
+        //Set BrokerPublicKey
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
+                businessTransactionRecord.getBrokerPublicKey());
+        //Set the transactionId
+        String transactionIdString=businessTransactionRecord.getTransactionId();
+        UUID transactionId;
+        /**
+         * This, in theory, can't happen, but, I'll check, just in case
+         */
+        if(transactionIdString==null||transactionIdString.isEmpty()){
+            transactionId=UUID.randomUUID();
+        } else {
+            transactionId=UUID.fromString(transactionIdString);
+        }
+        record.setUUIDValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME, transactionId);
+        //Set the transactionHash
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME,
+                businessTransactionRecord.getTransactionHash());
+        //Set the contractTransactionStatus
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                businessTransactionRecord.getContractTransactionStatus().getCode());
+        //Set the timestamp
+        record.setLongValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_TIMESTAMP_COLUMN_NAME,
+                businessTransactionRecord.getTimestamp());
+        //Set the paymentAmount
+        record.setLongValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_PAYMENT_AMOUNT_COLUMN_NAME,
+                businessTransactionRecord.getPaymentAmount());
+        //Set the payment Type
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME,
+                businessTransactionRecord.getPaymentType().getCode());
+        //Set the currency type
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME,
+                businessTransactionRecord.getPaymentType().getCode());
+        //Set the external Id
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_EXTERNAL_TRANSACTION_ID,
+                businessTransactionRecord.getTransactionId());
+        //Set the actor Public key
+        record.setStringValue(
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_ACTOR_PUBLIC_KEY,
+                businessTransactionRecord.getActorPublicKey());
+        return record;
+    }
+
     /**
      * This method update a database record by contract hash.
      * @param contractHash
@@ -477,7 +631,10 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             record.setStringValue(statusColumnName, newStatus);
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter "+statusColumnName,"");
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating parameter "+statusColumnName,
+                    "");
         }
     }
 
@@ -492,6 +649,36 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             CantGetContractListException {
         return getBusinessTransactionRecordList(
                 ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT_NOTIFICATION.getCode(),
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+    }
+
+    /**
+     * This method returns the pending to bank credit list.
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetContractListException
+     */
+    public List<BusinessTransactionRecord> getPendingToBankCreditList() throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetContractListException {
+        return getBusinessTransactionRecordList(
+                ContractTransactionStatus.PENDING_CREDIT_BANK_WALLET.getCode(),
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+    }
+
+    /**
+     * This method returns the pending to bank credit list.
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetContractListException
+     */
+    public List<BusinessTransactionRecord> getPendingToCashCreditList() throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetContractListException {
+        return getBusinessTransactionRecordList(
+                ContractTransactionStatus.PENDING_CREDIT_CASH_WALLET.getCode(),
                 BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
     }
