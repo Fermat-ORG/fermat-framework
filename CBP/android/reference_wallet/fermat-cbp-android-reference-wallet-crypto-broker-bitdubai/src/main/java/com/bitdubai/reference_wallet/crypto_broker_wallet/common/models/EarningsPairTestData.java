@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningPairState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
@@ -9,20 +10,24 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.Wallet
 import java.util.UUID;
 
 /**
- * Created by nelson on 15/02/16.
+ * Created by nelson on 27/01/16.
  */
 public class EarningsPairTestData implements EarningsPair {
-    private Currency earningCurrency;
-    private Currency linkedCurrency;
-    private WalletReference walletReference;
-    private UUID id;
 
+    private final Currency         selectedCurrency;
+    private final Currency         linkedCurrency  ;
+    private final UUID             id              ;
+    private final EarningPairState state           ;
 
-    public EarningsPairTestData(Currency earningCurrency, Currency linkedCurrency) {
-        this.earningCurrency = earningCurrency;
-        this.linkedCurrency = linkedCurrency;
-        walletReference = new WalletReference("earningWalletPublicKey");
+    public EarningsPairTestData(final Currency selectedCurrency,
+                                final Currency linkedCurrency  ) {
+
         id = UUID.randomUUID();
+
+        this.selectedCurrency = selectedCurrency;
+        this.linkedCurrency = linkedCurrency;
+        this.state = EarningPairState.ASSOCIATED;
+
     }
 
     @Override
@@ -41,12 +46,22 @@ public class EarningsPairTestData implements EarningsPair {
     }
 
     @Override
-    public WalletReference getWalletReference() {
-        return walletReference;
+    public WalletReference getEarningsWallet() {
+        return new WalletReference("earningWalletPublicKey");
+    }
+
+    @Override
+    public EarningPairState getState() {
+        return state;
     }
 
     @Override
     public EarningsSearch getSearch() {
         return null;
+    }
+
+    @Override
+    public void changeEarningsWallet(WalletReference earningsWallet) {
+
     }
 }
