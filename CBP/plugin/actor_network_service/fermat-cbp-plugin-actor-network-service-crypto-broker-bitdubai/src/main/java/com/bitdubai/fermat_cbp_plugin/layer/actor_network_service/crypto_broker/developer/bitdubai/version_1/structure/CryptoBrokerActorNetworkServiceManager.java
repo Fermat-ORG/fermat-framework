@@ -203,32 +203,21 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING_SEND.
      * - Action        : DISCONNECT.
-     * - Type          : SENT.
      */
     @Override
-    public final void disconnect(final UUID requestId) throws CantDisconnectException, ConnectionRequestNotFoundException {
+    public final void disconnect(final UUID requestId) throws CantDisconnectException            ,
+                                                              ConnectionRequestNotFoundException {
 
-       /* try {
+        try {
 
-            final UUID newId    = UUID.randomUUID();
-            final long sentTime = System.currentTimeMillis();
+            final ProtocolState state = ProtocolState.PROCESSING_SEND;
 
-            final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
-            final RequestType             type   = RequestType            .SENT           ;
-            final ConnectionRequestAction action = ConnectionRequestAction.DISCONNECT     ;
-
-            cryptoBrokerActorNetworkServiceDao.createDisconnectionRequest(
-                    newId,
-                    identityPublicKey,
-                    identityActorType,
-                    brokerPublicKey,
-                    sentTime,
-                    state,
-                    type,
-                    action
+            cryptoBrokerActorNetworkServiceDao.disconnectConnection(
+                    requestId,
+                    state
             );
 
-        } catch (final CantDisconnectException e){
+        } catch (final CantDisconnectException | ConnectionRequestNotFoundException e){
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
@@ -236,7 +225,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDisconnectException(e, null, "Unhandled Exception.");
-        }*/
+        }
     }
 
     /**
@@ -360,9 +349,9 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
 
     @Override
-    public CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(final String                  requesterPublicKey   ,
-                                                                  final Actors                  requesterActorType   ,
-                                                                  final String                  cryptoBrokerPublicKey) throws CantRequestQuotesException {
+    public CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(final String requesterPublicKey   ,
+                                                                  final Actors requesterActorType   ,
+                                                                  final String cryptoBrokerPublicKey) throws CantRequestQuotesException {
 
         try {
 
