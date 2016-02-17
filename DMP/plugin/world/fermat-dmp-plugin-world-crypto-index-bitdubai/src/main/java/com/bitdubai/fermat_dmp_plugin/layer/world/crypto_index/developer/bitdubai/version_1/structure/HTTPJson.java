@@ -4,18 +4,19 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetInputStreamException;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.exceptions.CantGetJsonObjectException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 // TODO add a little description of the class here
 
@@ -42,6 +43,8 @@ public class HTTPJson {
             cantGetInputStreamException.printStackTrace();
         } catch (CantGetBufferedReaderException cantGetBufferedReaderException) {
             cantGetBufferedReaderException.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         return jsonObject;
     }
@@ -75,7 +78,7 @@ public class HTTPJson {
     /**
      * En este método se espera el ingreso de un parámetro del tipo BufferedReader para que el mismo sea leído, colocado en formato json y guardado como un JsonObject
      */
-    public JSONObject getJsonObject(BufferedReader reader) {
+    public JSONObject getJsonObject(BufferedReader reader) throws JSONException {
         String json = null;
         try {
             json = JsonToString(reader);
@@ -126,6 +129,9 @@ public class HTTPJson {
             new CantGetJsonObjectException(CantGetJsonObjectException.DEFAULT_MESSAGE, cantGetBufferedReaderException, "HTTPJson Cant Get JsonObject Exception", "Probably the Json object obtained not correct or is not within the expected format");
         } catch (CantGetJsonObjectException cantGetJsonObjectException) {
             new CantGetJsonObjectException(CantGetJsonObjectException.DEFAULT_MESSAGE, cantGetJsonObjectException, "IOException HTTPJson", "Possible failures in internet connections");
+        } catch (JSONException e) {
+            new CantGetJsonObjectException(CantGetJsonObjectException.DEFAULT_MESSAGE, e, "IOException HTTPJson", "Possible failures in internet connections");
+
         }
         return jsonArray;
     }
