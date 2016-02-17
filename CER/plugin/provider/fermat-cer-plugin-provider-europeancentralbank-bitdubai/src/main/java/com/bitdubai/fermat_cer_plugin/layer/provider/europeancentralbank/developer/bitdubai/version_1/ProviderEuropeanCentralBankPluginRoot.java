@@ -43,6 +43,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -173,7 +174,9 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
     }
 
     @Override
-    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, Calendar calendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+
+        long timestamp = calendar.getTimeInMillis() / 1000L;
 
         if(DateHelper.timestampIsInTheFuture(timestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
@@ -217,7 +220,10 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
     }
 
     @Override
-    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, Calendar startCalendar, Calendar endCalendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+
+        long startTimestamp = startCalendar.getTimeInMillis() / 1000L;
+        long endTimestamp = endCalendar.getTimeInMillis() / 1000L;
 
         if(DateHelper.timestampIsInTheFuture(startTimestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
