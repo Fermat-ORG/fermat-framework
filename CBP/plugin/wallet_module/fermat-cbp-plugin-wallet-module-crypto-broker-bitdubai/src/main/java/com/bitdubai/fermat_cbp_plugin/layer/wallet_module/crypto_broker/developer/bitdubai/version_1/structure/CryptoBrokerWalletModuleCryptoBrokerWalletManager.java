@@ -57,6 +57,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.Crypt
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSettings;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
@@ -1655,7 +1656,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     contractClauseType.getCode() == ContractClauseType.CASH_ON_HAND.getCode()) {
                 //TODO: this is a hardcoded public key
                 String cryptoBrokerPublicKey = "walletPublicKeyTest";
-                this.brokerAckOfflinePaymentManager.ackPayment(cryptoBrokerPublicKey, contractHash);
+                this.brokerAckOfflinePaymentManager.ackPayment(
+                        cryptoBrokerPublicKey,
+                        contractHash,
+                        customerBrokerContractSale.getPublicKeyBroker()
+                );
                 return customerBrokerContractSale.getStatus();
             }
 
@@ -1680,10 +1685,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public EarningsPair addEarningsPairToEarningSettings(Currency earningCurrency, Currency linkedCurrency, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantAssociatePairException, PairAlreadyAssociatedException, CantLoadEarningSettingsException {
+    public EarningsPair addEarningsPairToEarningSettings(Currency earningCurrency, Currency linkedCurrency, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantAssociatePairException, PairAlreadyAssociatedException {
         EarningsSettings earningsSettings = matchingEngineManager.loadEarningsSettings(new WalletReference(brokerWalletPublicKey));
-        EarningsPair earningsPair = earningsSettings.associatePair(earningCurrency, linkedCurrency, new WalletReference(earningWalletPublicKey));
-
-        return earningsPair;
+        return earningsSettings.registerPair(earningCurrency, linkedCurrency, new WalletReference(earningWalletPublicKey));
     }
 }
