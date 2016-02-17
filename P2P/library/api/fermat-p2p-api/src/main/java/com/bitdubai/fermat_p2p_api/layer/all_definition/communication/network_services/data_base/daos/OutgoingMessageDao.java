@@ -503,6 +503,12 @@ public final class OutgoingMessageDao {
                 filtersTable.add(newFilter);
             }
 
+            DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+            newFilter.setType(DatabaseFilterType.EQUAL);
+            newFilter.setColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
+            newFilter.setValue(FermatMessagesStatus.PENDING_TO_SEND.getCode());
+            filtersTable.add(newFilter);
+
             templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
             templateTable.loadToMemory();
 

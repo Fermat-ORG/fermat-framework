@@ -27,7 +27,10 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
@@ -243,7 +246,14 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     public void onDismiss(DialogInterface dialogInterface) {
 
         try {
-            selectedIdentity = walletManager.getListOfIdentities().get(0);
+            List<CryptoCustomerIdentity> listOfIdentities = walletManager.getListOfIdentities();
+            if (listOfIdentities.isEmpty())
+                getActivity().onBackPressed();
+            else {
+                invalidate();
+                selectedIdentity = listOfIdentities.get(0);
+            }
+
         } catch (FermatException e) {
             Log.e(TAG, e.getMessage(), e);
             if (errorManager != null)
@@ -291,6 +301,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                     if (!containProvider(selectedItem)) {
                         selectedProviders.add(selectedItem);
                         adapter.changeDataSet(selectedProviders);
+                        Log.i("DATA PROVIDERSS:", "" + selectedProviders + " Item seleccionado: " + selectedItem);
                         showOrHideNoProvidersView();
                     }
                 }
@@ -391,11 +402,16 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             for (CurrencyPairAndProvider provider : selectedProviders) {
                 CurrencyExchangeRateProviderManager providerManager = provider.getProvider();
                 UUID providerId = providerManager.getProviderId();
-
                 CurrencyExchangeRateProviderManager selectedProviderManager = selectedProvider.getProvider();
                 UUID selectedProviderId = selectedProviderManager.getProviderId();
 
-                if (providerId.equals(selectedProviderId))
+                Currency providerFrom = provider.getCurrencyFrom();
+                Currency providerTo = provider.getCurrencyTo();
+
+                Currency SelectedFrom = selectedProvider.getCurrencyFrom();
+                Currency SelectedTo = selectedProvider.getCurrencyTo();
+
+                if (providerId.equals(selectedProviderId) && providerFrom == SelectedFrom && providerTo == SelectedTo)
                     return true;
             }
         } catch (CantGetProviderInfoException ex) {
@@ -456,7 +472,6 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         for (InstalledWallet wallet : bitcoinWallets) {
             data.add(wallet.getWalletName());
         }
-
         return data;
     }
 }

@@ -28,11 +28,11 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.bitdubai.fermat"
+        applicationId "org.fermat"
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0"
+        versionName "1.1"
         multiDexEnabled true
     }
 
@@ -56,7 +56,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -124,7 +124,7 @@ dependencies {
     compile project(':fermat-dap-android-sub-app-redeem-point-identity-bitdubai')
     //BNK wallets
 
-    //compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
+    compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
 
     //CSH wallet
     compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
