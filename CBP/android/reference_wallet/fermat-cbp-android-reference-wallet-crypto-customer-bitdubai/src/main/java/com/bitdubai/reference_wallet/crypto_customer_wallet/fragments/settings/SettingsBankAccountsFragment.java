@@ -188,7 +188,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
         }
 
         appSession.setData(CryptoCustomerWalletSession.CONFIGURED_DATA, true); // TODO: solo para testing, quitar despues
-        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }
 
     private void showOrHideRecyclerView() {
