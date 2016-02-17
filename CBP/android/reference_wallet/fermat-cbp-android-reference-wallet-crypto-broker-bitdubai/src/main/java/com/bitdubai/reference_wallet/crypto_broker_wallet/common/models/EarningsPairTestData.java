@@ -13,17 +13,16 @@ import java.util.UUID;
  */
 public class EarningsPairTestData implements EarningsPair {
 
-    private final Currency         selectedCurrency;
-    private final Currency         linkedCurrency  ;
-    private final UUID             id              ;
-    private final EarningPairState state           ;
+    private final Currency earningCurrency;
+    private final Currency linkedCurrency;
+    private final UUID id;
+    private final EarningPairState state;
 
-    public EarningsPairTestData(final Currency selectedCurrency,
-                                final Currency linkedCurrency  ) {
+    public EarningsPairTestData(final Currency earningCurrency, final Currency linkedCurrency) {
 
         id = UUID.randomUUID();
 
-        this.selectedCurrency = selectedCurrency;
+        this.earningCurrency = earningCurrency;
         this.linkedCurrency = linkedCurrency;
         this.state = EarningPairState.ASSOCIATED;
 
@@ -34,10 +33,9 @@ public class EarningsPairTestData implements EarningsPair {
         return id;
     }
 
-
     @Override
     public Currency getEarningCurrency() {
-        return selectedCurrency;
+        return earningCurrency;
     }
 
     @Override

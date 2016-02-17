@@ -183,7 +183,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<CryptoCustom
     @Override
     public void onItemClickListener(CryptoCustomerCommunityInformation data, int position) {
         appSession.setData(ACTOR_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
