@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
@@ -60,8 +62,8 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
 
-        haveNote = false;
-        haveNote = (!negotiationInformation.getMemo().isEmpty());
+        String memo = negotiationInformation.getMemo();
+        haveNote = memo != null && !memo.isEmpty();
     }
 
     public void changeDataSet(CustomerBrokerNegotiationInformation negotiationInfo) {
@@ -210,54 +212,84 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
             //BASIC CLAUSES
             case BROKER_CURRENCY:
                 clauseViewHolder.setViewResources(R.string.ccw_currency_to_pay, clauseNumberImageRes, R.string.ccw_currency_description);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case EXCHANGE_RATE:
                 clauseViewHolder.setViewResources(R.string.exchange_rate_reference, clauseNumberImageRes);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case CUSTOMER_CURRENCY_QUANTITY:
                 clauseViewHolder.setViewResources(R.string.ccw_amount_to_buy, clauseNumberImageRes, R.string.ccw_amount_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_CURRENCY_QUANTITY:
                 clauseViewHolder.setViewResources(R.string.ccw_amount_to_pay, clauseNumberImageRes, R.string.ccw_amount_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //PAYMENT METHOD CLAUSES
             case CUSTOMER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.payment_methods_title, clauseNumberImageRes, R.string.payment_method);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_PAYMENT_METHOD:
                 clauseViewHolder.setViewResources(R.string.reception_methods_title, clauseNumberImageRes, R.string.payment_method);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //CRYPTO CLAUSES
             case CUSTOMER_CRYPTO_ADDRESS:
                 clauseViewHolder.setViewResources(R.string.ccw_crypto_address_customer, clauseNumberImageRes, R.string.ccw_crypto_address_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_CRYPTO_ADDRESS:
                 clauseViewHolder.setViewResources(R.string.ccw_crypto_address_broker, clauseNumberImageRes, R.string.ccw_crypto_address_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //BANK CLAUSES
             case CUSTOMER_BANK_ACCOUNT:
                 clauseViewHolder.setViewResources(R.string.ccw_bank_account_customer, clauseNumberImageRes, R.string.ccw_bank_account_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_BANK_ACCOUNT:
                 clauseViewHolder.setViewResources(R.string.ccw_bank_account_broker, clauseNumberImageRes, R.string.ccw_bank_account_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //CASH CLAUSES
             case CUSTOMER_PLACE_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_customer, clauseNumberImageRes, R.string.ccw_cash_place_to_delivery_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_PLACE_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_broker, clauseNumberImageRes, R.string.ccw_cash_place_to_delivery_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //DATE CLAUSES
             case CUSTOMER_DATE_TIME_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_customer, clauseNumberImageRes, R.string.delivery_date_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_DATE_TIME_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_broker, clauseNumberImageRes, R.string.delivery_date_title);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             //OTHER
             case CUSTOMER_CURRENCY:
                 clauseViewHolder.setViewResources(R.string.ccw_currency_to_buy, clauseNumberImageRes, R.string.payment_method);
+                if(negotiationStepStatus(clause.getStatus()) != null)
+                    clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
         }
 
@@ -279,15 +311,7 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
 
         Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
 
-//        final int TOTAL_STEPS = getTotalSteps(clauses);
-        int TOTAL_STEPS = 8;
-        int contInd = TOTAL_STEPS - 1;
-        ClauseInformation brokerPaymentMethod = getCustomerPaymentInfo(clauses);
-        ClauseInformation customerReceivedMethod = getBrokerPaymentInfo(clauses);
-
-        if(brokerPaymentMethod != null)     TOTAL_STEPS = TOTAL_STEPS + 1;
-        if(customerReceivedMethod != null)  TOTAL_STEPS = TOTAL_STEPS + 1;
-
+        int TOTAL_STEPS = 10;
 
         final ClauseInformation[] data = new ClauseInformation[TOTAL_STEPS];
 
@@ -297,19 +321,11 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         data[3] = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
         data[4] = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
         data[5] = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
-        data[6] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
-        data[7] = clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
+        data[6] = getBrokerPaymentInfo(clauses);
+        data[7] = getCustomerPaymentInfo(clauses);
+        data[8] = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+        data[9] = clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
 
-        if(brokerPaymentMethod != null){
-            contInd = contInd + 1;
-            data[contInd] = brokerPaymentMethod;
-        }
-
-        if(customerReceivedMethod != null){
-            contInd = contInd + 1;
-            data[contInd] = customerReceivedMethod;
-        }
-//
         return Arrays.asList(data);
     }
 
@@ -349,6 +365,13 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         }
 
         return clause;
+    }
+
+    private NegotiationStepStatus negotiationStepStatus(ClauseStatus statusClause){
+        if(NegotiationStepStatus.codeExists(statusClause.getCode()))
+            return NegotiationStepStatus.getByCode(statusClause.getCode());
+        else
+            return null;
     }
 
     private int getItemPosition(int position) {
