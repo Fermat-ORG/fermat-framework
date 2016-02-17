@@ -465,7 +465,7 @@ public class AssetIssuerActorDao implements Serializable {
                     record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
 
                     if (actorAssetIssuer.getDescription() != null)
-                        record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_DESCRIPTION_COLUMN_NAME, actorAssetIssuer.getDescription());
+                        record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_DESCRIPTION_COLUMN_NAME, actorAssetIssuer.getDescription());
 
                     table.insertRecord(record);
                     recordInsert = recordInsert + 1;
