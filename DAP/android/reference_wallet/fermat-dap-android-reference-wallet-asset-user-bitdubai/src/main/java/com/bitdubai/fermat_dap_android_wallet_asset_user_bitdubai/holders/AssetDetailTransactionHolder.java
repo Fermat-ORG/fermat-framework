@@ -51,11 +51,11 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
     }
 
     public void bind(final Transaction transaction) {
-        byte[] img = (transaction.getImagePerson() == null) ? new byte[0] : transaction.getImagePerson();
+        byte[] img = (transaction.getActorImage() == null) ? new byte[0] : transaction.getActorImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(actorImage, res, R.drawable.img_asset_without_image, false);
         bitmapWorkerTask.execute(img);
 
-        actorNameText.setText(transaction.getUserName());
+        actorNameText.setText(transaction.getActorName());
         typeByText.setText((transaction.getTransactionType() == TransactionType.CREDIT) ? "Recieved by" : "Sent by");
         String symbol;
         if (transaction.getTransactionType() == TransactionType.CREDIT) {
@@ -67,7 +67,7 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
             amountText.setTextColor(res.getColor(R.color.fab_material_red_900));
             balanceTypeText.setTextColor(res.getColor(R.color.fab_material_red_900));
         }
-        amountText.setText(DAPStandardFormats.BITCOIN_FORMAT.format(symbol + transaction.getAmount()));
+        amountText.setText(symbol + DAPStandardFormats.BITCOIN_FORMAT.format(transaction.getAmount()));
         balanceTypeText.setText((transaction.getBalanceType() == BalanceType.AVAILABLE) ? "AVAILABLE" : "BOOK");
         dateText.setText(transaction.getFormattedDate());
     }

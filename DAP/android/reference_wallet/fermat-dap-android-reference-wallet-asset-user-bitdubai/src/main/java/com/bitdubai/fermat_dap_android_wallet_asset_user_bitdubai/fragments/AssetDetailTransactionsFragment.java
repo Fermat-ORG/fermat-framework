@@ -235,6 +235,8 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL, 0, "help").setIcon(R.drawable.dap_asset_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Item Sell")//.setIcon(R.drawable.dap_asset_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -245,7 +247,11 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL) {
                 setUpHelpAssetDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            } else if (id == R.id.action_wallet_user_redeem) {
+            } else if(id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
+                appSession.setData("asset_data", digitalAsset);
+                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY, appSession.getAppPublicKey());
+                return true;
+            }else if (id == R.id.action_wallet_user_redeem) {
                 changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
                 return true;
             } else if (id == R.id.action_wallet_user_appropriate) {
