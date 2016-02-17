@@ -256,6 +256,13 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
+    public void createActorAssetIssuerRegisterInNetworkService(ActorAssetIssuer actorAssetIssuer) throws CantCreateActorAssetIssuerException {
+        List<ActorAssetIssuer> list = new ArrayList<>();
+        list.add(actorAssetIssuer);
+        createActorAssetIssuerRegisterInNetworkService(list);
+    }
+
+    @Override
     public ActorAssetIssuer getActorAssetIssuer() throws CantGetAssetIssuerActorsException {
 
         ActorAssetIssuer actorAssetIssuer;
