@@ -171,7 +171,7 @@ public class ChatAdapterView extends LinearLayout {
                     msg.setId(chatManager.getMessageByChatId(chatid).get(i).getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else msg.setMe(false);
-                    msg.setDate(chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString());
+                    msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatid).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString()
                     msg.setUserId(chatManager.getMessageByChatId(chatid).get(i).getContactId());
                     msg.setMessage(message);
                     chatHistory.add(msg);

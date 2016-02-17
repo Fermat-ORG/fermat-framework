@@ -1,4 +1,3 @@
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
@@ -7,7 +6,8 @@
     <!-- Use standard android.R class icon id instead of app specific id. This is just useful for
          consistency. Use scaleType=centerCrop to give a nice full cropped image in the assigned
          space -->
-    <ImageView android:id="@+id/icon"
+    <ImageView
+        android:id="@+id/icon"
         android:layout_height="?android:attr/listPreferredItemHeight"
         android:layout_width="?android:attr/listPreferredItemHeight"
         android:scaleType="centerCrop"
@@ -53,6 +53,6 @@
         android:ellipsize="marquee"
         android:textColor="@color/black"
         android:layout_alignParentStart="false"
-         />
+        />
 
 </RelativeLayout>

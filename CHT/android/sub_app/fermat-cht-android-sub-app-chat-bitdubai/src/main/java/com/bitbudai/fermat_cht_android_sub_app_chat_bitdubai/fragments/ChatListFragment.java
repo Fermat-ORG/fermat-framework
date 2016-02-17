@@ -41,6 +41,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -193,7 +194,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 name=chatManager.getContactByContactId(chatManager.getMessageByChatId(chatidtemp).get(0).getContactId()).getRemoteName();
                 sizeofmessagelist=chatManager.getMessageByChatId(chatidtemp).size();
                 message=chatManager.getMessageByChatId(chatidtemp).get(sizeofmessagelist - 1).getMessage();
-                datemessage=chatManager.getChatByChatId(chatidtemp).getLastMessageDate().toString();
+                datemessage= DateFormat.getDateTimeInstance().format(chatManager.getChatByChatId(chatidtemp).getLastMessageDate());//.toString();
                 chatid=chatidtemp.toString();
                 infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+contactid+"@#@#");
                 imgid.add(R.drawable.ic_contact_picture_holo_light);//R.drawable.ken

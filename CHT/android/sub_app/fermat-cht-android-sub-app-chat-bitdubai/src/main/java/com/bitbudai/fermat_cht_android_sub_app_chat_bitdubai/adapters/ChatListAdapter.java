@@ -151,7 +151,6 @@ public class ChatListAdapter extends ArrayAdapter {
         return targetBitmap;
     }
 
-
 //    @Override
 //    protected ChatHolder createHolder(View itemView, int type) {
 //        return new ChatHolder(itemView);

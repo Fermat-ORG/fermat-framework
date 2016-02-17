@@ -23,8 +23,7 @@ android:layout_height="wrap_content">
     android:maxLines="1"
     android:text="title"
     android:textColor="@color/black"
-    android:textSize="15dip"
-    android:textStyle="bold" />
+    android:textSize="15dip" />
 
 <TextView
     android:id="@+id/tvdesc"
@@ -36,7 +35,7 @@ android:layout_height="wrap_content">
     android:maxLines="3"
     android:text="desc"
     android:textColor="@color/black"
-    android:textSize="13dip" />
+    android:textSize="10dip" />
 
 <TextView
     android:id="@+id/tvdate"
@@ -44,9 +43,9 @@ android:layout_height="wrap_content">
     android:layout_height="wrap_content"
     android:layout_alignParentRight="true"
     android:layout_marginRight="5dp"
-    android:layout_marginTop="5dip"
+    android:layout_marginTop="3dp"
     android:text="date"
-    android:textColor="@color/black"
-    android:textSize="12dip" />
+    android:textColor="#757575"
+    android:textSize="8dip" />
 
 </RelativeLayout>
