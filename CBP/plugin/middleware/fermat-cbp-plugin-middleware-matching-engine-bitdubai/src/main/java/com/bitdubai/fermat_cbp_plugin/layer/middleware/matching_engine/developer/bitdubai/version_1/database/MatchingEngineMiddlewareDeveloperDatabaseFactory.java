@@ -119,6 +119,8 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
         earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME      );
         earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME );
         earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME    );
+        earningPairColumns.add(MatchingEngineMiddlewareDatabaseConstants.EARNING_PAIR_STATE_COLUMN_NAME                );
+
         /**
          * Table Earning Pair addition.
          */

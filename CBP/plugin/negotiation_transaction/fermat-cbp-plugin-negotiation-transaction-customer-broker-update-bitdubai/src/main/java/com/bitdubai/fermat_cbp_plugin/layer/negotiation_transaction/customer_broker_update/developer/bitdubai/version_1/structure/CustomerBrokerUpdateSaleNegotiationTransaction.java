@@ -40,9 +40,8 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
 
             UUID transactionId = UUID.randomUUID();
 
-            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - SALE NEGOTIATION - SEND CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****\n");
-
-            System.out.print("\n\n --- Negotiation Mock XML Date" +
+            System.out.print("\n\n**** 3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - SALE NEGOTIATION - SEND CUSTOMER BROKER UPDATE SALE NEGOTIATION TRANSACTION. transactionId: " + transactionId + " ****" +
+                            "\n --- Negotiation Mock XML Date" +
                             "\n- NegotiationId = " + customerBrokerSaleNegotiation.getNegotiationId() +
                             "\n- CustomerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey() +
                             "\n- BrokerPublicKey = " + customerBrokerSaleNegotiation.getCustomerPublicKey()
