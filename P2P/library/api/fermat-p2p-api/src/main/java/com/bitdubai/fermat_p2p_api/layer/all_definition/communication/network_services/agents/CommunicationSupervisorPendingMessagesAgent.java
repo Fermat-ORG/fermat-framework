@@ -152,7 +152,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
         try {
 
             scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingIncomingMessageProcessorTask(),  15, 15, TimeUnit.SECONDS));
-            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(0, 4), 15, 15, TimeUnit.SECONDS));
+            scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(1, 4), 15, 15, TimeUnit.SECONDS));
             scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5, 9),  5,  5, TimeUnit.MINUTES));
             scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10, null), 1, 1, TimeUnit.HOURS));
 
@@ -172,7 +172,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
             try {
 
                 scheduledThreadPool.scheduleAtFixedRate(new PendingIncomingMessageProcessorTask()  , 15, 15, TimeUnit.SECONDS);
-                scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(0, 4), 15, 15, TimeUnit.SECONDS));
+                scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(1, 4), 15, 15, TimeUnit.SECONDS));
                 scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(5, 9), 5, 5, TimeUnit.MINUTES));
                 scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PendingOutgoingMessageProcessorTask(10, null), 1, 1, TimeUnit.HOURS));
 
