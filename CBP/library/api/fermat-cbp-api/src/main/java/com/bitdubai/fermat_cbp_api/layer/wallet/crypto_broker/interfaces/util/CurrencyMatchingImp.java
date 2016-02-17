@@ -16,6 +16,8 @@ public class CurrencyMatchingImp implements CurrencyMatching {
     private float    amountGiving;
     private float    amountReceiving;
 
+    public CurrencyMatchingImp(){};
+
     public CurrencyMatchingImp(UUID     currencyGivingId,
                                UUID     currencyReceivingId,
                                Currency currencyGiving,
@@ -32,8 +34,13 @@ public class CurrencyMatchingImp implements CurrencyMatching {
     }
 
     @Override
-    public UUID geCurrencyGivingId() {
+    public UUID getCurrencyGivingId() {
         return currencyGivingId;
+    }
+
+    @Override
+    public void setCurrencyGivingId(UUID currencyGivingId) {
+
     }
 
     @Override
@@ -42,8 +49,18 @@ public class CurrencyMatchingImp implements CurrencyMatching {
     }
 
     @Override
+    public void setCurrencyReceivingId(UUID currencyReceivingId) {
+
+    }
+
+    @Override
     public Currency getCurrencyGiving() {
         return currencyGiving;
+    }
+
+    @Override
+    public void setCurrencyGiving(Currency currencyGiving) {
+
     }
 
     @Override
@@ -52,12 +69,27 @@ public class CurrencyMatchingImp implements CurrencyMatching {
     }
 
     @Override
+    public void setAmountGiving(float amountGiving) {
+
+    }
+
+    @Override
     public Currency getCurrencyReceiving() {
         return currencyReceiving;
     }
 
     @Override
+    public void setCurrencyReceiving(Currency currencyReceiving) {
+
+    }
+
+    @Override
     public float getAmountReceiving() {
         return amountReceiving;
+    }
+
+    @Override
+    public void setAmountReceiving(float amountReceiving) {
+
     }
 }
