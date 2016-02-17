@@ -32,6 +32,7 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
     private FermatTextView amountText;
     private FermatTextView dateText;
     private FermatTextView balanceTypeText;
+    private FermatTextView memoText;
 
     /**
      * Constructor
@@ -51,6 +52,7 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
         amountText = (FermatTextView) itemView.findViewById(R.id.amountText);
         balanceTypeText = (FermatTextView) itemView.findViewById(R.id.balanceTypeText);
         dateText = (FermatTextView) itemView.findViewById(R.id.dateText);
+        memoText = (FermatTextView) itemView.findViewById(R.id.memoText);
     }
 
     public void bind(final Transaction transaction) {
@@ -72,7 +74,8 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
         }
         double amount = BitcoinConverter.convert(transaction.getAmount(), SATOSHI, BITCOIN);
         amountText.setText(symbol + DAPStandardFormats.BITCOIN_FORMAT.format(amount) + " BTC");
-        balanceTypeText.setText((transaction.getBalanceType() == BalanceType.AVAILABLE) ? "AVAILABLE" : "BOOK");
+        balanceTypeText.setText((transaction.getBalanceType() == BalanceType.AVAILABLE) ? "CONFIRMED" : "PENDING");
         dateText.setText(transaction.getFormattedDate());
+        if (transaction.getMemo() != null) memoText.setText(transaction.getMemo());
     }
 }
