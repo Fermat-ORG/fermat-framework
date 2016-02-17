@@ -27,6 +27,8 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager {
 
     List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;
 
+    List<ActorAssetUser> getAllActorAssetUserConnected() throws CantGetAssetUserActorsException;
+
     List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupId) throws CantGetAssetUserActorsException;
 
     void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException;
