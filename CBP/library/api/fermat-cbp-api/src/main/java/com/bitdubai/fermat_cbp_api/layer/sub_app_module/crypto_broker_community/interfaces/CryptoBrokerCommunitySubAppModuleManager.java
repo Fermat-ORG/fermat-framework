@@ -51,6 +51,13 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      */
     List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
 
+
+    /**
+     * Through the method <code>setSelectedActorIdentity</code> we can set the selected actor identity.
+     */
+     public void setSelectedActorIdentity(CryptoBrokerCommunitySelectableIdentity identity);
+
+
     /**
      * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
      * Crypto Brokers that are not linked to the local selectedIdentity

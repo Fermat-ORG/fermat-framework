@@ -8,10 +8,16 @@ import java.util.UUID;
  * Created by franklin on 14/02/16.
  */
 public interface CurrencyMatching {
-    UUID geCurrencyGivingId();
+    UUID getCurrencyGivingId();
+    void setCurrencyGivingId(UUID currencyGivingId);
     UUID getCurrencyReceivingId();
+    void setCurrencyReceivingId(UUID currencyReceivingId);
     Currency getCurrencyGiving();
+    void setCurrencyGiving(Currency currencyGiving);
     float getAmountGiving();
+    void setAmountGiving(float amountGiving);
     Currency getCurrencyReceiving();
+    void setCurrencyReceiving(Currency currencyReceiving);
     float getAmountReceiving();
+    void setAmountReceiving(float amountReceiving);
 }

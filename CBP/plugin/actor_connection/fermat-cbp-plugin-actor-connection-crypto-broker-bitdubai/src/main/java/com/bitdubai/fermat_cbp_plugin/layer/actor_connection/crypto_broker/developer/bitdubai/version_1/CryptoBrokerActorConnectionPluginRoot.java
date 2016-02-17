@@ -39,6 +39,10 @@ import java.util.List;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 

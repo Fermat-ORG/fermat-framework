@@ -9,4 +9,6 @@ public class ApplicationConstants {
     public static final String START_ACTIVITY_INIT = "Init";
     public static final String ACTIVE_PLATFORMS = "active";
     public static final String CLOSE_APP = "close";
+
+    public static final String SETTINGS_CORE = "settings_core";
 }
