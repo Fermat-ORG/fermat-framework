@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.event_handler.CustomerOfflinePaymentRecorderServiceTest;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.event_handler.CustomerOfflinePaymentRecorderService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -13,15 +15,13 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-
 /**
- * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 02/02/16.
+ * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 16/02/16.
  */
-public class testStart {
+public class incomingNewContractStatusUpdateEventHandlerTest {
     @Mock
     CustomerOfflinePaymentBusinessTransactionDao customerOfflinePaymentBusinessTransactionDao;
     @Mock
@@ -30,12 +30,13 @@ public class testStart {
     ErrorManager errorManager;
     @Mock
     FermatEventListener mockFermatEventListener;
-
+    IncomingNewContractStatusUpdate incomingNewContractStatusUpdate;
     CustomerOfflinePaymentRecorderService customerOfflinePaymentRecorderService;
 
     public void setUpGeneralMockitoRules() throws Exception{
         when(eventManager.getNewListener(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE)).thenReturn(mockFermatEventListener);
         when(eventManager.getNewListener(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE)).thenReturn(mockFermatEventListener);
+
 
     }
     @Before
@@ -43,28 +44,26 @@ public class testStart {
         MockitoAnnotations.initMocks(this);
         setUpGeneralMockitoRules();
     }
-
     @Test
-    public void testStart_Should_Return_Start() throws Exception {
+    public void incomingNewContractStatusUpdateEventHandlerTest_Should_Return_() throws Exception {
+        when(incomingNewContractStatusUpdate.getRemoteBusinessTransaction()).thenReturn(Plugins.CUSTOMER_OFFLINE_PAYMENT);
         customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
-        customerOfflinePaymentRecorderService.setEventManager(eventManager);
-        customerOfflinePaymentRecorderService.start();
-        assertEquals(ServiceStatus.STARTED, customerOfflinePaymentRecorderService.getStatus());
+        //customerOfflinePaymentRecorderService.incomingNewContractStatusUpdateEventHandler(incomingNewContractStatusUpdate);
     }
 
     @Test(expected = Exception.class)
-    public void testStart_Should_Return_Exception() throws Exception {
-        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(null,null,null);
-        customerOfflinePaymentRecorderService.start();
-    }
-
-    @Test
-    public void testStop_Should_Return_Stop() throws Exception {
+    public void incomingNewContractStatusUpdateEventHandlerTest_Should_Throw_Exception() throws Exception {
         customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
         customerOfflinePaymentRecorderService.setEventManager(eventManager);
         customerOfflinePaymentRecorderService.start();
-        customerOfflinePaymentRecorderService.stop();
-        assertEquals(customerOfflinePaymentRecorderService.getStatus(), ServiceStatus.STOPPED);
+        customerOfflinePaymentRecorderService.incomingNewContractStatusUpdateEventHandler(null);
     }
 
+    @Test(expected = CantSaveEventException.class)
+    public void incomingNewContractStatusUpdateEventHandlerTest_Should_Throw_CantSaveEventException() throws Exception {
+        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
+        customerOfflinePaymentRecorderService.setEventManager(eventManager);
+        customerOfflinePaymentRecorderService.start();
+        customerOfflinePaymentRecorderService.incomingNewContractStatusUpdateEventHandler(incomingNewContractStatusUpdate);
+    }
 }
