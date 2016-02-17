@@ -96,6 +96,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
         {
             try
             {
+                startMonitorAgent();
                 HoldCryptoMoneyTransactionDatabaseFactory holdCryptoMoneyTransactionDatabaseFactory = new HoldCryptoMoneyTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 holdCryptoMoneyTransactionDatabaseFactory.createDatabase(this.pluginId, HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME);
             }

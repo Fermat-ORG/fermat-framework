@@ -13,6 +13,6 @@ public interface BrokerAckOfflinePaymentManager extends BrokerAckPaymentManager 
      * @param contractHash
      * @throws CantAckPaymentException
      */
-    void ackPayment(String walletPublicKey, String contractHash)throws CantAckPaymentException;
+    void ackPayment(String walletPublicKey, String contractHash, String actorPublicKey)throws CantAckPaymentException;
 
 }
