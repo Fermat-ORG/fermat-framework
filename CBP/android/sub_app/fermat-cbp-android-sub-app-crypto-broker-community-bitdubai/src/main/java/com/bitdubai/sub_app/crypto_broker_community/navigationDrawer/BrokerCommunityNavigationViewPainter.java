@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_broker_community.navigationDrawer;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -8,15 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.sub_app.crypto_broker_community.R;
+import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.utils.FragmentsCommons;
+import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 
 /**
  * Created by mati on 2015.11.24..
@@ -25,22 +31,45 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
 
     private Activity activity;
     private ActiveActorIdentityInformation actorIdentity;
+    CryptoBrokerCommunitySubAppSession subAppSession;
+    private CryptoBrokerCommunitySubAppModuleManager moduleManager;
 
-
-    public BrokerCommunityNavigationViewPainter(Activity activity, ActiveActorIdentityInformation actorIdentity) {
+    public BrokerCommunityNavigationViewPainter(Activity activity, ActiveActorIdentityInformation actorIdentity, CryptoBrokerCommunitySubAppSession subAppSession) {
         this.activity = activity;
         this.actorIdentity = actorIdentity;
+        this.subAppSession = subAppSession;
+        this.moduleManager = subAppSession.getModuleManager();
 
     }
 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation actorIdentityInformation) {
+        View headerView = null;
+
         try {
-            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentityInformation);
+            headerView = FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentityInformation);
+            headerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try{
+                        ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(activity, subAppSession, null);
+                        listIdentitiesDialog.setTitle("Connection Request");
+                        listIdentitiesDialog.show();
+                        listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                activity.recreate();
+                            }
+                        });
+                        listIdentitiesDialog.show();
+                    }catch(Exception e){ }
+                }
+            });
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
-        return null;
+        return headerView;
+
     }
 
     @Override
