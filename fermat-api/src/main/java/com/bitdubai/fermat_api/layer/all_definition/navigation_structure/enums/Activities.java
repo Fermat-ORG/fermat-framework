@@ -119,6 +119,8 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_ASSET_USER_SETTINGS_ACTIVITY("DWAUSA"),
     DAP_WALLET_ASSET_USER_SETTINGS_MAIN_NETWORK("DWAUSMN"),
     DAP_WALLET_ASSET_USER_SETTINGS_NOTIFICATIONS("DWAUSN"),
+    DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY("DWAUASA"),
+    DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY("DWAUASSUA"),
 
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
     DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
@@ -719,6 +721,10 @@ public enum Activities implements FermatEnum {
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS;
             case "CBPCCWP":
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS;
+            case "DWAUASA":
+                return DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY;
+            case "DWAUASSUA":
+                return DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

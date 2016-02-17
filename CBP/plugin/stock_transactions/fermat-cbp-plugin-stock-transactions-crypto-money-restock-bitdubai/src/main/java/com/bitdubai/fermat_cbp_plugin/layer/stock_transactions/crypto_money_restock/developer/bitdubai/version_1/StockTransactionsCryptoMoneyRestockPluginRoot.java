@@ -97,6 +97,7 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
         {
             try
             {
+                startMonitorAgent();
                 StockTransactionsCryptoMoneyRestockDatabaseFactory stockTransactionsCryptoMoneyDestockDatabaseFactory = new StockTransactionsCryptoMoneyRestockDatabaseFactory(this.pluginDatabaseSystem);
                 stockTransactionsCryptoMoneyDestockDatabaseFactory.createDatabase(this.pluginId, StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_DATABASE_NAME);
             }

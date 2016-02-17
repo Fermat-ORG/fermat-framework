@@ -375,7 +375,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createNewIdentityAssetUser(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                        moduleManager.createNewIdentityAssetUser(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.asset_user_identity) : brokerImageByteArray);
                     else
                         moduleManager.updateIdentityAssetUser(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
                 } catch (CantCreateNewIdentityAssetUserException e) {
