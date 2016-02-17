@@ -196,7 +196,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 datemessage=chatManager.getChatByChatId(chatidtemp).getLastMessageDate().toString();
                 chatid=chatidtemp.toString();
                 infochat.add(name+"@#@#"+message+"@#@#"+datemessage+"@#@#"+chatid+"@#@#"+contactid+"@#@#");
-                imgid.add(R.drawable.ken);
+                imgid.add(R.drawable.ic_contact_picture_holo_light);//R.drawable.ken
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
