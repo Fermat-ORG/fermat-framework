@@ -5,21 +5,18 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -96,7 +93,9 @@ public class Data {
     public static List<ActorAssetRedeemPoint> getRedeemPoints(List<RedeemPoint> redeemPoints) {
         List<ActorAssetRedeemPoint> actorAssetRedeemPoints = new ArrayList<>();
         for (RedeemPoint redeemPoint : redeemPoints) {
-            actorAssetRedeemPoints.add(redeemPoint.getActorAssetRedeemPoint());
+            if (redeemPoint.isSelected()) {
+                actorAssetRedeemPoints.add(redeemPoint.getActorAssetRedeemPoint());
+            }
         }
         return actorAssetRedeemPoints;
     }
@@ -116,7 +115,7 @@ public class Data {
         List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY).getAllTransactions(digitalAsset.getAssetPublicKey());
         DAPActor dapActor;
         for (AssetUserWalletTransaction assetUserWalletTransaction :
-             assetUserWalletTransactions) {
+                assetUserWalletTransactions) {
             if (assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
                 dapActor = assetUserWalletTransaction.getActorFrom();
             } else {
