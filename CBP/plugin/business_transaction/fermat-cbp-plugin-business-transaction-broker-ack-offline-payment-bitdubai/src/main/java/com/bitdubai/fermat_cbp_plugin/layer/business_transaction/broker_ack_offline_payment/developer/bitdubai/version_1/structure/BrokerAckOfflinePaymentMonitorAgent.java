@@ -514,8 +514,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
                             customerBrokerContractSale,
                             paymentType,
-                            customerBrokerContractSale.getPublicKeyBroker());
-
+                            customerBrokerContractSale.getPublicKeyBroker(),
+                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT);
+                    brokerAckOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
             } catch (CantUpdateRecordException exception) {

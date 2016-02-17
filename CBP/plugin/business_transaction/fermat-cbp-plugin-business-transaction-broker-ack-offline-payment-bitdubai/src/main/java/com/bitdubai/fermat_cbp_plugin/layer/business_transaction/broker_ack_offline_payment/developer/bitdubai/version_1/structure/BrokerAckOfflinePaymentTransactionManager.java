@@ -116,11 +116,35 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                 ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(
                     contractHash);
                 //If the status is different to PENDING_OFFLINE_PAYMENT_CONFIRMATION the ack process was started.
-                if(!contractTransactionStatus.getCode()
+                if(contractTransactionStatus.getCode()
                         .equals(ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT.getCode())){
+                    customerBrokerContractSale=
+                            this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
+                                    contractHash);
+                    if(customerBrokerContractSale==null){
+                        throw new CantAckPaymentException("The CustomerBrokerContractSale with the hash \n" +
+                                contractHash+"\n" +
+                                "is null");
+                    }
+                    //TODO: get the payment type
+                    MoneyType paymentType=getMoneyTypeFromContract(customerBrokerContractSale);
+                    switch (paymentType){
+                        case BANK:
+                            contractTransactionStatus=ContractTransactionStatus.PENDING_CREDIT_BANK_WALLET;
+                            break;
+                        case CASH_DELIVERY:
+                            contractTransactionStatus=ContractTransactionStatus.PENDING_CREDIT_CASH_WALLET;
+                            break;
+                        case CASH_ON_HAND:
+                            contractTransactionStatus=ContractTransactionStatus.PENDING_CREDIT_CASH_WALLET;
+                            break;
+                        default:
+                            throw new InvalidParameterException(
+                                    paymentType+" value from MoneyType is not valid in this plugin");
+                    }
                     this.brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
-                            ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_CONFIRMATION);
+                            contractTransactionStatus);
 
                 } else{
                     try{
@@ -161,6 +185,8 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             throw new CantAckPaymentException(e,
                     "Creating Broker Ack Offline Payment Business Transaction",
                     "Cannot get the payment type");
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
         }
 
     }
