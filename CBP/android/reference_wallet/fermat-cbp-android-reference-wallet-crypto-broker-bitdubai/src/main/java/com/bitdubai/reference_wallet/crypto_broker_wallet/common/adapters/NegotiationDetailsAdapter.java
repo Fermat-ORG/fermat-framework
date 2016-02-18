@@ -13,6 +13,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
@@ -249,10 +250,10 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
             case PAYMENT_METHOD:
                 try {
                     String currencyToSell = data.getClauses().get(ClauseType.CUSTOMER_CURRENCY).getValue();
-                    List<String> paymentMethods = walletManager.getPaymentMethods(currencyToSell, session.getAppPublicKey());
+                    List<MoneyType> paymentMethods = walletManager.getPaymentMethods(currencyToSell, session.getAppPublicKey());
 
-                    viewHolder.bind(stepNumber, R.string.payment_methods_title,
-                            R.string.payment_method, step.getValue(), paymentMethods);
+//                    viewHolder.bind(stepNumber, R.string.payment_methods_title,
+//                            R.string.payment_method, step.getValue(), paymentMethods);
 
 
                     System.out.println("juanasoPrueba");
