@@ -182,51 +182,6 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
     }
 
 
-    private void reprocessMessage()
-    {
-        try {
-
-            List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listUncompletedRequest();
-
-            for(CryptoPaymentRequest record : cryptoAddressRequestList) {
-
-                cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(), RequestProtocolState.PROCESSING_SEND);
-
-                final CryptoPaymentRequest cryptoPaymentRequest  = record;
-
-
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            String json = "";
-                            if (cryptoPaymentRequest.getAction().getCode().equals(RequestAction.REQUEST.getCode())){
-                                json = buildJsonRequestMessage(cryptoPaymentRequest);
-                            }else{
-                                json = buildJsonInformationMessage(cryptoPaymentRequest);
-                            }
-
-                            sendNewMessage(
-                                    getProfileSenderToRequestConnection(cryptoPaymentRequest.getIdentityPublicKey()),
-                                    getProfileDestinationToRequestConnection(cryptoPaymentRequest.getActorPublicKey()),
-                                    json);
-                        } catch (CantSendMessageException e) {
-                            reportUnexpectedException(e);
-                        }
-                    }
-                });
-
-
-
-
-            }
-        }
-        catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
-        {
-            System.out.println("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
-            e.printStackTrace();
-        }
-    }
 
 
 
