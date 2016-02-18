@@ -62,7 +62,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Assets to Sell"
+            android:text="@string/dap_user_wallet_sell_assets_to_sell"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
             android:id="@+id/textView"
@@ -96,7 +96,7 @@
                 android:id="@+id/bitcoinsLabelText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Asset Value"
+                android:text="@string/dap_user_wallet_sell_asset_value"
                 android:textColor="#ffffff"
                 android:textSize="14sp"
                 android:fontFamily="regular"/>
@@ -138,8 +138,60 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/bitcoinTotalLayout"
+            android:id="@+id/totalPriceLayout"
             android:layout_below="@+id/unitPriceLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/bitcoinsTotalLabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dap_user_wallet_sell_total_value"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:fontFamily="regular"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/bitcoinsTotal"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:ems="10"
+                android:imeOptions="actionNext"
+                android:inputType="numberDecimal"
+                android:nextFocusDown="@+id/expiration_date"
+                android:layout_marginTop="5dp"
+                android:textSize="15sp"
+                android:textColor="#ffffff"
+                android:fontFamily="regular"
+                android:background="@drawable/bg_delivery_input"
+                android:layout_below="@+id/bitcoinsTotalLabelText"/>
+
+            <Spinner
+                android:id="@+id/bitcoinsTotalSpinner"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/bitcoinsTotal"
+                android:layout_alignBottom="@+id/bitcoinsTotal"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/bitcoinsTotalText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:layout_alignBottom="@+id/bitcoinsTotal"
+                android:layout_marginBottom="3dp"
+                android:layout_alignParentRight="true"
+                android:text="0.000000 BTC"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bitcoinTotalLayout"
+            android:layout_below="@+id/totalPriceLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -150,7 +202,7 @@
                 android:layout_marginTop="10dp"
                 android:textSize="14sp"
                 android:textColor="#ffffff"
-                android:text="Total Price:"/>
+                android:text="Total:"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/bitcoinBalanceText"
@@ -168,7 +220,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sell to"
+            android:text="@string/dap_user_wallet_sell_to"
             android:layout_below="@id/bitcoinTotalLayout"
             android:layout_marginTop="15dp"
             android:id="@+id/textView2"
@@ -189,7 +241,7 @@
                 android:id="@+id/selectedUsersText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Select Users"
+                android:text="@string/dap_user_wallet_sell_select_user"
                 android:textColor="#ffffff"
                 android:textSize="16dp"
                 android:layout_centerVertical="true"/>
@@ -209,7 +261,7 @@
             android:id="@+id/sellAssetsButton"
             android:layout_width="match_parent"
             android:layout_height="30dp"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="50dp"
             android:layout_below="@+id/selectUsersButton"
             android:layout_centerHorizontal="true">
 
@@ -222,7 +274,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Sell Assets"
+                android:text="@string/dap_user_wallet_sell_button"
                 android:textSize="17sp"
                 android:fontFamily="regular"
                 android:textColor="#00aeef"/>
