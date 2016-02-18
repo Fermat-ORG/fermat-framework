@@ -62,6 +62,11 @@ public class CustomerBrokerNegotiationInformationImpl implements CustomerBrokerN
         return expirationDatetime;
     }
 
+    @Override
+    public void setNegotiationExpirationDate(long negotiationExpirationDate) {
+        this.expirationDatetime = negotiationExpirationDate;
+    }
+
     public void setExpirationDatetime(long expirationDatetime) {
         this.expirationDatetime = expirationDatetime;
     }
