@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityNotificationAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.AcceptDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
@@ -277,7 +278,14 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     @Override
     public void onItemClickListener(Actor data, int position) {
         try {
-            ConnectDialog notificationAcceptDialog = new ConnectDialog(
+//            ConnectDialog notificationAcceptDialog = new ConnectDialog(
+//                    getActivity(),
+//                    (AssetUserCommunitySubAppSession) appSession,
+//                    null,
+//                    data,
+//                    manager.getActiveAssetUserIdentity());
+
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(
                     getActivity(),
                     (AssetUserCommunitySubAppSession) appSession,
                     null,

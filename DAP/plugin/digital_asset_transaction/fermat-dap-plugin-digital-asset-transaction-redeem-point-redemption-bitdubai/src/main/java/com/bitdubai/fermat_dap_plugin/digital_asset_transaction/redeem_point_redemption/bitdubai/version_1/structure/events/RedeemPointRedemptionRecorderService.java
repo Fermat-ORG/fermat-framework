@@ -77,7 +77,7 @@ public class RedeemPointRedemptionRecorderService implements DealsWithEvents, As
     public void start() throws CantStartServiceException {
 
         FermatEventHandler handler = new RedeemPointRedemptionEventHandler(this);
-        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+        FermatEventListener fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
         fermatEventListener.setEventHandler(handler);
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
