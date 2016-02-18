@@ -65,6 +65,11 @@
     <string name="dap_user_wallet_sell_button">Sell Assets</string>
     <!-- -->
 
+    <!-- app strings -->
+    <string name="dap_user_wallet_confirmed">CONFIRMED</string>
+    <string name="dap_user_wallet_pending">PENDING</string>
+    <!-- -->
+
     <!--Dialog Help - Init-->
     <string name="dap_user_wallet_welcome_subTitle">Welcome to the Asset User Wallet.</string>
     <string name="dap_user_wallet_welcome_body">From this wallet you will be able to redeem your assets or even get the monetary value associated with them.</string>
