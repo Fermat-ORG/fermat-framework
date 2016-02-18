@@ -224,11 +224,11 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
             if (CryptoCurrency.codeExists(currencyPair.getFrom().getCode())) {
                 currencyFrom = currencyPair.getFrom();
                 currencyTo = currencyPair.getTo();
-                invertExchange = false;
+                invertExchange = true;
             } else {
                 currencyFrom = currencyPair.getTo();
                 currencyTo = currencyPair.getFrom();
-                invertExchange = true;
+                invertExchange = false;
             }
 
             //Query API
@@ -289,11 +289,11 @@ public class ProviderBitcoinVenezuelaPluginRoot extends AbstractPlugin implement
         if (CryptoCurrency.codeExists(currencyPair.getFrom().getCode())) {
             currencyFrom = currencyPair.getFrom();
             currencyTo = currencyPair.getTo();
-            invertExchange = false;
+            invertExchange = true;
         } else {
             currencyFrom = currencyPair.getTo();
             currencyTo = currencyPair.getFrom();
-            invertExchange = true;
+            invertExchange = false;
         }
 
         //Query API
