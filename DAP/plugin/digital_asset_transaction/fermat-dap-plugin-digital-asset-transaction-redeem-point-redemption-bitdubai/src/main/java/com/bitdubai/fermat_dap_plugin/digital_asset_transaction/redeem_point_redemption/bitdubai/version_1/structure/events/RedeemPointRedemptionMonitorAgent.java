@@ -22,6 +22,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -202,6 +203,8 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                                     //PERSIST METADATA
                                     debug("persisting metadata");
+                                    //We store the previous owner on its respective plugin
+                                    ActorUtils.storeDAPActor(metadata.getLastOwner(), actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
                                     dao.newTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
                                     persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
                                     //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
