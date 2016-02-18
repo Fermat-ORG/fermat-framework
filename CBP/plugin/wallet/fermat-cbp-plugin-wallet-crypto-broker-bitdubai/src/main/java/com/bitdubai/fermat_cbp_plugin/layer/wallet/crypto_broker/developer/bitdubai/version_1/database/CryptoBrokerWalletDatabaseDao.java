@@ -153,9 +153,9 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
                     if (originTransactionId == records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME)) {
                         new CurrencyMatchingImp(originTransactionId, currencyGiving, currencyReceiving, amountGiving, amountReceiving);
+                        currencyMatchings.add(currencyMatchingImp);
                     }
                     originTransactionId = null;
-                    currencyMatchings.add(currencyMatchingImp);
 
                     sw = true;
                 }
