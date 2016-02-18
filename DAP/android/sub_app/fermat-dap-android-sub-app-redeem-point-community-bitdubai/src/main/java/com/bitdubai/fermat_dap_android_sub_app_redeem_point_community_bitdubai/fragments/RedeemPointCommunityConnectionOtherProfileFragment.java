@@ -162,8 +162,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             //userStatus.setTextColor(Color.parseColor("#292929"));
 
             if(actor.getCryptoAddress() != null){
-                userCryptoAddres.setText("YES");
-                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getCode());
+                userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
+                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
             } else{
                 userCryptoAddres.setText("No");
                 userCryptoCurrency.setText("None");

@@ -18,6 +18,16 @@ public class MatchingEngineMiddlewareDatabaseConstants {
      */
     public static final String MATCHING_ENGINE_MIDDLEWARE_DATABASE_NAME              = "matching_engine_middleware";
 
+
+    /**
+     * Wallets database table definition.
+     */
+    public static final String WALLETS_TABLE_NAME                                    = "wallets"                   ;
+
+    public static final String WALLETS_PUBLIC_KEY_COLUMN_NAME                        = "public_key"                ;
+
+    public static final String WALLETS_FIRST_KEY_COLUMN                              = "public_key"                ;
+
     /**
      * Earning Pair database table definition.
      */
@@ -29,6 +39,7 @@ public class MatchingEngineMiddlewareDatabaseConstants {
     public static final String EARNING_PAIR_LINKED_CURRENCY_COLUMN_NAME              = "linked_currency"           ;
     public static final String EARNING_PAIR_LINKED_CURRENCY_TYPE_COLUMN_NAME         = "linked_currency_type"      ;
     public static final String EARNING_PAIR_WALLET_PUBLIC_KEY_COLUMN_NAME            = "wallet_public_key"         ;
+    public static final String EARNING_PAIR_STATE_COLUMN_NAME                        = "state"                     ;
 
     public static final String EARNING_PAIR_FIRST_KEY_COLUMN                         = "id"                        ;
 
