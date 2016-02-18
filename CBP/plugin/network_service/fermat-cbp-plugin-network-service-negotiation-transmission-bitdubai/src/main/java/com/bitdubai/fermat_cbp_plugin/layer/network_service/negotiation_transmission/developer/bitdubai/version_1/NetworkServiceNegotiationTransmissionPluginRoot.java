@@ -708,7 +708,9 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                time.getTime()
+
         );
     }
 
@@ -734,7 +736,8 @@ public class NetworkServiceNegotiationTransmissionPluginRoot extends AbstractNet
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                time.getTime()
         );
     }
 

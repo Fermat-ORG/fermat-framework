@@ -107,13 +107,17 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     private Database getDataBase() {
         return database;
     }
-
     /**
      * Returns the Open Contract DatabaseTable
      *
      * @return DatabaseTable
      */
-    private DatabaseTable getDatabaseContractTable() {
+    /**
+     * Access modifier was changed from private to protected to enhance
+     * testability
+     */
+    // private
+    protected DatabaseTable getDatabaseContractTable() {
         return getDataBase().getTable(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TABLE_NAME);
     }
@@ -123,7 +127,12 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
      *
      * @return DatabaseTable
      */
-    private DatabaseTable getDatabaseEventsTable() {
+    /**
+     * Access modifier was changed from private to protected to enhance
+     * testability
+     */
+    // private
+    protected DatabaseTable getDatabaseEventsTable() {
         return getDataBase().getTable(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME);
     }
@@ -142,6 +151,10 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     e,
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException( exception,
+                    "Getting the contract transaction status",
+                    "Unexpected error" );
         }
     }
 
@@ -170,6 +183,10 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
+        }catch(Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Getting events in EventStatus.PENDING\"",
+                    "Unexpected error");
         }
     }
 
@@ -194,6 +211,10 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
+        }catch(Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Getting events in EventStatus.PENDING\"",
+                    "Unexpected error");
         }
 
     }
@@ -219,19 +240,31 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public List<CustomerOfflinePaymentRecord> getPendingToSubmitNotificationList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOfflinePaymentRecordList(
-                ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_NOTIFICATION.getCode(),
-                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+        try{
+            return getCustomerOfflinePaymentRecordList(
+                    ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_NOTIFICATION.getCode(),
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+        }catch(Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     public List<CustomerOfflinePaymentRecord> getPendingToSubmitConfirmList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOfflinePaymentRecordList(
-                ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_CONFIRMATION.getCode(),
-                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+        try{
+            return getCustomerOfflinePaymentRecordList(
+                    ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_CONFIRMATION.getCode(),
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+        }catch(Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /*public List<CustomerOfflinePaymentRecord> getOnCryptoNetworkCryptoStatusList() throws
@@ -287,11 +320,17 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public List<CustomerOfflinePaymentRecord> getPendingCryptoTransactionList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOfflinePaymentRecordList(
-                ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED.getCode(),
-                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME
-        );
+        try{
+            return getCustomerOfflinePaymentRecordList(
+                    ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED.getCode(),
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME
+            );
+        }catch(Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -333,11 +372,17 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     public boolean isContractHashInDatabase(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        String contractHashFromDatabase=getValue(
-                contractHash,
-                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
-                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-        return contractHashFromDatabase!=null;
+        try{
+            String contractHashFromDatabase=getValue(
+                    contractHash,
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
+            return contractHashFromDatabase!=null;
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -408,14 +453,19 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public void persistContractInDatabase(
             CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
-
-        DatabaseTable databaseTable=getDatabaseContractTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord= buildDatabaseTableRecord(
-                databaseTableRecord,
-                customerBrokerContractPurchase
-        );
-        databaseTable.insertRecord(databaseTableRecord);
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
+                    databaseTableRecord,
+                    customerBrokerContractPurchase
+            );
+            databaseTable.insertRecord(databaseTableRecord);
+        }catch(Exception exception){
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     public CustomerOfflinePaymentRecord getCustomerOfflinePaymentRecord(String contractHash)
@@ -462,6 +512,10 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Invalid parameter in ContractTransactionStatus");
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Getting value from database",
+                    "Unexpected error");
         }
 
     }
@@ -486,6 +540,10 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     exception,
                     "Updating databaseTableRecord from a CustomerOfflinePaymentRecord",
                     "Unexpected results in database");
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected Error",
+                    "Unexpected error");
         }
     }
 
@@ -497,14 +555,19 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale)
             throws CantInsertRecordException {
-
-        DatabaseTable databaseTable=getDatabaseContractTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord= buildDatabaseTableRecord(
-                databaseTableRecord,
-                customerBrokerContractSale
-        );
-        databaseTable.insertRecord(databaseTableRecord);
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
+                    databaseTableRecord,
+                    customerBrokerContractSale
+            );
+            databaseTable.insertRecord(databaseTableRecord);
+        }catch(Exception exception){
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -643,9 +706,13 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        updateRecordStatus(contractHash,
-                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                contractTransactionStatus.getCode());
+        try{
+            updateRecordStatus(contractHash,
+                    CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    contractTransactionStatus.getCode());
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Unexpected error","Check the cause");
+        }
     }
 
     /**
@@ -702,6 +769,8 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+ CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }catch(Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Unexpected error","Check the cause");
         }
     }
 

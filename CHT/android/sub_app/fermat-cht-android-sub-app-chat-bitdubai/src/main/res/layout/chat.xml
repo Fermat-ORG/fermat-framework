@@ -47,7 +47,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_above="@+id/messageEdit"
                 android:layout_below="@+id/meLbl"
-                android:layout_marginTop="2dp"
+                android:layout_marginTop="10dp"
                 android:listSelector="@android:color/transparent"
                 android:transcriptMode="alwaysScroll"
                 android:divider="@null" />
@@ -59,6 +59,7 @@
                 android:layout_gravity="left"
                 android:text="Friend"
                 android:singleLine="false"
+                android:textColor="@color/background_floating_material_dark"
                 android:textSize="20dp" />
 
             <TextView
@@ -67,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="MySelf"
+                android:textColor="@color/background_floating_material_dark"
                 android:textSize="20dp" />
             <!--
             <TextView

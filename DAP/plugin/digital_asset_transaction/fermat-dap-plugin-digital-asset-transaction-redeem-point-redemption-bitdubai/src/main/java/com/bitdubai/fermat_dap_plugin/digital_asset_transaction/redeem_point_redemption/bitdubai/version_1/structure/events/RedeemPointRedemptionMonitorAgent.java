@@ -191,7 +191,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                     switch (dao.getEventTypeById(eventId)) {
                         case RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION:
                             debug("received new digital asset metadata, requesting transaction list");
-                            List<Transaction<DigitalAssetMetadataTransaction>> newAssetTransaction = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
+                            List<Transaction<DigitalAssetMetadataTransaction>> newAssetTransaction = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_REDEMPTION_SPECIALIST);
                             for (Transaction<DigitalAssetMetadataTransaction> transaction : newAssetTransaction) {
                                 debug("verifying if there is any transaction for me");
                                 if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {

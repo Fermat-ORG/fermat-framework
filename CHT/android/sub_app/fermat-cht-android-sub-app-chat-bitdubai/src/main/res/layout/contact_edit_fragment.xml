@@ -43,7 +43,7 @@
                 android:layout_alignParentBottom="true"
                 android:autoText="true"
                 android:textColor="@color/black"
-                android:hint="Edit Alias" />
+                android:hint="User Alias" />
 
             <Button
                 android:id="@+id/saveContactButton"
