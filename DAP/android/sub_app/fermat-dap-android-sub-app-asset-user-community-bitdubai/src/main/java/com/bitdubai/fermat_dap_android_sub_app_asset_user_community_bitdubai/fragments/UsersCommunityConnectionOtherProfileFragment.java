@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,24 +20,24 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
-//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.AssetUserWalletSubAppModuleManager;
-//import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetActiveLoginIdentityException;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.Actor;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.AcceptDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.DisconectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Date;
+
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.AssetUserWalletSubAppModuleManager;
+//import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetActiveLoginIdentityException;
+//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.Actor;
+//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 //import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 /**
@@ -127,31 +126,29 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         connect.setOnClickListener(this);
         disconnect.setOnClickListener(this);
 
-        /*switch (actor.getDapConnectionState()) {
-                case BLOCKED_LOCALLY:
-                case BLOCKED_REMOTELY:
-                case CANCELLED_LOCALLY:
-                case CANCELLED_REMOTELY:
-                    connectionRejected();
-                    break;
-                case CONNECTED:
-                    disconnectRequest();
-                    break;
-                case NO_CONNECTED:
-                case DISCONNECTED_LOCALLY:
-                case DISCONNECTED_REMOTELY:
-                case ERROR:
-                case DENIED_LOCALLY:
-                case DENIED_REMOTELY:
-                    connectRequest();
-                    break;
-                case PENDING_LOCALLY_ACCEPTANCE:
-                    conectionAccept();
-                    break;
-                case PENDING_REMOTELY_ACCEPTANCE:
-                    connectionSend();
-                    break;
-            }*/
+        switch (actor.getDapConnectionState()) {
+            case BLOCKED_LOCALLY:
+            case BLOCKED_REMOTELY:
+            case CANCELLED_LOCALLY:
+            case CANCELLED_REMOTELY:
+                connectionRejected();
+                break;
+            case CONNECTED:
+                disconnectRequest();
+                break;
+            case DISCONNECTED_LOCALLY:
+            case DISCONNECTED_REMOTELY:
+            case DENIED_LOCALLY:
+            case DENIED_REMOTELY:
+                connectRequest();
+                break;
+            case PENDING_LOCALLY:
+                conectionAccept();
+                break;
+            case PENDING_REMOTELY:
+                connectionSend();
+                break;
+        }
 
 
         try {
@@ -160,19 +157,19 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             //userStatus.setText(actor.getName());
             //userStatus.setTextColor(Color.parseColor("#292929"));
 
-            if(actor.getCryptoAddress() != null){
+            if (actor.getCryptoAddress() != null) {
                 userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
                 userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
                 disconnectRequest();
-            } else{
+            } else {
                 userCryptoAddres.setText("No");
                 userCryptoCurrency.setText("None");
                 connectRequest();
             }
 
-            if(actor.getBlockchainNetworkType() != null) {
-                userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().toString().replace("_"," "));
-            }else {
+            if (actor.getBlockchainNetworkType() != null) {
+                userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().toString().replace("_", " "));
+            } else {
                 userBlockchainNetworkType.setText("None");
             }
 
@@ -240,7 +237,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                     public void onDismiss(DialogInterface dialog) {
                         //TODO Implementar aca que va a pasar con los estados de los botones
                         //connectRequest();
-                       // updateButton();
+                        // updateButton();
                     }
                 });
                 disconectDialog.show();
@@ -248,10 +245,10 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 e.printStackTrace();
             }
         }
-        if (i == R.id.btn_connection_accept){
+        if (i == R.id.btn_connection_accept) {
             try {
 
-                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(AssetUserCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetUserIdentity());
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null, actor, manager.getActiveAssetUserIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -269,7 +266,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
             Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
-           // CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
+            // CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
             Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
         }
     }
@@ -317,7 +314,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         connectionRequestRejected.setVisibility(View.GONE);
     }
 
-    private void conectionAccept(){
+    private void conectionAccept() {
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
