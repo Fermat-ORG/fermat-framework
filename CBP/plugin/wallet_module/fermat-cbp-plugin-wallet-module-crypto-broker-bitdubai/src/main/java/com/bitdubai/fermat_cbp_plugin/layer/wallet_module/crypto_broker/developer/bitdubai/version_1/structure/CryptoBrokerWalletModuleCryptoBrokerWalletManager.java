@@ -153,6 +153,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -466,7 +467,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException {
         Collection<NegotiationLocations> negotiationLocations = null;
-        if (negotiationType.getCode() == NegotiationType.SALE.getCode()) {
+        if (Objects.equals(negotiationType.getCode(), NegotiationType.SALE.getCode())) {
             negotiationLocations = customerBrokerSaleNegotiationManager.getAllLocations();
         }
         return negotiationLocations;

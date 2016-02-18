@@ -40,7 +40,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     private static final int TYPE_AMOUNT = 4;
     private static final int TYPE_FOOTER = 5;
 
-    private NegotiationWrapper negotiation;
+    private NegotiationWrapper negotiationWrapper;
     private FooterViewHolder.OnFooterButtonsClickListener footerListener;
     private ClauseViewHolder.Listener clauseListener;
     private List<IndexInfoSummary> marketRateList;
@@ -52,7 +52,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
 
         super(context);
 
-        this.negotiation = negotiationInformation;
+        this.negotiationWrapper = negotiationInformation;
 
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
@@ -60,16 +60,15 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
         haveNote = negotiationInformation.haveNote();
     }
 
-    public void changeDataSet(NegotiationWrapper negotiationInfo) {
+    public void changeDataSet(NegotiationWrapper negotiationWrapper) {
 
-        this.negotiation = negotiationInfo;
+        this.negotiationWrapper = negotiationWrapper;
 
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
 
         final List<ClauseInformation> items = buildListOfItems();
         super.changeDataSet(items);
-
     }
 
     public void setClauseListener(ClauseViewHolder.Listener clauseListener) {
@@ -89,29 +88,22 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
         switch (type) {
             case TYPE_HEADER:
                 return new NoteViewHolder(itemView, TYPE_HEADER);
-
             case TYPE_DATE_TIME:
                 return new DateTimeViewHolder(itemView, TYPE_DATE_TIME);
-
             case TYPE_DATE_EXPIRATION_TIME:
                 return new ExpirationTimeViewHolder(itemView, TYPE_DATE_EXPIRATION_TIME);
-
             case TYPE_SINGLE_CHOICE:
                 return new SingleChoiceViewHolder(itemView, TYPE_SINGLE_CHOICE);
-
             case TYPE_EXCHANGE_RATE:
                 final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView, TYPE_SINGLE_CHOICE);
                 exchangeRateViewHolder.setMarketRateList(marketRateList);
                 return exchangeRateViewHolder;
-
             case TYPE_AMOUNT:
                 return new AmountViewHolder(itemView, TYPE_AMOUNT);
-
             case TYPE_FOOTER:
                 final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView, TYPE_AMOUNT);
                 footerViewHolder.setListener(footerListener);
                 return footerViewHolder;
-
             default:
                 throw new IllegalArgumentException("Cant recognise the given value");
         }
@@ -140,6 +132,11 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     }
 
     @Override
+    public int getItemCount() {
+        return haveNote ? super.getItemCount() + 3 : super.getItemCount() + 2;
+    }
+
+    @Override
     public int getItemViewType(int position) {
         if (isHeaderPosition(position))
             return TYPE_HEADER;
@@ -151,7 +148,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             return TYPE_DATE_EXPIRATION_TIME;
 
         final int itemPosition = getItemPosition(position);
-        ClauseType type = getItem(itemPosition).getType();
+        final ClauseType type = dataSet.get(itemPosition).getType();
 
         switch (type) {
             case EXCHANGE_RATE:
@@ -171,14 +168,14 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
 
     @Override
     public void onBindViewHolder(FermatViewHolder holder, int position) {
-        if (holder.getHolderType() == TYPE_FOOTER) {
+        if (holder.getHolderType() == TYPE_HEADER) {
             final NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
-            noteViewHolder.bind(negotiation.getNegotiationInformation().getMemo());
+            noteViewHolder.bind(negotiationWrapper.getNegotiationInformation().getMemo());
 
         } else if (holder.getHolderType() == TYPE_DATE_EXPIRATION_TIME) {
             final ExpirationTimeViewHolder expirationTimeViewHolder = (ExpirationTimeViewHolder) holder;
-            final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(getFooterPosition());
-            expirationTimeViewHolder.bindData(negotiation, clauseNumberImageRes);
+            final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(getExpirationDatePosition() + 1);
+            expirationTimeViewHolder.bindData(negotiationWrapper, clauseNumberImageRes);
 
         } else {
             position = getItemPosition(position);
@@ -190,16 +187,20 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     @Override
     protected void bindHolder(FermatViewHolder holder, ClauseInformation clause, int position) {
         final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
-        final CustomerBrokerNegotiationInformation negotiationInformation = negotiation.getNegotiationInformation();
+        final CustomerBrokerNegotiationInformation negotiationInformation = negotiationWrapper.getNegotiationInformation();
 
         clauseViewHolder.bindData(negotiationInformation, clause, position);
         clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
         clauseViewHolder.setListener(clauseListener);
 
+        setViewResources(clause.getType(), position, clauseViewHolder);
+    }
+
+    private void setViewResources(ClauseType type, int position, ClauseViewHolder clauseViewHolder) {
         final int clauseNumber = position + 1;
         final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);
 
-        switch (clause.getType()) {
+        switch (type) {
             case EXCHANGE_RATE:
                 clauseViewHolder.setViewResources(R.string.exchange_rate_reference, clauseNumberImageRes);
                 break;
@@ -243,12 +244,12 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     }
 
     private List<ClauseInformation> buildListOfItems() {
-        CustomerBrokerNegotiationInformation negotiationInformation = negotiation.getNegotiationInformation();
+        CustomerBrokerNegotiationInformation negotiationInformation = negotiationWrapper.getNegotiationInformation();
 
         Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
 
-        ClauseInformation brokerPaymentMethodDetail = getCustomerPaymentInfo(clauses);
-        ClauseInformation customerReceivedMethodDetail = getBrokerPaymentInfo(clauses);
+        ClauseInformation brokerPaymentMethodDetail = getBrokerPaymentMethodDetail(clauses);
+        ClauseInformation customerReceptionMethodDetail = getCustomerReceptionMethodDetail(clauses);
 
         final List<ClauseInformation> data = new ArrayList<>();
 
@@ -258,45 +259,41 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
         data.add(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD));
         if (brokerPaymentMethodDetail != null) data.add(brokerPaymentMethodDetail);
         data.add(clauses.get(ClauseType.BROKER_PAYMENT_METHOD));
-        if (customerReceivedMethodDetail != null) data.add(customerReceivedMethodDetail);
+        if (customerReceptionMethodDetail != null) data.add(customerReceptionMethodDetail);
         data.add(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER));
         data.add(clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER));
 
         return data;
     }
 
-    private ClauseInformation getCustomerPaymentInfo(Map<ClauseType, ClauseInformation> clauses) {
+    private ClauseInformation getBrokerPaymentMethodDetail(Map<ClauseType, ClauseInformation> clauses) {
 
         String currencyType = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
         ClauseInformation clause = null;
 
         if (currencyType != null) {
-            if (currencyType.equals(MoneyType.CRYPTO.getFriendlyName()))
+            if (currencyType.equals(MoneyType.CRYPTO.getCode()))
                 clause = clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
-
-            else if (currencyType.equals(MoneyType.BANK.getFriendlyName()))
+            else if (currencyType.equals(MoneyType.BANK.getCode()))
                 clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
-
-            else if (currencyType.equals(MoneyType.CASH_DELIVERY.getFriendlyName()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getFriendlyName())))
+            else
                 clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
         }
 
         return clause;
     }
 
-    private ClauseInformation getBrokerPaymentInfo(Map<ClauseType, ClauseInformation> clauses) {
+    private ClauseInformation getCustomerReceptionMethodDetail(Map<ClauseType, ClauseInformation> clauses) {
 
         String currencyType = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
         ClauseInformation clause = null;
 
         if (currencyType != null) {
-            if (currencyType.equals(MoneyType.CRYPTO.getFriendlyName()))
+            if (currencyType.equals(MoneyType.CRYPTO.getCode()))
                 clause = clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
-
-            else if (currencyType.equals(MoneyType.BANK.getFriendlyName()))
+            else if (currencyType.equals(MoneyType.BANK.getCode()))
                 clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
-
-            else if (currencyType.equals(MoneyType.CASH_DELIVERY.getFriendlyName()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getFriendlyName())))
+            else
                 clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
         }
 
@@ -315,15 +312,11 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
         return position == getExpirationDatePosition();
     }
 
-    private int getExpirationDatePosition(){
+    private int getExpirationDatePosition() {
         return getItemCount() - 2;
     }
 
     private boolean isFooterPosition(int position) {
-        return position == getFooterPosition();
-    }
-
-    private int getFooterPosition() {
-        return getItemCount() - 1;
+        return position == getItemCount() - 1;
     }
 }
