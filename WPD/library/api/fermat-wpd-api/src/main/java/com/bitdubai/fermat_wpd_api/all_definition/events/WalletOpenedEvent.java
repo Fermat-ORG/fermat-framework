@@ -1,11 +1,12 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
+package com.bitdubai.fermat_wpd_api.all_definition.events;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 
 /**
  * Created by loui on 05/02/15.
  */
-public class WalletOpenedEvent extends AbstractFermatEvent {
+public class WalletOpenedEvent extends AbstractWPDEvent {
+
     private String publicKey;
 
     public void setWalletPublicKey (String publicKey){

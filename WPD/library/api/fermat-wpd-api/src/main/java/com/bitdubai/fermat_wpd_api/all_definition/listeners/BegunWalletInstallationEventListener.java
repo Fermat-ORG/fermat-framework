@@ -1,21 +1,21 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners;
+package com.bitdubai.fermat_wpd_api.all_definition.listeners;
 
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 
 /**
- * Created by loui on 14/02/15.
+ * Created by ciencias on 26.01.15.
  */
-public class WalletClosedEventListener implements FermatEventListener {
+public class BegunWalletInstallationEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
     private FermatEventHandler fermatEventHandler;
 
-    public WalletClosedEventListener (EventType eventType, FermatEventMonitor fermatEventMonitor){
+    public BegunWalletInstallationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor){
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
@@ -46,6 +46,5 @@ public class WalletClosedEventListener implements FermatEventListener {
         {
             fermatEventMonitor.handleEventException(exception, fermatEvent);
         }
-
     }
 }

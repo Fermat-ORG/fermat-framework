@@ -1,26 +1,27 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners;
+package com.bitdubai.fermat_wpd_api.all_definition.listeners;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 
 /**
- * Created by ciencias on 26.01.15.
+ * Created by loui on 14/02/15.
  */
-public class WalletNavigationStructureDownloadedEventListener implements FermatEventListener {
+public class WalletResourcesInstalledEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
-    private com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType;
+    private EventType eventType;
     private FermatEventHandler fermatEventHandler;
 
-    public WalletNavigationStructureDownloadedEventListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType, FermatEventMonitor fermatEventMonitor){
+    public WalletResourcesInstalledEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor){
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }
 
     @Override
-    public com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType getEventType() {
+    public EventType getEventType() {
         return eventType;
     }
 
