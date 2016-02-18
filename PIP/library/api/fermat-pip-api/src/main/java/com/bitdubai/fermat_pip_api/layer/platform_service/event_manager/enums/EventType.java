@@ -13,11 +13,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.BegunWalletInstallationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingIntraUserTransactionDebitNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorNetworkServicePendingsNotificationEventListener;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.BegunWalletInstallationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingIntraUserDebitTransactionNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.OutgoingIntraUserRollbackTransactionNotificationEventListener;
 
@@ -34,15 +32,15 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listener
  */
 public enum EventType implements FermatEventEnum {
 
-    BEGUN_WALLET_INSTALLATION("BWI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new BegunWalletInstallationEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new BegunWalletInstallationEvent(this);
-        }
-    },
+//    BEGUN_WALLET_INSTALLATION("BWI") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new BegunWalletInstallationEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new BegunWalletInstallationEvent(this);
+//        }
+//    },
 
     DEVICE_USER_CREATED("DUC") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -74,15 +72,15 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    FINISHED_WALLET_INSTALLATION("FWI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.FinishedWalletInstallationEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.FinishedWalletInstallationEvent(this);
-        }
-    },
+//    FINISHED_WALLET_INSTALLATION("FWI") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.FinishedWalletInstallationEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.FinishedWalletInstallationEvent(this);
+//        }
+//    },
 
     INCOMING_CRYPTO_IDENTIFIED("ICI") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -720,85 +718,85 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    WALLET_CLOSED("WC2") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletClosedEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletClosedEvent(this);
-        }
-    },
-
-    WALLET_CREATED("WC1") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletCreatedEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletCreatedEvent(this);
-        }
-    },
-
-    WALLET_INSTALLED("WI1") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletInstalledEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletInstalledEvent(this);
-        }
-    },
-
-    WALLET_OPENED("WO1") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletOpenedEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletOpenedEvent(this);
-        }
-    },
-
-    WALLET_RESOURCES_INSTALLED("WRI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletResourcesInstalledEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletResourcesInstalledEvent(this);
-        }
-    },
-
-    WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED("WRNSD") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletNavigationStructureDownloadedEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent(this);
-        }
-    },
-
-    WALLET_UNINSTALLED("WU1") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletUninstalledEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletUninstalledEvent(this);
-        }
-    },
-
-    WALLET_WENT_ONLINE("WWO") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletWentOnlineEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletWentOnlineEvent(this);
-        }
-    },
+//    WALLET_CLOSED("WC2") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletClosedEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletClosedEvent(this);
+//        }
+//    },
+//
+//    WALLET_CREATED("WC1") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletCreatedEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletCreatedEvent(this);
+//        }
+//    },
+//
+//    WALLET_INSTALLED("WI1") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletInstalledEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletInstalledEvent(this);
+//        }
+//    },
+//
+//    WALLET_OPENED("WO1") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletOpenedEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletOpenedEvent(this);
+//        }
+//    },
+//
+//    WALLET_RESOURCES_INSTALLED("WRI") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletResourcesInstalledEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletResourcesInstalledEvent(this);
+//        }
+//    },
+//
+//    WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED("WRNSD") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletNavigationStructureDownloadedEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent(this);
+//        }
+//    },
+//
+//    WALLET_UNINSTALLED("WU1") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletUninstalledEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletUninstalledEvent(this);
+//        }
+//    },
+//
+//    WALLET_WENT_ONLINE("WWO") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletWentOnlineEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletWentOnlineEvent(this);
+//        }
+//    },
 
     INCOMING_MONEY_NOTIFICATION("IMN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
