@@ -125,7 +125,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     currencyGivingId = records.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME);
 
                     try {
-                        if (MoneyType.CRYPTO.getCode() == MoneyType.getByCode(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME).getCode()) {
+                        if (MoneyType.CRYPTO == MoneyType.getByCode(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME)) {
                             currencyGiving = getCurrencyData("BTC", CurrencyTypes.CRYPTO, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
                         }
                         else currencyGiving   = getCurrencyData("FIAT", CurrencyTypes.FIAT, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
@@ -158,7 +158,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     currencyMatchingImp.setCurrencyGiving(currencyGiving);
                     currencyMatchingImp.setAmountGiving(amountGiving);
 
-                    if (originTransactionId == records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME)) {
+                    if (originTransactionId.equals(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME))) {
                         currencyMatchingImp.setCurrencyReceivingId(currencyReceivingId);
                         currencyMatchingImp.setCurrencyReceiving(currencyReceiving);
                         currencyMatchingImp.setAmountReceiving(amountReceiving);

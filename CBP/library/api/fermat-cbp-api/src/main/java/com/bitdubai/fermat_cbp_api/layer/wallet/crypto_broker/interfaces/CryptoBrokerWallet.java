@@ -88,6 +88,6 @@ public interface CryptoBrokerWallet  {
      * @return CurrencyMatching
      * @exception CantGetTransactionCryptoBrokerWalletMatchingException
      */
-    List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException;
+    List<CurrencyMatching> getCryptoBrokerTransactionCurrencyInputs() throws CantGetTransactionCryptoBrokerWalletMatchingException;
 
 }

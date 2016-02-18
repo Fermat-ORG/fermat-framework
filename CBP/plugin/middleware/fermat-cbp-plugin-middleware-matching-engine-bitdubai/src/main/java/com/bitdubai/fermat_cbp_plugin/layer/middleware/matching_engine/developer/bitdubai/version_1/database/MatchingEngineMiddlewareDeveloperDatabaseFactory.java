@@ -37,16 +37,11 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
     private final UUID                 pluginId            ;
 
 
-    Database database;
+    private Database database;
 
-    /**
-     * Constructor
-     *
-     * @param pluginDatabaseSystem
-     * @param pluginId
-     */
     public MatchingEngineMiddlewareDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
                                                             final UUID                 pluginId            ) {
+
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
     }
@@ -107,6 +102,20 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
         List<DeveloperDatabaseTable> tables = new ArrayList<>();
+
+        /**
+         * Table Wallets columns.
+         */
+        List<String> walletsColumns = new ArrayList<>();
+
+        walletsColumns.add(MatchingEngineMiddlewareDatabaseConstants.WALLETS_PUBLIC_KEY_COLUMN_NAME);
+
+        /**
+         * Table Wallets addition.
+         */
+        DeveloperDatabaseTable walletsTable = developerObjectFactory.getNewDeveloperDatabaseTable(MatchingEngineMiddlewareDatabaseConstants.WALLETS_TABLE_NAME, walletsColumns);
+
+        tables.add(walletsTable);
 
         /**
          * Table Earning Pair columns.

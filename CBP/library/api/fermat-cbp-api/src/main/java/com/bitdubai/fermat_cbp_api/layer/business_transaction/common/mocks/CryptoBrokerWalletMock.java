@@ -76,7 +76,7 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
      * @throws CantGetTransactionCryptoBrokerWalletMatchingException
      */
     @Override
-    public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
+    public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyInputs() throws CantGetTransactionCryptoBrokerWalletMatchingException {
         return null;
     }
 }
