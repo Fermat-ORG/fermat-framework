@@ -6,6 +6,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAssetUserGroupAlreadyExistException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
@@ -38,12 +39,15 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     List<AssetUserActorRecord> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;
 
+    ActorAssetUser getActorUser(String actorAssetUserPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
+
     List<ActorAssetUser> getAllActorAssetUserConnected() throws CantGetAssetUserActorsException;
 
     List<AssetUserActorRecord> getAllActorAssetUserRegisteredWithCryptoAddressNotIntheGroup(String groupId) throws CantGetAssetUserActorsException;
 
     void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers) throws CantConnectToActorAssetUserException;
 
+    void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetUserActorException, CantConnectToActorAssetUserException;
 //    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException;
     /**
      * The method <code>createGroup</code> Register a group in database Actor Asset User
