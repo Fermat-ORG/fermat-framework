@@ -31,6 +31,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetTransactionCryptoBrokerWalletMatchingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantMarkAsSeenException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
@@ -124,7 +125,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     currencyGivingId = records.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME);
 
                     try {
-                        if (MoneyType.CRYPTO.getCode() == MoneyType.getByCode(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME).getCode()) {
+                        if (MoneyType.CRYPTO == MoneyType.getByCode(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME)) {
                             currencyGiving = getCurrencyData("BTC", CurrencyTypes.CRYPTO, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
                         }
                         else currencyGiving   = getCurrencyData("FIAT", CurrencyTypes.FIAT, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
@@ -157,7 +158,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     currencyMatchingImp.setCurrencyGiving(currencyGiving);
                     currencyMatchingImp.setAmountGiving(amountGiving);
 
-                    if (originTransactionId == records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME)) {
+                    if (originTransactionId.equals(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME))) {
                         currencyMatchingImp.setCurrencyReceivingId(currencyReceivingId);
                         currencyMatchingImp.setCurrencyReceiving(currencyReceiving);
                         currencyMatchingImp.setAmountReceiving(amountReceiving);
@@ -181,7 +182,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return currencyMatchings;
     }
 
-    public void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
+    public void markAsSeen(UUID transactionId) throws CantMarkAsSeenException {
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
         try {
             for (DatabaseTableRecord record : getCryptoBrokerWalletStockTransactionData(transactionId)) {
@@ -190,11 +191,49 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             }
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetTransactionCryptoBrokerWalletMatchingException("Cant Load Table Memory", e, "", "");
+
+            throw new CantMarkAsSeenException(e, "", "Cant Load Table Memory");
         } catch (CantUpdateRecordException e) {
-            throw new CantGetTransactionCryptoBrokerWalletMatchingException("Cant Update Record", e, "", "");
+
+            throw new CantMarkAsSeenException(e, "", "Cant Update Record");
         }
     }
+
+    public void markAsSeen(final List<UUID> transactionIds) throws CantMarkAsSeenException {
+
+        try {
+
+            DatabaseTransaction databaseTransaction = database.newTransaction();
+
+            for (final UUID transactionId : transactionIds) {
+
+                DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
+
+                table.addUUIDFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+
+                table.loadToMemory();
+
+                for (final DatabaseTableRecord record : table.getRecords()) {
+
+                    record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME, "true");
+
+                    databaseTransaction.addRecordToUpdate(table, record);
+
+                }
+
+            }
+
+            database.executeTransaction(databaseTransaction);
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantMarkAsSeenException("Cant Load Table Memory", e, "", "");
+        } catch (final DatabaseTransactionFailedException e) {
+
+            throw new CantMarkAsSeenException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update all the records.");
+        }
+    }
+
 
     public float getBookedBalance(FermatEnum merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException {
         return getCurrentBalanceByMerchandise(BalanceType.BOOK, merchandise.getCode());
@@ -800,7 +839,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     private List<DatabaseTableRecord> getCryptoBrokerWalletStockTransactionData(UUID transactionId) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
 
-        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
+        table.addUUIDFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
         table.loadToMemory();
 
         return table.getRecords();
