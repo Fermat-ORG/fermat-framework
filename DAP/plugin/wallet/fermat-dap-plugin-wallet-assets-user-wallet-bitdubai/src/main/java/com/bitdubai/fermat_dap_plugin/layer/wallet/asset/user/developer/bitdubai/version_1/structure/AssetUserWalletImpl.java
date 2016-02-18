@@ -60,6 +60,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     {
         createdWallets = new ArrayList<>();
     }
+
     private AssetUserWalletDao assetUserWalletDao;
     private final ErrorManager errorManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
@@ -180,6 +181,20 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         List<AssetUserWalletTransaction> alldebitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
         for (AssetUserWalletTransaction transaction : alldebitAvailable) {
             allCreditAvailable.remove(transaction);
+        }
+        return allCreditAvailable;
+    }
+
+    @Override
+    public List<AssetUserWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException {
+        List<AssetUserWalletTransaction> allCreditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
+        List<AssetUserWalletTransaction> alldebitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
+        for (AssetUserWalletTransaction transaction : alldebitAvailable) {
+            if (allCreditAvailable.contains(transaction)) {
+                allCreditAvailable.remove(transaction);
+            } else {
+                allCreditAvailable.add(transaction);
+            }
         }
         return allCreditAvailable;
     }
