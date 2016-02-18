@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAssetUserGroupAlreadyExistException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
@@ -9,6 +10,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCon
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
@@ -34,6 +36,15 @@ public interface ActorAssetUserManager extends FermatManager {
      */
     ActorAssetUser getActorByPublicKey(String actorPublicKey) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
 
+    /**
+     * The method <code>getActorRegisteredByPublicKey</code> shows the information associated with the actorPublicKey
+     *
+     * @param actorPublicKey                    The public key of the Asset Actor User
+     * @return                                  THe information associated with the actorPublicKey.
+     * @throws CantGetAssetUserActorsException
+     * @throws CantAssetUserActorNotFoundException
+     */
+    ActorAssetUser getActorByPublicKey(String actorPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException, CantAssetUserActorNotFoundException;
     /**
      * The method <code>createActorAssetUserFactory</code> create Actor by a Identity
      *
@@ -97,6 +108,13 @@ public interface ActorAssetUserManager extends FermatManager {
      */
     void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetUserException;
 
+    /**
+     * The method <code>connectToActorAssetUser</code> Enable Connection
+     * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
+     *
+     * @throws CantConnectToActorAssetUserException
+     */
+    void disconnectToActorAssetUser(ActorAssetUser user, BlockchainNetworkType blockchainNetworkType) throws CantDeleteRecordException, CantDisconnectAssetUserActorException;
     /**
      * The method <code>connectToActorAssetRedeemPoint</code> Enable Connection
      * with Requester and Deliver Redeem Point to Reddem Asset

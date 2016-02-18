@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
@@ -44,6 +45,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCon
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
@@ -63,6 +65,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorCompleteRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserCryptoAddressTableExcepcion;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUsersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressesNewsEventException;
@@ -153,6 +156,23 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 return currentUser;
             } else {
                 return this.assetUserActorDao.getActorAssetUserRegisteredByPublicKey(actorPublicKey);
+            }
+        } catch (CantGetAssetUserActorsException e) {
+            throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
+        }
+
+    }
+
+    @Override
+    public ActorAssetUser getActorByPublicKey(String actorPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException,
+            CantAssetUserActorNotFoundException {
+        try {
+            ActorAssetUser currentUser = getActorAssetUser();
+            if (currentUser != null && currentUser.getActorPublicKey().equals(actorPublicKey)) {
+                return currentUser;
+            } else {
+
+                return this.assetUserActorDao.getActorAssetUserRegisteredByPublicKey(actorPublicKey, blockchainNetworkType);
             }
         } catch (CantGetAssetUserActorsException e) {
             throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
@@ -335,6 +355,17 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 }
             }
         } catch (CantSendAddressExchangeRequestException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void disconnectToActorAssetUser(ActorAssetUser user, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetUserActorException, CantDeleteRecordException {
+        try {
+            this.assetUserActorDao.deleteCryptoAddress(user.getActorPublicKey(),blockchainNetworkType);
+        } catch (CantDeleteRecordException e) {
+            throw new CantDeleteRecordException("Can't delte crypto for this user", e, "Error", "");
+        } catch (CantGetAssetUserCryptoAddressTableExcepcion e) {
             e.printStackTrace();
         }
     }
