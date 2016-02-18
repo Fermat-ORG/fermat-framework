@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,44 +13,41 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.LocationsAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BankAccountsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-
 /**
- * Created by memo on 06/01/16.
+ * Created by guillermo on 16/02/16.
  */
-public class SettingsMylocationsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<String>  {
+public class SettingsBankAccountsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<BankAccountNumber> {
 
     // Constants
-    private static final String TAG = "settingsMyLocations";
+    private static final String TAG = "WizardPageSetBank";
 
     // Data
-    private List<String> locationList;
+    private List<BankAccountNumber> bankAccountList;
 
     // UI
     private RecyclerView recyclerView;
-    private LocationsAdapter adapter;
+    private BankAccountsAdapter adapter;
     private View emptyView;
 
     // Fermat Managers
@@ -57,9 +55,11 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
     private ErrorManager errorManager;
 
 
-    public static SettingsMylocationsFragment newInstance() {
-        return new SettingsMylocationsFragment();
+    public static SettingsBankAccountsFragment newInstance() {
+        SettingsBankAccountsFragment fragment = new SettingsBankAccountsFragment();
+        return fragment;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,30 +70,19 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            Object data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
+            Object data = appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
             if (data == null) {
-                locationList = new ArrayList<>();
-                appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
-            } else {
-                locationList = (List<String>) data;
-                if (locationList.size()==0){
-                    Collection<NegotiationLocations> listAux= walletManager.getAllLocations(NegotiationType.PURCHASE);
-                    for (NegotiationLocations locationAux: listAux){
-                        locationList.add(locationAux.getLocation());
-                    }
-
+                bankAccountList = new ArrayList<>();
+                appSession.setData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST, bankAccountList);
+            } else
+                bankAccountList = (List<BankAccountNumber>) data;
+                if(bankAccountList.size()==0){
+                    //TODO: obtener las cuentas desde el module que no existe el metodo actualmente
                 }
-            }
-            if(locationList.size()>0) {
-                int pos = locationList.size() - 1;
-                if (locationList.get(pos).equals("settings") || locationList.get(pos).equals("wizard")) {
-                    locationList.remove(pos);
-                }
-            }
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
     }
@@ -102,24 +91,33 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View layout = inflater.inflate(R.layout.ccw_settings_my_locations, container, false);
+        /*PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                .setBody(R.string.cbw_wizard_accounts_dialog_body)
+                .setSubTitle(R.string.cbw_wizard_accounts_dialog_sub_title)
+                .setTextFooter(R.string.cbw_wizard_accounts_dialog_footer)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
+                .setIconRes(R.drawable.cbp_crypto_customer)
+                .build();
 
-        adapter = new LocationsAdapter(getActivity(), locationList);
+        presentationDialog.show();*/
+
+        View layout=inflater.inflate(R.layout.ccw_settings_bank_accounts,container,false);
+        configureToolbar();
+        adapter = new BankAccountsAdapter(getActivity(), bankAccountList);
         adapter.setDeleteButtonListener(this);
 
-        recyclerView = (RecyclerView) layout.findViewById(R.id.ccw_selected_locations_recycler_view);
+        recyclerView = (RecyclerView) layout.findViewById(R.id.ccw_selected_bank_accounts_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
-        emptyView = layout.findViewById(R.id.ccw_selected_locations_empty_view);
+        emptyView = layout.findViewById(R.id.ccw_selected_bank_accounts_empty_view);
 
-        final View addLocationButton = layout.findViewById(R.id.ccw_add_location_button);
-        addLocationButton.setOnClickListener(new View.OnClickListener() {
+        final View addBankButton = layout.findViewById(R.id.ccw_add_bank_account_button);
+        addBankButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                locationList.add("settings");
-                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS, appSession.getAppPublicKey());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_SETTINGS, appSession.getAppPublicKey());
             }
         });
 
@@ -130,7 +128,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
                 saveSettingAndGoNextStep();
             }
         });
-        configureToolbar();
+
         showOrHideRecyclerView();
 
         return layout;
@@ -147,16 +145,17 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
         toolbar.setTitleTextColor(Color.WHITE);
     }
 
+
     @Override
-    public void deleteButtonClicked(String data, final int position) {
+    public void deleteButtonClicked(BankAccountNumber data, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(R.string.ccw_delete_location_dialog_title).setMessage(R.string.ccw_delete_location_dialog_msg);
+        builder.setTitle(R.string.ccw_delete_bank_account_dialog_title).setMessage(R.string.ccw_delete_bank_account_dialog_msg);
         builder.setPositiveButton(R.string.ccw_delete_caps, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                locationList.remove(position);
-                adapter.changeDataSet(locationList);
+                bankAccountList.remove(position);
+                adapter.changeDataSet(bankAccountList);
                 showOrHideRecyclerView();
             }
         });
@@ -167,36 +166,35 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
         });
 
         builder.show();
+
+
     }
 
     private void saveSettingAndGoNextStep() {
-        if (locationList.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.ccw_add_location_warning_msg, Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         try {
-            for (String location : locationList) {
-                walletManager.createNewLocation(location, appSession.getAppPublicKey());
+            for (BankAccountNumber bankAccount : bankAccountList) {
+                BankAccountData bankAccountData = (BankAccountData) bankAccount;
+                NegotiationBankAccount negotiationBankAccount = walletManager.newEmptyNegotiationBankAccount(
+                        bankAccountData.toString(), bankAccount.getCurrencyType());
+
+                walletManager.createNewBankAccount(negotiationBankAccount);
             }
 
         } catch (FermatException ex) {
-            Toast.makeText(getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                        ex);
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
         }
 
+        appSession.setData(CryptoCustomerWalletSession.CONFIGURED_DATA, true); // TODO: solo para testing, quitar despues
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }
 
     private void showOrHideRecyclerView() {
-        if (locationList.isEmpty()) {
+        if (bankAccountList.isEmpty()) {
             emptyView.setVisibility(View.VISIBLE);
             recyclerView.setVisibility(View.GONE);
         } else {
@@ -204,4 +202,6 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             recyclerView.setVisibility(View.VISIBLE);
         }
     }
+
+
 }

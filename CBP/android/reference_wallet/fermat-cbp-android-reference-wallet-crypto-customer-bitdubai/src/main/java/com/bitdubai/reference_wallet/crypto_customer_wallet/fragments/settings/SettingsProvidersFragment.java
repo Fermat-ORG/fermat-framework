@@ -1,10 +1,13 @@
-package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pages;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
@@ -57,14 +57,13 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Created by nelson
- * on 22/12/15.
+ * Created by guillermo on 16/02/16.
  */
-public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
+public class SettingsProvidersFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
         implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<CurrencyExchangeRateProviderManager>, AdapterView.OnItemSelectedListener, DialogInterface.OnDismissListener {
 
     // Constants
-    private static final String TAG = "WizardPageSetBCWP";
+    private static final String TAG = "settingsprovidersCCW";
 
     // Data
     private List<CurrencyPairAndProvider> selectedProviders;
@@ -86,8 +85,9 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private ProvidersAdapter adapter;
 
 
-    public static WizardPageSetBitcoinWalletAndProvidersFragment newInstance() {
-        return new WizardPageSetBitcoinWalletAndProvidersFragment();
+    public static SettingsProvidersFragment newInstance() {
+        SettingsProvidersFragment fragment = new SettingsProvidersFragment();
+        return fragment;
     }
 
     @Override
@@ -146,8 +146,8 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        final View layout = inflater.inflate(R.layout.ccw_wizard_step_set_bitcoin_wallet_and_providers, container, false);
-
+        View layout=inflater.inflate(R.layout.ccw_settings_providers,container,false);
+        configureToolbar();
         recyclerView = (RecyclerView) layout.findViewById(R.id.ccw_selected_providers_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
@@ -191,10 +191,22 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             }
         });
 
-        showHelpDialog();
+        //showHelpDialog();
 
         return layout;
     }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+    }
+
 
     private void showHelpDialog() {
 
@@ -364,7 +376,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
         }
 
-        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }
 
     @Override
