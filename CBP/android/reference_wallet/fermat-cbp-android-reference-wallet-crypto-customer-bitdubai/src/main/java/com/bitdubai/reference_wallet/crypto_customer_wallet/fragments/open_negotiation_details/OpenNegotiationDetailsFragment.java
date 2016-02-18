@@ -11,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -67,7 +69,6 @@ import java.util.UUID;
  */
 //FermatWalletExpandableListFragment<GrouperItem>
 public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoCustomerWalletSession, ResourceProviderManager>
-//public class OpenNegotiationDetailsFragment extends FermatWalletExpandableListFragment<CryptoCustomerWalletSession, ResourceProviderManager>
         implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener/*, ClauseViewHolder.ListenerConfirm*/{
 
     private static final String TAG = "OpenNegotiationFrag";
@@ -102,35 +103,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         return new OpenNegotiationDetailsFragment();
     }
 
-
-    /*FermatWalletExpandableListFragment IMPLEMENTATION*/
-    /*
     @Override
-    public ExpandableRecyclerAdapter getAdapter(){
-        return null;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.ccw_open_negotiation_details_menu, menu);
     }
-
-    @Override
-    public RecyclerView.LayoutManager getLayoutManager(){
-        return null;
-    }
-
-    @Override
-    public void onRefresh(){
-
-    }
-
-    @Override
-    public void onPostExecute(Object... result){
-
-    }
-
-    public void onErrorOccurred(Exception ex){
-
-    }
-    */
-    /*END FermatWalletExpandableListFragment IMPLEMENTATION*/
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
