@@ -1,13 +1,15 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
+package com.bitdubai.fermat_wpd_api.all_definition.events;
+
+import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 
 import java.util.UUID;
 
 /**
  * Created by loui on 05/02/15.
  */
-public class WalletInstalledEvent extends AbstractFermatEvent {
-    private UUID walletId;
+public class WalletInstalledEvent extends AbstractWPDEvent {
 
+    private UUID walletId;
     private String publicKey;
 
     public void setWalletId (UUID walletId){
@@ -22,7 +24,7 @@ public class WalletInstalledEvent extends AbstractFermatEvent {
         return publicKey;
     }
     
-    public WalletInstalledEvent (com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType){
+    public WalletInstalledEvent (EventType eventType){
         super(eventType);
     }
 }

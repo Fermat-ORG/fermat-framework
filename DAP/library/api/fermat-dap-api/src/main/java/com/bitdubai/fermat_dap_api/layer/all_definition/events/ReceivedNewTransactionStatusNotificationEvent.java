@@ -1,11 +1,12 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
+package com.bitdubai.fermat_dap_api.layer.all_definition.events;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 /**
  * Created by Nerio on 15/10/15.
  */
-public class ReceivedNewDigitalAssetMetadataNotificationEvent extends AbstractFermatEvent {
+public class ReceivedNewTransactionStatusNotificationEvent extends AbstractDAPEvent {
 
     private ActorAssetUser actorAssetUser;
 
@@ -17,7 +18,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationEvent extends AbstractFe
         this.actorAssetUser = actorAssetUser;
     }
 
-    public ReceivedNewDigitalAssetMetadataNotificationEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType) {
+    public ReceivedNewTransactionStatusNotificationEvent(EventType eventType) {
         super(eventType);
     }
 }

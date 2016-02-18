@@ -1,15 +1,15 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners;
+package com.bitdubai.fermat_dap_api.layer.all_definition.listeners;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 
 /**
  * Created by Nerio on 15/10/15.
  */
-public class ReceivedNewDigitalAssetMetadataNotificationEventListener implements FermatEventListener {
+public class ReceivedNewTransactionStatusNotificationEventListener implements FermatEventListener {
 
     FermatEventMonitor fermatEventMonitor;
     private EventType eventType;
@@ -20,7 +20,7 @@ public class ReceivedNewDigitalAssetMetadataNotificationEventListener implements
      * @param eventType
      * @param fermatEventMonitor
      */
-    public ReceivedNewDigitalAssetMetadataNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
+    public ReceivedNewTransactionStatusNotificationEventListener(EventType eventType, FermatEventMonitor fermatEventMonitor) {
         this.eventType = eventType;
         this.fermatEventMonitor = fermatEventMonitor;
     }

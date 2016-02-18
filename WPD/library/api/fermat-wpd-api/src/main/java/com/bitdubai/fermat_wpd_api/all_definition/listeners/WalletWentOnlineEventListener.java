@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners;
+package com.bitdubai.fermat_wpd_api.all_definition.listeners;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 
 /**
  * Created by ciencias on 25.01.15.
