@@ -66,6 +66,20 @@
             android:textColor="#0072bc"
             tools:ignore="HardcodedText" />
 
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shape_white"
+            android:drawableLeft="@drawable/ic_profile_disconnect"
+            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/ic_profile_disconnect"
+            android:paddingLeft="34dp"
+            android:paddingRight="34dp"
+            android:text="Cancel"
+            android:textColor="#0072bc"
+            tools:ignore="HardcodedText" />
+
     </RelativeLayout>
 
     <LinearLayout

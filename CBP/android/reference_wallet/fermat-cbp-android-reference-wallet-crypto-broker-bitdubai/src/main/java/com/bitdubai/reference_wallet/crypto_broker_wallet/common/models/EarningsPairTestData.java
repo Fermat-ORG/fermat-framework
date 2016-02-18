@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningPairState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
@@ -12,17 +13,18 @@ import java.util.UUID;
  */
 public class EarningsPairTestData implements EarningsPair {
 
-    private final Currency selectedCurrency;
-    private final Currency linkedCurrency  ;
-    private final UUID     id              ;
+    private final Currency earningCurrency;
+    private final Currency linkedCurrency;
+    private final UUID id;
+    private final EarningPairState state;
 
-    public EarningsPairTestData(final Currency selectedCurrency,
-                                final Currency linkedCurrency  ) {
+    public EarningsPairTestData(final Currency earningCurrency, final Currency linkedCurrency) {
 
         id = UUID.randomUUID();
 
-        this.selectedCurrency = selectedCurrency;
+        this.earningCurrency = earningCurrency;
         this.linkedCurrency = linkedCurrency;
+        this.state = EarningPairState.ASSOCIATED;
 
     }
 
@@ -31,10 +33,9 @@ public class EarningsPairTestData implements EarningsPair {
         return id;
     }
 
-
     @Override
     public Currency getEarningCurrency() {
-        return selectedCurrency;
+        return earningCurrency;
     }
 
     @Override
@@ -43,12 +44,22 @@ public class EarningsPairTestData implements EarningsPair {
     }
 
     @Override
-    public WalletReference getWalletReference() {
+    public WalletReference getEarningsWallet() {
         return new WalletReference("earningWalletPublicKey");
+    }
+
+    @Override
+    public EarningPairState getState() {
+        return state;
     }
 
     @Override
     public EarningsSearch getSearch() {
         return null;
+    }
+
+    @Override
+    public void changeEarningsWallet(WalletReference earningsWallet) {
+
     }
 }

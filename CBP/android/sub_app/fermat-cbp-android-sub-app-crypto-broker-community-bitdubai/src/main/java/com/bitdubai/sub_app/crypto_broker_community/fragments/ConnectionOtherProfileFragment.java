@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
+import com.bitdubai.sub_app.crypto_broker_community.common.popups.CancelDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ConnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.DisconnectDialog;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
@@ -52,6 +54,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
     private CryptoBrokerCommunityInformation cryptoBrokerCommunityInformation;
     private Button connect;
     private Button disconnect;
+    private Button cancel;
 
     /**
      * Create a new instance of this fragment
@@ -85,19 +88,30 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
         connect.setOnClickListener(this);
         disconnect = (Button) rootView.findViewById(R.id.btn_disconect);
         disconnect.setOnClickListener(this);
+        cancel = (Button) rootView.findViewById(R.id.btn_cancel);
+        cancel.setOnClickListener(this);
 
         //Show connect or disconnect button depending on actor's connection
-        try{
-            if(moduleManager.isActorConnected(cryptoBrokerCommunityInformation.getPublicKey())) {
-                disconnect.setVisibility(View.VISIBLE);
-                connect.setVisibility(View.GONE);
-            }else {
-                connect.setVisibility(View.VISIBLE);
-                disconnect.setVisibility(View.GONE);
+        connect.setVisibility(View.GONE);
+        disconnect.setVisibility(View.GONE);
+        cancel.setVisibility(View.GONE);
+
+        ConnectionState connectionState = this.cryptoBrokerCommunityInformation.getConnectionState();
+        if(connectionState != null)
+        {
+            switch (connectionState) {
+                case CONNECTED:
+                    disconnect.setVisibility(View.VISIBLE);
+                    break;
+                case PENDING_REMOTELY_ACCEPTANCE:
+                    cancel.setVisibility(View.VISIBLE);
+                    break;
+                default:
+                    connect.setVisibility(View.VISIBLE);
             }
-        }catch (CantValidateConnectionStateException e) {
-            e.printStackTrace();
         }
+        else
+            connect.setVisibility(View.VISIBLE);
 
 
         //Show user image if it has one, otherwise show default user image
@@ -152,6 +166,22 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
+        } else if(i == R.id.btn_cancel) {
+
+            //TODO: verificar el getModuleManager().cancelCryptoBroker(cryptoBrokerCommunityInformation.getConnectionId());
+            //TODO: antes de habilitar esto.
+//            try {
+//                CancelDialog cancelDialog = new CancelDialog(getActivity(), appSession, null,
+//                        cryptoBrokerCommunityInformation, moduleManager.getSelectedActorIdentity());
+//                cancelDialog.setTitle("Cancel");
+//                cancelDialog.setDescription("Want to cancel connection with");
+//                cancelDialog.setUsername(cryptoBrokerCommunityInformation.getAlias());
+//                cancelDialog.setOnDismissListener(this);
+//                cancelDialog.show();
+//            } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
+//                errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+//                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+//            }
         }
     }
 
@@ -159,19 +189,24 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Crypt
     public void onDismiss(DialogInterface dialog) {
         //Get connectionresult flag, and hide/show connect/disconnect buttons
         try {
-            Boolean connectionresult = (Boolean) appSession.getData("connectionresult");
+            int connectionresult = (int) appSession.getData("connectionresult");
             appSession.removeData("connectionresult");
-            if(connectionresult) {
-                disconnect.setVisibility(View.VISIBLE);
-                connect.setVisibility(View.GONE);
-            }
-            else {
+
+            if(connectionresult == 1) {
                 disconnect.setVisibility(View.GONE);
                 connect.setVisibility(View.VISIBLE);
+                cancel.setVisibility(View.GONE);
+            } else if(connectionresult == 2) {
+                disconnect.setVisibility(View.GONE);
+                connect.setVisibility(View.GONE);
+                cancel.setVisibility(View.VISIBLE);
+            } else if(connectionresult == 3) {
+                disconnect.setVisibility(View.VISIBLE);
+                connect.setVisibility(View.GONE);
+                cancel.setVisibility(View.GONE);
             }
         }catch (Exception e) {}
 
     }
-
 
 }
