@@ -85,8 +85,6 @@ public class AssetSellFragment extends AbstractFermatFragment {
     private Spinner bitcoinsTotalSpinner;
     private FermatTextView bitcoinsTotalText;
 
-    private FermatTextView bitcoinBalanceText;
-
     private View selectUserButton;
     private View sellAssetsButton;
     private DigitalAsset digitalAsset;
@@ -192,7 +190,6 @@ public class AssetSellFragment extends AbstractFermatFragment {
         bitcoins = (FermatEditText) rootView.findViewById(R.id.bitcoins);
         bitcoinsSpinner = (Spinner) rootView.findViewById(R.id.bitcoinsSpinner);
         bitcoinsTextView = (FermatTextView) rootView.findViewById(R.id.bitcoinsText);
-        bitcoinBalanceText = (FermatTextView) rootView.findViewById(R.id.bitcoinBalanceText);
         bitcoinsTotal = (FermatEditText) rootView.findViewById(R.id.bitcoinsTotal);
         bitcoinsTotalSpinner = (Spinner) rootView.findViewById(R.id.bitcoinsTotalSpinner);
         bitcoinsTotalText = (FermatTextView) rootView.findViewById(R.id.bitcoinsTotalText);
@@ -273,8 +270,6 @@ public class AssetSellFragment extends AbstractFermatFragment {
         bitcoins.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                bitcoinsTotal.setText("");
-                bitcoinsTotalText.setText(String.format("%.6f BTC", 0.0));
                 updateBitcoins();
                 return false;
             }
@@ -282,8 +277,6 @@ public class AssetSellFragment extends AbstractFermatFragment {
         bitcoinsTotal.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
-                bitcoins.setText("");
-                bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
                 updateBitcoinsTotal();
                 return false;
             }
@@ -308,14 +301,16 @@ public class AssetSellFragment extends AbstractFermatFragment {
             double amountBTC = BitcoinConverter.convert(amount, from, BITCOIN);
             int quantity = Integer.parseInt(assetsToSellStr);
             bitcoinsTextView.setText(String.format("%.6f BTC", amountBTC));
-            bitcoinBalanceText.setText(String.format("%.6f BTC", quantity * amountBTC));
+            bitcoinsTotalSpinner.setSelection(bitcoinsSpinner.getSelectedItemPosition());
+            bitcoinsTotal.setText(Double.toString(amount * quantity));
         } else if (bitcoinStr.length() == 0) {
             bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
-            bitcoinBalanceText.setText(String.format("%.6f BTC", 0.0));
+            bitcoinsTotal.setText(Double.toString(0));
         } else if (assetsToSellStr.length() == 0) {
             bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
-            bitcoinBalanceText.setText(String.format("%.6f BTC", 0.0));
+            bitcoinsTotal.setText(Double.toString(0));
         }
+        updateBitcoinsTotal();
     }
 
     private void updateBitcoinsTotal() {
@@ -326,10 +321,8 @@ public class AssetSellFragment extends AbstractFermatFragment {
             double amount = Double.parseDouble(bitcoinsTotal.getText().toString());
             double amountBTC = BitcoinConverter.convert(amount, from, BITCOIN);
             bitcoinsTotalText.setText(String.format("%.6f BTC", amountBTC));
-            bitcoinBalanceText.setText(String.format("%.6f BTC", amountBTC));
         } else if (bitcoinTotalStr.length() == 0) {
             bitcoinsTotalText.setText(String.format("%.6f BTC", 0.0));
-            bitcoinBalanceText.setText(String.format("%.6f BTC", 0.0));
         }
     }
 
@@ -387,8 +380,8 @@ public class AssetSellFragment extends AbstractFermatFragment {
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                //moduleManager.redeemAssetToRedeemPoint(assetPublicKey, null, Data.getRedeemPoints(redeemPoints), assetAmount);
-                //TODO implementar metodos de sellAsset y agregarlos aqui
+//                long amountPerUnity =
+//                moduleManager.startSell(user.getActorAssetUser(), bitcoins.getText());
                 return true;
             }
         };
