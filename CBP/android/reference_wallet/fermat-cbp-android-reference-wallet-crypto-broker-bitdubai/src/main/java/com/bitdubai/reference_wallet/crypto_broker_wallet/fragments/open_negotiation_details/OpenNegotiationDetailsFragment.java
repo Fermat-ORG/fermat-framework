@@ -25,22 +25,16 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -57,16 +51,9 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.Simpl
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,14 +63,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     private static final String TAG = "OpenNegotiationDetails";
 
-    // UI
-    private ImageView customerImage;
-    private FermatTextView buyingDetails;
-    private FermatTextView exchangeRateSummary;
-    private FermatTextView customerName;
-    private FermatTextView lastUpdateDate;
-    private RecyclerView recyclerView;
-
     // DATA
     private NegotiationWrapper negotiationWrapper;
 
@@ -91,8 +70,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
     private NewOpenNegotiationDetailsAdapter adapter;
-    private boolean valuesHasChanged;
-
 
     public static OpenNegotiationDetailsFragment newInstance() {
         return new OpenNegotiationDetailsFragment();
@@ -102,7 +79,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         try {
             CryptoBrokerWalletModuleManager moduleManager = appSession.getModuleManager();
@@ -122,11 +98,41 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.cbw_fragment_open_negotiation_details_activity, container, false);
-
         configureToolbar();
-        initViews(rootView);
-        bindData();
+
+        final View rootView = inflater.inflate(R.layout.cbw_fragment_open_negotiation_details_activity, container, false);
+
+        final ImageView customerImage = (ImageView) rootView.findViewById(R.id.cbw_customer_image);
+        final FermatTextView customerName = (FermatTextView) rootView.findViewById(R.id.cbw_customer_name);
+        final FermatTextView buyingDetails = (FermatTextView) rootView.findViewById(R.id.cbw_buying_summary);
+        final FermatTextView exchangeRateSummary = (FermatTextView) rootView.findViewById(R.id.cbw_selling_exchange_rate);
+        final FermatTextView lastUpdateDate = (FermatTextView) rootView.findViewById(R.id.cbw_last_update_date);
+        final RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.cbw_open_negotiation_details_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+
+
+        final CustomerBrokerNegotiationInformation negotiationInfo = negotiationWrapper.getNegotiationInformation();
+        final ActorIdentity customer = negotiationInfo.getCustomer();
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        final String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+        final String exchangeAmount = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
+        final String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        final String amount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
+
+        //Negotiation Summary
+        customerImage.setImageDrawable(getImgDrawable(customer.getProfileImage()));
+        customerName.setText(customer.getAlias());
+        lastUpdateDate.setText(DateFormat.format("dd MMM yyyy", negotiationInfo.getLastNegotiationUpdateDate()));
+        exchangeRateSummary.setText(getResources().getString(R.string.cbw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency));
+        buyingDetails.setText(getResources().getString(R.string.cbw_buying_details, amount, merchandise));
+
+        adapter = new NewOpenNegotiationDetailsAdapter(getActivity(), negotiationWrapper);
+        adapter.setMarketRateList(appSession.getActualExchangeRates());
+        adapter.setFooterListener(this);
+        adapter.setClauseListener(this);
+
+        recyclerView.setAdapter(adapter);
 
         return rootView;
     }
@@ -149,7 +155,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
                     @Override
                     public void onClick(String newValue) {
-                        actionListenerBrokerCurrencyQuantity(clause, newValue);
+                        //actionListenerBrokerCurrencyQuantity(clause, newValue);
                     }
                 });
 
@@ -163,7 +169,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
                     @Override
                     public void onClick(String newValue) {
-                        actionListenerBrokerCurrencyQuantity(clause, newValue);
+                        //actionListenerBrokerCurrencyQuantity(clause, newValue);
                     }
                 });
 
@@ -177,7 +183,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
                     @Override
                     public void onClick(String newValue) {
-                        actionListenerBrokerCurrencyQuantity(clause, newValue);
+                        //actionListenerBrokerCurrencyQuantity(clause, newValue);
                     }
                 });
 
@@ -215,8 +221,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                         dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
                             @Override
                             public void onItemSelected(BankAccountNumber newValue) {
-                                // putClause(clause, newValue.getAccount(), getStatusClauseChange(clause.getStatus().getCode()));
-                                adapter.changeDataSet(negotiationWrapper);
+                                //putClause(clause, newValue.getAccount(), getStatusClauseChange(clause.getStatus().getCode()));
+                                //adapter.changeDataSet(negotiationWrapper);
                             }
                         });
 
@@ -241,8 +247,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                         dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                             @Override
                             public void onItemSelected(String newValue) {
-                                // putClause(clause, newValue, getStatusClauseChange(clause.getStatus().getCode()));
-                                adapter.changeDataSet(negotiationWrapper);
+                                //putClause(clause, newValue, getStatusClauseChange(clause.getStatus().getCode()));
+                                //adapter.changeDataSet(negotiationWrapper);
                             }
                         });
                         dialogFragment.show(getFragmentManager(), "placeToDeliveryDialog");
@@ -299,17 +305,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     }
 
-    private void initViews(View rootView) {
-
-        customerImage = (ImageView) rootView.findViewById(R.id.cbw_customer_image);
-        customerName = (FermatTextView) rootView.findViewById(R.id.cbw_customer_name);
-        buyingDetails = (FermatTextView) rootView.findViewById(R.id.cbw_buying_summary);
-        exchangeRateSummary = (FermatTextView) rootView.findViewById(R.id.cbw_selling_exchange_rate);
-        lastUpdateDate = (FermatTextView) rootView.findViewById(R.id.cbw_last_update_date);
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.cbw_open_negotiation_details_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-    }
-
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -317,34 +312,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
         else
             toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
-
-        toolbar.setTitleTextColor(Color.WHITE);
-        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
-    }
-
-    private void bindData() {
-        CustomerBrokerNegotiationInformation negotiationInfo = negotiationWrapper.getNegotiationInformation();
-        ActorIdentity customer = negotiationInfo.getCustomer();
-        Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-
-        String merchandise = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
-        String exchangeAmount = clauses.get(ClauseType.EXCHANGE_RATE).getValue();
-        String paymentCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-        String amount = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY).getValue();
-
-        //Negotiation Summary
-        customerImage.setImageDrawable(getImgDrawable(customer.getProfileImage()));
-        customerName.setText(customer.getAlias());
-        lastUpdateDate.setText(DateFormat.format("dd MMM yyyy", negotiationInfo.getLastNegotiationUpdateDate()));
-        exchangeRateSummary.setText(getResources().getString(R.string.cbw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency));
-        buyingDetails.setText(getResources().getString(R.string.cbw_buying_details, amount, merchandise));
-
-        adapter = new NewOpenNegotiationDetailsAdapter(getActivity(), negotiationWrapper);
-        adapter.setMarketRateList(appSession.getActualExchangeRates());
-        adapter.setFooterListener(this);
-        adapter.setClauseListener(this);
-
-        recyclerView.setAdapter(adapter);
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {
@@ -365,56 +332,5 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     public void onSendButtonClicked() {
         // TODO
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
-
-//        boolean nothingLeftToConfirm = walletManager.isNothingLeftToConfirm(negotiationSteps);
-//
-//        if (nothingLeftToConfirm) {
-//            walletManager.sendNegotiationSteps(negotiationInfo, negotiationSteps);
-//            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-//        }
     }
-
-    private void actionListenerBrokerCurrencyQuantity(ClauseInformation clause, String newValue) {
-        CustomerBrokerNegotiationInformation negotiationInfo = negotiationWrapper.getNegotiationInformation();
-
-        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-        final NumberFormat numberFormat = DecimalFormat.getInstance();
-
-        try {
-            Number number = numberFormat.parse(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-
-            if (number.doubleValue() < 0)
-                Toast.makeText(getActivity(), "The exchange rate must be greater than zero.", Toast.LENGTH_LONG).show();
-
-            else {
-                valuesHasChanged = clause.getValue().equals(newValue);
-
-                ClauseStatus status = valuesHasChanged && clause.getStatus() == ClauseStatus.ACCEPTED ? ClauseStatus.CHANGED : clause.getStatus();
-                // putClause(clause, newValue, status);
-
-                final BigDecimal exchangeRate = new BigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-                final BigDecimal amountToPay = new BigDecimal(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY).getValue());
-                final BigDecimal amountToBuy = amountToPay.divide(exchangeRate, 8, RoundingMode.HALF_UP);
-
-                final String amountToBuyStr = numberFormat.format(amountToBuy);
-                final ClauseInformation brokerCurrencyQuantity = clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
-                // putClause(brokerCurrencyQuantity, amountToBuyStr);
-
-                adapter.changeDataSet(negotiationWrapper);
-            }
-
-        } catch (ParseException ex) {
-            Toast.makeText(getActivity(), "Please set a correct value.", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private ClauseStatus getStatusClauseChange(ClauseStatus statusClause) {
-
-        if (valuesHasChanged && statusClause == ClauseStatus.ACCEPTED)
-            return ClauseStatus.CHANGED;
-
-        return statusClause;
-    }
-
-
 }
