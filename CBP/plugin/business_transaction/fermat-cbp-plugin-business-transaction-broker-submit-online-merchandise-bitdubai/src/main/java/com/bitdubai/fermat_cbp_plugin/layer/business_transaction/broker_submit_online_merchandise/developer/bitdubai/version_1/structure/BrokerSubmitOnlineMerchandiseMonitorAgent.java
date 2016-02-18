@@ -314,7 +314,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             cryptoMoneyDeStockRecord.getMemo(),
                             cryptoMoneyDeStockRecord.getPriceReference(),
                             cryptoMoneyDeStockRecord.getOriginTransaction(),
-                            pendingToDeStockTransaction.getContractHash());
+                            pendingToDeStockTransaction.getContractHash(),
+                            BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Manuel debemos de ver como nos llega esto desde android
                     pendingToDeStockTransaction.setContractTransactionStatus(
                             ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE);
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(

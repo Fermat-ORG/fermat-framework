@@ -52,14 +52,14 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
     }
 
     /**
-     * This method load the list CryptoBrokerStockTransaction
+     * This method load the update the transaction mark field seen in true
      *
-     * @param transactionId
+     * @param OriginTransactionId
      * @return void
      * @throws CantGetTransactionCryptoBrokerWalletMatchingException
      */
     @Override
-    public void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
+    public void markAsSeen(String OriginTransactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
 
     }
 
