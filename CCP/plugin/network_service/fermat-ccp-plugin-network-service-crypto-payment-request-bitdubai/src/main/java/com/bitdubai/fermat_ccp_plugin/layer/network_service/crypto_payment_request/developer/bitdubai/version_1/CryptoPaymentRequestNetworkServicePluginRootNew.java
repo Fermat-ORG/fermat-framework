@@ -407,7 +407,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
     @Override
     protected void reprocessMessages() {
-        try {
+       /* try {
 
             List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listUncompletedRequest();
 
@@ -445,13 +445,13 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
         {
             System.out.println("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
     protected void reprocessMessages(String identityPublicKey) {
 
-        try {
+      /*  try {
 
             List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listUncompletedRequest(identityPublicKey);
 
@@ -490,7 +490,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
         {
             System.out.println("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
-        }
+        }*/
     }
 
 
@@ -836,7 +836,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        if(developerDatabase.getName() == "Crypto Payment Request")
+        if(developerDatabase.getName().equals("Crypto Payment Request"))
             return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
         else
             return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
