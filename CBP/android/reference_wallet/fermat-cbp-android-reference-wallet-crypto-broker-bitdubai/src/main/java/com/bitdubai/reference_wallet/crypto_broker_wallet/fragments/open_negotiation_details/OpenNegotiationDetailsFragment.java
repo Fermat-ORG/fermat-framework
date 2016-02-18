@@ -14,6 +14,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
@@ -31,8 +33,11 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NegotiationDetailsAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NewOpenNegotiationDetailsAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ClauseViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ExpirationTimeViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
@@ -42,7 +47,9 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpenNegotiationDetailsFragment extends AbstractFermatFragment implements FooterViewHolder.OnFooterButtonsClickListener {
+public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, ResourceProviderManager>
+        implements FooterViewHolder.OnFooterButtonsClickListener, ClauseViewHolder.Listener, ExpirationTimeViewHolder.Listener {
+
     private static final String TAG = "OpenNegotiationDetails";
 
     // UI
@@ -54,17 +61,26 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
     private RecyclerView recyclerView;
 
     // DATA
-    private CustomerBrokerNegotiationInformation negotiationInfo;
-    private List<NegotiationStep> negotiationSteps;
+    private NegotiationWrapper negotiationWrapper;
 
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
+    private NewOpenNegotiationDetailsAdapter adapter;
 
 
-    private NegotiationDetailsAdapter  nda;
     public static OpenNegotiationDetailsFragment newInstance() {
         return new OpenNegotiationDetailsFragment();
+    }
+
+    @Override
+    public void onClauseClicked(Button triggerView, ClauseInformation clause, int clausePosition) {
+
+    }
+
+    @Override
+    public void onConfirmButtonClicked(ClauseInformation clause) {
+
     }
 
     @Override
@@ -73,12 +89,12 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
 
 
         try {
-            CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            CryptoBrokerWalletModuleManager moduleManager = appSession.getModuleManager();
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            CryptoBrokerWalletSession session = (CryptoBrokerWalletSession) appSession;
-            negotiationInfo = (CustomerBrokerNegotiationInformation) session.getData(CryptoBrokerWalletSession.NEGOTIATION_DATA);
+            CustomerBrokerNegotiationInformation negotiationInfo = appSession.getNegotiationData();
+            negotiationWrapper = new NegotiationWrapper(negotiationInfo);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -97,6 +113,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
         bindData();
 
         return rootView;
+    }
+
+    @Override
+    public void onValueClicked(Button triggerView) {
+
     }
 
     private void initViews(View rootView) {
@@ -123,6 +144,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
     }
 
     private void bindData() {
+        CustomerBrokerNegotiationInformation negotiationInfo = negotiationWrapper.getNegotiationInformation();
         ActorIdentity customer = negotiationInfo.getCustomer();
         Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
@@ -138,9 +160,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
         exchangeRateSummary.setText(getResources().getString(R.string.cbw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency));
         buyingDetails.setText(getResources().getString(R.string.cbw_buying_details, amount, merchandise));
 
-        negotiationSteps = walletManager.getSteps(negotiationInfo);
-        NegotiationDetailsAdapter adapter = new NegotiationDetailsAdapter(getActivity(), appSession, walletManager, negotiationInfo, negotiationSteps);
+        adapter = new NewOpenNegotiationDetailsAdapter(getActivity(), negotiationWrapper);
+        adapter.setMarketRateList(appSession.getActualExchangeRates());
         adapter.setFooterListener(this);
+        adapter.setClauseListener(this);
 
         recyclerView.setAdapter(adapter);
     }
@@ -156,22 +179,24 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment imple
 
     @Override
     public void onAddNoteButtonClicked() {
-       // Toast.makeText(getActivity(), "Click on add_a_note_card_view", Toast.LENGTH_SHORT).show();
+        // TODO
+        // Toast.makeText(getActivity(), "Click on add_a_note_card_view", Toast.LENGTH_SHORT).show();
 
-       /// NegotiationDetailsAdapter adapter = new NegotiationDetailsAdapter(getActivity(), appSession, walletManager, negotiationInfo, negotiationSteps);
+        /// NegotiationDetailsAdapter adapter = new NegotiationDetailsAdapter(getActivity(), appSession, walletManager, negotiationInfo, negotiationSteps);
 
     }
 
     @Override
     public void onSendButtonClicked() {
-        boolean nothingLeftToConfirm = walletManager.isNothingLeftToConfirm(negotiationSteps);
-
-        if (nothingLeftToConfirm) {
-            walletManager.sendNegotiationSteps(negotiationInfo, negotiationSteps);
-            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
-        }
+        // TODO
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+//        boolean nothingLeftToConfirm = walletManager.isNothingLeftToConfirm(negotiationSteps);
+//
+//        if (nothingLeftToConfirm) {
+//            walletManager.sendNegotiationSteps(negotiationInfo, negotiationSteps);
+//            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
+//        }
     }
-
 
 
 }

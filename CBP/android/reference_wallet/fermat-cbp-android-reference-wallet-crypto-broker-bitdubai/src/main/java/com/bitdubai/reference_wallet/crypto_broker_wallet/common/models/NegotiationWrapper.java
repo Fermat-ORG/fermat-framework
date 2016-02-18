@@ -12,7 +12,13 @@ public class NegotiationWrapper {
     private ClauseStatus expirationTimeStatus;
     private boolean expirationTimeConfirmButtonClicked;
 
-    public CustomerBrokerNegotiationInformation getNegotiationInformation(){
+    public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo) {
+        negotiationInformation = negotiationInfo;
+        expirationTimeStatus = ClauseStatus.CONFIRM;
+        expirationTimeConfirmButtonClicked = false;
+    }
+
+    public CustomerBrokerNegotiationInformation getNegotiationInformation() {
         return negotiationInformation;
     }
 
