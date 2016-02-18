@@ -72,8 +72,8 @@ public class ExpirationTimeViewHolder extends FermatViewHolder implements View.O
         java.text.DateFormat timeFormat = DateFormat.getTimeFormat(itemView.getContext());
         java.text.DateFormat dateFormat = DateFormat.getDateFormat(itemView.getContext());
 
-        final CustomerBrokerNegotiationInformation negotiationInformation = negotiation.getNegotiationInformation();
-        final ClauseStatus status = negotiation.isExpirationTimeConfirmButtonClicked() ? negotiation.getExpirationTimeStatus() : ClauseStatus.CONFIRM;
+        final CustomerBrokerNegotiationInformation negotiationInformation = negotiation.getNegotiationInfo();
+        final ClauseStatus status = negotiation.isExpirationTimeConfirmButtonClicked() ? negotiation.getExpirationTimeStatus() : ClauseStatus.DRAFT;
         final long expirationDate = negotiationInformation.getNegotiationExpirationDate();
 
         buttonTime.setText(timeFormat.format(expirationDate));
@@ -100,7 +100,7 @@ public class ExpirationTimeViewHolder extends FermatViewHolder implements View.O
                 descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
                 break;
 
-            case CONFIRM:
+            case DRAFT:
                 containerCardView.setCardBackgroundColor(getColor(R.color.cbw_card_background_status_confirm));
                 confirmButton.setText(R.string.status_confirm);
                 titleTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));

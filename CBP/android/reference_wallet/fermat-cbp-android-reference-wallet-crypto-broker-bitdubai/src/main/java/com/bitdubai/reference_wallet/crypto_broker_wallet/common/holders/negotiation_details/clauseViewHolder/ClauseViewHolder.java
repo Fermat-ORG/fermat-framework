@@ -78,7 +78,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
                 setChangedStatus();
                 break;
 
-            case CONFIRM:
+            case DRAFT:
                 containerCardView.setCardBackgroundColor(getColor(R.color.cbw_card_background_status_confirm));
                 confirmButton.setText(R.string.status_confirm);
                 titleTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
