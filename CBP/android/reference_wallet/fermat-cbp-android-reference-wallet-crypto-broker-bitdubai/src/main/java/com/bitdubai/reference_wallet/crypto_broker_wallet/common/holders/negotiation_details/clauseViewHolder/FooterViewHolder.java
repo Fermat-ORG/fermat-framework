@@ -4,6 +4,7 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
@@ -20,7 +21,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
         CardView addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
         addNoteButton.setOnClickListener(this);
 
-        TextView sendButton = (TextView) itemView.findViewById(R.id.send_button);
+        TextView sendButton = (FermatTextView) itemView.findViewById(R.id.send_button);
         sendButton.setOnClickListener(this);
     }
 

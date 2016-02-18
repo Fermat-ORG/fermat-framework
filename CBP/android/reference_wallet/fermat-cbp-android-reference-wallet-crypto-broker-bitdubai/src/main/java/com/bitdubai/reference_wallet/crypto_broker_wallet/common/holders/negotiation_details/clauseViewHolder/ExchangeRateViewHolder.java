@@ -103,7 +103,6 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_accepted));
         yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_accepted));
         yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_accepted));
-        yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_accepted));
     }
 
     @Override
@@ -115,7 +114,6 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_changed));
         yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_changed));
         yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_changed));
-        yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_changed));
     }
 
     @Override
@@ -127,7 +125,6 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_confirm));
         yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_confirm));
         yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_confirm));
-        yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_confirm));
     }
 
     public void setMarketRateList(List<IndexInfoSummary> marketRateList) {

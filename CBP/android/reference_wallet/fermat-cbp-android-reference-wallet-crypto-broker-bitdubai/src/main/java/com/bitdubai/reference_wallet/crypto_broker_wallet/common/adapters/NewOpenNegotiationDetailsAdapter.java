@@ -33,11 +33,13 @@ import java.util.NoSuchElementException;
 public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseInformation, FermatViewHolder> {
 
     public static final int TYPE_DATE_EXPIRATION_TIME = 6;
+    public static final int TYPE_AMOUNT_TO_SELL = 4;
+    public static final int TYPE_AMOUNT_TO_RECEIVE = 7;
+
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_SINGLE_CHOICE = 1;
     private static final int TYPE_DATE_TIME = 2;
     private static final int TYPE_EXCHANGE_RATE = 3;
-    private static final int TYPE_AMOUNT = 4;
     private static final int TYPE_FOOTER = 5;
 
     private NegotiationWrapper negotiationWrapper;
@@ -98,10 +100,12 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
                 final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView, TYPE_SINGLE_CHOICE);
                 exchangeRateViewHolder.setMarketRateList(marketRateList);
                 return exchangeRateViewHolder;
-            case TYPE_AMOUNT:
-                return new AmountViewHolder(itemView, TYPE_AMOUNT);
+            case TYPE_AMOUNT_TO_SELL:
+                return new AmountViewHolder(itemView, TYPE_AMOUNT_TO_SELL);
+            case TYPE_AMOUNT_TO_RECEIVE:
+                return new AmountViewHolder(itemView, TYPE_AMOUNT_TO_RECEIVE);
             case TYPE_FOOTER:
-                final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView, TYPE_AMOUNT);
+                final FooterViewHolder footerViewHolder = new FooterViewHolder(itemView, TYPE_FOOTER);
                 footerViewHolder.setListener(footerListener);
                 return footerViewHolder;
             default:
@@ -121,8 +125,10 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             case TYPE_SINGLE_CHOICE:
                 return R.layout.cbw_clause_single_choice_item;
             case TYPE_EXCHANGE_RATE:
-                return R.layout.cbw_exchange_rate_item;
-            case TYPE_AMOUNT:
+                return R.layout.cbw_clause_exchange_rate_item;
+            case TYPE_AMOUNT_TO_SELL:
+                return R.layout.cbw_clause_amount_item;
+            case TYPE_AMOUNT_TO_RECEIVE:
                 return R.layout.cbw_clause_amount_item;
             case TYPE_FOOTER:
                 return R.layout.cbw_footer_item;
@@ -154,9 +160,9 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             case EXCHANGE_RATE:
                 return TYPE_EXCHANGE_RATE;
             case CUSTOMER_CURRENCY_QUANTITY:
-                return TYPE_AMOUNT;
+                return TYPE_AMOUNT_TO_SELL;
             case BROKER_CURRENCY_QUANTITY:
-                return TYPE_AMOUNT;
+                return TYPE_AMOUNT_TO_RECEIVE;
             case CUSTOMER_DATE_TIME_TO_DELIVER:
                 return TYPE_DATE_TIME;
             case BROKER_DATE_TIME_TO_DELIVER:

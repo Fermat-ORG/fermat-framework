@@ -8,13 +8,19 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NewOpenNegotiationDetailsAdapter;
 
 import java.util.Map;
 
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CURRENCY;
+import static com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NewOpenNegotiationDetailsAdapter.TYPE_AMOUNT_TO_SELL;
+
 
 /**
- *Created by Yordin Alayn on 22.01.16.
- * Based in AmountToBuyViewHolder of Star_negotiation by nelson
+ * Created by Nelson Ramirez
+ *
+ * @since 21-02-2016.
  */
 public class AmountViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
@@ -24,7 +30,6 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
 
     public AmountViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
-
 
         currencyTextValue = (FermatTextView) itemView.findViewById(R.id.cbw_amount_currency);
         amountText = (FermatTextView) itemView.findViewById(R.id.cbw_amount_text);
@@ -36,7 +41,9 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
     public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause, int position) {
         super.bindData(data, clause, position);
 
-        currencyTextValue.setText(clause.getValue());
+        final ClauseType clauseType = (getHolderType() == TYPE_AMOUNT_TO_SELL) ? CUSTOMER_CURRENCY : BROKER_CURRENCY;
+        final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
+        currencyTextValue.setText(clauses.get(clauseType).getValue());
         amountValue.setText(clause.getValue());
     }
 
