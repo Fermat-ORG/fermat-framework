@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.open_negoti
 
 import android.app.Fragment;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +27,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
@@ -86,7 +86,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             errorManager = appSession.getErrorManager();
 
             CustomerBrokerNegotiationInformation negotiationInfo = appSession.getNegotiationData();
-            negotiationWrapper = new NegotiationWrapper(negotiationInfo);
+            negotiationWrapper = new NegotiationWrapper(negotiationInfo, appSession);
+
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -111,7 +112,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
 
-        final CustomerBrokerNegotiationInformation negotiationInfo = negotiationWrapper.getNegotiationInformation();
+        final CustomerBrokerNegotiationInformation negotiationInfo = negotiationWrapper.getNegotiationInfo();
         final ActorIdentity customer = negotiationInfo.getCustomer();
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
 
@@ -139,7 +140,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onClauseClicked(Button triggerView, final ClauseInformation clause, int clausePosition) {
-        final Map<ClauseType, ClauseInformation> clauses = negotiationWrapper.getNegotiationInformation().getClauses();
+        final Map<ClauseType, ClauseInformation> clauses = negotiationWrapper.getNegotiationInfo().getClauses();
         final ClauseType type = clause.getType();
 
         SimpleListDialogFragment dialogFragment;
@@ -193,13 +194,13 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             case CUSTOMER_PAYMENT_METHOD:
                 try {
                     ClauseInformation brokerCurrency = clauses.get(ClauseType.BROKER_CURRENCY);
-                    List<String> paymentMethods = walletManager.getPaymentMethods(brokerCurrency.getValue(), appSession.getAppPublicKey());
+                    List<MoneyType> paymentMethods = walletManager.getPaymentMethods(brokerCurrency.getValue(), appSession.getAppPublicKey());
 
                     dialogFragment = new SimpleListDialogFragment<>();
                     dialogFragment.configure("Payment Methods", paymentMethods);
-                    dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
+                    dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<MoneyType>() {
                         @Override
-                        public void onItemSelected(String newValue) {
+                        public void onItemSelected(MoneyType newValue) {
                             // actionListenerCustomerPaymentMethod(clause, newValue);
                         }
                     });
@@ -305,6 +306,17 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     }
 
+    @Override
+    public void onAddNoteButtonClicked() {
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_ADD_NOTE, appSession.getAppPublicKey());
+    }
+
+    @Override
+    public void onSendButtonClicked() {
+        // TODO
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+    }
+
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -321,16 +333,5 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
-    }
-
-    @Override
-    public void onAddNoteButtonClicked() {
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_ADD_NOTE, appSession.getAppPublicKey());
-    }
-
-    @Override
-    public void onSendButtonClicked() {
-        // TODO
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
     }
 }
