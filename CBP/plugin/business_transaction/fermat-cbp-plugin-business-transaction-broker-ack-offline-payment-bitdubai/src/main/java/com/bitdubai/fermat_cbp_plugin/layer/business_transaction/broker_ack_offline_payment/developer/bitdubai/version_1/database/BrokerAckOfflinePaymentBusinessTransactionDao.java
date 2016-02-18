@@ -554,6 +554,10 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             }
             currencyType= FiatCurrency.getByCode(currencyTypeString);
             businessTransactionRecord.setCurrencyType(currencyType);
+            String cbpWalletPublicKey=record.getStringValue(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY);
+            businessTransactionRecord.setCBPWalletPublicKey(cbpWalletPublicKey);
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -581,7 +585,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         try{
             ObjectChecker.checkArgument(contractHash);
             updateRecordStatus(contractHash,
-                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
         } catch (ObjectNotSetException exception) {
             throw new CantUpdateRecordException(
@@ -760,6 +765,78 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME",
+                    "");
+        }
+    }
+
+    /**
+     * This method update a database record, the payment type field, by contract hash.
+     * @param contractHash
+     * @param currencyType
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantUpdateRecordException
+     */
+    public void updateRecordCurrencyTypeByContractHash(
+            String contractHash,
+            FiatCurrency currencyType) throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            databaseTable.addStringFilter(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, currencyType.getCode());
+            databaseTable.updateRecord(record);
+        }  catch (CantLoadTableToMemoryException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating parameter ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME",
+                    "");
+        }
+    }
+
+    /**
+     * This method update a database record, the CBP wallet public key field, by contract hash.
+     * @param contractHash
+     * @param cbpWalletPublicKey
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantUpdateRecordException
+     */
+    public void updateRecordCBPWalletPublicKeyByContractHash(
+            String contractHash,
+            String cbpWalletPublicKey) throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            databaseTable.addStringFilter(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY, cbpWalletPublicKey);
+            databaseTable.updateRecord(record);
+        }  catch (CantLoadTableToMemoryException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating parameter ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY",
                     "");
         }
     }

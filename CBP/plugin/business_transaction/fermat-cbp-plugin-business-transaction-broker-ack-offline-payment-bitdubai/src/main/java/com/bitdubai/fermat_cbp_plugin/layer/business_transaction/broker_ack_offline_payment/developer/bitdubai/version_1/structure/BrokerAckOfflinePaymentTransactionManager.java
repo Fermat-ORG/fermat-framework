@@ -144,21 +144,21 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                                     paymentType+" value from MoneyType is not valid in this plugin");
                     }
                     FiatCurrency currencyType=getCurrencyTypeFromContract(customerBrokerContractSale);
-                    BusinessTransactionRecord businessTransactionRecord=
-                            this.brokerAckOfflinePaymentBusinessTransactionDao.
-                                    getBusinessTransactionRecordByContractHash(contractHash);
-                    businessTransactionRecord.setPaymentType(paymentType);
-                    businessTransactionRecord.setCurrencyType(currencyType);
-                    businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.
-                            updateBusinessTransactionRecord(businessTransactionRecord);
-                    /*this.brokerAckOfflinePaymentBusinessTransactionDao.
+                            updateRecordCurrencyTypeByContractHash(
+                                    contractHash,
+                                    currencyType);
+                    this.brokerAckOfflinePaymentBusinessTransactionDao.
+                            updateRecordCBPWalletPublicKeyByContractHash(
+                                    contractHash,
+                                    walletPublicKey);
+                    this.brokerAckOfflinePaymentBusinessTransactionDao.
                             updateRecordPaymentTypeByContractHash(
                                     contractHash,
                                     paymentType);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
-                            contractTransactionStatus);*/
+                            contractTransactionStatus);
 
                 } else{
                     try{

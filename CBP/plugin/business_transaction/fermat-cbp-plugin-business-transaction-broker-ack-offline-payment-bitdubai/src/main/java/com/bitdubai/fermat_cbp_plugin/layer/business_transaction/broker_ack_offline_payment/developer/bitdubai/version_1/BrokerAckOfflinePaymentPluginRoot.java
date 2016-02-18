@@ -283,7 +283,7 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             //System.out.println("Broker Ack Offline Payment Starting");
             //Testing method
             //newOpenedContractRaiseEventTest();
-            testAck();
+            //testAck();
         } catch (CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
@@ -370,9 +370,9 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
     private void testAck(){
         try{
             brokerAckOfflinePaymentTransactionManager.ackPayment(
-                    "TestWalletPublicKey",
+                    "walletPublicKeyTest",
                     "888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2",
-                    "actorPublicKey");
+                    "brokerPublicKey");
         }catch (Exception e){
             System.out.println("Exception in ACK OFFLINE PAYMENT:");
             e.printStackTrace();

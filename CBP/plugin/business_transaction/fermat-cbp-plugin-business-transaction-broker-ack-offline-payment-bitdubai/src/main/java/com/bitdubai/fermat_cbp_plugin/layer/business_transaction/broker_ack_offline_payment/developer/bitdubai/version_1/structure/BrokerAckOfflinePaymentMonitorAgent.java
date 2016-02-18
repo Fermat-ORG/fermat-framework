@@ -316,7 +316,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 List<BusinessTransactionRecord> pendingToBankCreditList=
                         brokerAckOfflinePaymentBusinessTransactionDao.getPendingToBankCreditList();
                 for(BusinessTransactionRecord pendingToBankCreditRecord : pendingToBankCreditList){
-                    contractHash=pendingToBankCreditRecord.getTransactionHash();
+                    contractHash=pendingToBankCreditRecord.getContractHash();
                     cryptoWalletPublicKey=pendingToBankCreditRecord.getCBPWalletPublicKey();
                     bankTransactionParametersRecord=getBankTransactionParametersRecordFromContractId(
                             contractHash, cryptoWalletPublicKey);
@@ -338,7 +338,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 List<BusinessTransactionRecord> pendingToCashCreditList=
                         brokerAckOfflinePaymentBusinessTransactionDao.getPendingToCashCreditList();
                 for(BusinessTransactionRecord pendingToCashCreditRecord : pendingToCashCreditList){
-                    contractHash=pendingToCashCreditRecord.getTransactionHash();
+                    contractHash=pendingToCashCreditRecord.getContractHash();
                     cryptoWalletPublicKey=pendingToCashCreditRecord.getCBPWalletPublicKey();
                     cashTransactionParametersRecord=getCashTransactionParametersRecordFromContractId(
                             contractHash,
