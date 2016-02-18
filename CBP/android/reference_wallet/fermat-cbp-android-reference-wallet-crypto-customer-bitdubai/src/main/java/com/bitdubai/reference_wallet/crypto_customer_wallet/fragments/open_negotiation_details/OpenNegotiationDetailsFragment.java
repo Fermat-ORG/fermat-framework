@@ -364,34 +364,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_ADD_NOTE, this.appSession.getAppPublicKey());
     }
 
-    @Override
-    public void onCancelNegotiationClicked() {
-
-        SingleTextDialog singleTextDialog = null;
-
-        singleTextDialog = new SingleTextDialog(getActivity(), appSession, appResourcesProviderManager);
-        singleTextDialog.setAcceptBtnListener(new SingleTextDialog.OnClickAcceptListener() {
-            @Override
-            public void onClick(String newValue) {
-
-                try {
-
-                    CustomerBrokerNegotiationInformation negotiation = walletManager.cancelNegotiation(negotiationInfo,newValue);
-                    Toast.makeText(getActivity(), "NEGOTIATION IS CANCELATED. REASON: " + negotiation.getCancelReason(), Toast.LENGTH_LONG).show();
-                    changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
-
-                } catch (CouldNotCancelNegotiationException | CantCancelNegotiationException e){
-                    Toast.makeText(getActivity(), "ERROR IN CANCELLATION OF NEGOTIATION: "+ e.DEFAULT_MESSAGE, Toast.LENGTH_LONG).show();
-                }
-
-            }
-        });
-
-        singleTextDialog.setEditTextValue("");
-        singleTextDialog.configure(R.string.ccw_cancellation_negotiation, R.string.ccw_cancellation_reason_title);
-        singleTextDialog.show();
-
-    }
     /*-------------------------------------------------------------------------------------------------
                                             VIEW METHODS
     ---------------------------------------------------------------------------------------------------*/
