@@ -185,6 +185,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
             /**
              * If I couldn't get the correct logging level, then I will set it to minimal.
              */
+
             return DEFAULT_LOG_LEVEL;
         }
     }
