@@ -55,7 +55,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="15dp">
 
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -64,8 +65,6 @@
             android:text="Assets to Sell"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
-            android:layout_marginTop="15dp"
-            android:layout_marginLeft="15dp"
             android:id="@+id/textView"
             android:textSize="14sp"
             android:textColor="#ffffff"
@@ -79,7 +78,6 @@
             android:id="@+id/assetsToSellEditText"
             android:text="0"
             android:layout_below="@id/textView"
-            android:layout_marginLeft="15dp"
             android:layout_marginTop="5dp"
             android:textSize="15sp"
             android:textColor="#ffffff"
@@ -98,30 +96,31 @@
                 android:id="@+id/bitcoinsLabelText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
                 android:text="Asset Value"
                 android:textColor="#ffffff"
-                android:textSize="12sp" />
+                android:textSize="14sp"
+                android:fontFamily="regular"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
                 android:id="@+id/bitcoins"
                 android:layout_width="100dp"
-                android:layout_height="38dp"
+                android:layout_height="25dp"
                 android:ems="10"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
                 android:nextFocusDown="@+id/expiration_date"
-                android:padding="8dp"
+                android:layout_marginTop="5dp"
+                android:textSize="15sp"
                 android:textColor="#ffffff"
-                android:textSize="12sp"
-                android:layout_marginTop="2dp"
+                android:fontFamily="regular"
+                android:background="@drawable/bg_delivery_input"
                 android:layout_below="@+id/bitcoinsLabelText"/>
 
             <Spinner
                 android:id="@+id/bitcoinsSpinner"
                 android:layout_width="100dp"
-                android:layout_height="41dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/bitcoins"
                 android:layout_alignBottom="@+id/bitcoins"/>
 
@@ -130,11 +129,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:textColor="#0072bd"
+                android:textColor="#ffffff"
                 android:layout_alignBottom="@+id/bitcoins"
                 android:layout_marginBottom="3dp"
                 android:layout_alignParentRight="true"
-                android:text="0.111111 BTC"/>
+                android:text="0.000000 BTC"/>
 
         </RelativeLayout>
 
@@ -148,10 +147,9 @@
                 android:id="@+id/bitcoinBalanceLabelText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:layout_marginTop="10dp"
                 android:textSize="14sp"
-                android:textColor="#0072bd"
+                android:textColor="#ffffff"
                 android:text="Total Price:"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -172,7 +170,6 @@
             android:layout_height="wrap_content"
             android:text="Sell to"
             android:layout_below="@id/bitcoinTotalLayout"
-            android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
             android:id="@+id/textView2"
             android:textSize="14sp"
@@ -183,8 +180,6 @@
             android:id="@+id/selectUsersButton"
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
             android:layout_width="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/textView2"

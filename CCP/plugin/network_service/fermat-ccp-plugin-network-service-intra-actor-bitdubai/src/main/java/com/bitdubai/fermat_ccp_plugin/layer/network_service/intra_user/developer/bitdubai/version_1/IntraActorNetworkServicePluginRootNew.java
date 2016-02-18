@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -770,6 +771,19 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     }
 
     @Override
+    public void saveCacheIntraUsersSuggestions(List<IntraUserInformation> lstIntraUser) throws CantInsertRecordException {
+
+            try
+            {
+                intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+            } catch (CantAddIntraWalletCacheUserException e) {
+
+                throw new CantInsertRecordException("CAN'T Save INTRA USER CACHE LIST",e,"","error saved table records");
+
+            }
+    }
+
+    @Override
     public void askIntraUserForAcceptance(final String intraUserSelectedPublicKey,
                                           final String intraUserSelectedName,
                                           final Actors senderType,
@@ -1229,7 +1243,10 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        if(developerDatabase.getName() == IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME)
+            return new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        else
+            return new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
     }
 
     /**
