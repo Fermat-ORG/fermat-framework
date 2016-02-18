@@ -130,6 +130,8 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase(IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
+
         return databases;
     }
 

@@ -746,7 +746,11 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        if(developerDatabase.getName().equals(CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME))
+            return new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        else
+            return new CommunicationNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
+
     }
 
     /**

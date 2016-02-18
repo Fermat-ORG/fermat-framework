@@ -315,12 +315,12 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                 {
                     if(record.getSentNumber() > 10)
                     {
-                        if(record.getSentNumber() > 20)
-                        {
+                       // if(record.getSentNumber() > 20)
+                        //{
                             //reprocess at two hours
                             //  reprocessTimer =  2 * 3600 * 1000;
 
-                        }
+                       // }
 
                         //reprocess at five minutes
                         //update state and process again later
