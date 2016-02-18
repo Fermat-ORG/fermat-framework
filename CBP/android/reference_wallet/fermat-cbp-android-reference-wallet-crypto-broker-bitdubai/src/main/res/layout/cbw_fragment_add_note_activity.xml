@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <EditText
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:id="@+id/cbw_open_negotiation_text_note"
+        android:textSize="14sp"
+        android:textColor="#5F5F5F"
+        android:hint="@string/cbw_insert_note"
+        android:minLines="4"
+        android:textColorHint="#8f8f8f" />
+
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:text="@string/cbw_cancel_caps"
+                android:id="@+id/cbw_open_negotiation_cancel_note"
+                android:background="#E7E7E7"
+                android:textColor="#5F5F5F"
+                android:textSize="18sp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="OK"
+                android:layout_weight="1"
+                android:id="@+id/cbw_open_negotiation_save_note"
+                android:background="#E7E7E7"
+                android:textColor="#5F5F5F"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+</RelativeLayout>

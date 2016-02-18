@@ -189,5 +189,12 @@
     <string name="cbw_bank_account_title">Bank Account</string>
     <string name="cbw_cash_place_to_deliver">Place to Deliver</string>
     <string name="cbw_cash_place_to_receive">Place to Receive</string>
+    <string name="cbw_insert_note">Insert Note</string>
+    <string name="hint">hint</string>
+    <string name="title">title</string>
+    <string name="cancel">Cancel</string>
+    <string name="accept">Accept</string>
+    <string name="cbw_your_exchange_rate">Your Exchange Rate</string>
+    <string name="cbw_value">value</string>
     <!--Dialog Help - End-->
 </resources>
