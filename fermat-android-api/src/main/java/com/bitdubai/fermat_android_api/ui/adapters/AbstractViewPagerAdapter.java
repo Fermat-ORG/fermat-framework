@@ -1,4 +1,4 @@
-package com.mati.image_slider;
+package com.bitdubai.fermat_android_api.ui.adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
@@ -16,21 +16,21 @@ import java.util.List;
  */
 
 /**
- * ScreenPagerAdapter to add new subApp
+ * AbstractViewPagerAdapter to add new subApp
  */
-public abstract class ScreenPagerAdapter<I> extends PagerAdapter {
+public abstract class AbstractViewPagerAdapter<I> extends PagerAdapter {
 
     private List<I> lstItems;
     private Context context;
     private LayoutInflater layoutInflater;
 
-    public ScreenPagerAdapter(Context context,List<I> lstItems) {
+    public AbstractViewPagerAdapter(Context context, List<I> lstItems) {
         this.context = context;
         this.lstItems = lstItems;
 
     }
 
-    public ScreenPagerAdapter(Context context) {
+    public AbstractViewPagerAdapter(Context context) {
         this.context = context;
         this.lstItems = new ArrayList<>();
     }
