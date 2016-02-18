@@ -44,9 +44,9 @@
             android:id="@+id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/black">
+            android:textColor="@color/black"
+              android:divider="@drawable/cht_list_divider"/>
 
-        </ListView>
     </FrameLayout>
 
 
