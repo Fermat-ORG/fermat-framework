@@ -212,6 +212,7 @@ public class UnHoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
                     cryptoUnholdTransaction.setStatus(CryptoTransactionStatus.REJECTED);
                     cryptoUnholdTransaction.setTimestampConfirmedRejected(new Date().getTime() / 1000);
                     cryptoUnholdTransaction.setMemo("REJECTED AVAILABLE BALANCE");
+                    cryptoUnholdTransaction.setBlockChainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                     unHoldCryptoMoneyTransactionManager.saveUnHoldCryptoMoneyTransactionData(cryptoUnholdTransaction);
                 }
             }
