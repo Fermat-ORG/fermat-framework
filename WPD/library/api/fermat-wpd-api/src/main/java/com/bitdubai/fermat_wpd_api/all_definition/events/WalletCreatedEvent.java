@@ -1,17 +1,17 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
+package com.bitdubai.fermat_wpd_api.all_definition.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 
 import java.util.UUID;
 
 /**
  * Created by ciencias on 26.01.15.
  */
-public class WalletCreatedEvent extends AbstractFermatEvent {
+public class WalletCreatedEvent extends AbstractWPDEvent {
 
     private UUID walletId;
-
     private CryptoCurrency cryptoCurrency;
     private FiatCurrency fiatCurrency;
 
@@ -31,7 +31,7 @@ public class WalletCreatedEvent extends AbstractFermatEvent {
 
     public FiatCurrency getFiatCurrency(){return fiatCurrency;}
 
-    public WalletCreatedEvent (com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType){
+    public WalletCreatedEvent (EventType eventType){
         super(eventType);
     }
 }
