@@ -31,6 +31,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetTransactionCryptoBrokerWalletMatchingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantMarkAsSeenException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
@@ -167,18 +168,20 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return currencyMatchings;
     }
 
-    public void markAsSeen(String originTransactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
-        DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
-        try {
-            for (DatabaseTableRecord record : getCryptoBrokerWalletStockTransactionData(originTransactionId)) {
-                record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME, "true");
-                table.updateRecord(record);
-            }
+    public void markAsSeen(List<String> transactionIds) throws CantMarkAsSeenException {
+        for (String ids : transactionIds) {
+            DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
+            try {
+                for (DatabaseTableRecord record : getCryptoBrokerWalletStockTransactionData(ids)) {
+                    record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME, "true");
+                    table.updateRecord(record);
+                }
 
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetTransactionCryptoBrokerWalletMatchingException("Cant Load Table Memory", e, "", "");
-        } catch (CantUpdateRecordException e) {
-            throw new CantGetTransactionCryptoBrokerWalletMatchingException("Cant Update Record", e, "", "");
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantMarkAsSeenException("Cant Load Table Memory", e, "", "");
+            } catch (CantUpdateRecordException e) {
+                throw new CantMarkAsSeenException("Cant Update Record", e, "", "");
+            }
         }
     }
 
