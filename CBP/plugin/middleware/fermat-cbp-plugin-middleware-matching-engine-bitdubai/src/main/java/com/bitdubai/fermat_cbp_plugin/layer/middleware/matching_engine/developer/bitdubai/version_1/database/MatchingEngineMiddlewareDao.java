@@ -25,6 +25,8 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.E
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantGetEarningsPairException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantLoadOrCreateWalletReferenceException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareEarningsPair;
 
 import java.util.ArrayList;
@@ -91,11 +93,71 @@ public final class MatchingEngineMiddlewareDao {
         }
     }
 
-    public final EarningsPair registerEarningsPair(final UUID id,
-                                                   final Currency earningCurrency,
-                                                   final Currency linkedCurrency,
+    public final void loadOrCreateWalletReference(final WalletReference walletReference) throws CantLoadOrCreateWalletReferenceException {
+
+        try {
+
+            final DatabaseTable walletsTable = database.getTable(MatchingEngineMiddlewareDatabaseConstants.WALLETS_TABLE_NAME);
+
+            walletsTable.addStringFilter(MatchingEngineMiddlewareDatabaseConstants.WALLETS_PUBLIC_KEY_COLUMN_NAME, walletReference.getPublicKey(), DatabaseFilterType.EQUAL);
+
+            walletsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = walletsTable.getRecords();
+
+            if (records.isEmpty()) {
+
+                DatabaseTableRecord entityRecord = walletsTable.getEmptyRecord();
+
+                entityRecord.setStringValue(MatchingEngineMiddlewareDatabaseConstants.WALLETS_PUBLIC_KEY_COLUMN_NAME, walletReference.getPublicKey());
+
+                walletsTable.insertRecord(entityRecord);
+
+            }
+
+        } catch (final CantInsertRecordException e) {
+
+            throw new CantLoadOrCreateWalletReferenceException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantLoadOrCreateWalletReferenceException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
+    public final List<WalletReference> listWallets() throws CantListWalletsException {
+
+        try {
+
+            final DatabaseTable walletsTable = database.getTable(MatchingEngineMiddlewareDatabaseConstants.WALLETS_TABLE_NAME);
+
+            walletsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = walletsTable.getRecords();
+
+            final List<WalletReference> walletReferenceList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+
+                WalletReference walletReference = new WalletReference(
+                        record.getStringValue(MatchingEngineMiddlewareDatabaseConstants.WALLETS_PUBLIC_KEY_COLUMN_NAME)
+                );
+
+                walletReferenceList.add(walletReference);
+            }
+
+            return walletReferenceList;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantListWalletsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
+    public final EarningsPair registerEarningsPair(final UUID            id             ,
+                                                   final Currency        earningCurrency,
+                                                   final Currency        linkedCurrency ,
                                                    final WalletReference walletReference) throws CantAssociatePairException     ,
-                                                                                                  PairAlreadyAssociatedException {
+                                                                                                 PairAlreadyAssociatedException {
 
         try {
 
