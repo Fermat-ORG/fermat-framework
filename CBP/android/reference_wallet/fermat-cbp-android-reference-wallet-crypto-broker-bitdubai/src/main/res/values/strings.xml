@@ -63,7 +63,7 @@
     <string name="payment_date">Payment Date: </string>
     <string name="add_a_note_button">ADD A NOTE</string>
     <string name="payment_methods_title">Payment Methods Juanaso title </string>
-    <string name="payment_method">juanaso Method: </string>
+    <string name="payment_method">Method: </string>
     <string name="payment_date_text">Payment Date: </string>
     <string name="yours">Yours:</string>
     <string name="expiration_date_text">Expiration Date:</string>
@@ -179,5 +179,15 @@
     <string name="cbw_wizard_other_settings_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
     <string name="cbw_current_earings_title">Current Earnings:</string>
     <string name="cbw_earning_wizard_item_msg">Assign me a wallet</string>
+    <string name="reception_method_title">Reception Method</string>
+    <string name="reception_method">Method</string>
+    <string name="cbw_crypto_address_customer">Customer\'s Crypto Address</string>
+    <string name="cbw_crypto_address_broker">Broker\'s Crypto Address</string>
+    <string name="cbw_bank_account_customer">Customer\'s Bank Account</string>
+    <string name="cbw_bank_account_broker">Broker\'s Bank Accounts</string>
+    <string name="cbw_crypto_address_title">Crypto Address</string>
+    <string name="cbw_bank_account_title">Bank Account</string>
+    <string name="cbw_cash_place_to_deliver">Place to Deliver</string>
+    <string name="cbw_cash_place_to_receive">Place to Receive</string>
     <!--Dialog Help - End-->
 </resources>
