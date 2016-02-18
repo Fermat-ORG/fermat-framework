@@ -73,7 +73,7 @@ public interface Wallet {
      * @return void
      * @exception CantGetTransactionCryptoBrokerWalletMatchingException
      */
-    void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException;
+    void markAsSeen(String OriginTransactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException;
 
     /**
      * This method load the list CurrencyMatching

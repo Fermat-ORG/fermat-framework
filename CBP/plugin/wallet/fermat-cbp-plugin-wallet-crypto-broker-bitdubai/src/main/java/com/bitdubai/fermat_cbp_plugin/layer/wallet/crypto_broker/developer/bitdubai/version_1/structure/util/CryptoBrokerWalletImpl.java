@@ -155,16 +155,16 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     /**
      * This method load the list CryptoBrokerStockTransaction
      *
-     * @param transactionId
+     * @param OriginTransactionId
      * @return void
      * @throws CantGetTransactionCryptoBrokerWalletMatchingException
      */
     @Override
-    public void markAsSeen(UUID transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
+    public void markAsSeen(String OriginTransactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
-        cryptoBrokerWalletDatabaseDao.markAsSeen(transactionId);
+        cryptoBrokerWalletDatabaseDao.markAsSeen(OriginTransactionId);
     }
 
     /**
