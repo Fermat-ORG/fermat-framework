@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -107,6 +108,40 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.ccw_open_negotiation_details_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.ccw_action_cancel_negotiation) {
+
+            SingleTextDialog singleTextDialog = null;
+
+            singleTextDialog = new SingleTextDialog(getActivity(), appSession, appResourcesProviderManager);
+            singleTextDialog.setAcceptBtnListener(new SingleTextDialog.OnClickAcceptListener() {
+                @Override
+                public void onClick(String newValue) {
+
+                    try {
+
+                        CustomerBrokerNegotiationInformation negotiation = walletManager.cancelNegotiation(negotiationInfo,newValue);
+                        Toast.makeText(getActivity(), "NEGOTIATION IS CANCELATED. REASON: " + negotiation.getCancelReason(), Toast.LENGTH_LONG).show();
+                        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+
+                    } catch (CouldNotCancelNegotiationException | CantCancelNegotiationException e){
+                        Toast.makeText(getActivity(), "ERROR IN CANCELLATION OF NEGOTIATION: "+ e.DEFAULT_MESSAGE, Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            });
+
+            singleTextDialog.setEditTextValue("");
+            singleTextDialog.configure(R.string.ccw_cancellation_negotiation, R.string.ccw_cancellation_reason_title);
+            singleTextDialog.show();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
