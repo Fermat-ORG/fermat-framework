@@ -1006,7 +1006,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      *
      * @param newFermatMessageReceive
      */
-    public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
+    public synchronized void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
 
     }
 
