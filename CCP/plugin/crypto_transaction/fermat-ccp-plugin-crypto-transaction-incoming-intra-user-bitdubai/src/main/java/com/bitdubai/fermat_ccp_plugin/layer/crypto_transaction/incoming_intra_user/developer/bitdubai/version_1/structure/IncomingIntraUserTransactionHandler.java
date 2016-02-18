@@ -78,7 +78,7 @@ public class IncomingIntraUserTransactionHandler {
 
         eventManager.raiseEvent(platformEvent);*/
 
-        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,"TRANSACTION_ARRIVE|" + transaction.getTransactionID().toString());
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,cryptoAddressBookRecord.getWalletPublicKey(),"TRANSACTION_ARRIVE|" + transaction.getTransactionID().toString());
 
 
     }

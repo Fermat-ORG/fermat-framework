@@ -206,7 +206,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
                     //NOTIFICATION LAUNCH
                     lauchNotification();
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + actorNetworkServiceRecord.getActorSenderPublicKey());
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,"CONNECTION_REQUEST|" + actorNetworkServiceRecord.getActorSenderPublicKey());
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
                     break;
