@@ -385,24 +385,17 @@ public final class OutgoingMessageDao {
 
         try {
 
-            if(findById(String.valueOf(entity.getId()))== null)
-            {
-                if(!existPendingNotification(entity.getId())){
-                         /*
-                     * 1- Create the record to the entity
-                     */
-                    DatabaseTableRecord entityRecord = constructFrom(entity);
+            /*
+             * 1- Create the record to the entity
+             */
+            DatabaseTableRecord entityRecord = constructFrom(entity);
 
-                    /*
-                     * 2.- Create a new transaction and execute
-                     */
-                    DatabaseTransaction transaction = getDataBase().newTransaction();
-                    transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-                    getDataBase().executeTransaction(transaction);
-                }
-             }
-
-
+            /*
+             * 2.- Create a new transaction and execute
+             */
+            DatabaseTransaction transaction = getDataBase().newTransaction();
+            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
+            getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
@@ -415,12 +408,7 @@ public final class OutgoingMessageDao {
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
 
-        } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantGetNotificationException e) {
-            e.printStackTrace();
         }
-
     }
 
     /**
