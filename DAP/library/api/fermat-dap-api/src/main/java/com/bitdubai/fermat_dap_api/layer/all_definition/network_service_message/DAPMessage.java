@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
@@ -14,9 +15,31 @@ import java.io.Serializable;
 public class DAPMessage implements Serializable {
 
     //VARIABLE DECLARATION
+    /**
+     * The content of this message, this one should wrap all
+     * the needed information to process and answer this message
+     * to continue the respective data flow.
+     */
     private DAPContentMessage messageContent;
+    /**
+     * The actor who is sending this message.
+     */
     private DAPActor actorSender;
+    /**
+     * The actor who will receive this message.
+     */
     private DAPActor actorReceiver;
+    /**
+     * The subject from which this message is intending to be used for,
+     * if the subject is not specified it will be consider as a default
+     * message for that type of content, if there are more than one plugin
+     * listening to that content without specifying the subject both will answer.
+     */
+    private DAPMessageSubject subject;
+
+    {
+        subject = DAPMessageSubject.DEFAULT;
+    }
 
     //CONSTRUCTORS
 
@@ -29,6 +52,16 @@ public class DAPMessage implements Serializable {
         setMessageContent(messageContent);
         setActorSender(actorSender);
         setActorReceiver(actorReceiver);
+    }
+
+    public DAPMessage(DAPContentMessage messageContent,
+                      DAPActor actorSender,
+                      DAPActor actorReceiver,
+                      DAPMessageSubject subject) throws CantSetObjectException {
+        setMessageContent(messageContent);
+        setActorSender(actorSender);
+        setActorReceiver(actorReceiver);
+        setSubject(subject);
     }
 
     //PUBLIC METHODS
@@ -73,5 +106,12 @@ public class DAPMessage implements Serializable {
         this.actorReceiver = Validate.verifySetter(actorReceiver, "actorReceiver is null");
     }
 
+    public DAPMessageSubject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(DAPMessageSubject subject) throws CantSetObjectException {
+        this.subject = Validate.verifySetter(subject, "subject is null");
+    }
     //INNER CLASSES
 }

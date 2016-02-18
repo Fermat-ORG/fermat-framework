@@ -53,7 +53,7 @@ public class AssetSellerDAO {
 
     //VARIABLE DECLARATION
     private final UUID pluginId;
-    private Database database;
+    private final Database database;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final ActorAssetUserManager actorAssetUserManager;
     private final AssetUserWalletManager assetUserWalletManager;

@@ -24,6 +24,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerCloseNegotiationTransactionDatabaseException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseEventException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseImpl;
 
@@ -325,12 +326,12 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     }
 
     //GET LIST PENDING EVENT
-    public List<String> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
+    public List<UUID> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetNegotiationTransactionListException {
         try{
 
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME);
-            List<String> eventTypeList=new ArrayList<>();
-            String eventId;
+            List<UUID> eventTypeList=new ArrayList<>();
+            UUID eventId;
             table.addStringFilter(
                     CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_STATUS_COLUMN_NAME,
                     EventStatus.PENDING.getCode(),
@@ -342,7 +343,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
                 return eventTypeList;
             }
             for(DatabaseTableRecord databaseTableRecord : records){
-                eventId=databaseTableRecord.getStringValue(
+                eventId=databaseTableRecord.getUUIDValue(
                         CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_ID_COLUMN_NAME);
                 eventTypeList.add(eventId);
             }
@@ -354,25 +355,20 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     }
 
     //GET EVENT TYPE OF TRANSACTION
-    public String getEventType(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
+    public String getEventType(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
         try{
 
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME);
-            table.addStringFilter(
-                    CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_ID_COLUMN_NAME,
-                    eventId,
-                    DatabaseFilterType.EQUAL);
+            table.addUUIDFilter(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
             checkDatabaseRecords(records);
-            String value=records
-                    .get(0)
-                    .getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TYPE_COLUMN_NAME);
+            String value=records.get(0).getStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TYPE_COLUMN_NAME);
+
             return value;
+
         } catch (CantLoadTableToMemoryException e) {
-            throw new UnexpectedResultReturnedFromDatabaseException(e,
-                    "Getting value from database",
-                    "Cannot load the database table");
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Getting value from database","Cannot load the database table");
         }
 
     }
@@ -402,22 +398,48 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
     }
 
     //UPDATE STATUS THE EVENT
-    public void updateEventTansactionStatus(UUID eventId, EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+    public void updateEventTansactionStatus(UUID eventId, EventStatus eventStatus) throws CantRegisterCustomerBrokerCloseEventException, CantUpdateRecordException {
         try{
+
+            if (!eventExists(eventId))
+                throw new CantRegisterCustomerBrokerCloseEventException("Cant Update Status Customer Broker Close Negotiation Transaction, Event Id not exists.", "Customer Broker Close Negotiation Transaction, Update Event State", "Cant Update Event State Customer Broker Close Negotiation Transaction, Id not exists");
+
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME);
             table.addUUIDFilter(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
-            List<DatabaseTableRecord> records = table.getRecords();
-            checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = table.getEmptyRecord();
             record.setStringValue(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_STATUS_COLUMN_NAME, eventStatus.getCode());
+
             table.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Updating parameter "+CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_STATUS_COLUMN_NAME,"");
+
+//            System.out.print("\n\n**** 19.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");
+
+        }  catch (CantLoadTableToMemoryException e) {
+            throw new CantRegisterCustomerBrokerCloseEventException(e.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
     }
 
     /*PRIVATE METHOD*/
+    private boolean eventExists(UUID eventId) throws CantRegisterCustomerBrokerCloseEventException {
+
+        try {
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_TABLE_NAME);
+            if (table == null)
+                throw new CantRegisterCustomerBrokerCloseEventException("Cant check if event tablet exists", "Customer Broker New Negotiation Transaction", "");
+
+            table.addUUIDFilter(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantRegisterCustomerBrokerCloseEventException(em.getMessage(), em, "Customer Broker New Negotiation Transaction Event Id Not Exists", "Cant load " + CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantRegisterCustomerBrokerCloseEventException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction Event Id Not Exists", "unknown failure.");
+        }
+
+    }
+
     private boolean transactionExists(UUID transactionId) throws CantRegisterCustomerBrokerCloseNegotiationTransactionException {
         try {
             DatabaseTable table = this.database.getTable(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TABLE_NAME);
