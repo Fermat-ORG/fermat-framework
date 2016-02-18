@@ -68,8 +68,8 @@ public class CurrentMoodService extends Service {
 	            Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "This is the currentMood " + currentMood + " to widget " + widgetId);
 
 	            AppWidgetManager appWidgetMan = AppWidgetManager.getInstance(this);
-	            RemoteViews views = new RemoteViews(this.getPackageName(),R.layout.widgetlayout);
-	            views.setTextViewText(R.id.widgetMood, currentMood);
+	            RemoteViews views = new RemoteViews(this.getPackageName(),R.layout.bitcoin_widget);
+	            views.setTextViewText(R.id.txt_base_price, currentMood);
 	            appWidgetMan.updateAppWidget(widgetId, views);
 	            
 	            Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "CurrentMood updated!");
