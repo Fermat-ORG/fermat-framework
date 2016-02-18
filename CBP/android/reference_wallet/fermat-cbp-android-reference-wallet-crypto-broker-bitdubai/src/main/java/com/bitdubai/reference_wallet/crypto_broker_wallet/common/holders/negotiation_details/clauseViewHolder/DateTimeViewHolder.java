@@ -5,13 +5,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NewOpenNegotiationDetailsAdapter;
 
 /**
- *Created by Yordin Alayn on 22.01.16.
+ * Created by Yordin Alayn on 22.01.16.
  * Based in DateTimeViewHolder of Star_negotiation by nelson
  */
 public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClickListener {
@@ -21,14 +21,14 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
     private TextView descriptionTextView;
 
 
-    public DateTimeViewHolder(View itemView) {
-        super(itemView);
+    public DateTimeViewHolder(View itemView, int holderType) {
+        super(itemView, holderType);
 
-        descriptionTextView = (TextView) itemView.findViewById(R.id.ccw_date_time_description_text);
+        descriptionTextView = (TextView) itemView.findViewById(R.id.cbw_date_time_description_text);
 
-        buttonDate = (Button) itemView.findViewById(R.id.ccw_date_value);
+        buttonDate = (Button) itemView.findViewById(R.id.cbw_date_value);
         buttonDate.setOnClickListener(this);
-        buttonTime = (Button) itemView.findViewById(R.id.ccw_time_value);
+        buttonTime = (Button) itemView.findViewById(R.id.cbw_time_value);
         buttonTime.setOnClickListener(this);
     }
 
@@ -39,7 +39,9 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
         java.text.DateFormat timeFormat = DateFormat.getTimeFormat(itemView.getContext());
         java.text.DateFormat dateFormat = DateFormat.getDateFormat(itemView.getContext());
 
-        long timeInMillis = Long.valueOf(clause.getValue());
+        long timeInMillis = getHolderType() == NewOpenNegotiationDetailsAdapter.TYPE_DATE_EXPIRATION_TIME ?
+                negotiationInformation.getNegotiationExpirationDate() : Long.valueOf(clause.getValue());
+
         buttonTime.setText(timeFormat.format(timeInMillis));
         buttonDate.setText(dateFormat.format(timeInMillis));
     }
@@ -54,38 +56,36 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
     @Override
     public void onClick(View view) {
         if (listener != null)
-            listener.onClauseCLicked((Button) view, clause, clausePosition);
+            listener.onClauseClicked((Button) view, clause, clausePosition);
     }
 
     @Override
     protected int getConfirmButtonRes() {
-        return R.id.ccw_confirm_button;
+        return R.id.cbw_confirm_button;
     }
 
     @Override
     protected int getClauseNumberImageViewRes() {
-        return R.id.ccw_clause_number;
+        return R.id.cbw_clause_number;
     }
 
     @Override
     protected int getTitleTextViewRes() {
-        return R.id.ccw_card_view_title;
+        return R.id.cbw_card_view_title;
     }
 
     @Override
-    public void setStatus(NegotiationStepStatus stepStatus) {
-        super.setStatus(stepStatus);
+    protected void onAcceptedStatus() {
+        descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
+    }
 
-        switch (stepStatus) {
-            case ACCEPTED:
-                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
-                break;
-            case CHANGED:
-                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
-                break;
-            case CONFIRM:
-                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
-                break;
-        }
+    @Override
+    protected void setChangedStatus() {
+        descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
+    }
+
+    @Override
+    protected void onToConfirmStatus() {
+        descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
     }
 }

@@ -6,59 +6,85 @@ import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 /**
- *Created by Yordin Alayn on 22.01.16.
+ * Created by Yordin Alayn on 22.01.16.
  * Based in ClauseViewHolder of Star_negotiation by nelson
  */
 public abstract class ClauseViewHolder extends FermatViewHolder {
 
-    private final Resources res;
+    private Resources res;
+    private CardView containerCardView;
 
-    protected NegotiationStepStatus actualStatus;
-    protected boolean valuesHasChanged;
-    protected Button confirmButton;
+    protected FermatButton confirmButton;
     protected ImageView clauseNumberImageView;
-    protected TextView titleTextView;
+    protected FermatTextView titleTextView;
 
     protected Listener listener;
     protected ClauseInformation clause;
     protected CustomerBrokerNegotiationInformation negotiationInformation;
     protected int clausePosition;
 
-    public ClauseViewHolder(View itemView) {
-        super(itemView);
-
+    public ClauseViewHolder(View itemView, int holderType) {
+        super(itemView, holderType);
         res = itemView.getResources();
-        actualStatus = NegotiationStepStatus.CONFIRM;
-        valuesHasChanged = false;
 
-        confirmButton = (Button) itemView.findViewById(getConfirmButtonRes());
+        containerCardView = (CardView) this.itemView;
         clauseNumberImageView = (ImageView) itemView.findViewById(getClauseNumberImageViewRes());
-        titleTextView = (TextView) itemView.findViewById(getTitleTextViewRes());
-
-        configClauseViews(itemView);
-    }
-
-    public Button getConfirmButton() {
-        return confirmButton;
+        titleTextView = (FermatTextView) itemView.findViewById(getTitleTextViewRes());
+        confirmButton = (FermatButton) itemView.findViewById(getConfirmButtonRes());
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.onConfirmButtonClicked(clause);
+            }
+        });
     }
 
     public void setListener(Listener listener) {
         this.listener = listener;
     }
 
+    public FermatButton getConfirmButton(){
+        return confirmButton;
+    }
+
     public void bindData(CustomerBrokerNegotiationInformation negotiationInformation, ClauseInformation clause, int clausePosition) {
         this.negotiationInformation = negotiationInformation;
         this.clause = clause;
         this.clausePosition = clausePosition;
+
+        switch (clause.getStatus()) {
+            case ACCEPTED:
+                containerCardView.setCardBackgroundColor(getColor(R.color.cbw_card_background_status_accepted));
+                containerCardView.setClickable(false);
+                confirmButton.setText(R.string.status_accepted);
+                titleTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
+                onAcceptedStatus();
+                break;
+
+            case CHANGED:
+                containerCardView.setCardBackgroundColor(getColor(R.color.cbw_card_background_status_changed));
+                containerCardView.setClickable(false);
+                confirmButton.setText(R.string.status_changed);
+                titleTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
+                setChangedStatus();
+                break;
+
+            case CONFIRM:
+                containerCardView.setCardBackgroundColor(getColor(R.color.cbw_card_background_status_confirm));
+                confirmButton.setText(R.string.status_confirm);
+                titleTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
+                onToConfirmStatus();
+                break;
+        }
     }
 
     public abstract void setViewResources(int titleRes, int positionImgRes, int... stringResources);
@@ -70,62 +96,16 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected abstract int getTitleTextViewRes();
 
     public interface Listener {
-        void onClauseCLicked(Button triggerView, ClauseInformation clause, int clausePosition);
-        boolean setValuesHasChanged();
+        void onClauseClicked(Button triggerView, ClauseInformation clause, int clausePosition);
+
+        void onConfirmButtonClicked(ClauseInformation clause);
     }
 
-    public void setValuesHasChanged(){
-        valuesHasChanged = listener.setValuesHasChanged();
-    }
+    protected abstract void onAcceptedStatus();
 
-    private void configClauseViews(View itemView) {
+    protected abstract void setChangedStatus();
 
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if ((listener.setValuesHasChanged()) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
-                    actualStatus = NegotiationStepStatus.CHANGED;
-                else if ((!listener.setValuesHasChanged()) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
-                    actualStatus = NegotiationStepStatus.ACCEPTED;
-
-//                if ((valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
-//                    actualStatus = NegotiationStepStatus.CHANGED;
-//                else if ((!valuesHasChanged) && actualStatus.equals(NegotiationStepStatus.CONFIRM))
-//                    actualStatus = NegotiationStepStatus.ACCEPTED;
-
-                valuesHasChanged = false;
-
-                modifyData(actualStatus);
-            }
-        });
-    }
-
-    public void setStatus(NegotiationStepStatus stepStatus) {
-        CardView containerCardView = (CardView) this.itemView;
-
-        switch (stepStatus) {
-            case ACCEPTED:
-                containerCardView.setCardBackgroundColor(getColor(R.color.card_background_status_accepted));
-                containerCardView.setClickable(false);
-                confirmButton.setText(R.string.status_accepted);
-                titleTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
-                break;
-
-            case CHANGED:
-                containerCardView.setCardBackgroundColor(getColor(R.color.card_background_status_changed));
-                containerCardView.setClickable(false);
-                confirmButton.setText(R.string.status_changed);
-                titleTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
-                break;
-
-            case CONFIRM:
-                containerCardView.setCardBackgroundColor(getColor(R.color.card_background_status_confirm));
-                confirmButton.setText(R.string.status_confirm);
-                titleTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
-                break;
-        }
-    }
+    protected abstract void onToConfirmStatus();
 
     @SuppressWarnings("deprecation")
     protected int getColor(int colorResId) {
@@ -134,9 +114,4 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
         else
             return res.getColor(colorResId);
     }
-
-    protected void modifyData(NegotiationStepStatus status) {
-        setStatus(status);
-    }
-
 }

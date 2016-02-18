@@ -1,9 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder;
 
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -39,8 +36,8 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private List<IndexInfoSummary> marketRateList;
 
 
-    public ExchangeRateViewHolder(View itemView) {
-        super(itemView);
+    public ExchangeRateViewHolder(View itemView, int holderType) {
+        super(itemView, holderType);
 
         exchangeRateReferenceText = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_text);
         exchangeRateReference = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_value);
@@ -73,7 +70,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     public void onClick(View view) {
         if (listener != null)
-            listener.onClauseCLicked(yourExchangeRateValue, clause, clausePosition);
+            listener.onClauseClicked(yourExchangeRateValue, clause, clausePosition);
     }
 
     @Override
@@ -97,46 +94,44 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         return R.id.cbw_card_view_title;
     }
 
-    public void setMarketRateList(List<IndexInfoSummary> marketRateList) {
-        this.marketRateList = marketRateList;
+    @Override
+    protected void onAcceptedStatus() {
+        exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
+        exchangeRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
+        markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
+        markerRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
+        yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_accepted));
+        yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_accepted));
+        yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_accepted));
+        yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_accepted));
     }
 
     @Override
-    public void setStatus(NegotiationStepStatus clauseStatus) {
-        super.setStatus(clauseStatus);
+    protected void setChangedStatus() {
+        exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));
+        exchangeRateReference.setTextColor(getColor(R.color.text_value_status_changed));
+        markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));
+        markerRateReference.setTextColor(getColor(R.color.text_value_status_changed));
+        yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_changed));
+        yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_changed));
+        yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_changed));
+        yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_changed));
+    }
 
-        switch (clauseStatus) {
-            case ACCEPTED:
-                exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
-                exchangeRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
-                markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
-                markerRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
-                yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_accepted));
-                yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_accepted));
-                yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_accepted));
-                yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_accepted));
-                break;
-            case CHANGED:
-                exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));
-                exchangeRateReference.setTextColor(getColor(R.color.text_value_status_changed));
-                markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));
-                markerRateReference.setTextColor(getColor(R.color.text_value_status_changed));
-                yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_changed));
-                yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_changed));
-                yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_changed));
-                yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_changed));
-                break;
-            case CONFIRM:
-                exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_confirm));
-                exchangeRateReference.setTextColor(getColor(R.color.text_value_status_confirm));
-                markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_confirm));
-                markerRateReference.setTextColor(getColor(R.color.text_value_status_confirm));
-                yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_confirm));
-                yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_confirm));
-                yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_confirm));
-                yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_confirm));
-                break;
-        }
+    @Override
+    protected void onToConfirmStatus() {
+        exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_confirm));
+        exchangeRateReference.setTextColor(getColor(R.color.text_value_status_confirm));
+        markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_confirm));
+        markerRateReference.setTextColor(getColor(R.color.text_value_status_confirm));
+        yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_confirm));
+        yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_confirm));
+        yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_confirm));
+        yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_confirm));
+    }
+
+    public void setMarketRateList(List<IndexInfoSummary> marketRateList) {
+        this.marketRateList = marketRateList;
     }
 
     private String getMarketRate(Map<ClauseType, ClauseInformation> clauses) {

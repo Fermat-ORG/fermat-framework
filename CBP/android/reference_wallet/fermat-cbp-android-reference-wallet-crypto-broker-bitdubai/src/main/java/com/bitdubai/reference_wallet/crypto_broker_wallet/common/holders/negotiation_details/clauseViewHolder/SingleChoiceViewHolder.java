@@ -11,10 +11,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 /**
- *Created by Yordin Alayn on 22.01.16.
+ * Created by Yordin Alayn on 22.01.16.
  * Based in AmountToBuyViewHolder of Star_negotiation by nelson
  */
 public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnClickListener {
@@ -22,11 +22,11 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     private Button buttonValue;
     private TextView descriptionTextView;
 
-    public SingleChoiceViewHolder(View itemView) {
-        super(itemView);
+    public SingleChoiceViewHolder(View itemView, int holderType) {
+        super(itemView, holderType);
 
-        descriptionTextView = (TextView) itemView.findViewById(R.id.ccw_description_text);
-        buttonValue = (Button) itemView.findViewById(R.id.ccw_single_choice_value);
+        descriptionTextView = (TextView) itemView.findViewById(R.id.cbw_description_text);
+        buttonValue = (Button) itemView.findViewById(R.id.cbw_single_choice_value);
         buttonValue.setOnClickListener(this);
     }
 
@@ -40,7 +40,6 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     public void setViewResources(int titleRes, int positionImgRes, int... stringResources) {
         titleTextView.setText(titleRes);
-        //TODO ACA DA EXCEPTION: Process: com.bitdubai.fermat, PID: 3128 java.lang.OutOfMemoryError: Failed to allocate a 1849612 byte allocation with 1595744 free bytes and 1558KB until OOM
         clauseNumberImageView.setImageResource(positionImgRes);
         descriptionTextView.setText(stringResources[0]);
     }
@@ -48,39 +47,37 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     public void onClick(View view) {
         if (listener != null)
-            listener.onClauseCLicked(buttonValue, clause, clausePosition);
+            listener.onClauseClicked(buttonValue, clause, clausePosition);
     }
 
     @Override
     protected int getConfirmButtonRes() {
-        return R.id.ccw_confirm_button;
+        return R.id.cbw_confirm_button;
     }
 
     @Override
     protected int getClauseNumberImageViewRes() {
-        return R.id.ccw_clause_number;
+        return R.id.cbw_clause_number;
     }
 
     @Override
     protected int getTitleTextViewRes() {
-        return R.id.ccw_card_view_title;
+        return R.id.cbw_card_view_title;
     }
 
     @Override
-    public void setStatus(NegotiationStepStatus clauseStatus) {
-        super.setStatus(clauseStatus);
+    protected void onAcceptedStatus() {
+        descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
+    }
 
-        switch (clauseStatus) {
-            case ACCEPTED:
-                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
-                break;
-            case CHANGED:
-                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
-                break;
-            case CONFIRM:
-                descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
-                break;
-        }
+    @Override
+    protected void setChangedStatus() {
+        descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_changed));
+    }
+
+    @Override
+    protected void onToConfirmStatus() {
+        descriptionTextView.setTextColor(getColor(R.color.card_title_color_status_confirm));
     }
 
     /**

@@ -5,21 +5,19 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 /**
- *Created by Yordin Alayn on 22.01.16.
- * Based in FooterViewHolder of Star_negotiation by nelson
+ *Created by Nelson Ramirez
+ * @since 17-02-2016.
  */
 public class FooterViewHolder extends FermatViewHolder implements View.OnClickListener {
     OnFooterButtonsClickListener listener;
 
-    public FooterViewHolder(View itemView) {
-
-        super(itemView);
+    public FooterViewHolder(View itemView, int holderType) {
+        super(itemView, holderType);
 
         CardView addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
-        addNoteButton.setVisibility(View.VISIBLE);
         addNoteButton.setOnClickListener(this);
 
         TextView sendButton = (TextView) itemView.findViewById(R.id.send_button);
