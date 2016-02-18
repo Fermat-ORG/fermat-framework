@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -78,7 +77,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private EditText messageET;
     private RecyclerView messagesContainer;
     public Button sendBtn;
-    private ChatAdapter adapter;
+    private ChatAdapterView adapter;
     public ArrayList<ChatMessage> chatHistory= new ArrayList<ChatMessage>();
 
     public static ChatFragment newInstance() { return new ChatFragment(); }
@@ -136,7 +135,19 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
-//
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        super.onUpdateViewOnUIThread(code);
+    //    Toast.makeText(getActivity(),"broadcaster chat", Toast.LENGTH_SHORT).show();
+
+        if(code.equals("13")){
+            adapter.refreshEvents();
+        }
+    }
+
+
+    //
 //    void findmessage(){
 //        String message;
 //        String inorout;
@@ -163,8 +174,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
-
-        return new ChatAdapterView.Builder(inflater.getContext())
+        adapter=new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                         //.addLeftName("Probando")
                         //.setBackground(R.color.holo_blue)
@@ -175,6 +185,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 .addAppSession(appSession)
                 .addChatManager(chatManager)
                 .build();
+        return adapter;
 
         // Inflate the layout for this fragment
 //        final View layout = inflater.inflate(R.layout.chat, container, false);
