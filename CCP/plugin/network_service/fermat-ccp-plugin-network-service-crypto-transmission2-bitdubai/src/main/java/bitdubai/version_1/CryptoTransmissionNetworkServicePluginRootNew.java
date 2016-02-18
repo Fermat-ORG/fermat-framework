@@ -57,6 +57,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -67,6 +69,7 @@ import bitdubai.version_1.database.communications.CommunicationNetworkServiceDev
 import bitdubai.version_1.database.communications.CryptoTransmissionMetadataDAO_V2;
 import bitdubai.version_1.database.communications.CryptoTransmissionNetworkServiceDatabaseConstants;
 import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
+import bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import bitdubai.version_1.structure.CryptoTransmissionTransactionProtocolManager;
@@ -316,6 +319,8 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                                     break;
 
                                 case SEEN_BY_DESTINATION_NETWORK_SERVICE:
+                                    //el otro no recibio mi mensaje de Credit in destination wallet
+
 
                                     System.out.println("-----------------------\n" +
                                             "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
@@ -498,9 +503,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
             for (CryptoTransmissionMetadataRecord cpr : lstActorRecord) {
                 sendMessageToActor(cpr);
             }
-        } catch (CantReadRecordDataBaseException e) {
-            System.out.println("CRYPTO TRANSMISSION NS EXCEPCION REPROCESANDO MESSAGEs");
-            e.printStackTrace();
+
         } catch (Exception e) {
             System.out.println("CRYPTO TRANSMISSIO NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
