@@ -82,7 +82,13 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Datab
 
                         FermatEventListener fermatEventListener;
                         FermatEventHandler fermatEventHandler;
-                        ActorBrokerExtraDataEventActions handlerAction = new ActorBrokerExtraDataEventActions(cryptoBrokerANSManager, cryptoBrokerWalletManager, cryptoBrokerActorDao);
+                        ActorBrokerExtraDataEventActions handlerAction = new ActorBrokerExtraDataEventActions(
+                            cryptoBrokerANSManager,
+                            cryptoBrokerWalletManager,
+                            cryptoBrokerActorDao,
+                            this.errorManager,
+                            this.getPluginVersionReference()
+                        );
                         fermatEventListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_QUOTES_REQUEST_NEWS);
                         fermatEventHandler = new CryptoBrokerExtraDataEventHandler(handlerAction, this);
                         fermatEventListener.setEventHandler(fermatEventHandler);
@@ -90,23 +96,27 @@ public class CryptoBrokerActorPluginRoot extends AbstractPlugin implements Datab
                         listenersAdded.add(fermatEventListener);
 
                     this.serviceStatus = ServiceStatus.STARTED;
-                } catch (CantInitializeCryptoBrokerActorDatabaseException cantInitializeExtraUserRegistryException) {
-                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeExtraUserRegistryException);
-                    throw new CantStartPluginException(cantInitializeExtraUserRegistryException, this.getPluginVersionReference());
+                } catch (CantInitializeCryptoBrokerActorDatabaseException e) {
+                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                    throw new CantStartPluginException(e, this.getPluginVersionReference());
                 }
             }
 
-    @Override
-    public void stop() {
-        for (FermatEventListener fermatEventListener : listenersAdded) {
-            eventManager.removeListener(fermatEventListener);
-        }
-        listenersAdded.clear();
-    }
+            @Override
+            public void stop() {
+                for (FermatEventListener fermatEventListener : listenersAdded) {
+                    eventManager.removeListener(fermatEventListener);
+                }
+                listenersAdded.clear();
+            }
 
-    @Override
+            @Override
             public FermatManager getManager() {
-                return new BrokerActorManager(this.cryptoBrokerActorDao, cryptoBrokerANSManager, cryptoBrokerWalletManager);
+                return new BrokerActorManager(
+                    this.cryptoBrokerActorDao,
+                    this.errorManager,
+                    this.getPluginVersionReference()
+                );
             }
 
         /*
