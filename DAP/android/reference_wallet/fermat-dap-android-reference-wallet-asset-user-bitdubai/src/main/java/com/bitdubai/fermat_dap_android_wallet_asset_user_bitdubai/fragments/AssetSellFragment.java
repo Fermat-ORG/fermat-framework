@@ -28,7 +28,6 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
@@ -78,9 +77,14 @@ public class AssetSellFragment extends AbstractFermatFragment {
     private FermatTextView selectedUserText;
     private FermatEditText assetsToSellEditText;
 
-    private FermatEditText bitcoinsView;
+    private FermatEditText bitcoins;
     private Spinner bitcoinsSpinner;
     private FermatTextView bitcoinsTextView;
+
+    private FermatEditText bitcoinsTotal;
+    private Spinner bitcoinsTotalSpinner;
+    private FermatTextView bitcoinsTotalText;
+
     private FermatTextView bitcoinBalanceText;
 
     private View selectUserButton;
@@ -185,22 +189,45 @@ public class AssetSellFragment extends AbstractFermatFragment {
         selectedUserText = (FermatTextView) rootView.findViewById(R.id.selectedUsersText);
         selectUserButton = rootView.findViewById(R.id.selectUsersButton);
         sellAssetsButton = rootView.findViewById(R.id.sellAssetsButton);
-        bitcoinsView = (FermatEditText) rootView.findViewById(R.id.bitcoins);
+        bitcoins = (FermatEditText) rootView.findViewById(R.id.bitcoins);
         bitcoinsSpinner = (Spinner) rootView.findViewById(R.id.bitcoinsSpinner);
         bitcoinsTextView = (FermatTextView) rootView.findViewById(R.id.bitcoinsText);
         bitcoinBalanceText = (FermatTextView) rootView.findViewById(R.id.bitcoinBalanceText);
+        bitcoinsTotal = (FermatEditText) rootView.findViewById(R.id.bitcoinsTotal);
+        bitcoinsTotalSpinner = (Spinner) rootView.findViewById(R.id.bitcoinsTotalSpinner);
+        bitcoinsTotalText = (FermatTextView) rootView.findViewById(R.id.bitcoinsTotalText);
+
 
         bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
-        final BitcoinConverter.Currency[] data = BitcoinConverter.Currency.values();
-        final ArrayAdapter<BitcoinConverter.Currency> spinnerAdapter = new BitcoinsSpinnerAdapter(
+        final BitcoinConverter.Currency[] currenciesSpinner = BitcoinConverter.Currency.values();
+        final ArrayAdapter<BitcoinConverter.Currency> bitcoinsSpinnerAdapter = new BitcoinsSpinnerAdapter(
                 getActivity(), android.R.layout.simple_spinner_item,
-                data);
-        bitcoinsSpinner.setAdapter(spinnerAdapter);
+                currenciesSpinner);
+        bitcoinsSpinner.setAdapter(bitcoinsSpinnerAdapter);
         bitcoinsSpinner.setSelection(3);
         bitcoinsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 updateBitcoins();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        bitcoinsTotalText.setText(String.format("%.6f BTC", 0.0));
+        final BitcoinConverter.Currency[] currenciesSpinnerTotal = BitcoinConverter.Currency.values();
+        final ArrayAdapter<BitcoinConverter.Currency> bitcoinsSpinnerTotalAdapter = new BitcoinsSpinnerAdapter(
+                getActivity(), android.R.layout.simple_spinner_item,
+                currenciesSpinnerTotal);
+        bitcoinsTotalSpinner.setAdapter(bitcoinsSpinnerTotalAdapter);
+        bitcoinsTotalSpinner.setSelection(3);
+        bitcoinsTotalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                updateBitcoinsTotal();
             }
 
             @Override
@@ -236,16 +263,35 @@ public class AssetSellFragment extends AbstractFermatFragment {
                 //TODO: agregar la funcion del sellAssetButton
             }
         });
-        bitcoinsView.setOnKeyListener(new View.OnKeyListener() {
+        assetsToSellEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                updateBitcoins();
+                return false;
+            }
+        });
+        bitcoins.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                bitcoinsTotal.setText("");
+                bitcoinsTotalText.setText(String.format("%.6f BTC", 0.0));
                 updateBitcoins();
+                return false;
+            }
+        });
+        bitcoinsTotal.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                bitcoins.setText("");
+                bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
+                updateBitcoinsTotal();
                 return false;
             }
         });
         selectUserButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 //                appSession.setData("asset_data", data);
+//                appSession.setData("sell_info")
                 changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY, appSession.getAppPublicKey());
                 //TODO: aqui va la actividad de seleccion de users, users conectados a users la cual no existe
             }
@@ -254,18 +300,41 @@ public class AssetSellFragment extends AbstractFermatFragment {
     }
     private void updateBitcoins() {
         Object selectedItem = bitcoinsSpinner.getSelectedItem();
-        String bitcoinViewStr = bitcoinsView.getText().toString();
-        if (selectedItem != null && bitcoinViewStr != null && bitcoinViewStr.length() > 0) {
-            BitcoinConverter.Currency from = (BitcoinConverter.Currency) bitcoinsSpinner.getSelectedItem();
-            double amount = Double.parseDouble(bitcoinsView.getText().toString());
+        String bitcoinStr = bitcoins.getText().toString();
+        String assetsToSellStr = assetsToSellEditText.getText().toString();
+        if (selectedItem != null && bitcoinStr.length() > 0 && assetsToSellStr.length() > 0) {
+            BitcoinConverter.Currency from = (BitcoinConverter.Currency) selectedItem;
+            double amount = Double.parseDouble(bitcoins.getText().toString());
             double amountBTC = BitcoinConverter.convert(amount, from, BITCOIN);
+            int quantity = Integer.parseInt(assetsToSellStr);
             bitcoinsTextView.setText(String.format("%.6f BTC", amountBTC));
-            int quantity = Integer.parseInt(assetsToSellEditText.getText().toString());
             bitcoinBalanceText.setText(String.format("%.6f BTC", quantity * amountBTC));
+        } else if (bitcoinStr.length() == 0) {
+            bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
+            bitcoinBalanceText.setText(String.format("%.6f BTC", 0.0));
+        } else if (assetsToSellStr.length() == 0) {
+            bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
+            bitcoinBalanceText.setText(String.format("%.6f BTC", 0.0));
         }
     }
+
+    private void updateBitcoinsTotal() {
+        Object selectedItem = bitcoinsTotalSpinner.getSelectedItem();
+        String bitcoinTotalStr = bitcoinsTotal.getText().toString();
+        if (selectedItem != null && bitcoinTotalStr.length() > 0) {
+            BitcoinConverter.Currency from = (BitcoinConverter.Currency) selectedItem;
+            double amount = Double.parseDouble(bitcoinsTotal.getText().toString());
+            double amountBTC = BitcoinConverter.convert(amount, from, BITCOIN);
+            bitcoinsTotalText.setText(String.format("%.6f BTC", amountBTC));
+            bitcoinBalanceText.setText(String.format("%.6f BTC", amountBTC));
+        } else if (bitcoinTotalStr.length() == 0) {
+            bitcoinsTotalText.setText(String.format("%.6f BTC", 0.0));
+            bitcoinBalanceText.setText(String.format("%.6f BTC", 0.0));
+        }
+    }
+
     private long getSatoshis() {
-        String amountStr = bitcoinsView.getText().toString().trim();
+        String amountStr = bitcoins.getText().toString().trim();
         if (amountStr != null && amountStr.length() > 0) {
             BitcoinConverter.Currency currency = (BitcoinConverter.Currency) bitcoinsSpinner.getSelectedItem();
             double amount = Double.parseDouble(amountStr);
@@ -395,6 +464,10 @@ public class AssetSellFragment extends AbstractFermatFragment {
             user = (User) x;
             selectedUserText.setText(user.getName());
         }
+
+        assetsToSellEditText.setText(Long.toString(quantity));
+        bitcoins.setText(digitalAsset.getAmount());
+        updateBitcoins();
     }
 
     private void configureToolbar() {
