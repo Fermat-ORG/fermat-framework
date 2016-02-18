@@ -15,15 +15,6 @@
         android:textColor="#2d3e50"
         android:fontFamily="regular" />
 
-    <ImageView
-        android:id="@+id/selectUserButton"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:src="@drawable/ic_deliver_user_add"
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="6dp" />
-
     <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"

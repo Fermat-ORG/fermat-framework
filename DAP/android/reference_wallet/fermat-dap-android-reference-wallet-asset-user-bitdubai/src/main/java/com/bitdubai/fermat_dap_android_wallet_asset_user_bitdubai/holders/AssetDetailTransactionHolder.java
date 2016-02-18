@@ -8,12 +8,15 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Transaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+
+import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.*;
 
 /**
  * Created by frank on 12/8/15.
@@ -29,6 +32,7 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
     private FermatTextView amountText;
     private FermatTextView dateText;
     private FermatTextView balanceTypeText;
+    private FermatTextView memoText;
 
     /**
      * Constructor
@@ -48,6 +52,7 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
         amountText = (FermatTextView) itemView.findViewById(R.id.amountText);
         balanceTypeText = (FermatTextView) itemView.findViewById(R.id.balanceTypeText);
         dateText = (FermatTextView) itemView.findViewById(R.id.dateText);
+        memoText = (FermatTextView) itemView.findViewById(R.id.memoText);
     }
 
     public void bind(final Transaction transaction) {
@@ -56,7 +61,7 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
         bitmapWorkerTask.execute(img);
 
         actorNameText.setText(transaction.getActorName());
-        typeByText.setText((transaction.getTransactionType() == TransactionType.CREDIT) ? "Recieved by" : "Sent by");
+        typeByText.setText((transaction.getTransactionType() == TransactionType.CREDIT) ? "Received by" : "Sent to");
         String symbol;
         if (transaction.getTransactionType() == TransactionType.CREDIT) {
             symbol = "+ ";
@@ -67,8 +72,10 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
             amountText.setTextColor(res.getColor(R.color.fab_material_red_900));
             balanceTypeText.setTextColor(res.getColor(R.color.fab_material_red_900));
         }
-        amountText.setText(symbol + DAPStandardFormats.BITCOIN_FORMAT.format(transaction.getAmount()));
-        balanceTypeText.setText((transaction.getBalanceType() == BalanceType.AVAILABLE) ? "AVAILABLE" : "BOOK");
+        double amount = BitcoinConverter.convert(transaction.getAmount(), SATOSHI, BITCOIN);
+        amountText.setText(symbol + DAPStandardFormats.BITCOIN_FORMAT.format(amount) + " BTC");
+        balanceTypeText.setText((transaction.getBalanceType() == BalanceType.AVAILABLE) ? "CONFIRMED" : "PENDING");
         dateText.setText(transaction.getFormattedDate());
+        if (transaction.getMemo() != null) memoText.setText(transaction.getMemo());
     }
 }
