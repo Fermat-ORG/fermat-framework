@@ -99,7 +99,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao {
         } catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Customer Broker Purchase Event Record in the database.", null);
         }
     }
