@@ -4,5 +4,6 @@
   android:minWidth="220dp" 
   android:minHeight="72dp"
   android:updatePeriodMillis="86400000" 
-  android:initialLayout="@layout/bitcoin_widget">
+  android:initialLayout="@layout/bitcoin_widget"
+    android:initialKeyguardLayout="@layout/bitcoin_widget">
 </appwidget-provider>

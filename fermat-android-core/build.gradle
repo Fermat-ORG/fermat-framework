@@ -94,8 +94,8 @@ dependencies {
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
     compile project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai')
     /*
-                                Sub APPs on the pipeline
-                                */
+                                        Sub APPs on the pipeline
+                                        */
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
     // PIP Projects (Sub APPs)
     compile project(':fermat-pip-android-sub-app-developer-bitdubai')
@@ -150,7 +150,9 @@ dependencies {
             exclude module: ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
         }
     }
-    compile files('libs/activation.jar')
-    compile files('libs/additionnal.jar')
-    compile files('libs/mail.jar')
+    compile files('src/main/libs/activation.jar')
+    compile files('src/main/libs/additionnal.jar')
+    compile files('src/main/libs/mail.jar')
+
+
 }
