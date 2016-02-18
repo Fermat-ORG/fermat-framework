@@ -211,14 +211,14 @@ public class IntraActorNetworkServiceDeveloperDatabaseFactory implements DealsWi
     }
 
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase,DeveloperDatabaseTable developerDatabaseTable) {
 
         /**
          * Will get the records for the given table
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
         try {
-            if(!developerDatabaseTable.getName().equals(IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME))
+            if(!developerDatabase.getName().equals(IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME))
                 initializeDatabaseCommunication();
             else
                 initializeDatabase();

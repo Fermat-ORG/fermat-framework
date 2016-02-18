@@ -182,11 +182,12 @@ public final class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
     }
 
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabase developerDatabase,
                                                                       final DeveloperDatabaseTable developerDatabaseTable) {
 
         try {
 
-             if(!developerDatabaseTable.getName().equals(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME) )
+             if(!developerDatabase.getName().equals(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME) )
                 initializeDatabaseCommunication();
             else
                 initializeDatabase();

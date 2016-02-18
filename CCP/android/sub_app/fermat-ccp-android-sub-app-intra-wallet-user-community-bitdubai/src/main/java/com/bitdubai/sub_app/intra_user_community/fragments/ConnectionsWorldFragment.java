@@ -513,10 +513,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
             List<IntraUserInformation> userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
-
              dataSet.addAll(userList);
 
-            if(userCacheList.size() == 0)
+           /* if(userCacheList.size() == 0)
             {
                 dataSet.addAll(userList);
             }
@@ -537,7 +536,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     moduleManager.saveCacheIntraUsersSuggestions(userList);
                     dataSet.addAll(userList);
                 }
-            }
+            }*/
 
             offset = dataSet.size();
 

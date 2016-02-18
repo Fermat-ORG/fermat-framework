@@ -100,6 +100,11 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
+
+    Timer timer = new Timer();
+
+    private long reprocessTimer = 300000; //five minutes
+
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
@@ -185,6 +190,11 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                     outgoingNotificationDao = new CryptoTransmissionMetadataDAO_V2(dataBaseCommunication, CryptoTransmissionNetworkServiceDatabaseConstants.OUTGOING_CRYPTO_TRANSMISSION_METADATA_TABLE_NAME);
 
 
+            // change message state to process again first time
+            reprocessPendingMessage();
+
+            //declare a schedule to process waiting request message
+            this.startTimer();
 
             System.out.println("-----------------------\n" +
                     "CRYPTO TRANSMISSION INICIADO -----------------------");
@@ -232,7 +242,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                 case METADATA:
                     CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord = cryptoTransmissionMetadata;
                     cryptoTransmissionMetadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PROCESSING_RECEIVE);
-                    if (!incomingNotificationsDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord)) {
+                   incomingNotificationsDao.saveCryptoTransmissionMetadata(cryptoTransmissionMetadataRecord);
                         try {
                             CryptoTransmissionMetadataRecord cryptoTransmissionMetadataRecord1 = incomingNotificationsDao.getMetadata(cryptoTransmissionMetadata.getTransactionId());
                             System.out.println("-----------------------\n" +
@@ -322,13 +332,21 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
                                     lauchNotification();
                                     break;
 
+                                case SEEN_BY_DESTINATION_NETWORK_SERVICE:
+
+                                    System.out.println("-----------------------\n" +
+                                            "RECIVIENDO RESPUESTA CRYPTO METADATA!!!!! -----------------------\n" +
+                                            "-----------------------\n STATE: METADATA SEEN_BY_DESTINATION_NETWORK_SERVICE - DONE ");
+
+                                    break;
+
 
                             }
                         } catch (CantGetCryptoTransmissionMetadataException e) {
                             e.printStackTrace();
                         }
 
-                    }
+
 
 
                     break;
@@ -475,12 +493,19 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     }
 
     @Override
-    protected void reprocessMessages() {
+    protected void reprocessMessages()
+    {
+
+    }
+
+    protected void reprocessPendingMessage() {
+
+        System.out.println("Crypto transmission reprocessing message");
 
          /*
          * Read all pending CryptoTransmissionMetadata message from database and change status
          */
-      /*  try {
+        try {
             outgoingNotificationDao.changeStatusNotSentMessage();
 
            Map<String, Object> filters = new HashMap<>();
@@ -498,12 +523,12 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         } catch (Exception e) {
             System.out.println("CRYPTO TRANSMISSIO NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
-        }*/
+        }
     }
 
     @Override
     protected void reprocessMessages(String identityPublicKey) {
- /*
+        /*
          * Read all pending CryptoTransmissionMetadata message from database and change status
          */
       /*  try {
@@ -760,7 +785,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
     }
 
     /**
@@ -1080,5 +1105,16 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
 
 
+    }
+
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessPendingMessage();
+            }
+        }, 0,reprocessTimer);
     }
 }

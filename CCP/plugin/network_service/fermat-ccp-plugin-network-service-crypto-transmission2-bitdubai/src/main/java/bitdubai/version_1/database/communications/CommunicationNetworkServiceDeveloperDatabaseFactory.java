@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CantInitializeTemplateNetworkServiceDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.structure.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -247,7 +247,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         return tables;
     }
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase,DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
@@ -255,7 +255,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory implements Deal
         try {
 
 
-            if(developerDatabaseTable.getName().equals(CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME))
+            if(!developerDatabase.getName().equals(CryptoTransmissionNetworkServiceDatabaseConstants.DATABASE_NAME))
                 initializeDatabaseCommunication();
             else
                 initializeDatabase();

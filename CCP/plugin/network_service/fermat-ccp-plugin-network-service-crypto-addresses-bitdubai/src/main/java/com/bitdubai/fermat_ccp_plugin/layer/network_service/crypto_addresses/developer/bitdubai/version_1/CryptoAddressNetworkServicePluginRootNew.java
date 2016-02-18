@@ -95,7 +95,9 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
      */
     CryptoAddressesNetworkServiceDeveloperDatabaseFactory cryptoAddressesNetworkServiceDatabaseFactory;
 
+    private long reprocessTimer =  300000; //five minutes
 
+    private Timer timer = new Timer();
 
     /**
      * cache identities to register
@@ -103,7 +105,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
     private List<PlatformComponentProfile> actorsToRegisterCache;
 
-    private Timer timer = new Timer();
+
 
     public CryptoAddressNetworkServicePluginRootNew() {
 
@@ -152,6 +154,13 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
         }
 
         executorService = Executors.newFixedThreadPool(1);
+
+        // change message state to process again first time
+        reprocessPendingMessage();
+
+        //declare a schedule to process waiting request message
+        startTimer();
+
 
     }
 
@@ -586,6 +595,41 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
         }
     }
 
+
+    private void reprocessPendingMessage()
+    {
+        try {
+
+            List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listUncompletedRequest();
+
+            for(CryptoAddressRequest record : cryptoAddressRequestList) {
+
+                cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(),ProtocolState.PROCESSING_SEND);
+
+                final CryptoAddressRequest cryptoAddressRequest  = record;
+
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
+                                    getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
+                                    buildJsonRequestMessage(cryptoAddressRequest));
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedException(e);
+                        }
+                    }
+                });
+
+            }
+        }
+        catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
+        {
+            System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+    }
     @Override
     protected void reprocessMessages() {
 
@@ -1063,11 +1107,23 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+            return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
         } catch (Exception e) {
             System.out.println(e);
             return new ArrayList<>();
         }
+    }
+
+    private void startTimer() {
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessPendingMessage();
+            }
+        }, 0,reprocessTimer);
+
+
     }
 
 }
