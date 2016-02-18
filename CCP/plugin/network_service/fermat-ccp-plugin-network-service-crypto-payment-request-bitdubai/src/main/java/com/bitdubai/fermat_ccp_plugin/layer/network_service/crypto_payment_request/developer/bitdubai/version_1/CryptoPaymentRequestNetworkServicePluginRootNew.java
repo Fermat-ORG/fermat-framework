@@ -79,13 +79,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
 
-    private Timer timer = new Timer();
 
-    private long reprocessTimer =  300000; //five minutes
-    /**
-     * Represent the flag to start only once
-     */
-    private AtomicBoolean flag = new AtomicBoolean(false);
 
 
     /**
@@ -152,12 +146,6 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
 
         executorService = Executors.newFixedThreadPool(1);
-
-        // change message state to process again first time
-        reprocessMessage();
-
-
-
     }
 
     /**
@@ -240,18 +228,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
         }
     }
 
-    private void startTimer(){
 
-
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // change message state to process retry later
-                reprocessMessage();
-            }
-        },0, reprocessTimer);
-
-    }
 
     @Override
     public void stop() {
@@ -949,41 +926,14 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
     }
 
-    @Override
-    protected void onClientConnectionClose() {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
-    protected void onClientSuccessfulReconnect() {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
-    protected void onClientConnectionLoose() {
-        // This network service don t need to do anything in this method
-    }
 
     @Override
     protected void onFailureComponentConnectionRequest(PlatformComponentProfile remoteParticipant) {
         //I check my time trying to send the message
+        System.out.println("************ Crypto Payment Request -> FAILURE CONNECTION.");
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
 
-    @Override
-    protected void onReceivePlatformComponentProfileRegisteredList(CopyOnWriteArrayList<PlatformComponentProfile> remotePlatformComponentProfileRegisteredList) {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
-    protected void onCompleteActorProfileUpdate(PlatformComponentProfile platformComponentProfileUpdate) {
-        // This network service don t need to do anything in this method
-    }
-
-    @Override
-    protected void onFailureComponentRegistration(PlatformComponentProfile platformComponentProfile) {
-        // This network service don t need to do anything in this method
-    }
 
     @Override
     public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {

@@ -97,8 +97,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
 
 
-    private long reprocessTimer =  300000; //five minutes
-
     /**
      * cache identities to register
      */
@@ -236,17 +234,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
         }
     }
 
-    private void startTimer() {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // change message state to process retry later
-                reprocessMessage();
-            }
-        }, 0, reprocessTimer);
 
-
-    }
 
     @Override
     public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
@@ -576,6 +564,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
     @Override
     protected void onFailureComponentConnectionRequest(PlatformComponentProfile remoteParticipant) {
         //I check my time trying to send the message
+        System.out.println("************ Crypto Addresses -> FAILURE CONNECTION.");
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
 
