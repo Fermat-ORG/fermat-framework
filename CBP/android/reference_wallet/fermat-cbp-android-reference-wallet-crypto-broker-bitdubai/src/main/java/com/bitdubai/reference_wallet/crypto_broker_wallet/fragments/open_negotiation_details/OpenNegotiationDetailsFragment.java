@@ -24,15 +24,12 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -147,52 +144,48 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         ClauseTextDialog clauseTextDialog;
         ClauseDateTimeDialog clauseDateTimeDialog;
 
-        switch (type) {
+        try {
+            switch (type) {
+                case EXCHANGE_RATE:
+                    clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+                    clauseTextDialog.setEditTextValue(clause.getValue());
+                    clauseTextDialog.configure(R.string.cbw_your_exchange_rate, R.string.amount);
+                    clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+                        @Override
+                        public void onClick(String newValue) {
+                            //actionListenerBrokerCurrencyQuantity(clause, newValue);
+                        }
+                    });
+                    clauseTextDialog.show();
+                    break;
 
-            case EXCHANGE_RATE:
-                clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
-                clauseTextDialog.setEditTextValue(clause.getValue());
-                clauseTextDialog.configure(R.string.cbw_your_exchange_rate, R.string.amount);
-                clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
-                    @Override
-                    public void onClick(String newValue) {
-                        //actionListenerBrokerCurrencyQuantity(clause, newValue);
-                    }
-                });
+                case CUSTOMER_CURRENCY_QUANTITY:
+                    clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+                    clauseTextDialog.setEditTextValue(clause.getValue());
+                    clauseTextDialog.configure(R.string.cbw_amount_to_sell, R.string.cbw_value);
+                    clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+                        @Override
+                        public void onClick(String newValue) {
+                            //actionListenerBrokerCurrencyQuantity(clause, newValue);
+                        }
+                    });
+                    clauseTextDialog.show();
+                    break;
 
-                clauseTextDialog.show();
-                break;
+                case BROKER_CURRENCY_QUANTITY:
+                    clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+                    clauseTextDialog.setEditTextValue(clause.getValue());
+                    clauseTextDialog.configure(R.string.cbw_amount_to_receive, R.string.cbw_value);
+                    clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+                        @Override
+                        public void onClick(String newValue) {
+                            //actionListenerBrokerCurrencyQuantity(clause, newValue);
+                        }
+                    });
+                    clauseTextDialog.show();
+                    break;
 
-            case CUSTOMER_CURRENCY_QUANTITY:
-                clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
-                clauseTextDialog.setEditTextValue(clause.getValue());
-                clauseTextDialog.configure(R.string.cbw_amount_to_sell, R.string.cbw_value);
-                clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
-                    @Override
-                    public void onClick(String newValue) {
-                        //actionListenerBrokerCurrencyQuantity(clause, newValue);
-                    }
-                });
-
-                clauseTextDialog.show();
-                break;
-
-            case BROKER_CURRENCY_QUANTITY:
-                clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
-                clauseTextDialog.setEditTextValue(clause.getValue());
-                clauseTextDialog.configure(R.string.cbw_amount_to_receive, R.string.cbw_value);
-                clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
-                    @Override
-                    public void onClick(String newValue) {
-                        //actionListenerBrokerCurrencyQuantity(clause, newValue);
-                    }
-                });
-
-                clauseTextDialog.show();
-                break;
-
-            case CUSTOMER_PAYMENT_METHOD:
-                try {
+                case CUSTOMER_PAYMENT_METHOD:
                     ClauseInformation brokerCurrency = clauses.get(ClauseType.BROKER_CURRENCY);
                     List<MoneyType> paymentMethods = walletManager.getPaymentMethods(brokerCurrency.getValue(), appSession.getAppPublicKey());
 
@@ -204,17 +197,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                             // actionListenerCustomerPaymentMethod(clause, newValue);
                         }
                     });
-
                     dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
+                    break;
 
-                } catch (FermatException e) {
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-                break;
-
-            case BROKER_BANK_ACCOUNT:
-                try {
+                case BROKER_BANK_ACCOUNT:
                     List<BankAccountNumber> bankAccounts = walletManager.getAccounts(appSession.getAppPublicKey());
                     if (bankAccounts.size() > 0) {
                         dialogFragment = new SimpleListDialogFragment<>();
@@ -226,20 +212,12 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                                 //adapter.changeDataSet(negotiationWrapper);
                             }
                         });
-
                         dialogFragment.show(getFragmentManager(), "bankAccountDialog");
-
                     } else
                         Toast.makeText(getActivity(), "The Bank Account List is Empty. Add Your Bank Account in the Wallet Settings.", Toast.LENGTH_LONG).show();
+                    break;
 
-                } catch (CantLoadBankMoneyWalletException e) {
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-                break;
-
-            case BROKER_PLACE_TO_DELIVER:
-                try {
+                case BROKER_PLACE_TO_DELIVER:
                     List<NegotiationLocations> locations = new ArrayList<>();
                     locations.addAll(walletManager.getAllLocations(NegotiationType.SALE));
                     if (locations.size() > 0) {
@@ -253,52 +231,62 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                             }
                         });
                         dialogFragment.show(getFragmentManager(), "placeToDeliveryDialog");
-
                     } else
                         Toast.makeText(getActivity(), "The Locations List is Empty. Add Your Locations in the Settings Wallet.", Toast.LENGTH_LONG).show();
+                    break;
 
-                } catch (CantGetListLocationsPurchaseException | CantGetListLocationsSaleException e) {
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-                break;
+                case CUSTOMER_DATE_TIME_TO_DELIVER:
+                    clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), Long.valueOf(clause.getValue()));
+                    if (triggerView.getId() == R.id.cbw_date_value)
+                        clauseDateTimeDialog.showDateDialog();
+                    else
+                        clauseDateTimeDialog.showTimeDialog();
 
-            case CUSTOMER_DATE_TIME_TO_DELIVER:
-                clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), Long.valueOf(clause.getValue()));
-                if (triggerView.getId() == R.id.cbw_date_value)
-                    clauseDateTimeDialog.showDateDialog();
-                else
-                    clauseDateTimeDialog.showTimeDialog();
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void getDate(long newValue) {
+                            // actionListenerDatetime(clause, String.valueOf(newValue));
+                        }
+                    });
+                    break;
 
-                clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
-                    @Override
-                    public void getDate(long newValue) {
-                        // actionListenerDatetime(clause, String.valueOf(newValue));
-                    }
-                });
-                break;
+                case BROKER_DATE_TIME_TO_DELIVER:
+                    clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), Long.valueOf(clause.getValue()));
+                    if (triggerView.getId() == R.id.cbw_date_value)
+                        clauseDateTimeDialog.showDateDialog();
+                    else
+                        clauseDateTimeDialog.showTimeDialog();
 
-            case BROKER_DATE_TIME_TO_DELIVER:
-                clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), Long.valueOf(clause.getValue()));
-                if (triggerView.getId() == R.id.cbw_date_value)
-                    clauseDateTimeDialog.showDateDialog();
-                else
-                    clauseDateTimeDialog.showTimeDialog();
-
-                clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
-                    @Override
-                    public void getDate(long newValue) {
-                        // actionListenerDatetime(clause, String.valueOf(newValue));
-                    }
-                });
-
-                break;
+                    clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+                        @Override
+                        public void getDate(long newValue) {
+                            // actionListenerDatetime(clause, String.valueOf(newValue));
+                        }
+                    });
+                    break;
+            }
+        } catch (FermatException e) {
+            errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                    UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
+
     }
 
     @Override
     public void onValueClicked(Button triggerView) {
+        CustomerBrokerNegotiationInformation negotiationInfo = negotiationWrapper.getNegotiationInfo();
+        ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), negotiationInfo.getNegotiationExpirationDate());
+        if (triggerView.getId() == R.id.cbw_date_value)
+            clauseDateTimeDialog.showDateDialog();
+        else
+            clauseDateTimeDialog.showTimeDialog();
 
+        clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
+            @Override
+            public void getDate(long newValue) {
+                // actionListenerDatetime(clause, String.valueOf(newValue));
+            }
+        });
     }
 
     @Override
