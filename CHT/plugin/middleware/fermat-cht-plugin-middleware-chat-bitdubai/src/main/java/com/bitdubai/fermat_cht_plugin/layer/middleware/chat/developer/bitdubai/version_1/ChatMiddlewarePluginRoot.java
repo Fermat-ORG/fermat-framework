@@ -265,7 +265,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao=
                     new ChatMiddlewareDatabaseDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
             //chatMiddlewareDatabaseDao.initialize();
             /**
              * Init developer database factory

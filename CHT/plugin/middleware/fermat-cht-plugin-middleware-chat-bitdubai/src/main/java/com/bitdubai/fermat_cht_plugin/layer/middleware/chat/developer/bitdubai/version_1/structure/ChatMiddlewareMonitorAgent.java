@@ -264,7 +264,8 @@ public class ChatMiddlewareMonitorAgent implements
                 chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 /**
                  * Discover contact

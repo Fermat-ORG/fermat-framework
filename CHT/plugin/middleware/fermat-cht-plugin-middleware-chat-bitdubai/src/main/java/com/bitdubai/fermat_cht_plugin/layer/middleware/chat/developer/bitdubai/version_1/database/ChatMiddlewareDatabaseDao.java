@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -46,6 +47,8 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingEventListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -62,16 +65,19 @@ public class ChatMiddlewareDatabaseDao {
     private Database database;
     private PluginDatabaseSystem pluginDatabaseSystem;
     private UUID pluginId;
+    private ErrorManager errorManager;
 
     /**
      * Constructor
      */
     public ChatMiddlewareDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem,
                                      UUID pluginId,
-                                     Database database) {
+                                     Database database,
+                                     ErrorManager errorManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId;
         this.database             = database;
+        this.errorManager         = errorManager;
 
     }
 
@@ -100,7 +106,15 @@ public class ChatMiddlewareDatabaseDao {
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Contact from the database with filter: " + filter.toString(), null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "error trying to get Contact from the database with filter: " + filter.toString(),
+                    null);
         }
     }
 
@@ -133,7 +147,15 @@ public class ChatMiddlewareDatabaseDao {
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Contact from the database with filter: " + contactId.toString(), null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "error trying to get Contact from the database with filter: " + contactId.toString(),
+                    null);
         }
     }
 
@@ -173,9 +195,13 @@ public class ChatMiddlewareDatabaseDao {
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
+                    FermatException.wrapException(e),
                     "error trying to get Contact from the database with filter: " + localPublicKey,
                     null);
         }
@@ -183,12 +209,23 @@ public class ChatMiddlewareDatabaseDao {
 
     public Contact newEmptyInstanceContact() throws CantNewEmptyContactException
     {
-        ContactImpl contact = new ContactImpl();
-        contact.setContactId(UUID.randomUUID());
-        return contact;
+        try{
+            ContactImpl contact = new ContactImpl();
+            contact.setContactId(UUID.randomUUID());
+            return contact;
+        } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            return new ContactImpl();
+        }
+
     }
 
-    public void saveContact(Contact contact) throws CantSaveContactException, DatabaseOperationException {
+    public void saveContact(Contact contact) throws
+            CantSaveContactException,
+            DatabaseOperationException {
         try
         {
             database = openDatabase();
@@ -215,11 +252,21 @@ public class ChatMiddlewareDatabaseDao {
         }catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Contact Transaction in the database.", null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to save the Contact Transaction in the database.",
+                    null);
         }
     }
 
-    public void deleteContact(Contact contact) throws CantDeleteContactException, DatabaseOperationException
+    public void deleteContact(Contact contact) throws
+            CantDeleteContactException,
+            DatabaseOperationException
     {
         try
         {
@@ -238,7 +285,15 @@ public class ChatMiddlewareDatabaseDao {
         }catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to delete the Contact Transaction in the database.", null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to delete the Contact Transaction in the database.",
+                    null);
         }
     }
 
@@ -257,7 +312,9 @@ public class ChatMiddlewareDatabaseDao {
         return getChats(null);
     }
 
-    public List<Chat> getChats(DatabaseTableFilter filter) throws CantGetChatException, DatabaseOperationException
+    public List<Chat> getChats(DatabaseTableFilter filter) throws
+            CantGetChatException,
+            DatabaseOperationException
     {
         //if filter is null all records
         Database database = null;
@@ -282,11 +339,21 @@ public class ChatMiddlewareDatabaseDao {
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Contact from the database with filter: " + filter.toString(), null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "error trying to get Contact from the database with filter: " + filter.toString(),
+                    null);
         }
     }
 
-    public Chat getChatByChatId(UUID chatId) throws CantGetChatException, DatabaseOperationException
+    public Chat getChatByChatId(UUID chatId) throws
+            CantGetChatException,
+            DatabaseOperationException
     {
         Database database = null;
         try {
@@ -315,15 +382,35 @@ public class ChatMiddlewareDatabaseDao {
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Chat from the database with filter: " + chatId.toString(), null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantGetChatException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    e,
+                    "error trying to get Chat from the database with filter: " + chatId.toString(),
+                    null);
         }
     }
 
     public Chat newEmptyInstanceChat() throws CantNewEmptyChatException
     {
-        ChatImpl chat = new ChatImpl();
-        chat.setChatId(UUID.randomUUID());
-        return chat;
+        try{
+            ChatImpl chat = new ChatImpl();
+            chat.setChatId(UUID.randomUUID());
+            return chat;
+        } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantNewEmptyChatException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to get new empty instance chat",
+                    null);
+        }
     }
 
     public void saveChat(Chat chat) throws CantSaveChatException, DatabaseOperationException
@@ -354,7 +441,15 @@ public class ChatMiddlewareDatabaseDao {
         }catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Chat Transaction in the database.", null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantSaveChatException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to save the Chat Transaction in the database.",
+                    null);
         }
     }
 
@@ -377,7 +472,15 @@ public class ChatMiddlewareDatabaseDao {
         }catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to delete the Chat Transaction in the database.", null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantDeleteChatException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to delete the Chat Transaction in the database.",
+                    null);
         }
     }
 
@@ -392,13 +495,26 @@ public class ChatMiddlewareDatabaseDao {
     public List<Message> getCreatedMessages() throws
             DatabaseOperationException,
             CantGetMessageException {
-        DatabaseTable databaseTable=getDatabaseTable(
-                ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
-        DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
-        databaseTableFilter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME);
-        databaseTableFilter.setType(DatabaseFilterType.EQUAL);
-        databaseTableFilter.setValue(MessageStatus.CREATED.getCode());
-        return getMessages(databaseTableFilter);
+        try{
+            DatabaseTable databaseTable=getDatabaseTable(
+                    ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+            DatabaseTableFilter databaseTableFilter=databaseTable.getEmptyTableFilter();
+            databaseTableFilter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_STATUS_COLUMN_NAME);
+            databaseTableFilter.setType(DatabaseFilterType.EQUAL);
+            databaseTableFilter.setValue(MessageStatus.CREATED.getCode());
+            return getMessages(databaseTableFilter);
+        } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantGetMessageException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to delete the Chat Transaction in the database.",
+                    null);
+        }
+
     }
 
     /**
@@ -441,7 +557,15 @@ public class ChatMiddlewareDatabaseDao {
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, e.getMessage(), null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE, 
+                    e, 
+                    e.getMessage(), 
+                    null);
         }
     }
 
@@ -478,7 +602,15 @@ public class ChatMiddlewareDatabaseDao {
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Message from the database with filter: " + chatId.toString(), null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantGetMessageException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "error trying to get Message from the database with filter: " + chatId.toString(),
+                    null);
         }
     }
 
@@ -511,9 +643,13 @@ public class ChatMiddlewareDatabaseDao {
         catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
             throw new DatabaseOperationException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
-                    e,
+                    FermatException.wrapException(e),
                     "error trying to get Message from the database with filter: " + messageId.toString(),
                     null);
         }
@@ -554,11 +690,21 @@ public class ChatMiddlewareDatabaseDao {
         }catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the message Transaction in the database.", null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new DatabaseOperationException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to save the message Transaction in the database.",
+                    null);
         }
     }
 
-    public void deleteMessage(Message message) throws CantDeleteMessageException, DatabaseOperationException
+    public void deleteMessage(Message message) throws
+            CantDeleteMessageException,
+            DatabaseOperationException
     {
         try
         {
@@ -577,7 +723,15 @@ public class ChatMiddlewareDatabaseDao {
         }catch (Exception e) {
             if (database != null)
                 database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to delete the message Transaction in the database.", null);
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantDeleteMessageException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to delete the message Transaction in the database.",
+                    null);
         }
     }
 
@@ -819,11 +973,19 @@ public class ChatMiddlewareDatabaseDao {
             databaseTable.insertRecord(eventRecord);
 
         } catch (CantInsertRecordException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantSaveEventException(
                     exception,
                     "Saving new event.",
                     "Cannot insert a record in Open Contract database");
         } catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
             throw new CantSaveEventException(
                     FermatException.wrapException(exception),
                     "Saving new event.",
@@ -880,13 +1042,29 @@ public class ChatMiddlewareDatabaseDao {
             }
             return eventRecords;
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
             throw new CantGetPendingEventListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
             throw new CantGetPendingEventListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Invalid parameter in EventStatus enum");
+        } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantGetPendingEventListException(e,
+                    "Getting events in EventStatus.PENDING",
+                    "Unexpected Exception");
         }
     }
 
@@ -1019,9 +1197,22 @@ public class ChatMiddlewareDatabaseDao {
                     ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_CHAT_ID_COLUMN_NAME,
                     eventRecord.getChatId());
         } catch (CantLoadTableToMemoryException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        FermatException.wrapException(e));
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                        "Updating an event record",
+                        "Unexpected Exception");
+
         }
     }
 
@@ -1032,11 +1223,21 @@ public class ChatMiddlewareDatabaseDao {
      * @throws CantGetChatException
      */
     public boolean chatIdExists(UUID chatId) throws CantGetChatException{
-        DatabaseTable databaseTable=getDatabaseChatTable();
-        return checkIdExists(
-                chatId,
-                ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME,
-                databaseTable);
+        try{
+            DatabaseTable databaseTable=getDatabaseChatTable();
+            return checkIdExists(
+                    chatId,
+                    ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME,
+                    databaseTable);
+        } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantGetChatException(e,
+                    "Checking if chat id exists",
+                    "Unexpected Exception");
+        }
 
     }
 
@@ -1047,11 +1248,22 @@ public class ChatMiddlewareDatabaseDao {
      * @throws CantGetChatException
      */
     public boolean messageIdExists(UUID chatId) throws CantGetChatException{
-        DatabaseTable databaseTable=getDatabaseMessageTable();
-        return checkIdExists(
-                chatId,
-                ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME,
-                databaseTable);
+        try{
+            DatabaseTable databaseTable=getDatabaseMessageTable();
+            return checkIdExists(
+                    chatId,
+                    ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME,
+                    databaseTable);
+        } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantGetChatException(e,
+                    "Checking if message id exists",
+                    "Unexpected Exception");
+        }
+
     }
 
     /**
