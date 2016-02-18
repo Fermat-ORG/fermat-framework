@@ -63,6 +63,11 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
 
     }
 
+    @Override
+    public void markAsSeen(List<UUID> transactionId) throws CantGetTransactionCryptoBrokerWalletMatchingException {
+
+    }
+
     /**
      * This method load the list CurrencyMatching
      *
