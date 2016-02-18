@@ -554,27 +554,6 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST("INSCR") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return null;
-        }
-
-        public FermatEvent getNewEvent() {
-            return null;
-        }
-    },
-
-    ESTABLISHED_NETWORK_SERVICE_CONNECTION("SNSC") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return null;
-        }
-
-        public FermatEvent getNewEvent() {
-            return null;
-        }
-    },
-
-
     INTRA_USER_CONNECTION_ACCEPTED("IUCA") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IntraUserActorConnectionAcceptedEventListener(this, fermatEventMonitor);
