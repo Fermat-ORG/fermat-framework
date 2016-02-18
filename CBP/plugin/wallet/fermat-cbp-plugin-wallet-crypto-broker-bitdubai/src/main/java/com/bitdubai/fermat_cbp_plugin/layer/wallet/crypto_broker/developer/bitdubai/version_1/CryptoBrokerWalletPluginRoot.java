@@ -431,8 +431,10 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
             walletFile.loadFromMedia();
             return walletFile;
         } catch (FileNotFoundException | CantCreateFileException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
             return createWalletFile();
         } catch (CantLoadFileException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
@@ -449,6 +451,7 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
             walletFile.persistToMedia();
             return walletFile;
         } catch (CantCreateFileException | CantPersistFileException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
     }

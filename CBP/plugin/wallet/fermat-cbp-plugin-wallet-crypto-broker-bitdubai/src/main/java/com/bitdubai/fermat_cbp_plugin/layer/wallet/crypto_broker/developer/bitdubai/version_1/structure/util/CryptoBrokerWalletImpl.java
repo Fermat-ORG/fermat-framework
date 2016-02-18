@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -38,6 +39,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantCreateNewCryptoBrokerWalletException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
@@ -221,8 +223,11 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
             persistWallet(walletFile);
             return internalWalletId;
         } catch (CantCreateCryptoBrokerWalletException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+
             throw exception;
         } catch (Exception exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
             throw new CantCreateCryptoBrokerWalletException(CantCreateCryptoBrokerWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
@@ -260,6 +265,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
             databaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
             database = databaseFactory.createDatabase(this.pluginId, internalWalletId);
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
+
             throw new CantCreateNewCryptoBrokerWalletException("Database could not be created", cantCreateDatabaseException, "internalWalletId: " + internalWalletId.toString(), "");
         }
     }
