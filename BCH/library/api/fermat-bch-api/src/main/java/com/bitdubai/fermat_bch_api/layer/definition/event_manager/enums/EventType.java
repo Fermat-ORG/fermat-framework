@@ -17,6 +17,54 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.events.IncomingCryptoOnBlo
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.events.IncomingCryptoOnCryptoNetworkEvent;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.events.IncomingCryptoReversedOnBlockchainEvent;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.events.IncomingCryptoReversedOnCryptoNetworkEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceAssetIssuerEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceAssetUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceRedeemPointEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceRedemptionEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceRedeemPointEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceRedemptionEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetIssuerEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceRedeemPointEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceRedemptionEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetIssuerEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceRedeemPointEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceRedemptionEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceAssetIssuerEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceAssetUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceRedeemPointEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceRedemptionEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnCryptoNetworkWaitingTransferenceRedeemPointEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnCryptoNetworkWaitingTransferenceRedemptionEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetIssuerEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetReversedOnBlockchainWaitingTransferenceRedeemPointEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetReversedOnBlockchainWaitingTransferenceRedemptiontEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetReversedOnCryptoNetworkWaitingTransferenceRedeemPointEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetReversedOnCryptoNetworkWaitingTransferenceRedemptionEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventListener;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEventListener;
 
 /**
  * The enum <code>ccom.bitdubai.fermat_cry_api.layer.definition.enums.EventType</code>
@@ -32,6 +80,252 @@ public enum EventType implements FermatEventEnum {
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
+
+    INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER("ICOBWTEU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent();
+        }
+    },
+
+    INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER("ICOBWTIU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEvent();
+        }
+    },
+
+    INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER("ICOCNWTEU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent();
+        }
+    },
+
+    INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER("ICROBWTEU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent();
+        }
+    },
+
+    INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER("ICROBWTIU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEvent();
+        }
+    },
+
+    INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER("ICROCNWTEU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent();
+        }
+    },
+
+    INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICROCNWTIU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEvent();
+        }
+    },
+
+    //Modified by Manuel Perez on 02/10/2015
+    //Fix returning IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener
+    INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICOCNWTIU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEvent();
+        }
+    },
+
+
+    /**
+     * Asset Issuer Incoming Crypto Events
+     */
+    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOCNWTAI") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent();
+        }
+    },
+    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOBCWTAI") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnBlockchainWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnBlockchainWaitingTransferenceAssetIssuerEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAROCNWTAI") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetIssuerEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER("IAROBCWTAI") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetIssuerEvent();
+        }
+    },
+
+
+    /**
+     * Asset User Incoming Crypto Events
+     */
+    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER("IAOCNWTAU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent();
+        }
+    },
+    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER("IAOBCWTAU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnBlockchainWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnBlockchainWaitingTransferenceAssetUserEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER("IAROCNWTAU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER("IAROBCWTAU") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent();
+        }
+    },
+
+    /**
+     * RedeemPoint Incoming Crypto Events
+     */
+    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT("IAOCNWTRP") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceRedeemPointEvent();
+        }
+    },
+    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT("IAOBCWTRP") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnBlockchainWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnBlockchainWaitingTransferenceRedeemPointEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT("IAROCNWTRP") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnCryptoNetworkWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceRedeemPointEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT("IAROBCWTRP") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceRedeemPointEvent();
+        }
+    },
+
+
+
+    /**
+     * Asset Redemption Incoming Crypto Events
+     */
+    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION("IAOCNWTRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceRedemptionEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnCryptoNetworkWaitingTransferenceRedemptionEvent();
+        }
+    },
+    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION("IAOBCWTRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetOnBlockchainWaitingTransferenceRedemptionEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetOnBlockchainWaitingTransferenceRedemptionEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION("IAROCNWTRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnCryptoNetworkWaitingTransferenceRedemptionEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceRedemptionEvent();
+        }
+    },
+    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION("IAROBCWTRN") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceRedemptiontEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new IncomingAssetReversedOnBlockchainWaitingTransferenceRedemptionEvent();
+        }
+    },
 
     INCOMING_CRYPTO_IRREVERSIBLE("ICIRR") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return null; }
