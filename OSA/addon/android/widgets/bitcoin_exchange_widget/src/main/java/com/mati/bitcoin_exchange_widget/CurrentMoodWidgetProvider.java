@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
 public class CurrentMoodWidgetProvider extends AppWidgetProvider {
 	public static final String WIDGETTAG = "WidgetMood";

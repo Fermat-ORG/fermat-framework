@@ -145,6 +145,10 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
+
+    //widget
+    compile project(':bitcoin_exchange_widget')
+
     configurations {
         all {
             exclude module: ':fermat-p2p-plugin-communication-cloud-server-bitdubai'

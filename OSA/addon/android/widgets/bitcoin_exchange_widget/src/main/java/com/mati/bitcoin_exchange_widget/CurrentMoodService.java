@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
 import java.util.Calendar;
 import java.util.LinkedList;
