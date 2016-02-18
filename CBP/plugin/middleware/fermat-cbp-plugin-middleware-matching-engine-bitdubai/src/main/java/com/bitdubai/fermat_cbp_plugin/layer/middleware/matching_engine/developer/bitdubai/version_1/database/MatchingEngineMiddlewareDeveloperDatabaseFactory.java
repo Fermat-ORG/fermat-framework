@@ -170,47 +170,46 @@ public class MatchingEngineMiddlewareDeveloperDatabaseFactory {
         return tables;
     }
 
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabaseTable developerDatabaseTable) {
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
-        /**
-         * Will get the records for the given table
-         */
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
-        /**
-         * I load the passed table name from the SQLite database.
-         */
-        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
+
+            this.initializeDatabase();
+
+            List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
+
+            final DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
+
             selectedTable.loadToMemory();
-            List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
-                List<String> developerRow = new ArrayList<>();
-                /**
-                 * for each row in the table list
-                 */
-                for (DatabaseRecord field : row.getValues()){
-                    /**
-                     * I get each row and save them into a List<String>
-                     */
+
+            final List<DatabaseTableRecord> records = selectedTable.getRecords();
+
+            List<String> developerRow;
+
+            for (final DatabaseTableRecord row: records){
+
+                developerRow = new ArrayList<>();
+
+                for (final DatabaseRecord field : row.getValues())
                     developerRow.add(field.getValue());
-                }
-                /**
-                 * I create the Developer Database record
-                 */
+
                 returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
             }
-            /**
-             * return the list of DeveloperRecords for the passed table.
-             */
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * if there was an error, I will returned an empty list.
-             */
+
             return returnedRecords;
-        } catch (Exception e){
-            return returnedRecords;
+
+        } catch (final CantLoadTableToMemoryException  |
+                       CantInitializeDatabaseException e) {
+
+            System.err.println(e);
+
+            return new ArrayList<>();
+
+        } catch (final Exception e){
+
+            return new ArrayList<>();
         }
-        return returnedRecords;
     }
 
 }
