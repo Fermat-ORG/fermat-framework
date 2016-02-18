@@ -516,7 +516,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
              dataSet.addAll(userList);
 
-           /* if(userCacheList.size() == 0)
+            if(userCacheList.size() == 0)
             {
                 dataSet.addAll(userList);
             }
@@ -530,14 +530,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 {
                     for (IntraUserInformation intraUserCache : userCacheList) {
 
-                        if(!userList.contains(intraUserCache))
+                        if(!userList.contains(intraUserCache.getPublicKey()))
                             userList.add(intraUserCache);
                     }
                     //guardo el cache
                     moduleManager.saveCacheIntraUsersSuggestions(userList);
                     dataSet.addAll(userList);
                 }
-            }*/
+            }
 
             offset = dataSet.size();
 
