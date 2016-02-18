@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
@@ -40,6 +41,10 @@ import java.util.UUID;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 14/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class ActorConnectionEventActions {
 
@@ -102,9 +107,11 @@ public class ActorConnectionEventActions {
                     case DENY:
                         this.handleDenyConnection(request.getRequestId());
                         break;
-                  /*  case DISCONNECT:
-                        this.handleDisconnect(request.getRequestId());
-                        break;*/
+                    case DISCONNECT:
+                        if (request.getRequestType() == RequestType.SENT)
+                            this.handleDisconnect(request.getRequestId());
+
+                        break;
 
                 }
 
@@ -115,8 +122,8 @@ public class ActorConnectionEventActions {
                 UnexpectedConnectionStateException         |
                 CantAcceptActorConnectionRequestException /* |
                 CantCancelActorConnectionRequestException */ |
-                CantDenyActorConnectionRequestException   /* |
-                CantDisconnectFromActorException          */ e) {
+                CantDenyActorConnectionRequestException    |
+                CantDisconnectFromActorException           e) {
 
             throw new CantHandleNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
         }
@@ -190,8 +197,8 @@ public class ActorConnectionEventActions {
     }
 
     public void handleDisconnect(final UUID connectionId) throws CantDisconnectFromActorException   ,
-                                                           ActorConnectionNotFoundException   ,
-                                                           UnexpectedConnectionStateException {
+                                                                 ActorConnectionNotFoundException   ,
+                                                                 UnexpectedConnectionStateException {
 
         try {
 

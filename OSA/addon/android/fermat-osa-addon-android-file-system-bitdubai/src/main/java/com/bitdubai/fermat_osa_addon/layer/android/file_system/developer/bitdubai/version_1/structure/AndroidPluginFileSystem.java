@@ -257,4 +257,9 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
             throw new CantHashFileNameException(e, "", "This Should never happen unless we change the DIGEST_ALGORITHM Constant");
         }
     }
+
+    @Override
+    public String getAppPath() {
+        return context.getFilesDir().getPath();
+    }
 }
