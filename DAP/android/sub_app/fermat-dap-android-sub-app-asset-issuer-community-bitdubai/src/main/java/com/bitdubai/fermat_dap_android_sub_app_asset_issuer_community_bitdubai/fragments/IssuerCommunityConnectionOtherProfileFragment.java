@@ -143,7 +143,8 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                     connectionSend();
                     break;
             }*/
-        connectRequest();
+
+
 
         try {
             issuerName.setText(actorIssuer.getRecord().getName());
@@ -168,8 +169,10 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
 
             if (actorIssuer.getRecord().getExtendedPublicKey() != null){
                 issuerExtendedKey.setText(actorIssuer.getRecord().getExtendedPublicKey());
+                disconnectRequest();
             }else {
                 issuerExtendedKey.setText("None");
+                connectRequest();
             }
 
             //issuerRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actorIssuer.getRecord().getRegistrationDate())));
@@ -200,7 +203,8 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        updateButton();
+                        //TODO Implementar aca que va a pasar con los estados de los botones
+                        //updateButton();
                     }
                 });
                 connectDialog.show();
@@ -220,7 +224,8 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                 disconectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        connectRequest();
+                        //TODO Implementar aca que va a pasar con los estados de los botones
+                       // connectRequest();
                         // updateButton();
                     }
                 });
@@ -287,7 +292,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
                 conectionAccept();
                 break;
         }*/
-        disconnectRequest();
+        //disconnectRequest();
     }
 
 
