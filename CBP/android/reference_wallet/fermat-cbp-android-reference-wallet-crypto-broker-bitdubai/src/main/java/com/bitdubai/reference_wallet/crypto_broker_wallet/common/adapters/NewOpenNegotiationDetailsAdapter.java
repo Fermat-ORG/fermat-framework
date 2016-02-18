@@ -168,26 +168,30 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
 
     @Override
     public void onBindViewHolder(FermatViewHolder holder, int position) {
-        if (holder.getHolderType() == TYPE_HEADER) {
-            final NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
-            noteViewHolder.bind(negotiationWrapper.getNegotiationInformation().getMemo());
+        int holderType = holder.getHolderType();
 
-        } else if (holder.getHolderType() == TYPE_DATE_EXPIRATION_TIME) {
-            final ExpirationTimeViewHolder expirationTimeViewHolder = (ExpirationTimeViewHolder) holder;
-            final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(getExpirationDatePosition() + 1);
-            expirationTimeViewHolder.bindData(negotiationWrapper, clauseNumberImageRes);
-
-        } else {
-            position = getItemPosition(position);
-            super.onBindViewHolder(holder, position);
+        switch (holderType) {
+            case TYPE_HEADER:
+                final NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
+                noteViewHolder.bind(negotiationWrapper.getNegotiationInfo().getMemo());
+                break;
+            case TYPE_DATE_EXPIRATION_TIME:
+                final ExpirationTimeViewHolder expirationTimeViewHolder = (ExpirationTimeViewHolder) holder;
+                final int clauseNumber = getExpirationDatePosition() + 1;
+                final int clauseNumberImageRes = FragmentsCommons.getClauseNumberImageRes(clauseNumber);
+                expirationTimeViewHolder.bindData(negotiationWrapper, clauseNumberImageRes);
+                break;
+            default:
+                position = getItemPosition(position);
+                super.onBindViewHolder(holder, position);
+                break;
         }
-
     }
 
     @Override
     protected void bindHolder(FermatViewHolder holder, ClauseInformation clause, int position) {
         final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
-        final CustomerBrokerNegotiationInformation negotiationInformation = negotiationWrapper.getNegotiationInformation();
+        final CustomerBrokerNegotiationInformation negotiationInformation = negotiationWrapper.getNegotiationInfo();
 
         clauseViewHolder.bindData(negotiationInformation, clause, position);
         clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
@@ -244,10 +248,11 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     }
 
     private List<ClauseInformation> buildListOfItems() {
-        CustomerBrokerNegotiationInformation negotiationInformation = negotiationWrapper.getNegotiationInformation();
+        CustomerBrokerNegotiationInformation negotiationInformation = negotiationWrapper.getNegotiationInfo();
 
         Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
 
+        ClauseInformation receptionMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
         ClauseInformation brokerPaymentMethodDetail = getBrokerPaymentMethodDetail(clauses);
         ClauseInformation customerReceptionMethodDetail = getCustomerReceptionMethodDetail(clauses);
 
@@ -258,7 +263,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
         data.add(clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY));
         data.add(clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD));
         if (brokerPaymentMethodDetail != null) data.add(brokerPaymentMethodDetail);
-        data.add(clauses.get(ClauseType.BROKER_PAYMENT_METHOD));
+        if (receptionMethod != null) data.add(receptionMethod);
         if (customerReceptionMethodDetail != null) data.add(customerReceptionMethodDetail);
         data.add(clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER));
         data.add(clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER));
@@ -267,37 +272,35 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     }
 
     private ClauseInformation getBrokerPaymentMethodDetail(Map<ClauseType, ClauseInformation> clauses) {
+        final ClauseInformation paymentMethod = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
 
-        String currencyType = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
-        ClauseInformation clause = null;
-
-        if (currencyType != null) {
-            if (currencyType.equals(MoneyType.CRYPTO.getCode()))
-                clause = clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
-            else if (currencyType.equals(MoneyType.BANK.getCode()))
-                clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
-            else
-                clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
+        if (paymentMethod != null) {
+            String currencyType = paymentMethod.getValue();
+            if (currencyType != null) {
+                if (currencyType.equals(MoneyType.CRYPTO.getCode()))
+                    return clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
+                if (currencyType.equals(MoneyType.BANK.getCode()))
+                    return clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
+                return clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
+            }
         }
-
-        return clause;
+        return null;
     }
 
     private ClauseInformation getCustomerReceptionMethodDetail(Map<ClauseType, ClauseInformation> clauses) {
+        final ClauseInformation paymentMethod = clauses.get(ClauseType.BROKER_PAYMENT_METHOD);
 
-        String currencyType = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
-        ClauseInformation clause = null;
-
-        if (currencyType != null) {
-            if (currencyType.equals(MoneyType.CRYPTO.getCode()))
-                clause = clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
-            else if (currencyType.equals(MoneyType.BANK.getCode()))
-                clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
-            else
-                clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
+        if (paymentMethod != null) {
+            String currencyType = paymentMethod.getValue();
+            if (currencyType != null) {
+                if (currencyType.equals(MoneyType.CRYPTO.getCode()))
+                    return clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
+                if (currencyType.equals(MoneyType.BANK.getCode()))
+                    return clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
+                return clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
+            }
         }
-
-        return clause;
+        return null;
     }
 
     private int getItemPosition(int position) {
