@@ -125,9 +125,6 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     private CryptoTransmissionMetadataDAO_V2 incomingNotificationsDao;
     private CryptoTransmissionMetadataDAO_V2 outgoingNotificationDao;
 
-    Timer timer = new Timer();
-
-    private long reprocessTimer = 300000; //five minutes
 
     /**
      * Represent the identity
@@ -483,7 +480,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
          /*
          * Read all pending CryptoTransmissionMetadata message from database and change status
          */
-        try {
+      /*  try {
             outgoingNotificationDao.changeStatusNotSentMessage();
 
            Map<String, Object> filters = new HashMap<>();
@@ -501,7 +498,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         } catch (Exception e) {
             System.out.println("CRYPTO TRANSMISSIO NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
@@ -509,7 +506,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
  /*
          * Read all pending CryptoTransmissionMetadata message from database and change status
          */
-        try {
+      /*  try {
             outgoingNotificationDao.changeStatusNotSentMessage(identityPublicKey);
 
             Map<String, Object> filters = new HashMap<>();
@@ -528,7 +525,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
         } catch (Exception e) {
             System.out.println("CRYPTO TRANSMISSIO NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
-        }
+        }*/
     }
 
 
