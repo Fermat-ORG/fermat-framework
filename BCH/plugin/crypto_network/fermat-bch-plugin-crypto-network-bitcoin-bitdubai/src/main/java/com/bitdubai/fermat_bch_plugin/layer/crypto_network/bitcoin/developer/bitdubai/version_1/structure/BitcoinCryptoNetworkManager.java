@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
@@ -71,10 +72,6 @@ import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isV
  */
 public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
 
-    /**
-     * BitcoinJ wallet where I'm storing the public keys and transactions
-     */
-    private final String WALLET_FILENAME = "/data/data/com.bitdubai.fermat/files/wallet_";
 
     /**
      * UTXO Provider interface variables
@@ -86,6 +83,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor;
     File walletFile;
+    final String WALLET_PATH;
 
     /**
      * List of running agents per network
@@ -112,8 +110,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.WALLET_PATH = pluginFileSystem.getAppPath();
 
         runningAgents = new HashMap<>();
+
+
     }
 
     /**
@@ -207,7 +208,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                     /**
                      * once the agent is stopped, I will restart it with the new wallet.
                      */
-                    File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
+                    File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
                     bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem);
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
@@ -217,7 +218,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 /**
                  * If the agent for the network is not running, I will start a new one.
                  */
-                File walletFilename = new File(WALLET_FILENAME + blockchainNetworkType.getCode());
+                File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
                 BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
@@ -285,8 +286,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList) {
         Wallet wallet = null;
-        String fileName = WALLET_FILENAME + blockchainNetworkType.getCode();
-        walletFile = new File(fileName);
+        walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
+
         try {
             wallet = Wallet.loadFromFile(walletFile);
         } catch (UnreadableWalletException e) {
