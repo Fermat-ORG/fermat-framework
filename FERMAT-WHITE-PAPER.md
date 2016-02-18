@@ -34,7 +34,9 @@ People of this future have in their pocket not only their money, but a whole sui
 
 We are building Fermat to get into that future in the fastest way possible. And to discover what kind of system to build, we traced back the path from that future into present times, we have identified all the challenges that needed to be addressed and all the obstacles that needed to be overcome. We put everything that had to be done into a huge master plan and started developing the first phase of it. The result is a system that rocks the foundations of many established paradigms and with such a disruptive potential that its final effects are difficult to measure or even project at present times.
 
-This white paper does not describe a theoretical system that might work one day to get us to that future. It describes a system that already works and it is in alpha testing right now. It also describes the organization of several networks of people spanning different disciplines and countries collaborating to produce the most ambitious project in the industry.
+From end users perspective, Fermat is an extension of the operating system. In the same way Windows is deployed with some fundamental APPs like the notepad, calculator, photo editor, and many others, Fermat is distributed with a set of fundamental P2P APPs like chat, crypto wallets, digital assets, crypto broker, shops and many others. The equivalent of the Microsoft Office suite of applications in Fermat are the P2P version of popular services like Uber but without Uber Inc., AirBNB without AirBNB inc, LinkedIn, Tinder, eBay, etc., all of them without the middlemen.  
+
+This white paper does not describe a theoretical system that might work one day to get us to that future. It describes a system that already works and some parts of it are in alpha testing right now. It also describes the organization of several networks of people spanning different disciplines and countries collaborating to produce the most ambitious project in the industry.
 
 <br><br>
 
@@ -118,7 +120,7 @@ We must think of Fermat as a system with no visible end, so it must be designed 
 
 **Master Plan**
 
-We define a long term master plan with everything that needs to be done, and considering all possible use cases. Then we all collaborate building the pieces of that master plan, in order, phase by phase. The master excludes duplicate functionality thus we eliminate duplicate efforts and save time and money.
+We define a long term master plan with everything that needs to be done, and considering all possible use cases. Then we all collaborate building the pieces of that master plan, in order, phase by phase. The master plan excludes duplicate functionality thus we eliminate duplicate efforts and save time and money.
 
 #### Promote Collaboration
 
@@ -443,9 +445,9 @@ On top of the functionality built by the developers network, business operators 
 
 This functionality was developed by the developers network with the only intention that business operator would pick it up and run their business using their code.
 
-There is no limit on the different kind of business that the Fermat system can support. It is only a matter of time until the most popular global services like Uber, AirBNB, social networks, dating APPs, etc. will be replicated into Fermat. That would open the door for thousands of regional operators to fine tune these business models to adapt them to local audiences. 
+There is no limit on the different kind of business that the Fermat system can support. Fermat is distributed with different layers of applications. The first layer includes very basic infraestructure APPs that often don't need business operators at all. Examples of these APPs are Chat, Crypto Wallets, etc. Besides those simple APPs, the next layer includes a suite of APPs that requires business operators to run them: Crypto Broker APPs, Digital Assets APPs, etc. A third layer contains popular the most popular global services like Uber, AirBNB, social networks, dating APPs, etc. In this case these APPs will cut cost to end users since the business operator will only be required optionally and for specific situations were the value they add cannot be automated. That opens the door for thousands of regional operators to fine tune these business models to adapt them to local audiences. 
 
-The sinergy produced by having more and more use cases covered by the same platform would be unmatcheable. This openess allows any of these use cases to increase the overal system user base, which in turn benefits all other use cases since one of the key problem for adoption is how end users end up with crypto currency in the first place. If one use case brings the in, they would likely jump to other use cases available since that barrier has already been overcome.
+The sinergy produced by having more and more use cases covered by the same platform would be unmatcheable. This openess allows any of these use cases to increase the overal system user base, which in turn benefits all other use cases since one of the key problem for adoption is how end users end up with crypto currency in the first place. If one use case brings them in, they would likely jump to other use cases available since that barrier has already been overcome.
 
 <br><br>
 ## Part II - Fermat In Detail
