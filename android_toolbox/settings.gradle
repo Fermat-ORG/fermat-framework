@@ -16,6 +16,12 @@ include ':image_slider'
 project(':image_slider').projectDir = new File('android_toolbox/image_slider')
 
 
+include ':toolbar_widgets'
+project(':toolbar_widgets').projectDir = new File('android_toolbox/toolbar_widgets')
+
+include ':currency-selector'
+project(':currency-selector').projectDir = new File('android_toolbox/currency-selector')
+
 
 
 
