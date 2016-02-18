@@ -854,7 +854,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+        fermatEventListener = eventManager.getNewListener(EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
         fermatEventListener.setEventHandler(new ActorAssetUserNewNotificationsEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);

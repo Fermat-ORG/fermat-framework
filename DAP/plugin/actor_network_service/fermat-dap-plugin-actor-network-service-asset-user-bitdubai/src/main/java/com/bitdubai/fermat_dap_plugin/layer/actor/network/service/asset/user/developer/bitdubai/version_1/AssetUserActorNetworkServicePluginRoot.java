@@ -2149,7 +2149,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     }
 
     private void launchNotificationActorAsset() {
-        FermatEvent fermatEvent = this.getEventManager().getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+        FermatEvent fermatEvent = this.getEventManager().getNewEvent(EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
         ActorAssetNetworkServicePendingNotificationEvent actorAssetRequestConnectionEvent = (ActorAssetNetworkServicePendingNotificationEvent) fermatEvent;
         this.getEventManager().raiseEvent(actorAssetRequestConnectionEvent);
     }

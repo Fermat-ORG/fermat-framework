@@ -361,14 +361,14 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                             toConnect.add(actor);
                                     }
                                     //// TODO: 28/10/15 get Actor asset Redeem Point
-//                                    manager.askActorAssetUserForConnection(toConnect);
-//
-//                                    Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
-//                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
-//                                    sendLocalBroadcast(broadcast);
+                                    manager.askActorAssetUserForConnection(toConnect);
+
+                                    Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                    sendLocalBroadcast(broadcast);
 //                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
 
-                                    manager.connectToActorAssetUser(null, toConnect);
+//                                    manager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
                             };
