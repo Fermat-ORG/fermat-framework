@@ -18,6 +18,16 @@ public class MatchingEngineMiddlewareDatabaseConstants {
      */
     public static final String MATCHING_ENGINE_MIDDLEWARE_DATABASE_NAME              = "matching_engine_middleware";
 
+
+    /**
+     * Wallets database table definition.
+     */
+    public static final String WALLETS_TABLE_NAME                                    = "wallets"                   ;
+
+    public static final String WALLETS_PUBLIC_KEY_COLUMN_NAME                        = "public_key"                ;
+
+    public static final String WALLETS_FIRST_KEY_COLUMN                              = "public_key"                ;
+
     /**
      * Earning Pair database table definition.
      */
