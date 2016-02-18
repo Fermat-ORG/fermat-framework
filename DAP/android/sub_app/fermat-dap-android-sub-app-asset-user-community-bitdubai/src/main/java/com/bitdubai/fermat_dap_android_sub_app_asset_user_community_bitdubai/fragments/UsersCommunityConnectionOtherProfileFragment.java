@@ -30,6 +30,9 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdenti
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.Actor;
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
@@ -238,9 +241,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 disconectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        //TODO Implementar aca que va a pasar con los estados de los botones
-                        //connectRequest();
-                       // updateButton();
+
+                       updateButton();
                     }
                 });
                 disconectDialog.show();
@@ -280,6 +282,32 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
         } catch (CantGetIntraUserConnectionStatusException e) {
             e.printStackTrace();
         }*/
+        ActorAssetUser tempActor = null;
+        try {
+            tempActor = manager.getActorUser(actor.getActorPublicKey());
+
+            if(tempActor.getCryptoAddress() != null){
+                userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
+                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
+                disconnectRequest();
+            } else{
+                userCryptoAddres.setText("No");
+                userCryptoCurrency.setText("None");
+                connectRequest();
+            }
+
+            if(tempActor.getBlockchainNetworkType() != null) {
+                userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().toString().replace("_"," "));
+            }else {
+                userBlockchainNetworkType.setText("None");
+            }
+        } catch (CantGetAssetUserActorsException e) {
+            e.printStackTrace();
+        } catch (CantAssetUserActorNotFoundException e) {
+            e.printStackTrace();
+        }
+
+
         /*switch (connectionState) {
             case BLOCKED_LOCALLY:
             case BLOCKED_REMOTELY:
@@ -306,7 +334,7 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
                 conectionAccept();
                 break;
         }*/
-        disconnectRequest();
+        //disconnectRequest();
     }
 
 
