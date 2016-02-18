@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_bch_api.layer.definition.events;
+package com.bitdubai.fermat_bch_api.layer.definition.event_manager.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
