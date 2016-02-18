@@ -187,16 +187,23 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     @Override
     public List<AssetUserWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException {
-        List<AssetUserWalletTransaction> allCreditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
-        List<AssetUserWalletTransaction> alldebitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
-        for (AssetUserWalletTransaction transaction : alldebitAvailable) {
-            if (allCreditAvailable.contains(transaction)) {
-                allCreditAvailable.remove(transaction);
-            } else {
-                allCreditAvailable.add(transaction);
+        List<AssetUserWalletTransaction> creditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
+        List<AssetUserWalletTransaction> creditBook = getTransactions(BalanceType.BOOK, TransactionType.CREDIT, assetPublicKey);
+        List<AssetUserWalletTransaction> debitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
+        List<AssetUserWalletTransaction> debitBook = getTransactions(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
+        List<AssetUserWalletTransaction> toReturn = new ArrayList<>();
+        toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
+        toReturn.addAll(getTransactionsForDisplay(debitAvailable, debitBook));
+        return toReturn;
+    }
+
+    private List<AssetUserWalletTransaction> getTransactionsForDisplay(List<AssetUserWalletTransaction> available, List<AssetUserWalletTransaction> book) {
+        for (AssetUserWalletTransaction transaction : book) {
+            if (!available.contains(transaction)) {
+                available.add(transaction);
             }
         }
-        return allCreditAvailable;
+        return available;
     }
 
     @Override
