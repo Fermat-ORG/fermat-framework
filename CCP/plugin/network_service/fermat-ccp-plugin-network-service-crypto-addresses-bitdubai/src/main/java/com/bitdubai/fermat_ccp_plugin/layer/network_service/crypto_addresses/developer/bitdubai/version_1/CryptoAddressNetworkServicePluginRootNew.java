@@ -153,8 +153,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
         executorService = Executors.newFixedThreadPool(1);
 
-        // change message state to process again first time
-        reprocessMessage();
     }
 
     @Override
@@ -197,42 +195,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
     }
 
-    //reprocess all messages could not be sent
-    private void reprocessMessage()
-    {
-        try {
-
-            List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listUncompletedRequest();
-
-            for(CryptoAddressRequest record : cryptoAddressRequestList) {
-
-                cryptoAddressesNetworkServiceDao.changeProtocolState(record.getRequestId(), ProtocolState.PROCESSING_SEND);
-
-                final CryptoAddressRequest cryptoAddressRequest  = record;
-
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            sendNewMessage(
-                                    getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
-                                    getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
-                                    buildJsonRequestMessage(cryptoAddressRequest));
-                        } catch (CantSendMessageException e) {
-                            reportUnexpectedException(e);
-                        }
-                    }
-                });
-
-
-            }
-        }
-        catch(CantListPendingCryptoAddressRequestsException | CantChangeProtocolStateException |PendingRequestNotFoundException e)
-        {
-            System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
-            e.printStackTrace();
-        }
-    }
 
 
 
@@ -627,7 +589,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
     @Override
     protected void reprocessMessages() {
 
-        try {
+      /*  try {
 
             List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listUncompletedRequest();
 
@@ -657,14 +619,14 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
         {
             System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
-        }
+        }*/
 
     }
 
     @Override
     protected void reprocessMessages(String identityPublicKey) {
 
-        try {
+     /*   try {
 
             List<CryptoAddressRequest> cryptoAddressRequestList = cryptoAddressesNetworkServiceDao.listUncompletedRequest(identityPublicKey);
 
@@ -695,7 +657,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
         {
             System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
-        }
+        }*/
 
     }
     
@@ -1091,7 +1053,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        if(developerDatabase.getName() == "Crypto Addresses")
+        if(developerDatabase.getName().equals("Crypto Addresses"))
             return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
         else
             return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
