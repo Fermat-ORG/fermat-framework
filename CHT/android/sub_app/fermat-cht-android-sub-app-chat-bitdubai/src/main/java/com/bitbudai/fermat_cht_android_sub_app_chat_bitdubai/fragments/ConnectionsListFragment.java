@@ -135,9 +135,11 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
             int size = con.size();
             if (size > 0) {
                 for (int i=0;i<size;i++){
-                    contactname.add(con.get(i).getAlias());
-                    contactid.add(con.get(i).getContactId());
-                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                    if(!con.get(i).getRemoteName().equals("Not registered contact")) {
+                        contactname.add(con.get(i).getAlias());
+                        contactid.add(con.get(i).getContactId());
+                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                    }
                 }
                 text.setVisibility(View.GONE);
             }else{
@@ -252,9 +254,11 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                             List <Contact> con=  chatManager.getContacts();
                             if (con.size() > 0) {
                                 for (int i=0;i<con.size();i++){
-                                    contactname.add(con.get(i).getAlias());
-                                    contactid.add(con.get(i).getContactId());
-                                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                    if(!con.get(i).getRemoteName().equals("Not registered contact")) {
+                                        contactname.add(con.get(i).getAlias());
+                                        contactid.add(con.get(i).getContactId());
+                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                    }
                                 }
                                 final ConnectionListAdapter adaptador =
                                         new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid);

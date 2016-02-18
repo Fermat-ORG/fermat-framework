@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -22,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -92,6 +92,9 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.INTRA_WALLET_USER)
     private IntraUserModuleManager intraUserModuleManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
 
     public static EventSource EVENT_SOURCE = EventSource.MIDDLEWARE_CHAT_MANAGER;
 
@@ -306,7 +309,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     eventManager,
                     pluginId,
                     networkServiceChatManager,
-                    chatMiddlewareManager);
+                    chatMiddlewareManager,
+                    broadcaster);
             openContractMonitorAgent.start();
 
 

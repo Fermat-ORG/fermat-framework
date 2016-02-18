@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -86,6 +88,8 @@ public class ChatMiddlewareMonitorAgent implements
     UUID pluginId;
     NetworkServiceChatManager chatNetworkServiceManager;
     MiddlewareChatManager chatMiddlewareManager;
+    private final Broadcaster broadcaster;
+
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                     LogManager logManager,
@@ -93,7 +97,7 @@ public class ChatMiddlewareMonitorAgent implements
                                     EventManager eventManager,
                                     UUID pluginId,
                                     NetworkServiceChatManager chatNetworkServiceManager,
-                                      MiddlewareChatManager chatMiddlewareManager) throws CantSetObjectException {
+                                      MiddlewareChatManager chatMiddlewareManager, Broadcaster broadcaster) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -101,6 +105,7 @@ public class ChatMiddlewareMonitorAgent implements
         this.logManager=logManager;
         this.chatNetworkServiceManager=chatNetworkServiceManager;
         this.chatMiddlewareManager = chatMiddlewareManager;
+        this.broadcaster=broadcaster;
     }
 
     @Override
@@ -427,6 +432,7 @@ public class ChatMiddlewareMonitorAgent implements
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, "13");
                       //  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
                       //This happen when recive a message check first the message sent from here and then the recive message
                        //when response some wrong with this code down here
