@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -19,22 +20,38 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_buyer.exceptions.CantGetBuyingTransactionsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_buyer.interfaces.AssetBuyerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.developer_utils.AssetBuyerDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.database.AssetBuyerDAO;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.database.AssetBuyerDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.events.AssetBuyerMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.events.AssetBuyerRecorderService;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional.AssetBuyerTransactionManager;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional.AssetBuyingVault;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
@@ -58,8 +75,26 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_USER)
+    private AssetUserWalletManager assetUserWalletManager;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK, plugin = Plugins.BITCOIN_NETWORK)
+    private BitcoinNetworkManager bitcoinNetworkManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
+    private ActorAssetUserManager actorAssetUserManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.ASSET_TRANSMISSION)
+    private AssetTransmissionNetworkServiceManager assetTransmission;
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_VAULT)
+    private CryptoVaultManager cryptoVaultManager;
+
     private AssetBuyerMonitorAgent agent;
     private AssetBuyerRecorderService recorderService;
+    private AssetBuyerTransactionManager transactionManager;
+    private AssetBuyingVault assetBuyingVault;
+    private AssetBuyerDAO dao;
 
     //CONSTRUCTORS
     public AssetBuyerDigitalAssetTransactionPluginRoot() {
@@ -71,6 +106,9 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
     @Override
     public void start() throws CantStartPluginException {
         try {
+            assetBuyingVault = new AssetBuyingVault(pluginId, pluginFileSystem);
+            dao = new AssetBuyerDAO(pluginId, pluginDatabaseSystem, actorAssetUserManager, assetUserWalletManager, assetBuyingVault);
+            transactionManager = new AssetBuyerTransactionManager(dao, actorAssetUserManager);
             initializeMonitorAgent();
             initializeRecorderService();
             super.start();
@@ -94,12 +132,12 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
 
     //PRIVATE METHODS
     private void initializeMonitorAgent() throws CantStartAgentException {
-        agent = new AssetBuyerMonitorAgent();
+        agent = new AssetBuyerMonitorAgent(errorManager, dao, transactionManager, assetUserWalletManager, actorAssetUserManager, assetTransmission, cryptoVaultManager, bitcoinNetworkManager);
         agent.start();
     }
 
     private void initializeRecorderService() throws CantStartServiceException {
-        recorderService = new AssetBuyerRecorderService(eventManager, pluginDatabaseSystem, pluginId);
+        recorderService = new AssetBuyerRecorderService(eventManager, pluginDatabaseSystem, pluginId, dao);
         recorderService.start();
     }
 
@@ -136,5 +174,43 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
         // If we are here the database could not be opened, so we return an empty list
         return Collections.EMPTY_LIST;
     }
+
+    @Override
+    public void acceptNegotiation(UUID negotiationId) throws CantProcessBuyingTransactionException {
+        try {
+            transactionManager.acceptNegotiation(negotiationId);
+        } catch (RecordsNotFoundException | CantLoadTableToMemoryException | CantUpdateRecordException e) {
+            throw new CantProcessBuyingTransactionException(FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public void declineNegotiation(UUID negotiationId) throws CantProcessBuyingTransactionException {
+        try {
+            transactionManager.declineNegotiation(negotiationId);
+        } catch (RecordsNotFoundException | CantLoadTableToMemoryException | CantUpdateRecordException e) {
+            throw new CantProcessBuyingTransactionException(FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public void changeDeal(UUID negotiationId, int newQuantityToBuy) throws CantProcessBuyingTransactionException {
+        try {
+            transactionManager.changeDeal(negotiationId, newQuantityToBuy);
+        } catch (DAPException | CantLoadTableToMemoryException | CantUpdateRecordException e) {
+            throw new CantProcessBuyingTransactionException(FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public List<AssetNegotiation> getNewNegotiations() throws CantGetBuyingTransactionsException {
+        try {
+            return transactionManager.getNewNegotiations();
+        } catch (DAPException e) {
+            throw new CantGetBuyingTransactionsException(FermatException.wrapException(e));
+        }
+    }
+
+
     //INNER CLASSES
 }

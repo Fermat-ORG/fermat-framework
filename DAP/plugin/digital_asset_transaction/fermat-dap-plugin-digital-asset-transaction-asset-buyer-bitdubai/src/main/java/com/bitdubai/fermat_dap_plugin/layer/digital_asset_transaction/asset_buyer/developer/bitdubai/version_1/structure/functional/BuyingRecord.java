@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional;
+package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -10,12 +10,12 @@ import java.util.UUID;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 11/02/16.
  */
-public final class SellingRecord {
+public final class BuyingRecord {
 
     //VARIABLE DECLARATION
     private UUID recordId;
     private DigitalAssetMetadata metadata;
-    private ActorAssetUser buyer;
+    private ActorAssetUser seller;
     private AssetSellStatus status;
     private DraftTransaction buyerTransaction;
     private DraftTransaction sellerTransaction;
@@ -23,17 +23,17 @@ public final class SellingRecord {
     private UUID negotiationId;
 
     //CONSTRUCTORS
-    public SellingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser buyer, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash, UUID negotiationId) {
+
+    public BuyingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser seller, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash, UUID negotiationId) {
         this.recordId = recordId;
         this.metadata = metadata;
-        this.buyer = buyer;
+        this.seller = seller;
         this.status = status;
         this.buyerTransaction = buyerTransaction;
         this.sellerTransaction = sellerTransaction;
         this.broadcastingTxHash = broadcastingTxHash;
         this.negotiationId = negotiationId;
     }
-
     //PUBLIC METHODS
 
     //PRIVATE METHODS
@@ -48,8 +48,8 @@ public final class SellingRecord {
         return metadata;
     }
 
-    public ActorAssetUser getBuyer() {
-        return buyer;
+    public ActorAssetUser getSeller() {
+        return seller;
     }
 
     public AssetSellStatus getStatus() {
@@ -71,5 +71,6 @@ public final class SellingRecord {
     public UUID getNegotiationId() {
         return negotiationId;
     }
+
     //INNER CLASSES
 }
