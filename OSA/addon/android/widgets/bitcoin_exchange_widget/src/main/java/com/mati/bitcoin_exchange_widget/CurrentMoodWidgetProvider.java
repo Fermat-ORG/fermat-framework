@@ -27,7 +27,7 @@ public class CurrentMoodWidgetProvider extends AppWidgetProvider {
 		    		    
 		    Log.i(WIDGETTAG, "updating widget[id] " + appWidgetId);
 
-		    RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widgetlayout);
+		    RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.bitcoin_widget);
 		    
 		    Intent intent = new Intent(context, CurrentMoodService.class);
 		    intent.setAction(CurrentMoodService.UPDATEMOOD);
