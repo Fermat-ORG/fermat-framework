@@ -203,7 +203,7 @@ public class ContactFragment extends AbstractFermatFragment {
         id.setText(contactid.get(0).toString());
 
         // create bitmap from resource
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_contact_picture_180_holo_light);
 
         // set circle bitmap
         ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);

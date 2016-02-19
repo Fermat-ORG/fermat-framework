@@ -251,6 +251,9 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                         try {
                             List <Contact> con=  chatManager.getContacts();
                             if (con.size() > 0) {
+                                contactname.clear();
+                                contactid.clear();
+                                contacticon.clear();
                                 for (int i=0;i<con.size();i++){
                                     contactname.add(con.get(i).getAlias());
                                     contactid.add(con.get(i).getContactId());
@@ -259,7 +262,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                 final ConnectionListAdapter adaptador =
                                         new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
                                 adaptador.refreshEvents(contactname, contacticon, contactid);
-                                adaptador.notifyDataSetChanged();
+                                //adaptador.notifyDataSetChanged();
+
                                 list.invalidateViews();
                                 list.requestLayout();
                             }else{

@@ -285,6 +285,9 @@ public class ContactsListFragment extends AbstractFermatFragment {
                     Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
                     List <Contact> con=  chatManager.getContacts();
                     if (con.size() > 0) {
+                        contactname.clear();
+                        contactid.clear();
+                        contacticon.clear();
                         for (int i=0;i<con.size();i++){
                             contactname.add(con.get(i).getAlias());
                             contactid.add(con.get(i).getContactId());
@@ -293,7 +296,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
                         final ContactListAdapter adaptador =
                                 new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
                         adaptador.refreshEvents(contactname, contacticon, contactid);
-                        adaptador.notifyDataSetChanged();
+                        //adaptador.notifyDataSetChanged();
                         list.invalidateViews();
                         list.requestLayout();
                     }else{
@@ -302,7 +305,6 @@ public class ContactsListFragment extends AbstractFermatFragment {
                 } catch (CantGetContactException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (Exception e) {
-                    //TODO: fix this
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
                 mSwipeRefreshLayout.setRefreshing(false);

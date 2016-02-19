@@ -36,7 +36,7 @@
                 android:layout_alignParentRight="true"
                 android:background="@color/black"
                 android:text="Send"
-                android:textColor="@color/background_material_light"/>
+                android:textColor="@color/text_color_gallery_fragment"/>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/messagesContainer"
