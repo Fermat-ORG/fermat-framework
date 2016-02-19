@@ -117,7 +117,7 @@ public final class AssetFactoryMiddlewareManager {
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
             if (assetFactory.getResources() != null) {
                 for (Resource resource : assetFactory.getResources()) {
-                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                     imageFile.setContent(resource.getResourceBinayData());
                     imageFile.persistToMedia();
                 }
@@ -618,7 +618,7 @@ public final class AssetFactoryMiddlewareManager {
     }
 
     public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
-        return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+        return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
     }
 
     public boolean isReadyToPublish(String asssetPublicKey) throws CantPublishAssetException {
