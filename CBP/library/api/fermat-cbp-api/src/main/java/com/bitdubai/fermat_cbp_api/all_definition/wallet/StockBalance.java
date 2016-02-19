@@ -26,7 +26,7 @@ public interface StockBalance {
      * @return a float of the booked balance
      * @throws CantGetBookedBalanceCryptoBrokerWalletException
      */
-    float getBookedBalance(Currency merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException;
+    float getBookedBalance(Currency merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException, CantStartPluginException;
 
     /**
      * The method <code>getAvailableBalance</code> returns the available balance of the Stock Balance
@@ -35,7 +35,7 @@ public interface StockBalance {
      * @return a float of the available balance
      * @throws CantGetAvailableBalanceCryptoBrokerWalletException
      */
-    float getAvailableBalance(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException;
+    float getAvailableBalance(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException, CantStartPluginException;
 
     /**
      * The method <code>getAvailableBalanceFrozen</code> returns the available balance frozen of the Stock Balance
@@ -44,7 +44,7 @@ public interface StockBalance {
      * @return a float of the available balance frozen
      * @throws CantGetAvailableBalanceCryptoBrokerWalletException
      */
-    float getAvailableBalanceFrozen(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException;
+    float getAvailableBalanceFrozen(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException, CantStartPluginException;
 
     /**
      * The method <code>getCryptoBrokerWalletBalanceBook</code> returns the crypto broker wallet balance book of the Stock Balance

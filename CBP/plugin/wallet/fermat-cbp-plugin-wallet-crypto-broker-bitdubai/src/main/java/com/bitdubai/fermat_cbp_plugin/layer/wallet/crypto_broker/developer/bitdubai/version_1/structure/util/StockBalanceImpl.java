@@ -43,7 +43,7 @@ public class StockBalanceImpl implements StockBalance {
      * @param plugin
      * @param pluginFileSystem
      */
-    public StockBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem) {
+    public StockBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem, ErrorManager errorManager) {
         this.database = database;
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;
@@ -57,24 +57,51 @@ public class StockBalanceImpl implements StockBalance {
      * {@inheritDoc}
      */
     @Override
-    public float getBookedBalance(Currency merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException {
-        return cryptoBrokerWalletDatabaseDao.getBookedBalance(merchandise);
+    public float getBookedBalance(Currency merchandise) throws CantGetBookedBalanceCryptoBrokerWalletException, CantStartPluginException {
+        try {
+            return cryptoBrokerWalletDatabaseDao.getBookedBalance(merchandise);
+        }catch (CantGetBookedBalanceCryptoBrokerWalletException e){
+        this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        throw new CantGetBookedBalanceCryptoBrokerWalletException(CantGetBookedBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
+        }
+        catch(Exception e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public float getAvailableBalance(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
+    public float getAvailableBalance(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException, CantStartPluginException {
+       try{
         return cryptoBrokerWalletDatabaseDao.geAvailableBalance(merchandise);
+       }catch(CantGetAvailableBalanceCryptoBrokerWalletException e) {
+           this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+           throw new CantGetAvailableBalanceCryptoBrokerWalletException(CantGetAvailableBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
+       }
+       catch(Exception e) {
+           this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+           throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
+       }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public float getAvailableBalanceFrozen(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException {
+    public float getAvailableBalanceFrozen(Currency merchandise) throws CantGetAvailableBalanceCryptoBrokerWalletException, CantStartPluginException {
+        try{
         return cryptoBrokerWalletDatabaseDao.getAvailableBalanceFrozen(merchandise);
+        }catch(CantGetAvailableBalanceCryptoBrokerWalletException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetAvailableBalanceCryptoBrokerWalletException(CantGetAvailableBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
+        }
+        catch(Exception e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
+        }
     }
 
     /**
