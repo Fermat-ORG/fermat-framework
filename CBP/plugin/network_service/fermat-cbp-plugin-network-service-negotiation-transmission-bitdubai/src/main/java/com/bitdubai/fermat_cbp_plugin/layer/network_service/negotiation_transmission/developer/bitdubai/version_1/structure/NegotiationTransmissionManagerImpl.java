@@ -68,7 +68,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
     }
 
     @Override
-    public void sendNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException {
+    public void sendNegotiatioToCryptoCustomer(final NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoCustomerException {
 
         try {
 
@@ -90,15 +90,30 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
             PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
             NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
             NegotiationTransmissionState transmissionState = NegotiationTransmissionState.PROCESSING_SEND;
-            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+            final NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
 
-            negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
-//            outgoingNotificationDao.createNotification(negotiationTransmission, transmissionState);
+//            negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+            outgoingNotificationDao.createNotification(negotiationTransmission, transmissionState);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
+                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
+                                negotiationTransmission.toJson()
+                        );
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         } catch (CantConstructNegotiationTransmissionException e) {
             throw new CantSendNegotiationToCryptoCustomerException(CantSendNegotiationToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
-        } catch (CantRegisterSendNegotiationTransmissionException e) {
-            throw new CantSendNegotiationToCryptoCustomerException(CantSendNegotiationToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
+//        } catch (CantRegisterSendNegotiationTransmissionException e) {
+//            throw new CantSendNegotiationToCryptoCustomerException(CantSendNegotiationToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER", "");
         } catch (Exception e) {
             throw new CantSendNegotiationToCryptoCustomerException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER, UNKNOWN FAILURE.");
         }
@@ -106,7 +121,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
     }
 
     @Override
-    public void sendNegotiatioToCryptoBroker(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoBrokerException {
+    public void sendNegotiatioToCryptoBroker(final NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendNegotiationToCryptoBrokerException {
 
         try {
 
@@ -127,15 +142,29 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
             PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
             NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_NEGOTIATION;
             NegotiationTransmissionState transmissionState = NegotiationTransmissionState.PROCESSING_SEND;
-            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+            final NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
 
-            negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
-//            outgoingNotificationDao.createNotification(negotiationTransmission, transmissionState);
+//            negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+            outgoingNotificationDao.createNotification(negotiationTransmission, transmissionState);
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
+                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
+                                negotiationTransmission.toJson()
+                        );
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         } catch (CantConstructNegotiationTransmissionException e) {
             throw new CantSendNegotiationToCryptoBrokerException(CantSendNegotiationToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");
-        } catch (CantRegisterSendNegotiationTransmissionException e) {
-            throw new CantSendNegotiationToCryptoBrokerException(CantSendNegotiationToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");
+//        } catch (CantRegisterSendNegotiationTransmissionException e) {
+//            throw new CantSendNegotiationToCryptoBrokerException(CantSendNegotiationToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND NEGOTIATION TO CRYPTO BROKER", "");
         } catch (Exception e) {
             throw new CantSendNegotiationToCryptoBrokerException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", "ERROR SEND NEGOTIATION TO CRYPTO BROKER, UNKNOWN FAILURE.");
         }
@@ -143,7 +172,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
     }
 
     @Override
-    public void sendConfirmNegotiatioToCryptoCustomer(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoCustomerException {
+    public void sendConfirmNegotiatioToCryptoCustomer(final NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantSendConfirmToCryptoCustomerException {
 
         try {
 
@@ -164,15 +193,30 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
             PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_BROKER;
             NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
             NegotiationTransmissionState transmissionState = NegotiationTransmissionState.PROCESSING_SEND;
-            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+            final NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
 
-            negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
-//            outgoingNotificationDao.createNotification(negotiationTransmission, transmissionState);
+//            negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+            outgoingNotificationDao.createNotification(negotiationTransmission, transmissionState);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
+                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
+                                negotiationTransmission.toJson()
+                        );
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         } catch (CantConstructNegotiationTransmissionException e) {
             throw new CantSendConfirmToCryptoCustomerException(CantSendConfirmToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRMATION NEGOTIATION TO CRYPTO CUSTOMER", "");
-        } catch (CantRegisterSendNegotiationTransmissionException e) {
-            throw new CantSendConfirmToCryptoCustomerException(CantSendConfirmToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRMATION NEGOTIATION TO CRYPTO CUSTOMER", "");
+//        } catch (CantRegisterSendNegotiationTransmissionException e) {
+//            throw new CantSendConfirmToCryptoCustomerException(CantSendConfirmToCryptoCustomerException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRMATION NEGOTIATION TO CRYPTO CUSTOMER", "");
         } catch (Exception e) {
             throw new CantSendConfirmToCryptoCustomerException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO CUSTOMER", "ERROR SEND NEGOTIATION TO CRYPTO CUSTOMER, UNKNOWN FAILURE.");
         }
@@ -203,23 +247,23 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
             NegotiationTransmissionState transmissionState = NegotiationTransmissionState.PROCESSING_SEND;
             final NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
 
-            negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
-//            outgoingNotificationDao.createNotification(negotiationTransmission, transmissionState);
-//
-//            executorService.submit(new Runnable() {
-//                @Override
-//                public void run() {
-//
-//                    try {
-//                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-//                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
-//                                negotiationTransmission.toJson()
-//                        );
-//                    } catch (CantSendMessageException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
+//            negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+            outgoingNotificationDao.createNotification(negotiationTransmission, transmissionState);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
+                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
+                                negotiationTransmission.toJson()
+                        );
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         } catch (CantConstructNegotiationTransmissionException e) {
             throw new CantSendConfirmToCryptoBrokerException(CantSendConfirmToCryptoBrokerException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRMATION NEGOTIATION TO CRYPTO BROKER", "");
@@ -232,22 +276,37 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
     }
 
     @Override
-    public void confirmNegotiation(NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantConfirmNegotiationException {
+    public void confirmNegotiation(final NegotiationTransaction negotiationTransaction, NegotiationTransactionType transactionType) throws CantConfirmNegotiationException {
 
         try {
 
             PlatformComponentType actorSendType = PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
             NegotiationTransmissionType transmissionType = NegotiationTransmissionType.TRANSMISSION_CONFIRM;
             NegotiationTransmissionState transmissionState = NegotiationTransmissionState.PROCESSING_SEND;
-            NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
+            final NegotiationTransmission negotiationTransmission = constructNegotiationTransmission(negotiationTransaction, actorSendType, transactionType, transmissionType);
 
-            negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
-//            outgoingNotificationDao.createNotification(negotiationTransmission, transmissionState);
+//            negotiationTransmissionNetworkServiceDatabaseDao.registerSendNegotiatioTransmission(negotiationTransmission, transmissionState);
+            outgoingNotificationDao.createNotification(negotiationTransmission, transmissionState);
+
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
+                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
+                                negotiationTransmission.toJson()
+                        );
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
         } catch (CantConstructNegotiationTransmissionException e) {
             throw new CantConfirmNegotiationException(CantConfirmNegotiationException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
-        } catch (CantRegisterSendNegotiationTransmissionException e) {
-            throw new CantConfirmNegotiationException(CantConfirmNegotiationException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
+//        } catch (CantRegisterSendNegotiationTransmissionException e) {
+//            throw new CantConfirmNegotiationException(CantConfirmNegotiationException.DEFAULT_MESSAGE, e, "ERROR SEND CONFIRM TO CRYPTO BROKER", "");
         } catch (Exception e) {
             throw new CantConfirmNegotiationException(e.getMessage(), FermatException.wrapException(e), "CAN'T CREATE REGISTER NEGOTIATION TRANSMISSION TO CRYPTO BROKER", "ERROR SEND CONFIRM TO CRYPTO BROKER, UNKNOWN FAILURE.");
         }
@@ -257,11 +316,11 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
     @Override
     public void confirmReception(UUID transmissionId) throws CantConfirmTransactionException {
         try {
-            negotiationTransmissionNetworkServiceDatabaseDao.confirmReception(transmissionId);
-//            outgoingNotificationDao.confirmReception(transmissionId);
+//            negotiationTransmissionNetworkServiceDatabaseDao.confirmReception(transmissionId);
+            outgoingNotificationDao.confirmReception(transmissionId);
             System.out.print("\n\n**** 19.2.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT, CONFIRM TRANSAMISSION ****\n");
-        } catch (CantRegisterSendNegotiationTransmissionException e) {
-            throw new CantConfirmTransactionException("CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM THE RECEPTION", "");
+//        } catch (CantRegisterSendNegotiationTransmissionException e) {
+//            throw new CantConfirmTransactionException("CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", e, "ERROR SEND CONFIRM THE RECEPTION", "");
         } catch (Exception e) {
             throw new CantConfirmTransactionException(e.getMessage(), FermatException.wrapException(e), "CAN'T CONFIRM THE RECEPTION OF NEGOTIATION TRANSMISSION", "ERROR SEND CONFIRM THE RECEPTION, UNKNOWN FAILURE.");
         }
@@ -272,7 +331,8 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
         List<Transaction<NegotiationTransmission>> pendingTransaction = new ArrayList<>();
         try {
 
-            List<NegotiationTransmission> negotiationTransmissionList = negotiationTransmissionNetworkServiceDatabaseDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
+//            List<NegotiationTransmission> negotiationTransmissionList = negotiationTransmissionNetworkServiceDatabaseDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
+            List<NegotiationTransmission> negotiationTransmissionList = outgoingNotificationDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
             if (!negotiationTransmissionList.isEmpty()) {
 
                 for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
