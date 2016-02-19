@@ -34,8 +34,8 @@ import java.util.UUID;
  */
 public final class ChatExecutorAgent extends FermatAgent {
 
-    // Represent the sleep time for the cycles of receive and send in this agent, with both cycles send and receive 15000 millis.
-    private static final long SLEEP_TIME = 7500;
+    // Represent the sleep time for the cycles of receive and send in this agent, with both cycles send and receive 1500 millis.
+    private static final long SLEEP_TIME = 2000;
 
     // Represent the receive and send cycles for this agent.
     private Thread agentThread;
