@@ -24,7 +24,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
@@ -47,8 +46,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.Negotiat
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
+import com.google.common.collect.Lists;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -129,6 +128,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         adapter.setMarketRateList(appSession.getActualExchangeRates());
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
+        adapter.setExpirationDatetimeListener(this);
 
         recyclerView.setAdapter(adapter);
 
@@ -153,7 +153,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
                         @Override
                         public void onClick(String newValue) {
-                            //actionListenerBrokerCurrencyQuantity(clause, newValue);
+                            negotiationWrapper.changeClauseValue(clause, newValue);
+                            adapter.changeDataSet(negotiationWrapper);
                         }
                     });
                     clauseTextDialog.show();
@@ -166,7 +167,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
                         @Override
                         public void onClick(String newValue) {
-                            //actionListenerBrokerCurrencyQuantity(clause, newValue);
+                            negotiationWrapper.changeClauseValue(clause, newValue);
+                            adapter.changeDataSet(negotiationWrapper);
                         }
                     });
                     clauseTextDialog.show();
@@ -179,7 +181,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
                         @Override
                         public void onClick(String newValue) {
-                            //actionListenerBrokerCurrencyQuantity(clause, newValue);
+                            negotiationWrapper.changeClauseValue(clause, newValue);
+                            adapter.changeDataSet(negotiationWrapper);
                         }
                     });
                     clauseTextDialog.show();
@@ -194,45 +197,50 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<MoneyType>() {
                         @Override
                         public void onItemSelected(MoneyType newValue) {
-                            // actionListenerCustomerPaymentMethod(clause, newValue);
+                            negotiationWrapper.changeClauseValue(clause, newValue.getCode());
+                            adapter.changeDataSet(negotiationWrapper);
                         }
                     });
                     dialogFragment.show(getFragmentManager(), "paymentMethodsDialog");
                     break;
 
                 case BROKER_BANK_ACCOUNT:
-                    List<BankAccountNumber> bankAccounts = walletManager.getAccounts(appSession.getAppPublicKey());
-                    if (bankAccounts.size() > 0) {
+                    final String currencyToSell = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+                    List<String> bankAccounts = walletManager.getAccounts(currencyToSell, appSession.getAppPublicKey());
+
+                    if (bankAccounts.isEmpty())
+                        Toast.makeText(getActivity(), "You don't have Bank Accounts. Add one in the Wallet Settings.", Toast.LENGTH_LONG).show();
+                    else {
                         dialogFragment = new SimpleListDialogFragment<>();
                         dialogFragment.configure("bankAccount", bankAccounts);
-                        dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
+                        dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                             @Override
-                            public void onItemSelected(BankAccountNumber newValue) {
-                                //putClause(clause, newValue.getAccount(), getStatusClauseChange(clause.getStatus().getCode()));
-                                //adapter.changeDataSet(negotiationWrapper);
+                            public void onItemSelected(String newValue) {
+                                negotiationWrapper.changeClauseValue(clause, newValue);
+                                adapter.changeDataSet(negotiationWrapper);
                             }
                         });
                         dialogFragment.show(getFragmentManager(), "bankAccountDialog");
-                    } else
-                        Toast.makeText(getActivity(), "The Bank Account List is Empty. Add Your Bank Account in the Wallet Settings.", Toast.LENGTH_LONG).show();
+                    }
                     break;
 
                 case BROKER_PLACE_TO_DELIVER:
-                    List<NegotiationLocations> locations = new ArrayList<>();
-                    locations.addAll(walletManager.getAllLocations(NegotiationType.SALE));
-                    if (locations.size() > 0) {
+                    List<NegotiationLocations> locations = Lists.newArrayList(walletManager.getAllLocations(NegotiationType.SALE));
+
+                    if (locations.isEmpty())
+                        Toast.makeText(getActivity(), "You don't have Locations. Add one in the Wallet Settings.", Toast.LENGTH_LONG).show();
+                    else {
                         dialogFragment = new SimpleListDialogFragment<>();
                         dialogFragment.configure("placeToDelivery", locations);
                         dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                             @Override
                             public void onItemSelected(String newValue) {
-                                //putClause(clause, newValue, getStatusClauseChange(clause.getStatus().getCode()));
-                                //adapter.changeDataSet(negotiationWrapper);
+                                negotiationWrapper.changeClauseValue(clause, newValue);
+                                adapter.changeDataSet(negotiationWrapper);
                             }
                         });
                         dialogFragment.show(getFragmentManager(), "placeToDeliveryDialog");
-                    } else
-                        Toast.makeText(getActivity(), "The Locations List is Empty. Add Your Locations in the Settings Wallet.", Toast.LENGTH_LONG).show();
+                    }
                     break;
 
                 case CUSTOMER_DATE_TIME_TO_DELIVER:
@@ -245,7 +253,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
                         @Override
                         public void getDate(long newValue) {
-                            // actionListenerDatetime(clause, String.valueOf(newValue));
+                            negotiationWrapper.changeClauseValue(clause, Long.toString(newValue));
+                            adapter.changeDataSet(negotiationWrapper);
                         }
                     });
                     break;
@@ -260,7 +269,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
                         @Override
                         public void getDate(long newValue) {
-                            // actionListenerDatetime(clause, String.valueOf(newValue));
+                            negotiationWrapper.changeClauseValue(clause, Long.toString(newValue));
+                            adapter.changeDataSet(negotiationWrapper);
                         }
                     });
                     break;
@@ -273,9 +283,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     }
 
     @Override
-    public void onValueClicked(Button triggerView) {
-        CustomerBrokerNegotiationInformation negotiationInfo = negotiationWrapper.getNegotiationInfo();
-        ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), negotiationInfo.getNegotiationExpirationDate());
+    public void onExpirationDatetimeValueClicked(Button triggerView) {
+        ClauseDateTimeDialog clauseDateTimeDialog = new ClauseDateTimeDialog(getActivity(), negotiationWrapper.getExpirationDate());
         if (triggerView.getId() == R.id.cbw_date_value)
             clauseDateTimeDialog.showDateDialog();
         else
@@ -284,14 +293,22 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         clauseDateTimeDialog.setAcceptBtnListener(new ClauseDateTimeDialog.OnClickAcceptListener() {
             @Override
             public void getDate(long newValue) {
-                // actionListenerDatetime(clause, String.valueOf(newValue));
+                negotiationWrapper.setExpirationTime(newValue);
+                adapter.changeDataSet(negotiationWrapper);
             }
         });
     }
 
     @Override
-    public void onConfirmButtonClicked(ClauseInformation clause) {
+    public void onExpirationDatetimeConfirmButtonClicked() {
+        negotiationWrapper.setExpirationDatetimeConfirmButtonClicked();
+        adapter.changeDataSet(negotiationWrapper);
+    }
 
+    @Override
+    public void onConfirmClauseButtonClicked(ClauseInformation clause) {
+        negotiationWrapper.setClauseAsConfirmed(clause);
+        adapter.changeDataSet(negotiationWrapper);
     }
 
     @Override
