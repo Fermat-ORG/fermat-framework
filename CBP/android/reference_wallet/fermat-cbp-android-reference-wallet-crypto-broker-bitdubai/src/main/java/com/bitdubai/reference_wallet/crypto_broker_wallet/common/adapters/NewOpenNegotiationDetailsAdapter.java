@@ -183,6 +183,9 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     public void onBindViewHolder(FermatViewHolder holder, int position) {
         int holderType = holder.getHolderType();
 
+        if (holderType == TYPE_FOOTER)
+            return;
+
         switch (holderType) {
             case TYPE_HEADER:
                 final NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
