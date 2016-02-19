@@ -43,6 +43,10 @@
     <string name="dap_user_wallet_validate_no_redeem_points">No redeem points selected</string>
     <string name="dap_user_wallet_validate_not_enought_assets">There is not enought assets to redeem</string>
     <string name="dap_user_wallet_identity">Identity must be created</string>
+    <string name="dap_user_wallet_validate_sell_quantity_zero">Must be enter number of assets to sell</string>
+    <string name="dap_user_wallet_validate_sell_quantity">Value can\'t be greater than assets remaining</string>
+    <string name="dap_user_wallet_validate_sell_total_zero">Must be enter a total value</string>
+    <string name="dap_user_wallet_validate_sell_user">Must be select an user</string>
     <!-- -->
 
     <!-- confirm messages -->

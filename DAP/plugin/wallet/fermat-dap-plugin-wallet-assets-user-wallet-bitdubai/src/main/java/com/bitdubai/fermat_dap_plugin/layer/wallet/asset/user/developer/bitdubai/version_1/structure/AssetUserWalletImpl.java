@@ -60,6 +60,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     {
         createdWallets = new ArrayList<>();
     }
+
     private AssetUserWalletDao assetUserWalletDao;
     private final ErrorManager errorManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
@@ -182,6 +183,27 @@ public class AssetUserWalletImpl implements AssetUserWallet {
             allCreditAvailable.remove(transaction);
         }
         return allCreditAvailable;
+    }
+
+    @Override
+    public List<AssetUserWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException {
+        List<AssetUserWalletTransaction> creditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
+        List<AssetUserWalletTransaction> creditBook = getTransactions(BalanceType.BOOK, TransactionType.CREDIT, assetPublicKey);
+        List<AssetUserWalletTransaction> debitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
+        List<AssetUserWalletTransaction> debitBook = getTransactions(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
+        List<AssetUserWalletTransaction> toReturn = new ArrayList<>();
+        toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
+        toReturn.addAll(getTransactionsForDisplay(debitAvailable, debitBook));
+        return toReturn;
+    }
+
+    private List<AssetUserWalletTransaction> getTransactionsForDisplay(List<AssetUserWalletTransaction> available, List<AssetUserWalletTransaction> book) {
+        for (AssetUserWalletTransaction transaction : book) {
+            if (!available.contains(transaction)) {
+                available.add(transaction);
+            }
+        }
+        return available;
     }
 
     @Override

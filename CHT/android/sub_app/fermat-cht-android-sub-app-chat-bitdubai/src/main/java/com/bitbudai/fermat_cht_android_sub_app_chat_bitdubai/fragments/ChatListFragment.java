@@ -110,6 +110,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    ChatListAdapter adapter;
 
     ListView list;
     // Defines a tag for identifying log entries
@@ -259,7 +260,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updatevalues();
-        final ChatListAdapter adapter=new ChatListAdapter(getActivity(), infochat, imgid);
+        adapter=new ChatListAdapter(getActivity(), infochat, imgid);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -298,7 +299,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                             //System.out.println("Threar UI corriendo");
                             //TODO: fix this
                             if (!chatManager.getContacts().isEmpty()) {
-                               // specialfilldatabase();
+                                // specialfilldatabase();
                                 updatevalues();
                                 adapter.refreshEvents(infochat, imgid);
                             } else {
@@ -316,6 +317,17 @@ public class ChatListFragment extends AbstractFermatFragment{
     }
 
     //FINALLY
+
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        super.onUpdateViewOnUIThread(code);
+   //     Toast.makeText(getActivity(), "Broadcast chatlist", Toast.LENGTH_SHORT).show();
+        if(code.equals("13")){
+            updatevalues();
+            adapter.refreshEvents(infochat, imgid);
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
