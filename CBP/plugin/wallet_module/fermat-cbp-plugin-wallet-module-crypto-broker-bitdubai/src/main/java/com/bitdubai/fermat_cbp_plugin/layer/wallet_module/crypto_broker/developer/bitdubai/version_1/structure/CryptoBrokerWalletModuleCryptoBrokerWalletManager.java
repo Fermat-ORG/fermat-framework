@@ -492,17 +492,16 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
         CurrencyExchangeRateProviderManager providerReference = currencyExchangeProviderFilterManager.getProviderReference(indexInfo.getProviderId());
 
-        Calendar calendar = Calendar.getInstance();
-        long endTimestamp = calendar.getTimeInMillis();
+        Calendar endCalendar = Calendar.getInstance();
 
-        calendar.add(Calendar.DATE, -numberOfDays);
-        long startTimestamp = calendar.getTimeInMillis();
+        Calendar startCalendar = Calendar.getInstance();
+        startCalendar.add(Calendar.DATE, -numberOfDays);
 
 
         ExchangeRate exchangeRateData = indexInfo.getExchangeRateData();
         CurrencyPairImpl currencyPair = new CurrencyPairImpl(exchangeRateData.getFromCurrency(), exchangeRateData.getToCurrency());
 
-        return providerReference.getDailyExchangeRatesForPeriod(currencyPair, startTimestamp, endTimestamp);
+        return providerReference.getDailyExchangeRatesForPeriod(currencyPair, startCalendar, endCalendar);
     }
 
     @Override
@@ -1223,11 +1222,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
      *
      * @param currencyFrom
      * @param currencyTo
-     * @param timestamp
+     * @param calendar
      * @return an exchangeRate object
      */
     @Override
-    public ExchangeRate getExchangeRateFromDate(final Currency currencyFrom, final Currency currencyTo, long timestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException {
+    public ExchangeRate getExchangeRateFromDate(final Currency currencyFrom, final Currency currencyTo, Calendar calendar, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException {
         CurrencyPair currencyPair = new CurrencyPair() {
             @Override
             public Currency getFrom() {
@@ -1239,7 +1238,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                 return currencyTo;
             }
         };
-        return currencyExchangeProviderFilterManager.getProviderReference(providerId).getExchangeRateFromDate(currencyPair, timestamp);
+        return currencyExchangeProviderFilterManager.getProviderReference(providerId).getExchangeRateFromDate(currencyPair, calendar);
     }
 
     /**
@@ -1247,13 +1246,13 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
      *
      * @param currencyFrom
      * @param currencyTo
-     * @param startTimestamp
-     * @param endTimestamp
+     * @param startCalendar
+     * @param endCalendar
      * @param providerId
      * @return a list of exchangeRate objects
      */
     @Override
-    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(final Currency currencyFrom, final Currency currencyTo, long startTimestamp, long endTimestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException {
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(final Currency currencyFrom, final Currency currencyTo, Calendar startCalendar, Calendar endCalendar, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException {
         CurrencyPair currencyPair = new CurrencyPair() {
             @Override
             public Currency getFrom() {
@@ -1265,7 +1264,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                 return currencyTo;
             }
         };
-        return currencyExchangeProviderFilterManager.getProviderReference(providerId).getDailyExchangeRatesForPeriod(currencyPair, startTimestamp, endTimestamp);
+        return currencyExchangeProviderFilterManager.getProviderReference(providerId).getDailyExchangeRatesForPeriod(currencyPair, startCalendar, endCalendar);
     }
 
 

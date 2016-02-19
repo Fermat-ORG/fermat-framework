@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 
@@ -13,15 +14,19 @@ public class AssetSellContentMessage implements DAPContentMessage {
     private UUID sellingId;
     private byte[] serializedTransaction;
     private AssetSellStatus sellStatus;
-
+    private DigitalAssetMetadata assetMetadata;
+    private UUID negotiationId;
     //CONSTRUCTORS
+
     public AssetSellContentMessage() {
     }
 
-    public AssetSellContentMessage(UUID sellingId, byte[] serializedTransaction, AssetSellStatus sellStatus) {
+    public AssetSellContentMessage(UUID sellingId, byte[] serializedTransaction, AssetSellStatus sellStatus, DigitalAssetMetadata assetMetadata, UUID negotiationId) {
         this.sellingId = sellingId;
         this.serializedTransaction = serializedTransaction;
         this.sellStatus = sellStatus;
+        this.assetMetadata = assetMetadata;
+        this.negotiationId = negotiationId;
     }
 
     //PUBLIC METHODS
@@ -44,24 +49,21 @@ public class AssetSellContentMessage implements DAPContentMessage {
         return serializedTransaction;
     }
 
-    public void setSerializedTransaction(byte[] serializedTransaction) {
-        this.serializedTransaction = serializedTransaction;
-    }
-
     public AssetSellStatus getSellStatus() {
         return sellStatus;
-    }
-
-    public void setSellStatus(AssetSellStatus sellStatus) {
-        this.sellStatus = sellStatus;
     }
 
     public UUID getSellingId() {
         return sellingId;
     }
 
-    public void setSellingId(UUID sellingId) {
-        this.sellingId = sellingId;
+    public DigitalAssetMetadata getAssetMetadata() {
+        return assetMetadata;
     }
+
+    public UUID getNegotiationId() {
+        return negotiationId;
+    }
+
     //INNER CLASSES
 }

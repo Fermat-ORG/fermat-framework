@@ -313,9 +313,9 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                                 ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                                 communicationNetworkServiceConnectionManager.getOutgoingMessageDao().update(message);
 
-                            /*
-                             * Notify a new message send
-                             */
+                                /*
+                                 * Notify a new message send
+                                 */
                                 communicationNetworkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
 
 
