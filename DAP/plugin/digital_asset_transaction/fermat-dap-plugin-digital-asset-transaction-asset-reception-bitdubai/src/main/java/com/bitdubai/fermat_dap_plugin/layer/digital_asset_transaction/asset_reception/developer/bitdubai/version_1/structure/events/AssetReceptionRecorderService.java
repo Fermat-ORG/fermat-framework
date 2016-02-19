@@ -81,13 +81,13 @@ public class AssetReceptionRecorderService implements DealsWithEvents, AssetTran
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
         fermatEventListener.setEventHandler(fermatEventHandler);
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
 
-        fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
+        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
         fermatEventListener.setEventHandler(fermatEventHandler);
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);

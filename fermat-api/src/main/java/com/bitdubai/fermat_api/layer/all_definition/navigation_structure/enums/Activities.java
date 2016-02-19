@@ -727,10 +727,12 @@ public enum Activities implements FermatEnum {
                 return DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY;
             case "DAUCCLOP":
                 return DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE;
+
             case "DWAUATA":
                 return DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY;
             case "DWAUATSUA":
                 return DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY;
+
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

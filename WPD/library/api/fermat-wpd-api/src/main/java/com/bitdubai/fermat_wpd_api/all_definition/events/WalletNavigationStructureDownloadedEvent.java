@@ -1,25 +1,21 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
+package com.bitdubai.fermat_wpd_api.all_definition.events;
+
+import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 
 import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2015.08.03..
  */
-
-public class WalletNavigationStructureDownloadedEvent extends AbstractFermatEvent {
+public class WalletNavigationStructureDownloadedEvent extends AbstractWPDEvent {
 
     private String xmlText;
-
     private UUID skinId;
-
     private String linkToRepo;
-
     private String filename;
-
     private String walletPublicKey;
 
-
-    public WalletNavigationStructureDownloadedEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType){
+    public WalletNavigationStructureDownloadedEvent(EventType eventType){
         super(eventType);
     }
 
@@ -59,6 +55,7 @@ public class WalletNavigationStructureDownloadedEvent extends AbstractFermatEven
     public String getWalletPublicKey() {
         return walletPublicKey;
     }
+
     public void setWalletPublicKey(String walletPublicKey){
         this.walletPublicKey=walletPublicKey;
     }

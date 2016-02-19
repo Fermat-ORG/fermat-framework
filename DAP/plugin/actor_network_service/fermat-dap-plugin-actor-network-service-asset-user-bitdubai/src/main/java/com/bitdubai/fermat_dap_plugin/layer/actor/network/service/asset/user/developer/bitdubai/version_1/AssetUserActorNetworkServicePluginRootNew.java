@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
@@ -420,7 +421,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
     }
 
     private void launchNotificationActorAsset() {
-        FermatEvent fermatEvent = this.getEventManager().getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+        FermatEvent fermatEvent = this.getEventManager().getNewEvent(EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
         ActorAssetNetworkServicePendingNotificationEvent actorAssetRequestConnectionEvent = (ActorAssetNetworkServicePendingNotificationEvent) fermatEvent;
         this.getEventManager().raiseEvent(actorAssetRequestConnectionEvent);
     }
@@ -1885,6 +1886,19 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
      */
     @Override
     public List<DAPMessage> getUnreadDAPMessagesByType(DAPMessageType type) throws CantGetDAPMessagesException {
+        return null;
+    }
+
+    /**
+     * This method returns the list of new unread DAPMessages for a specific subject, these messages can be
+     * from the same or different types.
+     *
+     * @param subject
+     * @return
+     * @throws CantGetDAPMessagesException
+     */
+    @Override
+    public List<DAPMessage> getUnreadDAPMessageBySubject(DAPMessageSubject subject) throws CantGetDAPMessagesException {
         return null;
     }
 
