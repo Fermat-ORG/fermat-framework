@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -25,7 +26,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAcc
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.RelationshipNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraDataManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
@@ -44,7 +46,9 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_pa
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
@@ -59,7 +63,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNewManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractHistoryException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
@@ -80,6 +84,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exception
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCryptoCustomerWalletProviderSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCustomerBrokerNegotiationInformationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.IdentityAssociatedNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
@@ -94,6 +99,8 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
@@ -127,6 +134,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private final CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager;
     private final SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager;
 
+    private final ErrorManager           errorManager          ;
+    private final PluginVersionReference pluginVersionReference;
+
     /*
     *Constructor with Parameters
     */
@@ -141,7 +151,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                                                  CustomerOfflinePaymentManager customerOfflinePaymentManager,
                                                                  CustomerAckOnlineMerchandiseManager customerAckOnlineMerchandiseManager,
                                                                  CustomerAckOfflineMerchandiseManager customerAckOfflineMerchandiseManager,
-                                                                 SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager) {
+                                                                 SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager,
+
+                                                                 final ErrorManager           errorManager          ,
+                                                                 final PluginVersionReference pluginVersionReference) {
         this.walletManagerManager = walletManagerManager;
         this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
         this.cryptoCustomerIdentityManager = cryptoCustomerIdentityManager;
@@ -155,11 +168,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         this.customerAckOfflineMerchandiseManager = customerAckOfflineMerchandiseManager;
 
         this.settingsManager = settingsManager;
-    }
 
-    private List<ContractBasicInformation> openContracts;
-    private List<CustomerBrokerNegotiationInformation> openNegotiations;
-    private List<BrokerIdentityBusinessInfo> connectedBrokers;
+        this.errorManager           = errorManager          ;
+        this.pluginVersionReference = pluginVersionReference;
+    }
 
     @Override
     public Collection<ContractBasicInformation> getContractsHistory(ContractStatus status, int max, int offset) throws CantGetContractHistoryException, CantGetListCustomerBrokerContractPurchaseException {
@@ -229,8 +241,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             }
 
             //TODO:Eliminar solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.COMPLETED, null);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.COMPLETED, null);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, null);
             filteredList.add(contract);
             return contractsHistory;
@@ -403,39 +413,68 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetListCustomerIdentityWalletRelationshipException {
-        List<CryptoCustomerIdentity> identities = cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
-        CustomerIdentityWalletRelationship relationship = actorExtraDataManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
+    public boolean haveAssociatedIdentity(final String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetCustomerIdentityWalletRelationshipException {
 
-        if (relationship != null && identities != null) {
-            for (CryptoCustomerIdentity identity : identities) {
-                String identityPublicKey = identity.getPublicKey();
-                String associatedCryptoCustomerPublicKey = relationship.getCryptoCustomer();
+        CustomerIdentityWalletRelationship relationship;
 
-                if (identityPublicKey.equals(associatedCryptoCustomerPublicKey))
-                    return true;
-            }
+        try {
+
+            relationship = actorExtraDataManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
+
+        } catch (RelationshipNotFoundException relationshipNotFoundException) {
+
+            return false;
         }
 
-        return false;
+        try {
+
+            return cryptoCustomerIdentityManager.getCryptoCustomerIdentity(relationship.getCryptoCustomer()) != null;
+
+        } catch (CantGetCryptoCustomerIdentityException | IdentityNotFoundException e) {
+
+            throw new CantGetCustomerIdentityWalletRelationshipException(e, "", "The identity has not been found there's a serious error here.");
+        }
+
     }
 
     @Override
-    public CryptoCustomerIdentity getAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetListCustomerIdentityWalletRelationshipException, CantGetAssociatedIdentity {
-        List<CryptoCustomerIdentity> identities = cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
-        CustomerIdentityWalletRelationship relationship = actorExtraDataManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
+    public CryptoCustomerIdentity getAssociatedIdentity(final String walletPublicKey) throws IdentityAssociatedNotFoundException,
+                                                                                             CantGetAssociatedIdentityException {
 
-        if (relationship != null && identities != null) {
-            for (CryptoCustomerIdentity identity : identities) {
-                String identityPublicKey = identity.getPublicKey();
-                String associatedCryptoCustomerPublicKey = relationship.getCryptoCustomer();
+        try {
 
-                if (identityPublicKey.equals(associatedCryptoCustomerPublicKey))
-                    return identity;
+            CustomerIdentityWalletRelationship relationship = actorExtraDataManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
+
+            if (relationship != null) {
+
+                return cryptoCustomerIdentityManager.getCryptoCustomerIdentity(
+                        relationship.getCryptoCustomer()
+                );
+
+            } else {
+                throw new IdentityAssociatedNotFoundException("walletPublicKey: " + walletPublicKey, "We cannot find a customer identity associated to the referenced wallet.");
             }
-        }
 
-        throw new CantGetAssociatedIdentity();
+        } catch (IdentityAssociatedNotFoundException identityAssociatedNotFoundException) {
+
+            throw identityAssociatedNotFoundException;
+        } catch (RelationshipNotFoundException relationshipNotFoundException) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, relationshipNotFoundException);
+            throw new IdentityAssociatedNotFoundException(relationshipNotFoundException, "walletPublicKey: "+walletPublicKey, "There's no relationship for this wallet.");
+        } catch (CantGetCryptoCustomerIdentityException cantGetCryptoCustomerIdentityException) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCryptoCustomerIdentityException);
+            throw new CantGetAssociatedIdentityException(cantGetCryptoCustomerIdentityException, "walletPublicKey: "+walletPublicKey, "There was a problem trying to get a crypto customer identity.");
+        } catch (CantGetCustomerIdentityWalletRelationshipException cantGetCustomerIdentityWalletRelationshipException) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCustomerIdentityWalletRelationshipException);
+            throw new CantGetAssociatedIdentityException(cantGetCustomerIdentityWalletRelationshipException, "walletPublicKey: "+walletPublicKey, "There was a problem listing the relationship between the wallet and the crypto customers.");
+        } catch (Exception exception) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new CantGetAssociatedIdentityException(exception, "walletPublicKey: "+walletPublicKey, "Unhandled Error.");
+        }
     }
 
     /**
@@ -481,32 +520,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     public Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises() throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException {
 
         Collection<ActorExtraData> actorExtraDataList = actorExtraDataManager.getAllActorExtraDataConnected();
+
         Collection<BrokerIdentityBusinessInfo> brokersBusinessInfo = new ArrayList<>();
 
-        if (actorExtraDataList != null) {
-            for (ActorExtraData actorExtraData : actorExtraDataList) {
-
-                if (actorExtraData.getQuotes() != null) {
-                    Map<Currency, BrokerIdentityBusinessInfo> map = new HashMap<>();
-
-                    for (QuotesExtraData quotesExtraData : actorExtraData.getQuotes()) {
-                        final ActorIdentity brokerIdentity = actorExtraData.getBrokerIdentity();
-                        final Currency merchandise = quotesExtraData.getMerchandise();
-
-                        BrokerIdentityBusinessInfo businessInfo = map.get(merchandise);
-                        if (businessInfo == null) {
-                            businessInfo = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(brokerIdentity, merchandise);
-                            brokersBusinessInfo.add(businessInfo);
-
-                            map.put(merchandise, businessInfo);
-                        }
-
-                        List<MerchandiseExchangeRate> quotes = businessInfo.getQuotes();
-                        quotes.add(new CryptoCustomerWalletModuleMerchandiseExchangeRate(quotesExtraData));
-                    }
-                }
-
-            }
+        for (ActorExtraData actorExtraData : actorExtraDataList) {
+            brokersBusinessInfo.add(
+                    new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(
+                            actorExtraData
+                    )
+            );
         }
 
         return brokersBusinessInfo;

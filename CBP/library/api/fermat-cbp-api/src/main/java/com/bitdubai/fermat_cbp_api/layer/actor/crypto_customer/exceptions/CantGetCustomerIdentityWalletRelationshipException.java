@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by Angel on 19-10-2015.
  */
 
-public class CantGetListCustomerIdentityWalletRelationshipException extends FermatException {
+public class CantGetCustomerIdentityWalletRelationshipException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T GET LIST BROKER IDENTITY WALLET RELATIONSHIP";
 
@@ -19,11 +19,11 @@ public class CantGetListCustomerIdentityWalletRelationshipException extends Ferm
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
 
-    public CantGetListCustomerIdentityWalletRelationshipException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetCustomerIdentityWalletRelationshipException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
-    public CantGetListCustomerIdentityWalletRelationshipException(Exception cause, String context, String possibleReason) {
+    public CantGetCustomerIdentityWalletRelationshipException(Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }

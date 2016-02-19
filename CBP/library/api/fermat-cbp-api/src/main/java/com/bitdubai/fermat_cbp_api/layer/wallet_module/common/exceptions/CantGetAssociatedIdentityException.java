@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by nelson on 22/10/15.
  */
-public class CantGetAssociatedIdentity extends FermatException {
+public class CantGetAssociatedIdentityException extends FermatException {
     public static final String DEFAULT_MESSAGE = "Can't get the Associated Crypto Broker Identity";
 
     /**
@@ -16,8 +16,12 @@ public class CantGetAssociatedIdentity extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetAssociatedIdentity(String message, Exception cause, String context, String possibleReason) {
+    public CantGetAssociatedIdentityException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
+    }
+
+    public CantGetAssociatedIdentityException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     /**
@@ -26,7 +30,7 @@ public class CantGetAssociatedIdentity extends FermatException {
      * @param message the short description of the why this exception happened, there is a public static constant called DEFAULT_MESSAGE that can be used here
      * @param cause   the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
      */
-    public CantGetAssociatedIdentity(String message, Exception cause) {
+    public CantGetAssociatedIdentityException(String message, Exception cause) {
         super(message, cause, "", "");
     }
 
@@ -35,11 +39,11 @@ public class CantGetAssociatedIdentity extends FermatException {
      *
      * @param cause the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
      */
-    public CantGetAssociatedIdentity(Exception cause) {
+    public CantGetAssociatedIdentityException(Exception cause) {
         super(DEFAULT_MESSAGE, cause, "", "");
     }
 
-    public CantGetAssociatedIdentity() {
+    public CantGetAssociatedIdentityException() {
         super(DEFAULT_MESSAGE, new Exception(), "", "");
     }
 }

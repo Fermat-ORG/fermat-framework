@@ -9,10 +9,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListPlatformsException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantRequestBrokerExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.RelationshipNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraDataManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
@@ -48,10 +49,10 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         this.pluginVersionReference = pluginVersionReference;
     }
 
-    /*==============================================================================================
-    *
-    *   Customer Identity Wallet Relationship
-    *
+   /*==============================================================================================*
+    *                                                                                              *
+    *   Customer Identity Wallet Relationship                                                      *
+    *                                                                                              *
     *==============================================================================================*/
 
     @Override
@@ -74,63 +75,64 @@ public final class CustomerActorManager implements ActorExtraDataManager {
     }
 
     @Override
-    public Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetListCustomerIdentityWalletRelationshipException {
+    public Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetCustomerIdentityWalletRelationshipException {
 
         try {
 
             return this.dao.getAllCustomerIdentityWalletRelationship();
 
-        } catch (CantGetListCustomerIdentityWalletRelationshipException e) {
+        } catch (CantGetCustomerIdentityWalletRelationshipException e) {
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e) {
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetListCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "", "Unhandled error.");
+            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "", "Unhandled error.");
         }
     }
 
     @Override
-    public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+    public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetCustomerIdentityWalletRelationshipException {
 
         try {
 
             return this.dao.getCustomerIdentityWalletRelationshipByIdentity(publicKey);
 
-        } catch (CantGetListCustomerIdentityWalletRelationshipException e) {
+        } catch (CantGetCustomerIdentityWalletRelationshipException e) {
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e) {
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetListCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "publicKey: "+publicKey, "Unhandled error.");
+            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "publicKey: "+publicKey, "Unhandled error.");
         }
     }
 
     @Override
-    public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+    public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(final String walletPublicKey) throws CantGetCustomerIdentityWalletRelationshipException,
+                                                                                                                                 RelationshipNotFoundException                      {
 
         try {
 
             return this.dao.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
 
-        } catch (CantGetListCustomerIdentityWalletRelationshipException e) {
+        } catch (CantGetCustomerIdentityWalletRelationshipException | RelationshipNotFoundException e) {
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (Exception e) {
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetListCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "walletPublicKey: "+walletPublicKey, "Unhandled error.");
+            throw new CantGetCustomerIdentityWalletRelationshipException(FermatException.wrapException(e), "walletPublicKey: "+walletPublicKey, "Unhandled error.");
         }
     }
 
-    /*==============================================================================================
-    *
-    *   Actor Extra Data
-    *
+   /*==============================================================================================*
+    *                                                                                              *
+    *   Actor Extra Data                                                                           *
+    *                                                                                              *
     *==============================================================================================*/
 
     @Override
