@@ -43,14 +43,14 @@ public class FermatAppConnectionManager {
         switch (publicKey){
             //CCP WALLET
             case "reference_wallet":
-                fermatAppConnection = new BitcoinWalletFermatAppConnection(activity,fermatSession);
+                fermatAppConnection = new BitcoinWalletFermatAppConnection(activity);
                 break;
             //CCP Sub Apps
             case "public_key_ccp_intra_user_identity":
                 fermatAppConnection = new CryptoWalletUserFermatAppConnection(activity);
                 break;
             case "public_key_intra_user_commmunity":
-                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity,fermatSession);
+                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
                 break;
 
             //DAP WALLETS

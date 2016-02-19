@@ -66,7 +66,7 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
     }
 
 
-    public NotificationPainter getNotificationPainter(String code){
+    public NotificationPainter getNotificationPainter(String code, FermatSession fermatSession){
         return null;
     }
 }

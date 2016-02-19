@@ -37,8 +37,8 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
     private CryptoWallet moduleManager;
     private ReferenceWalletSession referenceWalletSession;
 
-    public BitcoinWalletFermatAppConnection(Activity activity,FermatSession fullyLoadedSession) {
-        super(activity); this.referenceWalletSession = (ReferenceWalletSession)fullyLoadedSession;
+    public BitcoinWalletFermatAppConnection(Activity activity) {
+        super(activity);
     }
 
     @Override
@@ -78,35 +78,37 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code){
+    public NotificationPainter getNotificationPainter(String code,FermatSession fullyLoadedSession){
 
         NotificationPainter notification = null;
+
         try
         {
+            this.referenceWalletSession = (ReferenceWalletSession)fullyLoadedSession;
             moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
             CryptoWalletTransaction transaction;
             PaymentRequest  paymentRequest;
 
-            String[] params = code.split("|");
+            String[] params = code.split("_");
             String notificationType = params[0];
             String transactionId = params[1];
             //find last transaction
             switch (notificationType){
-                case "TRANSACTION_ARRIVE":
+                case "TRANSACTIONARRIVE":
                      transaction= moduleManager.getTransaction(UUID.fromString(transactionId), referenceWalletSession.getAppPublicKey(),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                    notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) ,"","");
+                    notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","");
 
 
                     break;
-                case "PAYMENT_REQUEST":
+                case "PAYMENTREQUEST":
                     paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                    notification = new BitcoinWalletNotificationPainter("","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()),"","");
+                    notification = new BitcoinWalletNotificationPainter("","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","");
 
                     break;
 
-                case "PAYMENT_DENIED":
+                case "PAYMENTDENIED":
                     paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                    notification = new BitcoinWalletNotificationPainter("","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + "was deny.","","");
+                    notification = new BitcoinWalletNotificationPainter("","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","");
 
                     break;
 
@@ -120,7 +122,7 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
         }
         catch(Exception e)
         {
-
+            e.printStackTrace();
         }
 
         return notification;

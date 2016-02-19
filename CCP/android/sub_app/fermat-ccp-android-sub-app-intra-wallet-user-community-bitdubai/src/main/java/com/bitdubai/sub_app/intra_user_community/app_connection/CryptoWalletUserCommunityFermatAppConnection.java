@@ -30,9 +30,8 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
    private IntraUserSubAppSession intraUserSubAppSession;
     private IntraUserModuleManager moduleManager;
 
-    public CryptoWalletUserCommunityFermatAppConnection(Activity activity,FermatSession fullyLoadedSession) {
+    public CryptoWalletUserCommunityFermatAppConnection(Activity activity) {
         super(activity);
-        this.intraUserSubAppSession = (IntraUserSubAppSession)fullyLoadedSession;
 
     }
 
@@ -73,18 +72,21 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code){
+    public NotificationPainter getNotificationPainter(String code,FermatSession fullyLoadedSession){
+
 
         NotificationPainter notification = null;
         try
         {
+            this.intraUserSubAppSession = (IntraUserSubAppSession)fullyLoadedSession;
+
             moduleManager = intraUserSubAppSession.getModuleManager();
-            String[] params = code.split("|");
+            String[] params = code.split("_");
             String notificationType = params[0];
             String senderActorPublicKey = params[1];
 
             switch (notificationType){
-                case "CONNECTION_REQUEST":
+                case "CONNECTIONREQUEST":
                     try
                     {
                         //find last notification by sender actor public key
@@ -94,14 +96,14 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
                     }
                     catch(Exception e)
                     {
-
+                        e.printStackTrace();
                     }
 
             }
         }
         catch(Exception e)
         {
-
+            e.printStackTrace();
         }
 
 

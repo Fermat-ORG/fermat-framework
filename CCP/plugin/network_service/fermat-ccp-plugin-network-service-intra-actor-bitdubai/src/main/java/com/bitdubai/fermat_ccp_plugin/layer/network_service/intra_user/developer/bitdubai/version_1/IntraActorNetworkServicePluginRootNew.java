@@ -207,7 +207,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
                     //NOTIFICATION LAUNCH
                     lauchNotification();
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CCP_COMMUNITY.getCode(),"CONNECTION_REQUEST|" + actorNetworkServiceRecord.getActorSenderPublicKey());
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CCP_COMMUNITY.getCode(),"CONNECTIONREQUEST_" + actorNetworkServiceRecord.getActorSenderPublicKey());
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
                     break;
@@ -1188,8 +1188,8 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                        (actor.getName().toLowerCase()),
-                        (actor.getName().toLowerCase() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
+                        (actor.getName()),
+                        (actor.getName() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);
@@ -1242,8 +1242,8 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                        (actor.getName().toLowerCase()),
-                        (actor.getName().toLowerCase() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
+                        (actor.getName()),
+                        (actor.getName() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);

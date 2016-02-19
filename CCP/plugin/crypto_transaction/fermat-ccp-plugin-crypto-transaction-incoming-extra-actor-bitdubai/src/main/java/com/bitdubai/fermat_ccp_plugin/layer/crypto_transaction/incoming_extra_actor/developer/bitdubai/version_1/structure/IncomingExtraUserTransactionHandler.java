@@ -77,20 +77,8 @@ public class IncomingExtraUserTransactionHandler {
     }
 
     private void launchIncomingMoneyNotificationEvent(CryptoAddressBookRecord cryptoAddressBookRecord,Transaction<CryptoTransaction> transaction) {
-      /*  FermatEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_MONEY_NOTIFICATION);
-        IncomingMoneyNotificationEvent incomingMoneyNotificationEvent =  (IncomingMoneyNotificationEvent) platformEvent;
-        incomingMoneyNotificationEvent.setSource(EventSource.INCOMING_EXTRA_USER);
-        incomingMoneyNotificationEvent.setActorId(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
-//        incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorPublicKey()));
-        //TODO CAMBIADO PARA EVIAR EXCEPTION YA QUE LA getDeliveredToActorPublicKey NO ES UN ENUM TYPE ACTOR
-        incomingMoneyNotificationEvent.setActorType(Actors.getByCode(cryptoAddressBookRecord.getDeliveredToActorType().getCode()));
-        incomingMoneyNotificationEvent.setAmount(transaction.getInformation().getCryptoAmount());
-        incomingMoneyNotificationEvent.setCryptoCurrency(transaction.getInformation().getCryptoCurrency());
-        incomingMoneyNotificationEvent.setWalletPublicKey(cryptoAddressBookRecord.getWalletPublicKey());
-        incomingMoneyNotificationEvent.setIntraUserIdentityPublicKey(cryptoAddressBookRecord.getDeliveredByActorPublicKey());
-        eventManager.raiseEvent(platformEvent);*/
 
-        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,cryptoAddressBookRecord.getWalletPublicKey(),"TRANSACTION_ARRIVE|" + transaction.getTransactionID().toString());
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,cryptoAddressBookRecord.getWalletPublicKey(),"TRANSACTIONARRIVE_" + transaction.getTransactionID().toString());
 
     }
 }

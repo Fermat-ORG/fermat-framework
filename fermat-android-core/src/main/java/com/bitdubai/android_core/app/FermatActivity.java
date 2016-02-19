@@ -1622,8 +1622,9 @@ public abstract class FermatActivity extends AppCompatActivity
     public void notificateBroadcast(String appPublicKey,String code){
         if(appPublicKey!=null) {
             FermatStructure fermatStructure = getAppForPublicKey(appPublicKey);
+            FermatSession fermatSession = getFermatSessionInUse(fermatStructure.getPublicKey());
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this);
-            NotificationPainter notificationPainter = fermatAppConnection.getNotificationPainter(code);
+            NotificationPainter notificationPainter = fermatAppConnection.getNotificationPainter(code,fermatSession);
             if (notificationPainter != null) {
                 RemoteViews remoteViews = notificationPainter.getNotificationView(code);
                 Intent intent = new Intent(this, WalletActivity.class);
@@ -1645,7 +1646,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     builder = new Notification.Builder(this)
                             .setTicker(notificationPainter.getNotificationTitle())
                             .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.drawable.fermat_logo_310_x_310 : notificationPainter.getIcon())
-                            .setContentTitle(notificationPainter.getNotificationImageText())
+                            .setContentTitle(notificationPainter.getNotificationTitle())
                             .setContentText(notificationPainter.getNotificationTextBody())
                             .setContentIntent(pi)
                             .setAutoCancel(true)
