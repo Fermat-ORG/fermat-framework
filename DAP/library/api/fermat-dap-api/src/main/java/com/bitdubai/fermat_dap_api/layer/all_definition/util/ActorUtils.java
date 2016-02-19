@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_api.layer.all_definition.util;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -83,6 +84,22 @@ public final class ActorUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void storeDAPActor(DAPActor actorToStore, ActorAssetUserManager userManager, ActorAssetRedeemPointManager redeemPointManager, ActorAssetIssuerManager issuerManager) throws DAPException {
+        try {
+            if (actorToStore instanceof ActorAssetIssuer) {
+                issuerManager.createActorAssetIssuerRegisterInNetworkService((ActorAssetIssuer) actorToStore);
+            }
+            if (actorToStore instanceof ActorAssetRedeemPoint) {
+                redeemPointManager.saveRegisteredActorRedeemPoint((ActorAssetRedeemPoint) actorToStore);
+            }
+            if (actorToStore instanceof ActorAssetUser) {
+                userManager.createActorAssetUserRegisterInNetworkService((ActorAssetUser) actorToStore);
+            }
+        } catch (Exception e) {
+            throw new DAPException(e);
+        }
     }
     //PRIVATE METHODS
 

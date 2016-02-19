@@ -252,6 +252,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
         switch (type) {
             case PAYMENT_METHOD:
                 try {
+                    
                     String currencyToSell = data.getClauses().get(ClauseType.CUSTOMER_CURRENCY).getValue();
                     List<String> paymentMethods = walletManager.getPaymentMethods(currencyToSell, session.getAppPublicKey());
 

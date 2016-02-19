@@ -61,8 +61,8 @@
     <string name="payment_date_title">PAYMENT DATE</string>
     <string name="payment_date">Payment Date: </string>
     <string name="add_a_note_button">ADD A NOTE</string>
-    <string name="payment_methods_title">Payment Methods Juanaso title </string>
-    <string name="payment_method">juanaso Method: </string>
+    <string name="payment_methods_title">Payment Methods</string>
+    <string name="payment_method">Method: </string>
     <string name="payment_date_text">Payment Date: </string>
     <string name="yours">Yours:</string>
     <string name="expiration_date_text">Expiration Date:</string>

@@ -81,6 +81,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
     private FermatEditText bitcoinsView;
     private Spinner bitcoinsSpinner;
     private FermatTextView bitcoinsTextView;
+    private FermatTextView bitcoinBalanceText;
 
     private View selectUserButton;
     private View sellAssetsButton;
@@ -90,6 +91,8 @@ public class AssetSellFragment extends AbstractFermatFragment {
     int selectedUserCount;
 
     SettingsManager<AssetUserSettings> settingsManager;
+
+    private User user;
 
     public AssetSellFragment() {
 
@@ -135,8 +138,8 @@ public class AssetSellFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle(R.string.dap_user_wallet_redeem_subTitle)
-                    .setBody(R.string.dap_user_wallet_redeem_body)
+                    .setSubTitle(R.string.dap_user_wallet_sell_subTitle)
+                    .setBody(R.string.dap_user_wallet_sell_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -185,6 +188,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
         bitcoinsView = (FermatEditText) rootView.findViewById(R.id.bitcoins);
         bitcoinsSpinner = (Spinner) rootView.findViewById(R.id.bitcoinsSpinner);
         bitcoinsTextView = (FermatTextView) rootView.findViewById(R.id.bitcoinsText);
+        bitcoinBalanceText = (FermatTextView) rootView.findViewById(R.id.bitcoinBalanceText);
 
         bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
         final BitcoinConverter.Currency[] data = BitcoinConverter.Currency.values();
@@ -246,11 +250,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
                 //TODO: aqui va la actividad de seleccion de users, users conectados a users la cual no existe
             }
         });
-
-        selectedUserCount = getUsersSelectedCount();
-        String message = (selectedUserCount == 0) ? "Select redeem points" : selectedUserCount + " redeem points selected";
-
-        selectedUserText.setText(message);
+        selectedUserText.setText(getResources().getString(R.string.dap_user_wallet_sell_select_user));
     }
     private void updateBitcoins() {
         Object selectedItem = bitcoinsSpinner.getSelectedItem();
@@ -260,6 +260,8 @@ public class AssetSellFragment extends AbstractFermatFragment {
             double amount = Double.parseDouble(bitcoinsView.getText().toString());
             double amountBTC = BitcoinConverter.convert(amount, from, BITCOIN);
             bitcoinsTextView.setText(String.format("%.6f BTC", amountBTC));
+            int quantity = Integer.parseInt(assetsToSellEditText.getText().toString());
+            bitcoinBalanceText.setText(String.format("%.6f BTC", quantity * amountBTC));
         }
     }
     private long getSatoshis() {
@@ -308,23 +310,6 @@ public class AssetSellFragment extends AbstractFermatFragment {
         asyncTask.execute();
     }
 
-    private int getUsersSelectedCount() {
-        Object x = appSession.getData("redeem_points");
-        int count = 0;
-        if (x != null) {
-            List<User> redeemPoints = (List<User>) x;
-            if (redeemPoints.size() > 0) {
-                for (User redeemPoint :
-                        redeemPoints) {
-                    if (redeemPoint.isSelected()) {
-                        count++;
-                    }
-                }
-            }
-        }
-        return count;
-    }
-
     private void doSell(final String assetPublicKey, final List<User> redeemPoints, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
@@ -346,7 +331,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
                 dialog.dismiss();
                 if (activity != null) {
                     refreshUIData();
-                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_redeem_ok), Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_ok), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -397,13 +382,19 @@ public class AssetSellFragment extends AbstractFermatFragment {
 //        }
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetSellImage, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img); //todo comment to be able to compile
+        bitmapWorkerTask.execute(img);
 
         assetSellNameText.setText(digitalAsset.getName());
 //        assetsToSellEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
         assetsToSellEditText.setText(selectedUserCount+"");
         long quantity = digitalAsset.getAvailableBalanceQuantity();
         assetSellRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
+
+        Object x = appSession.getData("user_selected");
+        if (x != null) {
+            user = (User) x;
+            selectedUserText.setText(user.getName());
+        }
     }
 
     private void configureToolbar() {

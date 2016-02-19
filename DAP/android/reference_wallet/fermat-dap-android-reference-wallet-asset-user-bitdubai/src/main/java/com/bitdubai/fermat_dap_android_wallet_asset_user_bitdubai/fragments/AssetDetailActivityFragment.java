@@ -41,6 +41,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.Asset
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -132,11 +133,17 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL, 0, "help").setIcon(R.drawable.dap_asset_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Item Sell")//.setIcon(R.drawable.dap_asset_user_help_icon)
+        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 1, getResources().getString(R.string.dap_user_wallet_action_redeem))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE, 2, getResources().getString(R.string.dap_user_wallet_action_appropriate))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER, 3, getResources().getString(R.string.dap_user_wallet_action_transfer))
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 4, getResources().getString(R.string.dap_user_wallet_action_sell))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
@@ -148,14 +155,10 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL) {
                 setUpHelpAssetDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            }else if(id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL){
-                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY , appSession.getAppPublicKey());
-                return true;
-
-            } else if (id == R.id.action_wallet_user_redeem) {
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM) {
                 changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
                 return true;
-            } else if (id == R.id.action_wallet_user_appropriate) {
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE) {
                 new ConfirmDialog.Builder(getActivity(), appSession)
                         .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                         .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
@@ -167,7 +170,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                             }
                         }).build().show();
                 return true;
-            } else if (id == R.id.action_wallet_user_transfer) {
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER) {
                 new ConfirmDialog.Builder(getActivity(), appSession)
                         .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                         .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
@@ -179,8 +182,9 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
                             }
                         }).build().show();
                 return true;
-            } else if (id == R.id.action_wallet_user_sell) {
-                //TODO include sell asset action
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
+                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY , appSession.getAppPublicKey());
+                return true;
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -278,6 +282,9 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     }
 
     private void setupUIData() {
+        Object x = appSession.getData("user_selected");
+        if (x != null) appSession.setData("user_selected", null);
+
 //        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
         String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
         try {
@@ -389,7 +396,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                moduleManager.transferAssets(assetPublicKey, null, 1);
+                moduleManager.transferAssets(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, 1);
                 return true;
             }
         };
