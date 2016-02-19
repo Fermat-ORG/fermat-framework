@@ -38,9 +38,9 @@ public enum ClauseStatus implements FermatEnum {
             case "WFC": return WAITING_FOR_CUSTOMER;
             case "AGR": return AGREED;
             case "REJ": return REJECTED;
-            case "ACCEPTED": return ACCEPTED;
-            case "CHANGED":  return CHANGED;
-            case "CONFIRM":  return CONFIRM;
+            case "ACCEPT": return ACCEPTED;
+            case "CHANGE":  return CHANGED;
+            case "CONFIR":  return CONFIRM;
 
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ClauseStatus enum");
         }
