@@ -19,9 +19,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
+
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
@@ -92,8 +93,8 @@ public class AssetRedeemPointRedemptionDAO {
         return EventType.getByCode(getStringFieldByEventId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
 
-    public com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType getEventBchTypeById(String id) throws CantLoadAssetRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
-        return com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.getByCode(getStringFieldByEventId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
+    public com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType getEventBchTypeById(String id) throws CantLoadAssetRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
+        return com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType.getByCode(getStringFieldByEventId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
 
     public EventSource getEventSourceById(String id) throws CantLoadAssetRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
