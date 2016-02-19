@@ -37,6 +37,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemPoint;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -52,9 +53,9 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Created by frank on 12/15/15.
+ * Jinmy Bohorquez on 02/18/2016.
  */
-public class AssetRedeemFragment extends AbstractFermatFragment {
+public class AssetTransferFragment extends AbstractFermatFragment {
 
     private Activity activity;
 
@@ -64,27 +65,27 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     private View rootView;
     private Toolbar toolbar;
     private Resources res;
-    private ImageView assetRedeemImage;
-    private FermatTextView assetRedeemNameText;
-    private FermatTextView assetRedeemRemainingText;
-    private FermatTextView selectedRPText;
-    private FermatEditText assetsToRedeemEditText;
-    private View selectRPButton;
-    private View redeemAssetsButton;
+    private ImageView assetTransferImage;
+    private FermatTextView assetTransferNameText;
+    private FermatTextView assetTransferRemainingText;
+    private FermatTextView selectedUserText;
+    private FermatEditText assetsToTransferEditText;
+    private View selectUserButton;
+    private View transferAssetsButton;
 
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
 
-    int selectedRPCount;
+    int selectedUserCount;
 
     SettingsManager<AssetUserSettings> settingsManager;
 
-    public AssetRedeemFragment() {
+    public AssetTransferFragment() {
 
     }
 
-    public static AssetRedeemFragment newInstance() {
-        return new AssetRedeemFragment();
+    public static AssetTransferFragment newInstance() {
+        return new AssetTransferFragment();
     }
 
     @Override
@@ -106,7 +107,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dap_wallet_asset_user_asset_redeem, container, false);
+        rootView = inflater.inflate(R.layout.dap_wallet_asset_user_asset_transfer, container, false);
         res = rootView.getResources();
 
         setupUI();
@@ -122,8 +123,8 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle(R.string.dap_user_wallet_redeem_subTitle)
-                    .setBody(R.string.dap_user_wallet_redeem_body)
+                    .setSubTitle(R.string.dap_user_wallet_transfer_subTitle)
+                    .setBody(R.string.dap_user_wallet_transfer_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -137,8 +138,8 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help").setIcon(R.drawable.dap_asset_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER, 0, "Help").setIcon(R.drawable.dap_asset_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
@@ -146,7 +147,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM) {
+            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER) {
                 setUpHelpAssetRedeem(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
@@ -162,22 +163,21 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
     private void setupUI() {
         setupBackgroundBitmap();
 
-        assetRedeemImage = (ImageView) rootView.findViewById(R.id.assetRedeemImage);
-        assetRedeemNameText = (FermatTextView) rootView.findViewById(R.id.assetRedeemNameText);
-        assetRedeemRemainingText = (FermatTextView) rootView.findViewById(R.id.assetRedeemRemainingText);
-        assetsToRedeemEditText = (FermatEditText) rootView.findViewById(R.id.assetsToRedeemEditText);
-        selectedRPText = (FermatTextView) rootView.findViewById(R.id.selectedRedeemPointsText);
-        selectRPButton = rootView.findViewById(R.id.selectRedeemPointsButton);
-        redeemAssetsButton = rootView.findViewById(R.id.redeemAssetsButton);
+        assetTransferImage= (ImageView) rootView.findViewById(R.id.assetTransferImage);
+        assetTransferNameText = (FermatTextView) rootView.findViewById(R.id.assetTransferNameText);
+        assetTransferRemainingText = (FermatTextView) rootView.findViewById(R.id.assetTransferRemainingText);
+        assetsToTransferEditText = (FermatEditText) rootView.findViewById(R.id.assetsToTransferEditText);
+        selectedUserText = (FermatTextView) rootView.findViewById(R.id.selectedTransferUsersText);
+        selectUserButton = rootView.findViewById(R.id.selectUserButton);
+        transferAssetsButton = rootView.findViewById(R.id.transferAssetsButton);
 
-//        layout = rootView.findViewById(R.id.assetDetailRemainingLayout);
-        redeemAssetsButton.setOnClickListener(new View.OnClickListener() {
+        transferAssetsButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (selectedRPCount > 0) {
-                    Object x = appSession.getData("redeem_points");
+                if (selectedUserCount > 0) {
+                    Object x = appSession.getData("users_to_transfer");
                     if (x != null) {
-                        final List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
-                        if (redeemPoints.size() > 0) {
+                        final List<User> users = (List<User>) x;
+                        if (users.size() > 0) {
                             new ConfirmDialog.Builder(getActivity(), appSession)
                                     .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                                             .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
@@ -185,28 +185,28 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                                                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                                                 @Override
                                                                 public void onClick() {
-                                                                    int assetsAmount = Integer.parseInt(assetsToRedeemEditText.getText().toString());
-                                                                    doRedeem(digitalAsset.getAssetPublicKey(), redeemPoints, assetsAmount);
+                                                                    int assetsAmount = Integer.parseInt(assetsToTransferEditText.getText().toString());
+                                                                    doTransfer(digitalAsset.getAssetPublicKey(), users, assetsAmount);
                                                                 }
                                                             }).build().show();
                         }
                     }
                 } else {
-                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_redeem_points), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_users), Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        selectRPButton.setOnClickListener(new View.OnClickListener() {
+        selectUserButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 //                appSession.setData("asset_data", data);
-                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM_SELECT_REDEEMPOINTS, appSession.getAppPublicKey());
+                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY, appSession.getAppPublicKey());
             }
         });
 
-        selectedRPCount = getRedeemPointsSelectedCount();
-        String message = (selectedRPCount == 0) ? "Select redeem points" : selectedRPCount + " redeem points selected";
-        selectedRPText.setText(message);
+        selectedUserCount = getUsersSelectedCount();
+        String message = (selectedUserCount == 0) ? "Select users" : selectedUserCount + " users selected";
+        selectedUserText.setText(message);
     }
 
     private void setupBackgroundBitmap() {
@@ -244,15 +244,15 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         asyncTask.execute();
     }
 
-    private int getRedeemPointsSelectedCount() {
-        Object x = appSession.getData("redeem_points");
+    private int getUsersSelectedCount() {
+        Object x = appSession.getData("users_to_transfer");
         int count = 0;
         if (x != null) {
-            List<RedeemPoint> redeemPoints = (List<RedeemPoint>) x;
-            if (redeemPoints.size() > 0) {
-                for (RedeemPoint redeemPoint :
-                        redeemPoints) {
-                    if (redeemPoint.isSelected()) {
+            List<User> users = (List<User>) x;
+            if (users.size() > 0) {
+                for (User user :
+                        users) {
+                    if (user.isSelected()) {
                         count++;
                     }
                 }
@@ -261,7 +261,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         return count;
     }
 
-    private void doRedeem(final String assetPublicKey, final List<RedeemPoint> redeemPoints, final int assetAmount) {
+    private void doTransfer(final String assetPublicKey, final List<User> users, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
@@ -269,7 +269,9 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, Data.getRedeemPoints(redeemPoints), assetAmount);
+                //TODO transfer for implements
+
+                //moduleManager.redeemAssetToUser(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, Data.getConnectedUsers(users), assetAmount);
                 return true;
             }
         };
@@ -281,7 +283,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                 dialog.dismiss();
                 if (activity != null) {
                     refreshUIData();
-                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_redeem_ok), Toast.LENGTH_LONG).show();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_transfer_ok), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -304,18 +306,16 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
             e.printStackTrace();
         }
 
-        assetRedeemNameText.setText(digitalAsset.getName());
-        //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetsToRedeemEditText.setText(selectedRPCount + "");
-        assetRedeemRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
+        assetTransferNameText.setText(digitalAsset.getName());
+        assetsToTransferEditText.setText(selectedUserCount + "");
+        assetTransferRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
 
         if (digitalAsset.getAvailableBalanceQuantity() == 0) {
-            selectRPButton.setOnClickListener(null);
+            selectUserButton.setOnClickListener(null);
         }
     }
 
     private void setupUIData() {
-//        digitalAsset = (DigitalAsset) appSession.getData("asset_data");
         String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
         try {
             digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
@@ -325,20 +325,15 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
 
         toolbar.setTitle(digitalAsset.getName());
 
-//        if (digitalAsset.getImage() != null) {
-//            assetRedeemImage.setImageBitmap(BitmapFactory.decodeStream(new ByteArrayInputStream(digitalAsset.getImage())));
-//        } else {
-//            assetRedeemImage.setImageDrawable(rootView.getResources().getDrawable(R.drawable.img_asset_without_image));
-//        }
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
-        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetRedeemImage, res, R.drawable.img_asset_without_image, false);
+        BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetTransferImage, res, R.drawable.img_asset_without_image, false);
         bitmapWorkerTask.execute(img); //todo comment to be able to compile
 
-        assetRedeemNameText.setText(digitalAsset.getName());
-//        assetsToRedeemEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
-        assetsToRedeemEditText.setText(selectedRPCount+"");
+        assetTransferNameText.setText(digitalAsset.getName());
+
+        assetsToTransferEditText.setText(selectedUserCount+"");
         long quantity = digitalAsset.getAvailableBalanceQuantity();
-        assetRedeemRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
+        assetTransferRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
     }
 
     private void configureToolbar() {

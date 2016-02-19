@@ -4,7 +4,6 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -26,8 +25,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.AssetRedeemSelectRedeemPointsAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.AssetSellSelectUsersAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.AssetTransferSelectUsersAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
@@ -46,29 +45,29 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Jinmy Bohorquez 15/02/2016.
+ * Created by Jinmy Bohorquez on 18/02/2016.
  */
-public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
+public class AssetTransferSelectUserFragment extends FermatWalletListFragment<User>
         implements FermatListItemListeners<User> {
 
     // Constants
-    private static final String TAG = "AssetDeliverySelectUsersFragment";
+    private static final String TAG = "AssetTransferSelectUsersFragment";
 
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
     // Data
-    private List<User> redeemPoints;
+    private List<User> users;
 
     SettingsManager<AssetUserSettings> settingsManager;
 
     //UI
-    private View noRPView;
+    private View noUsersView;
     private Toolbar toolbar;
 
-    public static AssetSellSelectUserFragment newInstance() {
-        return new AssetSellSelectUserFragment();
+    public static AssetTransferSelectUserFragment newInstance() {
+        return new AssetTransferSelectUserFragment();
     }
 
     @Override
@@ -81,7 +80,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
 
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -96,9 +95,9 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
 
         configureToolbar();
 
-        noRPView = layout.findViewById(R.id.dap_wallet_asset_sell_no_users);
+        noUsersView = layout.findViewById(R.id.dap_wallet_asset_transfer_no_users);
 
-        showOrHideNoUsersView(redeemPoints.isEmpty());
+        showOrHideNoUsersView(users.isEmpty());
     }
 
     private void setUpHelpAssetRedeem(boolean checkButton) {
@@ -108,8 +107,8 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
                     .setIconRes(R.drawable.asset_user_wallet)
                     .setVIewColor(R.color.dap_user_view_color)
                     .setTitleTextColor(R.color.dap_user_view_color)
-                    .setSubTitle(R.string.dap_user_wallet_redeem_select_subTitle)
-                    .setBody(R.string.dap_user_wallet_redeem_select_body)
+                    .setSubTitle(R.string.dap_user_wallet_user_select_subTitle)
+                    .setBody(R.string.dap_user_wallet_user_select_body)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setIsCheckEnabled(checkButton)
                     .build();
@@ -123,7 +122,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT, 0, "Help").setIcon(R.drawable.dap_asset_user_help_icon)
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER_SELECT, 0, "Help").setIcon(R.drawable.dap_asset_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -132,7 +131,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
         try {
             int id = item.getItemId();
 
-            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT) {
+            if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER_SELECT) {
                 setUpHelpAssetRedeem(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
@@ -178,7 +177,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.dap_wallet_asset_user_asset_sell_select_users;
+        return R.layout.dap_wallet_asset_user_asset_transfer_select_users;
     }
 
     @Override
@@ -188,7 +187,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.dap_wallet_asset_user_asset_sell_select_users_activity_recycler_view;
+        return R.id.dap_wallet_asset_user_asset_transfer_select_users_activity_recycler_view;
     }
 
     @Override
@@ -202,11 +201,11 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                redeemPoints = (ArrayList) result[0];
+                users = (ArrayList) result[0];
                 if (adapter != null)
-                    adapter.changeDataSet(redeemPoints);
+                    adapter.changeDataSet(users);
 
-                showOrHideNoUsersView(redeemPoints.isEmpty());
+                showOrHideNoUsersView(users.isEmpty());
             }
         }
     }
@@ -223,7 +222,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AssetSellSelectUsersAdapter(getActivity(), redeemPoints, moduleManager);
+            adapter = new AssetTransferSelectUsersAdapter(getActivity(), users, moduleManager);
             adapter.setFermatListEventListener(this);
         }
         return adapter;
@@ -240,8 +239,8 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
     @Override
     public void onItemClickListener(User data, int position) {
         //TODO select user
-        appSession.setData("user_selected", data);
-        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY, appSession.getAppPublicKey());
+       //appSession.setData("user_selected", data);
+        //changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY, appSession.getAppPublicKey());
     }
 
     @Override
@@ -255,7 +254,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
             try {
                 DigitalAsset digitalAsset = (DigitalAsset) appSession.getData("asset_data");
                 users = Data.getConnectedUsers(moduleManager);
-                appSession.setData("users", users);
+                appSession.setData("users_to_transfer", users);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
@@ -276,10 +275,10 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
     private void showOrHideNoUsersView(boolean show) {
         if (show) {
             recyclerView.setVisibility(View.GONE);
-            noRPView.setVisibility(View.VISIBLE);
+            noUsersView.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
-            noRPView.setVisibility(View.GONE);
+            noUsersView.setVisibility(View.GONE);
         }
     }
 }
