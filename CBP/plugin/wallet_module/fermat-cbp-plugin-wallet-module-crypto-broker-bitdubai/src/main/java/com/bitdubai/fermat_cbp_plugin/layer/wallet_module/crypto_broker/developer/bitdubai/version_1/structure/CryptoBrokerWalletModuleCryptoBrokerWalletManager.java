@@ -605,8 +605,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             if (merchandise.getCode().equals(currencyToSell) && associatedWallet.getPlatform() == Platforms.BANKING_PLATFORM) {
                 List<BankAccountNumber> accounts = getAccounts(associatedWallet.getWalletPublicKey());
                 for (BankAccountNumber accountNumber : accounts) {
-                    String value = accountNumber.getBankName() + "\n" + accountNumber.getAccount() + "\n" + accountNumber.getCurrencyType();
-                    paymentMethod.add(value);
+                    paymentMethod.add("Bank: " + accountNumber.getBankName() + "\n Account: " + accountNumber.getAccount() +
+                            "\n Account Type: " + accountNumber.getAccountType().getFriendlyName());
                 }
             }
 
