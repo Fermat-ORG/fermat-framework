@@ -60,14 +60,14 @@ final public class NegotiationWrapper {
                 addClause(ClauseType.BROKER_DATE_TIME_TO_DELIVER, Long.toString(actualTimeInMillis));
 
             if (clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD) == null) {
-                final String currencyToSell = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
-                final List<MoneyType> paymentMethods = walletManager.getPaymentMethods(currencyToSell, appSession.getAppPublicKey());
+                final String currencyToReceive = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+                final List<MoneyType> paymentMethods = walletManager.getPaymentMethods(currencyToReceive, appSession.getAppPublicKey());
                 final MoneyType paymentMethod = paymentMethods.get(0);
 
-                addClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethod.getFriendlyName());
+                addClause(ClauseType.CUSTOMER_PAYMENT_METHOD, paymentMethod.getCode());
 
                 if (paymentMethod == MoneyType.BANK) {
-                    List<String> bankAccounts = walletManager.getAccounts(currencyToSell, appSession.getAppPublicKey());
+                    List<String> bankAccounts = walletManager.getAccounts(currencyToReceive, appSession.getAppPublicKey());
                     addClause(ClauseType.BROKER_BANK_ACCOUNT, bankAccounts.isEmpty() ? "" : bankAccounts.get(0));
 
                 } else if (paymentMethod == MoneyType.CASH_DELIVERY) {
