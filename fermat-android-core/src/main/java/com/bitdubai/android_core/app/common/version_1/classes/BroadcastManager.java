@@ -54,6 +54,23 @@ public class BroadcastManager implements BroadcasterInterface {
     }
 
     @Override
+    public void publish(BroadcasterType broadcasterType, String appCode, String code) {
+        try {
+            switch (broadcasterType){
+                case UPDATE_VIEW:
+                    updateView(appCode,code);
+                    break;
+                case NOTIFICATION_SERVICE:
+                    fermatActivity.get().notificateBroadcast(appCode,code);
+                    break;
+            }
+        }catch (Exception e){
+            Log.e(TAG, "Cant broadcast excepcion");
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void publish(BroadcasterType broadcasterType, String code,Platforms platform) {
         try {
             switch (broadcasterType){
@@ -89,6 +106,14 @@ public class BroadcastManager implements BroadcasterInterface {
     }
 
     private void updateView(String code){
+        for(AbstractFermatFragment fragment : fermatActivity.get().getAdapter().getLstCurrentFragments()){
+            fragment.onUpdateView(code);
+            fragment.onUpdateViewUIThred(code);
+        }
+    }
+
+    //TODO: esto va a ser del codigo de la app, el paquete del intent
+    private void updateView(String appCode,String code){
         for(AbstractFermatFragment fragment : fermatActivity.get().getAdapter().getLstCurrentFragments()){
             fragment.onUpdateView(code);
             fragment.onUpdateViewUIThred(code);
