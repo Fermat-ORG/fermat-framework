@@ -9,16 +9,18 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.NotificationNotFoundException;
@@ -35,12 +37,12 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataRecord;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 
@@ -58,94 +60,41 @@ public class IncomingNotificationDAO implements DAO {
      */
     private Database database;
 
-    private PluginFileSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
     private UUID pluginId;
 
     /**
      * Constructor
      * @param database
-     * @param pluginFileSystem
+     * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public IncomingNotificationDAO(Database database, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public IncomingNotificationDAO(Database database, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         super();
         this.database = database;
-        this.pluginDatabaseSystem = pluginFileSystem;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
 
-    /**
-     * Return the Database
-     *
-     * @return Database
-     */
-    Database getDatabase() {
+    private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
+        try {
+            database = pluginDatabaseSystem.openDatabase(this.pluginId, ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+
+        } catch (DatabaseNotFoundException e) {
+            ChatNetworkServiceDatabaseFactory chatNetworkServiceDatabaseFactory = new ChatNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            database = chatNetworkServiceDatabaseFactory.createDatabase(this.pluginId, ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
+        }
         return database;
     }
-
     /**
      * Return the DatabaseTable
      *
      * @return DatabaseTable
      */
-    DatabaseTable getDatabaseTable() {
-        return getDatabase().getTable(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_CHAT_TABLE_NOTIFICATION_TABLE_NAME);
+    DatabaseTable getDatabaseTable(Database database) {
+        return database.getTable(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_CHAT_TABLE_NOTIFICATION_TABLE_NAME);
     }
 
-    /**
-     * Method that find an ChatMetadataRecord by id in the data base.
-     *
-     * @param hash String id.
-     * @return ChatMetadataRecord found.
-     * @throws CantReadRecordDataBaseException
-     */
-
-    public ChatMetadataRecord findByTransactionHash(String hash)throws CantReadRecordDataBaseException {
-        if (hash == null) {
-            throw new IllegalArgumentException("The id is required, can not be null");
-        }
-
-        ChatMetadataRecord chatMetadaTransactionRecord = null;
-
-        try {
-
-            /*
-             * 1 - load the data base to memory with filter
-             */
-            DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_TRANSACTION_HASH_COLUMN_NAME, hash, DatabaseFilterType.EQUAL);
-            incomingMessageTable.loadToMemory();
-
-            /*
-             * 2 - read all records
-             */
-            List<DatabaseTableRecord> records = incomingMessageTable.getRecords();
-
-
-            /*
-             * 3 - Convert into ChatMetadataRecord objects
-             */
-            for (DatabaseTableRecord record : records) {
-
-                /*
-                 * 3.1 - Create and configure a  ChatMetadataRecord
-                 */
-                chatMetadaTransactionRecord = constructFrom(record);
-            }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            // Register the failure.
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
-        }
-
-        return chatMetadaTransactionRecord;
-    }
     /**
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>TemplateNetworkServiceDatabaseConstants</code>
@@ -155,7 +104,15 @@ public class IncomingNotificationDAO implements DAO {
      */
     public List<ChatMetadataRecord> findAllToSend() throws CantReadRecordDataBaseException, CantLoadTableToMemoryException {
 
-        DatabaseTable databaseTable = getDatabaseTable();
+        Database database;
+        try {
+            database = openDatabase();
+        } catch (CantOpenDatabaseException e) {
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch (CantCreateDatabaseException e) {
+            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        }
+        DatabaseTable databaseTable = getDatabaseTable(database);
         databaseTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_PROTOCOL_STATE_COLUMN_NAME, ChatProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.EQUAL);
         databaseTable.loadToMemory();
 
@@ -175,63 +132,8 @@ public class IncomingNotificationDAO implements DAO {
         } catch (Exception e){
             throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
         }
-
+        database.closeDatabase();
         return list;
-    }
-
-    /**
-     *
-     * @param id
-     * @return
-     * @throws CantReadRecordDataBaseException
-     */
-    @Deprecated
-    public ChatMetadataRecord findById(String id) throws CantReadRecordDataBaseException {
-
-        if (id == null) {
-            throw new IllegalArgumentException("The id is required, can not be null");
-        }
-
-        ChatMetadataRecord chatMetadaTransactionRecord = null;
-
-        try {
-
-            /*
-             * 1 - load the data base to memory with filter
-             */
-            DatabaseTable incomingMessageTable = getDatabaseTable();
-            incomingMessageTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_TRANSACTION_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
-            incomingMessageTable.loadToMemory();
-
-            /*
-             * 2 - read all records
-             */
-            List<DatabaseTableRecord> records = incomingMessageTable.getRecords();
-
-
-            /*
-             * 3 - Convert into ChatMetadataRecord objects
-             */
-            for (DatabaseTableRecord record : records) {
-
-                /*
-                 * 3.1 - Create and configure a  ChatMetadataRecord
-                 */
-                chatMetadaTransactionRecord = constructFrom(record);
-            }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            // Register the failure.
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
-        }
-
-        return chatMetadaTransactionRecord;
     }
 
     /**
@@ -253,7 +155,8 @@ public class IncomingNotificationDAO implements DAO {
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable databaseTable = getDatabaseTable();
+            Database database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(database);
             databaseTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_TRANSACTION_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
 
@@ -270,15 +173,16 @@ public class IncomingNotificationDAO implements DAO {
             while(records.size()>0){
 
                 id =UUID.randomUUID().toString();
-                databaseTable = getDatabaseTable();
+                databaseTable = getDatabaseTable(database);
                 databaseTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_TRANSACTION_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
                 databaseTable.loadToMemory();
-                records = databaseTable.getRecords();
                 newUUID = UUID.fromString(id);
+                records = databaseTable.getRecords();
+
 
             }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException | CantCreateDatabaseException | CantOpenDatabaseException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
@@ -291,71 +195,6 @@ public class IncomingNotificationDAO implements DAO {
 
         return newUUID;
     }
-
-    /**
-     * Method that list the all entities on the data base.
-     *
-     * @return All ChatMetadataRecord.
-     * @throws CantReadRecordDataBaseException
-     */
-    public List<ChatMetadataRecord> findAll() throws CantReadRecordDataBaseException {
-
-
-        List<ChatMetadataRecord> list = null;
-
-        try {
-
-            /*
-             * 1 - load the data base to memory
-             */
-            DatabaseTable networkIntraUserTable = getDatabaseTable();
-            networkIntraUserTable.loadToMemory();
-
-            /*
-             * 2 - read all records
-             */
-            List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
-
-            /*
-             * 3 - Create a list of ChatMetadataRecord objects
-             */
-            list = new ArrayList<>();
-            list.clear();
-
-            /*
-             * 4 - Convert into ChatMetadataRecord objects
-             */
-            for (DatabaseTableRecord record : records) {
-
-                /*
-                 * 4.1 - Create and configure a  ChatMetadataRecord
-                 */
-                ChatMetadataRecord ChatMetadaTransactionRecord = constructFrom(record);
-
-                /*
-                 * 4.2 - Add to the list
-                 */
-                list.add(ChatMetadaTransactionRecord);
-
-            }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
-        }
-
-        /*
-         * return the list
-         */
-        return list;
-    }
-
 
     /**
      * Method that list the all entities on the data base. The valid value of
@@ -383,7 +222,8 @@ public class IncomingNotificationDAO implements DAO {
             /*
              * 1 - load the data base to memory with filters
              */
-            DatabaseTable templateTable = getDatabaseTable();
+            Database database = openDatabase();
+            DatabaseTable templateTable = getDatabaseTable(database);
             templateTable.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             templateTable.loadToMemory();
 
@@ -414,98 +254,8 @@ public class IncomingNotificationDAO implements DAO {
                 list.add(ChatMetadaTransactionRecord);
 
             }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
-        }
-
-        /*
-         * return the list
-         */
-        return list;
-    }
-
-
-    /**
-     * Method that list the all entities on the data base. The valid value of
-     * the key are the att of the <code>CommunicationChatNetworkServiceDatabaseConstants</code>
-     *
-     * @param filters
-     * @return List<ChatMetadataRecord>
-     * @throws CantReadRecordDataBaseException
-     */
-    public List<ChatMetadataRecord> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
-
-        if (filters == null ||
-                filters.isEmpty()) {
-
-            throw new IllegalArgumentException("The filters are required, can not be null or empty");
-        }
-
-        List<ChatMetadataRecord> list = null;
-        List<DatabaseTableFilter> filtersTable = new ArrayList<>();
-
-        try {
-
-
-            /*
-             * 1- Prepare the filters
-             */
-            DatabaseTable templateTable = getDatabaseTable();
-
-            for (String key : filters.keySet()) {
-
-                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
-                newFilter.setType(DatabaseFilterType.EQUAL);
-                newFilter.setColumn(key);
-                newFilter.setValue((String) filters.get(key));
-
-                filtersTable.add(newFilter);
-            }
-
-
-            /*
-             * 2 - load the data base to memory with filters
-             */
-            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
-            templateTable.loadToMemory();
-
-            /*
-             * 3 - read all records
-             */
-            List<DatabaseTableRecord> records = templateTable.getRecords();
-
-            /*
-             * 4 - Create a list of ChatMetadataRecord objects
-             */
-            list = new ArrayList<>();
-            list.clear();
-
-            /*
-             * 5 - Convert into ChatMetadataRecord objects
-             */
-            for (DatabaseTableRecord record : records) {
-
-                /*
-                 * 5.1 - Create and configure a  ChatMetadataRecord
-                 */
-                ChatMetadataRecord ChatMetadaTransactionRecord = constructFrom(record);
-
-                /*
-                 * 5.2 - Add to the list
-                 */
-                list.add(ChatMetadaTransactionRecord);
-
-            }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException | CantCreateDatabaseException | CantOpenDatabaseException cantLoadTableToMemory) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
@@ -545,10 +295,12 @@ public class IncomingNotificationDAO implements DAO {
             /*
              * 2.- Create a new transaction and execute
              */
-            DatabaseTransaction transaction = getDatabase().newTransaction();
-            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-            getDatabase().executeTransaction(transaction);
-
+            Database database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(database);
+            DatabaseTransaction transaction = database.newTransaction();
+            transaction.addRecordToInsert(databaseTable, entityRecord);
+            database.executeTransaction(transaction);
+            database.closeDatabase();
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
 
@@ -592,7 +344,8 @@ public class IncomingNotificationDAO implements DAO {
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable incomingMessageTable = getDatabaseTable();
+            Database database = openDatabase();
+            DatabaseTable incomingMessageTable = getDatabaseTable(database);
             incomingMessageTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_TRANSACTION_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
@@ -612,8 +365,8 @@ public class IncomingNotificationDAO implements DAO {
                  */
                 chatMetadaTransactionRecord = constructFrom(record);
             }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException | CantCreateDatabaseException | CantOpenDatabaseException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
@@ -642,7 +395,8 @@ public class IncomingNotificationDAO implements DAO {
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable incomingMessageTable = getDatabaseTable();
+            Database database = openDatabase();
+            DatabaseTable incomingMessageTable = getDatabaseTable(database);
             incomingMessageTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_LOCALACTORPUBKEY_COLUMN_NAME, senderPublicKey, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
@@ -668,8 +422,8 @@ public class IncomingNotificationDAO implements DAO {
                 }
 
             }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            database.closeDatabase();
+        } catch (CantLoadTableToMemoryException | CantCreateDatabaseException | CantOpenDatabaseException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
@@ -696,7 +450,8 @@ public class IncomingNotificationDAO implements DAO {
             /*
              * 1 - load the data base to memory with filter
              */
-            DatabaseTable incomingMessageTable = getDatabaseTable();
+            Database database = openDatabase();
+            DatabaseTable incomingMessageTable = getDatabaseTable(database);
             incomingMessageTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_LOCALACTORPUBKEY_COLUMN_NAME, senderPublicKey, DatabaseFilterType.EQUAL);
             incomingMessageTable.loadToMemory();
 
@@ -722,8 +477,9 @@ public class IncomingNotificationDAO implements DAO {
                 }
 
             }
+            database.closeDatabase();
 
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException | CantCreateDatabaseException | CantOpenDatabaseException cantLoadTableToMemory) {
             // Register the failure.
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
@@ -760,21 +516,22 @@ public class IncomingNotificationDAO implements DAO {
     @Override
     public List<ChatMetadata> listUnreadNotifications() throws CHTException {
         try {
-            DatabaseTable cryptoPaymentRequestTable = getDatabaseTable();
+            Database database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(database);
 
-            cryptoPaymentRequestTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_READ_MARK_COLUMN_NAME, String.valueOf(false), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_READ_MARK_COLUMN_NAME, String.valueOf(false), DatabaseFilterType.EQUAL);
 
-            cryptoPaymentRequestTable.loadToMemory();
+            databaseTable.loadToMemory();
 
-            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
 
             List<ChatMetadata> chatMetadatas = new ArrayList<>();
 
             for (DatabaseTableRecord record : records) {
                 chatMetadatas.add(constructFrom(record));
             }
+            database.closeDatabase();
             return chatMetadatas;
-
         } catch (Exception e) {
 
             throw new CHTException("",e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
@@ -823,21 +580,17 @@ public class IncomingNotificationDAO implements DAO {
             /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord entityRecord = constructFrom(entity);
-            DatabaseTableFilter filter = getDatabaseTable().getEmptyTableFilter();
-            filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(entity.getTransactionId().toString());
-            filter.setColumn(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_CHAT_FIRST_KEY_COLUMN);
+            Database database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(database);
+            databaseTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_TRANSACTION_ID_COLUMN_NAME, entity.getTransactionId().toString(), DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
 
-            /*
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDatabase().newTransaction();
-            getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
-            getDatabase().executeTransaction(transaction);
+            if (databaseTable.getRecords().isEmpty()) throw new RecordsNotFoundException();
+            DatabaseTableRecord record = databaseTable.getRecords().get(0);
+            setValuesToRecord(record, entity);
+            databaseTable.updateRecord(record);
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (CantUpdateRecordException | CantCreateDatabaseException | CantOpenDatabaseException | RecordsNotFoundException |CantLoadTableToMemoryException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
@@ -865,16 +618,22 @@ public class IncomingNotificationDAO implements DAO {
 
         try {
 
+            Database database = openDatabase();
+            DatabaseTable databaseTable = getDatabaseTable(database);
+            DatabaseTableFilter filter = databaseTable.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(id.toString());
+            filter.setColumn(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_CHAT_FIRST_KEY_COLUMN);
+
             /*
-             * Create a new transaction and execute
+             * 2.- Create a new transaction and execute
              */
-            DatabaseTransaction transaction = getDatabase().newTransaction();
+            DatabaseTransaction transaction = database.newTransaction();
+            databaseTable.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            database.executeTransaction(transaction);
+            database.closeDatabase();
 
-            //falta configurar la llamada para borrar la entidad
-
-            getDatabase().executeTransaction(transaction);
-
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (DatabaseTransactionFailedException | CantCreateDatabaseException | CantOpenDatabaseException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + ChatNetworkServiceDataBaseConstants.DATA_BASE_NAME);
@@ -937,12 +696,30 @@ public class IncomingNotificationDAO implements DAO {
      * @param chatMetadataRecord the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(ChatMetadataRecord chatMetadataRecord) {
+    private DatabaseTableRecord constructFrom(ChatMetadataRecord chatMetadataRecord) throws CantOpenDatabaseException, CantCreateDatabaseException {
 
         /*
          * Create the record to the entity
          */
-        DatabaseTableRecord entityRecord = getDatabaseTable().getEmptyRecord();
+        Database database = openDatabase();
+        DatabaseTable databaseTable = getDatabaseTable(database);
+        DatabaseTableRecord entityRecord = databaseTable.getEmptyRecord();
+
+        /*
+         * return the new table record
+         */
+        return setValuesToRecord(entityRecord, chatMetadataRecord);
+
+    }
+    /**
+     *
+     * @param chatMetadataRecord
+     * @param entityRecord
+     * @return
+     * @throws CantOpenDatabaseException
+     * @throws CantCreateDatabaseException
+     */
+    private DatabaseTableRecord setValuesToRecord(DatabaseTableRecord entityRecord,ChatMetadataRecord chatMetadataRecord) throws CantOpenDatabaseException, CantCreateDatabaseException {
 
         /*
          * Set the entity values
@@ -964,9 +741,8 @@ public class IncomingNotificationDAO implements DAO {
         entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME,          chatMetadataRecord.getDistributionStatus().getCode());
         entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_PROCCES_STATUS_COLUMN_NAME,              chatMetadataRecord.getProcessed());
         entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_PROTOCOL_STATE_COLUMN_NAME,              chatMetadataRecord.getChatProtocolState().getCode());
-        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_SENTDATE_COLUMN_NAME,                    chatMetadataRecord.getSentDate().toString());
+        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_SENTDATE_COLUMN_NAME, chatMetadataRecord.getSentDate().toString());
         entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_READ_MARK_COLUMN_NAME,                   String.valueOf(chatMetadataRecord.isFlagReadead()));
-
         /*
          * return the new table record
          */

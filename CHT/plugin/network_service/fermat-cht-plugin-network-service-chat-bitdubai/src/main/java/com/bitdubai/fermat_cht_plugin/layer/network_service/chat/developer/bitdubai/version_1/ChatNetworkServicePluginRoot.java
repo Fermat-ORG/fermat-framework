@@ -178,11 +178,10 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             chatNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             //DAO
-            incomingNotificationsDao = new IncomingNotificationDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
+            incomingNotificationsDao = new IncomingNotificationDAO(dataBaseCommunication, this.pluginDatabaseSystem, this.pluginId);
 
-            outgoingNotificationDao = new OutgoingNotificationDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
+            outgoingNotificationDao = new OutgoingNotificationDAO(dataBaseCommunication, this.pluginDatabaseSystem, this.pluginId);
 
-            initializeAgent();
             //executorService = Executors.newFixedThreadPool(2);
 
             // change message state to process again first time
@@ -237,7 +236,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                             + "\n-------------------------------------------------");
 
                     chatMetadataRecord.changeState(ChatProtocolState.PROCESSING_RECEIVE);
-                    chatMetadataRecord.setTransactionId(UUID.randomUUID());
+                    chatMetadataRecord.setTransactionId(getIncomingNotificationsDao().getNewUUID(UUID.randomUUID().toString()));
                     transactionHash = CryptoHasher.performSha256(chatMetadataRecord.getChatId().toString() + chatMetadataRecord.getMessageId().toString());
                     chatMetadataRecord.setTransactionHash(transactionHash);
                     chatMetadataRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
@@ -281,7 +280,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                             chatMetadataRecord.setMessageStatus(messageStatus);
                         chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
                         chatMetadataRecord.changeState(ChatProtocolState.DONE);
-                        getOutgoingNotificationDao().update(chatMetadataRecord);
 
                         //create incoming notification
                         chatMetadataRecord.setFlagReadead(false);
@@ -828,7 +826,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             long currentTime = System.currentTimeMillis();
             ChatProtocolState protocolState = ChatProtocolState.PROCESSING_SEND;
             String msgHash = CryptoHasher.performSha256(chatMetadata.getChatId().toString() + chatMetadata.getMessageId().toString());
-            chatMetadataRecord.setTransactionId(UUID.randomUUID());
+            chatMetadataRecord.setTransactionId(getOutgoingNotificationDao().getNewUUID(UUID.randomUUID().toString()));
             chatMetadataRecord.setTransactionHash(msgHash);
             chatMetadataRecord.setChatId(chatMetadata.getChatId());
             chatMetadataRecord.setObjectId(chatMetadata.getObjectId());
