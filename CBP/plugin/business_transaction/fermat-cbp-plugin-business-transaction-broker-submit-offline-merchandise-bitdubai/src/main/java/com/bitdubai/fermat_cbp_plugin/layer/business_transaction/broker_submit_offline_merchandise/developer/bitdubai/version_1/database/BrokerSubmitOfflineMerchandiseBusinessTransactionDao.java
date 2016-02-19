@@ -203,6 +203,10 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
                     e,
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException( exception,
+                    "Getting the contract transaction status",
+                    "Unexpected error" );
         }
     }
 
@@ -280,20 +284,28 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             FiatCurrency merchandiseType,
             MoneyType moneyType)
             throws CantInsertRecordException {
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
+                    databaseTableRecord,
+                    customerBrokerContractSale,
+                    walletPublicKey,
+                    amount,
+                    cbpWalletPublicKey,
+                    referencePrice,
+                    merchandiseType,
+                    moneyType
+            );
+            databaseTable.insertRecord(databaseTableRecord);
+        }catch(CantInsertRecordException exception){
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,"Error in persistContractInDatabase","");
+        }catch(Exception exception){
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
 
-        DatabaseTable databaseTable=getDatabaseSubmitTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord= buildDatabaseTableRecord(
-                databaseTableRecord,
-                customerBrokerContractSale,
-                walletPublicKey,
-                amount,
-                cbpWalletPublicKey,
-                referencePrice,
-                merchandiseType,
-                moneyType
-        );
-        databaseTable.insertRecord(databaseTableRecord);
     }
 
     /**
@@ -365,11 +377,19 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingDeStockTransactionList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOfflinePaymentRecordList(
-                ContractTransactionStatus.PENDING_OFFLINE_DE_STOCK.getCode(),
-                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
-        );
+        try{
+            return getCustomerOfflinePaymentRecordList(
+                    ContractTransactionStatus.PENDING_OFFLINE_DE_STOCK.getCode(),
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
+            );
+        }catch(CantGetContractListException e){
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,e,"Getting value from getPendingDeStockTransactionList","");
+        }catch(Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -536,6 +556,10 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Invalid parameter in ContractTransactionStatus");
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Getting value from database",
+                    "Unexpected error");
         }
 
     }
@@ -559,6 +583,11 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating databaseTableRecord from a BusinessTransactionRecord",
+                    "Unexpected results in database");
+        }catch (Exception exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Getting value from database",
                     "Unexpected results in database");
         }
     }
@@ -636,12 +665,22 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingToSubmitNotificationList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOfflinePaymentRecordList(
-                ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION.getCode(),
-                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        try{
+            return getCustomerOfflinePaymentRecordList(
+                    ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION.getCode(),
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        }catch(CantGetContractListException exception){
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
+                    exception,
+                    "Getting value from getPendingToSubmitNotificationList","");
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -653,11 +692,19 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingCryptoTransactionList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED.getCode(),
-                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
-        );
+        try{
+            return getCustomerOnlinePaymentRecordList(
+                    ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED.getCode(),
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
+            );
+        }catch (CantGetContractListException exception){
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,exception,"Getting value from getPendingCryptoTransactionList","");
+        }catch(Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -723,6 +770,8 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Error","CHeck the cause");
         }
     }
 
@@ -755,6 +804,8 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
+        }catch(Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected result from Database","Check the cause");
         }
 
     }
@@ -767,13 +818,17 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
      */
     public boolean isContractHashInDatabase(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        String contractHashFromDatabase=getValue(
-                contractHash,
-                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
-                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
-        return contractHashFromDatabase!=null;
+        try{
+            String contractHashFromDatabase=getValue(
+                    contractHash,
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+            return contractHashFromDatabase!=null;
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected result from Database","Check the cause");
+        }
     }
 
     /**
@@ -809,6 +864,8 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
                     exception,
                     "Updating parameter "+BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
                             SUBMIT_OFFLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result from database","Check the cause");
         }
     }
 
@@ -820,14 +877,21 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
     public void persistContractInDatabase(
             CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
-
-        DatabaseTable databaseTable=getDatabaseSubmitTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord= buildDatabaseTableRecord(
-                databaseTableRecord,
-                customerBrokerContractPurchase
-        );
-        databaseTable.insertRecord(databaseTableRecord);
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
+                    databaseTableRecord,
+                    customerBrokerContractPurchase
+            );
+            databaseTable.insertRecord(databaseTableRecord);
+        }catch(CantInsertRecordException exception){
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,"Error in persistContractInDatabase","");
+        }catch(Exception exception){
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
