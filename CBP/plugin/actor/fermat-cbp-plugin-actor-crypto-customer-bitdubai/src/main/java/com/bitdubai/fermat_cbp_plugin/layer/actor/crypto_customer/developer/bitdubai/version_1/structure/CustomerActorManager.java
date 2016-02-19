@@ -48,10 +48,10 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         this.pluginVersionReference = pluginVersionReference;
     }
 
-    /*==============================================================================================
-    *
-    *   Customer Identity Wallet Relationship
-    *
+   /*==============================================================================================*
+    *                                                                                              *
+    *   Customer Identity Wallet Relationship                                                      *
+    *                                                                                              *
     *==============================================================================================*/
 
     @Override
@@ -127,10 +127,10 @@ public final class CustomerActorManager implements ActorExtraDataManager {
         }
     }
 
-    /*==============================================================================================
-    *
-    *   Actor Extra Data
-    *
+   /*==============================================================================================*
+    *                                                                                              *
+    *   Actor Extra Data                                                                           *
+    *                                                                                              *
     *==============================================================================================*/
 
     @Override
