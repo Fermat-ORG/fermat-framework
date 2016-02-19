@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bit
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetExtraDataActorException;
@@ -25,6 +26,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitd
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetBrokersConnectedException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantNewConnectionEventException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantNewsEventException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -40,17 +43,28 @@ public class ActorCustomerExtraDataEventActions {
     private CryptoBrokerManager cryptoBrokerANSManager;
     private CryptoCustomerActorDao cryptoCustomerActorDao;
     private CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
+    private final ErrorManager errorManager;
+    private final PluginVersionReference pluginVersionReference;
 
-    public ActorCustomerExtraDataEventActions(CryptoBrokerManager cryptoBrokerANSManager, CryptoCustomerActorDao cryptoCustomerActorDao, CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager){
+    public ActorCustomerExtraDataEventActions(
+            final CryptoBrokerManager cryptoBrokerANSManager,
+            final CryptoCustomerActorDao cryptoCustomerActorDao,
+            final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager,
+            final ErrorManager errorManager,
+            final PluginVersionReference pluginVersionReference
+    ){
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
         this.cryptoCustomerActorDao = cryptoCustomerActorDao;
         this.cryptoBrokerActorConnectionManager = cryptoBrokerActorConnectionManager;
+        this.errorManager = errorManager;
+        this.pluginVersionReference = pluginVersionReference;
     }
 
     public void handleNewsEvent() throws CantNewsEventException {
         try {
             this.setExtraData();
         } catch (CantGetExtraDataActorException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantNewsEventException(e.getMessage(), e, "", "");
         }
     }
@@ -67,16 +81,20 @@ public class ActorCustomerExtraDataEventActions {
                             this.cryptoCustomerActorDao.createCustomerExtraData(new ActorExtraDataInformation(relationship.getCryptoCustomer(), brokerIdentity, null, null));
                             this.cryptoBrokerANSManager.requestQuotes(relationship.getCryptoCustomer(), Actors.CBP_CRYPTO_CUSTOMER, broker.getPublicKey());
                         } catch (CantCreateNewActorExtraDataException e) {
+                            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                             throw new CantNewConnectionEventException(e.getMessage(), e, "", "");
                         } catch (CantRequestQuotesException e) {
+                            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                             throw new CantNewConnectionEventException(e.getMessage(), e, "", "");
                         }
                     }
                 }
             }
         } catch (CantGetListCustomerIdentityWalletRelationshipException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantNewConnectionEventException(e.getMessage(), e, "", "");
         } catch (CantGetBrokersConnectedException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantNewConnectionEventException(e.getMessage(), e, "", "");
         }
     }
@@ -91,6 +109,7 @@ public class ActorCustomerExtraDataEventActions {
         try {
             return search.getResult();
         } catch (CantListActorConnectionsException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetBrokersConnectedException(e.getMessage(), e, "", "");
         }
     }
@@ -116,10 +135,13 @@ public class ActorCustomerExtraDataEventActions {
                 }
             }
         } catch (CantUpdateActorExtraDataException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetExtraDataActorException(e.getMessage(), e, "", "");
         } catch (CantCreateNewActorExtraDataException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetExtraDataActorException(e.getMessage(), e, "", "");
         } catch (CantListPendingQuotesRequestsException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetExtraDataActorException(e.getMessage(), e, "", "");
         }
     }
