@@ -125,6 +125,10 @@ public class OpenContractCustomerContractManager extends AbstractOpenContract {
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Opening a new contract",
                     "Cannot update ContractTransactionStatus");
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Opening a new contract",
+                    "Unexpected Result");
         }
 
     }
