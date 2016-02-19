@@ -157,4 +157,8 @@ public class Data {
         digitalAsset.setAppropriated(appropriated);
         digitalAsset.setRedeemed(redeemed);
     }
+
+    public static List<Transaction> getTransactions(AssetIssuerWalletSupAppModuleManager moduleManager, DigitalAsset digitalAsset) {
+        return new ArrayList<>();
+    }
 }

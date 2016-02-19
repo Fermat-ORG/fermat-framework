@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:background="@color/gray">
+        android:background="#4382ef">
 
         <TextView
             android:layout_width="wrap_content"
@@ -25,7 +25,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#093A90">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh"
@@ -34,7 +35,7 @@
             android:visibility="visible">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/dap_wallet_asset_issuer_user_asset_detail_transaction_sent_recycler_view"
+                android:id="@+id/dap_wallet_asset_issuer_asset_detail_transaction_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="16dp"
@@ -46,7 +47,7 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout
-            android:id="@+id/dap_wallet_asset_user_no_transactions"
+            android:id="@+id/dap_wallet_asset_issuer_no_transactions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
