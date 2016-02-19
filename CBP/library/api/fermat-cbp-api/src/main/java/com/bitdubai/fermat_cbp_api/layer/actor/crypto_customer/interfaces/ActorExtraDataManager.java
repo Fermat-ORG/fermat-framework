@@ -35,13 +35,6 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
      * @return
      * @throws CantGetListActorExtraDataException
      */
-    Collection<ActorExtraData> getAllActorExtraData() throws CantGetListActorExtraDataException;
-
-    /**
-     *
-     * @return
-     * @throws CantGetListActorExtraDataException
-     */
     Collection<ActorExtraData> getAllActorExtraDataConnected() throws CantGetListActorExtraDataException;
 
     /**
@@ -66,12 +59,5 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
      * @return all currencies handled with platforms that support them
      */
     Collection<Platforms> getPlatformsSupport(String CustomerPublicKey, Currency currency) throws CantGetListPlatformsException;
-
-    /**
-     *
-     * @param actorExtraData
-     * @throws CantSendActorNetworkServiceException
-     */
-    void requestBrokerExtraData(ActorExtraData actorExtraData) throws CantSendActorNetworkServiceException;
 
 }

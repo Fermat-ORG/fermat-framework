@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRate
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -51,18 +52,18 @@ public interface CurrencyExchangeRateProviderManager extends FermatManager {
     ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
-     * Returns an exchange rate of a given date, for a specific currencyPair
+     * Returns an exchange rate of a given Calendar, for a specific currencyPair
      *
      * @return an exchangeRate object
      */
-    ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
+    ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, Calendar calendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
-     * Given a start and end timestamp and a currencyPair, returns a list of DAILY ExchangeRates
+     * Given a start and end Calendar and a currencyPair, returns a list of DAILY ExchangeRates
      *
      * @return a list of exchangeRate objects
      */
-    Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
+    Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, Calendar startCalendar, Calendar endCalendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
      * Returns a list of queried exchange rates, for a specific currencyPair
