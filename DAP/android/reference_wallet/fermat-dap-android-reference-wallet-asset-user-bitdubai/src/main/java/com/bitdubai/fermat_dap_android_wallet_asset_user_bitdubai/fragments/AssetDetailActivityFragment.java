@@ -135,8 +135,8 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 //        inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL, 0, "help").setIcon(R.drawable.dap_asset_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL, 0, "Help").setIcon(R.drawable.dap_asset_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 1, getResources().getString(R.string.dap_user_wallet_action_redeem))
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE, 2, getResources().getString(R.string.dap_user_wallet_action_appropriate))
