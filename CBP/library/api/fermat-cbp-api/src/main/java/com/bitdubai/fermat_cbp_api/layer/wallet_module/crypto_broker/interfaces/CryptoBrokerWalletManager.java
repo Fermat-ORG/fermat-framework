@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -81,6 +83,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoney
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -373,7 +376,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             String memo,
             BigDecimal priceReference,
             OriginTransaction originTransaction,
-            String originTransactionId
+            String originTransactionId,
+            BlockchainNetworkType blockchainNetworkType
     ) throws CantCreateCryptoMoneyDestockException;
 
     /**
@@ -435,14 +439,14 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      *
      * @return an exchangeRate object
      */
-    ExchangeRate getExchangeRateFromDate(Currency currencyFrom, Currency currencyTo, long timestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
+    ExchangeRate getExchangeRateFromDate(Currency currencyFrom, Currency currencyTo, Calendar calendar, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
 
     /**
      * Given a start and end timestamp and a currencyPair, returns a list of DAILY ExchangeRates
      *
      * @return a list of exchangeRate objects
      */
-    Collection<ExchangeRate> getDailyExchangeRatesForPeriod(Currency currencyFrom, Currency currencyTo, long startTimestamp, long endTimestamp, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
+    Collection<ExchangeRate> getDailyExchangeRatesForPeriod(Currency currencyFrom, Currency currencyTo, Calendar startCalendar, Calendar endCalendar, UUID providerId) throws UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetProviderException;
 
     /**
      * This method load the list CryptoBrokerStockTransaction
@@ -456,7 +460,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      */
     List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp, String walletPublicKey) throws CantGetCryptoBrokerStockTransactionException;
 
-    float getAvailableBalance(Currency merchandise, String walletPublicKey) throws CantGetAvailableBalanceCryptoBrokerWalletException, CryptoBrokerWalletNotFoundException, CantGetStockCryptoBrokerWalletException;
+    float getAvailableBalance(Currency merchandise, String walletPublicKey) throws CantGetAvailableBalanceCryptoBrokerWalletException, CryptoBrokerWalletNotFoundException, CantGetStockCryptoBrokerWalletException, CantStartPluginException;
 
     /**
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
