@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/background_activity">
 
-    <TextView
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/contact_detail_header"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
         android:minHeight="48dp"
         android:divider="?android:attr/listDivider">
 
-        <TextView
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/alias"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
@@ -30,18 +30,6 @@
             android:layout_gravity="center"
             android:textColor="@color/black"
             style="@style/addressDetail"/>
-
-        <ImageButton
-            android:id="@+id/button_view_address"
-            android:src="@drawable/ic_action_map"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:layout_gravity="center"
-            android:textColor="@color/black"
-            android:contentDescription="@string/address_button_description"
-            style="@style/addressButton"/>
 
     </LinearLayout>
 

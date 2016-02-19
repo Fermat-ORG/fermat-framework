@@ -4,35 +4,35 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AlphabetIndexer;
 import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -94,12 +94,13 @@ public List<Contact> contacts;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
-    private static final String TAG = "ContactFragment";
+    String TAG = "CHT_ContactFragment";
 
 
-    String[] contactname={"YO"};   //work
-    String[] contactalias={"aqui"};
-    UUID[] contactuuid;
+    ArrayList<String> contactname=new ArrayList<String>();
+    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    ArrayList<String> contactalias =new ArrayList<String>();
     Contact cont;
     //public ContactsListFragment() {}
     static void initchatinfo(){
@@ -123,23 +124,20 @@ public List<Contact> contacts;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
-
-        // Let this fragment contribute menu items
-        setHasOptionsMenu(true);
-
         try {
-
             chatSession=((ChatSession) appSession);
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
-
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage(), e);
-        }
+            CommonLogger.exception(TAG + "onCreate()", e.getMessage(), e);
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
+        }
+        //mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
+
+        // Let this fragment contribute menu items
+        setHasOptionsMenu(true);
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
@@ -192,24 +190,23 @@ public List<Contact> contacts;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
+        View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
+
         try {
             Contact con= chatSession.getSelectedContact();
-            cont = chatManager.getContactByContactId(con.getContactId());
-            System.out.println("\n\nCONTACTuid:\n\n" + con.getContactId());
-            contactalias[0]=cont.getAlias();
-            contactname[0]=cont.getRemoteName();
-            contactuuid[0]=cont.getContactId();
+            contactname.add(con.getRemoteName());
+            contactid.add(con.getContactId());
+            contactalias.add(con.getAlias());
+            contacticon.add(R.drawable.ic_contact_picture_holo_light);
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
         }
-        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactuuid, "detail");
-        TextView name =(TextView)layout.findViewById(R.id.contact_name);
-        name.setText(contactname[0]);
-        TextView id =(TextView)layout.findViewById(R.id.uuid);
-        id.setText(contactuuid[0].toString());
+        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail");
+        FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
+        name.setText(contactname.get(0));
+        FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
+        id.setText(contactid.get(0).toString());
 
         LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
 
@@ -381,7 +378,7 @@ public List<Contact> contacts;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
+        menu.clear();
         // Inflate the menu items
         inflater.inflate(R.menu.contact_detail_menu, menu);
         // Locate the search item
@@ -477,10 +474,19 @@ public List<Contact> contacts;
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_edit_contact) {
-            changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
+            Contact con = chatSession.getSelectedContact();
+          try {
+              appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(con.getContactId()));
+              changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
+            } catch (CantGetContactException e) {
+              CommonLogger.exception(TAG + "onOptionItemSelected", e.getMessage(), e);
+              Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+          }
+            return true;
         }
         if (item.getItemId() == R.id.menu_del_contact) {
-            AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext());
+            AlertDialog.Builder builder1 = new AlertDialog.Builder(getActivity());
             builder1.setMessage("Do you want to delete this contact?");
             builder1.setCancelable(true);
 
@@ -491,12 +497,27 @@ public List<Contact> contacts;
                             dialog.cancel();
                             try {
                                 Contact con = chatSession.getSelectedContact();
-                                contactuuid[0] = con.getContactId();
                                 chatManager.deleteContact(con);
-                            }catch (Exception e)
-                            {
+                                List <Contact> cont=  chatManager.getContacts();
+                                if (cont.size() > 0) {
+                                    for (int i=0;i<cont.size();i++){
+                                        contactname.add(cont.get(i).getAlias());
+                                        contactid.add(cont.get(i).getContactId());
+                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                    }
+                                    final ContactListAdapter adaptador =
+                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
+                                    adaptador.refreshEvents(contactname, contacticon, contactid);
+                                }
+                            } catch (CantGetContactException e) {
+                                CommonLogger.exception(TAG + "clickYes", e.getMessage(), e);
+                                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                CommonLogger.exception(TAG + "clickYes", e.getMessage(), e);
+                                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
                             }
+                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                         }
                     });
 
@@ -507,12 +528,13 @@ public List<Contact> contacts;
                             dialog.cancel();
                         }
                     });
-
             AlertDialog alert11 = builder1.create();
             alert11.show();
+            return true;
         }
 
-        return true;
+
+        return super.onOptionsItemSelected(item);
 
 
     }
