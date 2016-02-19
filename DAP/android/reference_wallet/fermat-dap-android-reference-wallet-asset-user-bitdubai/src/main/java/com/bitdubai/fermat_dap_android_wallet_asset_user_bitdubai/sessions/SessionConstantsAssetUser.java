@@ -24,4 +24,6 @@ public class SessionConstantsAssetUser {
     public static final int IC_ACTION_USER_ASSET_REDEEM = 210;
     public static final int IC_ACTION_USER_ASSET_APPROPRIATE = 211;
     public static final int IC_ACTION_USER_ASSET_TRANSFER = 212;
+    public static final int IC_ACTION_USER_HELP_TRANSFER = 213;
+    public static final int IC_ACTION_USER_HELP_TRANSFER_SELECT= 214;
 }
