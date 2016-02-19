@@ -114,6 +114,8 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         appSession.setData("users_to_transfer", null);
 
         transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
+        appSession.setData("sell_info", null);
     }
 
     @Override
@@ -132,7 +134,15 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
         configureToolbar();
 
-        if (adapter != null) adapter.changeDataSet(transactions);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            });
+        }
+        
         noTransactionsView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_transactions_sent);
         showOrHideNoTransactionsView(transactions.isEmpty());
     }

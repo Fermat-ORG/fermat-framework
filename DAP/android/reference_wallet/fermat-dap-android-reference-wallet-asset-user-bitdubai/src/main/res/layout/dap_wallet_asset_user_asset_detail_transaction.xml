@@ -20,12 +20,6 @@
             android:layout_marginLeft="7dp"
             android:textColor="@color/color_white"/>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:background="@color/color_white"
-            android:layout_alignParentBottom="true"/>
-
     </RelativeLayout>
 
     <LinearLayout
