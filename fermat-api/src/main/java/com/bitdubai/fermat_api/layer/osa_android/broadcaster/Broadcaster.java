@@ -9,4 +9,6 @@ public interface Broadcaster extends FermatManager {
 
     void publish(BroadcasterType broadcasterType,String code);
 
+    void publish(BroadcasterType broadcasterType,String appCode,String code);
+
 }

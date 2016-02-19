@@ -37,6 +37,9 @@ project(':fermat-osa-addon-android-device-location-bitdubai').projectDir = new F
 include ':fermat-osa-addon-android-broadcaster-system-bitdubai'
 project(':fermat-osa-addon-android-broadcaster-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-broadcaster-system-bitdubai')
 
+include ':bitcoin_exchange_widget'
+project(':bitcoin_exchange_widget').projectDir = new File('OSA/addon/android/widgets/bitcoin_exchange_widget')
+
 // OSA Projects (Linux)
 /*
 include ':fermat-osa-linux-core'

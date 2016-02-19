@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRoot;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.CryptoPaymentRequestNetworkServicePluginRootNew;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
@@ -23,7 +24,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new CryptoPaymentRequestNetworkServicePluginRoot());
+            this.registerVersion(new CryptoPaymentRequestNetworkServicePluginRootNew());
 
         } catch (CantRegisterVersionException e) {
 
