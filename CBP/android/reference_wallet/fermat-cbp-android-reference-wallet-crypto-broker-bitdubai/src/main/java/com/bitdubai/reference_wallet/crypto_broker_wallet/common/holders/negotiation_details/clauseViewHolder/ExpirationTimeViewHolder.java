@@ -53,13 +53,13 @@ public class ExpirationTimeViewHolder extends FermatViewHolder implements View.O
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.cbw_confirm_button) {
-            negotiation.setExpirationTimeConfirmButtonClicked(true);
-            return;
-        }
 
-        if (listener != null)
-            listener.onValueClicked((FermatButton) view);
+        if (listener != null) {
+            if (view.getId() == R.id.cbw_confirm_button)
+                listener.onExpirationDatetimeConfirmButtonClicked();
+            else
+                listener.onExpirationDatetimeValueClicked((FermatButton) view);
+        }
     }
 
     public void setListener(Listener listener) {
@@ -110,7 +110,9 @@ public class ExpirationTimeViewHolder extends FermatViewHolder implements View.O
     }
 
     public interface Listener {
-        void onValueClicked(Button triggerView);
+        void onExpirationDatetimeValueClicked(Button triggerView);
+
+        void onExpirationDatetimeConfirmButtonClicked();
     }
 
 
