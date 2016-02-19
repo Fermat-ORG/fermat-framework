@@ -29,13 +29,15 @@ import java.util.UUID;
  */
 public class EncodeMsjContent {
 
+    private static JsonParser parser = new JsonParser();
+
     /**
      *  Construct the content of the message fot the type <code>ChatMessageTransactionType.CHAT_METADATA_TRASMIT</code>
      *
      * @param chatMetadata
      * @return String message content
      */
-    public static String encodeMSjContentChatMetadataTransmit(ChatMetadata chatMetadata, PlatformComponentType senderType, PlatformComponentType receiverType){
+    public static String encodeMSjContentChatMetadataTransmit(ChatMetadataRecord chatMetadata, PlatformComponentType senderType, PlatformComponentType receiverType){
 
         String contemnt = "";
 
@@ -108,7 +110,14 @@ public class EncodeMsjContent {
      * @return
      */
     public static JsonObject decodeMsjContent(FermatMessage fermatMessage){
-        JsonParser parser = new JsonParser();
         return parser.parse(fermatMessage.getContent()).getAsJsonObject();
+    }
+    /**
+     * Decode a FermatMessage
+     * @param fermatMessage
+     * @return
+     */
+    public static JsonObject decodeMsjContent(String fermatMessage){
+        return parser.parse(fermatMessage).getAsJsonObject();
     }
 }

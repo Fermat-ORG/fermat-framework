@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.interfaces;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNotificationException;
@@ -40,11 +41,10 @@ public interface DAO {
                                 final MessageStatus messageStatus) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException, CantReadRecordDataBaseException;
 
     void changeChatProtocolState(final UUID requestId,
-                                    final ChatProtocolState protocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, Exception;
+                                    final ChatProtocolState protocolState) throws CHTException, CantGetNotificationException, NotificationNotFoundException;
 
 
-//  List<ChatMetadataRecord> listRequestsByChatProtocolStateAndType(final DistributionStatus distributionStatus,
-//                                                                              final NotificationDescriptor notificationDescriptor);
+  List<ChatMetadataRecord> listRequestsByChatProtocolState(final ChatProtocolState chatProtocolState) throws CantReadRecordDataBaseException, CantLoadTableToMemoryException;
 
 
     List<ChatMetadata> listUnreadNotifications() throws CHTException;

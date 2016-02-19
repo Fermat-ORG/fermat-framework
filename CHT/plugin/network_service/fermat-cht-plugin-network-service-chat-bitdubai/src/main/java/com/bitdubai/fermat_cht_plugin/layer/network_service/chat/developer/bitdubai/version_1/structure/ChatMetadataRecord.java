@@ -1,11 +1,14 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+
 
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -54,8 +57,6 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     private int sentCount;
 
-    private UUID responseToNotificationId;
-
     public ChatProtocolState getChatProtocolState() {
         return chatProtocolState;
     }
@@ -93,19 +94,12 @@ public class ChatMetadataRecord implements ChatMetadata{
         this.sentCount = sentCount;
     }
 
-    public UUID getResponseToNotificationId() {
-        return responseToNotificationId;
-    }
-
-    public void setResponseToNotificationId(UUID responseToNotificationId) {
-        this.responseToNotificationId = responseToNotificationId;
-    }
-
     /**
      * This method checks if the ChatMetadataRecord if completed filled before sending.
+     * @param isNewPluginRoot Recieves {@isNewPluginRoot} which indicates if this is an old version of the plugin.
      * @return
      */
-    public boolean isFilled(){
+    public boolean isFilled(boolean isNewPluginRoot){
         if(this.chatId == null)
             return false;
         if(this.transactionId == null)
@@ -138,12 +132,12 @@ public class ChatMetadataRecord implements ChatMetadata{
             return false;
         if(this.processed == null || processed.isEmpty())
             return false;
-        if(this.chatProtocolState == null)
-            return false;
-        if(this.sentDate == null)
-            return false;
-        if(this.responseToNotificationId == null)
-            return false;
+        if(isNewPluginRoot){
+            if(this.chatProtocolState == null)
+                return false;
+            if(this.sentDate == null)
+                return false;
+        }
         return true;
     }
 
@@ -289,6 +283,7 @@ public class ChatMetadataRecord implements ChatMetadata{
         return distributionStatus;
     }
 
+
     /**
      *
      * @param distributionStatus
@@ -299,19 +294,8 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     @Override
     public String toString() {
-        return "ChatMetadataRecord{" +
-                "chatId=" + chatId +
-                ", objectId=" + objectId +
-                ", localActorType='" + localActorType + '\'' +
-                ", localActorPublicKey='" + localActorPublicKey + '\'' +
-                ", remoteActorType='" + remoteActorType + '\'' +
-                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
-                ", chatName='" + chatName + '\'' +
-                ", chatMessageStatus=" + chatMessageStatus +
-                ", date=" + date +
-                ", messageId=" + messageId +
-                ", message='" + message + '\'' +
-                '}';
+        ChatMetadata chatMetadata = this;
+        return XMLParser.parseObject(chatMetadata);
     }
 
     /**

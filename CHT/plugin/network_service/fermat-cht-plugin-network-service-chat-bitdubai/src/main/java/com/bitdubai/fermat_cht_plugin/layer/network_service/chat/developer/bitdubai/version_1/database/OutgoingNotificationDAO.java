@@ -15,11 +15,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
@@ -33,11 +30,8 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageS
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.CommunicationChatNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.CommunicationChatNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.interfaces.DAO;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -192,7 +186,7 @@ public class OutgoingNotificationDAO implements DAO {
     public List<ChatMetadataRecord> findAllToSend() throws CantReadRecordDataBaseException, CantLoadTableToMemoryException {
 
         DatabaseTable databaseTable = getDatabaseTable();
-        databaseTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME, DistributionStatus.DELIVERING.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_PROTOCOL_STATE_COLUMN_NAME, ChatProtocolState.PROCESSING_SEND.getCode(), DatabaseFilterType.EQUAL);
         databaseTable.loadToMemory();
 
             /*
@@ -773,7 +767,7 @@ public class OutgoingNotificationDAO implements DAO {
 
 
     @Override
-    public void changeChatProtocolState(UUID requestId, ChatProtocolState protocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, Exception {
+    public void changeChatProtocolState(UUID requestId, ChatProtocolState protocolState) throws CHTException, CantGetNotificationException, NotificationNotFoundException {
         if (requestId == null) {
             throw new IllegalArgumentException("The senderPublicKey is required, can not be null");
         }
@@ -781,11 +775,16 @@ public class OutgoingNotificationDAO implements DAO {
             throw new IllegalArgumentException("The messageStatus is required, can not be null");
         }
         ChatMetadataRecord chatMetadataRecord = getNotificationById(requestId);
-        if(chatMetadataRecord != null && chatMetadataRecord.isFilled()){
+        if(chatMetadataRecord != null && chatMetadataRecord.isFilled(true)){
             chatMetadataRecord.changeState(protocolState);
             update(chatMetadataRecord);
         }
 
+    }
+
+    @Override
+    public List<ChatMetadataRecord> listRequestsByChatProtocolState(ChatProtocolState chatProtocolState) throws CantReadRecordDataBaseException, CantLoadTableToMemoryException {
+        return findAllToSend();
     }
 
     @Override
@@ -959,7 +958,6 @@ public class OutgoingNotificationDAO implements DAO {
             chatMetadataRecord.setSentDate(Timestamp.valueOf(record.getStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_SENTDATE_COLUMN_NAME)));
             chatMetadataRecord.setSentCount(record.getIntegerValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_SENT_COUNT_COLUMN_NAME));
             chatMetadataRecord.setFlagReadead(Boolean.valueOf(record.getStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_READ_MARK_COLUMN_NAME)));
-            chatMetadataRecord.setResponseToNotificationId(UUID.fromString(record.getStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {
             //this should not happen, but if it happens return null
@@ -1007,7 +1005,6 @@ public class OutgoingNotificationDAO implements DAO {
         entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_SENTDATE_COLUMN_NAME,                    chatMetadataRecord.getSentDate().toString());
         entityRecord.setIntegerValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_SENT_COUNT_COLUMN_NAME,                 chatMetadataRecord.getSentCount());
         entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_READ_MARK_COLUMN_NAME,                   String.valueOf(chatMetadataRecord.isFlagReadead()));
-        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_CHAT_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, chatMetadataRecord.getResponseToNotificationId().toString());
 
         /*
          * return the new table record
