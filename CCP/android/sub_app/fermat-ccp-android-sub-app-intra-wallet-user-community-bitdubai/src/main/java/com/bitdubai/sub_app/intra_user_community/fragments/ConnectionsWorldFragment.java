@@ -518,8 +518,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             if(userCacheList.size() == 0)
             {
                 dataSet.addAll(userList);
-            } Intra Actors Cache List
-
+            }
             else
             {
                 if(userList.size() == 0)
