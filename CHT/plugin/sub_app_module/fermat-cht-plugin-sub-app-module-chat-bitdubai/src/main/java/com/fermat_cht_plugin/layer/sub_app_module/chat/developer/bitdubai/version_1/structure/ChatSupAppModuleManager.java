@@ -65,7 +65,7 @@ public class ChatSupAppModuleManager implements ChatManager {
     }
 
     @Override
-    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException {
+    public List<Message> getMessageByChatId(UUID chatId) throws CantGetMessageException {
         return middlewareChatManager.getMessageByChatId(chatId);
     }
 
