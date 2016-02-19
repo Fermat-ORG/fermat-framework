@@ -698,6 +698,10 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     exception,
                     "Persisting crypto transaction in database",
                     "There was an unexpected result in database");
+        }catch (Exception exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Persisting crypto transaction in database",
+                    "Unexpected error");
         }
     }
 
