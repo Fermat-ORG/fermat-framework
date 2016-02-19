@@ -94,7 +94,7 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
 
                 database = cryptoPaymentRequestNetworkServiceDatabaseFactory.createDatabase(
                         pluginId,
-                        pluginId.toString()
+                        CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME
                 );
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {

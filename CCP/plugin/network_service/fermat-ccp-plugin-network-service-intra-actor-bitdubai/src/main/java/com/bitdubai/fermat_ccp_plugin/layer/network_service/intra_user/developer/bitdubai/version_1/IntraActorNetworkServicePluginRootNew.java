@@ -378,7 +378,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
     @Override
     protected void reprocessMessages() {
-        try {
+       /* try {
            outgoingNotificationDao.changeStatusNotSentMessage();
 
 
@@ -411,12 +411,12 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
         } catch (Exception e) {
             System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
-        }
+        }*/
     }
 
     @Override
     protected void reprocessMessages(String identityPublicKey) {
-        try {
+       /* try {
            outgoingNotificationDao.changeStatusNotSentMessage(identityPublicKey);
 
             List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndNotDone(
@@ -448,7 +448,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
         } catch (Exception e) {
             System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
-        }
+        }*/
     }
 
     private void lauchNotification(){
@@ -1243,7 +1243,10 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        if(developerDatabase.getName().equals(IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME))
+            return new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        else
+            return new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
     }
 
     /**
