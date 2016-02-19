@@ -259,7 +259,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             /*
              * Initialize Developer Database Factory
              */
-            //System.out.println("OPEN_CONTRACT Facti");
             chatMiddlewareDeveloperDatabaseFactory = new
                     ChatMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem,
                     pluginId);
@@ -291,7 +290,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     chatMiddlewareDatabaseDao,
                     this.chatMiddlewareContactFactory,
                     this,
-                    this.networkServiceChatManager
+                    this.networkServiceChatManager,
+                    this.errorManager
             );
 
             /**
