@@ -113,7 +113,7 @@ public class Data {
 
     public static List<Transaction> getTransactions(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         List<Transaction> transactions = new ArrayList<>();
-        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY).getAllTransactions(digitalAsset.getAssetPublicKey());
+        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY).getTransactionsForDisplay(digitalAsset.getAssetPublicKey());
         DAPActor dapActor;
         for (AssetUserWalletTransaction assetUserWalletTransaction :
                 assetUserWalletTransactions) {
