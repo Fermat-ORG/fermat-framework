@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -32,7 +32,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -48,7 +47,6 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
@@ -258,6 +256,15 @@ public class ChatMiddlewareMonitorAgent implements
                 throw new CantInitializeCHTAgent(exception,
                         "Initialize Monitor Agent - trying to open the plugin database",
                         "Please, check the cause");
+            } catch (Exception exception){
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        FermatException.wrapException(exception));
+                throw new CantInitializeCHTAgent(
+                        FermatException.wrapException(exception),
+                        "Initialize Monitor Agent - trying to open the plugin database",
+                        "Unexpected exception");
             }
         }
 
@@ -331,24 +338,40 @@ public class ChatMiddlewareMonitorAgent implements
 
                 }
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 throw new CantSendChatMessageException(
                         e,
                         "Executing Monitor Agent",
                         "Unexpected result in database"
                 );
             } catch (CantGetPendingEventListException e) {
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 throw new CantSendChatMessageException(
                         e,
                         "Executing Monitor Agent",
                         "Cannot get the Pending event list"
                 );
             }  catch (CantGetMessageException e) {
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 throw new CantSendChatMessageException(
                         e,
                         "Executing Monitor Agent",
                         "Cannot get the message"
                 );
             } catch (CantGetPendingTransactionException e) {
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 throw new CantSendChatMessageException(
                         e,
                         "Executing Monitor Agent",
@@ -356,13 +379,31 @@ public class ChatMiddlewareMonitorAgent implements
                 );
             } catch (CantGetContactException e) {
                 //For now, I'm gonna handle this print the exception and continue the thread
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 e.printStackTrace();
             } catch (CantSaveContactException e) {
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        e);
                 throw new CantSendChatMessageException(
                         e,
                         "Executing Monitor Agent",
                         "Cannot save a new contact"
                 );
+            } catch (Exception exception){
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CHAT_MIDDLEWARE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        FermatException.wrapException(exception));
+                throw new DatabaseOperationException(
+                        DatabaseOperationException.DEFAULT_MESSAGE,
+                        FermatException.wrapException(exception),
+                        "Executing Monitor Agent",
+                        "Unexpected exception");
             }
 
 
@@ -430,8 +471,9 @@ public class ChatMiddlewareMonitorAgent implements
                     incomingChatMetadata=pendingTransaction.getInformation();
                     incomingTransactionChatId=incomingChatMetadata.getChatId();
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
-                        //If message exists in database, this message will be update
                         saveChat(incomingChatMetadata);
+                        //If message exists in database, this message will be update
+                   //     saveChat(incomingChatMetadata);
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
@@ -681,8 +723,6 @@ public class ChatMiddlewareMonitorAgent implements
         }
 
         /**
-<<<<<<< HEAD
-=======
          * This method add a new contact to the incoming chat
          * @param chat
          * @param contact
@@ -707,7 +747,6 @@ public class ChatMiddlewareMonitorAgent implements
         }
 
         /**
->>>>>>> 7d89e61ca780089e7397f21cdc9b68bb6b1a68bf
          * This method creates a new Message from incoming metadata
          * @param chatMetadata
          * @return
