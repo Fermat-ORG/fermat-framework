@@ -13,14 +13,15 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.BegunWalletInstallationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingIntraUserTransactionDebitNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorNetworkServicePendingsNotificationEventListener;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.BegunWalletInstallationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingIntraUserDebitTransactionNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.OutgoingIntraUserRollbackTransactionNotificationEventListener;
+
+
 
 /**
  * The enum <code>EventType</code>
@@ -35,16 +36,15 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listener
  */
 public enum EventType implements FermatEventEnum {
 
-    BEGUN_WALLET_INSTALLATION("BWI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new BegunWalletInstallationEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new BegunWalletInstallationEvent(this);
-        }
-    },
-
+//    BEGUN_WALLET_INSTALLATION("BWI") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new BegunWalletInstallationEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new BegunWalletInstallationEvent(this);
+//        }
+//    },
 
     DEVICE_USER_CREATED("DUC") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -76,16 +76,17 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
+//    FINISHED_WALLET_INSTALLATION("FWI") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.FinishedWalletInstallationEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.FinishedWalletInstallationEvent(this);
+//        }
+//    },
 
-    FINISHED_WALLET_INSTALLATION("FWI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.FinishedWalletInstallationEventListener(this, fermatEventMonitor);
-        }
 
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.FinishedWalletInstallationEvent(this);
-        }
-    },
 
     INCOMING_CRYPTO_IDENTIFIED("ICI") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -93,7 +94,7 @@ public enum EventType implements FermatEventEnum {
         }
 
         public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoIdentifiedEvent(this);
+            return new IncomingCryptoIdentifiedEvent(this);
         }
     },
 
@@ -137,211 +138,7 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER("ICOBWTEU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
-        }
 
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoOnBlockchainWaitingTransferenceExtraUserEvent(this);
-        }
-    },
-
-    INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER("ICOBWTIU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoOnBlockchainWaitingTransferenceIntraUserEvent();
-        }
-    },
-
-    INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER("ICOCNWTEU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoOnCryptoNetworkWaitingTransferenceExtraUserEvent(this);
-        }
-    },
-
-    //Modified by Manuel Perez on 02/10/2015
-    //Fix returning IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener
-    INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICOCNWTIU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEvent();
-        }
-    },
-
-
-    /**
-     * Asset Issuer Incoming Crypto Events
-     */
-    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOCNWTAI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetIssuerEvent();
-        }
-    },
-    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER("IAOBCWTAI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceAssetIssuerEvent();
-        }
-    },
-    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER("IAROCNWTAI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetIssuerEvent();
-        }
-    },
-    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER("IAROBCWTAI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetIssuerEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetIssuerEvent();
-        }
-    },
-
-
-    /**
-     * Asset User Incoming Crypto Events
-     */
-    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER("IAOCNWTAU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceAssetUserEvent();
-        }
-    },
-    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER("IAOBCWTAU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceAssetUserEvent();
-        }
-    },
-    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER("IAROCNWTAU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetReversedOnCryptoNetworkWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceAssetUserEvent();
-        }
-    },
-    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER("IAROBCWTAU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceAssetUserEvent();
-        }
-    },
-
-    /**
-     * RedeemPoint Incoming Crypto Events
-     */
-    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT("IAOCNWTRP") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetOnCryptoNetworkWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceRedeemPointEvent();
-        }
-    },
-    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT("IAOBCWTRP") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceRedeemPointEvent();
-        }
-    },
-    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT("IAROCNWTRP") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetReversedOnCryptoNetworkWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceRedeemPointEvent();
-        }
-    },
-    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT("IAROBCWTRP") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetReversedOnBlockchainWaitingTransferenceRedeemPointEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceRedeemPointEvent();
-        }
-    },
-
-
-
-    /**
-     * Asset Redemption Incoming Crypto Events
-     */
-    INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION("IAOCNWTRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetOnCryptoNetworkWaitingTransferenceRedemptionEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnCryptoNetworkWaitingTransferenceRedemptionEvent();
-        }
-    },
-    INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION("IAOBCWTRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceRedemptionEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetOnBlockchainWaitingTransferenceRedemptionEvent();
-        }
-    },
-    INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION("IAROCNWTRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetReversedOnCryptoNetworkWaitingTransferenceRedemptionEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnCryptoNetworkNetworkWaitingTransferenceRedemptionEvent();
-        }
-    },
-    INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION("IAROBCWTRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingAssetReversedOnBlockchainWaitingTransferenceRedemptiontEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-                return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingAssetReversedOnBlockchainWaitingTransferenceRedemptionEvent();
-        }
-    },
 
 
     INCOMING_CRYPTO_RECEIVED("ICR") {
@@ -464,45 +261,6 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER("ICROBWTEU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoReversedOnBlockchainWaitingTransferenceExtraUserEvent(this);
-        }
-    },
-
-    INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER("ICROBWTIU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEvent();
-        }
-    },
-
-    INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_EXTRA_USER("ICROCNWTEU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent(this);
-        }
-    },
-
-    INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER("ICROCNWTIU") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEventListener(fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEvent();
-        }
-    },
 
     INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE("TWT") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -573,7 +331,6 @@ public enum EventType implements FermatEventEnum {
             return null;
         }
     },
-
 
     INTRA_USER_CONNECTION_ACCEPTED("IUCA") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -726,85 +483,85 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    WALLET_CLOSED("WC2") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletClosedEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletClosedEvent(this);
-        }
-    },
-
-    WALLET_CREATED("WC1") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletCreatedEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletCreatedEvent(this);
-        }
-    },
-
-    WALLET_INSTALLED("WI1") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletInstalledEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletInstalledEvent(this);
-        }
-    },
-
-    WALLET_OPENED("WO1") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletOpenedEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletOpenedEvent(this);
-        }
-    },
-
-    WALLET_RESOURCES_INSTALLED("WRI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletResourcesInstalledEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletResourcesInstalledEvent(this);
-        }
-    },
-
-    WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED("WRNSD") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletNavigationStructureDownloadedEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent(this);
-        }
-    },
-
-    WALLET_UNINSTALLED("WU1") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletUninstalledEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletUninstalledEvent(this);
-        }
-    },
-
-    WALLET_WENT_ONLINE("WWO") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletWentOnlineEventListener(this, fermatEventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletWentOnlineEvent(this);
-        }
-    },
+//    WALLET_CLOSED("WC2") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletClosedEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletClosedEvent(this);
+//        }
+//    },
+//
+//    WALLET_CREATED("WC1") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletCreatedEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletCreatedEvent(this);
+//        }
+//    },
+//
+//    WALLET_INSTALLED("WI1") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletInstalledEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletInstalledEvent(this);
+//        }
+//    },
+//
+//    WALLET_OPENED("WO1") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletOpenedEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletOpenedEvent(this);
+//        }
+//    },
+//
+//    WALLET_RESOURCES_INSTALLED("WRI") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletResourcesInstalledEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletResourcesInstalledEvent(this);
+//        }
+//    },
+//
+//    WALLET_RESOURCES_NAVIGATION_STRUCTURE_DOWNLOADED("WRNSD") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletNavigationStructureDownloadedEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletNavigationStructureDownloadedEvent(this);
+//        }
+//    },
+//
+//    WALLET_UNINSTALLED("WU1") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletUninstalledEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletUninstalledEvent(this);
+//        }
+//    },
+//
+//    WALLET_WENT_ONLINE("WWO") {
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.WalletWentOnlineEventListener(this, fermatEventMonitor);
+//        }
+//
+//        public FermatEvent getNewEvent() {
+//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.WalletWentOnlineEvent(this);
+//        }
+//    },
 
     INCOMING_MONEY_NOTIFICATION("IMN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -845,26 +602,6 @@ public enum EventType implements FermatEventEnum {
         }
     },
 
-    RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ReceivedNewDigitalAssetMetadataNotificationEventListener(this, eventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivedNewDigitalAssetMetadataNotificationEvent(this);
-        }
-    },
-
-    RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION("RNTSN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ReceivedNewTransactionStatusNotificationEventListener(this, eventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivedNewTransactionStatusNotificationEvent(this);
-        }
-    },
-
     NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR") {
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -879,7 +616,7 @@ public enum EventType implements FermatEventEnum {
     ACTOR_NETWORK_SERVICE_NEW_NOTIFICATIONS("ANSNN") {
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorNetworkServicePendingsNotificationEventListener(this, fermatEventMonitor);
+            return new ActorNetworkServicePendingsNotificationEventListener(this, fermatEventMonitor);
         }
 
         @Override
@@ -887,17 +624,7 @@ public enum EventType implements FermatEventEnum {
             return new ActorNetworkServicePendingsNotificationEvent(this);
         }
     },
-    ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS("AANSNN") {
-        @Override
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new ActorNetworkServicePendingsNotificationEventListener(this, fermatEventMonitor);
-        }
 
-        @Override
-        public FermatEvent getNewEvent() {
-            return new ActorAssetNetworkServicePendingNotificationEvent(this);
-        }
-    },
     INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION("IIARCN") {
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -908,40 +635,8 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent(this);
         }
-    }, INCOMING_CHAT_MESSAGE("INCCM"){
-        @Override
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingChatMessageEventListener(this, fermatEventMonitor);
-        }
-
-        @Override
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingChatMessageEvent(this);
-        }
     },
-//    NEW_CRYPTO_ADDRESS_REQUEST_ASSET_USER("NCA_REQUEST_AU") {
-//        @Override
-//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-//            return new NewCryptoAddressRequestAssetUserActorNotificationEventListener(this, fermatEventMonitor);
-//        }
-//
-//        @Override
-//        public FermatEvent getNewEvent() {
-//            return new NewCryptoAddressRequestAssetUserActorNotificationEvent(this);
-//        }
-//    },
-//    NEW_CRYPTO_ADDRESS_RECEIVE_ASSET_USER("NCA_RECEIVE_AU") {
-//        @Override
-//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-//            return new NewCryptoAddressReceiveAssetUserActorNotificationEventListener(this, fermatEventMonitor);
-//        }
-//
-//        @Override
-//        public FermatEvent getNewEvent() {
-//            return new NewCryptoAddressReceiveAssetUserActorNotificationEvent(this);
-//        }
-//
-//    },
+
     INCOMING_INTRA_USER_DEBIT_TRANSACTION("IIUDT") {
         @Override
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -966,17 +661,17 @@ public enum EventType implements FermatEventEnum {
         }
 
     },
-    REVIEW_NEGOTIATION("RN"){
-        @Override
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ReviewNegotiationEventListener(this, fermatEventMonitor);
-        }
-
-        @Override
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReviewNegotiationEvent(this);
-        }
-    }
+//    REVIEW_NEGOTIATION("RN") {
+//        @Override
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new ReviewNegotiationEventListener(this, fermatEventMonitor);
+//        }
+//
+//        @Override
+//        public FermatEvent getNewEvent() {
+//            return new ReviewNegotiationEvent(this);
+//        }
+//    };
     ;
 
 

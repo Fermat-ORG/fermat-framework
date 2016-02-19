@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -250,6 +251,8 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
 
                     //NOTIFICATION LAUNCH
                     launchNotificationActorAsset();
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + assetUserNetworkServiceRecord.getActorSenderPublicKey());
+
                     respondReceiveAndDoneCommunication(assetUserNetworkServiceRecord);
                     break;
 
@@ -412,18 +415,18 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
         try {
             outgoingNotificationDao.changeStatusNotSentMessage(identityPublicKey);
         } catch (CantGetActorAssetNotificationException e) {
-            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            System.out.println("ACTOR ASSET USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            System.out.println("ACTOR ASSET USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
         }
     }
 
     private void launchNotificationActorAsset() {
-        FermatEvent fermatEvent = this.getEventManager().getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
+        FermatEvent fermatEvent = eventManager.getNewEvent(EventType.ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS);
         ActorAssetNetworkServicePendingNotificationEvent actorAssetRequestConnectionEvent = (ActorAssetNetworkServicePendingNotificationEvent) fermatEvent;
-        this.getEventManager().raiseEvent(actorAssetRequestConnectionEvent);
+        eventManager.raiseEvent(actorAssetRequestConnectionEvent);
     }
 
     private AssetUserNetworkServiceRecord swapActor(AssetUserNetworkServiceRecord assetUserNetworkServiceRecord) {
