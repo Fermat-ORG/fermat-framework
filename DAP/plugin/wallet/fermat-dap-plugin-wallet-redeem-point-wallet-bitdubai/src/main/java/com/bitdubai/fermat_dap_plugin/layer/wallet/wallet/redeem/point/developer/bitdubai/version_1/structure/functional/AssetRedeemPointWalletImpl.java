@@ -212,7 +212,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
         List<AssetRedeemPointWalletTransaction> debitBook = getTransactions(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
         List<AssetRedeemPointWalletTransaction> toReturn = new ArrayList<>();
         toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
-        toReturn.addAll(getTransactionsForDisplay(debitAvailable, debitBook));
+        toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
         Collections.sort(toReturn, new Comparator<AssetRedeemPointWalletTransaction>() {
             @Override
             public int compare(AssetRedeemPointWalletTransaction o1, AssetRedeemPointWalletTransaction o2) {

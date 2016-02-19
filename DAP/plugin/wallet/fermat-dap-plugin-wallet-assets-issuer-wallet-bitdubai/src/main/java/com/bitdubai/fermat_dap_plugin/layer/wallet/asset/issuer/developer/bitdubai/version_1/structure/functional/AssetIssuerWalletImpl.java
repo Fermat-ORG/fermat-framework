@@ -291,7 +291,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         List<AssetIssuerWalletTransaction> debitBook = getTransactionsAll(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
         List<AssetIssuerWalletTransaction> toReturn = new ArrayList<>();
         toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
-        toReturn.addAll(getTransactionsForDisplay(debitAvailable, debitBook));
+        toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
         Collections.sort(toReturn, new Comparator<AssetIssuerWalletTransaction>() {
             @Override
             public int compare(AssetIssuerWalletTransaction o1, AssetIssuerWalletTransaction o2) {
