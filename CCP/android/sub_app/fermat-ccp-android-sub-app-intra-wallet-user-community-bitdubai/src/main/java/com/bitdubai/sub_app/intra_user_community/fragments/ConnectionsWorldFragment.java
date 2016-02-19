@@ -513,12 +513,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
             List<IntraUserInformation> userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
-             dataSet.addAll(userList);
+             //dataSet.addAll(userList);
 
-           /* if(userCacheList.size() == 0)
+            if(userCacheList.size() == 0)
             {
                 dataSet.addAll(userList);
-            }
+            } Intra Actors Cache List
+             #4837
             else
             {
                 if(userList.size() == 0)
@@ -528,15 +529,21 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 else
                 {
                     for (IntraUserInformation intraUserCache : userCacheList) {
-
-                        if(!userList.contains(intraUserCache.getPublicKey()))
+                        boolean exist = false;
+                        for (IntraUserInformation intraUser : userList) {
+                            if(intraUserCache.getPublicKey().equals(intraUser.getPublicKey())){
+                                exist = true;
+                                break;
+                            }
+                        }
+                        if(!exist)
                             userList.add(intraUserCache);
                     }
                     //guardo el cache
                     moduleManager.saveCacheIntraUsersSuggestions(userList);
                     dataSet.addAll(userList);
                 }
-            }*/
+            }
 
             offset = dataSet.size();
 

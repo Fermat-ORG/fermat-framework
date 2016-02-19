@@ -91,7 +91,7 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
                     {
                         //find last notification by sender actor public key
                         IntraWalletUserActor senderActor= moduleManager.getLastNotification(senderActorPublicKey);
-                        notification = new UserCommunityNotificationPainter("Nuevo pedido de conexión","Se recibió un pedido de conexion de " + senderActor.getName(),"","");
+                        notification = new UserCommunityNotificationPainter("New Connection Request","A new connection request was received from " + senderActor.getName(),"","");
                         break;
                     }
                     catch(Exception e)
