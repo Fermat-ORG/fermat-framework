@@ -45,6 +45,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     private NegotiationWrapper negotiationWrapper;
     private FooterViewHolder.OnFooterButtonsClickListener footerListener;
     private ClauseViewHolder.Listener clauseListener;
+    private ExpirationTimeViewHolder.Listener expirationDatetimeListener;
     private List<IndexInfoSummary> marketRateList;
 
     private boolean haveNote;
@@ -77,6 +78,10 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
         this.clauseListener = clauseListener;
     }
 
+    public void setExpirationDatetimeListener(ExpirationTimeViewHolder.Listener expirationDatetimeListener) {
+        this.expirationDatetimeListener = expirationDatetimeListener;
+    }
+
     public void setFooterListener(FooterViewHolder.OnFooterButtonsClickListener footerListener) {
         this.footerListener = footerListener;
     }
@@ -93,7 +98,9 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             case TYPE_DATE_TIME:
                 return new DateTimeViewHolder(itemView, TYPE_DATE_TIME);
             case TYPE_DATE_EXPIRATION_TIME:
-                return new ExpirationTimeViewHolder(itemView, TYPE_DATE_EXPIRATION_TIME);
+                ExpirationTimeViewHolder expirationTimeViewHolder = new ExpirationTimeViewHolder(itemView, TYPE_DATE_EXPIRATION_TIME);
+                expirationTimeViewHolder.setListener(expirationDatetimeListener);
+                return expirationTimeViewHolder;
             case TYPE_SINGLE_CHOICE:
                 return new SingleChoiceViewHolder(itemView, TYPE_SINGLE_CHOICE);
             case TYPE_EXCHANGE_RATE:
@@ -197,9 +204,8 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     @Override
     protected void bindHolder(FermatViewHolder holder, ClauseInformation clause, int position) {
         final ClauseViewHolder clauseViewHolder = (ClauseViewHolder) holder;
-        final CustomerBrokerNegotiationInformation negotiationInformation = negotiationWrapper.getNegotiationInfo();
 
-        clauseViewHolder.bindData(negotiationInformation, clause, position);
+        clauseViewHolder.bindData(negotiationWrapper, clause, position);
         clauseViewHolder.getConfirmButton().setVisibility(View.VISIBLE);
         clauseViewHolder.setListener(clauseListener);
 
