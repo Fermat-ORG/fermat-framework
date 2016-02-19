@@ -175,6 +175,7 @@ public class ChatMiddlewareMonitorAgent implements
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000;
         public final int DISCOVER_ITERATION_LIMIT = 1;
+        public final String BROADCAST_CODE="13";
         int discoverIteration = 0;
         int iterationNumber = 0;
         ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
@@ -434,7 +435,7 @@ public class ChatMiddlewareMonitorAgent implements
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, "13");
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
                       //  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
                       //This happen when recive a message check first the message sent from here and then the recive message
                        //when response some wrong with this code down here

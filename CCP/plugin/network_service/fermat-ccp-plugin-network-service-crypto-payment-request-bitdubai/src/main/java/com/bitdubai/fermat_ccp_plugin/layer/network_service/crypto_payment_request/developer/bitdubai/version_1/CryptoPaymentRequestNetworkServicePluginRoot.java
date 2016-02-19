@@ -167,8 +167,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
 
 
     private long reprocessTimer =  300000; //five minutes
-
-
     private Timer timer = new Timer();
 
 
@@ -280,8 +278,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                     reprocessMessage();
 
                     //declare a schedule to process waiting request message
-
-
                     this.startTimer();
 
                     initializeAgent();
@@ -1291,7 +1287,7 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+            return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory,developerDatabase, developerDatabaseTable);
         } catch (Exception e) {
             System.out.println(e);
             return new ArrayList<>();
@@ -1409,8 +1405,6 @@ public final class CryptoPaymentRequestNetworkServicePluginRoot extends Abstract
                 reprocessMessage();
             }
         },0, reprocessTimer);
-
-
 
     }
 
