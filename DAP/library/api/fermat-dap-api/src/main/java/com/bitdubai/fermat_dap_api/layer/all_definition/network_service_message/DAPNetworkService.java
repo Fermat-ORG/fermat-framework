@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message;
 
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
@@ -26,6 +27,16 @@ public interface DAPNetworkService {
      * @throws CantGetDAPMessagesException If there was an error while querying for the list.
      */
     List<DAPMessage> getUnreadDAPMessagesByType(DAPMessageType type) throws CantGetDAPMessagesException;
+
+    /**
+     * This method returns the list of new unread DAPMessages for a specific subject, these messages can be
+     * from the same or different types.
+     *
+     * @param subject
+     * @return
+     * @throws CantGetDAPMessagesException
+     */
+    List<DAPMessage> getUnreadDAPMessageBySubject(DAPMessageSubject subject) throws CantGetDAPMessagesException;
 
     void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException;
 }

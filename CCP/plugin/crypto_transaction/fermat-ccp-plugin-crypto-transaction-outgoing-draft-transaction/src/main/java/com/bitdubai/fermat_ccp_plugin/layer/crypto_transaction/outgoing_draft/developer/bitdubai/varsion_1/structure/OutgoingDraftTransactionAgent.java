@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
@@ -56,6 +58,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
     private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
     private EventManager eventManager;
+    private Broadcaster broadcaster;
 
 
     private Thread agentThread;
@@ -70,7 +73,8 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                                                        final OutgoingDraftTransactionDao outgoingIntraActorDao,
                                                        final OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                                        final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
-                                                       final EventManager eventManager
+                                                       final EventManager eventManager,
+                                                        final Broadcaster broadcaster
     ) {
 
         this.errorManager                            = errorManager;
@@ -86,6 +90,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         this.transactionHandlerFactory = transactionHandlerFactory;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
         this.eventManager = eventManager;
+        this.broadcaster = broadcaster;
 
 
     }
@@ -93,9 +98,9 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
 
     public void start() {
         this.transactionProcessorAgent = new TransactionProcessorAgent();
-        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.bitcoinNetworkManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager);
+        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.bitcoinNetworkManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager, this.broadcaster);
         this.agentThread               = new Thread(this.transactionProcessorAgent);
-        this.transactionProcessorAgent.initialize(this.errorManager, this.outgoingIntraActorDao, this.bitcoinWalletManager, this.cryptoVaultManager, this.transactionHandlerFactory, this.cryptoTransmissionNetworkServiceManager, eventManager);
+        this.transactionProcessorAgent.initialize(this.errorManager, this.outgoingIntraActorDao, this.bitcoinWalletManager, this.cryptoVaultManager, this.transactionHandlerFactory, this.cryptoTransmissionNetworkServiceManager, eventManager, this.broadcaster);
         this.agentThread = new Thread(this.transactionProcessorAgent);
         this.agentThread.start();
         this.status = AgentStatus.STARTED;
@@ -125,6 +130,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
         private CryptoTransmissionNetworkServiceManager cryptoTransmissionManager;
         private EventManager eventManager;
+        private Broadcaster broadcaster;
 
 
         private static final int SLEEP_TIME = 5000;
@@ -139,13 +145,15 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                                  CryptoVaultManager cryptoVaultManager,
                                  BitcoinNetworkManager bitcoinNetworkManager,
                                  OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
-                                 CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager
+                                 CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager,
+                                 Broadcaster broadcaster
                                  ) {
             this.dao = dao;
             this.errorManager = errorManager;
             this.cryptoVaultManager = cryptoVaultManager;
             this.bitcoinNetworkManager = bitcoinNetworkManager;
             this.bitcoinWalletManager = bitcoinWalletManager;
+            this.broadcaster = broadcaster;
         }
 
         private void initialize(ErrorManager errorManager,
@@ -154,7 +162,8 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                                 CryptoVaultManager cryptoVaultManager,
                                 OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                 CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
-                                EventManager eventManager) {
+                                EventManager eventManager,
+                                Broadcaster broadcaster) {
             this.dao = dao;
             this.errorManager = errorManager;
             this.cryptoVaultManager = cryptoVaultManager;
@@ -162,6 +171,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
             this.transactionHandlerFactory = transactionHandlerFactory;
             this.cryptoTransmissionManager = cryptoTransmissionNetworkServiceManager;
             this.eventManager = eventManager;
+            this.broadcaster = broadcaster;
         }
 
         public boolean isRunning() {
@@ -477,7 +487,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
 
 
         private void notificateRollbackToGUI(OutgoingIntraActorTransactionWrapper transactionWrapper){
-            FermatEvent                    platformEvent                  = eventManager.getNewEvent(EventType.OUTGOING_ROLLBACK_NOTIFICATION);
+           /* FermatEvent                    platformEvent                  = eventManager.getNewEvent(EventType.OUTGOING_ROLLBACK_NOTIFICATION);
             OutgoingIntraRollbackNotificationEvent outgoingIntraRollbackNotificationEvent = (OutgoingIntraRollbackNotificationEvent) platformEvent;
             outgoingIntraRollbackNotificationEvent.setSource(EventSource.OUTGOING_INTRA_USER);
             outgoingIntraRollbackNotificationEvent.setActorId(transactionWrapper.getActorToPublicKey());
@@ -486,7 +496,10 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
             outgoingIntraRollbackNotificationEvent.setCryptoStatus(transactionWrapper.getCryptoStatus());
             outgoingIntraRollbackNotificationEvent.setWalletPublicKey(transactionWrapper.getWalletPublicKey());
 
-            eventManager.raiseEvent(platformEvent);
+            eventManager.raiseEvent(platformEvent);*/
+
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "TRANSACTION_REVERSE|" + transactionWrapper.getTransactionId().toString());
+
         }
 
     }

@@ -24,9 +24,8 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     @Override
     public void start() throws CantStartPluginDeveloperException {
         try {
-            this.registerVersion(new CryptoAddressesNetworkServicePluginRoot());
-//TODO: comment while fix problem with other platform problem with request CryptoAddress
-//            this.registerVersion(new CryptoAddressNetworkServicePluginRootNew());
+           // this.registerVersion(new CryptoAddressesNetworkServicePluginRoot());
+          this.registerVersion(new CryptoAddressNetworkServicePluginRootNew());
 
         } catch (CantRegisterVersionException e) {
 

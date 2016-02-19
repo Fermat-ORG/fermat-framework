@@ -17,6 +17,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -105,30 +107,22 @@ public class DisconectDialog extends FermatDialog<AssetUserCommunitySubAppSessio
         int i = v.getId();
 
         if (i == R.id.positive_button) {
-//            try {
-//                //image null
-//                if (actor != null && identity != null) {
-//
-//                    getSession().getModuleManager().disconnectIntraUSer(identity.getPublicKey(),actor.getPublicKey());
-//
-//                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-//                    prefs.edit().putBoolean("Connected", true).apply();
-//                    Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
-//                    broadcast.putExtra(Constants.BROADCAST_DISCONNECTED_UPDATE, true);
-//                    sendLocalBroadcast(broadcast);
-//
+            try {
+                //image null
+                if (actor != null) {
+                    getSession().getModuleManager().disconnectToActorAssetUser(actor);
                     Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
-//
-//                } else {
-//                    super.toastDefaultError();
-//                }
-//                dismiss();
-//
-//            } catch (final IntraUserDisconnectingFailedException e) {
-//
-//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-//                super.toastDefaultError();
-//            }
+
+                } else {
+                    super.toastDefaultError();
+                }
+                dismiss();
+
+            }  catch (CantDisconnectAssetUserActorException e) {
+                e.printStackTrace();
+            } catch (CantConnectToActorAssetUserException e) {
+                e.printStackTrace();
+            }
 
             dismiss();
         }else if( i == R.id.negative_button){
