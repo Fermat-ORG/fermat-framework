@@ -218,12 +218,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     }
 
     /*-------------------------------------------------------------------------------------------------
-                                           END ON CLICK METHODS
-   ---------------------------------------------------------------------------------------------------*/
+                                            END ON CLICK METHODS
+    ---------------------------------------------------------------------------------------------------*/
     /*-------------------------------------------------------------------------------------------------
                                             VIEW METHODS
     ---------------------------------------------------------------------------------------------------*/
 
+    /*PRIVATE METHOD*/
     private void initViews(View rootView) {
 
         brokerImage = (ImageView) rootView.findViewById(R.id.ccw_broker_image);
@@ -326,6 +327,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     /*-------------------------------------------------------------------------------------------------
                                             ACTION LISTENER
     ---------------------------------------------------------------------------------------------------*/
+
     //ACTION LISTENER FOR CLAUSE BROKER CURRNCY QUANTTY
     private void actionListenerBrokerCurrencyQuantity(ClauseInformation clause, String newValue) {
 
@@ -413,7 +415,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     /*-------------------------------------------------------------------------------------------------
                                                 END ACTION LISTENER
     ---------------------------------------------------------------------------------------------------*/
-
     /*-------------------------------------------------------------------------------------------------
                                                 VALIDATE OF DATE
     --------------------------------------------------------------------------------------------------*/
@@ -473,7 +474,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
     /*------------------------------------------ END VALIDATE OF DATE -------------------------------------*/
 
-    /*------------------------------------------ OTHER METHODS --------------------------------------------*/
+    /*------------------------------------------ OTHER METHODS ---------------------------------------------*/
 
     //GET CLAUSE INFORMATION
     private Collection<ClauseInformation> getClause(Map<ClauseType, ClauseInformation> mapClauses) {
@@ -531,7 +532,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         return new BigDecimal(value.replace(",", ""));
     }
 
-    /*---------------------------------------------------------------------------------------------------
-                                                END OTHER METHODS
-    ----------------------------------------------------------------------------------------------------*
+    /*------------------------------------------ OTHER METHODS ---------------------------------------------*/
+
 }
