@@ -638,6 +638,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     private void showCriptoUsersCache() {
+
+        IntraUserModuleManager moduleManager = intraUserSubAppSession.getModuleManager();
+        if(moduleManager==null){
+            getActivity().onBackPressed();
+        }else{
+            invalidate();
+        }
         if (dataSet.isEmpty()) {
             showEmpty(true, emptyView);
             swipeRefresh.post(new Runnable() {

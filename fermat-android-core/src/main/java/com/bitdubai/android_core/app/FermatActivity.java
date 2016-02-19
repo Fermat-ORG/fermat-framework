@@ -1797,7 +1797,9 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void onItemClickListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
-        getWalletRuntimeManager().getLastWallet().clear();
+        if(getWalletRuntimeManager().getLastWallet() != null)
+            getWalletRuntimeManager().getLastWallet().clear();
+
         onNavigationMenuItemTouchListener(data, position);
     }
 
