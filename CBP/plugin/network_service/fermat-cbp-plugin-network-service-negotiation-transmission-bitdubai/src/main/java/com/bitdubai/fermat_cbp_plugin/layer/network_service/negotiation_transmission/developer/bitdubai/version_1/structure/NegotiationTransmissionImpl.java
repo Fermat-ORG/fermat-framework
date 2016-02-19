@@ -114,24 +114,41 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
 
     private NegotiationTransmissionImpl(JsonObject jsonObject, Gson gson) {
 
+        System.out.println("12345 Inside Constructor");
         this.transmissionId = UUID.fromString(jsonObject.get("transmissionId").getAsString());
+        System.out.println("12345 Transmission");
         this.transactionId = UUID.fromString(jsonObject.get("transactionId").getAsString());
+        System.out.println("12345 Transaction");
         this.negotiationId = UUID.fromString(jsonObject.get("negotiationId").getAsString());
+        System.out.println("12345 Negotiation");
         this.negotiationTransactionType = gson.fromJson(jsonObject.get("negotiationTransactionType").getAsString(), NegotiationTransactionType.class);
+        System.out.println("12345 negotiationTransactionType");
         this.publicKeyActorSend = (jsonObject.get("publicKeyActorSend") != null) ? jsonObject.get("publicKeyActorSend").getAsString() : null;
-        this.actorSendType = gson.fromJson(jsonObject.get("actorSenderType").getAsString(), PlatformComponentType.class);
+        System.out.println("12345 publicKeyActorSend");
+        this.actorSendType = gson.fromJson(jsonObject.get("actorSendType").getAsString(), PlatformComponentType.class);
+        System.out.println("12345 actorSendType");
         this.publicKeyActorReceive = jsonObject.get("publicKeyActorReceive").getAsString();
+        System.out.println("12345 publicKeyActorReceive");
         this.actorReceiveType = gson.fromJson(jsonObject.get("actorReceiveType").getAsString(), PlatformComponentType.class);
+        System.out.println("12345 actorReceiveType");
         this.transmissionType = gson.fromJson(jsonObject.get("transmissionType").getAsString(), NegotiationTransmissionType.class);
+        System.out.println("12345 transmissionType");
         this.transmissionState = gson.fromJson(jsonObject.get("transmissionState").getAsString(), NegotiationTransmissionState.class);
+        System.out.println("12345 transmissionState");
         this.negotiationType = gson.fromJson(jsonObject.get("negotiationType").getAsString(), NegotiationType.class);
+        System.out.println("12345 negotiationType");
         this.negotiationXML = (jsonObject.get("negotiationXML") != null) ? jsonObject.get("negotiationXML").getAsString() : null;
+        System.out.println("12345 negotiationXML");
         this.timestamp = jsonObject.get("timestamp").getAsLong();
+        System.out.println("12345 timestamp");
         this.pendingFlag = jsonObject.get("pendingFlag").getAsBoolean();
+        System.out.println("12345 pendingFlag");
         this.flagRead = jsonObject.get("flagRead").getAsBoolean();
+        System.out.println("12345 flagRead");
         this.sentCount = jsonObject.get("sentCount").getAsInt();
-        if (jsonObject.get("responseToNotificationId") != null)
-            this.responseToNotificationId = UUID.fromString(jsonObject.get("responseToNotificationId").getAsString());
+        System.out.println("12345 sentCount");
+//            this.responseToNotificationId = UUID.fromString(jsonObject.get("responseToNotificationId").getAsString());
+//        System.out.println("12345 responseToNotificationId");
 
     }
 
