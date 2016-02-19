@@ -100,8 +100,8 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
+                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -152,7 +152,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
                     try {
                         networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
+                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -203,8 +203,8 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
+                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -256,7 +256,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
                     try {
                         networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
+                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -294,7 +294,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
                     try {
                         networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileDestinationToRequestConnection("044C082549C70810022D3174EE6D0A52019E2942D2961FEB597695F4ADE590C20F34C4B404679BF416344A3498E39CF8D14607351F856E4C22C8F90302F03C9400"),
+                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
