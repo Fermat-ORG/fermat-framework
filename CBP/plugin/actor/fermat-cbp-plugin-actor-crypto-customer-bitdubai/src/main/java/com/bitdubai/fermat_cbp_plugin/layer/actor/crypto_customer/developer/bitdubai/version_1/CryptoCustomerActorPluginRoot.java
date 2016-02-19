@@ -108,7 +108,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
                     listenersAdded.add(fermatEventListener);
 
 
-                    agente = new CryptoBrokerExtraDataUpdateAgent(cryptoBrokerANSManager, cryptoCustomerActorDao);
+                    agente = new CryptoBrokerExtraDataUpdateAgent(cryptoBrokerANSManager, cryptoCustomerActorDao, errorManager, getPluginVersionReference());
                     agente.start();
                     this.serviceStatus = ServiceStatus.STARTED;
 
