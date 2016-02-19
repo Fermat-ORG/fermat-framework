@@ -2,6 +2,17 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
@@ -11,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AlphabetIndexer;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -197,7 +209,7 @@ public List<Contact> contacts;
             contactname.add(con.getRemoteName());
             contactid.add(con.getContactId());
             contactalias.add(con.getAlias());
-            contacticon.add(R.drawable.ic_contact_picture_holo_light);
+            contacticon.add(R.drawable.ic_contact_picture_180_holo_light);
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -207,6 +219,14 @@ public List<Contact> contacts;
         name.setText(contactname.get(0));
         FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
         id.setText(contactid.get(0).toString());
+
+        // create bitmap from resource
+        Bitmap bm = BitmapFactory.decodeResource(getResources(),
+                contacticon.get(0));
+
+        // set circle bitmap
+        ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
+        mImage.setImageBitmap(getCircleBitmap(bm));
 
         LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
 
@@ -232,6 +252,40 @@ public List<Contact> contacts;
         //loadDummyHistory();
         // Inflate the list fragment layout
         //return inflater.inflate(R.layout.contact_list_fragment, container, false);
+    }
+
+    private Bitmap getCircleBitmap(Bitmap bitmap) {
+        final Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+                bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(output);
+
+        final int color = Color.RED;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+        //final Paint paintBorder = new Paint();
+       // paintBorder.setColor(Color.GREEN);
+        //paintBorder.setShadowLayer(4.0f, 0.0f, 2.0f, Color.BLACK);
+        //BitmapShader shader = new BitmapShader(Bitmap.createScaledBitmap(output, canvas.getWidth(), canvas.getHeight(), false), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        //paint.setShader(shader);
+
+
+        paint.setAntiAlias(true);
+        //paintBorder.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        //int circleCenter = bitmap.getWidth() / 2;
+        //int borderWidth = 2;
+        //canvas.drawCircle(circleCenter + borderWidth, circleCenter + borderWidth, circleCenter + borderWidth - 4.0f, paintBorder);
+        //canvas.drawCircle(circleCenter + borderWidth, circleCenter + borderWidth, circleCenter - 4.0f, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+        //canvas.drawBitmap(bitmap, circleCenter + borderWidth, circleCenter + borderWidth, paint);
+
+        bitmap.recycle();
+
+        return output;
     }
 
 
