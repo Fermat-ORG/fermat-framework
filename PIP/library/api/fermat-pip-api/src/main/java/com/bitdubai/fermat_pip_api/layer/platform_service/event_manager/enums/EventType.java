@@ -16,9 +16,11 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.Acto
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingIntraUserTransactionDebitNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorNetworkServicePendingsNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingIntraUserDebitTransactionNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.OutgoingIntraUserRollbackTransactionNotificationEventListener;
+
 
 
 /**
@@ -659,17 +661,17 @@ public enum EventType implements FermatEventEnum {
         }
 
     },
-    REVIEW_NEGOTIATION("RN") {
-        @Override
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ReviewNegotiationEventListener(this, fermatEventMonitor);
-        }
-
-        @Override
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReviewNegotiationEvent(this);
-        }
-    };
+//    REVIEW_NEGOTIATION("RN") {
+//        @Override
+//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+//            return new ReviewNegotiationEventListener(this, fermatEventMonitor);
+//        }
+//
+//        @Override
+//        public FermatEvent getNewEvent() {
+//            return new ReviewNegotiationEvent(this);
+//        }
+//    };
     ;
 
 
