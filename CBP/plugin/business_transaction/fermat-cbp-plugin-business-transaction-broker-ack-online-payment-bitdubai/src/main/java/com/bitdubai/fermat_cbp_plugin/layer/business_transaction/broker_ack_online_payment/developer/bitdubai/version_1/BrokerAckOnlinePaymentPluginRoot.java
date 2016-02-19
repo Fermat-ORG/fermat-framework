@@ -248,7 +248,8 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
             BrokerAckOnlinePaymentRecorderService brokerAckOnlinePaymentRecorderService=
                     new BrokerAckOnlinePaymentRecorderService(
                             brokerAckOnlinePaymentBusinessTransactionDao,
-                            eventManager);
+                            eventManager,
+                            errorManager);
 
             //brokerAckOnlinePaymentRecorderService.start();
 
@@ -284,6 +285,10 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
                     FermatException.wrapException(exception),
                     "Starting Broker Ack Online Payment Plugin",
                     "Cannot initialize the plugin recorder service");
+        }catch (Exception exception){
+            throw new CantStartPluginException(FermatException.wrapException(exception),
+                    "Starting Broker Ack Online Payment Plugin",
+                    "Unexpected error");
         }
     }
 
