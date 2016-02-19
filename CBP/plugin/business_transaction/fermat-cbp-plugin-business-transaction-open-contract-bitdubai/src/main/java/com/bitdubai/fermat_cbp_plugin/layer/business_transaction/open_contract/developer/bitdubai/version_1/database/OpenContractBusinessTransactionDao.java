@@ -112,49 +112,78 @@ public class OpenContractBusinessTransactionDao {
     }
 
     public void persistContractRecord(Contract contractRecord, ContractType contractType) throws CantInsertRecordException {
-
-        ContractTransactionStatus contractTransactionStatus=ContractTransactionStatus.CREATING_CONTRACT;
-        TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.NOT_READY_TO_SEND;
-        DatabaseTable databaseTable=getDatabaseContractTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord=buildDatabaseRecord(databaseTableRecord,
-                contractRecord,
-                contractTransactionStatus,
-                transactionTransmissionStates,
-                contractType);
-        databaseTable.insertRecord(databaseTableRecord);
+        try{
+            ContractTransactionStatus contractTransactionStatus=ContractTransactionStatus.CREATING_CONTRACT;
+            TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.NOT_READY_TO_SEND;
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord=buildDatabaseRecord(databaseTableRecord,
+                    contractRecord,
+                    contractTransactionStatus,
+                    transactionTransmissionStates,
+                    contractType);
+            databaseTable.insertRecord(databaseTableRecord);
+        }catch(CantInsertRecordException e){
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
+                    e,
+                    "Cant Insert Recort in persist Contract Record","Check the cause");
+        }catch(Exception e){
+            throw new CantInsertRecordException(CantCreateDatabaseException.DEFAULT_MESSAGE,
+                    e,
+                    "Unexpected Result",
+                    "Check the cause");
+        }
 
     }
 
     public String getContractXML(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        return getValue(
-                contractHash,
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_XML_COLUMN_NAME);
+        try{
+            return getValue(
+                    contractHash,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_XML_COLUMN_NAME);
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
 
     }
 
     public String getNegotiationId(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        return getValue(
-                contractHash,
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_NEGOTIATION_ID_COLUMN_NAME);
-
+        try{
+            return getValue(
+                    contractHash,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_NEGOTIATION_ID_COLUMN_NAME);
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
     }
 
     public boolean isContractHashExists(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        String stringFromDatabase=getContractXML(contractHash);
-        return stringFromDatabase!=null;
+        try{
+            String stringFromDatabase=getContractXML(contractHash);
+            return stringFromDatabase!=null;
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
     }
 
     public boolean isContractHashSentConfirmation(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(contractHash);
-        return contractTransactionStatus.getCode().equals(ContractTransactionStatus.CONTRACT_CONFIRMED.getCode());
+        try{
+            ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(contractHash);
+            return contractTransactionStatus.getCode().equals(ContractTransactionStatus.CONTRACT_CONFIRMED.getCode());
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
     }
 
     public boolean isContractHashPendingResponse(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(contractHash);
-        return contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_RESPONSE.getCode());
+        try{
+            ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(contractHash);
+            return contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_RESPONSE.getCode());
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
     }
 
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
@@ -171,6 +200,8 @@ public class OpenContractBusinessTransactionDao {
                     e,
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
     }
 
@@ -188,16 +219,21 @@ public class OpenContractBusinessTransactionDao {
                     e,
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
     }
 
     public UUID getTransactionId(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
-        String transactionId= getValue(
-                contractHash,
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_ID_COLUMN_NAME);
-        return UUID.fromString(transactionId);
-
+        try{
+            String transactionId= getValue(
+                    contractHash,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_ID_COLUMN_NAME);
+            return UUID.fromString(transactionId);
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
     }
 
     public ContractType getContractType(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
@@ -213,8 +249,9 @@ public class OpenContractBusinessTransactionDao {
                     e,
                     "Getting Contract Type from database",
                     "The contractType in database is invalid");
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
-
     }
 
     private String getValue(String key,
@@ -266,6 +303,8 @@ public class OpenContractBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
 
     }
@@ -295,23 +334,35 @@ public class OpenContractBusinessTransactionDao {
             throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        updateRecordStatus(contractHash,
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                contractTransactionStatus.getCode());
+        try{
+            updateRecordStatus(contractHash,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    contractTransactionStatus.getCode());
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
     }
 
     public List<String> getPendingToSubmitContractHash() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
-        return getStringList(
-                ContractTransactionStatus.PENDING_SUBMIT.getCode(),
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
+        try{
+            return getStringList(
+                    ContractTransactionStatus.PENDING_SUBMIT.getCode(),
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
     }
 
     public List<String> getPendingToConfirmContractHash() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
-        return getStringList(
-                ContractTransactionStatus.PENDING_CONFIRMATION.getCode(),
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
+        try{
+            return getStringList(
+                    ContractTransactionStatus.PENDING_CONFIRMATION.getCode(),
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
     }
 
     /**
@@ -376,6 +427,8 @@ public class OpenContractBusinessTransactionDao {
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
     }
 
@@ -398,6 +451,8 @@ public class OpenContractBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }catch (Exception e){
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
     }
 

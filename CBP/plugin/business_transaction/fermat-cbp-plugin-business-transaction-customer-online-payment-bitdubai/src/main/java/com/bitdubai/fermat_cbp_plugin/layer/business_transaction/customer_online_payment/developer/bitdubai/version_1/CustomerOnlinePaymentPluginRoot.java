@@ -190,7 +190,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
                     CustomerOnlinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
-        } catch (Exception exception) {
+        }catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -299,32 +299,17 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
 
     @Override
     public void pause() {
-        try{
-            this.serviceStatus = ServiceStatus.PAUSED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
-        }
-
+        this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
-        try{
-            this.serviceStatus = ServiceStatus.STARTED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
-        }
-
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void stop() {
-        try{
-            this.serviceStatus = ServiceStatus.STOPPED;
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
-        }
-
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
     @Override
