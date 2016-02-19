@@ -7,11 +7,14 @@ import android.widget.TextView;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
 /**
  * Created by Yordin Alayn on 22.01.16.
@@ -31,8 +34,8 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     }
 
     @Override
-    public void bindData(CustomerBrokerNegotiationInformation negotiationInformation, ClauseInformation clause, int clausePosition) {
-        super.bindData(negotiationInformation, clause, clausePosition);
+    public void bindData(NegotiationWrapper data, ClauseInformation clause, int clausePosition) {
+        super.bindData(data, clause, clausePosition);
 
         buttonValue.setText(getFriendlyValue(clause));
     }
@@ -89,15 +92,17 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
         String friendlyValue = clauseValue;
 
         final ClauseType type = clause.getType();
-        if (type.equals(ClauseType.CUSTOMER_CURRENCY) || type.equals(ClauseType.BROKER_CURRENCY)) {
-            try {
+        try {
+            if (type == ClauseType.CUSTOMER_CURRENCY || type == ClauseType.BROKER_CURRENCY) {
                 if (FiatCurrency.codeExists(clauseValue))
                     friendlyValue = FiatCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
                 else if (CryptoCurrency.codeExists(clauseValue))
                     friendlyValue = CryptoCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
 
-            } catch (FermatException ignore) {
+            } else if (type == ClauseType.CUSTOMER_PAYMENT_METHOD || type == ClauseType.BROKER_PAYMENT_METHOD) {
+                friendlyValue = MoneyType.getByCode(clauseValue).getFriendlyName();
             }
+        } catch (FermatException ignore) {
         }
 
         return friendlyValue;
