@@ -10,6 +10,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -36,8 +37,8 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
     private CryptoWallet moduleManager;
     private ReferenceWalletSession referenceWalletSession;
 
-    public BitcoinWalletFermatAppConnection(Activity activity) {
-        super(activity);
+    public BitcoinWalletFermatAppConnection(Activity activity,FermatSession fullyLoadedSession) {
+        super(activity); this.referenceWalletSession = (ReferenceWalletSession)fullyLoadedSession;
     }
 
     @Override
