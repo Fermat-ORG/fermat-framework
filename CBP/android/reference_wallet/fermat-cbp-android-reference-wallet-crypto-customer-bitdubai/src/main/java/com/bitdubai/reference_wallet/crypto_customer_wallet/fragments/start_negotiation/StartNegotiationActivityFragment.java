@@ -115,6 +115,10 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         return layout;
     }
 
+    /*-------------------------------------------------------------------------------------------------
+                                            ON CLICK METHODS
+    ---------------------------------------------------------------------------------------------------*/
+    
     @Override
     public void onClauseCLicked(final Button triggerView, final ClauseInformation clause, final int position) {
         SimpleListDialogFragment dialogFragment;
@@ -203,8 +207,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
         } catch (CouldNotStartNegotiationException | CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException e) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
     }
@@ -214,7 +217,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         // DO NOTHING..
     }
 
-    /*PRIVATE METHOD*/
+    /*-------------------------------------------------------------------------------------------------
+                                           END ON CLICK METHODS
+   ---------------------------------------------------------------------------------------------------*/
+    /*-------------------------------------------------------------------------------------------------
+                                            VIEW METHODS
+    ---------------------------------------------------------------------------------------------------*/
+
     private void initViews(View rootView) {
 
         brokerImage = (ImageView) rootView.findViewById(R.id.ccw_broker_image);
@@ -310,6 +319,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
     }
 
+    /*-------------------------------------------------------------------------------------------------
+                                            END VIEW METHODS
+    ---------------------------------------------------------------------------------------------------*/
+
+    /*-------------------------------------------------------------------------------------------------
+                                            ACTION LISTENER
+    ---------------------------------------------------------------------------------------------------*/
     //ACTION LISTENER FOR CLAUSE BROKER CURRNCY QUANTTY
     private void actionListenerBrokerCurrencyQuantity(ClauseInformation clause, String newValue) {
 
@@ -394,6 +410,13 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
 
     }
+    /*-------------------------------------------------------------------------------------------------
+                                                END ACTION LISTENER
+    ---------------------------------------------------------------------------------------------------*/
+
+    /*-------------------------------------------------------------------------------------------------
+                                                VALIDATE OF DATE
+    --------------------------------------------------------------------------------------------------*/
 
     //VALIDATE CLAUSE
     private Boolean validateClauses(Map<ClauseType, ClauseInformation> clauses) {
@@ -432,6 +455,26 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         return true;
     }
 
+    //VALIDATE EXCHANGE RATE NOT IS ZERO
+    private boolean validateExchangeRate() {
+
+        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
+
+        final BigDecimal exchangeRate = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
+
+        if (exchangeRate.compareTo(BigDecimal.ZERO) <= 0) {
+            Toast.makeText(getActivity(), "The exchange rate must be greater than zero.", Toast.LENGTH_LONG).show();
+            return false;
+        }
+
+        return true;
+
+    }
+
+    /*------------------------------------------ END VALIDATE OF DATE -------------------------------------*/
+
+    /*------------------------------------------ OTHER METHODS --------------------------------------------*/
+
     //GET CLAUSE INFORMATION
     private Collection<ClauseInformation> getClause(Map<ClauseType, ClauseInformation> mapClauses) {
 
@@ -464,22 +507,6 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         return clauses;
     }
 
-    //VALIDATE EXCHANGE RATE NOT IS ZERO
-    private boolean validateExchangeRate() {
-
-        final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
-
-        final BigDecimal exchangeRate = getBigDecimal(clauses.get(ClauseType.EXCHANGE_RATE).getValue());
-
-        if (exchangeRate.compareTo(BigDecimal.ZERO) <= 0) {
-            Toast.makeText(getActivity(), "The exchange rate must be greater than zero.", Toast.LENGTH_LONG).show();
-            return false;
-        }
-
-        return true;
-
-    }
-
     private List<Currency> getCurrenciesFromQuotes(List<MerchandiseExchangeRate> quotes) {
         List<Currency> data = new ArrayList<>();
 
@@ -504,4 +531,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         return new BigDecimal(value.replace(",", ""));
     }
 
+    /*---------------------------------------------------------------------------------------------------
+                                                END OTHER METHODS
+    ----------------------------------------------------------------------------------------------------*
 }
