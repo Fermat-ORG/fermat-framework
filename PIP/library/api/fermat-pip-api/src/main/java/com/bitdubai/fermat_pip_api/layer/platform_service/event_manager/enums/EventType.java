@@ -670,6 +670,7 @@ public enum EventType implements FermatEventEnum {
             return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReviewNegotiationEvent(this);
         }
     };
+    ;
 
 
     /**
