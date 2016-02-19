@@ -86,7 +86,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
      */
     @Override
     public StockBalance getStockBalance() throws CantGetStockCryptoBrokerWalletException {
-        return new StockBalanceImpl(database, pluginId, pluginFileSystem);
+        return new StockBalanceImpl(database, pluginId, pluginFileSystem, errorManager);
     }
 
     /**
@@ -97,7 +97,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
      */
     @Override
     public CryptoBrokerWalletSetting getCryptoWalletSetting() throws CantGetCryptoBrokerWalletSettingException {
-        return new CryptoBrokerWalletSettingImpl(database, pluginId, pluginFileSystem);
+        return new CryptoBrokerWalletSettingImpl(database, pluginId, pluginFileSystem, errorManager);
     }
 
     /**
@@ -203,8 +203,8 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
             throw new CryptoBrokerWalletNotFoundException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
         } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
-            throw new CryptoBrokerWalletNotFoundException(CryptoBrokerWalletNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
+        throw new CryptoBrokerWalletNotFoundException(CryptoBrokerWalletNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+    }
     }
 
     /**
