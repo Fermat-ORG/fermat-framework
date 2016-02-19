@@ -202,15 +202,14 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      */
     public AbstractNetworkServiceBase(PluginVersionReference pluginVersionReference, EventSource eventSource, PlatformComponentType platformComponentType, NetworkServiceType networkServiceType, String name, String extraData) {
         super(pluginVersionReference);
-        this.eventSource = eventSource;
+        this.eventSource           = eventSource;
         this.platformComponentType = platformComponentType;
         this.networkServiceType    = networkServiceType;
         this.name                  = name;
         this.extraData             = extraData;
         this.starting              = new AtomicBoolean(false);
         this.register              = Boolean.FALSE;
-
-        listenersAdded = new CopyOnWriteArrayList<>();
+        this.listenersAdded        = new CopyOnWriteArrayList<>();
     }
 
 
@@ -1007,7 +1006,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      *
      * @param newFermatMessageReceive
      */
-    public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
+    public synchronized void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
 
     }
 

@@ -507,8 +507,37 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
-        try {
-            dataSet.addAll(moduleManager.getSuggestionsToContact(MAX, offset));
+
+         try {
+            //verifico la cache para mostrar los que tenia antes y los nuevos
+
+            List<IntraUserInformation> userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+            List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
+             dataSet.addAll(userList);
+
+           /* if(userCacheList.size() == 0)
+            {
+                dataSet.addAll(userList);
+            }
+            else
+            {
+                if(userList.size() == 0)
+                {
+                    dataSet.addAll(userCacheList);
+                }
+                else
+                {
+                    for (IntraUserInformation intraUserCache : userCacheList) {
+
+                        if(!userList.contains(intraUserCache.getPublicKey()))
+                            userList.add(intraUserCache);
+                    }
+                    //guardo el cache
+                    moduleManager.saveCacheIntraUsersSuggestions(userList);
+                    dataSet.addAll(userList);
+                }
+            }*/
+
             offset = dataSet.size();
 
         } catch (CantGetIntraUsersListException e) {

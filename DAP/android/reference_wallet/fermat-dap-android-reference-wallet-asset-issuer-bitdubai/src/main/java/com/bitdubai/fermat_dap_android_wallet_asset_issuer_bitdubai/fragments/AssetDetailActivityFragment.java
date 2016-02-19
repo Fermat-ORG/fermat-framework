@@ -320,7 +320,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_APPROPRIATE, 1, getResources().getString(R.string.dap_issuer_wallet_action_appropriate))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
-        menu.add(1, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL, 2, "Help")
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL, 2, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
