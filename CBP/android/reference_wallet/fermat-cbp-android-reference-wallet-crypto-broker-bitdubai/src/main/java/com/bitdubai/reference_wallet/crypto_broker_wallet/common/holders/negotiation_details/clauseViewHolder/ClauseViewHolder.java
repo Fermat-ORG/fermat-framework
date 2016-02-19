@@ -10,9 +10,11 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
 /**
  * Created by Yordin Alayn on 22.01.16.
@@ -43,7 +45,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.onConfirmButtonClicked(clause);
+                listener.onConfirmClauseButtonClicked(clause);
             }
         });
     }
@@ -52,16 +54,17 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
         this.listener = listener;
     }
 
-    public FermatButton getConfirmButton(){
+    public FermatButton getConfirmButton() {
         return confirmButton;
     }
 
-    public void bindData(CustomerBrokerNegotiationInformation negotiationInformation, ClauseInformation clause, int clausePosition) {
-        this.negotiationInformation = negotiationInformation;
+    public void bindData(NegotiationWrapper negotiationWrapper, ClauseInformation clause, int clausePosition) {
+        this.negotiationInformation = negotiationWrapper.getNegotiationInfo();
         this.clause = clause;
         this.clausePosition = clausePosition;
 
-        switch (clause.getStatus()) {
+        ClauseStatus status = negotiationWrapper.isClauseConfirmed(clause) ? clause.getStatus() : ClauseStatus.DRAFT;
+        switch (status) {
             case ACCEPTED:
                 containerCardView.setCardBackgroundColor(getColor(R.color.cbw_card_background_status_accepted));
                 containerCardView.setClickable(false);
@@ -98,7 +101,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     public interface Listener {
         void onClauseClicked(Button triggerView, ClauseInformation clause, int clausePosition);
 
-        void onConfirmButtonClicked(ClauseInformation clause);
+        void onConfirmClauseButtonClicked(ClauseInformation clause);
     }
 
     protected abstract void onAcceptedStatus();

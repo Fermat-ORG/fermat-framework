@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NewOpenNegotiationDetailsAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
 /**
  * Created by Yordin Alayn on 22.01.16.
@@ -33,7 +34,7 @@ public class DateTimeViewHolder extends ClauseViewHolder implements View.OnClick
     }
 
     @Override
-    public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause, int position) {
+    public void bindData(NegotiationWrapper data, ClauseInformation clause, int position) {
         super.bindData(data, clause, position);
 
         java.text.DateFormat timeFormat = DateFormat.getTimeFormat(itemView.getContext());

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NewOpenNegotiationDetailsAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
 import java.util.Map;
 
@@ -38,7 +39,7 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
     }
 
     @Override
-    public void bindData(CustomerBrokerNegotiationInformation data, ClauseInformation clause, int position) {
+    public void bindData(NegotiationWrapper data, ClauseInformation clause, int position) {
         super.bindData(data, clause, position);
 
         final ClauseType clauseType = (getHolderType() == TYPE_AMOUNT_TO_SELL) ? CUSTOMER_CURRENCY : BROKER_CURRENCY;

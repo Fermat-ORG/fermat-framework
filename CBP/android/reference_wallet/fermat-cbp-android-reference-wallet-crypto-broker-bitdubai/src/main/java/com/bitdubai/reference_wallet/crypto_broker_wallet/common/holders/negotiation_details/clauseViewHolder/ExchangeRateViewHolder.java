@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -51,10 +52,10 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     }
 
     @Override
-    public void bindData(CustomerBrokerNegotiationInformation negotiationInformation, ClauseInformation clause, int clausePosition) {
-        super.bindData(negotiationInformation, clause, clausePosition);
+    public void bindData(NegotiationWrapper data, ClauseInformation clause, int clausePosition) {
+        super.bindData(data, clause, clausePosition);
 
-        final Map<ClauseType, ClauseInformation> clauses = negotiationInformation.getClauses();
+        final Map<ClauseType, ClauseInformation> clauses = data.getClauses();
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
