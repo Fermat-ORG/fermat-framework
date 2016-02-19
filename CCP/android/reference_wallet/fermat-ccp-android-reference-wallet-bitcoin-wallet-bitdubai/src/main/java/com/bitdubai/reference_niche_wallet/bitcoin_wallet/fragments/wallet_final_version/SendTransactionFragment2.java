@@ -426,6 +426,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
+
         //txt_type_balance.setTypeface(tf);
 
         //((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
@@ -954,9 +955,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         switch (showMoneyType){
             case BITCOIN:
                 moneyTpe = "btc";
+                txt_balance_amount.setTextSize(38);
                 break;
             case BITS:
                 moneyTpe = "bits";
+                txt_balance_amount.setTextSize(28);
                 break;
         }
 
