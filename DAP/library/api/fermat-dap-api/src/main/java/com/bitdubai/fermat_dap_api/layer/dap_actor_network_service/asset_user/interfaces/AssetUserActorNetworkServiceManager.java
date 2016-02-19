@@ -17,6 +17,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.ex
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantSendCryptoAddressException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
 
 import java.util.List;
 import java.util.UUID;
@@ -134,7 +136,7 @@ public interface AssetUserActorNetworkServiceManager extends FermatManager, DAPN
      *
      * @return List of IntraUserNotification
      */
-//    public List<IntraUserNotification> getActorAssetPendingNotifications() throws CantActorAssetPendingNotificationsException;
+    public List<ActorNotification> getPendingNotifications() throws CantGetActorAssetNotificationException;
 
     /**
      * The method <coda>confirmActorAssetNotification</coda> confirm the pending notification

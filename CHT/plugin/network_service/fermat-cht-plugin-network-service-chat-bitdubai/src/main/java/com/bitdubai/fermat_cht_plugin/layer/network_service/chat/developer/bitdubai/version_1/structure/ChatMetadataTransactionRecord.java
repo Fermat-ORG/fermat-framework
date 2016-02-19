@@ -8,6 +8,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMet
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -49,6 +50,87 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
      * Represent the value of processed
      */
     private String processed;
+
+    /**
+     * This method checks if the ChatMetadataTransactionRecord if completed filled before sending.
+     * @return
+     */
+    public boolean isFilled(){
+        if(this.chatId == null)
+            return false;
+        if(this.transactionId == null)
+            return false;
+        if(this.transactionHash == null || this.transactionHash.isEmpty())
+            return false;
+        if(this.objectId == null)
+            return false;
+        if(this.localActorType == null)
+            return false;
+        if(this.localActorPublicKey == null || this.localActorPublicKey.isEmpty())
+            return false;
+        if(this.remoteActorType == null)
+            return false;
+        if(this.remoteActorPublicKey == null || this.remoteActorPublicKey.isEmpty())
+            return false;
+        if(this.chatName == null || this.chatName.isEmpty())
+            return false;
+        if(this.chatMessageStatus == null)
+            return false;
+        if(this.messageStatus == null)
+            return false;
+        if(this.date == null)
+            return false;
+        if(this.messageId == null)
+            return false;
+        if(this.message == null || message.isEmpty())
+            return false;
+        if(this.distributionStatus == null)
+            return false;
+        if(this.processed == null || processed.isEmpty())
+            return false;
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null)
+            return false;
+        if(!(obj instanceof ChatMetadataTransactionRecord))
+            return false;
+        if(this.chatId != ((ChatMetadataTransactionRecord) obj).getChatId())
+            return false;
+        if(this.transactionId != ((ChatMetadataTransactionRecord) obj).getTransactionId())
+            return false;
+        if(!Objects.equals(this.transactionHash, ((ChatMetadataTransactionRecord) obj).getTransactionHash()))
+            return false;
+        if(this.objectId != ((ChatMetadataTransactionRecord) obj).getObjectId())
+            return false;
+        if(this.localActorType != ((ChatMetadataTransactionRecord) obj).getLocalActorType())
+            return false;
+        if(!Objects.equals(this.localActorPublicKey, ((ChatMetadataTransactionRecord) obj).getLocalActorPublicKey()))
+            return false;
+        if(this.remoteActorType != ((ChatMetadataTransactionRecord) obj).getRemoteActorType())
+            return false;
+        if(!Objects.equals(this.remoteActorPublicKey, ((ChatMetadataTransactionRecord) obj).getRemoteActorPublicKey()))
+            return false;
+        if(!Objects.equals(this.chatName, ((ChatMetadataTransactionRecord) obj).getChatName()))
+            return false;
+        if(this.chatMessageStatus != ((ChatMetadataTransactionRecord) obj).getChatMessageStatus())
+            return false;
+        if(this.messageStatus != ((ChatMetadataTransactionRecord) obj).getMessageStatus())
+            return false;
+        if(this.date != ((ChatMetadataTransactionRecord) obj).getDate())
+            return false;
+        if(this.messageId != ((ChatMetadataTransactionRecord) obj).getMessageId())
+            return false;
+        if(!Objects.equals(this.message, ((ChatMetadataTransactionRecord) obj).getMessage()))
+            return false;
+        if(this.distributionStatus != ((ChatMetadataTransactionRecord) obj).getDistributionStatus())
+            return false;
+        if(!Objects.equals(this.processed, ((ChatMetadataTransactionRecord) obj).getProcessed()))
+            return false;
+        return true;
+    }
 
     /**
      * Represent the value of PROCESSED
@@ -346,4 +428,5 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
     public void setMessageId(UUID messageId) {
         this.messageId = messageId;
     }
+
 }

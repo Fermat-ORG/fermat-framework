@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -28,6 +29,8 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinCurrencyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantValidateCryptoNetworkIsActiveException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.InvalidSeedException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
@@ -81,6 +84,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
     BitcoinNetworkManager bitcoinNetworkManager;
     PluginFileSystem pluginFileSystem;
     PluginDatabaseSystem pluginDatabaseSystem;
+    ErrorManager errorManager;
 
 
     /**
@@ -92,13 +96,15 @@ public class BitcoinCurrencyCryptoVaultManager  {
                                    PluginFileSystem pluginFileSystem,
                                    PluginDatabaseSystem pluginDatabaseSystem,
                                    String seedFileName,
-                                   BitcoinNetworkManager bitcoinNetworkManager) throws InvalidSeedException {
+                                   BitcoinNetworkManager bitcoinNetworkManager,
+                                   ErrorManager errorManager) throws InvalidSeedException {
 
         this.pluginId = pluginId;
         BITCOIN_VAULT_SEED_FILENAME = seedFileName;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.errorManager = errorManager;
 
         /**
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
@@ -128,11 +134,14 @@ public class BitcoinCurrencyCryptoVaultManager  {
             seed.check();
             return seed;
         } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadExistingVaultSeed);
             throw new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, cantLoadExistingVaultSeed, "there was an error trying to load an existing seed.", null);
         } catch (CantCreateAssetVaultSeed cantCreateAssetVaultSeed) {
-            throw new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, cantCreateAssetVaultSeed, "there was an error trying to create a new seed.", null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateAssetVaultSeed);
+            throw  new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, cantCreateAssetVaultSeed, "there was an error trying to create a new seed.", null);
         } catch (MnemonicException e) {
-            throw new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, e, "the seed that was generated is not valid.", null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw  new InvalidSeedException(InvalidSeedException.DEFAULT_MESSAGE, e, "the seed that was generated is not valid.", null);
         }
     }
 
@@ -355,7 +364,9 @@ public class BitcoinCurrencyCryptoVaultManager  {
         try {
             address = getBitcoinAddress(networkParameters,addressTo);
         } catch (AddressFormatException e) {
-            throw new InvalidSendToAddressException(e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+            InvalidSendToAddressException exception = new InvalidSendToAddressException(e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -400,7 +411,10 @@ public class BitcoinCurrencyCryptoVaultManager  {
             output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + satoshis + " - " + fee.getValue() + ")");
 
 
-            throw new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, output.toString(), null);
+            CouldNotSendMoneyException exception = new CouldNotSendMoneyException(CouldNotSendMoneyException.DEFAULT_MESSAGE, null, output.toString(), null);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -431,7 +445,10 @@ public class BitcoinCurrencyCryptoVaultManager  {
             output.append("Current balance available for this vault: " + wallet.getBalance().getValue());
             output.append(System.lineSeparator());
             output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
-            throw new InsufficientCryptoFundsException(InsufficientCryptoFundsException.DEFAULT_MESSAGE, e, output.toString(), null);
+            InsufficientCryptoFundsException exception = new InsufficientCryptoFundsException(InsufficientCryptoFundsException.DEFAULT_MESSAGE, e, output.toString(), null);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -467,6 +484,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
         try {
             return this.getBitcoinVaultSeed().getMnemonicCode();
         } catch (InvalidSeedException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");
         }
     }
@@ -481,8 +499,13 @@ public class BitcoinCurrencyCryptoVaultManager  {
         Transaction transaction = draftTransaction.getBitcoinTransaction();
         final NetworkParameters NETWORK_PARAMETERS  = transaction.getParams();
 
-        if (transaction == null)
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "Bitcoin Transaction can't be null", null);
+        if (transaction == null){
+            CantSignTransactionException exception = new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "Bitcoin Transaction can't be null", null);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
+
 
         /**
          * Create the bitcoinj wallet from the keys of all accounts
@@ -491,6 +514,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
         try {
             wallet = Wallet.fromSeed(NETWORK_PARAMETERS, getBitcoinVaultSeed());
         } catch (InvalidSeedException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
         }
 
@@ -498,6 +522,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
         try {
             wallet.importKeys(vaultKeyHierarchyGenerator.getVaultKeyHierarchy().getDerivedKeys(hierarchyAccount));
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
         }
 
@@ -529,6 +554,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
         try {
             privateKey = this.getNextAvailableECKey(hierarchyAccount);
         } catch (CantExecuteDatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, e, "Can't get private key to sign", "hierarchy error");
         }
 
@@ -549,8 +575,13 @@ public class BitcoinCurrencyCryptoVaultManager  {
             }
         }
 
-        if (inputToSign == null)
-            throw new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "No inputs that we own were found in the draft transaction.", "wrong draft transaction");
+        if (inputToSign == null){
+            CantSignTransactionException exception = new CantSignTransactionException(CantSignTransactionException.DEFAULT_MESSAGE, null, "No inputs that we own were found in the draft transaction.", "wrong draft transaction");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+
+        }
+
 
         inputToSign.setScriptSig(inputScript);
 
@@ -569,8 +600,12 @@ public class BitcoinCurrencyCryptoVaultManager  {
      * @throws CantCreateDraftTransactionException
      */
     public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
-        if (draftTransaction == null || addressTo == null || valueToSend == 0)
-            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Parameters can't be null", null);
+        if (draftTransaction == null || addressTo == null || valueToSend == 0){
+            CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, "Parameters can't be null", null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
+
 
         /**
          * I get the network for this address and validate that is active
@@ -579,6 +614,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
         try {
             networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
         } catch (CantValidateCryptoNetworkIsActiveException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "The network to which this address belongs to, is not active!", null);
         }
 
@@ -594,6 +630,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
         try {
             address = getBitcoinAddress(networkParameters,addressTo);
         } catch (AddressFormatException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE,e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
         }
 
@@ -639,7 +676,11 @@ public class BitcoinCurrencyCryptoVaultManager  {
             output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + valueToSend + " - " + fee.getValue() + ")");
 
 
-            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+
+            CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+
         }
 
         /**
@@ -665,7 +706,10 @@ public class BitcoinCurrencyCryptoVaultManager  {
             output.append("Current balance available for this vault: " + wallet.getBalance().getValue());
             output.append(System.lineSeparator());
             output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
-            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, output.toString(), null);
+            CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, output.toString(), null);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**

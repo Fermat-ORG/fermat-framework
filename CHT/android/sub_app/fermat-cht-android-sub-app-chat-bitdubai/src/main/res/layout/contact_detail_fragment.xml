@@ -24,17 +24,17 @@
             android:layout_weight="@integer/contact_detail_info_percent"
             android:orientation="vertical">
 
-            <TextView android:id="@+id/contact_name"
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/contact_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/padding"
                 android:paddingRight="@dimen/padding"
                 android:paddingTop="@dimen/padding"
-                android:visibility="gone"
                 android:textColor="@color/black"
                 style="@style/contactNameTitle"/>
 
-            <TextView
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/uuid"
                 android:layout_height="wrap_content"
                 android:layout_width="0dp"
