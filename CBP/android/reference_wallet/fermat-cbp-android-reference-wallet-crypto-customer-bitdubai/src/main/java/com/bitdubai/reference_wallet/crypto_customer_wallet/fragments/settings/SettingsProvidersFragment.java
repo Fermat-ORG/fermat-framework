@@ -210,7 +210,8 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<CryptoCust
         });
 
         //showHelpDialog();
-
+        if(selectedProviders.size()!=0)
+            this.adapter.changeDataSet(selectedProviders);
         return layout;
     }
 
