@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
 import java.math.BigDecimal;
@@ -58,5 +59,12 @@ public interface CryptoHoldTransactionParameters {
      */
     String getMemo();
     void   setMemo(String memo);
+
+    /**
+     * Returns the blockchainNetworkType of the transaction
+     * @return      BlockchainNetworkType of the transaction
+     */
+    BlockchainNetworkType getBlockchainNetworkType();
+    void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType);
 
 }

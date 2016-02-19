@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionTy
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.enums.ActorProtocolState;
 
 import java.util.UUID;
 
@@ -115,5 +116,21 @@ public interface NegotiationTransmission {
      * The method <code>setTransmissionState</code> set the Transmission State
      */
     void setTransmissionState(NegotiationTransmissionState negotiationTransmissionState);
+
+    public boolean isFlagRead();
+
+    public void setFlagRead(boolean flagRead);
+
+    public int getSentCount();
+
+    public void setSentCount(int sentCount);
+
+    public UUID getResponseToNotificationId();
+
+    public void setResponseToNotificationId(UUID responseToNotificationId);
+
+    public boolean isPendingFlag();
+
+    public void setPendingFlag(boolean pendingFlag);
 
 }

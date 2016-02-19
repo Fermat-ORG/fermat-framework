@@ -38,7 +38,7 @@ public class DateHelper {
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
-        return (cal.getTimeInMillis());
+        return (cal.getTimeInMillis() / 1000L);
     }
 
     public static String getDateStringFromTimestamp(long timestamp) {
@@ -55,7 +55,7 @@ public class DateHelper {
 
         //Calculate the difference
         int daysBetween = (int) ((startDay.getTime() - endDay.getTime()) / (1000 * 60 * 60 * 24));
-        return (Math.abs(daysBetween) + 1) / 1000;
+        return Math.abs(daysBetween) + 1;
     }
 
     public static boolean timestampIsInTheFuture(long timestamp) {
