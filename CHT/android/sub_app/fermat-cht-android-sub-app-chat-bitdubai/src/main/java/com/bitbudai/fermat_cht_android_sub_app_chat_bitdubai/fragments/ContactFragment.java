@@ -48,22 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/*import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;*/
-//import android.text.TextUtils;
-//import android.widget.AbsListView;
-//import android.widget.Button;
-//import android.widget.EditText;
-//import android.widget.ListAdapter;
-//import android.widget.LinearLayout;
-//import android.widget.ListView;
-//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-//import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-//import com.bitdubai.fermat_cht_api.layer.chat_module.interfaces.ChatModuleManager;
-//import com.bitdubai.fermat_cht_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
-
 /**
  * Contact fragment
  *
@@ -88,7 +72,7 @@ public class ContactFragment extends AbstractFermatFragment {
 //    // can be reselected again
 //    private int mPreviouslySelectedSearchItem = 0;
 // public ArrayList<ContactList> contactList;
-public List<Contact> contacts;
+    public List<Contact> contacts;
 //    private ListView contactsContainer;
 //    //private ContactsAdapter adapter;
 //
@@ -106,8 +90,8 @@ public List<Contact> contacts;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    // Defines a tag for identifying log entries
     String TAG = "CHT_ContactFragment";
-
 
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
@@ -142,14 +126,12 @@ public List<Contact> contacts;
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
         } catch (Exception e) {
-            CommonLogger.exception(TAG + "onCreate()", e.getMessage(), e);
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
+            //CommonLogger.exception(TAG + "onCreate()", e.getMessage(), e);
+            //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            if(errorManager != null)
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        //mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
-        // Let this fragment contribute menu items
-        setHasOptionsMenu(true);
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
@@ -157,7 +139,7 @@ public List<Contact> contacts;
        // mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
 
         // Create the main contacts adapter
 //        mAdapter = new ContactsAdapter(getActivity());
@@ -214,15 +196,14 @@ public List<Contact> contacts;
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail");
+        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail", errorManager);
         FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
         name.setText(contactname.get(0));
         FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
         id.setText(contactid.get(0).toString());
 
         // create bitmap from resource
-        Bitmap bm = BitmapFactory.decodeResource(getResources(),
-                contacticon.get(0));
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
 
         // set circle bitmap
         ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
@@ -548,30 +529,30 @@ public List<Contact> contacts;
                     "Yes",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                            try {
-                                Contact con = chatSession.getSelectedContact();
-                                chatManager.deleteContact(con);
-                                List <Contact> cont=  chatManager.getContacts();
-                                if (cont.size() > 0) {
-                                    for (int i=0;i<cont.size();i++){
-                                        contactname.add(cont.get(i).getAlias());
-                                        contactid.add(cont.get(i).getContactId());
-                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
-                                    }
-                                    final ContactListAdapter adaptador =
-                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
-                                    adaptador.refreshEvents(contactname, contacticon, contactid);
+                        dialog.cancel();
+                        try {
+                            Contact con = chatSession.getSelectedContact();
+                            chatManager.deleteContact(con);
+                            List <Contact> cont=  chatManager.getContacts();
+                            if (cont.size() > 0) {
+                                for (int i=0;i<cont.size();i++){
+                                    contactname.add(cont.get(i).getAlias());
+                                    contactid.add(cont.get(i).getContactId());
+                                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
                                 }
-                            } catch (CantGetContactException e) {
-                                CommonLogger.exception(TAG + "clickYes", e.getMessage(), e);
-                                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-                            } catch (Exception e) {
-                                CommonLogger.exception(TAG + "clickYes", e.getMessage(), e);
-                                Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
+                                final ContactListAdapter adaptador =
+                                        new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
+                                adaptador.refreshEvents(contactname, contacticon, contactid);
                             }
-                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+                        } catch (CantGetContactException e) {
+                            CommonLogger.exception(TAG + "clickYes", e.getMessage(), e);
+                            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+                        } catch (Exception e) {
+                            CommonLogger.exception(TAG + "clickYes", e.getMessage(), e);
+                            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+
+                        }
+                        changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                         }
                     });
 
@@ -586,11 +567,7 @@ public List<Contact> contacts;
             alert11.show();
             return true;
         }
-
-
         return super.onOptionsItemSelected(item);
-
-
     }
 
 //    @Override

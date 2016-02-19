@@ -149,7 +149,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
-        ConnectionListAdapter adapter=new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid);
+        ConnectionListAdapter adapter=new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
 
@@ -257,7 +257,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                     contacticon.add(R.drawable.ic_contact_picture_holo_light);
                                 }
                                 final ConnectionListAdapter adaptador =
-                                        new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid);
+                                        new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
                                 adaptador.refreshEvents(contactname, contacticon, contactid);
                                 adaptador.notifyDataSetChanged();
                                 list.invalidateViews();

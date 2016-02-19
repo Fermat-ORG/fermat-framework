@@ -113,7 +113,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     }
                 }
             }
-
         }catch(Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -166,9 +165,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
         return new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
-                        //.addLeftName("Probando")
-                        //.setBackground(R.color.holo_blue)
-                        //.addChatHistory(chatHistory)
                 .addModuleManager(moduleManager)
                 .addErrorManager(errorManager)
                 .addChatSession(chatSession)

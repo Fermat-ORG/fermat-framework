@@ -40,22 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/*import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.widget.CursorAdapter;*/
-//import android.text.TextUtils;
-//import android.widget.AbsListView;
-//import android.widget.Button;
-//import android.widget.EditText;
-//import android.widget.ListAdapter;
-//import android.widget.LinearLayout;
-//import android.widget.ListView;
-//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-//import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-//import com.bitdubai.fermat_cht_api.layer.chat_module.interfaces.ChatModuleManager;
-//import com.bitdubai.fermat_cht_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
-
 /**
  * Contact fragment
  *
@@ -65,9 +49,6 @@ import android.support.v4.widget.CursorAdapter;*/
  */
 public class ContactEditFragment extends AbstractFermatFragment {
 
-//    // Defines a tag for identifying log entries
-//    private static final String TAG = "ContactsListFragment";
-//
 //    // Bundle key for saving previously selected search result item
 //    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =      "SELECTED_ITEM";
 //    //private ContactsAdapter mAdapter; // The main query adapter
@@ -98,6 +79,7 @@ public List<Contact> contacts;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    //Defines a tag for identifying log entries
     private static final String TAG = "CHT_ContactEditFragment";
 
 
@@ -137,26 +119,16 @@ public List<Contact> contacts;
         //setHasOptionsMenu(true);
 
         try {
-
             chatSession=((ChatSession) appSession);
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
-
         } catch (Exception e) {
-
-            CommonLogger.exception(TAG + "oncreate", e.getMessage(), e);
+           // CommonLogger.exception(TAG + "oncreate", e.getMessage(), e);
             if(errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
         }
-        // create bitmap from resource
-        BitmapFactory.decodeResource(getResources(),
-                R.drawable.ic_contact_picture_holo_light);
 
-        // set circle bitmap
-        //ImageView mImage = (ImageView) findViewById(R.id.image);
-        //mImage.setImageBitmap(getCircleBitmap(bm));
         // Check if this fragment is part of a two-pane set up or a single pane by reading a
         // boolean from the application resource directories. This lets allows us to easily specify
         // which screen sizes should use a two-pane layout by setting this boolean in the
@@ -210,8 +182,6 @@ public List<Contact> contacts;
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View layout = inflater.inflate(R.layout.contact_edit_fragment, container, false);
-
-
         try {
             Contact con= chatSession.getSelectedContact();
             contactname.add(con.getRemoteName());
@@ -222,7 +192,7 @@ public List<Contact> contacts;
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "edit");
+        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "edit",errorManager);
         //FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
         //name.setText(contactname.get(0));
         //FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
@@ -263,11 +233,11 @@ public List<Contact> contacts;
                     con.setAlias(aliasText);
                     chatManager.saveContact(con);
                     Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
-
                 } catch (CantSaveContactException e) {
-
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-
+                }catch (Exception e){
+                    if (errorManager != null)
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
             }
         });
@@ -297,7 +267,6 @@ public List<Contact> contacts;
         canvas.drawBitmap(bitmap, rect, rect, paint);
 
         bitmap.recycle();
-
         return output;
     }
 //    private void loadDummyHistory(){// Hard Coded

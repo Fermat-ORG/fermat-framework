@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
@@ -25,8 +26,11 @@ import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.MessageMock;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatSupAppModuleManagerException;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure.ChatSupAppModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseSystemException;
 
 import java.util.List;
 import java.util.Map;
@@ -71,8 +75,14 @@ public class ChatSupAppModulePluginRoot extends AbstractPlugin implements
                 chatManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure.ChatSupAppModuleManager(chatMiddlewareManager);
             }
             return chatManager;
-        }catch (Exception e) {
-            throw new CHTException(FermatException.wrapException(e));
+        }catch (final Exception e) {
+            //throw new CHTException(FermatException.wrapException(e));
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_SUP_APP_MODULE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new CantInitializeChatSupAppModuleManagerException(
+                    "Trying to create the plugin database - Please, check the cause",e);
         }
     }
 

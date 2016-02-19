@@ -14,7 +14,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,25 +41,30 @@ public class ConnectionListAdapter extends ArrayAdapter<String> {
     ArrayList<String> contactinfo=new ArrayList<String>();
     ArrayList<Integer> contacticon=new ArrayList<Integer>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
+    private ErrorManager errorManager;
 
-    public ConnectionListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
+
+    public ConnectionListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid, ErrorManager errorManager) {
         super(context, R.layout.connection_list_item, contactinfo);
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
+        this.errorManager = errorManager;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.connection_list_item, null, true);
+        try {
+            ImageView imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));
+            imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
-        ImageView imagen = (ImageView) item.findViewById(R.id.icon);
-        //imagen.setImageResource(contacticon.get(position));
-        imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
-
-        TextView contactname = (TextView) item.findViewById(R.id.text1);
-        contactname.setText(contactinfo.get(position));
-
+            TextView contactname = (TextView) item.findViewById(R.id.text1);
+            contactname.setText(contactinfo.get(position));
+        }catch (Exception e)
+        {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
         return item;
     }
 
@@ -68,31 +76,27 @@ public class ConnectionListAdapter extends ArrayAdapter<String> {
     }
 
     public static Bitmap decodeFile(Context context,int resId) {
-        try {
 // decode image size
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            BitmapFactory.decodeResource(context.getResources(), resId, o);
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(context.getResources(), resId, o);
 // Find the correct scale value. It should be the power of 2.
-            final int REQUIRED_SIZE = 300;
-            int width_tmp = o.outWidth, height_tmp = o.outHeight;
-            int scale = 1;
-            while (true)
-            {
-                if (width_tmp / 2 < REQUIRED_SIZE
-                        || height_tmp / 2 < REQUIRED_SIZE)
-                    break;
-                width_tmp /= 2;
-                height_tmp /= 2;
-                scale++;
-            }
-// decode with inSampleSize
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            return BitmapFactory.decodeResource(context.getResources(), resId, o2);
-        } catch (Exception e) {
+        final int REQUIRED_SIZE = 300;
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true)
+        {
+            if (width_tmp / 2 < REQUIRED_SIZE
+                    || height_tmp / 2 < REQUIRED_SIZE)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale++;
         }
-        return null;
+// decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeResource(context.getResources(), resId, o2);
     }
 
     public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
