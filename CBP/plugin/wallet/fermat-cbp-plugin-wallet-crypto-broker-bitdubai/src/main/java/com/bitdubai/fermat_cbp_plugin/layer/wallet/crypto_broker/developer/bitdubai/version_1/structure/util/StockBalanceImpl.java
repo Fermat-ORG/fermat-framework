@@ -186,11 +186,13 @@ public class StockBalanceImpl implements StockBalance {
      * {@inheritDoc}
      */
     @Override
-    public void credit(CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, BalanceType balanceType) throws CantAddCreditCryptoBrokerWalletException {
+    public void credit(CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, BalanceType balanceType) throws CantAddCreditCryptoBrokerWalletException, CantStartPluginException {
         try {
             cryptoBrokerWalletDatabaseDao.addCredit(cryptoBrokerStockTransactionRecord, balanceType);
         } catch (CantAddCreditException e) {
-            e.printStackTrace();
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
+
         }
     }
 }

@@ -277,9 +277,11 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
         } catch (CantMakeUnholdTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCalculateBalanceException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+
         } catch (CantStartPluginException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+
         }
     }
 

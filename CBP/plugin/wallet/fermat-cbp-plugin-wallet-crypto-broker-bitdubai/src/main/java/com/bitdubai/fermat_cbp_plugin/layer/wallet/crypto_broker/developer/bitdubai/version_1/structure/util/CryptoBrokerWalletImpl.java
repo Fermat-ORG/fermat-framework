@@ -196,10 +196,13 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,cantOpenDatabaseException);
             throw new CryptoBrokerWalletNotFoundException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,databaseNotFoundException);
             throw new CryptoBrokerWalletNotFoundException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
         } catch (Exception exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
             throw new CryptoBrokerWalletNotFoundException(CryptoBrokerWalletNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
@@ -224,7 +227,6 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
             return internalWalletId;
         } catch (CantCreateCryptoBrokerWalletException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
-
             throw exception;
         } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
@@ -236,8 +238,10 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         try {
             return pluginFileSystem.getTextFile(pluginId, "", CRYPTO_BROKER_WALLET_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         } catch (CantCreateFileException cantCreateFileException) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,cantCreateFileException);
             throw new CantCreateCryptoBrokerWalletException("File could not be created (?)", cantCreateFileException, "File Name: " + CRYPTO_BROKER_WALLET_FILE_NAME, "");
         } catch (FileNotFoundException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantCreateCryptoBrokerWalletException("File could not be found", e, "File Name: " + CRYPTO_BROKER_WALLET_FILE_NAME, "");
         }
     }
@@ -255,6 +259,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
                 }
             }
         } catch (CantLoadFileException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
             throw new CantCreateNewCryptoBrokerWalletException("Can't load file content from media", exception, "", "");
         }
     }
@@ -265,7 +270,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
             databaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
             database = databaseFactory.createDatabase(this.pluginId, internalWalletId);
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,cantCreateDatabaseException);
             throw new CantCreateNewCryptoBrokerWalletException("Database could not be created", cantCreateDatabaseException, "internalWalletId: " + internalWalletId.toString(), "");
         }
     }
@@ -291,6 +296,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         try {
             pluginTextFile.persistToMedia();
         } catch (CantPersistFileException cantPersistFileException) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,cantPersistFileException);
             throw new CantCreateNewCryptoBrokerWalletException("Could not persist in file", cantPersistFileException, "stringBuilder: " + stringBuilder.toString(), "");
         }
     }
