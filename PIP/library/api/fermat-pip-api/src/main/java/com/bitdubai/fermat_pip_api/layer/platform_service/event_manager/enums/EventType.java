@@ -13,11 +13,13 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingIntraUserTransactionDebitNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorNetworkServicePendingsNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingIntraUserDebitTransactionNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.OutgoingIntraUserRollbackTransactionNotificationEventListener;
+
 
 /**
  * The enum <code>EventType</code>
@@ -82,15 +84,7 @@ public enum EventType implements FermatEventEnum {
 //        }
 //    },
 
-    FINISHED_WALLET_INSTALLATION("FWI") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.FinishedWalletInstallationEventListener(this, fermatEventMonitor);
-        }
 
-        public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.FinishedWalletInstallationEvent(this);
-        }
-    },
 
     INCOMING_CRYPTO_IDENTIFIED("ICI") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -98,7 +92,7 @@ public enum EventType implements FermatEventEnum {
         }
 
         public FermatEvent getNewEvent() {
-            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoIdentifiedEvent(this);
+            return new IncomingCryptoIdentifiedEvent(this);
         }
     },
 

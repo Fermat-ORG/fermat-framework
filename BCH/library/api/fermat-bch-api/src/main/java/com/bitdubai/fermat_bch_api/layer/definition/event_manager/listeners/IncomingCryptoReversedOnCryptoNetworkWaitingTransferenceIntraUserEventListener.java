@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 
 /**
  * Created by eze on 2015.09.02..
