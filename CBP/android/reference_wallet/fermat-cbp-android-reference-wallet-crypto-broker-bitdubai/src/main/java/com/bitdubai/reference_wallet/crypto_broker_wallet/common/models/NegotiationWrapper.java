@@ -17,24 +17,31 @@ import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
  * Created by Nelson Ramirez
+ *
  * @since 17/02/16.
  */
-public class NegotiationWrapper {
+final public class NegotiationWrapper {
 
     private CustomerBrokerNegotiationInformation negotiationInfo;
     private ClauseStatus expirationTimeStatus;
     private boolean expirationTimeConfirmButtonClicked;
+    private Set<ClauseType> confirmedClauses;
+    private long previousExpirationTime;
 
     public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo, CryptoBrokerWalletSession appSession) {
         this.negotiationInfo = negotiationInfo;
         expirationTimeStatus = ClauseStatus.DRAFT;
         expirationTimeConfirmButtonClicked = false;
+        confirmedClauses = new HashSet<>();
+        previousExpirationTime = negotiationInfo.getNegotiationExpirationDate();
 
         final ErrorManager errorManager = appSession.getErrorManager();
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
@@ -75,8 +82,25 @@ public class NegotiationWrapper {
         }
     }
 
+    public Map<ClauseType, ClauseInformation> getClauses() {
+        return negotiationInfo.getClauses();
+    }
+
     public CustomerBrokerNegotiationInformation getNegotiationInfo() {
         return negotiationInfo;
+    }
+
+    public long getExpirationDate() {
+        return negotiationInfo.getNegotiationExpirationDate();
+    }
+
+    public void setExpirationTime(long expirationTime) {
+        negotiationInfo.setNegotiationExpirationDate(expirationTime);
+
+        if (previousExpirationTime == expirationTime && expirationTimeStatus == ClauseStatus.DRAFT)
+            expirationTimeStatus = ClauseStatus.ACCEPTED;
+        else if (previousExpirationTime != expirationTime)
+            expirationTimeStatus = ClauseStatus.CHANGED;
     }
 
     public ClauseStatus getExpirationTimeStatus() {
@@ -87,40 +111,22 @@ public class NegotiationWrapper {
         return expirationTimeConfirmButtonClicked;
     }
 
-    public void setExpirationTimeConfirmButtonClicked(boolean expirationTimeConfirmButtonClicked) {
-        this.expirationTimeConfirmButtonClicked = expirationTimeConfirmButtonClicked;
+    public void setExpirationDatetimeConfirmButtonClicked() {
+        setExpirationTime(negotiationInfo.getNegotiationExpirationDate());
+        this.expirationTimeConfirmButtonClicked = true;
     }
 
     public boolean haveNote() {
         return negotiationInfo.getMemo() != null && !negotiationInfo.getMemo().isEmpty();
     }
 
-    public void putClause(final ClauseInformation clause, final String value) {
+    public boolean isClauseConfirmed(ClauseInformation clause) {
+        return confirmedClauses.contains(clause.getType());
+    }
 
-        final ClauseType type = clause.getType();
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return clause.getClauseID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return type;
-            }
-
-            @Override
-            public String getValue() {
-                return value;
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return clause.getStatus();
-            }
-        };
-
-        negotiationInfo.getClauses().put(type, clauseInformation);
+    public void setClauseAsConfirmed(ClauseInformation clause) {
+        changeClauseValue(clause, clause.getValue());
+        confirmedClauses.add(clause.getType());
     }
 
     public void addClause(final ClauseType clauseType, final String value) {
@@ -171,14 +177,14 @@ public class NegotiationWrapper {
 
             @Override
             public ClauseStatus getStatus() {
-                boolean equalValues = value.equals(clause.getValue());
+                final boolean equalValues = value.equals(clause.getValue());
 
                 if (equalValues && clause.getStatus() == ClauseStatus.DRAFT)
                     return ClauseStatus.ACCEPTED;
-                if (!equalValues && clause.getStatus() == ClauseStatus.ACCEPTED)
+                if (!equalValues)
                     return ClauseStatus.CHANGED;
 
-                return equalValues ? clause.getStatus() : ClauseStatus.CHANGED;
+                return clause.getStatus();
             }
         };
 
