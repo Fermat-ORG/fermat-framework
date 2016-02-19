@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by Yordin Alayn on 13.11.2015.
  */
-public class CantSendActorNetworkServiceException extends FermatException {
+public class CantRequestBrokerExtraDataException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T SEND INFORMATION THE ACTOR NETWORK SERVICE";
+    public static final String DEFAULT_MESSAGE = "CAN'T REQUEST BROKER EXTRA DATA EXCEPTION";
 
     /**
      * This is the constructor that every inherited FermatException must implement
@@ -17,7 +17,12 @@ public class CantSendActorNetworkServiceException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantSendActorNetworkServiceException(String message, Exception cause, String context, String possibleReason) {
+    public CantRequestBrokerExtraDataException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public CantRequestBrokerExtraDataException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
 }

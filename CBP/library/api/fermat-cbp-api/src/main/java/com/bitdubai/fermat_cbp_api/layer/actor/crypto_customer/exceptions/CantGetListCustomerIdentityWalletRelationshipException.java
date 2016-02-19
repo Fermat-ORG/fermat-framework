@@ -23,4 +23,7 @@ public class CantGetListCustomerIdentityWalletRelationshipException extends Ferm
         super(message, cause, context, possibleReason);
     }
 
+    public CantGetListCustomerIdentityWalletRelationshipException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
 }
