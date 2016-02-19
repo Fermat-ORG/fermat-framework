@@ -25,6 +25,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.int
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorConnectionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorConnectionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestNewsEventHandler;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.event_handlers.CryptoBrokerConnectionRequestUpdatesEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.structure.ActorConnectionEventActions;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_customer.developer.bitdubai.version_1.structure.ActorConnectionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -39,6 +40,10 @@ import java.util.List;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class CryptoCustomerActorConnectionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
@@ -93,10 +98,15 @@ public class CryptoCustomerActorConnectionPluginRoot extends AbstractPlugin impl
                     this.getPluginVersionReference()
             );
 
-            FermatEventListener updatesListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
-            updatesListener.setEventHandler(new CryptoBrokerConnectionRequestNewsEventHandler(eventActions, this));
+            FermatEventListener updatesListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES);
+            updatesListener.setEventHandler(new CryptoBrokerConnectionRequestUpdatesEventHandler(eventActions, this));
             eventManager.addListener(updatesListener);
             listenersAdded.add(updatesListener);
+
+            FermatEventListener newListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_NEWS);
+            newListener.setEventHandler(new CryptoBrokerConnectionRequestNewsEventHandler(eventActions, this));
+            eventManager.addListener(newListener);
+            listenersAdded.add(newListener);
 
             fermatManager = new ActorConnectionManager(
                     cryptoBrokerManagerNetworkService,

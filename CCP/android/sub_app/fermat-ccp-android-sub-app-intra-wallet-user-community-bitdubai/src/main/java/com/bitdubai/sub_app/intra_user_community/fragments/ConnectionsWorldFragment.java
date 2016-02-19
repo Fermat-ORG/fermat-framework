@@ -513,7 +513,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
             List<IntraUserInformation> userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
-
              dataSet.addAll(userList);
 
            /* if(userCacheList.size() == 0)
@@ -530,7 +529,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 {
                     for (IntraUserInformation intraUserCache : userCacheList) {
 
-                        if(!userList.contains(intraUserCache))
+                        if(!userList.contains(intraUserCache.getPublicKey()))
                             userList.add(intraUserCache);
                     }
                     //guardo el cache

@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_broker_community.fragmentFactory.CryptoBrokerCommunityFragmentFactory;
 import com.bitdubai.sub_app.crypto_broker_community.navigationDrawer.BrokerCommunityNavigationViewPainter;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
@@ -57,7 +58,8 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
     public NavigationViewPainter getNavigationViewPainter() {
         //System.out.println("CBC getNavigationViewPainter.. llamando a getActiveIdentity..");
 
-        return new BrokerCommunityNavigationViewPainter(getActivity(), getActiveIdentity());
+        return new BrokerCommunityNavigationViewPainter(getActivity(), getActiveIdentity(),
+                (CryptoBrokerCommunitySubAppSession) getFullyLoadedSession());
 
     }
 

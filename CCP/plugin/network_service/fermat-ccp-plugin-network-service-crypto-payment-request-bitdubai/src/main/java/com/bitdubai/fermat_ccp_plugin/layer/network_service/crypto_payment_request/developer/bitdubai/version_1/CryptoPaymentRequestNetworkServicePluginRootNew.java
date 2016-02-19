@@ -79,7 +79,8 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
     private CryptoPaymentRequestNetworkServiceDao cryptoPaymentRequestNetworkServiceDao;
 
-
+    private long reprocessTimer =  300000; //five minutes
+    private Timer timer = new Timer();
 
 
     /**
@@ -146,6 +147,12 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
 
         executorService = Executors.newFixedThreadPool(1);
+
+        // change message state to process again first time
+        reprocessPendingMessage();
+
+        //declare a schedule to process waiting request message
+        this.startTimer();
     }
 
     /**
@@ -315,12 +322,12 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                 {
                     if(record.getSentNumber() > 10)
                     {
-                        if(record.getSentNumber() > 20)
-                        {
+                       // if(record.getSentNumber() > 20)
+                        //{
                             //reprocess at two hours
                             //  reprocessTimer =  2 * 3600 * 1000;
 
-                        }
+                       // }
 
                         //reprocess at five minutes
                         //update state and process again later
@@ -403,6 +410,49 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
         }
     }
 
+
+        private void reprocessPendingMessage()
+        {
+            try {
+
+                List<CryptoPaymentRequest> cryptoAddressRequestList = cryptoPaymentRequestNetworkServiceDao.listUncompletedRequest();
+
+                for(CryptoPaymentRequest record : cryptoAddressRequestList) {
+
+                    cryptoPaymentRequestNetworkServiceDao.changeProtocolState(record.getRequestId(),RequestProtocolState.PROCESSING_SEND);
+
+                    final CryptoPaymentRequest cryptoPaymentRequest  = record;
+
+
+                    executorService.submit(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                String json = "";
+                                if (cryptoPaymentRequest.getAction().getCode().equals(RequestAction.REQUEST.getCode())){
+                                    json = buildJsonRequestMessage(cryptoPaymentRequest);
+                                }else{
+                                    json = buildJsonInformationMessage(cryptoPaymentRequest);
+                                }
+
+                                sendNewMessage(
+                                        getProfileSenderToRequestConnection(cryptoPaymentRequest.getIdentityPublicKey()),
+                                        getProfileDestinationToRequestConnection(cryptoPaymentRequest.getActorPublicKey()),
+                                        json);
+                            } catch (CantSendMessageException e) {
+                                reportUnexpectedException(e);
+                            }
+                        }
+                    });
+
+                }
+            }
+            catch(CantListRequestsException | CantChangeRequestProtocolStateException |RequestNotFoundException e)
+            {
+                System.out.println("Payment Request NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+                e.printStackTrace();
+            }
+        }
 
 
     @Override
@@ -846,15 +896,12 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+            return new CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory,developerDatabase, developerDatabaseTable);
         } catch (Exception e) {
             System.out.println(e);
             return new ArrayList<>();
         }
     }
-
-
-
 
     @Override
     public ErrorManager getErrorManager() {
@@ -1007,6 +1054,19 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
 
             reportUnexpectedException(e);
         }
+
+    }
+
+    private void startTimer(){
+
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessPendingMessage();
+            }
+        },0, reprocessTimer);
 
     }
 

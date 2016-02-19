@@ -111,7 +111,9 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
      */
     private List<PlatformComponentProfile> actorsToRegisterCache;
 
+    private long reprocessTimer =  300000; //five minutes
 
+    private  Timer timer = new Timer();
 
     /**
      * Executor
@@ -157,7 +159,12 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
             executorService = Executors.newFixedThreadPool(3);
 
+            // change message state to process again first time
+            reprocessPendingMessage();
 
+            //declare a schedule to process waiting request message
+
+            this.startTimer();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -199,7 +206,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
                     //NOTIFICATION LAUNCH
                     lauchNotification();
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + actorNetworkServiceRecord.getActorSenderPublicKey());
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,"CONNECTION_REQUEST|" + actorNetworkServiceRecord.getActorSenderPublicKey());
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
                     break;
@@ -376,6 +383,44 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                                                                                "");
     }
 
+
+    private void reprocessPendingMessage()
+    {
+        try {
+            outgoingNotificationDao.changeStatusNotSentMessage();
+
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndNotDone(
+                    ActorProtocolState.PROCESSING_SEND
+            );
+
+
+            for (final ActorNetworkServiceRecord cpr : lstActorRecord) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
+                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
+                                    cpr.toJson());
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedError(e);
+                        }
+                    }
+                });
+            }
+
+        }
+        catch(CantListIntraWalletUsersException e)
+        {
+            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            e.printStackTrace();
+        }
+    }
     @Override
     protected void reprocessMessages() {
        /* try {
@@ -1256,7 +1301,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
     }
 
 
@@ -1270,4 +1315,15 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
 
     }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessPendingMessage();
+            }
+        },0, reprocessTimer);
+    }
+
 }

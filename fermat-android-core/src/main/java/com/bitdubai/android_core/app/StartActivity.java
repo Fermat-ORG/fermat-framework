@@ -224,24 +224,7 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
      */
-    @Override
-    protected void onStop() {
-        try {
-            super.onStop();
 
-            /**
-             * Service
-             */
-//            if (mServiceConnected) {
-//                unbindService(mServiceConnection);
-//                mServiceConnected = false;
-//            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void onStart() {

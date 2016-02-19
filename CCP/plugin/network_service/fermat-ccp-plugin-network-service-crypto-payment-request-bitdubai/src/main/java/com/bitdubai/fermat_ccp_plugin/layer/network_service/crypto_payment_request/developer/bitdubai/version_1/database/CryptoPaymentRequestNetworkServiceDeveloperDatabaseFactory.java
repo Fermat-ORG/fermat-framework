@@ -199,12 +199,13 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
     }
 
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabase developerDatabase,
                                                                       final DeveloperDatabaseTable developerDatabaseTable) {
 
 
         try {
 
-            if(!developerDatabaseTable.getName().equals(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME))
+            if(!developerDatabase.getName().equals(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME))
                 initializeDatabaseCommunication();
             else
                 initializeDatabase();

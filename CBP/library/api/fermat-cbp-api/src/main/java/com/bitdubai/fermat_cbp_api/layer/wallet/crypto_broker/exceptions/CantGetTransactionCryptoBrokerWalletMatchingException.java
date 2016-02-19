@@ -11,4 +11,8 @@ public class CantGetTransactionCryptoBrokerWalletMatchingException extends Ferma
     public CantGetTransactionCryptoBrokerWalletMatchingException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public CantGetTransactionCryptoBrokerWalletMatchingException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
 }
