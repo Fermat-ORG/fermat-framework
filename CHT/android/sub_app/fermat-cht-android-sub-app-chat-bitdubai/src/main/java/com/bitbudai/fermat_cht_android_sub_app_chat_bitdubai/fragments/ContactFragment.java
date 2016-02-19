@@ -192,47 +192,33 @@ public class ContactFragment extends AbstractFermatFragment {
             contactid.add(con.getContactId());
             contactalias.add(con.getAlias());
             contacticon.add(R.drawable.ic_contact_picture_180_holo_light);
+            ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail", errorManager);
+            FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
+            name.setText(contactname.get(0));
+            FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
+            id.setText(contactid.get(0).toString());
+
+            // create bitmap from resource
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
+
+            // set circle bitmap
+            ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
+            mImage.setImageBitmap(getCircleBitmap(bm));
+
+            LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
+
+            final int adapterCount = adapter.getCount();
+
+            for (int i = 0; i < adapterCount; i++) {
+                View item = adapter.getView(i, null, null);
+                detalles.addView(item);
+            }
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail", errorManager);
-        FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
-        name.setText(contactname.get(0));
-        FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
-        id.setText(contactid.get(0).toString());
-
-        // create bitmap from resource
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.ic_contact_picture_180_holo_light);
-
-        // set circle bitmap
-        ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
-        mImage.setImageBitmap(getCircleBitmap(bm));
-
-        LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
-
-        final int adapterCount = adapter.getCount();
-
-        for (int i = 0; i < adapterCount; i++) {
-            View item = adapter.getView(i, null, null);
-            detalles.addView(item);
-        }
-
-        /*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                // TODO Auto-generated method stub
-                //String Slecteditem= contactname[position];
-                //Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
-
-            }
-        });*/
-
-        return layout;
-        //loadDummyHistory();
         // Inflate the list fragment layout
-        //return inflater.inflate(R.layout.contact_list_fragment, container, false);
+        return layout;//return inflater.inflate(R.layout.contact_list_fragment, container, false);
     }
 
     private Bitmap getCircleBitmap(Bitmap bitmap) {
@@ -249,12 +235,11 @@ public class ContactFragment extends AbstractFermatFragment {
         //paintBorder.setShadowLayer(4.0f, 0.0f, 2.0f, Color.BLACK);
         //BitmapShader shader = new BitmapShader(Bitmap.createScaledBitmap(output, canvas.getWidth(), canvas.getHeight(), false), Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
         //paint.setShader(shader);
-
-
         paint.setAntiAlias(true);
         //paintBorder.setAntiAlias(true);
         canvas.drawARGB(0, 0, 0, 0);
         paint.setColor(color);
+        canvas.drawOval(rectF, paint);
         //int circleCenter = bitmap.getWidth() / 2;
         //int borderWidth = 2;
         //canvas.drawCircle(circleCenter + borderWidth, circleCenter + borderWidth, circleCenter + borderWidth - 4.0f, paintBorder);
@@ -263,9 +248,7 @@ public class ContactFragment extends AbstractFermatFragment {
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, rect, rect, paint);
         //canvas.drawBitmap(bitmap, circleCenter + borderWidth, circleCenter + borderWidth, paint);
-
         bitmap.recycle();
-
         return output;
     }
 

@@ -61,7 +61,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
 //    // can be reselected again
 //    private int mPreviouslySelectedSearchItem = 0;
 // public ArrayList<ContactList> contactList;
-public List<Contact> contacts;
+    public List<Contact> contacts;
 //    private ListView contactsContainer;
 //    //private ContactsAdapter adapter;
 //
@@ -188,19 +188,20 @@ public List<Contact> contacts;
             contactid.add(con.getContactId());
             contactalias.add(con.getAlias());
             contacticon.add(R.drawable.ic_contact_picture_holo_light);
+            ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "edit",errorManager);
+            //FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
+            //name.setText(contactname.get(0));
+            //FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
+            //id.setText(contactid.get(0).toString());
+            aliasET =(EditText)layout.findViewById(R.id.aliasEdit);
+            aliasET.setText(contactalias.get(0));
+            saveBtn = (Button) layout.findViewById(R.id.saveContactButton);
+            RelativeLayout contain = (RelativeLayout) layout.findViewById(R.id.containere);
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "edit",errorManager);
-        //FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
-        //name.setText(contactname.get(0));
-        //FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
-        //id.setText(contactid.get(0).toString());
-        aliasET =(EditText)layout.findViewById(R.id.aliasEdit);
-        aliasET.setText(contactalias.get(0));
-        saveBtn = (Button) layout.findViewById(R.id.saveContactButton);
-        RelativeLayout contain = (RelativeLayout) layout.findViewById(R.id.containere);
+
 
 //        LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
 //

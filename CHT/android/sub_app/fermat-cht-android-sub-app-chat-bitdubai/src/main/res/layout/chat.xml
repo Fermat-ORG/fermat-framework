@@ -59,7 +59,7 @@
                 android:layout_gravity="left"
                 android:text="Friend"
                 android:singleLine="false"
-                android:textColor="@color/background_floating_material_dark"
+                android:textColor="@color/text_color"
                 android:textSize="20dp" />
 
             <TextView
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:text="MySelf"
-                android:textColor="@color/background_floating_material_dark"
+                android:textColor="@color/text_color"
                 android:textSize="20dp" />
             <!--
             <TextView
