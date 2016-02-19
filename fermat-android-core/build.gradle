@@ -150,9 +150,12 @@ dependencies {
             exclude module: ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
         }
     }
-    compile files('src/main/libs/activation.jar')
-    compile files('src/main/libs/additionnal.jar')
-    compile files('src/main/libs/mail.jar')
+//    compile files('src/main/libs/activation.jar')
+//    compile files('src/main/libs/additionnal.jar')
+//    compile files('src/main/libs/mail.jar')
+    compile 'com.sun.mail:android-mail:1.5.5'
+    compile 'com.sun.mail:android-activation:1.5.5'
+
 
 
 }

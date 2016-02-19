@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.bitdubai.fermat_core.FermatSystem;
 
 import java.util.Calendar;
 import java.util.LinkedList;
@@ -18,22 +19,13 @@ public class CurrentMoodService extends Service {
 	
 	private String currentMood;
 	private LinkedList<String> moods;
+	private final FermatSystem fermatSystem;
 	
 	public CurrentMoodService(){
 		this.moods = new LinkedList<String>();
-		fillMoodsList();
+		fermatSystem = FermatSystem.getInstance();
 	}
 
-    private void fillMoodsList() {
-    	this.moods.add(":)");
-    	this.moods.add(":(");
-    	this.moods.add(":D");
-    	this.moods.add(":X");
-    	this.moods.add(":S");
-    	this.moods.add(";)");
-    	
-    	this.currentMood = ";)";
-    }
 
 
 	@Override
@@ -62,7 +54,15 @@ public class CurrentMoodService extends Service {
             Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "This is the action " + requestedAction);
     		if (requestedAction != null && requestedAction.equals(UPDATEMOOD)){
 	            this.currentMood = getRandomMood();
-	            	            	 
+
+//				fermatSystem.startAndGetPluginVersion(new PluginVersionReference(
+//						Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM,
+//						Layers.PROVIDER,
+//						Developers.BITDUBAI,
+//						new Version()))
+
+
+
 	            int widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0);
 
 	            Log.i(CurrentMoodWidgetProvider.WIDGETTAG, "This is the currentMood " + currentMood + " to widget " + widgetId);
