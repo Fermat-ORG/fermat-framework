@@ -224,7 +224,8 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
             CustomerAckOfflineMerchandiseRecorderService customerAckOfflineMerchandiseRecorderService=
                     new CustomerAckOfflineMerchandiseRecorderService(
                             customerAckOfflineMerchandiseBusinessTransactionDao,
-                            eventManager);
+                            eventManager,
+                            errorManager);
             customerAckOfflineMerchandiseRecorderService.start();
 
             /**
@@ -255,25 +256,44 @@ public class CustomerAckOfflineMerchandisePluginRoot extends AbstractPlugin impl
             //testing method
             //testAck();
         } catch (CantInitializeCustomerAckOfflineMerchandiseBusinessTransactionDatabaseException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Offline Merchandise Plugin",
                     "Cannot initialize the plugin database factory");
         } catch (CantInitializeDatabaseException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Offline Merchandise Plugin",
                     "Cannot initialize the database plugin");
         } catch (CantStartAgentException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Offline Merchandise Plugin",
                     "Cannot initialize the plugin monitor agent");
         } catch (CantStartServiceException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Offline Merchandise Plugin",
                     "Cannot initialize the plugin recorder service");
+        }catch (Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(FermatException.wrapException(exception),
+                    "Starting Customer Ack Offline Merchandise Plugin",
+                    "Unexpected error");
         }
     }
 
