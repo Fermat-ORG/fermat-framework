@@ -477,7 +477,7 @@ public class AssetFactoryMiddlewareDao {
                     } catch (InvalidParameterException e) {
                         resource.setResourceType(ResourceType.IMAGE);
                     }
-                    PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId, AssetFactoryMiddlewareManager.PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    PluginBinaryFile imageFile = pluginFileSystem.getBinaryFile(pluginId, AssetFactoryMiddlewareManager.PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                     resource.setResourceBinayData(imageFile.getContent());
                     resources.add(resource);
                 }
