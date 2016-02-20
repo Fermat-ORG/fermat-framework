@@ -237,7 +237,8 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
             BrokerSubmitOnlineMerchandiseBusinessTransactionDao brokerSubmitOnlineMerchandiseBusinessTransactionDao=
                     new BrokerSubmitOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
 
             /**
              * Init the plugin manager

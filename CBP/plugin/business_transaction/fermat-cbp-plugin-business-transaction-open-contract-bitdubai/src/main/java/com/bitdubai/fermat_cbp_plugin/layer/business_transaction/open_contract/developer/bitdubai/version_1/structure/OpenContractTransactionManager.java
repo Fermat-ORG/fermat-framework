@@ -76,7 +76,6 @@ public class OpenContractTransactionManager implements OpenContractManager{
         this.transactionTransmissionManager=transactionTransmissionManager;
         this.openContractBusinessTransactionDao=openContractBusinessTransactionDao;
         this.errorManager=errorManager;
-
     }
 
 
@@ -110,7 +109,8 @@ public class OpenContractTransactionManager implements OpenContractManager{
         OpenContractBrokerContractManager openContractCustomerContractManager=new OpenContractBrokerContractManager(
                 customerBrokerContractSaleManager,
                 transactionTransmissionManager,
-                openContractBusinessTransactionDao);
+                openContractBusinessTransactionDao,
+                errorManager);
         try {
             Object[] arguments={customerBrokerSaleNegotiation, fiatIndex};
             ObjectChecker.checkArguments(arguments);
@@ -147,7 +147,8 @@ public class OpenContractTransactionManager implements OpenContractManager{
         OpenContractCustomerContractManager openContractCustomerContractManager =new OpenContractCustomerContractManager(
                 customerBrokerContractPurchaseManager,
                 transactionTransmissionManager,
-                openContractBusinessTransactionDao);
+                openContractBusinessTransactionDao,
+                errorManager);
         try {
             Object[] arguments={customerBrokerPurchaseNegotiation, fiatIndex};
             ObjectChecker.checkArguments(arguments);

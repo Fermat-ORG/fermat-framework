@@ -227,7 +227,8 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao=
                     new CustomerAckOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
 
             /**
              * Init event recorder service.

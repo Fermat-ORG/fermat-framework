@@ -164,7 +164,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                  */
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
@@ -186,7 +186,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
         }
     }
@@ -217,7 +217,8 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
             CustomerOfflinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
                     new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
 
             /**
              * Init the plugin manager

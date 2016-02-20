@@ -233,7 +233,8 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
             BrokerSubmitOfflineMerchandiseBusinessTransactionDao brokerSubmitOfflineMerchandiseBusinessTransactionDao=
                     new BrokerSubmitOfflineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
 
             /**
              * Init the plugin manager

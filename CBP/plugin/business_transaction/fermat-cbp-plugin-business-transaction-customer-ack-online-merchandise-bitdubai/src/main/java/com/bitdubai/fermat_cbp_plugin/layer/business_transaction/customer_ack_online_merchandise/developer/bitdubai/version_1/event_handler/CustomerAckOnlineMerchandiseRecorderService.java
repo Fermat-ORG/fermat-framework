@@ -46,6 +46,7 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
             EventManager eventManager,
             ErrorManager errorManager) throws CantStartServiceException {
         try {
+            this.errorManager = errorManager;
             setDatabaseDao(customerAckOnlineMerchandiseBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
@@ -146,7 +147,8 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
             this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"broker Ack Payment Confirmed EventHandler CantSaveException","");
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,
+                    exception,"broker Ack Payment Confirmed EventHandler CantSaveException","");
         }catch(Exception exception){
             this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
@@ -228,7 +230,9 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
         }
     }
 

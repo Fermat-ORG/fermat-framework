@@ -43,6 +43,7 @@ public class CustomerAckOfflineMerchandiseRecorderService implements CBPService 
             EventManager eventManager,
             ErrorManager errorManager) throws CantStartServiceException {
         try {
+            this.errorManager=errorManager;
             setDatabaseDao(customerAckOfflineMerchandiseBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {

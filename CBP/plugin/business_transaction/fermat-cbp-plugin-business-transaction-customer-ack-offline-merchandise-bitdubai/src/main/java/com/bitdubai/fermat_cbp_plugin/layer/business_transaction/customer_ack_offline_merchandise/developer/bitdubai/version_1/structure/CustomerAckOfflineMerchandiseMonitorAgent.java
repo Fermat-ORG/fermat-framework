@@ -266,7 +266,8 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                 customerAckOfflineMerchandiseBusinessTransactionDao =new CustomerAckOfflineMerchandiseBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 String contractHash;
 
