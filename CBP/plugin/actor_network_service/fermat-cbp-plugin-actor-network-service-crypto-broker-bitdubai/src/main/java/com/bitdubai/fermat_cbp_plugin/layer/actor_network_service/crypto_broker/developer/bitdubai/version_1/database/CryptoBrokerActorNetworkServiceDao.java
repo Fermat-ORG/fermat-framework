@@ -43,6 +43,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraDataInfoTemp;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
@@ -741,7 +742,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public final CryptoBrokerExtraData<CryptoBrokerQuote> createQuotesRequest(final UUID                    requestId            ,
+    public final CryptoBrokerExtraDataInfoTemp createQuotesRequest(final UUID                    requestId            ,
                                                                               final String                  requesterPublicKey   ,
                                                                               final Actors                  requesterActorType   ,
                                                                               final String                  cryptoBrokerPublicKey,
@@ -841,7 +842,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public final List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(final ProtocolState protocolState, final RequestType requestType) throws CantListPendingQuotesRequestsException {
+    public final List<CryptoBrokerExtraDataInfoTemp> listPendingQuotesRequests(final ProtocolState protocolState, final RequestType requestType) throws CantListPendingQuotesRequestsException {
 
         try {
 
@@ -854,7 +855,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
 
-            final List<CryptoBrokerExtraData<CryptoBrokerQuote>> quotesRequestsList = new ArrayList<>();
+            final List<CryptoBrokerExtraDataInfoTemp> quotesRequestsList = new ArrayList<>();
 
             for (final DatabaseTableRecord record : records)
                 quotesRequestsList.add(buildQuotesRequestObject(record));
@@ -941,8 +942,8 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             for(DatabaseTableRecord record : records) {
 
-                String merchandiseString         = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     );
-                String merchandiseTypeString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          );
+                String merchandiseString         = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME     );
+                String merchandiseTypeString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME           );
                 String paymentCurrencyString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     );
                 String paymentCurrencyTypeString = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
                 Float  price                     = record.getFloatValue (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                );
