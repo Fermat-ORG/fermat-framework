@@ -45,6 +45,7 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
             EventManager eventManager,
             ErrorManager errorManager) throws CantStartServiceException {
         try {
+            this.errorManager = errorManager;
             setDatabaseDao(brokerAckOnlinePaymentBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
@@ -234,7 +235,9 @@ public class BrokerAckOnlinePaymentRecorderService implements CBPService {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
         }
     }
 

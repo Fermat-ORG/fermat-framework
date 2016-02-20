@@ -269,7 +269,8 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 brokerAckOnlinePaymentBusinessTransactionDao =new BrokerAckOnlinePaymentBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 String contractHash;
                 /**

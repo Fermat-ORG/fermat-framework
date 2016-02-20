@@ -224,7 +224,8 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
             BrokerAckOnlinePaymentBusinessTransactionDao brokerAckOnlinePaymentBusinessTransactionDao=
                     new BrokerAckOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
             /**
              * Init Monitor Agent
              */
