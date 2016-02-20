@@ -18,6 +18,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartR
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -128,16 +130,26 @@ public class ConnectDialog extends FermatDialog<AssetUserCommunitySubAppSession,
 //            try {
 //                //image null
 //                if (actor != null && identity != null) {
-//                    getSession().getModuleManager().askIntraUserForAcceptance(actor.getName(), actor.getPhrase(),actor.getPublicKey(),actor.getProfileImage(), identity.getProfileImage(), identity.getPublicKey(), identity.getAlias());
-//                    Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
-//                    broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
+//                    getSession().getModuleManager().askActorAssetUserForConnection(
+//                            actor.getActorPublicKey(),
+//                            actor.getName(),
+//                            identity.getPublicKey(),
+//                            identity.getAlias(),
+//                            actor.getProfileImage());
+////                            identity.getImage(),
+////                            identity.getPublicKey());
+//                    Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+//                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
 //                    sendLocalBroadcast(broadcast);
-                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
 //                } else {
 //                    super.toastDefaultError();
 //                }
 //                dismiss();
-//            } catch (CantStartRequestException e) {
+//            } catch (CantRequestAlreadySendActorAssetException e) {
+//                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+//                super.toastDefaultError();
+//            } catch (CantAskConnectionActorAssetException e) {
 //                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
 //                super.toastDefaultError();
 //            }

@@ -555,10 +555,10 @@ public abstract class FermatActivity extends AppCompatActivity
             }
         } catch (CantGetSettingsException e) {
             btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
-            e.printStackTrace();
+           // e.printStackTrace();
         } catch (SettingsNotFoundException e) {
             btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         btn_fermat_apps_status.setOnClickListener(new View.OnClickListener() {
             @Override

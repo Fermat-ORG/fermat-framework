@@ -20,10 +20,10 @@ public final class SellingRecord {
     private DraftTransaction buyerTransaction;
     private DraftTransaction sellerTransaction;
     private String broadcastingTxHash;
+    private UUID negotiationId;
 
     //CONSTRUCTORS
-
-    public SellingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser buyer, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash) {
+    public SellingRecord(UUID recordId, DigitalAssetMetadata metadata, ActorAssetUser buyer, AssetSellStatus status, DraftTransaction buyerTransaction, DraftTransaction sellerTransaction, String broadcastingTxHash, UUID negotiationId) {
         this.recordId = recordId;
         this.metadata = metadata;
         this.buyer = buyer;
@@ -31,6 +31,7 @@ public final class SellingRecord {
         this.buyerTransaction = buyerTransaction;
         this.sellerTransaction = sellerTransaction;
         this.broadcastingTxHash = broadcastingTxHash;
+        this.negotiationId = negotiationId;
     }
 
     //PUBLIC METHODS
@@ -67,5 +68,8 @@ public final class SellingRecord {
         return broadcastingTxHash;
     }
 
+    public UUID getNegotiationId() {
+        return negotiationId;
+    }
     //INNER CLASSES
 }

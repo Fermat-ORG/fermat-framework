@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorE
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantCheckIfExistsException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetCryptoCustomerActorProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageExtraDataException;
@@ -429,39 +430,47 @@ public class CryptoCustomerActorDao {
             return quotes;
         }
 
-        public boolean existBrokerExtraData(String customerPublicKey, String brokerPublicKey){
+        public boolean existBrokerExtraData(final String brokerPublicKey  ,
+                                            final String customerPublicKey) throws CantCheckIfExistsException {
+
             try {
+
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
+
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME  , brokerPublicKey  , DatabaseFilterType.EQUAL);
                 table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerPublicKey, DatabaseFilterType.EQUAL);
-                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerPublicKey, DatabaseFilterType.EQUAL);
+
                 table.loadToMemory();
+
                 List<DatabaseTableRecord> records = table.getRecords();
-                table.clearAllFilters();
-                if (records.isEmpty() ){
-                    return false;
-                }else {
-                    return true;
-                }
+
+                return !records.isEmpty();
+
             } catch (CantLoadTableToMemoryException e) {
-                return false;
+
+                throw new CantCheckIfExistsException(e, "brokerPublicKey: "+brokerPublicKey+" - customerPublicKey: "+customerPublicKey, "Error checking if broker extra DATA exists.");
             }
         }
 
-        public boolean existBrokerExtraDataQuotes(String brokerPublicKey, String customerPublicKey){
+        public boolean existBrokerExtraDataQuotes(final String brokerPublicKey  ,
+                                                  final String customerPublicKey) throws CantCheckIfExistsException {
+
             try {
+
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
-                table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerPublicKey, DatabaseFilterType.EQUAL);
+
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME  , brokerPublicKey  , DatabaseFilterType.EQUAL);
                 table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerPublicKey, DatabaseFilterType.EQUAL);
+
                 table.loadToMemory();
+
                 List<DatabaseTableRecord> records = table.getRecords();
-                table.clearAllFilters();
-                if (records.isEmpty() ){
-                    return false;
-                }else {
-                    return true;
-                }
+
+                return !records.isEmpty();
+
             } catch (CantLoadTableToMemoryException e) {
-                return false;
+
+                throw new CantCheckIfExistsException(e, "brokerPublicKey: "+brokerPublicKey+" - customerPublicKey: "+customerPublicKey, "Error checking if broker extra data QUOTES exists.");
             }
         }
 

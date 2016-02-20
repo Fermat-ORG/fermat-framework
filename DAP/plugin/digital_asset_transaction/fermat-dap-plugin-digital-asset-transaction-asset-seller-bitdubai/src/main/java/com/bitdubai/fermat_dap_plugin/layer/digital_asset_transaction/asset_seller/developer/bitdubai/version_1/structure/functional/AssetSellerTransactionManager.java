@@ -89,7 +89,7 @@ public final class AssetSellerTransactionManager {
 
     private void sendMessage(AssetNegotiation negotiation, DAPActor from, DAPActor to) throws CantSetObjectException, CantSendMessageException {
         DAPContentMessage content = new AssetNegotiationContentMessage(AssetSellStatus.WAITING_CONFIRMATION, negotiation);
-        DAPMessage message = new DAPMessage(content, from, to, DAPMessageSubject.NEW_SELL_STARTED);
+        DAPMessage message = new DAPMessage(content, from, to, DAPMessageSubject.NEW_NEGOTIATION_STARTED);
         assetTransmission.sendMessage(message);
     }
 
