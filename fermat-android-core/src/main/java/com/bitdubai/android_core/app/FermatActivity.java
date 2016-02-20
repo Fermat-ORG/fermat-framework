@@ -1643,7 +1643,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     builder = new Notification.Builder(this)
                             .setTicker(notificationPainter.getNotificationTitle())
                             .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.drawable.fermat_logo_310_x_310 : notificationPainter.getIcon())
-                            .setContentTitle(notificationPainter.getNotificationImageText())
+                            .setContentTitle(notificationPainter.getNotificationTitle())
                             .setContentText(notificationPainter.getNotificationTextBody())
                             .setContentIntent(pi)
                             .setAutoCancel(true)
@@ -1794,7 +1794,9 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void onItemClickListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
-        getWalletRuntimeManager().getLastWallet().clear();
+        if(getWalletRuntimeManager().getLastWallet() != null)
+            getWalletRuntimeManager().getLastWallet().clear();
+
         onNavigationMenuItemTouchListener(data, position);
     }
 
