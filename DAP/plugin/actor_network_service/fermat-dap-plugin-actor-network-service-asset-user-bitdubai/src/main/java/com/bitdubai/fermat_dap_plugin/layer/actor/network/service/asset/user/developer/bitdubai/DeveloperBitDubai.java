@@ -14,7 +14,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
+//import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRootNew;
 
 /**
 * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.DeveloperBitDubai</code> is
@@ -35,6 +37,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
         try {
 
             this.registerVersion(new AssetUserActorNetworkServicePluginRoot());
+//            this.registerVersion(new AssetUserActorNetworkServicePluginRootNew());
 
         } catch (CantRegisterVersionException e) {
 

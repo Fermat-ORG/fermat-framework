@@ -29,6 +29,7 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
     private ImageView actorImage;
     private FermatTextView actorNameText;
     private FermatTextView typeByText;
+    private FermatTextView quantityText;
     private FermatTextView amountText;
     private FermatTextView dateText;
     private FermatTextView balanceTypeText;
@@ -49,6 +50,7 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
         actorNameText = (FermatTextView) itemView.findViewById(R.id.actorNameText);
         typeByText = (FermatTextView) itemView.findViewById(R.id.typeByText);
         dateText = (FermatTextView) itemView.findViewById(R.id.dateText);
+        quantityText = (FermatTextView) itemView.findViewById(R.id.quantityText);
         amountText = (FermatTextView) itemView.findViewById(R.id.amountText);
         balanceTypeText = (FermatTextView) itemView.findViewById(R.id.balanceTypeText);
         dateText = (FermatTextView) itemView.findViewById(R.id.dateText);
@@ -62,19 +64,31 @@ public class AssetDetailTransactionHolder extends FermatViewHolder {
 
         actorNameText.setText(transaction.getActorName());
         typeByText.setText((transaction.getTransactionType() == TransactionType.CREDIT) ? "Received by" : "Sent to");
+
         String symbol;
+        String confirmedStr = res.getString(R.string.dap_user_wallet_confirmed);
+        String pendingStr = res.getString(R.string.dap_user_wallet_pending);
         if (transaction.getTransactionType() == TransactionType.CREDIT) {
             symbol = "+ ";
             amountText.setTextColor(res.getColor(R.color.fab_material_green_900));
-            balanceTypeText.setTextColor(res.getColor(R.color.fab_material_green_900));
+            quantityText.setTextColor(res.getColor(R.color.fab_material_green_900));
+            balanceTypeText.setText((transaction.getBalanceType() == BalanceType.AVAILABLE) ? confirmedStr : pendingStr);
         } else {
             symbol = "- ";
             amountText.setTextColor(res.getColor(R.color.fab_material_red_900));
-            balanceTypeText.setTextColor(res.getColor(R.color.fab_material_red_900));
+            quantityText.setTextColor(res.getColor(R.color.fab_material_red_900));
+            balanceTypeText.setText((transaction.getBalanceType() == BalanceType.AVAILABLE) ? pendingStr : confirmedStr);
         }
+
         double amount = BitcoinConverter.convert(transaction.getAmount(), SATOSHI, BITCOIN);
         amountText.setText(symbol + DAPStandardFormats.BITCOIN_FORMAT.format(amount) + " BTC");
-        balanceTypeText.setText((transaction.getBalanceType() == BalanceType.AVAILABLE) ? "CONFIRMED" : "PENDING");
+
+        if (balanceTypeText.getText().toString().equals(pendingStr)) {
+            balanceTypeText.setTextColor(res.getColor(R.color.dap_user_wallet_blue_text));
+        } else {
+            balanceTypeText.setTextColor(res.getColor(R.color.dap_user_wallet_black_text));
+        }
+
         dateText.setText(transaction.getFormattedDate());
         if (transaction.getMemo() != null) memoText.setText(transaction.getMemo());
     }

@@ -71,6 +71,7 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
         if (editable.length() > 0 && sourceValue != null) {
             actualValue = yourExchangeRateValue.getText().toString();
             valuesHasChanged = !actualValue.equals(sourceValue);
+            /*
             if (valuesHasChanged) {
                 listener.exchangeValueChanged(actualValue);
                 setStatus(NegotiationStepStatus.CHANGED);
@@ -79,6 +80,7 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
                 listener.exchangeValueChanged(actualValue);
                 setStatus(NegotiationStepStatus.ACCEPTED);
             }
+            */
         }
     }
 

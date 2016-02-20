@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -82,6 +83,7 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
         record.setLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, cryptoHoldTransaction.getTimestampAcknowledged());
         record.setLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, cryptoHoldTransaction.getTimestampConfirmedRejected());
         record.setStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, cryptoHoldTransaction.getStatus().getCode());
+        record.setStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME, cryptoHoldTransaction.getBlockchainNetworkType().getCode());
 
         return record;
     }
@@ -118,6 +120,7 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
         holdCryptoMoneyTransaction.setTimestampAcknowledged(crtyptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
         holdCryptoMoneyTransaction.setTimestampConfirmedRejected(crtyptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
         holdCryptoMoneyTransaction.setStatus(CryptoTransactionStatus.getByCode(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME)));
+        holdCryptoMoneyTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME)));
 
         return holdCryptoMoneyTransaction;
     }

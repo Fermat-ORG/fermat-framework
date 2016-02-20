@@ -46,7 +46,7 @@ public class testStart {
 
     @Test
     public void testStart_Should_Return_Start() throws Exception {
-        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager);
+        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
         customerOfflinePaymentRecorderService.setEventManager(eventManager);
         customerOfflinePaymentRecorderService.start();
         assertEquals(ServiceStatus.STARTED, customerOfflinePaymentRecorderService.getStatus());
@@ -54,13 +54,13 @@ public class testStart {
 
     @Test(expected = Exception.class)
     public void testStart_Should_Return_Exception() throws Exception {
-        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(null,null);
+        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(null,null,null);
         customerOfflinePaymentRecorderService.start();
     }
 
     @Test
     public void testStop_Should_Return_Stop() throws Exception {
-        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager);
+        customerOfflinePaymentRecorderService = new CustomerOfflinePaymentRecorderService(customerOfflinePaymentBusinessTransactionDao,eventManager,errorManager);
         customerOfflinePaymentRecorderService.setEventManager(eventManager);
         customerOfflinePaymentRecorderService.start();
         customerOfflinePaymentRecorderService.stop();

@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/background_activity">
 
-    <TextView
-        android:id="@+id/contact_detail_header"
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/contact_edit_header"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         style="@style/addressHeader"/>
@@ -19,34 +19,6 @@
         android:dividerPadding="12dp"
         android:minHeight="48dp"
         android:divider="?android:attr/listDivider">
-
-        <EditText
-            android:id="@+id/aliasEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:autoText="true"
-            android:textColor="@color/black"
-            android:hint="Edit Alias" />
-
-        <TextView
-            android:id="@+id/uuid"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:paddingRight="@dimen/padding"
-            android:layout_gravity="center"
-            android:textColor="@color/color_white"/>
-
-        <Button
-            android:id="@+id/saveContactButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="@color/background_floating_material_dark"
-            android:text="Send"
-            android:textColor="@color/background_material_light"/>
 
     </LinearLayout>
 

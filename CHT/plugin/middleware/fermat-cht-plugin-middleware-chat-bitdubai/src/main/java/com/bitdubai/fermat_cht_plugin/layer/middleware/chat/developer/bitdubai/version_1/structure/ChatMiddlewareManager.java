@@ -189,7 +189,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      * @throws CantGetMessageException
      */
     @Override
-    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException {
+    public List<Message> getMessageByChatId(UUID chatId) throws CantGetMessageException {
         try{
             ObjectChecker.checkArgument(chatId, "The chat id argument is null");
             return this.chatMiddlewareDatabaseDao.getMessageByChatId(chatId);
