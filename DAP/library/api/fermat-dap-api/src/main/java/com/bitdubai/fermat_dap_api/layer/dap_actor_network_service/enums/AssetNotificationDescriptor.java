@@ -8,12 +8,13 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum AssetNotificationDescriptor implements FermatEnum {
 
-    ASKFORCONNECTION    ("ASK"),
-    ACCEPTED            ("ACP"),
-    CANCEL              ("CAN"),
-    DISCONNECTED        ("DIS"),
-    RECEIVED            ("REC"),
-    DENIED              ("DEN"),
+    ASKFORCONNECTION        ("ASK"),
+    ACCEPTED                ("ACP"),
+    CANCEL                  ("CAN"),
+    DISCONNECTED            ("DIS"),
+    RECEIVED                ("REC"),
+    DENIED                  ("DEN"),
+    ACTOR_ASSET_NOT_FOUND   ("ANF"),
     ;
 
     private String code;
@@ -34,6 +35,7 @@ public enum AssetNotificationDescriptor implements FermatEnum {
             case "DIS": return AssetNotificationDescriptor.DISCONNECTED;
             case "REC": return AssetNotificationDescriptor.RECEIVED;
             case "DEN": return AssetNotificationDescriptor.DENIED;
+            case "ANF": return AssetNotificationDescriptor.ACTOR_ASSET_NOT_FOUND;
             default:
                 throw new InvalidParameterException(
                         InvalidParameterException.DEFAULT_MESSAGE,

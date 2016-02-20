@@ -15,13 +15,11 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.BegunWalletInstallationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.GenericEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingIntraUserTransactionDebitNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ActorNetworkServicePendingsNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.BegunWalletInstallationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingIntraUserDebitTransactionNotificationEventListener;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.OutgoingDraftTransactionFinishedNotificationEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.OutgoingIntraUserRollbackTransactionNotificationEventListener;
 
 /**
@@ -965,18 +963,6 @@ public enum EventType implements FermatEventEnum {
         @Override
         public FermatEvent getNewEvent() {
             return new OutgoingIntraUserTransactionRollbackNotificationEvent(this);
-        }
-
-    },
-    OUTGOING_DRAFT_TRANSACTION_FINISHED("ODTF") {
-        @Override
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return new OutgoingDraftTransactionFinishedNotificationEventListener(this, fermatEventMonitor);
-        }
-
-        @Override
-        public FermatEvent getNewEvent() {
-            return new GenericEvent(this);
         }
 
     },

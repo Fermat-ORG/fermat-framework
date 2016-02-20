@@ -18,9 +18,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
+
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
@@ -118,6 +120,27 @@ public class IssuerRedemptionDao {
             throw new RecordsNotFoundException(null, context, "");
         }
         return databaseTable.getRecords().get(0).getStringValue(columnName);
+    }
+
+    private List<String> getPendingDAPEventsByType(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType eventType) throws CantLoadIssuerRedemptionEventListException {
+        String context = "Event Type: " + eventType.getCode();
+
+        DatabaseTable eventsRecordedTable;
+        eventsRecordedTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
+        eventsRecordedTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType.getCode(), DatabaseFilterType.EQUAL);
+        eventsRecordedTable.addStringFilter(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
+        eventsRecordedTable.addFilterOrder(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
+        try {
+            eventsRecordedTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantLoadIssuerRedemptionEventListException(e, context, null);
+        }
+        List<String> eventIdList = new ArrayList<>();
+        for (DatabaseTableRecord record : eventsRecordedTable.getRecords()) {
+            eventIdList.add(record.getStringValue(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_ID_COLUMN_NAME));
+        }
+        return eventIdList;
     }
 
     private List<String> getPendingDAPEventsByType(EventType eventType) throws CantLoadIssuerRedemptionEventListException {
@@ -220,12 +243,12 @@ public class IssuerRedemptionDao {
     }
 
 
-    public com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType getEventTypeById(String id) throws CantLoadIssuerRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
-        return com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.getByCode(getStringFieldByEventId(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
+    public EventType getEventTypeById(String id) throws CantLoadIssuerRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
+        return EventType.getByCode(getStringFieldByEventId(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
 
     public List<String> getPendingNewReceiveMessageActorEvents() throws CantLoadIssuerRedemptionEventListException {
-        return getPendingDAPEventsByType(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
+        return getPendingDAPEventsByType(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.NEW_RECEIVE_MESSAGE_ACTOR);
     }
     //INNER CLASSES
 }

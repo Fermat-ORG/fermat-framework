@@ -136,8 +136,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     private ECCKeyPair identity;
 
     /**
-    * Represent the platformComponentType
-    */
+     * Represent the platformComponentType
+     */
     private PlatformComponentType platformComponentType;
 
     /**
@@ -265,11 +265,11 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                          * Construct my profile and register me
                          */
                         this.networkServiceProfile =  wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructPlatformComponentProfileFactory(identity.getPublicKey(),
-                                                                                                                                                                            name.toLowerCase(),
-                                                                                                                                                                            name,
-                                                                                                                                                                            networkServiceType,
-                                                                                                                                                                            platformComponentType,
-                                                                                                                                                                            extraData);
+                                name.toLowerCase(),
+                                name,
+                                networkServiceType,
+                                platformComponentType,
+                                extraData);
 
                         /*
                          * Initialize connection manager
@@ -603,7 +603,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
             if (event.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.NETWORK_SERVICE &&
                     event.getPlatformComponentProfileRegistered().getNetworkServiceType() == getNetworkServiceProfile().getNetworkServiceType() &&
-                        event.getPlatformComponentProfileRegistered().getIdentityPublicKey().equals(identity.getPublicKey())) {
+                    event.getPlatformComponentProfileRegistered().getIdentityPublicKey().equals(identity.getPublicKey())) {
 
                 System.out.println("###################\n"+"NETWORK SERVICE REGISTERED: "+ name+"\n###################");
 
