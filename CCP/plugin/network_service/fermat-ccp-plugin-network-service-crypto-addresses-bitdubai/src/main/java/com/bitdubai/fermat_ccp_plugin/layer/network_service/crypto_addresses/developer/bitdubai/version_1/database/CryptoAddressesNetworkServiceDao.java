@@ -453,6 +453,88 @@ public final class CryptoAddressesNetworkServiceDao {
     }
 
 
+    public Actors getActorTypeFromRequest(String identityPublicKeySender) throws CantGetPendingAddressExchangeRequestException {
+        try {
+
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
+
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_REQUESTING_COLUMN_NAME, identityPublicKeySender, DatabaseFilterType.EQUAL);
+
+            addressExchangeRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                return buildAddressExchangeRequestRecord(records.get(0)).getIdentityTypeRequesting();
+            else{
+
+                addressExchangeRequestTable.clearAllFilters();
+                addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_RESPONDING_COLUMN_NAME, identityPublicKeySender, DatabaseFilterType.EQUAL);
+                addressExchangeRequestTable.loadToMemory();
+                List<DatabaseTableRecord> records1 = addressExchangeRequestTable.getRecords();
+                if (!records1.isEmpty())
+                    return buildAddressExchangeRequestRecord(records1.get(0)).getIdentityTypeResponding();
+                else
+                    throw new CantGetPendingAddressExchangeRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+
+            }
+
+
+
+
+
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetPendingAddressExchangeRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException e) {
+            throw new CantGetPendingAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (Exception e) {
+            throw new CantGetPendingAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
+    public Actors getActorTypeToRequest(String identityPublicKeyDestination) throws CantGetPendingAddressExchangeRequestException {
+        try {
+
+            DatabaseTable addressExchangeRequestTable = database.getTable(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME);
+
+            addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_RESPONDING_COLUMN_NAME, identityPublicKeyDestination, DatabaseFilterType.EQUAL);
+
+            addressExchangeRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = addressExchangeRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                return buildAddressExchangeRequestRecord(records.get(0)).getIdentityTypeResponding();
+            else{
+
+                addressExchangeRequestTable.clearAllFilters();
+                addressExchangeRequestTable.addStringFilter(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_IDENTITY_PUBLIC_KEY_REQUESTING_COLUMN_NAME, identityPublicKeyDestination, DatabaseFilterType.EQUAL);
+                addressExchangeRequestTable.loadToMemory();
+                List<DatabaseTableRecord> records1 = addressExchangeRequestTable.getRecords();
+                if (!records1.isEmpty())
+                    return buildAddressExchangeRequestRecord(records1.get(0)).getIdentityTypeRequesting();
+                else
+                    throw new CantGetPendingAddressExchangeRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+
+            }
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetPendingAddressExchangeRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException e) {
+            throw new CantGetPendingAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (Exception e) {
+            throw new CantGetPendingAddressExchangeRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
     public boolean existPendingRequest(UUID requestId) throws CantGetPendingAddressExchangeRequestException {
 
 

@@ -42,7 +42,7 @@ public class StockTransactionCashMoneyRestockManager implements
     }
 
     @Override
-    public void createTransactionRestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction) throws CantCreateCashMoneyRestockException {
+    public void createTransactionRestock(String publicKeyActor, FiatCurrency fiatCurrency, String cbpWalletPublicKey, String cshWalletPublicKey, String cashReference, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId) throws CantCreateCashMoneyRestockException {
 
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
@@ -59,7 +59,8 @@ public class StockTransactionCashMoneyRestockManager implements
                 timestamp,
                 TransactionStatusRestockDestock.INIT_TRANSACTION,
                 priceReference,
-                originTransaction);
+                originTransaction,
+                originTransactionId);
 
         try {
             StockTransactionCashMoneyRestockFactory stockTransactionCashMoneyRestockFactory = new StockTransactionCashMoneyRestockFactory(pluginDatabaseSystem, pluginId);

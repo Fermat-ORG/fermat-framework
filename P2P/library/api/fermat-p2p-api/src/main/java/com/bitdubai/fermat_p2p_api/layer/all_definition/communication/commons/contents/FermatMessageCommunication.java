@@ -64,7 +64,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     /**
      * Represent the failCount
      */
-    private Integer failCount;
+    private int failCount = 0;
 
     /**
      * Represent the status
@@ -87,7 +87,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     public FermatMessageCommunication() {
        super();
        this.id = UUID.randomUUID();
-       this.failCount = 0;
+       this.failCount = new Integer(0);
     }
 
     /**
@@ -113,6 +113,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
         this.sender = sender;
         this.shippingTimestamp = shippingTimestamp;
         this.signature = signature;
+        this.failCount = new Integer(0);
     }
 
     /**
@@ -255,7 +256,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
      * (no-javadoc)
      * @see FermatMessage#getFailCount()
      */
-    public Integer getFailCount() {
+    public int getFailCount() {
         return failCount;
     }
 

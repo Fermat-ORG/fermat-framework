@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -34,6 +36,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
@@ -60,7 +63,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     public static final String USER_SELECTED = "user";
     private static AssetUserCommunitySubAppModuleManager manager;
-    private static final int MAX = 20;
+    private int mNotificationsCount = 0;
 
     private List<Actor> actors;
     ErrorManager errorManager;
@@ -72,6 +75,8 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private UserCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
+    private Actor actor;
+    private int MAX = 1;
     private int offset = 0;
 
     SettingsManager<AssetUserSettings> settingsManager;
@@ -92,8 +97,13 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
         try {
             manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
+            actor = (Actor) appSession.getData(USER_SELECTED);
+
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
+
+            mNotificationsCount = manager.getWaitingYourConnectionActorAssetUserCount();
+            new FetchCountTask().execute();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -290,16 +300,124 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 //        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
-        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT, 0, "Connect")//.setIcon(R.drawable.dap_community_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+
+//        if (item.getItemId() == R.id.action_connect) {
+        if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT) {
+            List<ActorAssetUser> actorsSelected = new ArrayList<>();
+            for (Actor actor : actors) {
+                if (actor.selected)
+                    actorsSelected.add(actor);
+            }
+            if(actorsSelected.size() > 0) {
+
+
+                ConnectDialog connectDialog;
+
+                connectDialog = new ConnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null)
+                {
+                    @Override
+                    public void onClick(View v) {
+                        int i = v.getId();
+                        if (i == R.id.positive_button) {
+
+//                            if (actor != null && identity != null) {
+//                                getSession().getModuleManager().askActorAssetUserForConnection(
+//                                        actor.getActorPublicKey(),
+//                                        actor.getName(),
+//                                        identity.getPublicKey(),
+//                                        identity.getAlias(),
+//                                        actor.getProfileImage());
+////                            identity.getImage(),
+////                            identity.getPublicKey());
+//                                Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+//                                broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                                sendLocalBroadcast(broadcast);
+//                                Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                super.toastDefaultError();
+//                            }
+
+                            final ProgressDialog dialog = new ProgressDialog(getActivity());
+                            dialog.setMessage("Connecting please wait...");
+                            dialog.setCancelable(false);
+                            dialog.show();
+                            FermatWorker worker = new FermatWorker() {
+                                @Override
+                                protected Object doInBackground() throws Exception {
+                                    List<ActorAssetUser> toConnect = new ArrayList<>();
+                                    for (Actor actor : actors) {
+                                        if (actor.selected)
+                                            toConnect.add(actor);
+                                    }
+                                    //// TODO: 28/10/15 get Actor asset Redeem Point
+//                                    manager.askActorAssetUserForConnection(toConnect);
+//
+//                                    Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+//                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                                    sendLocalBroadcast(broadcast);
+//                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+
+                                    manager.connectToActorAssetUser(null, toConnect);
+                                    return true;
+                                }
+                            };
+                            worker.setContext(getActivity());
+                            worker.setCallBack(new FermatWorkerCallBack() {
+                                @Override
+                                public void onPostExecute(Object... result) {
+                                    dialog.dismiss();
+                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                    if (swipeRefreshLayout != null)
+                                        swipeRefreshLayout.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                onRefresh();
+                                            }
+                                        });
+                                }
+
+                                @Override
+                                public void onErrorOccurred(Exception ex) {
+                                    dialog.dismiss();
+//                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "Asset Issuer or Asset User Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+//                                ex.printStackTrace();
+                                }
+                            });
+                            worker.execute();
+
+
+                            dismiss();
+                        } else if (i == R.id.negative_button) {
+                            dismiss();
+                        }
+                    }
+                };
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setDescription("Do you want to send to ");
+                connectDialog.setUsername((actorsSelected.size() > 1) ? "" + actorsSelected.size() +
+                        " Users" : actorsSelected.get(0).getName());
+                connectDialog.setSecondDescription("a connection request");
+                connectDialog.show();
+                return true;
+            }else {
+                Toast.makeText(getActivity(), "No User selected to connect.", Toast.LENGTH_LONG).show();
+                return false;
+            }
+
+
+        /*int id = item.getItemId();
 
 //        if (item.getItemId() == R.id.action_connect) {
         if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT) {
@@ -343,7 +461,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 }
             });
             worker.execute();
-            return true;
+            return true;*/
         }
 
         try {
@@ -357,6 +475,11 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+        getActivity().invalidateOptionsMenu();
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -378,6 +501,23 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     }
 
+    /*
+Sample AsyncTask to fetch the notifications count
+*/
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
+    }
     @Override
     public void onRefresh() {
         if (!isRefreshing) {

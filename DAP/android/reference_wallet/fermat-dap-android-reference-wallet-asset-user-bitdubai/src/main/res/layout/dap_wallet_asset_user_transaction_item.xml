@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@color/fab_material_white">
+
+    <ImageView
+        android:id="@+id/actorImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/img_asset_without_image"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/memoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rollback asset transfered"
+        android:textSize="12sp"
+        android:textColor="#37474f"
+        android:fontFamily="regular"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/actorImage"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/actorImage"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="5dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/typeByText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sent to"
+            android:textSize="12sp"
+            android:textColor="#607d8b"
+            android:fontFamily="regular"
+            android:layout_alignLeft="@+id/actorNameText"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/actorNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frank Contreras"
+            android:textSize="18sp"
+            android:textColor="#37474f"
+            android:fontFamily="regular"
+            android:textStyle="bold"
+            android:layout_below="@+id/typeByText"/>
+
+    </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/dateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2 Feb, 2016 12:30"
+        android:textSize="10sp"
+        android:textColor="#37474f"
+        android:fontFamily="regular"
+        android:layout_marginBottom="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/quantityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1 Asset"
+        android:textSize="15sp"
+        android:textColor="@color/fab_material_red_500"
+        android:fontFamily="regular"
+        android:textStyle="bold"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_alignParentTop="true"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/amountText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="- 0.000001 BTC"
+        android:textSize="12sp"
+        android:textColor="@color/fab_material_red_500"
+        android:fontFamily="regular"
+        android:textStyle="bold"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_below="@id/quantityText"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/balanceTypeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="regular"
+        android:textSize="10sp"
+        android:text="AVAILABLE"
+        android:textColor="@color/dap_user_wallet_black_text"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/amountText"
+        android:layout_marginRight="5dp"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dip"
+        android:background="@color/gray"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

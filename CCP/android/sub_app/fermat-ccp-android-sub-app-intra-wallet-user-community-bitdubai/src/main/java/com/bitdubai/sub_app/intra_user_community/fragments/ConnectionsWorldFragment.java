@@ -189,6 +189,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     public void setUpReferences() {
+        dataSet = new ArrayList<>();
         rootView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -507,8 +508,43 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
-        try {
-            dataSet.addAll(moduleManager.getSuggestionsToContact(MAX, offset));
+
+         try {
+            //verifico la cache para mostrar los que tenia antes y los nuevos
+
+            List<IntraUserInformation> userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+            List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
+             //dataSet.addAll(userList);
+
+            if(userCacheList.size() == 0)
+            {
+                dataSet.addAll(userList);
+            }
+            else
+            {
+                if(userList.size() == 0)
+                {
+                    dataSet.addAll(userCacheList);
+                }
+                else
+                {
+                    for (IntraUserInformation intraUserCache : userCacheList) {
+                        boolean exist = false;
+                        for (IntraUserInformation intraUser : userList) {
+                            if(intraUserCache.getPublicKey().equals(intraUser.getPublicKey())){
+                                exist = true;
+                                break;
+                            }
+                        }
+                        if(!exist)
+                            userList.add(intraUserCache);
+                    }
+                    //guardo el cache
+                    moduleManager.saveCacheIntraUsersSuggestions(userList);
+                    dataSet.addAll(userList);
+                }
+            }
+
             offset = dataSet.size();
 
         } catch (CantGetIntraUsersListException e) {
@@ -603,6 +639,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     private void showCriptoUsersCache() {
+
+        IntraUserModuleManager moduleManager = intraUserSubAppSession.getModuleManager();
+        if(moduleManager==null){
+            getActivity().onBackPressed();
+        }else{
+            invalidate();
+        }
         if (dataSet.isEmpty()) {
             showEmpty(true, emptyView);
             swipeRefresh.post(new Runnable() {

@@ -118,6 +118,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
                     container_jane_doe = (FrameLayout) findViewById(R.id.container_jane_doe);
                     btn_left = (Button) findViewById(R.id.btn_left);
                     btn_right = (Button) findViewById(R.id.btn_right);
+                    setUpBasics();
                     setUpListenersPresentation();
                     break;
                 case DAP_TYPE_PRESENTATION:

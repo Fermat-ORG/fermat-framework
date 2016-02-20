@@ -42,6 +42,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.Ass
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -139,7 +140,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DELIVERY, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DELIVERY, 0, "Help").setIcon(R.drawable.dap_asset_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -334,7 +335,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                     }
                 }
                 if (users.size() > 0) {
-                    moduleManager.distributionAssets(assetPublicKey, null, assetsAmount);
+                    moduleManager.distributionAssets(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, assetsAmount);
                 }
                 return true;
             }
@@ -376,7 +377,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
                     }
                 }
                 if (groups.size() > 0) {
-                    moduleManager.distributionAssets(assetPublicKey, null, assetsAmount);
+                    moduleManager.distributionAssets(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, assetsAmount);
                 }
                 return true;
             }

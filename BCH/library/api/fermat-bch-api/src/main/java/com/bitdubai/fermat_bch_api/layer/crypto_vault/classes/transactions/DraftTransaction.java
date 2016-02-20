@@ -16,7 +16,10 @@ import java.util.Map;
  * Created by rodrigo on 2/10/16.
  */
 public class DraftTransaction {
+
     private Transaction bitcoinTransaction;
+    private CryptoAddress sellerCryptoAddress;
+    private CryptoAddress buyerCryptoAddress;
 
     /**
      * constructor
@@ -76,6 +79,32 @@ public class DraftTransaction {
     public BlockchainNetworkType getNetworkType() {
         return BitcoinNetworkSelector.getBlockchainNetworkType(bitcoinTransaction.getParams());
     }
+
+    public CryptoAddress getSellerCryptoAddress() {
+        return sellerCryptoAddress;
+    }
+
+    public void setSellerCryptoAddress(CryptoAddress sellerCryptoAddress) {
+        this.sellerCryptoAddress = sellerCryptoAddress;
+    }
+
+    public CryptoAddress getBuyerCryptoAddress() {
+        return buyerCryptoAddress;
+    }
+
+    public void setBuyerCryptoAddress(CryptoAddress buyerCryptoAddress) {
+        this.buyerCryptoAddress = buyerCryptoAddress;
+    }
+
+    public Transaction getBitcoinTransaction() {
+        return bitcoinTransaction;
+    }
+
+
+    public void setBitcoinTransaction(Transaction bitcoinTransaction) {
+        this.bitcoinTransaction = bitcoinTransaction;
+    }
+
     /**
      * Serializes the bitcoin transaction
      * @return

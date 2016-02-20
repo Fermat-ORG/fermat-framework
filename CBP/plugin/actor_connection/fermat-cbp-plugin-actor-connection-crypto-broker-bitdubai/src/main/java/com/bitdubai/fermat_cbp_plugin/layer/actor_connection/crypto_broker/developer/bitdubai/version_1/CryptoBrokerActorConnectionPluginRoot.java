@@ -39,6 +39,10 @@ import java.util.List;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
@@ -101,7 +105,7 @@ public class CryptoBrokerActorConnectionPluginRoot extends AbstractPlugin implem
             listenersAdded.add(newsListener);*/
 
             FermatEventListener updatesListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES);
-            updatesListener.setEventHandler(new CryptoBrokerConnectionRequestUpdatesEventHandler(eventActions, this));
+            updatesListener.setEventHandler(new     CryptoBrokerConnectionRequestUpdatesEventHandler(eventActions, this));
             eventManager.addListener(updatesListener);
             listenersAdded.add(updatesListener);
 

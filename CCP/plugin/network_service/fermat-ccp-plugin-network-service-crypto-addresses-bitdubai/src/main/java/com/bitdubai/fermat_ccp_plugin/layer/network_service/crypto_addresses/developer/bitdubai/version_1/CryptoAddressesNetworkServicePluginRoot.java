@@ -143,6 +143,8 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
      */
     private CommunicationNetworkServiceConnectionManager_V2 communicationNetworkServiceConnectionManager;
 
+
+
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
@@ -161,7 +163,7 @@ public class CryptoAddressesNetworkServicePluginRoot extends AbstractNetworkServ
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+            return new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
         } catch (Exception e) {
             System.out.println(e);
             return new ArrayList<>();

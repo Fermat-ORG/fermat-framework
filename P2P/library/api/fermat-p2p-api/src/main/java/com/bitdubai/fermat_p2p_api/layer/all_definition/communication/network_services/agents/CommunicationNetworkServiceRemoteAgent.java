@@ -17,6 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,6 +62,11 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
      * Represent the communicationsVPNConnection
      */
     private CommunicationsVPNConnection communicationsVPNConnection;
+
+    /**
+     * Represents the errorManager
+     */
+    private final ErrorManager errorManager;
 
     /**
      * Represent the communicationNetworkServiceConnectionManager
@@ -112,10 +118,11 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
      * @param communicationNetworkServiceConnectionManager
      * @param communicationsVPNConnection
      */
-    public CommunicationNetworkServiceRemoteAgent(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, CommunicationsVPNConnection communicationsVPNConnection) {
+    public CommunicationNetworkServiceRemoteAgent(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, CommunicationsVPNConnection communicationsVPNConnection, ErrorManager errorManager) {
 
         super();
         this.running                                      = Boolean.FALSE;
+        this.errorManager                                 = errorManager;
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
         this.communicationsVPNConnection = communicationsVPNConnection;
     }
@@ -186,7 +193,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
              */
             if (communicationsVPNConnection.isConnected()){
 
-                System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
+                //System.out.println("CommunicationNetworkServiceRemoteAgent - communicationsVPNConnection.getUnreadMessagesCount() = "+communicationsVPNConnection.getUnreadMessagesCount());
 
                 /**
                  * process all pending messages
@@ -244,7 +251,10 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
             Thread.currentThread().interrupt();
             System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         } catch (CantInsertRecordDataBaseException e) {
-            communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getErrorManager().reportUnexpectedPluginException(communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
+            errorManager.reportUnexpectedPluginException(communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
+            e.printStackTrace();
+        } catch(Exception e){
+            errorManager.reportUnexpectedPluginException(communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
         }
 
     }
@@ -303,9 +313,9 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                                 ((FermatMessageCommunication) message).setFermatMessagesStatus(FermatMessagesStatus.SENT);
                                 communicationNetworkServiceConnectionManager.getOutgoingMessageDao().update(message);
 
-                            /*
-                             * Notify a new message send
-                             */
+                                /*
+                                 * Notify a new message send
+                                 */
                                 communicationNetworkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
 
 
@@ -319,6 +329,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
                 }catch (Exception e){
                     System.out.println("CommunicationNetworkServiceRemoteAgent - Error sending message: " + e.getMessage());
+                    e.printStackTrace();
                 }
 
 

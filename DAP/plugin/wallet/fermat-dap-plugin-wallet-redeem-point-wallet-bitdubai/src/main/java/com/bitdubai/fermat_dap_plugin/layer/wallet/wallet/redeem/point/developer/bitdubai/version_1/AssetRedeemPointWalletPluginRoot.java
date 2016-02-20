@@ -30,7 +30,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
@@ -64,6 +66,12 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
+    private ActorAssetIssuerManager issuerManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    private ActorAssetRedeemPointManager redeemPointManager;
+
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
 
@@ -72,15 +80,15 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
 
     public static final String PATH_DIRECTORY = "asset-redeem-point-swap/";
 
+    private static final String WALLET_REDEEM_POINT_FILE_NAME = "walletsIds";
+    private List<UUID> redeemWallets = new ArrayList<>();
+    private String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
+    private boolean existsWallet = false;
+    private AssetRedeemPointWallet redeemPointWallet;
+
     public AssetRedeemPointWalletPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
-
-    private static final String WALLET_REDEEM_POINT_FILE_NAME = "walletsIds";
-    private List<UUID> redeemWallets = new ArrayList<>();
-    private String walletPublicKey = "walletPublicKeyTest";
-    private boolean existsWallet = false;
-    private AssetRedeemPointWallet redeemPointWallet;
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -145,7 +153,7 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
     @Override
     public AssetRedeemPointWallet loadAssetRedeemPointWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
-            AssetRedeemPointWalletImpl assetIssuerWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager);
+            AssetRedeemPointWalletImpl assetIssuerWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager, issuerManager, redeemPointManager);
             UUID internalAssetIssuerWalletId = WalletUtilities.constructWalletId(walletPublicKey, networkType);
             assetIssuerWallet.initialize(internalAssetIssuerWalletId);
             return assetIssuerWallet;
@@ -158,7 +166,7 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createWalletAssetRedeemPoint(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
-            AssetRedeemPointWalletImpl assetIssuerWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager);
+            AssetRedeemPointWalletImpl assetIssuerWallet = new AssetRedeemPointWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, actorAssetUserManager, issuerManager, redeemPointManager);
             UUID walletId = assetIssuerWallet.create(walletPublicKey, networkType);
             redeemWallets.add(walletId);
         } catch (CantCreateWalletException exception) {

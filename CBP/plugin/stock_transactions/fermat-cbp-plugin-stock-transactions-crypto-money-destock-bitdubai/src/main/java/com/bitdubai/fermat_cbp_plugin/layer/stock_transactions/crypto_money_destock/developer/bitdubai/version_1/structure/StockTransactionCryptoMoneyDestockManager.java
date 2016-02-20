@@ -43,7 +43,7 @@ public class StockTransactionCryptoMoneyDestockManager implements
     }
 
     @Override
-    public void createTransactionDestock(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction) throws CantCreateCryptoMoneyDestockException {
+    public void createTransactionDestock(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey, BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId) throws CantCreateCryptoMoneyDestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         CryptoMoneyDestockTransactionImpl cryptoMoneyRestockTransaction = new CryptoMoneyDestockTransactionImpl(
@@ -58,7 +58,8 @@ public class StockTransactionCryptoMoneyDestockManager implements
                 timestamp,
                 TransactionStatusRestockDestock.INIT_TRANSACTION,
                 priceReference,
-                originTransaction);
+                originTransaction,
+                originTransactionId);
 
         try {
             StockTransactionCryptoMoneyDestockFactory stockTransactionCryptoMoneyDestockFactory = new StockTransactionCryptoMoneyDestockFactory(pluginDatabaseSystem, pluginId);

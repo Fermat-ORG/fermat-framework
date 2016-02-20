@@ -21,9 +21,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
@@ -32,12 +36,12 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -219,14 +223,34 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
     }
 
     /**
-     * This method sends the digital asset metadata to a remote device.
-     *
-     * @param dapMessage {@link DAPMessage <AssetMetadataContentMessage>} instance, which should contain all the information to send
-     *                   this metadata to the destination device.
-     * @throws CantSendDigitalAssetMetadataException
+     * @param dapMessage the message to be sent, this message has to contain both the actor
+     *                   that sent the message and the actor that will receive the message.
+     * @throws CantSendMessageException
      */
     @Override
-    public void sendDigitalAssetMetadata(DAPMessage dapMessage) throws CantSendDigitalAssetMetadataException {
+    public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
+
+    }
+
+    /**
+     * This method retrieves the list of new incoming and unread DAP Messages for a specific type.
+     *
+     * @param type The {@link DAPMessageType} of message to search for.
+     * @return {@link List} instance filled with all the {@link DAPMessage} that were found.
+     * @throws CantGetDAPMessagesException If there was an error while querying for the list.
+     */
+    @Override
+    public List<DAPMessage> getUnreadDAPMessagesByType(DAPMessageType type) throws CantGetDAPMessagesException {
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public List<DAPMessage> getUnreadDAPMessageBySubject(DAPMessageSubject subject) throws CantGetDAPMessagesException {
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
 
     }
 
@@ -256,150 +280,9 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
         return null;
     }
 
-
-    /**
-     * This method is automatically called  when the client connection is close
-     * for the network service when need to update message state,
-     * is his define protocol are no complete
-     * and change incomplete message process to his original state
-     * for reprocessing again
-     */
-    @Override
-    protected void reprocessMessages() {
-
-    }
-
-    /**
-     * This method is automatically called  when the vpn connection is close
-     * for the network service when need to update message state,
-     * is his define protocol are no complete
-     * and change incomplete message process to his original state
-     * for reprocessing again
-     *
-     * @param identityPublicKey
-     */
-    @Override
-    protected void reprocessMessages(String identityPublicKey) {
-
-    }
     //PRIVATE METHODS
 
     //GETTER AND SETTERS
-
-    /**
-     * Get the CommunicationsClientConnection instance
-     *
-     * @return CommunicationsClientConnection
-     */
-    @Override
-    protected CommunicationsClientConnection getCommunicationsClientConnection() {
-        return null;
-    }
-
-    /**
-     * Get the ErrorManager instance
-     *
-     * @return ErrorManager
-     */
-    @Override
-    public ErrorManager getErrorManager() {
-        return null;
-    }
-
-    /**
-     * Get the EventManager instance
-     *
-     * @return EventManager
-     */
-    @Override
-    public EventManager getEventManager() {
-        return null;
-    }
-
-    /**
-     * Get the WsCommunicationsCloudClientManager instance
-     *
-     * @return WsCommunicationsCloudClientManager
-     */
-    @Override
-    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-        return null;
-    }
-
-    /**
-     * Get the PluginDatabaseSystem instance
-     *
-     * @return PluginDatabaseSystem
-     */
-    @Override
-    public PluginDatabaseSystem getPluginDatabaseSystem() {
-        return null;
-    }
-
-    /**
-     * Get the PluginFileSystem instance
-     *
-     * @return PluginFileSystem
-     */
-    @Override
-    public PluginFileSystem getPluginFileSystem() {
-        return null;
-    }
-
-    /**
-     * Get the Broadcaster instance
-     *
-     * @return Broadcaster
-     */
-    @Override
-    public Broadcaster getBroadcaster() {
-        return null;
-    }
-
-    /**
-     * Get the LogManager instance
-     *
-     * @return LogManager
-     */
-    @Override
-    public LogManager getLogManager() {
-        return null;
-    }
-
-    @Override
-    public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        return null;
-    }
-
-    /**
-     * This method is automatically called when the CommunicationSupervisorPendingMessagesAgent is trying to request
-     * a new connection for a message pending to send. This method need construct the profile specific to
-     * the network service work.
-     * <p/>
-     * Example: Is the network service work with actor this profile has to mach with the actor.
-     * <p/>
-     * <code>
-     *
-     * @param identityPublicKeyDestination
-     * @return PlatformComponentProfile
-     * @overray public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-     * <p/>
-     * return getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection()
-     * .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
-     * actor.getAlias(),
-     * actor.getName(),
-     * NetworkServiceType.UNDEFINED,
-     * PlatformComponentType.ACTOR_INTRA_USER,
-     * "");
-     * <p/>
-     * }
-     * <p/>
-     * </code>
-     */
-    @Override
-    public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        return null;
-    }
 
     //INNER CLASSES
 }

@@ -175,7 +175,7 @@ public class RedeemPointActorDao implements Serializable {
                 DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
                 DatabaseTableRecord record = table.getEmptyRecord();
 
-//                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
+                record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
 //                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
 //                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getActorPublicKey());
 
@@ -369,7 +369,7 @@ public class RedeemPointActorDao implements Serializable {
                         record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetRedeemPoint.getLocationLongitude());
                     }
 
-                    if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME).isEmpty()) {
+                    if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
                         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
                     } else {
                         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
@@ -380,7 +380,7 @@ public class RedeemPointActorDao implements Serializable {
                         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetRedeemPoint.getCryptoAddress().getCryptoCurrency().getCode());
                     }
 
-                    record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, actorAssetRedeemPoint.getRegistrationDate());
+                    record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                     record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
 
                     table.insertRecord(record);
@@ -847,6 +847,7 @@ public class RedeemPointActorDao implements Serializable {
             issuerRegisteredTable.loadToMemory();
 
             for (DatabaseTableRecord record : issuerRegisteredTable.getRecords()) {
+                table.clearAllFilters();
                 table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode(), DatabaseFilterType.EQUAL);
                 table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, record.getStringValue(RedeemPointActorDatabaseConstants.REGISTERED_ASSET_ISSUERS_REDEEM_POINT_PUBLICKEY_COLUMN), DatabaseFilterType.EQUAL);
                 table.loadToMemory();

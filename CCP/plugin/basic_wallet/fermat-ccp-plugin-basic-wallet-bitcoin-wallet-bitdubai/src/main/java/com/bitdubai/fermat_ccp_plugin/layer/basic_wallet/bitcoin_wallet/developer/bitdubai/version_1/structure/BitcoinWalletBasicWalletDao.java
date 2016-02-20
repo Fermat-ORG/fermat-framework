@@ -634,4 +634,32 @@ public class BitcoinWalletBasicWalletDao {
             e.printStackTrace();
         }
     }
+
+    public BitcoinWalletTransaction selectTransaction(UUID transactionID)throws CantFindTransactionException{
+
+        try {
+
+            BitcoinWalletTransaction bitcoinWalletTransaction = null;
+            // create the database objects
+            DatabaseTable bitcoinwalletTable = getBitcoinWalletTable();
+            /**
+             *  I will load the information of table into a memory structure, filter for transaction id
+             */
+            bitcoinwalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BBITCOIN_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME, transactionID.toString(), DatabaseFilterType.EQUAL);
+
+            bitcoinwalletTable.loadToMemory();
+
+            // Read record data and create transactions list
+            for(DatabaseTableRecord record : bitcoinwalletTable.getRecords()){
+                bitcoinWalletTransaction = constructBitcoinWalletTransactionFromRecord(record);
+            }
+
+            return bitcoinWalletTransaction;
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantFindTransactionException("Select Transaction Data Error",cantLoadTableToMemory,"Error load Transaction table" + transactionID.toString(), "");
+        } catch (Exception e) {
+            throw new CantFindTransactionException("Select Transaction Data Error",e,"unknown Error" + transactionID.toString(), "");
+
+        }
+    }
 }

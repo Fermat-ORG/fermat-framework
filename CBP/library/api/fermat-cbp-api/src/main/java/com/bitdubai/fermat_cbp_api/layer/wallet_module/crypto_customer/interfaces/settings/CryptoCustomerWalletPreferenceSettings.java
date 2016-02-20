@@ -6,6 +6,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -14,6 +16,8 @@ import java.util.UUID;
 public class CryptoCustomerWalletPreferenceSettings implements WalletSettings {
 
     private boolean isHomeTutorialDialogEnabled;
+    private CryptoCustomerWalletAssociatedSetting bitcoinWallet;
+    private List<CryptoCustomerWalletProviderSetting> providers;
 
     public boolean isHomeTutorialDialogEnabled() {
         return isHomeTutorialDialogEnabled;
@@ -69,5 +73,19 @@ public class CryptoCustomerWalletPreferenceSettings implements WalletSettings {
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
         isHomeTutorialDialogEnabled=b;
+    }
+
+    public List<CryptoCustomerWalletProviderSetting> getSelectedProviders() {
+        if (providers == null)
+            providers = new ArrayList<>();
+        return providers;
+    }
+
+    public CryptoCustomerWalletAssociatedSetting getSelectedBitcoinWallet() {
+        return bitcoinWallet;
+    }
+
+    public void setSelectedBitcoinWallet(CryptoCustomerWalletAssociatedSetting walletSetting) {
+        this.bitcoinWallet = walletSetting;
     }
 }

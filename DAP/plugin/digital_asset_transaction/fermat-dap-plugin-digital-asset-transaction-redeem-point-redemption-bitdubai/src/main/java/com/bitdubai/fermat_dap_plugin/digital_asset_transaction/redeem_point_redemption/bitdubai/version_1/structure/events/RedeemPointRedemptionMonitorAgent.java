@@ -21,7 +21,9 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -41,6 +43,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interface
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDAO;
@@ -186,10 +189,10 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         private void doTheMainTask() {
             try {
                 for (String eventId : dao.getPendingAssetTransmissionEvents()) {
-                    switch (dao.getEventTypeById(eventId)) {
+                    switch (dao.getEventDapTypeById(eventId)) {
                         case RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION:
                             debug("received new digital asset metadata, requesting transaction list");
-                            List<Transaction<DigitalAssetMetadataTransaction>> newAssetTransaction = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
+                            List<Transaction<DigitalAssetMetadataTransaction>> newAssetTransaction = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_REDEMPTION_SPECIALIST);
                             for (Transaction<DigitalAssetMetadataTransaction> transaction : newAssetTransaction) {
                                 debug("verifying if there is any transaction for me");
                                 if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
@@ -201,6 +204,8 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                                     //PERSIST METADATA
                                     debug("persisting metadata");
+                                    //We store the previous owner on its respective plugin
+                                    ActorUtils.storeDAPActor(metadata.getLastOwner(), actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
                                     dao.newTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
                                     persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
                                     //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
@@ -241,7 +246,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                         default:
                             dao.updateEventStatus(EventStatus.NOTIFIED, eventId); //I can't do anything with this event!
-                            logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
+                            logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventDapTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
                             //I CANNOT HANDLE THIS EVENT.
                             break;
                     }
@@ -250,7 +255,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                 for (String eventId : dao.getPendingCryptoRouterEvents()) {
                     boolean notifyEvent = false;
                     debug("received new crypto router event");
-                    switch (dao.getEventTypeById(eventId)) {
+                    switch (dao.getEventBchTypeById(eventId)) {
                         case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT:
                             debug("new transaction on crypto network");
                             for (String transactionId : dao.getPendingSubmitGenesisTransactions()) {
@@ -265,7 +270,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading redeem point wallet, public key is hardcoded");
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType());
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet(WalletUtilities.WALLET_PUBLIC_KEY, cryptoTransaction.getBlockchainNetworkType());
 
                                 String userPublicKey = dao.getSenderPublicKeyById(transactionId);
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
@@ -299,7 +304,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading wallet, public key is hardcoded");
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType());
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet(WalletUtilities.WALLET_PUBLIC_KEY, cryptoTransaction.getBlockchainNetworkType());
 
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
                                 assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
@@ -337,7 +342,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                         default:
                             notifyEvent = true;
-                            logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
+                            logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventBchTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
                             //I CANNOT HANDLE THIS EVENT.
                             break;
                     }

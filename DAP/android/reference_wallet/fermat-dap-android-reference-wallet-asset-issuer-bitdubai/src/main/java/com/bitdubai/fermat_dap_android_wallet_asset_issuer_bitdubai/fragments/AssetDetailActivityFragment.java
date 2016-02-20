@@ -40,6 +40,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.Ses
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -232,7 +233,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
         try {
             digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
-            Data.setStatistics("walletPublicKeyTest", digitalAsset, moduleManager);
+            Data.setStatistics(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset, moduleManager);
         } catch (CantGetAssetStatisticException e) {
             e.printStackTrace();
         } catch (CantLoadWalletException e) {
@@ -342,7 +343,7 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL, 0, "Help").setIcon(R.drawable.dap_asset_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 

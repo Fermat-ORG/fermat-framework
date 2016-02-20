@@ -46,4 +46,9 @@ public class IntraUserNetworkService  implements IntraUserInformation {
     public ConnectionState getConnectionState() {
         return null;
     }
+
+    @Override
+    public String getState() {
+        return null;
+    }
 }

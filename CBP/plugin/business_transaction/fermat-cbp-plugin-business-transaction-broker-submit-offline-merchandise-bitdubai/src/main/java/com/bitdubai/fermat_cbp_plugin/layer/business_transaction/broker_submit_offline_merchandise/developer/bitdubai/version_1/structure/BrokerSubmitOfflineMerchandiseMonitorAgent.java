@@ -26,6 +26,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BankMoneyDeStockRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.CashMoneyDeStockRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
@@ -128,7 +130,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                     exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
@@ -307,7 +309,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
-                            ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED
+                            ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED,
+                            Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE
                     );
                     //Updating the business transaction record
                     pendingToSubmitNotificationRecord.setContractTransactionStatus(
@@ -328,7 +331,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT
+                            ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT,
+                            Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE
                     );
                     //Updating the business transaction record
                     pendingToSubmitConfirmationRecord.setContractTransactionStatus(
@@ -381,7 +385,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                     bankMoneyDeStockRecord.getAmount(),
                     bankMoneyDeStockRecord.getMemo(),
                     bankMoneyDeStockRecord.getPriceReference(),
-                    bankMoneyDeStockRecord.getOriginTransaction()
+                    bankMoneyDeStockRecord.getOriginTransaction(),
+                    pendingToDeStockTransaction.getContractHash()
             );
             pendingToDeStockTransaction.setContractTransactionStatus(
                     ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION);
@@ -404,7 +409,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                     cashMoneyDeStockRecord.getAmount(),
                     cashMoneyDeStockRecord.getMemo(),
                     cashMoneyDeStockRecord.getPriceReference(),
-                    cashMoneyDeStockRecord.getOriginTransaction()
+                    cashMoneyDeStockRecord.getOriginTransaction(),
+                    pendingToDeStockTransaction.getContractHash()
             );
             pendingToDeStockTransaction.setContractTransactionStatus(
                     ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION);
@@ -446,6 +452,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             CustomerBrokerContractPurchase customerBrokerContractPurchase=
                                     customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(
                                             contractHash);
+                            //If the contract is null, I cannot handle with this situation
+                            ObjectChecker.checkArgument(customerBrokerContractPurchase);
                             brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                                     customerBrokerContractPurchase);
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
@@ -520,6 +528,11 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "Cannot update the contract purchase status");
+            } catch (ObjectNotSetException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "The customerBrokerContractPurchase is null");
             }
 
         }

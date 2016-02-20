@@ -14,21 +14,30 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_draft.OutgoingDraftManager;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.database.OutgoingDraftTransactionDao;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantInsertRecordException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.subgraph.orchid.events.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.ErrorManager;
+import java.util.UUID;
 
 /**
  * The Incoming Extra User Transaction Manager Plugin is in charge of coordinating the transactions coming from outside the
@@ -67,6 +76,8 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+
+    private OutgoingDraftTransactionDao outgoingDraftTransactionDao;
 
     public OutgoingDraftTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));    }
@@ -118,9 +129,18 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
      */
     @Override
     public void start()  throws CantStartPluginException{
+        try {
+
+            outgoingDraftTransactionDao = new OutgoingDraftTransactionDao(errorManager,pluginDatabaseSystem);
+            outgoingDraftTransactionDao.initialize(pluginId);
 
 
 
+
+
+        } catch (CantInitializeOutgoingIntraActorDaoException e) {
+            e.printStackTrace();
+        }
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -130,5 +150,28 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
 
 
         this.serviceStatus = ServiceStatus.STOPPED;
+    }
+
+
+
+
+
+    @Override
+    public void addInputsToDraftTransaction(UUID requestId, DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo, String walletPublicKey, ReferenceWallet referenceWallet, String memo, String actorToPublicKey, Actors actorToType, String actorFromPublicKey, Actors ActorFromType, BlockchainNetworkType blockchainNetworkType) {
+        try {
+            outgoingDraftTransactionDao.registerNewTransaction(draftTransaction,walletPublicKey,referenceWallet);
+        } catch (OutgoingIntraActorCantInsertRecordException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public DraftTransaction getPending(UUID requestId) {
+        return null;
+    }
+
+    @Override
+    public void markRead(UUID requestId) {
+
     }
 }
