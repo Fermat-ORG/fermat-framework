@@ -41,6 +41,7 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
             EventManager eventManager,
             ErrorManager errorManager) throws CantStartServiceException {
         try {
+            this.errorManager = errorManager;
             setDatabaseDao(brokerSubmitOnlineMerchandiseBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {

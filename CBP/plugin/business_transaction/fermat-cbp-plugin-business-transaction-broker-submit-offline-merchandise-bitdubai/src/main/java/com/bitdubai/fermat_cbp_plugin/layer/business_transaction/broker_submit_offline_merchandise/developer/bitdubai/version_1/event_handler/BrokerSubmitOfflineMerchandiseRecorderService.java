@@ -41,6 +41,7 @@ public class BrokerSubmitOfflineMerchandiseRecorderService implements CBPService
             EventManager eventManager,
             ErrorManager errorManager) throws CantStartServiceException {
         try {
+            this.errorManager = errorManager;
             setDatabaseDao(brokerSubmitOfflineMerchandiseBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {

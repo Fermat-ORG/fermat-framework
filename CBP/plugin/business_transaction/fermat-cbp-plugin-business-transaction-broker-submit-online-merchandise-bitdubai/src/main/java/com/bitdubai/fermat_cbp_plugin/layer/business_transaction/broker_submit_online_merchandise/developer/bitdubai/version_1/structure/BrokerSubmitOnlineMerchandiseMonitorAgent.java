@@ -302,7 +302,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 brokerSubmitOnlineMerchandiseBusinessTransactionDao =new BrokerSubmitOnlineMerchandiseBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 UUID outgoingCryptoTransactionId;
                 BusinessTransactionRecord businessTransactionRecord;

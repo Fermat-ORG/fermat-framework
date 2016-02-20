@@ -282,7 +282,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 brokerSubmitOfflineMerchandiseBusinessTransactionDao =new BrokerSubmitOfflineMerchandiseBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 String contractHash;
 
