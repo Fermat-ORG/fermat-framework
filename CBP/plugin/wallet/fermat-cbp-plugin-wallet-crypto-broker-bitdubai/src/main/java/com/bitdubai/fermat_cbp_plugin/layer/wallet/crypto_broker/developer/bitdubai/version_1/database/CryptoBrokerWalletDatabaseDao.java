@@ -68,6 +68,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -137,7 +138,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 }
                 if (!sw) //TODO: Validar que entre por aca tambien cuando sea el segundo registro del orden OriginTransactionId
                 {
-                    CurrencyMatchingImp currencyMatchingImp = null;
+                    CurrencyMatchingImp currencyMatchingImp;
 
                     //Receiving
                     originTransactionId = records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
@@ -152,8 +153,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     }
                     amountReceiving     = records.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME);
 
-                    if (originTransactionId == records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME)) {
-                        new CurrencyMatchingImp(originTransactionId, currencyGiving, currencyReceiving, amountGiving, amountReceiving);
+                    if (Objects.equals(originTransactionId, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME))) {
+                        currencyMatchingImp = new CurrencyMatchingImp(originTransactionId, currencyGiving, currencyReceiving, amountGiving, amountReceiving);
                         currencyMatchings.add(currencyMatchingImp);
                     }
                     originTransactionId = null;
@@ -278,11 +279,6 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         float priceReference = 0;
         float availableBalanceFroze = 0;
         ExchangeRate rate = null;
-        try {
-            availableBalanceFroze = getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, merchandise.getCode()) - getBalanceFrozenByMerchandise(merchandise, null, BalanceType.AVAILABLE, priceReference);
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetCryptoBrokerQuoteException("Cant Load Table", e, "", "");
-        }
 
         Currency currency = (Currency) merchandise;
         CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(currency, payment);
@@ -298,7 +294,14 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         } catch (UnsupportedCurrencyPairException e) {
             throw new CantGetCryptoBrokerQuoteException("Unsupported Currency Pair Exception", e, "", "");
         }
-        priceReference = (float)rate.getSalePrice();
+        priceReference = (float) (rate != null ? rate.getSalePrice() : 0);
+
+        try {
+            availableBalanceFroze = getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, merchandise.getCode()) - getBalanceFrozenByMerchandise(merchandise, null, BalanceType.AVAILABLE, priceReference);
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetCryptoBrokerQuoteException("Cant Load Table", e, "", "");
+        }
+
         QuoteImpl quote = new QuoteImpl(
                 merchandise,
                 payment,
@@ -335,15 +338,16 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 rate = provider.getCurrentExchangeRate(usdVefCurrencyPair);
             }
 
-            if (priceRateSale     == 0) priceRateSale     = (float) rate.getSalePrice();
-            if (priceRatePurchase == 0) priceRatePurchase = (float) rate.getPurchasePrice();
+            priceRateSale     = (float) (rate != null ? rate.getSalePrice() : 0);
+            priceRatePurchase = (float) (rate != null ? rate.getPurchasePrice() : 0);
 
             final float priceSaleUp       = (priceRateSale * ((spread / 2) / 100)) + priceRateSale;
             final float priceSaleDown     = (priceRateSale * ((spread / 2) / 100)) - priceRateSale;
             final float pricePurchaseUp   = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
             final float pricePurchaseDown = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
 
-            priceReference = (float)rate.getSalePrice();
+            priceReference = (float) (rate != null ? rate.getSalePrice() : 0);
+
             fiatIndex = new FiatIndexImpl(
                     merchandise,
                     priceRateSale,
