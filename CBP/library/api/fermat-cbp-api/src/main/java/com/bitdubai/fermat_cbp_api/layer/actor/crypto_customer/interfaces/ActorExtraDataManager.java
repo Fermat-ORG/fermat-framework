@@ -12,6 +12,9 @@ import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUp
 import java.util.Collection;
 
 /**
+ *
+ * TODO ADD A DESCRIPTION FOR THE INTERFACE AND FOR EACH OF ITS METHODS
+ *
  * Created by angel on 13/1/16.
  */
 public interface ActorExtraDataManager extends CryptoCustomerActorManager {
