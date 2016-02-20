@@ -244,7 +244,8 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
             OpenContractBusinessTransactionDao openContractBusinessTransactionDao=
                     new OpenContractBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
             openContractBusinessTransactionDao.initialize();
             /**
              * Initialize manager

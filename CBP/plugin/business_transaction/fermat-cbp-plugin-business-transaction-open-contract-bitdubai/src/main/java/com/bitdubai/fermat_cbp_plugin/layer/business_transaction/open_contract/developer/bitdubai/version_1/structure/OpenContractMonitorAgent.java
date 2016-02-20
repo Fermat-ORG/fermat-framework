@@ -245,7 +245,8 @@ public class OpenContractMonitorAgent implements
                 openContractBusinessTransactionDao=new OpenContractBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
                 /**
                  * Check if exist in database new contracts to send
                  */
