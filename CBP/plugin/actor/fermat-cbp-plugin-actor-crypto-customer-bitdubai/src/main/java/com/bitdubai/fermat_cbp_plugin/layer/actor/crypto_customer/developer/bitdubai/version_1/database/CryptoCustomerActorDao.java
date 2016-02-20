@@ -245,7 +245,7 @@ public class CryptoCustomerActorDao {
             }
         }
 
-        public void createActorQoutes(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
+        public void createActorQuotes(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
             try {
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
                 DatabaseTableRecord record;
@@ -294,7 +294,7 @@ public class CryptoCustomerActorDao {
                 record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
                 table.deleteRecord(record);
 
-                this.createActorQoutes(actorExtraData);
+                this.createActorQuotes(actorExtraData);
             } catch (CantDeleteRecordException e) {
                 throw new CantUpdateActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (CantCreateNewActorExtraDataException e) {

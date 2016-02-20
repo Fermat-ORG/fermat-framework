@@ -43,26 +43,6 @@ public class CryptoCustomerWalletModuleBrokerIdentityBusinessInfo implements Bro
         quotes = new ArrayList<>();
     }
 
-    public CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(ActorExtraData actorExtraData) {
-
-        this.alias               = actorExtraData.getBrokerIdentity().getAlias()       ;
-        this.img                 = actorExtraData.getBrokerIdentity().getProfileImage();
-        this.publicKey           = actorExtraData.getBrokerIdentity().getPublicKey()   ;
-        this.quotes = convertQuotes(actorExtraData.getQuotes());
-    }
-
-    private List<MerchandiseExchangeRate> convertQuotes(Collection<QuotesExtraData> quotesExtraData) {
-
-        List<MerchandiseExchangeRate> merchandiseExchangeRateList = new ArrayList<>();
-
-        for (QuotesExtraData quote : quotesExtraData)
-            merchandiseExchangeRateList.add(
-                    new CryptoCustomerWalletModuleMerchandiseExchangeRate(quote)
-            );
-
-        return merchandiseExchangeRateList;
-    }
-
     @Override
     public String getAlias() {
         return alias;
