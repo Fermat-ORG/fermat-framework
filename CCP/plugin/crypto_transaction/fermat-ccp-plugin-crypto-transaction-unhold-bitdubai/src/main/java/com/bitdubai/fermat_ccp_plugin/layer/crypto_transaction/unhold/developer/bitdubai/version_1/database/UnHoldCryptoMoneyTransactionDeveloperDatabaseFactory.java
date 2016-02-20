@@ -129,6 +129,7 @@ public class UnHoldCryptoMoneyTransactionDeveloperDatabaseFactory implements Dea
         holdColumns.add(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME);
         holdColumns.add(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME);
         holdColumns.add(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME);
+        holdColumns.add(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME);
         /**
          * Table Hold addition.
          */

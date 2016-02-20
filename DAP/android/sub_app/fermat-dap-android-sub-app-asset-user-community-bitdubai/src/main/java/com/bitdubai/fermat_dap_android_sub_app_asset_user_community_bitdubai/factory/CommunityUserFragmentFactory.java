@@ -8,6 +8,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fra
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments.UserCommuinityUsersFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments.UserCommunityConnectionsListFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments.UserCommunityGroupFragment;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments.UserCommunityNotificationsFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments.UsersCommunityConnectionOtherProfileFragment;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -33,6 +34,10 @@ public class CommunityUserFragmentFactory extends FermatFragmentFactory<AssetUse
                 return UsersCommunityConnectionOtherProfileFragment.newInstance();
             case DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_FRAGMENT:
                 return UserCommunityConnectionsListFragment.newInstance();
+            case DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT:
+                return UserCommunityNotificationsFragment.newInstance();
+            case DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT:
+                return UsersCommunityConnectionOtherProfileFragment.newInstance();
             default:
                 throw new FragmentNotFoundException(String.format("Fragment: %s not found", fragments.getKey()),
                         new Exception(), "fermat-dap-android-sub-app-asset-user-community", "fragment not found");

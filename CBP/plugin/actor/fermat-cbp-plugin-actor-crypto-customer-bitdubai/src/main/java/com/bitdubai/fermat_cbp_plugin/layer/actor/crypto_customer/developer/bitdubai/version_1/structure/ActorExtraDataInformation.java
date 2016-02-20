@@ -12,18 +12,21 @@ import java.util.Map;
 /**
  * Created by angel on 13/1/16.
  */
+public final class ActorExtraDataInformation implements ActorExtraData {
 
-public class ActorExtraDataInformation implements ActorExtraData {
+    private final String                               customer  ;
+    private final ActorIdentity                        broker    ;
+    private final Collection<QuotesExtraData>          quotes    ;
+    private final Map<Currency, Collection<Platforms>> currencies;
 
-    private String customer;
-    private ActorIdentity broker;
-    private Collection<QuotesExtraData> quotes;
-    private Map<Currency, Collection<Platforms>> currencies;
+    public ActorExtraDataInformation(final String                               customer  ,
+                                     final ActorIdentity                        broker    ,
+                                     final Collection<QuotesExtraData>          quotes    ,
+                                     final Map<Currency, Collection<Platforms>> currencies) {
 
-    public ActorExtraDataInformation(String customer, ActorIdentity broker, Collection<QuotesExtraData> quotes, Map<Currency, Collection<Platforms>> currencies){
-        this.customer = customer;
-        this.broker = broker;
-        this.quotes = quotes;
+        this.customer   = customer  ;
+        this.broker     = broker    ;
+        this.quotes     = quotes    ;
         this.currencies = currencies;
     }
 
@@ -46,4 +49,15 @@ public class ActorExtraDataInformation implements ActorExtraData {
     public Map<Currency, Collection<Platforms>> getCurrencies() {
         return this.currencies;
     }
+
+    @Override
+    public String toString() {
+        return "ActorExtraDataInformation{" +
+                "customer='" + customer + '\'' +
+                ", broker=" + broker +
+                ", quotes=" + quotes +
+                ", currencies=" + currencies +
+                '}';
+    }
+
 }
