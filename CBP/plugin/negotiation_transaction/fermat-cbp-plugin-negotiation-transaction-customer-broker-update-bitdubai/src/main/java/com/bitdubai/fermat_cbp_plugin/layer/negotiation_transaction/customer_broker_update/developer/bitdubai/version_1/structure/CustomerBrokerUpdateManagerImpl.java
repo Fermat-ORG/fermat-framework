@@ -196,7 +196,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
                                     "\n- NegotiationType = " + ListNegotiation.getNegotiationType().getCode() +
                                     "\n- StatusTransaction = " + ListNegotiation.getStatusTransaction().getCode()
                     );
-/*
+
                     //GET NEGOTIATION OF XML
                     if (ListNegotiation.getNegotiationXML() != null) {
                         CustomerBrokerPurchaseNegotiation purchaseNegotiationXML = new NegotiationPurchaseRecord();
@@ -207,7 +207,8 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
                                             "\n- NegotiationId = " + purchaseNegotiationXML.getNegotiationId() +
                                             "\n- CustomerPublicKey" + purchaseNegotiationXML.getCustomerPublicKey() +
                                             "\n- BrokerPublicKey" + purchaseNegotiationXML.getBrokerPublicKey() +
-                                            "\n- Status" + purchaseNegotiationXML.getStatus().getCode()
+                                            "\n- Status" + purchaseNegotiationXML.getStatus().getCode()+
+                                            "\n- Memo: " + purchaseNegotiationXML.getMemo()
                             );
                         } else {
                             System.out.print("\n\n\n --- NegotiationXML Date: purchaseNegotiationXML IS NOT INSTANCE OF NegotiationPurchaseRecord");
@@ -215,7 +216,7 @@ public class CustomerBrokerUpdateManagerImpl implements CustomerBrokerUpdateMana
                     } else {
                         System.out.print("\n\n\n --- NegotiationXML Date IS NULL");
                     }
-                    */
+
                 }
                 System.out.print("\n\n------------------------------- END LIST NEGOTIATION TRANSACTION -------------------------------");
             } else {
