@@ -336,7 +336,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
         try {
             setDigitalAssetLocalFilePath();
             String digitalAssetInnerXML = digitalAsset.toString();
-            PluginTextFile digitalAssetFile = this.pluginFileSystem.createTextFile(this.pluginId, this.digitalAssetFileStoragePath, this.digitalAssetFileName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+            PluginTextFile digitalAssetFile = this.pluginFileSystem.createTextFile(this.pluginId, this.digitalAssetFileStoragePath, this.digitalAssetFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             digitalAssetFile.setContent(digitalAssetInnerXML);
             digitalAssetFile.persistToMedia();
         } catch (CantCreateFileException exception) {
@@ -782,6 +782,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
             //create the digitalAssetMetadata
             digitalAssetMetadata = new DigitalAssetMetadata(this.digitalAsset);
             digitalAssetMetadata.setNetworkType(blockchainNetworkType);
+            digitalAssetMetadata.setLastOwner(actorAssetIssuerManager.getActorAssetIssuer());
             //Get the digital asset metadata hash
             String digitalAssetHash = getDigitalAssetHash(digitalAssetMetadata, transactionId);
             //LOG.info("MAP_DIGITAL ASSET FULL: "+this.digitalAsset);
@@ -798,7 +799,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
         } catch (CantRegisterCryptoAddressBookRecordException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.WALLET_EXCEPTION);
             throw new CantCreateDigitalAssetTransactionException(exception, "Issuing a new Digital Asset", "Cannot register the Digital Asset genesis transaction in address book");
-        } catch (CantGetGenesisAddressException exception) {
+        } catch (CantGetGenesisAddressException | CantGetAssetIssuerActorsException exception) {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.WALLET_EXCEPTION);
             throw new CantCreateDigitalAssetTransactionException(exception, "Issuing a new Digital Asset", "Cannot get the Digital Asset genesis address from asset vault");
         } catch (CantPersistDigitalAssetException exception) {
@@ -819,7 +820,6 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
             this.assetIssuingTransactionDao.updateDigitalAssetIssuingStatus(digitalAsset.getPublicKey(), IssuingStatus.INSUFFICIENT_FONDS);
             throw new CantIssueDigitalAssetException(exception, "Issuing a new Digital Asset", "The crypto balance is insufficient");
         }
-
     }
 
 }

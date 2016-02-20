@@ -163,13 +163,16 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
     @Override
     public ActorAssetIssuer getActorByPublicKey(String actorPublicKey) throws CantGetAssetIssuerActorsException,
             CantAssetIssuerActorNotFoundException {
-
         try {
-            return this.assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
+            ActorAssetIssuer currentIssuer = getActorAssetIssuer();
+            if (currentIssuer != null && currentIssuer.getActorPublicKey().equals(actorPublicKey)) {
+                return currentIssuer;
+            } else {
+                return assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
+            }
         } catch (CantGetAssetIssuerActorsException e) {
             throw new CantGetAssetIssuerActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset Issuer from Data Base", null);
         }
-
     }
 
     @Override
@@ -250,6 +253,13 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         } catch (CantAddPendingAssetIssuerException e) {
             throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER REGISTERED", e, "", "");
         }
+    }
+
+    @Override
+    public void createActorAssetIssuerRegisterInNetworkService(ActorAssetIssuer actorAssetIssuer) throws CantCreateActorAssetIssuerException {
+        List<ActorAssetIssuer> list = new ArrayList<>();
+        list.add(actorAssetIssuer);
+        createActorAssetIssuerRegisterInNetworkService(list);
     }
 
     @Override

@@ -27,24 +27,41 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
         if (fragments == null) {
             throw createFragmentNotFoundException(null);
         }
+
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT))
-        {   return ChatListFragment.newInstance();}
+        {
+            return ChatListFragment.newInstance();
+        }
 
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT))
-        {    return ContactsListFragment.newInstance();}
+        {
+            return ContactsListFragment.newInstance();
+        }
+
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACTLIST_FRAGMENT))
+        {
+            return ContactsListFragment.newInstance();
+        }
 
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT))
-        {   return ChatFragment.newInstance();}
+        {
+            return ChatFragment.newInstance();
+        }
 
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONTACT_DETAIL_FRAGMENT))
-        { return ContactFragment.newInstance();}
+        {
+            return ContactFragment.newInstance();
+        }
 
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_EDIT_CONTACT_FRAGMENT))
-        {return ContactEditFragment.newInstance();}
+        {
+            return ContactEditFragment.newInstance();
+        }
 
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT))
-        {return ConnectionsListFragment.newInstance();}
-
+        {
+            return ConnectionsListFragment.newInstance();
+        }
         throw createFragmentNotFoundException(fragments);
     }
 

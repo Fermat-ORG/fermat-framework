@@ -16,8 +16,12 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantConfirmException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
@@ -27,6 +31,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.devel
 import com.bitdubai.fermat_cbp_plugin.layer.actor_connection.crypto_broker.developer.bitdubai.version_1.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +41,10 @@ import java.util.UUID;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 14/12/2015.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class ActorConnectionEventActions {
 
@@ -43,16 +52,19 @@ public class ActorConnectionEventActions {
     private final CryptoBrokerManager            cryptoBrokerNetworkService;
     private final CryptoBrokerActorConnectionDao dao                       ;
     private final ErrorManager                   errorManager              ;
+    private final EventManager                   eventManager              ;
     private final PluginVersionReference         pluginVersionReference    ;
 
     public ActorConnectionEventActions(final CryptoBrokerManager            cryptoBrokerNetworkService,
                                        final CryptoBrokerActorConnectionDao dao                       ,
                                        final ErrorManager                   errorManager              ,
+                                       final EventManager                   eventManager              ,
                                        final PluginVersionReference         pluginVersionReference    ) {
 
         this.cryptoBrokerNetworkService = cryptoBrokerNetworkService;
         this.dao                        = dao                       ;
         this.errorManager               = errorManager              ;
+        this.eventManager               = eventManager              ;
         this.pluginVersionReference     = pluginVersionReference    ;
     }
 
@@ -95,9 +107,11 @@ public class ActorConnectionEventActions {
                     case DENY:
                         this.handleDenyConnection(request.getRequestId());
                         break;
-                  /*  case DISCONNECT:
-                        this.handleDisconnect(request.getRequestId());
-                        break;*/
+                    case DISCONNECT:
+                        if (request.getRequestType() == RequestType.SENT)
+                            this.handleDisconnect(request.getRequestId());
+
+                        break;
 
                 }
 
@@ -108,8 +122,8 @@ public class ActorConnectionEventActions {
                 UnexpectedConnectionStateException         |
                 CantAcceptActorConnectionRequestException /* |
                 CantCancelActorConnectionRequestException */ |
-                CantDenyActorConnectionRequestException   /* |
-                CantDisconnectFromActorException          */ e) {
+                CantDenyActorConnectionRequestException    |
+                CantDisconnectFromActorException           e) {
 
             throw new CantHandleNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
         }
@@ -183,8 +197,8 @@ public class ActorConnectionEventActions {
     }
 
     public void handleDisconnect(final UUID connectionId) throws CantDisconnectFromActorException   ,
-                                                           ActorConnectionNotFoundException   ,
-                                                           UnexpectedConnectionStateException {
+                                                                 ActorConnectionNotFoundException   ,
+                                                                 UnexpectedConnectionStateException {
 
         try {
 
@@ -347,8 +361,8 @@ public class ActorConnectionEventActions {
     }
 
     public void handleAcceptConnection(final UUID connectionId) throws CantAcceptActorConnectionRequestException,
-                                                                 ActorConnectionNotFoundException         ,
-                                                                 UnexpectedConnectionStateException       {
+                                                                       ActorConnectionNotFoundException         ,
+                                                                       UnexpectedConnectionStateException       {
 
         try {
 
@@ -374,6 +388,10 @@ public class ActorConnectionEventActions {
                 default:
                     throw new UnexpectedConnectionStateException("connectionId: "+connectionId + " - currentConnectionState: "+currentConnectionState, "Unexpected contact state for cancelling.");
             }
+
+            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CRYPTO_BROKER_ACTOR_CONNECTION_NEW_CONNECTION);
+            eventToRaise.setSource(EventSource.CRYPTO_BROKER_ACTOR_CONNECTION);
+            eventManager.raiseEvent(eventToRaise);
 
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
 

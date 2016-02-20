@@ -4,7 +4,10 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communi
  * Created by natalia on 16/09/15.
  */
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The interface <code>CryptoCustomerCommunityInformation</code>
@@ -37,5 +40,16 @@ public interface CryptoCustomerCommunityInformation {
      */
     List listCryptoCustomerWallets();
 
+    /**
+     * The method <code>getConnectionState</code> returns the Connection State Status
+     * @return ConnectionState object
+     */
+    ConnectionState getConnectionState();
+
+    /**
+     * The method <code>getConnectionId</code> returns the Connection UUID this actor has with the selected actor
+     * @return UUID object
+     */
+    UUID getConnectionId();
 }
 

@@ -30,7 +30,7 @@ public class CryptoPaymentRequestNetworkServiceDatabaseFactory {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    protected Database createDatabase(final UUID   ownerId     ,
+    public Database createDatabase(final UUID   ownerId     ,
                                       final String databaseName) throws CantCreateDatabaseException {
 
         try {

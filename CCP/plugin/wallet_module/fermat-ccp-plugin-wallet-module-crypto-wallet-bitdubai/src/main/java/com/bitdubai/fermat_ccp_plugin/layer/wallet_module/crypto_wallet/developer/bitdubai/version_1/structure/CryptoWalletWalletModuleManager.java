@@ -696,7 +696,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     public void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName, BlockchainNetworkType blockchainNetworkType) throws CantUpdateWalletContactException {
         try {
             HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses = new HashMap<>();
-            cryptoAddresses.put(blockchainNetworkType,receivedCryptoAddress);
+            cryptoAddresses.put(blockchainNetworkType, receivedCryptoAddress);
             walletContactsRegistry.updateWalletContact(
                     contactId,
                     actorName,
@@ -885,6 +885,30 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
+    public CryptoWalletTransaction getTransaction(UUID transactionId, String walletPublicKey,String intraUserLoggedInPublicKey) throws CantListTransactionsException
+    {
+
+        try {
+            CryptoWalletTransaction cryptoWalletTransaction;
+            BitcoinWalletWallet bitcoinWalletWallet;
+            bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+
+            BitcoinWalletTransaction bwt = bitcoinWalletWallet.getTransactionById(transactionId);
+            cryptoWalletTransaction =enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey);
+
+            return  cryptoWalletTransaction;
+
+        } catch (CantLoadWalletException e) {
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
+        } catch (CantFindTransactionException e) {
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
+        } catch (CantEnrichTransactionException e) {
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, e);
+        }
+
+    }
+
+    @Override
     public void setTransactionDescription(String walletPublicKey,
                                           UUID   transactionID,
                                           String description) throws CantSaveTransactionDescriptionException, TransactionNotFoundException {
@@ -975,17 +999,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                 lst.add(cryptoWalletPaymentRequest);
             }
 
-
-            //TODO: Harcoder
-            /*if(lst.size() == 0){
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-                lst.add(cryptoWalletPaymentRequest);
-                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-
-                lst.add(cryptoWalletPaymentRequest);
-            }*/
-
-
             return lst;
         } catch (Exception e) {
             throw new CantListSentPaymentRequestException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -994,13 +1007,36 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
     }
 
     @Override
+    public PaymentRequest getPaymentRequest(UUID requestId) throws CantListReceivePaymentRequestException {
+
+        try {
+
+            CryptoPayment paymentRecord = cryptoPaymentRegistry.getRequestById(requestId);
+
+           return  new CryptoWalletWalletModulePaymentRequest(
+                    paymentRecord.getRequestId(),
+                    convertTime(paymentRecord.getStartTimeStamp()),
+                    paymentRecord.getDescription(),
+                    paymentRecord.getAmount(),
+                    null,
+                    PaymentRequest.RECEIVE_PAYMENT,
+                    paymentRecord.getState());
+
+        } catch (Exception e) {
+            throw new CantListReceivePaymentRequestException(CantListSentPaymentRequestException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+
+
+    }
+
+
     public List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,int max,int offset) throws CantListReceivePaymentRequestException {
 
         try {
             List<PaymentRequest> lst =  new ArrayList<>();
 
             CryptoWalletWalletModuleWalletContact cryptoWalletWalletContact = null;
-             byte[] profilePicture = null;
+            byte[] profilePicture = null;
 
             //find received payment request
             for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(
@@ -1041,14 +1077,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                 lst.add(cryptoWalletPaymentRequest);
             }
 
-            //TODO: Harcoder
-           /* if(lst.size() == 0) {
-                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"1 hour ago", "Starbucks coffe", 500000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
-                lst.add(cryptoWalletPaymentRequest);
-                cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(UUID.randomUUID(),"2 hour ago", "Hamburguer from MC donald", 100000, null, PaymentRequest.RECEIVE_PAYMENT, "accepted");
-
-                lst.add(cryptoWalletPaymentRequest);
-            }*/
 
             return lst;
         } catch (Exception e) {
@@ -1172,16 +1200,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 //                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
 //                lst.add(cryptoWalletPaymentRequest);
 //            }
-//            //TODO: Harcoder
-//            CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-//            lst.add(cryptoWalletPaymentRequest);
-//            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.SEND_PAYMENT,"accepted");
-//            lst.add(cryptoWalletPaymentRequest);
-//
-//            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("1 hour ago","Starbucks coffe",500000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-//            lst.add(cryptoWalletPaymentRequest);
-//            cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest("2 hour ago","Hamburguer from MC donald",100000,null,PaymentRequest.RECEIVE_PAYMENT,"accepted");
-//            lst.add(cryptoWalletPaymentRequest);
+
 
 
             return lst;
@@ -1286,14 +1305,15 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                     try {
                         if(bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER)
                         {
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
 
                             walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
 
                         }
-                         else
+
+                        if(involvedActor==null)
                         {
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
 
                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
 
@@ -1316,6 +1336,17 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                     try {
                         involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),intraUserLoggedInPublicKey);
                          walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+
+                        if(involvedActor==null)
+                        {
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
+
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+
+                        }
+
+
+
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 

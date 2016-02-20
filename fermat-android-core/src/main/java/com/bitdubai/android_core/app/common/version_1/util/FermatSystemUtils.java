@@ -71,7 +71,7 @@ public class FermatSystemUtils {
      * @return reference of SubAppRuntimeManager
      */
 
-    public static SubAppRuntimeManager getSubAppRuntimeMiddleware(Application application) {
+    public static SubAppRuntimeManager getSubAppRuntimeMiddleware() {
 
         try {
             return (SubAppRuntimeManager) ApplicationSession.getInstance().getFermatSystem().getRuntimeManager2(
@@ -104,7 +104,7 @@ public class FermatSystemUtils {
      * @return reference of WalletRuntimeManager
      */
 
-    public static WalletRuntimeManager getWalletRuntimeManager(Application application) {
+    public static WalletRuntimeManager getWalletRuntimeManager() {
 
         try {
             return (WalletRuntimeManager) ApplicationSession.getInstance().getFermatSystem().getRuntimeManager2(

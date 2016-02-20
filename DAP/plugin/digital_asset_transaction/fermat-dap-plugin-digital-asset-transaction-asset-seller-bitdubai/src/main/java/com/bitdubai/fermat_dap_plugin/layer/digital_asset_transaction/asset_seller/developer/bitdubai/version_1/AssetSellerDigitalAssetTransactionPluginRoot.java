@@ -105,6 +105,7 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
     public void start() throws CantStartPluginException {
         try {
             createDatabase();
+
             dao = new AssetSellerDAO(pluginId, pluginDatabaseSystem, actorAssetUserManager, assetUserWalletManager);
             transactionManager = new AssetSellerTransactionManager(assetUserWalletManager, assetTransmission, actorAssetUserManager, dao);
             initializeMonitorAgent();
@@ -120,7 +121,6 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
         try {
             agent.stop();
             recorderService.stop();
-            super.stop();
         } catch (CantStopAgentException e) {
             e.printStackTrace();
         } finally {

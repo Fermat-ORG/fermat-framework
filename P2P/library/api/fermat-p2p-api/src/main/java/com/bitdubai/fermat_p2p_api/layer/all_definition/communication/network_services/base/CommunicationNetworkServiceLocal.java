@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.daos.OutgoingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
@@ -60,10 +61,10 @@ public final class CommunicationNetworkServiceLocal implements Observer, Network
      *
      * @param communicationNetworkServiceConnectionManager
      */
-    public CommunicationNetworkServiceLocal(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, PlatformComponentProfile remoteComponentProfile) {
+    public CommunicationNetworkServiceLocal(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, PlatformComponentProfile remoteComponentProfile, ErrorManager errorManager) {
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
         this.remoteComponentProfile                       = remoteComponentProfile;
-        this.errorManager                                 = communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getErrorManager();
+        this.errorManager                                 = errorManager;
         this.outgoingMessageDao                           = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
     }
 
@@ -105,10 +106,19 @@ public final class CommunicationNetworkServiceLocal implements Observer, Network
      */
     private void onMessageReceived(FermatMessage incomingMessage) {
 
-        /*
-         * process the new message receive
-         */
-        communicationNetworkServiceConnectionManager.getNetworkServiceRoot().onNewMessagesReceive(incomingMessage);
+        try {
+
+            /*
+             * process the new message receive
+             */
+            communicationNetworkServiceConnectionManager.getNetworkServiceRoot().onNewMessagesReceive(incomingMessage);
+
+            ((FermatMessageCommunication) incomingMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
+            communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(incomingMessage);
+
+        } catch (CantUpdateRecordDataBaseException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -29,8 +29,9 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     private Version version;
     private int iconResource;
     private int position;
+    private AppsStatus status;
 
-    public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
+    public InstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version,AppsStatus appsStatus) {
         this.walletCategory = walletCategory;
         this.walletType = walletType;
         this.skinsId = skinsId;
@@ -40,6 +41,7 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
         this.publicKey = publicKey;
         this.walletPlatformIdentifier = walletPlatformIdentifier;
         this.version = version;
+        this.status = appsStatus;
     }
 
     /**
@@ -171,7 +173,7 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
 
     @Override
     public AppsStatus getAppStatus() {
-        return null;
+        return status;
     }
 
 

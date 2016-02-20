@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -28,6 +29,8 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -75,13 +78,14 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     PluginFileSystem pluginFileSystem;
+    ErrorManager errorManager;
     final String TRANSACTION_DIRECTORY = "CryptoNetworkTransactions";
 
     /**
      * Constructor
      * @param pluginDatabaseSystem
      */
-    public BitcoinCryptoNetworkMonitor(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Wallet wallet, File walletFilename, PluginFileSystem pluginFileSystem) {
+    public BitcoinCryptoNetworkMonitor(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Wallet wallet, File walletFilename, PluginFileSystem pluginFileSystem, ErrorManager errorManager) {
         /**
          * I initialize the local variables
          */
@@ -90,6 +94,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         this.pluginId = pluginId;
         this.walletFileName = walletFilename;
         this.pluginFileSystem = pluginFileSystem;
+        this.errorManager = errorManager;
 
         /**
          * I get the network parameter from the passed wallet.
@@ -110,6 +115,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     doTheMainTask();
                 } catch (BlockchainException e) {
                     e.printStackTrace();
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         }).start();
@@ -147,7 +153,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             /**
              * creates the blockchain object for the specified network.
              */
-            BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(NETWORK_PARAMETERS, wallet);
+            BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(pluginFileSystem, NETWORK_PARAMETERS, wallet);
             blockChain = CryptoNetworkBlockChain.getBlockChain();
 
             /**
@@ -202,6 +208,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
         } catch (Exception e){
             e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
@@ -324,6 +331,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                 } catch (CantExecuteDatabaseOperationException e) {
                     e.printStackTrace();
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         });
@@ -339,7 +347,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param txHash
      * @return
      */
-    private Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException {
+    public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException {
         try {
             PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String transactionContent = pluginTextFile.getContent();
@@ -444,7 +452,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 // verify it was successfuly stored.
                 Transaction storedTransaction = wallet.getTransaction(tx.getHash());
                 if (storedTransaction == null){
-                    throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "transaction was not correctly stored at the wallet.", null);
+                    CantStoreBitcoinTransactionException e = new  CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "transaction was not correctly stored at the wallet.", null);
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    throw e;
+
                 }
             } else {
                 // if no commit, then I will save it into a file.
@@ -454,6 +465,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             System.out.println("***CryptoNetwork*** Transaction successfully stored for broadcasting: " + tx.getHashAsString());
         } catch (CantExecuteDatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "There was an error storing the transaction in the database", null);
         } catch (Exception e) {
             /**
@@ -468,7 +480,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  */
                 e1.printStackTrace();
             }
-            throw  new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error storing the transaction in the wallet. TxId: " + tx.getHashAsString(), "Crypto Network");
+
+            CantStoreBitcoinTransactionException exception = new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error storing the transaction in the wallet. TxId: " + tx.getHashAsString(), "Crypto Network");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
     }
 
@@ -528,7 +543,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             System.out.println("***CryptoNetwork*** Transaction " + txHash + " cancelled.");
         } catch (Exception e) {
-            throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't rollback properly.", "Crypto Network error");
+            CantCancellBroadcastTransactionException exception = new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Transaction couldn't rollback properly.", "Crypto Network error");
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
     }
 
@@ -546,7 +563,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             return blockchainConnectionStatus;
         } catch (Exception e){
-            throw new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, e, "Error getting connection status from peers.", null);
+            CantGetBlockchainConnectionStatusException exception = new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, e, "Error getting connection status from peers.", null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
     }
@@ -577,8 +596,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * I don't have it locally, so I will try to get it from the stored blockstore
          */
-        if (transactionBlockHash == null )
-            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
+        if (transactionBlockHash == null ){
+            CantGetTransactionException e = new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, null, "BlockHash parameters can't be null", null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+
+        }
+
 
         Sha256Hash blockHash = Sha256Hash.wrap(transactionBlockHash);
 
@@ -601,7 +625,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 }
             }
         } catch (Exception e) {
-            throw new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "error getting the Transaction from the blockchain" , null);
+            CantGetTransactionException exception = new CantGetTransactionException(CantGetTransactionException.DEFAULT_MESSAGE, e, "error getting the Transaction from the blockchain" , null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         return null;

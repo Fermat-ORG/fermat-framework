@@ -44,7 +44,7 @@ public enum AppsStatus implements FermatEnum{
     }
 
     public boolean isAppStatusAvailable(AppsStatus appsStatus){
-        return appsStatus.getNumber()>=this.number;
+        return (appsStatus!=null) ?appsStatus.getNumber()>=this.number : false;
     }
 
     @Override

@@ -2,24 +2,22 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -96,58 +94,37 @@ public class Data {
     public static List<ActorAssetRedeemPoint> getRedeemPoints(List<RedeemPoint> redeemPoints) {
         List<ActorAssetRedeemPoint> actorAssetRedeemPoints = new ArrayList<>();
         for (RedeemPoint redeemPoint : redeemPoints) {
-            actorAssetRedeemPoints.add(redeemPoint.getActorAssetRedeemPoint());
+            if (redeemPoint.isSelected()) {
+                actorAssetRedeemPoints.add(redeemPoint.getActorAssetRedeemPoint());
+            }
         }
         return actorAssetRedeemPoints;
     }
 
-    public static List<Transaction> getTransactionsSent(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
-//        List<Transaction> transactions = new ArrayList<>();
-//        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet("walletPublicKeyTest").getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, digitalAsset.getAssetPublicKey());
-//        ActorAssetUser actorAssetUser;
-//        for (AssetUserWalletTransaction assetUserWalletTransaction :
-//             assetUserWalletTransactions) {
-//            actorAssetUser = moduleManager.getActorByPublicKey(assetUserWalletTransaction.getActorFromPublicKey());
-//            Transaction transaction = new Transaction();
-//            transaction.setAssetUserWalletTransaction(assetUserWalletTransaction);
-//            transaction.setUserName(actorAssetUser.getName());
-//            transaction.setAmount(assetUserWalletTransaction.getAmount());
-//            transaction.setTransactionUserName(moduleManager.getActorRegisteredByPublicKey(assetUserWalletTransaction.getActorToPublicKey()).getName());
-//            transaction.setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
-//            transaction.setImagePerson(actorAssetUser.getProfileImage());
-//        }
-        List<Transaction> transactions = new ArrayList<>();
-        Transaction transaction = new Transaction();
-        transaction.setUserName("Prueba");
-        transaction.setAmount(1.12);
-        transaction.setTransactionUserName("Prueba");
-        transaction.setDate(new Timestamp(new Date().getTime()));
-        transactions.add(transaction);
-        return transactions;
+    public static List<User> getConnectedUsers(AssetUserWalletSubAppModuleManager moduleManager) throws CantGetAssetUserActorsException {
+        List<User> users = new ArrayList<>();
+        List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
+        for (ActorAssetUser actorAssetUser : actorAssetUsers) {
+            User newUser = new User(actorAssetUser.getName(), actorAssetUser);
+            users.add(newUser);
+        }
+        return users;
     }
 
-    public static List<Transaction> getTransactionsRecieved(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
-//        List<Transaction> transactions = new ArrayList<>();
-//        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet("walletPublicKeyTest").getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, digitalAsset.getAssetPublicKey());
-//        ActorAssetUser actorAssetUser;
-//        for (AssetUserWalletTransaction assetUserWalletTransaction :
-//                assetUserWalletTransactions) {
-//            actorAssetUser = moduleManager.getActorByPublicKey(assetUserWalletTransaction.getActorFromPublicKey());
-//            Transaction transaction = new Transaction();
-//            transaction.setAssetUserWalletTransaction(assetUserWalletTransaction);
-//            transaction.setUserName(moduleManager.getActorRegisteredByPublicKey(assetUserWalletTransaction.getActorFromPublicKey()).getName());
-//            transaction.setAmount(assetUserWalletTransaction.getAmount());
-//            transaction.setTransactionUserName(moduleManager.getActorByPublicKey(assetUserWalletTransaction.getActorToPublicKey()).getName());
-//            transaction.setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
-//            transaction.setImagePerson(actorAssetUser.getProfileImage());
-//        }
+    public static List<Transaction> getTransactions(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         List<Transaction> transactions = new ArrayList<>();
-        Transaction transaction = new Transaction();
-        transaction.setUserName("Prueba");
-        transaction.setAmount(1.12);
-        transaction.setTransactionUserName("Prueba");
-        transaction.setDate(new Timestamp(new Date().getTime()));
-        transactions.add(transaction);
+        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY).getTransactionsForDisplay(digitalAsset.getAssetPublicKey());
+        DAPActor dapActor;
+        for (AssetUserWalletTransaction assetUserWalletTransaction :
+                assetUserWalletTransactions) {
+            if (assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
+                dapActor = assetUserWalletTransaction.getActorFrom();
+            } else {
+                dapActor = assetUserWalletTransaction.getActorTo();
+            }
+            Transaction transaction = new Transaction(assetUserWalletTransaction, dapActor);
+            transactions.add(transaction);
+        }
         return transactions;
     }
 }

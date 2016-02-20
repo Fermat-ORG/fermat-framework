@@ -9,6 +9,9 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAd
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -17,17 +20,29 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAcc
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
@@ -57,7 +72,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexIn
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.WalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCurrentIndexSummaryForStockCurrenciesException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
@@ -106,15 +121,15 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     /**
      * @param brokerWalletPublicKey the wallet public key
      * @return A summary of the current market rate for the different selected providers
-     * @throws CantGetCurrentIndexSummaryForStockCurrenciesException Cant get current Index Summary for the selected providers
-     * @throws CryptoBrokerWalletNotFoundException                   Cant find the installed wallet data
-     * @throws CantGetCryptoBrokerWalletSettingException             Cant find the settings for the wallet with the public key
-     * @throws CantGetProviderException                              Cant get the provider from the CER platform
-     * @throws UnsupportedCurrencyPairException                      The Currency pair fot the selected provider is not supported
-     * @throws CantGetExchangeRateException                          Cant get current the exchange rate for the currency pair in the provider
-     * @throws InvalidParameterException                             Invalid parameters
+     * @throws CantGetProvidersCurrentExchangeRatesException Cant get current Index Summary for the selected providers
+     * @throws CryptoBrokerWalletNotFoundException           Cant find the installed wallet data
+     * @throws CantGetCryptoBrokerWalletSettingException     Cant find the settings for the wallet with the public key
+     * @throws CantGetProviderException                      Cant get the provider from the CER platform
+     * @throws UnsupportedCurrencyPairException              The Currency pair fot the selected provider is not supported
+     * @throws CantGetExchangeRateException                  Cant get current the exchange rate for the currency pair in the provider
+     * @throws InvalidParameterException                     Invalid parameters
      */
-    Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String brokerWalletPublicKey) throws CantGetCurrentIndexSummaryForStockCurrenciesException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, InvalidParameterException;
+    Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String brokerWalletPublicKey) throws CantGetProvidersCurrentExchangeRatesException, CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, InvalidParameterException;
 
     boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoBrokerIdentitiesException, CantGetListBrokerIdentityWalletRelationshipException;
 
@@ -230,7 +245,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
 
     /**
@@ -257,7 +273,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateBankMoneyDestockException;
 
     /**
@@ -283,7 +300,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
 
     /**
@@ -309,7 +327,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateCashMoneyDestockException;
 
     /**
@@ -333,7 +352,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateCryptoMoneyRestockException;
 
 
@@ -358,7 +378,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
     ) throws CantCreateCryptoMoneyDestockException;
 
     /**
@@ -405,6 +426,15 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @throws CantGetCryptoBrokerWalletSettingException
      */
     List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
+
+    /**
+     * This method load the instance saveCryptoBrokerWalletSpreadSetting
+     *
+     * @param
+     * @return CryptoBrokerWalletSettingSpread
+     * @throws CantSaveCryptoBrokerWalletSettingException
+     */
+    CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting(String walletPublicKey) throws CantGetCryptoBrokerWalletSettingException, CryptoBrokerWalletNotFoundException;
 
     /**
      * Returns an exchange rate of a given date, for a specific currencyPair
@@ -479,9 +509,77 @@ public interface CryptoBrokerWalletManager extends WalletManager {
     BigDecimal getBalanceCashWallet(String walletPublicKey) throws CantGetCashMoneyWalletBalanceException, CantLoadCashMoneyWalletException;
 
     /**
+     * Checks if wallet exists in wallet database
+     */
+    boolean cashMoneyWalletExists(String walletPublicKey);
+
+    /**
      * Returns the Balance this BitcoinWalletBalance belongs to. (Can be available or book)
      *
      * @return A BigDecimal, containing the balance.
      */
     public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException, CantLoadWalletException;
+
+    /**
+     * This method returns the CustomerBrokerContractSale associated to a negotiationId
+     *
+     * @param negotiationId
+     * @return
+     * @throws CantGetListCustomerBrokerContractSaleException
+     */
+    CustomerBrokerContractSale getCustomerBrokerContractSaleByNegotiationId(
+            String negotiationId) throws CantGetListCustomerBrokerContractSaleException;
+
+    /**
+     * This method returns the currency type from a contract
+     *
+     * @param customerBrokerContractSale
+     * @param contractDetailType
+     * @return
+     * @throws CantGetListSaleNegotiationsException
+     */
+    MoneyType getMoneyTypeFromContract(
+            CustomerBrokerContractSale customerBrokerContractSale,
+            ContractDetailType contractDetailType) throws
+            CantGetListSaleNegotiationsException;
+
+    /**
+     * This method returns the ContractStatus by contractHash/Id
+     *
+     * @param contractHash
+     * @return
+     * @throws CantGetListCustomerBrokerContractSaleException
+     */
+    ContractStatus getContractStatus(String contractHash) throws
+            CantGetListCustomerBrokerContractSaleException;
+
+    /**
+     * This method send a merchandise according the contract elements.
+     *
+     * @param contractHash
+     */
+    void submitMerchandise(String contractHash) throws CantSubmitMerchandiseException;
+
+    /**
+     * This method execute a Broker Ack payment Business Transaction
+     *
+     * @param contractHash
+     * @throws CantAckPaymentException
+     */
+    ContractStatus ackPayment(String contractHash) throws CantAckPaymentException;
+
+    /**
+     * Through the method <code>associatePair</code> you can associate an earnings pair to the wallet in which we're working.
+     * Automatically will be generated an UUID to the earnings pair, with it, we can identify the same.
+     *
+     * @param earningCurrency        the currency which we decided to extract the earnings.
+     * @param linkedCurrency         the currency that we're linking to the previous selected currency to conform the pair.
+     * @param earningWalletPublicKey the wallet's public key that we're associating and where we will deposit the earnings.
+     * @param brokerWalletPublicKey  the broker wallet's public key who we're associating this earning setting
+     * @return an instance of the well formed associated EarningPair-
+     * @throws CantAssociatePairException     if something goes wrong.
+     * @throws PairAlreadyAssociatedException if the pair is already associated.
+     * @throws CantLoadEarningSettingsException if something goes wrong trying to get the earning settings.
+     */
+    EarningsPair addEarningsPairToEarningSettings(Currency earningCurrency, Currency linkedCurrency, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantAssociatePairException, PairAlreadyAssociatedException;
 }

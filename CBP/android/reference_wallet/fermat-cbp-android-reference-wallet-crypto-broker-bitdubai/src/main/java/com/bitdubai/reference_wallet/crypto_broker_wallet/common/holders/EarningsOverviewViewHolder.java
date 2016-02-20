@@ -18,14 +18,12 @@ import java.util.Calendar;
  */
 public class EarningsOverviewViewHolder extends FermatViewHolder {
 
-    private final FermatTextView earningValueTextView;
     private final FermatTextView differenceTextView;
     private final FermatTextView dateTextView;
 
     public EarningsOverviewViewHolder(View itemView) {
         super(itemView);
 
-        earningValueTextView = (FermatTextView) itemView.findViewById(R.id.cbw_earning_value_item);
         differenceTextView = (FermatTextView) itemView.findViewById(R.id.cbw_earning_value_difference_item);
         dateTextView = (FermatTextView) itemView.findViewById(R.id.cbw_earning_value_date_item);
     }
@@ -35,9 +33,6 @@ public class EarningsOverviewViewHolder extends FermatViewHolder {
 
         final String diff = numberFormat.format(data.getDifference());
         final String currencyCode = data.getCurrency().getCode();
-        final double earningValue = data.getEarningValue();
-
-        earningValueTextView.setText(String.format("%s %s", numberFormat.format(earningValue), currencyCode));
 
         if (data.getDifference() > 0) {
             differenceTextView.setText(String.format("+ %s %s", diff, currencyCode));

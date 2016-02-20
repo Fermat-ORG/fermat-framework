@@ -34,6 +34,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.Date;
+
 //import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.AssetUserWalletSubAppModuleManager;
 //import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetActiveLoginIdentityException;
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.Actor;
@@ -57,6 +59,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     private FermatTextView userCryptoAddres;
     private FermatTextView userCryptoCurrency;
     private FermatTextView redeemRegistrationDate;
+    private FermatTextView redeemLastConnectionDate;
     //private FermatTextView userBlockchainNetworkType;
     //private IntraUserModuleManager manager;
     private static RedeemPointCommunitySubAppModuleManager manager;
@@ -108,7 +111,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         //userEmail = (FermatTextView) rootView.findViewById(R.id.email);
         userCryptoAddres = (FermatTextView) rootView.findViewById(R.id.cryptoAddress);
         userCryptoCurrency = (FermatTextView) rootView.findViewById(R.id.cryptoCurrency);
-        redeemRegistrationDate = (FermatTextView) rootView.findViewById(R.id.redeemRegistrationDate);
+        //redeemRegistrationDate = (FermatTextView) rootView.findViewById(R.id.redeemRegistrationDate);
+        redeemLastConnectionDate= (FermatTextView) rootView.findViewById(R.id.redeemLastConnectionDate);
         //userBlockchainNetworkType = (FermatTextView) rootView.findViewById(R.id.blockchainNetworkType);
         connectionRequestSend = (Button) rootView.findViewById(R.id.btn_connection_request_send);
         connectionRequestRejected = (Button) rootView.findViewById(R.id.btn_connection_request_reject);
@@ -158,15 +162,15 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             //userStatus.setTextColor(Color.parseColor("#292929"));
 
             if(actor.getCryptoAddress() != null){
-                userCryptoAddres.setText("YES");
-                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getCode());
+                userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
+                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
             } else{
                 userCryptoAddres.setText("No");
                 userCryptoCurrency.setText("None");
             }
 
-            redeemRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(actor.getRegistrationDate()));
-
+            //redeemRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
+            redeemLastConnectionDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
             /*if(actor.getBlockchainNetworkType() != null) {
                 userBlockchainNetworkType.setText(actor.getBlockchainNetworkType().getCode());
             }else {

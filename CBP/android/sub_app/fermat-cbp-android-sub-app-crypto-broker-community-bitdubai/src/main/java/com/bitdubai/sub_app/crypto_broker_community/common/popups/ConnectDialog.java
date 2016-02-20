@@ -31,7 +31,8 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
  * @author lnacosta
  * @version 1.0.0
  */
-public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager>
+        implements View.OnClickListener {
 
     /**
      * UI components
@@ -43,7 +44,6 @@ public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessi
     FermatTextView mSecondDescription;
     FermatTextView mTitle;
     CharSequence description;
-
     CharSequence secondDescription;
     CharSequence username;
     CharSequence title;
@@ -118,30 +118,30 @@ public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessi
         int i = v.getId();
         if (i == R.id.positive_button) {
             try {
-
                 if (information != null && identity != null) {
 
-                    System.out.println("*********** i'm the selected identity: "+identity);
-                    System.out.println("*********** i'm the selected broker information: "+information);
+                    //System.out.println("*********** i'm the selected identity: "+identity);
+                    //System.out.println("*********** i'm the selected broker information: " + information);
 
-                    getSession().getModuleManager().requestConnectionToCryptoBroker(
-                            identity,
-                            information
-                    );
-
-                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                    prefs.edit().putBoolean("Connected", true).apply();
+                    getSession().getModuleManager().requestConnectionToCryptoBroker(identity, information);
                     Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
-                    Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
-                    broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
-                    sendLocalBroadcast(broadcast);
+
+                    //set flag so that the preceding fragment reads it on dismiss()
+                    getSession().setData("connectionresult", 2);
+
                 } else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - identity or information = null", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            } catch (CantRequestConnectionException | ActorConnectionAlreadyRequestedException | ActorTypeNotSupportedException e) {
+            } catch (ActorTypeNotSupportedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "Oooops! recovering from system error - " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+            } catch (CantRequestConnectionException e) {
+                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getContext(), "Could not request connection, please try again", Toast.LENGTH_SHORT).show();
+            } catch (ActorConnectionAlreadyRequestedException e) {
+                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getContext(), "The connection has already been requested", Toast.LENGTH_SHORT).show();
             }
 
             dismiss();

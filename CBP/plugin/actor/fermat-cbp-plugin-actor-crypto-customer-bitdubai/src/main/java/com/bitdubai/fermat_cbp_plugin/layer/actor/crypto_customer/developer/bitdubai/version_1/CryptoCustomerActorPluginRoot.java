@@ -23,10 +23,12 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.event_handlers.CryptoBrokerNewConnectionEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.event_handlers.CryptoCustomerExtraDataEventHandler;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.ActorCustomerExtraDataEventActions;
@@ -62,8 +64,8 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM  , layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CRYPTO_BROKER )
     private CryptoBrokerManager cryptoBrokerANSManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_CUSTOMER     )
-    private CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_BROKER     )
+    private CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,           layer = Layers.PLATFORM_SERVICE,    addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -83,31 +85,37 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
             @Override
             public void start() throws CantStartPluginException {
                 try {
+
                     FermatEventListener fermatEventListener;
                     FermatEventHandler fermatEventHandler;
-                    ActorCustomerExtraDataEventActions handlerAction = new ActorCustomerExtraDataEventActions(cryptoBrokerANSManager, cryptoCustomerActorDao);
+
+                    this.cryptoCustomerActorDao = new CryptoCustomerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+                    this.cryptoCustomerActorDao.initializeDatabase();
+
+                    ActorCustomerExtraDataEventActions handlerAction = new ActorCustomerExtraDataEventActions(cryptoBrokerANSManager, cryptoCustomerActorDao, cryptoBrokerActorConnectionManager);
+
                     fermatEventListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_QUOTES_REQUEST_UPDATES);
                     fermatEventHandler = new CryptoCustomerExtraDataEventHandler(handlerAction, this);
                     fermatEventListener.setEventHandler(fermatEventHandler);
                     eventManager.addListener(fermatEventListener);
                     listenersAdded.add(fermatEventListener);
 
+                    fermatEventListener = eventManager.getNewListener(EventType.CRYPTO_BROKER_ACTOR_CONNECTION_NEW_CONNECTION);
+                    fermatEventHandler = new CryptoBrokerNewConnectionEventHandler(handlerAction, this);
+                    fermatEventListener.setEventHandler(fermatEventHandler);
+                    eventManager.addListener(fermatEventListener);
+                    listenersAdded.add(fermatEventListener);
+
+
                     agente = new CryptoBrokerExtraDataUpdateAgent(cryptoBrokerANSManager, cryptoCustomerActorDao);
                     agente.start();
-                } catch (CantStartAgentException e) {
-                    errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                    throw new CantStartPluginException(e, this.getPluginVersionReference());
-                }
-
-                try {
-                    this.cryptoCustomerActorDao = new CryptoCustomerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
-                    this.cryptoCustomerActorDao.initializeDatabase();
-
                     this.serviceStatus = ServiceStatus.STARTED;
-                } catch (CantInitializeCryptoCustomerActorDatabaseException e) {
+
+                } catch (CantStartAgentException | CantInitializeCryptoCustomerActorDatabaseException e) {
                     errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                     throw new CantStartPluginException(e, this.getPluginVersionReference());
                 }
+
             }
 
             @Override
