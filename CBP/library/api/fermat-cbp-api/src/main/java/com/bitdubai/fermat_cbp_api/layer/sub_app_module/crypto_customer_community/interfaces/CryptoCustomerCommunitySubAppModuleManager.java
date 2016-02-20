@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
@@ -38,6 +39,19 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      */
     List<CryptoCustomerCommunityInformation> listWorldCryptoCustomers(CryptoCustomerCommunitySelectableIdentity selectedIdentity, final int max, final int offset) throws CantListCryptoCustomersException;
 
+    /**
+     * The method <code>listSelectableIdentities</code> returns the list of all local broker identities on the device
+     *
+     * @return a list of all local broker identities on device
+     *
+     * @throws CantListIdentitiesToSelectException if something goes wrong.
+     */
+    List<CryptoCustomerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
+
+    /**
+     * The method <code>setSelectedActorIdentity</code> saves an identity as default
+     */
+    void setSelectedActorIdentity(CryptoCustomerCommunitySelectableIdentity identity);
 
 
 
