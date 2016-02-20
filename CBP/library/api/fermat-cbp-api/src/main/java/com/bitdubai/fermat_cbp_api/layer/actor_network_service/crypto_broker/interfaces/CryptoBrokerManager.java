@@ -152,7 +152,7 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * @throws CantRequestQuotesException if something goes wrong.
      */
-    CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(String                  requesterPublicKey   ,
+    CryptoBrokerExtraDataInfo requestQuotes(String                  requesterPublicKey   ,
                                                            Actors                  requesterActorType   ,
                                                            String                  cryptoBrokerPublicKey) throws CantRequestQuotesException;
 
@@ -168,7 +168,7 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * @throws CantListPendingQuotesRequestsException if something goes wrong.
      */
-    List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(RequestType requestType) throws CantListPendingQuotesRequestsException;
+    List<CryptoBrokerExtraDataInfo> listPendingQuotesRequests(RequestType requestType) throws CantListPendingQuotesRequestsException;
 
     /**
      * Through this method you can send the response of the quotes request to its requester.

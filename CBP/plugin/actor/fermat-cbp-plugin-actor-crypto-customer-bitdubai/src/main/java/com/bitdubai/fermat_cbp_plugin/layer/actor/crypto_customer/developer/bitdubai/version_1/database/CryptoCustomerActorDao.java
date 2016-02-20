@@ -30,9 +30,10 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.RelationshipNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.QuotesExtraData;
@@ -115,7 +116,7 @@ public class CryptoCustomerActorDao {
             }
         }
 
-        public Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetListCustomerIdentityWalletRelationshipException {
+        public Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetCustomerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
                 RelationshipTable.loadToMemory();
@@ -127,15 +128,15 @@ public class CryptoCustomerActorDao {
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetCustomerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
                 RelationshipTable.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
@@ -147,31 +148,41 @@ public class CryptoCustomerActorDao {
                 }
                 return null;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(final String walletPublicKey) throws CantGetCustomerIdentityWalletRelationshipException,
+                                                                                                                                     RelationshipNotFoundException                      {
+
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
+
                 RelationshipTable.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+
                 RelationshipTable.loadToMemory();
+
                 List<DatabaseTableRecord> records = RelationshipTable.getRecords();
-                RelationshipTable.clearAllFilters();
-                for (DatabaseTableRecord record : records) {
-                    return  constructCryptoCustomerActorRelationshipFromRecord(record);
-                }
-                return null;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+
+
+                if (!records.isEmpty())
+                    return  constructCryptoCustomerActorRelationshipFromRecord(records.get(0));
+                else
+                    throw new RelationshipNotFoundException("walletPublicKey: "+walletPublicKey, "Relationshio not found for the given wallet public key.");
+
+            } catch (final CantLoadTableToMemoryException e) {
+
+                throw new CantGetCustomerIdentityWalletRelationshipException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            } catch (final InvalidParameterException e) {
+
+                throw new CantGetCustomerIdentityWalletRelationshipException(e, "", "There is a problem with some enum code.");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+
+                throw new CantGetCustomerIdentityWalletRelationshipException(e, "", "There is a problem listing the clauses of relationship.");
             }
         }
 

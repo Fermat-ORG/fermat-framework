@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantList
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
@@ -18,6 +18,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enu
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraDataInfo;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDao;
@@ -33,9 +34,14 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * TODO ADD A DESCRIPTION HERE
+ * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.ActorCustomerExtraDataEventActions</code>
+ * It contains all the necessary logic to manage events related to receiving quotes broker
+ * <p/>
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 4/02/16.
  *
- * Created by angel on 4/02/16.
+ * @author angel
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public final class ActorCustomerExtraDataEventActions {
 
@@ -84,7 +90,7 @@ public final class ActorCustomerExtraDataEventActions {
                 }
             }
 
-        } catch (CantGetListCustomerIdentityWalletRelationshipException e) {
+        } catch (CantGetCustomerIdentityWalletRelationshipException e) {
 
             throw new CantHandleNewConnectionEventException(e, "", "Error trying to get the list of customer-wallet relationships.");
         } catch (CantGetBrokersConnectedException e) {
@@ -129,11 +135,11 @@ public final class ActorCustomerExtraDataEventActions {
 
         try {
 
-            List<CryptoBrokerExtraData<CryptoBrokerQuote>> dataNS = cryptoBrokerANSManager.listPendingQuotesRequests(RequestType.SENT);
+            List<CryptoBrokerExtraDataInfo> dataNS = cryptoBrokerANSManager.listPendingQuotesRequests(RequestType.SENT);
 
             if(dataNS != null) {
 
-                for (CryptoBrokerExtraData<CryptoBrokerQuote> extraDate : dataNS) {
+                for (CryptoBrokerExtraDataInfo extraDate : dataNS) {
 
                     Collection<QuotesExtraData> quotes = new ArrayList<>();
                     ActorIdentity identity = new ActorExtraDataIdentity("", extraDate.getCryptoBrokerPublicKey(), null);
