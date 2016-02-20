@@ -783,20 +783,21 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
             //Create a thread to save intra user cache list
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try
-                    {
-                        intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
-                    } catch (CantAddIntraWalletCacheUserException e) {
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            if(lstIntraUser.size() > 0) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+                        } catch (CantAddIntraWalletCacheUserException e) {
+                            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
+                        }
                     }
-                }
-            },"Thread Cache");
+                }, "Thread Cache");
 
-            thread.start();
+                thread.start();
+            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

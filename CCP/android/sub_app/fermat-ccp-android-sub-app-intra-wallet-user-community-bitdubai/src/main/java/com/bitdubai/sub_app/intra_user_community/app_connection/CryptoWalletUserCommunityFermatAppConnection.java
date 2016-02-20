@@ -25,7 +25,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWallet
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections{
+public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections<IntraUserSubAppSession>{
 
    private IntraUserSubAppSession intraUserSubAppSession;
     private IntraUserModuleManager moduleManager;
@@ -72,32 +72,31 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
     }
 
     @Override
-    public NotificationPainter getNotificationPainter(String code,FermatSession fullyLoadedSession){
+    public NotificationPainter getNotificationPainter(String code){
 
 
         NotificationPainter notification = null;
         try
         {
-            this.intraUserSubAppSession = (IntraUserSubAppSession)fullyLoadedSession;
-
-            moduleManager = intraUserSubAppSession.getModuleManager();
+            this.intraUserSubAppSession = (IntraUserSubAppSession)this.getSession();
+            if(intraUserSubAppSession!=  null)
+               moduleManager = intraUserSubAppSession.getModuleManager();
             String[] params = code.split("_");
             String notificationType = params[0];
             String senderActorPublicKey = params[1];
 
             switch (notificationType){
                 case "CONNECTIONREQUEST":
-                    try
-                    {
-                        //find last notification by sender actor public key
-                        IntraWalletUserActor senderActor= moduleManager.getLastNotification(senderActorPublicKey);
-                        notification = new UserCommunityNotificationPainter("New Connection Request","A new connection request was received from " + senderActor.getName(),"","");
-                        break;
-                    }
-                    catch(Exception e)
-                    {
-                        e.printStackTrace();
-                    }
+
+                        if(moduleManager != null) {
+                            //find last notification by sender actor public key
+                            IntraWalletUserActor senderActor = moduleManager.getLastNotification(senderActorPublicKey);
+                            notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received from " + senderActor.getName(), "", "");
+                            break;
+                        }else
+                        {
+                            notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "");
+                        }
 
             }
         }
