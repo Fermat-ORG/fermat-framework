@@ -195,7 +195,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         List<AssetUserWalletTransaction> debitBook = getTransactions(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
         List<AssetUserWalletTransaction> toReturn = new ArrayList<>();
         toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
-        toReturn.addAll(getTransactionsForDisplay(debitAvailable, debitBook));
+        toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
         Collections.sort(toReturn, new Comparator<AssetUserWalletTransaction>() {
             @Override
             public int compare(AssetUserWalletTransaction o1, AssetUserWalletTransaction o2) {
