@@ -25,7 +25,8 @@ public class ApplicationResources extends Application {
 
     private static final ImmutableSet services = ImmutableSet.of(
             ExampleResourceImpl.class,
-            ComponentRegisteredListWebService.class
+            ComponentRegisteredListWebService.class,
+            MonitoringWebService.class
     );
 
     @Override

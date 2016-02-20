@@ -6,22 +6,28 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty;
 
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VpnWebSocketServlet;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.WebSocketVpnServerChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices.ApplicationResources;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jetty.annotations.ServletContainerInitializersStarter;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Slf4jLog;
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.UUID;
 
 import javax.servlet.ServletException;
@@ -54,6 +60,11 @@ public class JettyEmbeddedAppServer {
      * Represent the DEFAULT_CONTEXT_PATH value (/fermat)
      */
     public static final String DEFAULT_CONTEXT_PATH = "/fermat";
+
+    /**
+     * Represent the WEB_APP_CONTEXT_PATH value (/fermat_web)
+     */
+    public static final String WEB_APP_CONTEXT_PATH = "/fermat_web";
 
     /**
      * Represent the JettyEmbeddedAppServer instance
@@ -94,7 +105,7 @@ public class JettyEmbeddedAppServer {
      * @throws DeploymentException
      * @throws ServletException
      */
-    private void initialize() throws IOException, DeploymentException, ServletException {
+    private void initialize() throws IOException, DeploymentException, ServletException, URISyntaxException {
 
         LOG.info("Initializing the internal Server");
 
@@ -116,11 +127,24 @@ public class JettyEmbeddedAppServer {
         this.servletContextHandler.setClassLoader(JettyEmbeddedAppServer.class.getClassLoader());
         this.server.setHandler(servletContextHandler);
 
-       /* WebAppContext webAppContext = new WebAppContext();
-        webAppContext.setContextPath(DEFAULT_CONTEXT_PATH);
-        webAppContext.setResourceBase("src/main/resources/webapp");
-        webAppContext.setWelcomeFiles(new String[]{ "index.html" });
-        this.server.setHandler(webAppContext);*/
+        String resourceBase = "";
+        URL webAppUri = this.getClass().getClassLoader().getResource("webapp");
+        LOG.info("WebAppUri = "+webAppUri);
+
+        if (webAppUri != null) {
+            resourceBase = webAppUri.toURI().toASCIIString();
+        }
+
+        /*
+         * Initialize web layer
+         */
+        WebAppContext webAppContext = new WebAppContext();
+        webAppContext.setContextPath(JettyEmbeddedAppServer.DEFAULT_CONTEXT_PATH);
+        webAppContext.setDescriptor(resourceBase + "/WEB-INF/web.xml");
+        webAppContext.setResourceBase(resourceBase);
+        webAppContext.addBean(new ServletContainerInitializersStarter(webAppContext), true);
+        webAppContext.setWelcomeFiles(new String[]{"index.html"});
+        server.setHandler(webAppContext);
 
         /*
          * Initialize restful service layer
@@ -128,12 +152,12 @@ public class JettyEmbeddedAppServer {
         ServletHolder restfulServiceServletHolder = new ServletHolder(new HttpServlet30Dispatcher());
         restfulServiceServletHolder.setInitParameter("javax.ws.rs.Application", ApplicationResources.class.getName());
         restfulServiceServletHolder.setInitParameter("resteasy.use.builtin.providers", "true");
-        servletContextHandler.addServlet(restfulServiceServletHolder, "/*");
+        webAppContext.addServlet(restfulServiceServletHolder, "/api/*");
 
         /*
          * Initialize javax.websocket layer
          */
-        this.wsServerContainer = WebSocketServerContainerInitializer.configureContext(servletContextHandler);
+        this.wsServerContainer = WebSocketServerContainerInitializer.configureContext(webAppContext);
 
         /*
          * Add WebSocket endpoint to javax.websocket layer
@@ -222,94 +246,4 @@ public class JettyEmbeddedAppServer {
         return server;
     }
 
-
-
-
-    public static void main(String[] args)
-    {
-        try {
-
-            JettyEmbeddedAppServer.getInstance().start();
-
-         /*   JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
-
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-                        JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, 5000);
-
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-                        JettyEmbeddedAppServer.getInstance().deployNewJavaxVpnWebSocket();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, 10000);
-
-
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-
-                        org.eclipse.jetty.util.Attributes attributes = JettyEmbeddedAppServer.getInstance().servletContextHandler.getAttributes();
-
-                        Enumeration<String> enumeration = attributes.getAttributeNames();
-                        while (enumeration.hasMoreElements()){
-                            System.out.println("name = " +enumeration.nextElement());
-                        }
-
-                        ServletMapping[] servletMappings = instance.servletContextHandler.getServletHandler().getServletMappings();
-
-                        for (int j = 0; j < servletMappings.length; j++) {
-                            ServletMapping servletMapping = servletMappings[j];
-                            System.out.println("servletMapping = " + servletMapping.getPathSpecs());
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, 15000);
-
-
-
-           new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    try {
-
-                       System.out.println(" ------------------------------------------------------- ");
-                       ServletMapping[] servletMappings2 = JettyEmbeddedAppServer.getInstance().servletContextHandler.getServletHandler().getServletMappings();
-                       String vpn = servletMappings2[1].getServletName();
-
-                       System.out.println("vpn = " + vpn);
-                       ServletHolder servletHolder =  JettyEmbeddedAppServer.getInstance().servletContextHandler.getServletHandler().getServlet(vpn);
-                       System.out.println("getContextPath = " + servletHolder.getContextPath());
-                       VpnWebSocketServlet wpnWebSocketServlet = (VpnWebSocketServlet) servletHolder.getServlet();
-                       System.out.println("getPrivateKey = " + wpnWebSocketServlet.getVpnInstance().getVpnServerIdentity().getPrivateKey());
-
-                       servletHolder.getServlet().destroy();
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }, 15000); */
-
-            //JettyEmbeddedAppServer.getInstance().getServer().join();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

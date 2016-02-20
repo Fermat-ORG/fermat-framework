@@ -135,4 +135,12 @@ public class ShareMemoryCacheForVpnClientsConnections {
 
         return null;
     }
+
+    /**
+     * Get the connection map
+     * @return Map<NetworkServiceType, Map<String, VpnClientConnection>>
+     */
+    public static Map<NetworkServiceType, Map<String, VpnClientConnection>> getConnectionMapCopy(){
+        return (HashMap) new HashMap<>(instance.connectionMap).clone();
+    }
 }
