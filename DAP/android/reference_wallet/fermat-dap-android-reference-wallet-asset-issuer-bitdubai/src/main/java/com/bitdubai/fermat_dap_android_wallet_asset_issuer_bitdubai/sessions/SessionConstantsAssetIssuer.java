@@ -24,5 +24,6 @@ public class SessionConstantsAssetIssuer {
     public static final int IC_ACTION_ISSUER_HELP_SETTINGS = 110;
     public static final int IC_ACTION_ISSUER_HELP_SETTINGS_NETWORK = 111;
     public static final int IC_ACTION_ISSUER_HELP_SETTINGS_NOTIFICATION = 112;
-
+    public static final int IC_ACTION_ISSUER_DELIVER = 113;
+    public static final int IC_ACTION_ISSUER_APPROPRIATE = 114;
 }
