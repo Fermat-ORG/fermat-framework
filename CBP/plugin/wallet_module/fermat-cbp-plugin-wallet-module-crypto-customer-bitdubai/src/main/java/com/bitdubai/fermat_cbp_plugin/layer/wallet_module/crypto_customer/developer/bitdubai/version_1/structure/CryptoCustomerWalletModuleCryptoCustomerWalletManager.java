@@ -598,7 +598,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 //                        "\n- "+information.getType().getCode()+": "+information.getValue()+" (STATUS: "+information.getStatus()+")");
 //            }
 
-            customerBrokerNewManager.createCustomerBrokerNewPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+            customerBrokerNewManager.createCustomerBrokerNewPurchaseNegotiationTransaction(customerBrokerPurchaseNegotiation);
 
             return true;
         } catch (Exception exception) {
