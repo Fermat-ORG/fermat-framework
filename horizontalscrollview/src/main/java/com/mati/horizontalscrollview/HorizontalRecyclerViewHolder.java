@@ -3,7 +3,7 @@ package com.mati.horizontalscrollview;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.bitdubai.fermat.R;
+
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 
@@ -18,8 +18,8 @@ public class HorizontalRecyclerViewHolder extends FermatViewHolder {
 
     protected HorizontalRecyclerViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
-        imageButton = itemView.findViewById(R.id.image_button);
-        txtName = (FermatTextView) itemView.findViewById(R.id.txt_name);
+        imageButton = (ImageButton) itemView.findViewById(R.id.image_button);
+        txtName = (FermatTextView) itemView.findViewById(R.id.txt_item_name);
     }
 
     public ImageButton getImageButton() {

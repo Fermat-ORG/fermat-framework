@@ -5,12 +5,14 @@ package com.mati.horizontalscrollview;
  */
 public class SetttingsItems {
 
+    private int type;
     private int src;
     private String name;
 
-    public SetttingsItems(int src, String name) {
+    public SetttingsItems(int type,int src, String name) {
         this.src = src;
         this.name = name;
+        this.type = type;
     }
 
     public int getSrc() {

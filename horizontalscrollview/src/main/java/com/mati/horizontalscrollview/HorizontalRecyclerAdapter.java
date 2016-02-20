@@ -12,7 +12,6 @@ import java.util.List;
  */
 public class HorizontalRecyclerAdapter extends FermatAdapterImproved<SetttingsItems,HorizontalRecyclerViewHolder> {
 
-
     protected HorizontalRecyclerAdapter(Context context) {
         super(context);
     }
@@ -23,17 +22,21 @@ public class HorizontalRecyclerAdapter extends FermatAdapterImproved<SetttingsIt
 
     @Override
     protected HorizontalRecyclerViewHolder createHolder(View itemView, int type) {
-        return null;
+        return new HorizontalRecyclerViewHolder(itemView,type);
     }
 
     @Override
     protected int getCardViewResource(int type) {
-        return 0;
+        return R.layout.holder;
     }
 
     @Override
     protected void bindHolder(HorizontalRecyclerViewHolder holder, SetttingsItems data, int position) {
-        if(data.getSrc()>0) holder.getImageButton().setImageResource(data.getSrc());
+        if(data.getSrc()>0) holder.getImageButton().setBackgroundResource(data.getSrc());
+        holder.getImageButton().getLayoutParams().height = 130;
+        holder.getImageButton().getLayoutParams().width = 200;
         if(data.getName()!=null) holder.getTxtName().setText(data.getName());
     }
+
+
 }
