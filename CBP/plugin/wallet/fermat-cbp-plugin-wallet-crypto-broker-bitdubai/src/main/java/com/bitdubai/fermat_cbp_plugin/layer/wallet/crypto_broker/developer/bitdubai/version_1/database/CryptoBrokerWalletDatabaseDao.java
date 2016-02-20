@@ -279,11 +279,6 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         float priceReference = 0;
         float availableBalanceFroze = 0;
         ExchangeRate rate = null;
-        try {
-            availableBalanceFroze = getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, merchandise.getCode()) - getBalanceFrozenByMerchandise(merchandise, null, BalanceType.AVAILABLE, priceReference);
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetCryptoBrokerQuoteException("Cant Load Table", e, "", "");
-        }
 
         Currency currency = (Currency) merchandise;
         CurrencyPair usdVefCurrencyPair = new CurrencyPairImpl(currency, payment);
@@ -300,6 +295,13 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             throw new CantGetCryptoBrokerQuoteException("Unsupported Currency Pair Exception", e, "", "");
         }
         priceReference = (float) (rate != null ? rate.getSalePrice() : 0);
+
+        try {
+            availableBalanceFroze = getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, merchandise.getCode()) - getBalanceFrozenByMerchandise(merchandise, null, BalanceType.AVAILABLE, priceReference);
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetCryptoBrokerQuoteException("Cant Load Table", e, "", "");
+        }
+
         QuoteImpl quote = new QuoteImpl(
                 merchandise,
                 payment,
@@ -336,8 +338,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 rate = provider.getCurrentExchangeRate(usdVefCurrencyPair);
             }
 
-            if (priceRateSale     == 0) priceRateSale     = (float) (rate != null ? rate.getSalePrice() : 0);
-            if (priceRatePurchase == 0) priceRatePurchase = (float) (rate != null ? rate.getPurchasePrice() : 0);
+            priceRateSale     = (float) (rate != null ? rate.getSalePrice() : 0);
+            priceRatePurchase = (float) (rate != null ? rate.getPurchasePrice() : 0);
 
             final float priceSaleUp       = (priceRateSale * ((spread / 2) / 100)) + priceRateSale;
             final float priceSaleDown     = (priceRateSale * ((spread / 2) / 100)) - priceRateSale;
@@ -345,6 +347,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             final float pricePurchaseDown = (priceRatePurchase * ((spread / 2) / 100)) + priceRatePurchase;
 
             priceReference = (float) (rate != null ? rate.getSalePrice() : 0);
+
             fiatIndex = new FiatIndexImpl(
                     merchandise,
                     priceRateSale,
