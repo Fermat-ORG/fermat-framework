@@ -9,7 +9,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.google.gson.Gson;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -25,7 +25,7 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
     private final Actors                  requesterActorType   ;
     private final String                  cryptoBrokerPublicKey;
     private final long                    updateTime           ;
-    private final List<CryptoBrokerQuote> quotes               ;
+    private final ArrayList<CryptoBrokerQuote> quotes               ;
     private final RequestType             type                 ;
     private final ProtocolState           state                ;
 
@@ -34,7 +34,7 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
                                                         final Actors                  requesterActorType   ,
                                                         final String                  cryptoBrokerPublicKey,
                                                         final long                    updateTime           ,
-                                                        final List<CryptoBrokerQuote> quotes               ,
+                                                        final ArrayList<CryptoBrokerQuote> quotes               ,
                                                         final RequestType             type                 ,
                                                         final ProtocolState           state                ) {
 
@@ -89,7 +89,7 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
     }
 
     @Override
-    public List<CryptoBrokerQuote> listInformation() {
+    public ArrayList<CryptoBrokerQuote> listInformation() {
         return quotes;
     }
 
