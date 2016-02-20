@@ -87,6 +87,7 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
                     holder.connectionState.setVisibility(View.GONE);
                 break;
         }
+        holder.row_connection_state.setText(data.getState());
         holder.name.setText(data.getName());
         byte[] profileImage = data.getProfileImage();
         if (profileImage != null && profileImage.length > 0) {
