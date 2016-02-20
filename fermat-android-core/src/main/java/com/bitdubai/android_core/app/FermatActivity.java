@@ -68,7 +68,6 @@ import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionMana
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusListener;
-import com.bitdubai.android_core.app.common.version_1.top_settings.TopSettings;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
 import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
@@ -553,22 +552,21 @@ public abstract class FermatActivity extends AppCompatActivity
                     btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
                     break;
             }
-        } catch (CantGetSettingsException e) {
+        } catch (CantGetSettingsException | SettingsNotFoundException e) {
             btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
            // e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
-            //e.printStackTrace();
         }
         btn_fermat_apps_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AppStatusDialog(view.getContext(),androidCoreModule , appStatusListener).show();
+                new AppStatusDialog(view.getContext(), androidCoreModule, appStatusListener).show();
             }
         });
 
-        TopSettings.buildSettingsTop(mRevealView);
 
+
+//        TopSettings topSettings = new TopSettings((ViewGroup) mRevealView.findViewById(R.id.horizontal_container));
+//        topSettings.init();
     }
 
 
