@@ -632,7 +632,7 @@ public class BitcoinCurrencyCryptoVaultDao {
 
         DatabaseTableRecord record = databaseTable.getRecords().get(0);
         record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
-        record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME, blockchainNetworkType.getCode());
+        record.setStringValue(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
         try {
             databaseTable.updateRecord(record);
         } catch (CantUpdateRecordException e) {

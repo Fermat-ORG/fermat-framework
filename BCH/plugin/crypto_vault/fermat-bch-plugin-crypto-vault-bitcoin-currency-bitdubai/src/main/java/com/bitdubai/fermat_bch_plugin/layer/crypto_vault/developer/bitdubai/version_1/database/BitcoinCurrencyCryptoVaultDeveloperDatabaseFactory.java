@@ -161,7 +161,7 @@ public class BitcoinCurrencyCryptoVaultDeveloperDatabaseFactory implements Deals
         key_Maintenance_DetailColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME);
         key_Maintenance_DetailColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME);
         key_Maintenance_DetailColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME);
-        key_Maintenance_DetailColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
+        key_Maintenance_DetailColumns.add(BitcoinCurrencyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
 
 
         /**
