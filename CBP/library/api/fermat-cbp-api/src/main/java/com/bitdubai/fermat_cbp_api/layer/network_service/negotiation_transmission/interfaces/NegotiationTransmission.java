@@ -6,6 +6,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionS
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.enums.ActorProtocolState;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.UUID;
 
@@ -132,5 +135,7 @@ public interface NegotiationTransmission {
     public boolean isPendingFlag();
 
     public void setPendingFlag(boolean pendingFlag);
+
+    public String toJson();
 
 }

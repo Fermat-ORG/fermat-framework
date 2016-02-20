@@ -12,7 +12,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.UUID;
 
 /**
@@ -37,7 +37,7 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
                                                         final Actors                  requesterActorType   ,
                                                         final String                  cryptoBrokerPublicKey,
                                                         final long                    updateTime           ,
-                                                        final List<CryptoBrokerQuote> quotes               ,
+                                                        final ArrayList<CryptoBrokerQuote> quotes               ,
                                                         final RequestType             type                 ,
                                                         final ProtocolState           state                ) {
 

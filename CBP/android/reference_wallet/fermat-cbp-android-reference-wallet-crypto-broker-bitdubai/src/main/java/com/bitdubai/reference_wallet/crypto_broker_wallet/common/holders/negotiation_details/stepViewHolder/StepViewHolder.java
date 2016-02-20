@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details;
+package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder;
 
 import android.content.res.Resources;
 import android.os.Build;
@@ -72,14 +72,14 @@ public abstract class StepViewHolder extends FermatViewHolder {
 
         switch (stepStatus) {
             case ACCEPTED:
-                containerCardView.setCardBackgroundColor(getColor(R.color.card_background_status_accepted));
+                containerCardView.setCardBackgroundColor(getColor(R.color.cbw_card_background_status_accepted));
                 containerCardView.setClickable(false);
                 confirmButton.setText(R.string.status_accepted);
                 titleTextView.setTextColor(getColor(R.color.card_title_color_status_accepted));
                 break;
 
             case CHANGED:
-                containerCardView.setCardBackgroundColor(getColor(R.color.card_background_status_changed));
+                containerCardView.setCardBackgroundColor(getColor(R.color.cbw_card_background_status_changed));
                 containerCardView.setClickable(false);
                 confirmButton.setText(R.string.status_changed);
                 titleTextView.setTextColor(getColor(R.color.card_title_color_status_changed));

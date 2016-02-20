@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -152,6 +153,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -465,7 +467,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException {
         Collection<NegotiationLocations> negotiationLocations = null;
-        if (negotiationType.getCode() == NegotiationType.SALE.getCode()) {
+        if (Objects.equals(negotiationType.getCode(), NegotiationType.SALE.getCode())) {
             negotiationLocations = customerBrokerSaleNegotiationManager.getAllLocations();
         }
         return negotiationLocations;
@@ -579,18 +581,36 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public List<String> getPaymentMethods(String currencyToSell, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
+    public List<MoneyType> getPaymentMethods(String currencyToSell, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
+        List<MoneyType> paymentMethod = new ArrayList<>();
+
+        List<CryptoBrokerWalletAssociatedSetting> associatedWallets = getCryptoBrokerWalletAssociatedSettings(brokerWalletPublicKey);
+
+        for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
+            Currency merchandise = associatedWallet.getMerchandise();
+            if (merchandise.getCode().equals(currencyToSell))
+                paymentMethod.add(associatedWallet.getMoneyType());
+        }
+
+        return paymentMethod;
+    }
+
+    @Override
+    public List<String> getAccounts(String currencyToSell, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantLoadBankMoneyWalletException {
         List<String> paymentMethod = new ArrayList<>();
 
         List<CryptoBrokerWalletAssociatedSetting> associatedWallets = getCryptoBrokerWalletAssociatedSettings(brokerWalletPublicKey);
 
         for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
             Currency merchandise = associatedWallet.getMerchandise();
-
-            if (merchandise.getCode().equals(currencyToSell)) {
-                MoneyType moneyType = associatedWallet.getMoneyType();
-                paymentMethod.add(moneyType.getFriendlyName());
+            if (merchandise.getCode().equals(currencyToSell) && associatedWallet.getPlatform() == Platforms.BANKING_PLATFORM) {
+                List<BankAccountNumber> accounts = getAccounts(associatedWallet.getWalletPublicKey());
+                for (BankAccountNumber accountNumber : accounts) {
+                    paymentMethod.add("Bank: " + accountNumber.getBankName() + "\n Account: " + accountNumber.getAccount() +
+                            "\n Account Type: " + accountNumber.getAccountType().getFriendlyName());
+                }
             }
+
         }
 
         return paymentMethod;

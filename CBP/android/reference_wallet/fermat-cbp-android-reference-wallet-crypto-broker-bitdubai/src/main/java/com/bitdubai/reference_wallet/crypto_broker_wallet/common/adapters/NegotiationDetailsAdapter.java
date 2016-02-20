@@ -7,19 +7,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.AmountToSellStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
@@ -27,12 +24,12 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Negotia
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.SingleValueStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.AmountToSellStepViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.DateTimeStepViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.ExchangeRateStepViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.FooterViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.NoteViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.SingleChoiceStepViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder.AmountToSellStepViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder.DateTimeStepViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder.ExchangeRateStepViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder.FooterViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder.NoteViewHolder;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder.SingleChoiceStepViewHolder;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -252,11 +249,12 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
         switch (type) {
             case PAYMENT_METHOD:
                 try {
+                    
                     String currencyToSell = data.getClauses().get(ClauseType.CUSTOMER_CURRENCY).getValue();
-                    List<String> paymentMethods = walletManager.getPaymentMethods(currencyToSell, session.getAppPublicKey());
+                    List<MoneyType> paymentMethods = walletManager.getPaymentMethods(currencyToSell, session.getAppPublicKey());
 
-                    viewHolder.bind(stepNumber, R.string.payment_methods_title,
-                            R.string.payment_method, step.getValue(), paymentMethods);
+//                    viewHolder.bind(stepNumber, R.string.payment_methods_title,
+//                            R.string.payment_method, step.getValue(), paymentMethods);
 
 
                     System.out.println("juanasoPrueba");

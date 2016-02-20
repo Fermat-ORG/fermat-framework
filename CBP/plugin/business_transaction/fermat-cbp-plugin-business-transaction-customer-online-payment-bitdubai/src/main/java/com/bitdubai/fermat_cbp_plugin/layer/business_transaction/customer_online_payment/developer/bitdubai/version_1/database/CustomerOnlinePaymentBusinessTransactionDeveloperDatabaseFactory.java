@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,8 +83,6 @@ public class CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory im
                    */
                 throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(cantCreateDatabaseException.getMessage());
             }
-        }catch(Exception exception){
-            throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE,FermatException.wrapException(exception),"Unexpected error","Check the cause");
         }
     }
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
