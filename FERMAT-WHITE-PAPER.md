@@ -397,13 +397,13 @@ After analyzing several use cases we found out that it was possible to create a 
 Each platform usually has one or more Fermat APPs on top of it, and in this way is how the Ecosystem of Fermat APPs is organized.
 
 <br>
-### Business Model
+### Key Value Propositions
 
-We had to design a business model that works fine for several different actors. On one side we need Fermat p2p Network nodes operators to provide their hardware and bandwidth to inter-connect end users. On the other side we need developers to write the code of this massive system. We also need entrepreneurs to run business on top of what developers build. And finally we need end users to find value on the Fermat APPs they use.
+We considerd in our design a business model that works fine for several different actors. On one side we need Fermat p2p Network nodes operators to provide their hardware and bandwidth to inter-connect end users. On the other side we need developers to write the code. We also need entrepreneurs to run business on top of what developers build. And finally we need end users to find value on the Fermat APPs they use.
 
 We divided the challenge of creating incentives for everybody in the following way:
 
-#### Fermat Miners
+#### Fermat Miners - Nodes Operators
 
 We believe there is a need for an application token system that can be mined in order to encourage nodes operators to put their hardware and bandwith to work for the Fermat p2p Network. Lets call these tokens _fermats_.
 
@@ -417,8 +417,6 @@ So basically is the same model that bitcoin in the sense that at the begining we
 As we have a premise of reusing what is working, instead of handling these tokens transactions by ourselves, we are outsourcing the bitcoin network to do that for us. With this in mind, our blockchain will only need to record _coinbase_ or newly issued tokens transaction, while transfers from user to user can be handled directly by the bitcoin network itself.
 
 We chose the same economic parameters than the bitcoin network itself: 21 million units, generated every 10 minutes approximately, staring with 50 per block and halving this number every 4 years. The intended effect would be that a diverse community of nodes operators arise encouraged by the block reward, while there is not enough user base to profit from the selling of bandwith to end users.
-
-NOTE: The current implementation of the Fermat p2p Network does not include the mining scheme yet, meaning that no _fermats_ have been mined at present time.
 
 #### Developers
 
@@ -481,10 +479,6 @@ These are a set of rules to safeguard developers and investors on building Ferma
 4. Fermat Nodes before servicing clients (end user devices) with their connectivity services, will check if these clients are paying the micro-use-license fees. This can be enforced since nodes know who the owners of the components are, and can query the bitcoin blockchain to confirm there are transactions from the client's identities going to components owners. This prevents outside APPs to access the Fermat Network without going through the established channels that include micro-use-licenses, or recompiled versions of Fermat with the micro-use-licenses removed or altered.
 
 
-#### Designers
-
--- Explanation needed --
-
 #### Business Operators
 
 On top of the functionality built by the developers network, business operators can run their business. One example here are Crypto Brokers using the Crypto Brokers Wallet to run a localized business of buying and selling crypto currency to nearby end users.
@@ -494,6 +488,26 @@ This functionality was developed by the developers network with the only intenti
 There is no limit on the different kind of business that the Fermat system can support. Fermat is distributed with different layers of applications. The first layer includes very basic infraestructure APPs that often don't need business operators at all. Examples of these APPs are Chat, Crypto Wallets, etc. Besides those simple APPs, the next layer includes a suite of APPs that requires business operators to run them: Crypto Broker APPs, Digital Assets APPs, etc. A third layer contains the most popular global services like Uber, AirBNB, social networks, dating APPs, etc. In this case these APPs will cut cost to end users since the business operator will only be required optionally and for specific situations were the value they add cannot be automated. That opens the door for thousands of regional operators to fine tune these business models to adapt them to local audiences. 
 
 The sinergy produced by having more and more use cases covered by the same platform would be unmatcheable. This openess allows any of these use cases to increase the overal system user base, which in turn benefits all other use cases since one of the key problem for adoption is how end users end up with crypto currency in the first place. If one use case brings them in, they would likely jump to other use cases available since that barrier has already been overcome.
+
+#### End Users
+
+The key value proposition to end users is to reduce pricing (by eliminating or minimizing the need of third party intermediaries) and accelerate the participation in shared economy. To achive this the Fermat Master Plan includes the p2p version of several popular services spanning many different industries:
+
+**Transportation** : A p2p version of an Uber like service with several optional shades of third party operator required. End users are allowed to choose between a fully automated and operator-free network of drivers and operated networks where the role of the operator shifts from the current one of matching riders and drivers and focus on value added services like drivers background checks, insurance, marketing, and others.
+
+**Lodging** : A p2p version of an Airbnb like service, again with end user freedom to choose between no third party at all doing the guest and host matching, or some third party operated networks for cases were these operatos add value added services like insurance, marketing, etc.
+
+**e-Commerce** : A p2p version of an eBay like service, without the third party. In this case the matching between buyers and sellers is automated as well as the value exchange that is also peer to peer.
+
+**Classified Advertising** : Users of this p2p version with no third parties serve classified ads directly from their devices while other users can see them with a specialized Fermat APP. No middle man needed.
+
+**Online Dating Service** : A p2p version of a personal introductory system where individuals can find and contact each other over the Internet to arrange a date. Fully automated with no middle men.
+
+**Professional Network Service** : A p2p version of a LinkedIn like service with no intermediaries.
+
+**Job Boards** : A p2p version designed to allow employers to post job requirements for a position. Fully automated with no intermediaries.  
+
+
 
 <br><br>
 ## Part II - Fermat In Detail
