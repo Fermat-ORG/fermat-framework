@@ -296,9 +296,12 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             if (brokerIdentity != null)
                 negotiationInfo.setBroker(brokerIdentity);
 
-            final CryptoCustomerIdentity customerIdentity = walletManager.getAssociatedIdentity();
+//            final CryptoCustomerIdentity customerIdentity = walletManager.getAssociatedIdentity();
+            final CryptoCustomerIdentity customerIdentity = walletManager.getAssociatedIdentity(appSession.getAppPublicKey());
             if (customerIdentity != null)
                 negotiationInfo.setCustomer(customerIdentity);
+
+//            System.out.print("REFERENCE WALLET Identity: " + customerIdentity.getPublicKey());
 
             return negotiationInfo;
 
