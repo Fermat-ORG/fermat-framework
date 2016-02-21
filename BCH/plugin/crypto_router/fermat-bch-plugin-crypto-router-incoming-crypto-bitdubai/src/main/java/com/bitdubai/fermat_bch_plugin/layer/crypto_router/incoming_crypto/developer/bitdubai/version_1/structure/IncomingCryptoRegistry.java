@@ -89,6 +89,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         List<Transaction<CryptoTransaction>> transactionList = new ArrayList<>();
         CryptoTransaction c = new CryptoTransaction("random",
+                BlockchainNetworkType.getDefaultBlockchainNetworkType(),
                 new CryptoAddress("addFrom", CryptoCurrency.BITCOIN),
                 new CryptoAddress("addTo", CryptoCurrency.BITCOIN),
                 CryptoCurrency.BITCOIN, 1, CryptoStatus.IRREVERSIBLE
@@ -696,19 +697,17 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         CryptoStatus cryptoStatus = CryptoStatus.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName));
 
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NETWORK_TYPE_COLUMN.columnName));
 
         CryptoTransaction cryptoTransaction = new CryptoTransaction(
                   databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName),
+                blockchainNetworkType,
                   cryptoAddressFrom,
                   cryptoAddressTo,
                   CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)),
                   databaseTableRecord.getLongValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName),
                   cryptoStatus
                                                                      );
-
-        // sets the network type of the transaction
-        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NETWORK_TYPE_COLUMN.columnName));
-        cryptoTransaction.setBlockchainNetworkType(blockchainNetworkType);
 
         Action action  = Action.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ACTION_COLUMN.columnName));
 
