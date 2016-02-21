@@ -435,7 +435,7 @@ The key idea here is the ownership of developed components. This is the core tha
 
 Developing Fermat components is an investment done by individual developers, dev teams, startups or investors betting on the success of the project.
 
-In order to safeguard the investment developers do while coding Fermat APPs and components, the Fermat Open Source project establishes the following rules and it's management will enforce them through the lifetime of the project. 
+In order to safeguard the investment developers do while coding Fermat APPs and components, the Fermat Open Source project establishes the following rules and it's management will enforce them through the lifetime of the project. Following, a set of definitions:
 
 **Component Owner**
 
@@ -453,7 +453,9 @@ Each component has a Technical Support team. Owners create these teams and share
 
 Components are classified at a the master plan level according to their difficulty and how critical they are, from 1 to 10. Each level is then translated into the amount of fermats a component collect per month as micro-use-licenses. The level also determines the service level that is required for that component in terms of time to fix bugs, make upgrades, availability of their support team, and so on.
 
-**Rules to safeguard developers and investors (Fermat Property Law)**
+**Fermat Property Law**
+
+These are a set of rules to safeguard developers and investors on building Fermat components.
 
 1. Fermat Components have an specific well defined role or responsibility and there will not be other components in the system with an overlapping role or responsibility. This rule is enforced by design at the master plan level.
 
