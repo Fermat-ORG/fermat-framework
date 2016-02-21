@@ -198,7 +198,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.dap_other_profile_system_error_toast , Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
@@ -265,11 +265,11 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         }
         if (i == R.id.btn_connection_request_send) {
             //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
-            Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.dap_other_profile_request_send_toast, Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
            // CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
-            Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.dap_other_profile_request_reject_toast, Toast.LENGTH_SHORT).show();
         }
     }
 
