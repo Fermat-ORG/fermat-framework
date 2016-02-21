@@ -73,7 +73,9 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdateManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
@@ -720,6 +722,34 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             }
         }
         return true;
+    }
+
+    @Override
+    public void sendNegotiation(CustomerBrokerNegotiationInformation negotiationInfo) throws CantSendNegotiationToCryptoCustomerException {
+
+        CustomerBrokerSaleNegotiation negotiation;
+        try {
+            negotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(negotiationInfo.getNegotiationId());
+        } catch (CantGetListSaleNegotiationsException cause) {
+            throw new CantSendNegotiationToCryptoCustomerException(
+                    "Cant get the Sale Negotiation from the Data Base",
+                    cause,
+                    "negotiationInfo.getNegotiationId(): " + negotiationInfo.getNegotiationId(),
+                    "There is no Record of the Sale Negotiation in the Data Base");
+        }
+
+        CustomerBrokerSaleNegotiationImpl saleNegotiation = new CustomerBrokerSaleNegotiationImpl(negotiation);
+        saleNegotiation.changeInfo(negotiationInfo, NegotiationStatus.WAITING_FOR_CUSTOMER);
+
+        try {
+            customerBrokerUpdateManager.createCustomerBrokerUpdateSaleNegotiationTranasction(saleNegotiation);
+        } catch (CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException cause) {
+            throw new CantSendNegotiationToCryptoCustomerException(
+                    "Cant send the updated negotiation transaction to the customer",
+                    cause,
+                    "saleNegotiation: " + saleNegotiation.toString(),
+                    "N/A");
+        }
     }
 
     @Override
