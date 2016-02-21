@@ -275,27 +275,29 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
 
     private void updateButton() {
 
-//        ActorAssetRedeemPoint redeemPoint = null;
-//        try {
-//            redeemPoint = manager.getActorRedeemPoint(actor.getActorPublicKey());
-//
-//            if(redeemPoint.getCryptoAddress() != null){
-//                userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
-//                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
-//                disconnectRequest();
-//            } else{
-//                userCryptoAddres.setText("No");
-//                userCryptoCurrency.setText("None");
-//                connectRequest();
-//            }
-//
-//        } catch (CantAssetRedeemPointActorNotFoundException e) {
-//            //TODO No seamos flojos
-//            e.printStackTrace();
-//        } catch (CantGetAssetRedeemPointActorsException e) {
-//            //TODO No seamos flojos
-//            e.printStackTrace();
-//        }
+
+        ActorAssetRedeemPoint redeemPoint = null;
+        try {
+            redeemPoint = manager.getActorRedeemPoint(actor.getActorPublicKey());
+
+            if(redeemPoint.getCryptoAddress() != null){
+                userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
+                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
+                disconnectRequest();
+            } else{
+                userCryptoAddres.setText("No");
+                userCryptoCurrency.setText("None");
+                connectRequest();
+            }
+
+        } catch (CantAssetRedeemPointActorNotFoundException e) {
+            //TODO No seamos flojos
+            e.printStackTrace();
+        } catch (CantGetAssetRedeemPointActorsException e) {
+            //TODO No seamos flojos
+            e.printStackTrace();
+        }
+
         /*try {
             connectionState = manager.getIntraUsersConnectionStatus(this.actor.getPublicKey());
         } catch (CantGetIntraUserConnectionStatusException e) {
