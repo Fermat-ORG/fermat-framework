@@ -114,8 +114,8 @@ public class UsersCommunityConnectionOtherProfileFragment extends AbstractFermat
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dap_user_community_fragment_connections_other_profile, container, false);
         toolbar = getToolbar();
-        if (toolbar != null)
-            toolbar.setTitle(actor.getName());
+//        if (toolbar != null)
+//            toolbar.setTitle(actor.getName());
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
         //userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
