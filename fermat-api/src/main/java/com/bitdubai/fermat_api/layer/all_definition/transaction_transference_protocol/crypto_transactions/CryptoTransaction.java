@@ -48,8 +48,6 @@ public class CryptoTransaction{
                              long cryptoAmount,
                              CryptoStatus cryptoStatus) {
         this.transactionHash = transactionHash;
-        // will create by default a transaction in the DEFAULT network.
-        this.blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         this.addressFrom = addressFrom;
         this.addressTo = addressTo;
         this.cryptoCurrency = cryptoCurrency;
