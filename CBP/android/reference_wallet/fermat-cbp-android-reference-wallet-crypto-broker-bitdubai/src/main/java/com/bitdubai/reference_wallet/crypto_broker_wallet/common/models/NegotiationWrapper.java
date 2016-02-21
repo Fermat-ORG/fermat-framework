@@ -51,7 +51,7 @@ final public class NegotiationWrapper {
             CryptoBrokerWalletManager walletManager = appSession.getModuleManager().getCryptoBrokerWallet(appSession.getAppPublicKey());
 
             if (negotiationInfo.getNegotiationExpirationDate() == 0)
-                negotiationInfo.setLastNegotiationUpdateDate(actualTimeInMillis);
+                setExpirationTime(actualTimeInMillis);
 
             if (clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) == null)
                 addClause(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, Long.toString(actualTimeInMillis));
