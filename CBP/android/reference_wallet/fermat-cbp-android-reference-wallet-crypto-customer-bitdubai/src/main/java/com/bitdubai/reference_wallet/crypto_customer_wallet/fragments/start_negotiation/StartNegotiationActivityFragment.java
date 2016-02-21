@@ -183,7 +183,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
             Map<ClauseType, ClauseInformation> mapClauses = negotiationInfo.getClauses();
             Collection<ClauseInformation> clauses = new ArrayList<>();
-            String customerPublicKey = "customerPublicKey";
+            String customerPublicKey = negotiationInfo.getCustomer().getPublicKey();
             String brokerPublicKey = negotiationInfo.getBroker().getPublicKey();
 
             if (mapClauses != null) {
