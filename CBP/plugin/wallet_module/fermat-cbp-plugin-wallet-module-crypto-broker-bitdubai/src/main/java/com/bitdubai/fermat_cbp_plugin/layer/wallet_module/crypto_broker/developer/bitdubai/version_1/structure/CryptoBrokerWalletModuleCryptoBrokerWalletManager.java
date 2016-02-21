@@ -92,6 +92,7 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetAvailableBalanceCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerMarketRateException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
@@ -100,6 +101,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
@@ -494,6 +496,17 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
+    public Quote getQuote(Currency merchandise, Currency currencyPayment, String brokerWalletPublicKey) throws CantGetCryptoBrokerQuoteException {
+        try {
+            CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(brokerWalletPublicKey);
+            return cryptoBrokerWallet.getQuote(merchandise, 1f, currencyPayment);
+
+        } catch (CryptoBrokerWalletNotFoundException e) {
+            throw new CantGetCryptoBrokerQuoteException(e.getMessage(), e, "brokerWalletPublicKey: " + brokerWalletPublicKey, "N/A");
+        }
+    }
+
+    @Override
     public Collection<ExchangeRate> getDailyExchangeRatesFromCurrentDate(IndexInfoSummary indexInfo, int numberOfDays) throws CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
         CurrencyExchangeRateProviderManager providerReference = currencyExchangeProviderFilterManager.getProviderReference(indexInfo.getProviderId());
@@ -744,12 +757,12 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                 customerBrokerCloseManager.createCustomerBrokerCloseSaleNegotiationTranasction(saleNegotiationImpl);
 
         } catch (CantGetListSaleNegotiationsException cause) {
-            throw new CantSendNegotiationToCryptoCustomerException( "Cant get the Sale Negotiation from the Data Base",
+            throw new CantSendNegotiationToCryptoCustomerException("Cant get the Sale Negotiation from the Data Base",
                     cause, "negotiationInfo.getNegotiationId(): " + negotiationInfo.getNegotiationId(),
                     "There is no Record of the Sale Negotiation in the Data Base");
 
         } catch (CantCreateCustomerBrokerUpdateSaleNegotiationTransactionException cause) {
-            throw new CantSendNegotiationToCryptoCustomerException( "Cant send the UPDATED saleNegotiation Transaction to the customer",
+            throw new CantSendNegotiationToCryptoCustomerException("Cant send the UPDATED saleNegotiation Transaction to the customer",
                     cause, "saleNegotiationImpl: " + saleNegotiationImpl, "N/A");
 
         } catch (CantCreateCustomerBrokerSaleNegotiationException cause) {
