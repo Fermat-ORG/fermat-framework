@@ -240,15 +240,15 @@ Fermat runs on end users devices. Phones, tablets, laptops, PCs. It can also run
 
 ##### Why is it needed?
 
-A well known peer-to-peer software is [BitTorrent](https://en.wikipedia.org/wiki/BitTorrent) and its purpose is to enable its users to share files between each other. Anyone could argue that if BitTorrent clients are the network nodes themselves, why the need in Fermat to have specialized nodes for interconecting devices.
+A well known peer-to-peer software is [BitTorrent](https://en.wikipedia.org/wiki/BitTorrent) and its purpose is to enable its users to share files between each other. BitTorrent clients are the network nodes themselves. Anyone could argue why the need in Fermat to have specialized nodes for interconecting devices and don't let them connect between each other freely.
 
-There are two facts that prevent Fermat to do the same:
+There are two main reasons for this:
 
-1. Fermat is mobile first, and many mobile operators forbids incomming connections into mobile phones. This leaves these mobile devices with the only option to initiate the connection. Fermat nodes can be seen as relay servers among the [NAT traversal](https://en.wikipedia.org/wiki/NAT_traversal) techniques.
+1. Fermat is mobile first, and many mobile operators forbids incomming connections into mobile phones. This leaves these mobile devices with the only option to initiate the connection. Fermat nodes can be seen as relay servers described at the [NAT traversal](https://en.wikipedia.org/wiki/NAT_traversal) techniques.
 
 2. Mobile devices that their telco company do allows them to accept incomming connections are not good candidates to be relay servers either since not all mobile data plans globally have unlimitted data transfer.
 
-This creates the need for specialized nodes within Fermat that can take the role of relay servers and an incentive mechanism for their operators in order tu run them.
+This creates the need for specialized nodes within Fermat that can take the role of relay servers and an incentive mechanism for their operators in order tu run them. Operators would usually set up these nodes at hardware that can receive incomming conections naturally or with some configuration, and at places were they are charged for bandwith with unlimited data traffic.
 
 ##### Network Architecture
 
