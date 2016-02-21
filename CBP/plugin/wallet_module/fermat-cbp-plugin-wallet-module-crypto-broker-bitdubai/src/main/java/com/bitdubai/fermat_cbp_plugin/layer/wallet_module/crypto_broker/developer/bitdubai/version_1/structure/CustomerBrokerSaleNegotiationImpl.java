@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
@@ -11,6 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -28,15 +28,20 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     UUID negotiationId;
     NegotiationStatus status;
     Collection<Clause> clauses;
+    boolean dataHasChanged;
 
 
     public CustomerBrokerSaleNegotiationImpl(UUID negotiationId) {
+        dataHasChanged = false;
+
         this.negotiationId = negotiationId;
         clauses = new ArrayList<>();
         status = null;
     }
 
     public CustomerBrokerSaleNegotiationImpl(CustomerBrokerSaleNegotiation negotiationInfo) {
+        dataHasChanged = false;
+
         startDate = negotiationInfo.getStartDate();
         negotiationUpdateDatetime = negotiationInfo.getLastNegotiationUpdateDate();
         expirationDatetime = negotiationInfo.getNegotiationExpirationDate();
@@ -174,30 +179,42 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     }
 
     public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status) {
-        negotiationUpdateDatetime = negotiationInfo.getLastNegotiationUpdateDate();
+        dataHasChanged = expirationDatetime != negotiationInfo.getNegotiationExpirationDate();
         expirationDatetime = negotiationInfo.getNegotiationExpirationDate();
+
+        dataHasChanged = dataHasChanged || Objects.equals(cancelReason, negotiationInfo.getCancelReason());
         cancelReason = negotiationInfo.getCancelReason();
+
+        dataHasChanged = dataHasChanged || !Objects.equals(memo, negotiationInfo.getMemo());
         memo = negotiationInfo.getMemo();
         this.status = status;
 
         Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
         clauses = new ArrayList<>();
-        for (final ClauseInformation value : values)
+        for (final ClauseInformation value : values) {
+            dataHasChanged = dataHasChanged || (value.getStatus() == ClauseStatus.CHANGED);
             clauses.add(new ClauseImpl(value, brokerPublicKey));
+        }
+
+    }
+
+    public boolean dataHasChanged() {
+        return dataHasChanged;
     }
 
     @Override
     public String toString() {
-        return "long startDate: " + startDate + "\n" +
-                "long negotiationUpdateDatetime: " + negotiationUpdateDatetime + "\n" +
-                "long expirationDatetime: " + expirationDatetime + "\n" +
-                "boolean nearExpirationDatetime: " + nearExpirationDatetime + "\n" +
-                "String cancelReason: " + cancelReason + "\n" +
-                "String memo: " + memo + "\n" +
-                "String customerPublicKey: " + customerPublicKey + "\n" +
-                "String brokerPublicKey: " + brokerPublicKey + "\n" +
-                "UUID negotiationId: " + negotiationId + "\n" +
-                "NegotiationStatus status:" + status + " \n" +
-                "Collection<Clause> clauses: " + clauses;
+        return com.google.common.base.Objects.toStringHelper(this).
+                add("startDate", startDate).
+                add("negotiationUpdateDatetime", negotiationUpdateDatetime).
+                add("nearExpirationDatetime", nearExpirationDatetime).
+                add("cancelReason", cancelReason).
+                add("memo", memo).
+                add("customerPublicKey", customerPublicKey).
+                add("brokerPublicKey", brokerPublicKey).
+                add("negotiationId", negotiationId).
+                add("status", status).
+                add("clauses", clauses).
+                toString();
     }
 }
