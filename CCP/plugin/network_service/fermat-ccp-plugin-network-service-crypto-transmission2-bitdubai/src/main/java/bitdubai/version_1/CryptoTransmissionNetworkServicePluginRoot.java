@@ -136,7 +136,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
         DatabaseManagerForDevelopers {
 
     /**
-     * buen
+     *
      * Represent the EVENT_SOURCE
      */
     public final static EventSource EVENT_SOURCE = EventSource.NETWORK_SERVICE_INTRA_ACTOR;
@@ -1366,7 +1366,7 @@ public class CryptoTransmissionNetworkServicePluginRoot extends AbstractPlugin i
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return communicationNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
     }
 
     private void reportUnexpectedError(final Exception e) {

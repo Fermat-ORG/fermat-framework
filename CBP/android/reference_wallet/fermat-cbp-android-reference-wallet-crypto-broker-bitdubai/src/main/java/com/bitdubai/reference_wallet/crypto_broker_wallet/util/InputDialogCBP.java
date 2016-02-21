@@ -2,6 +2,8 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.util;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -13,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -25,8 +28,12 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+
+import java.util.List;
 
 
 /**
@@ -41,6 +48,7 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     Button btn,btn2;
     EditText Account,Alias,BankName;
     Spinner Tipo,CurrencySpinner,Cash;
+    private List<InstalledWallet> stockWallets;
     String AccountV,AliasV,BankNameV;
     BankAccountType TipoV;
     FiatCurrency CurrencyV,CurrencyCash;
@@ -49,8 +57,10 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     private SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
     private ErrorManager errorManager;
     CryptoBrokerWalletManager WalletManager;
-
-
+    BankAccountNumber accountnumber;
+    private WalletsAdapter adapter;
+    private RecyclerView recyclerView;
+    private FermatTextView emptyView;
 
     public InputDialogCBP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletManager WalletManager) {
         super(activity, fermatSession, resources);
@@ -82,6 +92,7 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
             BankName = (EditText) findViewById(R.id.editTextBankName);
             Alias = (EditText) findViewById(R.id.AccountAlias);
             Tipo = (Spinner) findViewById(R.id.spinner2Bank);
+            adapter = new WalletsAdapter(getActivity(), stockWallets);
             BankAccountType[] bankType = BankAccountType.values();
             ArrayAdapter<BankAccountType> Tipos = new ArrayAdapter<BankAccountType>(getActivity(),android.R.layout.simple_spinner_item,bankType);
             Tipo.setAdapter(Tipos);
@@ -140,10 +151,10 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     }
 
     public void DialogType(int DialogTypeset){DialogType = DialogTypeset;}
-
     public String getName(){ return BankNameV; }
     public String getAlias(){ return AliasV; }
     public String getAccount(){ return AccountV; }
+    public BankAccountNumber getAccountnumber(){ return accountnumber; }
     private void CustomInfo(){BankNameV = BankName.getText().toString();
         AliasV = Alias.getText().toString();
         AccountV = Account.getText().toString();
@@ -155,19 +166,20 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
             return R.layout.inputdialogcbp_cash;
         }
     }
+
     private void setUpListeners() {
         btn.setOnClickListener(this);
     }
-
     private void setUpListeners2() {
         btn2.setOnClickListener(this);
     }
+
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btn_action_bank) {
             CustomInfo();
               try {
-                    BankAccountNumber accountnumber =   WalletManager.newEmptyBankAccountNumber(BankNameV, TipoV, AliasV, AccountV, CurrencyV);
+                    accountnumber =   WalletManager.newEmptyBankAccountNumber(BankNameV, TipoV, AliasV, AccountV, CurrencyV);
                     String bankWalletPublicKey = "banking_wallet"; //TODO:Revisar como podemos obtener el public key de la wallet Bank
                     WalletManager.addNewAccount(accountnumber, bankWalletPublicKey);
                     dismiss();

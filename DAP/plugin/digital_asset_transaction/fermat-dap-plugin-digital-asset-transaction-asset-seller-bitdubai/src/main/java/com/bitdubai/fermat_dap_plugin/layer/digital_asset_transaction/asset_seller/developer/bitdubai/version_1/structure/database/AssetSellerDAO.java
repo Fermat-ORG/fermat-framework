@@ -53,7 +53,7 @@ public class AssetSellerDAO {
 
     //VARIABLE DECLARATION
     private final UUID pluginId;
-    private Database database;
+    private final Database database;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final ActorAssetUserManager actorAssetUserManager;
     private final AssetUserWalletManager assetUserWalletManager;
@@ -141,6 +141,7 @@ public class AssetSellerDAO {
     public void updateTransactionHash(UUID transactionId, String transactionHash) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
         updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_TX_HASH_COLUMN_NAME, transactionHash, AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
     }
+
     //DELETE
     public void deleteSellingRecord(UUID recordId) throws CantDeleteRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
         DatabaseTable table = getSellerTable();
@@ -200,8 +201,8 @@ public class AssetSellerDAO {
         DraftTransaction signedTransaction = encodeSignedTransaction == null ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decodeBase64(encodeSignedTransaction));
         DraftTransaction unsignedTransaction = encodeSignedTransaction == null ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decodeBase64(encodeUnsignedTransaction));
         String transactionHash = record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_TX_HASH_COLUMN_NAME);
-
-        return new SellingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash);
+        UUID negotiationId = UUID.fromString(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME));
+        return new SellingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash, negotiationId);
     }
 
     private NegotiationRecord constructNegotiationByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException {

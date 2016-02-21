@@ -3,12 +3,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.devel
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetNegotiationsWaitingForCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
@@ -16,9 +12,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -35,7 +29,6 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     // -- for test purposes
     private static final Random random = new Random(321515131);
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
-    private static final Calendar calendar = Calendar.getInstance();
     // for test purposes --
 
     private ActorIdentity customerIdentity;
@@ -45,9 +38,9 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
     private UUID negotiationId;
     private NegotiationStatus status;
     private long lastUpdateDate;
-    private long date;
     private String note;
     private String cancelReason;
+    private long expirationDatetime;
 
 
     public CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(CustomerBrokerPurchaseNegotiation negotiation) {
@@ -65,8 +58,8 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         summary.put(ClauseType.BROKER_CURRENCY, "paymentCurrency");
         summary.put(ClauseType.BROKER_PAYMENT_METHOD, "paymentMethod");
 
-        this.status = status;
-        date = calendar.getTimeInMillis();
+        this.status = negotiation.getStatus();
+        expirationDatetime = negotiation.getNegotiationExpirationDate();
 
         clauses = new HashMap<>();
         clauses.put(ClauseType.CUSTOMER_CURRENCY_QUANTITY, new CryptoCustomerWalletModuleClauseInformation(ClauseType.CUSTOMER_CURRENCY_QUANTITY, currencyQty, ClauseStatus.DRAFT));
@@ -207,7 +200,12 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
 
     @Override
     public long getNegotiationExpirationDate() {
-        return 0;
+        return expirationDatetime;
+    }
+
+    @Override
+    public void setNegotiationExpirationDate(long negotiationExpirationDatetime) {
+        this.expirationDatetime = negotiationExpirationDatetime;
     }
 
     @Override

@@ -121,6 +121,8 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_ASSET_USER_SETTINGS_NOTIFICATIONS("DWAUSN"),
     DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY("DWAUASA"),
     DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY("DWAUASSUA"),
+    DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY("DWAUATA"),
+    DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY("DWAUATSUA"),
 
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
     DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
@@ -142,8 +144,10 @@ public enum Activities implements FermatEnum {
     DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT("DAUCAAGUF"),
     DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_USERS("DAUCAAU"),
     DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST("DAUCCL"),
+    DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT("DAUCNF"),
 
     DAP_SUB_APP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE("DSAAUCCOP"),
+    DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE("DAUCCLOP"),
 
     DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN("DAPAICAM"),
     DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_CONNECTIONS_LIST("DAICACL"),
@@ -177,6 +181,7 @@ public enum Activities implements FermatEnum {
     CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES("CBPCBWSSM"),
     CBP_CRYPTO_BROKER_WALLET_OTHER_SETTINGS("CBPCBWOS"),
     CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS("CBPCBWCD"),
+    CBP_CRYPTO_BROKER_WALLET_ADD_NOTE("CBPCBWAN"),
 
     // Crypto Customer Wallet
     CBP_CRYPTO_CUSTOMER_WALLET_HOME("CBPCCWH"),
@@ -198,6 +203,9 @@ public enum Activities implements FermatEnum {
     CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_WIZARD("CBPCCWCNBAW"),
     CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS("CBPCCWSML"),
     CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS("CBPCCWCNLIS"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS("CBPCCWSBAS"),
+    CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_SETTINGS("CBPCCWCNBAIS"),
+    CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS("CBPCCWP"),
     CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS("CBPCCWCD"),
 
 
@@ -275,10 +283,9 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
     CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
     CHT_CHAT_OPEN_MESSAGE_LIST("CHTOML"),
-    //  CHT_CHAT_OPEN_CHAT_DETAIL("CHTOCHDF"),
-    CHT_CHAT_OPEN_CONTACT_DETAIL("CHTOCODF"),
-    CHT_CHAT_EDIT_CONTACT("CHTEDCOF"),
-    CHT_CHAT_OPEN_CONNECTIONLIST("CHTOCONNLTF"),
+    CHT_CHAT_OPEN_CONTACT_DETAIL("CHTOCOD"),
+    CHT_CHAT_EDIT_CONTACT("CHTEDCO"),
+    CHT_CHAT_OPEN_CONNECTIONLIST("CHTOCONNLT"),
 
 
     WPD_DESKTOP("WPD"),;
@@ -440,6 +447,7 @@ public enum Activities implements FermatEnum {
                 return CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN;
             case "DAUCAM":
                 return DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
+
             case "CBPCBWH":
                 return CBP_CRYPTO_BROKER_WALLET_HOME;
             case "CBPCBCH":
@@ -478,6 +486,13 @@ public enum Activities implements FermatEnum {
                 return CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;
             case "CBPCBWSSM":
                 return CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES;
+            case "CBPCBWCD":
+                return CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS;
+            case "CBPCBWSSBA":
+                return CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT;
+            case "CBPCBWAN":
+                return CBP_CRYPTO_BROKER_WALLET_ADD_NOTE;
+
             case "CBPCCWH":
                 return CBP_CRYPTO_CUSTOMER_WALLET_HOME;
             case "CBPCCWCH":
@@ -515,11 +530,16 @@ public enum Activities implements FermatEnum {
             case "CBPCCWSML":
                 return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS;
             case "CBPCCWCNLIS":
-                return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;
-            case "CBPCBWSSBA":
-                return CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT;
+                return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS;            
             case "CBPCCWCD":
                 return CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS;
+            case "CBPCCWSBAS":
+                return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS;
+            case "CBPCCWP":
+                return CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_PROVIDERS;
+                case "CBPCCWCNBAIS":
+                return CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_BANK_ACCOUNT_IN_SETTINGS;
+
             case "DAPAUCAM":
                 return Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN;
             case "DAPAUCAAGM":
@@ -528,6 +548,7 @@ public enum Activities implements FermatEnum {
                 return Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN;
             case "DAPARPCAM":
                 return Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN;
+
             case "CBPSACBI":
                 return Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY;
             case "CBPSACBICI":
@@ -539,9 +560,7 @@ public enum Activities implements FermatEnum {
             case "CBPSACCICI":
                 return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY;
             case "CBPSACCIEI":
-                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY;
-            case "CBPCBWCD":
-                return CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS;
+                return CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY;           
 
             case "CBPSACBCCF":
                 return CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTIONS;
@@ -672,14 +691,12 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_CONTACTLIST;
             case "CHTOML":
                 return Activities.CHT_CHAT_OPEN_MESSAGE_LIST;
-           /* case "CHTOCHDF":
-                return CHT_CHAT_OPEN_CHAT_DETAIL_FRAGMENT;
-           */ case "CHTOCODF":
+            case "CHTOCOD":
                 return Activities.CHT_CHAT_OPEN_CONTACT_DETAIL;
-           /* case "CHTEDCOF":
-                return CHT_CHAT_EDIT_CONTACT_FRAGMENT;
-            case "CHTOCONNLTF":
-                return CHT_CHAT_OPEN_CONNECTIONLIST_FRAGMENT;*/
+            case "CHTEDCO":
+                return Activities.CHT_CHAT_EDIT_CONTACT;
+            case "CHTOCONNLT":
+                return Activities.CHT_CHAT_OPEN_CONNECTIONLIST;
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
@@ -713,12 +730,22 @@ public enum Activities implements FermatEnum {
                 return DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTION_OTHER_PROFILE;
             case "DAUCCL":
                 return DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST;
+            case "DAUCNF":
+                return DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT;
             case "DARPCCL":
                 return DAP_ASSET_REDEEM_POINT_COMMUNITY_CONNECTIONS_LIST;
             case "DWAUASA":
                 return DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY;
             case "DWAUASSUA":
                 return DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY;
+            case "DAUCCLOP":
+                return DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE;
+
+            case "DWAUATA":
+                return DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY;
+            case "DWAUATSUA":
+                return DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY;
+
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

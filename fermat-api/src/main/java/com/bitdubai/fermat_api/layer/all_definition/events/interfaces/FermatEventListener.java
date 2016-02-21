@@ -12,13 +12,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEvent
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface FermatEventListener {
+public interface FermatEventListener<Z extends FermatEvent, T extends FermatEventEnum> {
 
     /**
      * Throw the method <code>getEventType</code> you can get the information of the event type.
      * @return an instance of a Fermat Enum.
      */
-    FermatEventEnum getEventType();
+    T getEventType();
 
     /**
      * Throw the method <code>setEventHandler</code> you can set a handler for the listener.
@@ -36,6 +36,6 @@ public interface FermatEventListener {
      * Throw the method <code>raiseEvent</code> you can raise the event to be listened.
      * @param fermatEvent an instance of fermat event to be listened.
      */
-    void raiseEvent(FermatEvent fermatEvent);
+    void raiseEvent(Z fermatEvent);
 
 }

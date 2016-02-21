@@ -69,21 +69,7 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
 
             } else if (choice instanceof MoneyType) {
                 MoneyType moneyType = (MoneyType) choice;
-
-                switch (moneyType) {
-                    case BANK:
-                        data.add("Bank Money");
-                        break;
-                    case CASH_DELIVERY:
-                        data.add("Cash Delivery");
-                        break;
-                    case CASH_ON_HAND:
-                        data.add("Cash on Hand");
-                        break;
-                    case CRYPTO:
-                        data.add("Crypto Money");
-                        break;
-                }
+                data.add(moneyType.getFriendlyName());
             } else {
                 data.add(choice.toString());
             }

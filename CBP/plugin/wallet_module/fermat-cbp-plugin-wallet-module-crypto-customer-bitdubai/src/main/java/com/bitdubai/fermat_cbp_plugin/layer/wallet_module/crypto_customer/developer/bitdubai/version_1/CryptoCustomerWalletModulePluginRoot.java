@@ -138,7 +138,11 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
                         customerOfflinePaymentManager,
                         customerAckOnlineMerchandiseManager,
                         customerAckOfflineMerchandiseManager,
-                        getSettingsManager());
+                        getSettingsManager(),
+                        errorManager,
+                        this.getPluginVersionReference()
+
+                );
 
             return walletManager;
 

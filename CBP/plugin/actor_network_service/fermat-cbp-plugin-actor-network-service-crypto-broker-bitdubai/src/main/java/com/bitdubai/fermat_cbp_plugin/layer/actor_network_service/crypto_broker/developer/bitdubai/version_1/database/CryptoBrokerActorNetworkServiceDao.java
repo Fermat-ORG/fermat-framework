@@ -43,6 +43,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraDataInfoTemp;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
@@ -741,7 +742,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public final CryptoBrokerExtraData<CryptoBrokerQuote> createQuotesRequest(final UUID                    requestId            ,
+    public final CryptoBrokerExtraDataInfoTemp createQuotesRequest(final UUID                    requestId            ,
                                                                               final String                  requesterPublicKey   ,
                                                                               final Actors                  requesterActorType   ,
                                                                               final String                  cryptoBrokerPublicKey,
@@ -794,6 +795,8 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             quotesRequestTable.addUUIDFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
+            quotesRequestTable.loadToMemory();
+
             final List<DatabaseTableRecord> records = quotesRequestTable.getRecords();
 
             DatabaseTableRecord quotesRequestRecord;
@@ -830,13 +833,16 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             database.executeTransaction(databaseTransaction);
 
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantAnswerQuotesRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (final DatabaseTransactionFailedException e) {
 
             throw new CantAnswerQuotesRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert all the records.");
         }
     }
 
-    public final List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(final ProtocolState protocolState, final RequestType requestType) throws CantListPendingQuotesRequestsException {
+    public final List<CryptoBrokerExtraDataInfoTemp> listPendingQuotesRequests(final ProtocolState protocolState, final RequestType requestType) throws CantListPendingQuotesRequestsException {
 
         try {
 
@@ -849,7 +855,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
 
-            final List<CryptoBrokerExtraData<CryptoBrokerQuote>> quotesRequestsList = new ArrayList<>();
+            final List<CryptoBrokerExtraDataInfoTemp> quotesRequestsList = new ArrayList<>();
 
             for (final DatabaseTableRecord record : records)
                 quotesRequestsList.add(buildQuotesRequestObject(record));
@@ -921,7 +927,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         );
     }
 
-    private List<CryptoBrokerQuote> listQuotes(UUID requestId) throws CantListPendingQuotesRequestsException {
+    private ArrayList<CryptoBrokerQuote> listQuotes(UUID requestId) throws CantListPendingQuotesRequestsException {
 
         try {
             final DatabaseTable quotesTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_TABLE_NAME);
@@ -932,12 +938,12 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             final List<DatabaseTableRecord> records = quotesTable.getRecords();
 
-            List<CryptoBrokerQuote> quotesList = new ArrayList<>();
+            ArrayList<CryptoBrokerQuote> quotesList = new ArrayList<>();
 
             for(DatabaseTableRecord record : records) {
 
-                String merchandiseString         = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     );
-                String merchandiseTypeString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          );
+                String merchandiseString         = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          );
+                String merchandiseTypeString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     );
                 String paymentCurrencyString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     );
                 String paymentCurrencyTypeString = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
                 Float  price                     = record.getFloatValue (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                );

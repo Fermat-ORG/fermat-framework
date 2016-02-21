@@ -22,7 +22,7 @@ public interface CustomerBrokerNewManager extends FermatManager {
      * @param customerBrokerPurchaseNegotiation the updated negotiation
      * @throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException
      */
-    void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
+    void createCustomerBrokerNewPurchaseNegotiationTransaction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 
     /**
      * Get negotiation transaction Customer Broker New for the transactionId indicate
@@ -31,7 +31,7 @@ public interface CustomerBrokerNewManager extends FermatManager {
      * @return the Negotiation Transaction data
      * @throws CantGetCustomerBrokerNewNegotiationTransactionException
      */
-    CustomerBrokerNew getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerNewNegotiationTransactionException;
+    CustomerBrokerNew getCustomerBrokerNewNegotiationTransaction(UUID transactionId) throws CantGetCustomerBrokerNewNegotiationTransactionException;
 
     /**
      * List negotiation transaction Customer Broker New
@@ -39,6 +39,6 @@ public interface CustomerBrokerNewManager extends FermatManager {
      * @return the list Negotiation Transaction data
      * @throws CantGetListCustomerBrokerNewNegotiationTransactionException
      */
-    List<CustomerBrokerNew> getAllCustomerBrokerNewNegotiationTranasction() throws CantGetListCustomerBrokerNewNegotiationTransactionException;
+    List<CustomerBrokerNew> getAllCustomerBrokerNewNegotiationTransaction() throws CantGetListCustomerBrokerNewNegotiationTransactionException;
 
 }

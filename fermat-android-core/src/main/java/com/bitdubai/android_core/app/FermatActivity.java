@@ -44,6 +44,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -52,6 +53,7 @@ import android.widget.SlidingDrawer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
@@ -111,6 +113,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
@@ -122,6 +126,8 @@ import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
+import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
+import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -519,14 +525,45 @@ public abstract class FermatActivity extends AppCompatActivity
         view.findViewById(R.id.img_fermat_setting_1).setOnClickListener(onClickListener);
         view.findViewById(R.id.img_fermat_setting).setOnClickListener(onClickListener);
 
+
+
+        ImageButton btn_fermat_apps_status = (ImageButton)mRevealView.findViewById(R.id.btn_fermat_apps_status);
+        final AndroidCoreModule androidCoreModule = FermatSystemUtils.getAndroidCoreModule();
+
         if(appStatusListener==null){
-            appStatusListener = new AppStatusListener(this);
+            appStatusListener = new AppStatusListener(this,btn_fermat_apps_status);
         }
 
-        mRevealView.findViewById(R.id.btn_fermat_apps_status).setOnClickListener(new View.OnClickListener() {
+        try {
+            AndroidCoreSettings androidCoreSettings = (AndroidCoreSettings) androidCoreModule.getSettingsManager().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
+            switch (androidCoreSettings.getAppsStatus()){
+                case RELEASE:
+                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
+                    break;
+                case BETA:
+                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icons_beta);
+                    break;
+                case ALPHA:
+                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icons_alfa);
+                    break;
+                case DEV:
+                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icons_developer);
+                    break;
+                default:
+                    btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
+                    break;
+            }
+        } catch (CantGetSettingsException e) {
+            btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
+           // e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
+            //e.printStackTrace();
+        }
+        btn_fermat_apps_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AppStatusDialog(view.getContext(), FermatSystemUtils.getAndroidCoreModule(),appStatusListener).show();
+                new AppStatusDialog(view.getContext(),androidCoreModule , appStatusListener).show();
             }
         });
 
@@ -1161,7 +1198,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     Log.d("WalletActivity", "Sdk version not compatible with status bar color");
                 } catch (OutOfMemoryError outOfMemoryError) {
                     getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, new Exception());
-                    Toast.makeText(this, "out of memory exception", LENGTH_SHORT).show();
+                    makeText(this, "out of memory exception", LENGTH_SHORT).show();
                 }
             }
         }
@@ -1553,7 +1590,7 @@ public abstract class FermatActivity extends AppCompatActivity
                 Log.e(TAG, "Wizard not found...");
             }
         } catch (Exception ex) {
-            Toast.makeText(this, "Cannot instantiate wizard runtime because the wizard called is null", Toast.LENGTH_SHORT).show();
+            makeText(this, "Cannot instantiate wizard runtime because the wizard called is null", Toast.LENGTH_SHORT).show();
         }
     }
 

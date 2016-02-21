@@ -1,0 +1,61 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_activity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:weightSum="100">
+
+        <ImageView
+            android:id="@+id/contact_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="@integer/contact_detail_photo_percent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_contact_picture_180_holo_light"
+            android:contentDescription="@string/imageview_description"/>
+
+        <RelativeLayout
+            android:id="@+id/containere"
+            android:layout_width="match_parent"
+            android:padding="20dp"
+            android:layout_height="0dp"
+            android:layout_weight="@integer/contact_detail_info_percent"
+            android:orientation="vertical">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding"
+                android:paddingRight="@dimen/padding"
+                android:paddingTop="@dimen/padding"
+                android:textColor="@color/black"
+                style="@style/contactNameTitle"/>
+
+            <EditText
+                android:id="@+id/aliasEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:autoText="true"
+                android:textColor="@color/black"
+                android:hint="User Alias" />
+
+            <Button
+                android:id="@+id/saveContactButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="@color/background_floating_material_dark"
+                android:text="Send"
+                android:textColor="@color/background_material_light"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</FrameLayout>

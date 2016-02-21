@@ -123,7 +123,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT, 0, "help").setIcon(R.drawable.dap_asset_user_help_icon)
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT, 0, "Help").setIcon(R.drawable.dap_asset_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -240,8 +240,8 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
     @Override
     public void onItemClickListener(User data, int position) {
         //TODO select user
-        appSession.setData("asset_data", data);
-        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
+        appSession.setData("user_selected", data);
+        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY, appSession.getAppPublicKey());
     }
 
     @Override
@@ -250,14 +250,12 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
 
     @Override
     public List<User> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<User> redeemPoints = new ArrayList<>();
+        List<User> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
                 DigitalAsset digitalAsset = (DigitalAsset) appSession.getData("asset_data");
-                //redeemPoints = Data.getConnectedRedeemPoints(moduleManager, redeemPoints, digitalAsset);
-                //TODO: implementar metodo de get users
-                appSession.setData("redeem_points", redeemPoints);
-
+                users = Data.getConnectedUsers(moduleManager);
+                appSession.setData("users", users);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
@@ -272,7 +270,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
                     Toast.LENGTH_SHORT).
                     show();
         }
-        return redeemPoints;
+        return users;
     }
 
     private void showOrHideNoUsersView(boolean show) {

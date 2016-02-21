@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.fragments;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -61,7 +63,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     public static final String USER_SELECTED = "user";
     private static AssetUserCommunitySubAppModuleManager manager;
-    private static final int MAX = 20;
+    private int mNotificationsCount = 0;
 
     private List<Actor> actors;
     ErrorManager errorManager;
@@ -73,6 +75,8 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private UserCommunityAdapter adapter;
     private View rootView;
     private LinearLayout emptyView;
+    private Actor actor;
+    private int MAX = 1;
     private int offset = 0;
 
     SettingsManager<AssetUserSettings> settingsManager;
@@ -93,8 +97,13 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
         try {
             manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
+            actor = (Actor) appSession.getData(USER_SELECTED);
+
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
+
+            mNotificationsCount = manager.getWaitingYourConnectionActorAssetUserCount();
+            new FetchCountTask().execute();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -291,11 +300,11 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 //        inflater.inflate(R.menu.dap_community_user_home_menu, menu);
-        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT, 0, "Connect")//.setIcon(R.drawable.dap_community_issuer_help_icon)
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -315,12 +324,29 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
                 ConnectDialog connectDialog;
 
-                connectDialog = new ConnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null){
+                connectDialog = new ConnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null)
+                {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
-                        if (i == R.id.positive_button) {//
+                        if (i == R.id.positive_button) {
 
+//                            if (actor != null && identity != null) {
+//                                getSession().getModuleManager().askActorAssetUserForConnection(
+//                                        actor.getActorPublicKey(),
+//                                        actor.getName(),
+//                                        identity.getPublicKey(),
+//                                        identity.getAlias(),
+//                                        actor.getProfileImage());
+////                            identity.getImage(),
+////                            identity.getPublicKey());
+//                                Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+//                                broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                                sendLocalBroadcast(broadcast);
+//                                Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                super.toastDefaultError();
+//                            }
 
                             final ProgressDialog dialog = new ProgressDialog(getActivity());
                             dialog.setMessage("Connecting please wait...");
@@ -335,6 +361,13 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                             toConnect.add(actor);
                                     }
                                     //// TODO: 28/10/15 get Actor asset Redeem Point
+//                                    manager.askActorAssetUserForConnection(toConnect);
+//
+//                                    Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+//                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+//                                    sendLocalBroadcast(broadcast);
+//                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+
                                     manager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
@@ -358,12 +391,12 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                 public void onErrorOccurred(Exception ex) {
                                     dialog.dismiss();
 //                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getActivity(), "Asset User or Redeem Point Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "Asset Issuer or Asset User Identities must be created before using this app.", Toast.LENGTH_LONG).show();
 //                                ex.printStackTrace();
                                 }
                             });
                             worker.execute();
-//
+
 
                             dismiss();
                         } else if (i == R.id.negative_button) {
@@ -444,6 +477,11 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         return super.onOptionsItemSelected(item);
     }
 
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+        getActivity().invalidateOptionsMenu();
+    }
+
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
@@ -463,6 +501,23 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     }
 
+    /*
+Sample AsyncTask to fetch the notifications count
+*/
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
+    }
     @Override
     public void onRefresh() {
         if (!isRefreshing) {
