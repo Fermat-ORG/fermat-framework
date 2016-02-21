@@ -183,6 +183,22 @@ public class TestData {
         exchangeRate = decimalFormat.format(exchangeRateVal);
         brokerCurrencyQty = decimalFormat.format(currencyQtyVal * exchangeRateVal);
         timeInMillisVal = System.currentTimeMillis();
+
+        item = new CustomerBrokerNegotiationInformationImpl("Adriana Moronta", NegotiationStatus.WAITING_FOR_BROKER);
+        item.setLastNegotiationUpdateDate(timeInMillisVal);
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY, CryptoCurrency.BITCOIN.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.CUSTOMER_CURRENCY_QUANTITY, customerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY, FiatCurrency.VENEZUELAN_BOLIVAR.getCode(), ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.BROKER_CURRENCY_QUANTITY, brokerCurrencyQty, ClauseStatus.DRAFT));
+        item.addClause(new ClauseInformationImpl(ClauseType.EXCHANGE_RATE, exchangeRate, ClauseStatus.DRAFT));
+        openNegotiations.add(item);
+
+        currencyQtyVal = random.nextFloat() * 100;
+        exchangeRateVal = random.nextFloat();
+        customerCurrencyQty = decimalFormat.format(currencyQtyVal);
+        exchangeRate = decimalFormat.format(exchangeRateVal);
+        brokerCurrencyQty = decimalFormat.format(currencyQtyVal * exchangeRateVal);
+        timeInMillisVal = System.currentTimeMillis();
         timeInMillisStr = String.valueOf(timeInMillisVal);
 
         item = new CustomerBrokerNegotiationInformationImpl("jorgeegonzalez", NegotiationStatus.WAITING_FOR_BROKER);

@@ -51,7 +51,7 @@ final public class NegotiationWrapper {
             CryptoBrokerWalletManager walletManager = appSession.getModuleManager().getCryptoBrokerWallet(appSession.getAppPublicKey());
 
             if (negotiationInfo.getNegotiationExpirationDate() == 0)
-                negotiationInfo.setLastNegotiationUpdateDate(actualTimeInMillis);
+                setExpirationTime(actualTimeInMillis);
 
             if (clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) == null)
                 addClause(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER, Long.toString(actualTimeInMillis));
@@ -68,11 +68,11 @@ final public class NegotiationWrapper {
 
                 if (paymentMethod == MoneyType.BANK) {
                     List<String> bankAccounts = walletManager.getAccounts(currencyToReceive, appSession.getAppPublicKey());
-                    addClause(ClauseType.BROKER_BANK_ACCOUNT, bankAccounts.isEmpty() ? "" : bankAccounts.get(0));
+                    addClause(ClauseType.BROKER_BANK_ACCOUNT, bankAccounts.isEmpty() ? "No Bank Accounts" : bankAccounts.get(0));
 
-                } else if (paymentMethod == MoneyType.CASH_DELIVERY) {
+                } else if (paymentMethod == MoneyType.CASH_ON_HAND || paymentMethod == MoneyType.CASH_DELIVERY) {
                     ArrayList<NegotiationLocations> locations = Lists.newArrayList(walletManager.getAllLocations(NegotiationType.SALE));
-                    addClause(ClauseType.BROKER_BANK_ACCOUNT, locations.isEmpty() ? "" : locations.get(0).getLocation());
+                    addClause(ClauseType.BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "No Locations" : locations.get(0).getLocation());
                 }
             }
 

@@ -581,29 +581,34 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public List<MoneyType> getPaymentMethods(String currencyToSell, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
+    public List<MoneyType> getPaymentMethods(String currencyCode, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
         List<MoneyType> paymentMethod = new ArrayList<>();
 
         List<CryptoBrokerWalletAssociatedSetting> associatedWallets = getCryptoBrokerWalletAssociatedSettings(brokerWalletPublicKey);
 
         for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
             Currency merchandise = associatedWallet.getMerchandise();
-            if (merchandise.getCode().equals(currencyToSell))
-                paymentMethod.add(associatedWallet.getMoneyType());
+            if (merchandise.getCode().equals(currencyCode)) {
+                if (associatedWallet.getPlatform() == Platforms.CASH_PLATFORM) {
+                    paymentMethod.add(MoneyType.CASH_ON_HAND);
+                    paymentMethod.add(MoneyType.CASH_DELIVERY);
+                } else
+                    paymentMethod.add(associatedWallet.getMoneyType());
+            }
         }
 
         return paymentMethod;
     }
 
     @Override
-    public List<String> getAccounts(String currencyToSell, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantLoadBankMoneyWalletException {
+    public List<String> getAccounts(String currencyCode, String brokerWalletPublicKey) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantLoadBankMoneyWalletException {
         List<String> paymentMethod = new ArrayList<>();
 
         List<CryptoBrokerWalletAssociatedSetting> associatedWallets = getCryptoBrokerWalletAssociatedSettings(brokerWalletPublicKey);
 
         for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
             Currency merchandise = associatedWallet.getMerchandise();
-            if (merchandise.getCode().equals(currencyToSell) && associatedWallet.getPlatform() == Platforms.BANKING_PLATFORM) {
+            if (merchandise.getCode().equals(currencyCode) && associatedWallet.getPlatform() == Platforms.BANKING_PLATFORM) {
                 List<BankAccountNumber> accounts = getAccounts(associatedWallet.getWalletPublicKey());
                 for (BankAccountNumber accountNumber : accounts) {
                     paymentMethod.add("Bank: " + accountNumber.getBankName() + "\n Account: " + accountNumber.getAccount() +
