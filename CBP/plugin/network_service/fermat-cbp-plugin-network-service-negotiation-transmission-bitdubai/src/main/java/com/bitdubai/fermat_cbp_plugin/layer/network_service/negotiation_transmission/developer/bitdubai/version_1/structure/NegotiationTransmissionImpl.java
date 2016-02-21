@@ -1,12 +1,19 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionState;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransmissionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.enums.ActorProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
+import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.enums.NotificationDescriptor;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.UUID;
 
@@ -99,11 +106,33 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
         this.negotiationType = negotiationType;
         this.negotiationXML = negotiationXML;
         this.timestamp = timestamp;
-        this.pendingFlag = false;
         this.pendingFlag = pendingFlag;
         this.flagRead = flagRead;
         this.sentCount = sentCount;
         this.responseToNotificationId = responseToNotificationId;
+    }
+
+    private NegotiationTransmissionImpl(JsonObject jsonObject, Gson gson) {
+
+        this.transmissionId = UUID.fromString(jsonObject.get("transmissionId").getAsString());
+        this.transactionId = UUID.fromString(jsonObject.get("transactionId").getAsString());
+        this.negotiationId = UUID.fromString(jsonObject.get("negotiationId").getAsString());
+        this.negotiationTransactionType = gson.fromJson(jsonObject.get("negotiationTransactionType").getAsString(), NegotiationTransactionType.class);
+        this.publicKeyActorSend = (jsonObject.get("publicKeyActorSend") != null) ? jsonObject.get("publicKeyActorSend").getAsString() : null;
+        this.actorSendType = gson.fromJson(jsonObject.get("actorSendType").getAsString(), PlatformComponentType.class);
+        this.publicKeyActorReceive = jsonObject.get("publicKeyActorReceive").getAsString();
+        this.actorReceiveType = gson.fromJson(jsonObject.get("actorReceiveType").getAsString(), PlatformComponentType.class);
+        this.transmissionType = gson.fromJson(jsonObject.get("transmissionType").getAsString(), NegotiationTransmissionType.class);
+        this.transmissionState = gson.fromJson(jsonObject.get("transmissionState").getAsString(), NegotiationTransmissionState.class);
+        this.negotiationType = gson.fromJson(jsonObject.get("negotiationType").getAsString(), NegotiationType.class);
+        this.negotiationXML = (jsonObject.get("negotiationXML") != null) ? jsonObject.get("negotiationXML").getAsString() : null;
+        this.timestamp = jsonObject.get("timestamp").getAsLong();
+        this.pendingFlag = jsonObject.get("pendingFlag").getAsBoolean();
+        this.flagRead = jsonObject.get("flagRead").getAsBoolean();
+        this.sentCount = jsonObject.get("sentCount").getAsInt();
+//            this.responseToNotificationId = UUID.fromString(jsonObject.get("responseToNotificationId").getAsString());
+//        System.out.println("12345 responseToNotificationId");
+
     }
 
     @Override
@@ -226,5 +255,40 @@ public class NegotiationTransmissionImpl implements NegotiationTransmission {
 
     public void setPendingFlag(boolean pendingFlag) {
         this.pendingFlag = pendingFlag;
+    }
+
+    public String toJson() {
+
+        Gson gson = new Gson();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("transmissionId", transmissionId.toString());
+        jsonObject.addProperty("transactionId", transactionId.toString());
+        jsonObject.addProperty("negotiationId", negotiationId.toString());
+        jsonObject.addProperty("negotiationTransactionType", negotiationTransactionType.toString());
+        jsonObject.addProperty("publicKeyActorSend", publicKeyActorSend);
+        jsonObject.addProperty("actorSendType", actorSendType.toString());
+        jsonObject.addProperty("publicKeyActorReceive", publicKeyActorReceive);
+        jsonObject.addProperty("actorReceiveType", actorReceiveType.toString());
+        jsonObject.addProperty("transmissionType", transmissionType.toString());
+        jsonObject.addProperty("transmissionState", transmissionState.toString());
+        jsonObject.addProperty("negotiationType", negotiationType.toString());
+        jsonObject.addProperty("negotiationXML", negotiationXML);
+        jsonObject.addProperty("timestamp", timestamp);
+        jsonObject.addProperty("pendingFlag", pendingFlag);
+        jsonObject.addProperty("flagRead", flagRead);
+        jsonObject.addProperty("sentCount", sentCount);
+        if (responseToNotificationId != null)
+            jsonObject.addProperty("responseToNotificationId", responseToNotificationId.toString());
+        return gson.toJson(jsonObject);
+
+    }
+
+    public static NegotiationTransmissionImpl fronJson(String jsonString) {
+
+        Gson gson = new Gson();
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = (JsonObject) jsonParser.parse(jsonString);
+        return new NegotiationTransmissionImpl(jsonObject, gson);
     }
 }

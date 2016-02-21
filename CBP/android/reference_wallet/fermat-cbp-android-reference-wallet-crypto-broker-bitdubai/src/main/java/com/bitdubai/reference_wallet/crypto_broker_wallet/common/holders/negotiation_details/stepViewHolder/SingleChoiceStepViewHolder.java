@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details;
+package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -60,7 +60,7 @@ public class SingleChoiceStepViewHolder extends StepViewHolder
 
         SingleChoiceDialogFragment<String> dialog = new SingleChoiceDialogFragment<>();
 
-        dialog.configure("Select an Item juanaso was here", dataList, selectedValue, this);
+        dialog.configure("Select an Item ", dataList, selectedValue, this);
 
         FragmentManager fragmentManager = activity.getFragmentManager();
         dialog.show(fragmentManager, "SingleChoiceDialog");

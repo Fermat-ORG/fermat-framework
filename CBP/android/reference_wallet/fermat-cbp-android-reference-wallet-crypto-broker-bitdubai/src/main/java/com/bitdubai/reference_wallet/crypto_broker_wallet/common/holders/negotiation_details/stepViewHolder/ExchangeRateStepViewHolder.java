@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details;
+package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -71,6 +71,7 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
         if (editable.length() > 0 && sourceValue != null) {
             actualValue = yourExchangeRateValue.getText().toString();
             valuesHasChanged = !actualValue.equals(sourceValue);
+            /*
             if (valuesHasChanged) {
                 listener.exchangeValueChanged(actualValue);
                 setStatus(NegotiationStepStatus.CHANGED);
@@ -79,6 +80,7 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
                 listener.exchangeValueChanged(actualValue);
                 setStatus(NegotiationStepStatus.ACCEPTED);
             }
+            */
         }
     }
 

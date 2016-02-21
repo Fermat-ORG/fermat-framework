@@ -10,6 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraDataInfo;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
@@ -54,11 +55,11 @@ public class ActorBrokerExtraDataEventActions {
     }
 
     public void handleNewsEvent() throws CantNewsEventException {
-        List<CryptoBrokerExtraData<CryptoBrokerQuote>> dataNS;
+        List<CryptoBrokerExtraDataInfo> dataNS;
         try {
             dataNS = cryptoBrokerANSManager.listPendingQuotesRequests(RequestType.RECEIVED);
             if(dataNS != null) {
-                for (CryptoBrokerExtraData<CryptoBrokerQuote> extraDate : dataNS) {
+                for (CryptoBrokerExtraDataInfo extraDate : dataNS) {
                     String brokerPublicKey = extraDate.getCryptoBrokerPublicKey();
                     cryptoBrokerANSManager.answerQuotesRequest(
                         extraDate.getRequestId(),

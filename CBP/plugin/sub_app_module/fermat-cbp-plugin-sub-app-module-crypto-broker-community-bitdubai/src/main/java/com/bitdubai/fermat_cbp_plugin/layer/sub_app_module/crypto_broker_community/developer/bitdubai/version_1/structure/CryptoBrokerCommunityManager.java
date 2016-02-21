@@ -137,7 +137,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             }
         }
         return worldBrokerList;
-     }
+    }
 
     /**
      * We are listing here all crypto brokers and all crypto customer identities found in the device.
@@ -152,12 +152,12 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             final List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
 
             for (final CryptoBrokerIdentity cbi : cryptoBrokerIdentities)
-                selectableIdentities.add(new SelectableIdentity(cbi));
+                selectableIdentities.add(new CryptoBrokerCommunitySelectableIdentityImpl(cbi));
 
             final List<CryptoCustomerIdentity> cryptoCustomerIdentities = cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
 
             for (final CryptoCustomerIdentity cci : cryptoCustomerIdentities)
-                selectableIdentities.add(new SelectableIdentity(cci));
+                selectableIdentities.add(new CryptoBrokerCommunitySelectableIdentityImpl(cci));
 
             return selectableIdentities;
 
@@ -208,8 +208,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     @Override
     public void requestConnectionToCryptoBroker(final CryptoBrokerCommunitySelectableIdentity selectedIdentity     ,
                                                 final CryptoBrokerCommunityInformation        cryptoBrokerToContact) throws CantRequestConnectionException          ,
-                                                                                                                            ActorConnectionAlreadyRequestedException,
-                                                                                                                            ActorTypeNotSupportedException          {
+            ActorConnectionAlreadyRequestedException,
+            ActorTypeNotSupportedException          {
 
         try {
 
@@ -259,7 +259,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             cryptoBrokerActorConnectionManager.acceptConnection(requestId);
 
         } catch (final CantAcceptActorConnectionRequestException |
-                       UnexpectedConnectionStateException        e) {
+                UnexpectedConnectionStateException        e) {
 
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAcceptRequestException(e, "", "Error trying to accept the actor connection.");
@@ -276,14 +276,14 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public void denyConnection(final UUID requestId) throws CryptoBrokerConnectionDenialFailedException,
-                                                            ConnectionRequestNotFoundException         {
+            ConnectionRequestNotFoundException         {
 
         try {
 
             cryptoBrokerActorConnectionManager.denyConnection(requestId);
 
         } catch (final CantDenyActorConnectionRequestException |
-                       UnexpectedConnectionStateException      e) {
+                UnexpectedConnectionStateException      e) {
 
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CryptoBrokerConnectionDenialFailedException(e, "", "Error trying to deny the actor connection.");
@@ -300,14 +300,14 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public void disconnectCryptoBroker(final UUID requestId) throws CryptoBrokerDisconnectingFailedException,
-                                                                    ConnectionRequestNotFoundException      {
+            ConnectionRequestNotFoundException      {
 
         try {
 
             cryptoBrokerActorConnectionManager.disconnect(requestId);
 
         } catch (final CantDisconnectFromActorException   |
-                       UnexpectedConnectionStateException e) {
+                UnexpectedConnectionStateException e) {
 
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CryptoBrokerDisconnectingFailedException(e, "", "Error trying to disconnect the actor connection.");
@@ -330,7 +330,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             cryptoBrokerActorConnectionManager.cancelConnection(requestId);
 
         } catch (final CantCancelActorConnectionRequestException |
-                       UnexpectedConnectionStateException e) {
+                UnexpectedConnectionStateException e) {
 
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CryptoBrokerCancellingFailedException(e, "", "Error trying to disconnect the actor connection.");
@@ -347,8 +347,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public List<CryptoBrokerCommunityInformation> listAllConnectedCryptoBrokers(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                                                       final int                                     max             ,
-                                                                       final int                                     offset          ) throws CantListCryptoBrokersException {
+                                                                                final int                                     max             ,
+                                                                                final int                                     offset          ) throws CantListCryptoBrokersException {
 
         try {
 
@@ -383,8 +383,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingLocalAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                                                             final int max,
-                                                                             final int offset) throws CantListCryptoBrokersException {
+                                                                                      final int max,
+                                                                                      final int offset) throws CantListCryptoBrokersException {
 
         try {
 
@@ -419,8 +419,8 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingRemoteAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                                                              final int max,
-                                                                              final int offset) throws CantListCryptoBrokersException {
+                                                                                       final int max,
+                                                                                       final int offset) throws CantListCryptoBrokersException {
         try {
 
             final CryptoBrokerLinkedActorIdentity linkedActorIdentity = new CryptoBrokerLinkedActorIdentity(
@@ -506,31 +506,31 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
 
         //Get all customer identities on local device
-        List<CryptoCustomerIdentity> customerIdentitiesInDevice = null;
+        List<CryptoCustomerIdentity> customerIdentitiesInDevice = new ArrayList<>();
         try{
             customerIdentitiesInDevice = cryptoCustomerIdentityManager.listAllCryptoCustomerFromCurrentDeviceUser();
         } catch(CantListCryptoCustomerIdentityException e) { /*Do nothing*/ }
 
 
         //Get all broker identities on local device
-        List<CryptoBrokerIdentity> brokerIdentitiesInDevice = null;
+        List<CryptoBrokerIdentity> brokerIdentitiesInDevice = new ArrayList<>();
         try{
             brokerIdentitiesInDevice = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
         } catch(CantListCryptoBrokerIdentitiesException e) { /*Do nothing*/ }
 
         //No registered users in device
         if(customerIdentitiesInDevice.size() + brokerIdentitiesInDevice.size() == 0)
-            throw new CantGetSelectedActorIdentityException("", null, "", "");;
+            throw new CantGetSelectedActorIdentityException("", null, "", "");
 
 
 
-            //If appSettings exists, get its selectedActorIdentityPublicKey property
+        //If appSettings exists, get its selectedActorIdentityPublicKey property
         if(appSettings != null)
         {
             String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
             Actors lastSelectedActorType = appSettings.getLastSelectedActorType();
 
-            if (lastSelectedIdentityPublicKey != null && lastSelectedActorType != null){
+            if (lastSelectedIdentityPublicKey != null && lastSelectedActorType != null) {
 
                 CryptoBrokerCommunitySelectableIdentityImpl selectedIdentity = null;
 
@@ -637,8 +637,6 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
     @Override
     public void setAppPublicKey(final String publicKey) {
-        //System.out.println("CBC setAppPublicKey a....." + publicKey);
-
         this.subAppPublicKey = publicKey;
     }
 

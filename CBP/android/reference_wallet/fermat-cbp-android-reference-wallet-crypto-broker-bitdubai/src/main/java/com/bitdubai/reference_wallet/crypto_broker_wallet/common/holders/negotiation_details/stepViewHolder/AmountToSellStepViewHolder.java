@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details;
+package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.stepViewHolder;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -80,10 +80,16 @@ public class AmountToSellStepViewHolder extends StepViewHolder
 
             actualAmountToReceive = calculateBrokerCurrencyAmount(actualAmountToSell, exchangeRateValue);
             youWillReceiveTextValue.setText(String.format("%1$s %2$s", actualAmountToReceive, currencyToReceive));
-
+/*
             if (!valuesHasChanged) {
                 valuesHasChanged = !actualAmountToSell.equals(sourceAmountToSell);
+                setStatus(NegotiationStepStatus.CHANGED);
+
+            }else{
+                setStatus(NegotiationStepStatus.ACCEPTED);
+
             }
+*/
         }
     }
 
