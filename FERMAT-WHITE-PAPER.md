@@ -236,11 +236,26 @@ The Ecosystem of Fermat APPs offers different products to end users. From the ou
 
 #### The Fermat Network
 
-Fermat runs on end users devices. Phones, tablets, laptops, PCs. It can also run on web servers of wherever is needed. One of our design constraints was to create a censorship resistant system. Since these devices need to communicate to each other in order to exchange information the need for a p2p network to enable this communication without going through third parties arose. If device to device communications were to go thought centralized service providers, then the system could be shut down buy censoring those centralized points.
+Fermat runs on end users devices. Phones, tablets, laptops, PCs. It can also run on web servers or wherever is needed. One of our design constraints was to create a censorship resistant system. Since these devices need to communicate to each other in order to exchange information the need for a p2p network to enable this communication without going through third parties arose. If device to device communications were to go thought centralized service providers, then the system could be shut down buy censoring those centralized points.
+
+##### Why is it needed?
+
+A well known peer-to-peer software is [BitTorrent](https://en.wikipedia.org/wiki/BitTorrent) and its purpose is to enable its users to share files between each other. Anyone could argue that if BitTorrent clients are the network nodes themselves, why the need in Fermat to have specialized nodes for interconecting devices.
+
+There are two facts that prevent Fermat to do the same:
+
+1. Fermat is mobile first, and many mobile operators forbids incomming connections into mobile phones. This leaves these mobile devices with the only option to initiate the connection. Fermat nodes can be seen as relay servers among the [NAT traversal](https://en.wikipedia.org/wiki/NAT_traversal) techniques.
+
+2. Mobile devices that their telco company do allows them to accept incomming connections are not good candidates to be relay servers either since not all mobile data plans globally have unlimitted data transfer.
+
+This creates the need for specialized nodes within Fermat that can take the role of relay servers and an incentive mechanism for their operators in order tu run them.
+
+##### Network Architecture
 
 Architecturally, we describe the Fermat p2p Network as having two levels:
 
 **Network Nodes** : Are the devices that interconnects other devices and let them talk between each other through them.
+
 **Network Clients** : Are the devices that use Network Nodes as a bridge to get connected to other Network Clients.
 
 The Fermat p2p Network of Nodes is the main tissue connecting devices running the Fermat Framework, though it is not the only one. You will learn later that the Framework is designed to use the Fermat p2p Network when it can not find a more direct way of connecting to the target device, like a shared WiFi connection, blue-tooth, NFC, etc.
