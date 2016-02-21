@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -171,10 +172,27 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
     }
 
     @Override
-    public void sendPayment(String walletPublicKey, String contractHash) throws CantSendPaymentException {
+    public void sendPayment(
+            String walletPublicKey,
+            String contractHash) throws
+            CantSendPaymentException {
         /**
          * TODO: Get contract, persist in database the base information, leave the send crypto to monitor agent
          */
+        sendPayment(
+                walletPublicKey,
+                contractHash,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType());
+
+    }
+
+    @Override
+    public void sendPayment(
+            String walletPublicKey,
+            String contractHash,
+            BlockchainNetworkType blockchainNetworkType) throws
+            CantSendPaymentException {
+
         try{
             //Checking the arguments
             Object[] arguments={walletPublicKey, contractHash};
@@ -190,6 +208,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     customerBrokerPurchaseNegotiation
             );
             long cryptoAmount=getCryptoAmount(customerBrokerPurchaseNegotiation);
+            //TODO: add the blockchain network type to persistContractInDatabase method
             this.customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractPurchase,
                     brokerCryptoAddress,
