@@ -435,6 +435,37 @@ With all these options, the Fermat project aims to recruit thousands of develope
 
 The key idea here is the ownership of developed components. This is the core that enables developers to live out of a stream of micro payments flowing from around the globe. The Fermat system even allow them to trade that ownership by selling it to someone else.
 
+In order to safeguard the investment developers do while coding Fermat APPs and components, the Fermat Open Source project establishes the following rules and it's management will enforce them through the life of the project.
+
+###### Definitions
+
+**Component Owner**
+
+Each component has an Owner from its very inception. During the life cycle of a component, the first owner is the Fermat Foundation that is the one designing the Fermat Master Plan. Once a component is assigned to a developer, the ownership is transfered to the original author or whoever financed its development. Later the ownership can be transferred or sold to anyone using the Fermat system itself to do so. Ownership can be shared by more than one entity in any proportion they see fit. Ownership is tracked within the Fermat system itself. Ownership can be partially or totally lost and returned to the Fermat Foundation if owners don't comply with the terms of service agreements.
+
+**Component Maintainer**
+
+Each component has a Maintainer team. Owners assign a Maintainer team with which they share part of the revenues (micro use licenses) that that component produces in whatever proportion they agree upon. Maintainers are responsible for keeping components updated, well performing, documented, and without bugs. They also process all the upgrades needed to be done in order to support needed functionality not implemented in the original version for any reason in a timely manner.
+
+**Component Support Team**
+
+Each component has a Technical Support team. Owners create these teams and share with them some of the micro-use-licenses fees. Fermat has an embedded technical support functionality that enables the possibility to give support to end users when technical problems arise at their devices. This system allows problems to be addressed in a distributed environment and several support teams to interact with each other in order to track the reasons of the failure and agree on the component responsible of it. Once the responsibility is established the Maintainer team of that component has some dead lines to solve the issue before triggering some procedures that would alert the Owner.
+
+**Component Level**
+
+Components are classified at a the master plan level according to their difficulty and how critical they are, from 1 to 10. Each level is then translated into the amount of fermats a component collect per month as micro-use-licenses. The level also determines the service level that is required for that component in terms of time to fix bugs, make upgrades, availability of their support team, and so on.
+
+**Rules to safeguard developers and investors - Fermat Property Law -**
+
+1. Fermat Components have an specific well defined role or responsibility and there will not be other components in the system with an overlapping role or responsibility. This rule is enforced by design at the master plan level.
+
+2. Components not being correctly maintained according to the Fermat Project Guidelines and rules and the service agreement, are subject to be reclaimed by the Fermat Foundation and their ownership partially or totally revoked. This is specially true when the terms of service of the component are not met (time to fix critical bugs, provide technical support, etc.). This can only be done under a special procedure that includes several warning to the owner and orders to replace the maintainer / support team and to futfill their obligations. 
+
+3. The Fermat System will provide an API to be consumed by other mobile APPs ruining on the same device. This API will expose only high level components or transactions to other mobile APPs in order to safeguard the investment on the development of lower level components within the system. This means that outside Fermat APPs replicating inside Fermat functionality wont be able to bypass the copied functionality by invoking directly lower level components. They are forced to pay micro-use-licenses even running outside the Fermat environment.
+
+4. Fermat Nodes before servicing clients (end user devices) with their connectivity services, will check if these clients are paying the micro-use-license fees. This can be enforced since nodes know who the owners of the components are, and can query the bitcoin blockchain to confirm there are transactions from the client's identities going to components owners. This prevents outside APPs to access the Fermat Network without going through the established channels that include micro-use-licenses, or recompiled versions of Fermat with the micro-use-licenses removed or altered.
+
+
 ##### Designers
 
 -- Explanation needed --
