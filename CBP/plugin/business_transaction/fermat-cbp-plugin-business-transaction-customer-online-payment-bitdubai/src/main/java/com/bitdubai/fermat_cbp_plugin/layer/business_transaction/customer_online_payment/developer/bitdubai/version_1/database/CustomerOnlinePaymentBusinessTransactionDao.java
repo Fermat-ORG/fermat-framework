@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -620,7 +621,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             CustomerBrokerContractPurchase customerBrokerContractPurchase,
             String brokerCryptoAddress,
             String walletPublicKey,
-            long cryptoAmount)
+            long cryptoAmount,
+            BlockchainNetworkType blockchainNetworkType)
             throws CantInsertRecordException {
         try {
             DatabaseTable databaseTable = getDatabaseContractTable();
@@ -630,7 +632,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     customerBrokerContractPurchase,
                     brokerCryptoAddress,
                     walletPublicKey,
-                    cryptoAmount
+                    cryptoAmount,
+                    blockchainNetworkType
             );
             databaseTable.insertRecord(databaseTableRecord);
         } catch (CantInsertRecordException exception) {
@@ -651,7 +654,14 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         }
     }
 
-    public BusinessTransactionRecord getCustomerOnlinePaymentRecord(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+    /**
+     * This method returns a BusinessTransactionRecord by a contract hash.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public BusinessTransactionRecord getCustomerOnlinePaymentRecord(
+            String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
 
         try {
             DatabaseTable databaseTable = getDatabaseContractTable();
@@ -701,6 +711,16 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     record.getLongValue(
                             CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                                     ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME));
+            String blockchainNetworkTypeString = record.getStringValue(
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
+                            ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
+            BlockchainNetworkType blockchainNetworkType;
+            if(blockchainNetworkTypeString==null||blockchainNetworkTypeString.isEmpty()){
+                blockchainNetworkType=BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            } else{
+                blockchainNetworkType=BlockchainNetworkType.getByCode(blockchainNetworkTypeString);
+            }
+            businessTransactionRecord.setBlockchainNetworkType(blockchainNetworkType);
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
             errorManager.reportUnexpectedPluginException(
@@ -894,7 +914,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             CustomerBrokerContractPurchase customerBrokerContractPurchase,
             String brokerCryptoAddress,
             String walletPublicKey,
-            long cryptoAmount) {
+            long cryptoAmount,
+            BlockchainNetworkType blockchainNetworkType) {
 
         UUID transactionId = UUID.randomUUID();
         record.setUUIDValue(
@@ -922,6 +943,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         record.setLongValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME,
                 cryptoAmount);
+        if(blockchainNetworkType==null){
+            blockchainNetworkType=BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        }
+        record.setStringValue(
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME,
+                blockchainNetworkType.getCode());
         return record;
     }
 

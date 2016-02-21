@@ -208,12 +208,12 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     customerBrokerPurchaseNegotiation
             );
             long cryptoAmount=getCryptoAmount(customerBrokerPurchaseNegotiation);
-            //TODO: add the blockchain network type to persistContractInDatabase method
             this.customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractPurchase,
                     brokerCryptoAddress,
                     walletPublicKey,
-                    cryptoAmount);
+                    cryptoAmount,
+                    blockchainNetworkType);
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
