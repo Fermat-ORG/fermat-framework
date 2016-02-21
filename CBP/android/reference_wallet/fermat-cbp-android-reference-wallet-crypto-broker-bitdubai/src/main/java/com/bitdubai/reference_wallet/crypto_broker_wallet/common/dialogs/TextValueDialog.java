@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.view.Window;
 
@@ -17,7 +18,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 /**
  * Created by nelson on 14/01/16.
  */
-public class ClauseTextDialog extends FermatDialog<CryptoBrokerWalletSession, ResourceProviderManager>
+public class TextValueDialog extends FermatDialog<CryptoBrokerWalletSession, ResourceProviderManager>
         implements View.OnClickListener {
 
     private FermatEditText editTextView;
@@ -26,13 +27,14 @@ public class ClauseTextDialog extends FermatDialog<CryptoBrokerWalletSession, Re
     private String editTextValue;
 
     private OnClickAcceptListener acceptBtnListener;
+    private boolean setTextFree;
 
     public interface OnClickAcceptListener {
         void onClick(String editTextValue);
     }
 
 
-    public ClauseTextDialog(Activity activity, CryptoBrokerWalletSession fermatSession, ResourceProviderManager resources) {
+    public TextValueDialog(Activity activity, CryptoBrokerWalletSession fermatSession, ResourceProviderManager resources) {
         super(activity, fermatSession, resources);
 
         hintStringResource = R.string.hint;
@@ -47,6 +49,16 @@ public class ClauseTextDialog extends FermatDialog<CryptoBrokerWalletSession, Re
 
     public void setAcceptBtnListener(OnClickAcceptListener acceptBtnListener) {
         this.acceptBtnListener = acceptBtnListener;
+    }
+
+    public void setTextFreeInputType(boolean setTextFree) {
+        this.setTextFree = setTextFree;
+
+        if (editTextView != null)
+            if (setTextFree)
+                editTextView.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
+            else
+                editTextView.setInputType(InputType.TYPE_CLASS_NUMBER);
     }
 
     public void setEditTextValue(String editTextValue) {
@@ -79,6 +91,10 @@ public class ClauseTextDialog extends FermatDialog<CryptoBrokerWalletSession, Re
         editTextView.setHint(hintStringResource);
         if (editTextValue != null)
             editTextView.setText(editTextValue);
+        if (setTextFree)
+            editTextView.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
+        else
+            editTextView.setInputType(InputType.TYPE_CLASS_NUMBER);
     }
 
     @Override

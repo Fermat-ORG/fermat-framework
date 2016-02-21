@@ -10,7 +10,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -38,7 +42,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NewOpenNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.ClauseDateTimeDialog;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.ClauseTextDialog;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.TextValueDialog;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ExpirationTimeViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.FooterViewHolder;
@@ -143,6 +147,40 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.cbw_open_negotiation_details_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.cbw_action_cancel_negotiation) {
+            TextValueDialog dialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
+            dialog.configure(R.string.cbw_cancel_negotiation, R.string.cbw_reason);
+            dialog.setTextFreeInputType(true);
+            dialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
+                @Override
+                public void onClick(String editTextValue) {
+                    try {
+                        walletManager.cancelNegotiation(negotiationWrapper.getNegotiationInfo(), editTextValue);
+                        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+
+                    } catch (FermatException e) {
+                        Toast.makeText(getActivity(), "Oopss, an error ocurred", Toast.LENGTH_SHORT).show();
+                        if (errorManager != null)
+                            errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                                    UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        else
+                            Log.e(TAG, e.getMessage(), e);
+                    }
+                }
+            });
+            dialog.show();
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void onClauseClicked(Button triggerView, final ClauseInformation clause, int clausePosition) {
         final Map<ClauseType, ClauseInformation> clauses = negotiationWrapper.getNegotiationInfo().getClauses();
         final ClauseType type = clause.getType();
@@ -211,7 +249,6 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onSendButtonClicked() {
-        // TODO
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
     }
 
@@ -234,11 +271,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     }
 
     private void exchangeRateEventAction(final ClauseInformation clause, final Map<ClauseType, ClauseInformation> clauses) {
-        ClauseTextDialog clauseTextDialog;
-        clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+        TextValueDialog clauseTextDialog;
+        clauseTextDialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
         clauseTextDialog.setEditTextValue(clause.getValue());
         clauseTextDialog.configure(R.string.cbw_your_exchange_rate, R.string.amount);
-        clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+        clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
                 final BigDecimal exchangeRate = MathUtils.getBigDecimal(clause);
@@ -257,11 +294,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     }
 
     private void amountToSellEventAction(final ClauseInformation clause, final Map<ClauseType, ClauseInformation> clauses) {
-        ClauseTextDialog clauseTextDialog;
-        clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+        TextValueDialog clauseTextDialog;
+        clauseTextDialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
         clauseTextDialog.setEditTextValue(clause.getValue());
         clauseTextDialog.configure(R.string.cbw_amount_to_sell, R.string.cbw_value);
-        clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+        clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
                 final BigDecimal amountToSell = MathUtils.getBigDecimal(clause);
@@ -280,11 +317,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     }
 
     private void amountToReceiveEventAction(final ClauseInformation clause, final Map<ClauseType, ClauseInformation> clauses) {
-        ClauseTextDialog clauseTextDialog;
-        clauseTextDialog = new ClauseTextDialog(getActivity(), appSession, appResourcesProviderManager);
+        TextValueDialog clauseTextDialog;
+        clauseTextDialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
         clauseTextDialog.setEditTextValue(clause.getValue());
         clauseTextDialog.configure(R.string.cbw_amount_to_receive, R.string.cbw_value);
-        clauseTextDialog.setAcceptBtnListener(new ClauseTextDialog.OnClickAcceptListener() {
+        clauseTextDialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
             @Override
             public void onClick(String newValue) {
                 final BigDecimal amountToReceive = MathUtils.getBigDecimal(clause);
