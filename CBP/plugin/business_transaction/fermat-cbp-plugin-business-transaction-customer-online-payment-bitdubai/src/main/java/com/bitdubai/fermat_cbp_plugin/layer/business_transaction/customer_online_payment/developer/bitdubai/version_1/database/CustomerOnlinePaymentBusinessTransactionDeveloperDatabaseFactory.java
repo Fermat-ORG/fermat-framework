@@ -111,6 +111,7 @@ public class CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory im
         onlinePaymentColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME);
+        onlinePaymentColumns.add(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE);
         /**
          * Table Online Payment addition.
          */
