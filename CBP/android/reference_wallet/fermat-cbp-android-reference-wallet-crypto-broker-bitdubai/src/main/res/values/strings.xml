@@ -196,5 +196,7 @@
     <string name="accept">Accept</string>
     <string name="cbw_your_exchange_rate">Your Exchange Rate</string>
     <string name="cbw_value">value</string>
+    <string name="cbw_cancel_negotiation">Cancel Negotiation</string>
+    <string name="cbw_reason">Reason</string>
     <!--Dialog Help - End-->
 </resources>
