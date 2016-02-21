@@ -388,9 +388,7 @@ We had to design a business model that works fine for several different actors. 
 
 We divided the challenge of creating incentives for everybody in the following way:
 
-#### Computer Networks
-
-##### Fermat Miners
+#### Fermat Miners
 
 We believe there is a need for an application token system that can be mined in order to encourage nodes operators to put their hardware and bandwith to work for the Fermat p2p Network. Lets call these tokens _fermats_.
 
@@ -407,9 +405,7 @@ We chose the same economic parameters than the bitcoin network itself: 21 millio
 
 NOTE: The current implementation of the Fermat p2p Network does not include the mining scheme yet, meaning that no _fermats_ have been mined at present time.
 
-#### Human Networks
-
-##### Developers
+#### Developers
 
 In bitcoin, the focus of the system is in creating an unmutalbe distributed layer across parties that don't trust each other. In that case the issuing of their token, bitcoins is tightly coupled with the mining process, that is the key element to achieve their goal.
 
@@ -435,7 +431,7 @@ With all these options, the Fermat project aims to recruit thousands of develope
 
 The key idea here is the ownership of developed components. This is the core that enables developers to live out of a stream of micro payments flowing from around the globe. The Fermat system even allow them to trade that ownership by selling it to someone else.
 
-##### Investors
+#### Investors
 
 Developing Fermat components is an investment done by individual developers, dev teams, startups or investors betting on the success of the project.
 
@@ -468,7 +464,7 @@ Components are classified at a the master plan level according to their difficul
 4. Fermat Nodes before servicing clients (end user devices) with their connectivity services, will check if these clients are paying the micro-use-license fees. This can be enforced since nodes know who the owners of the components are, and can query the bitcoin blockchain to confirm there are transactions from the client's identities going to components owners. This prevents outside APPs to access the Fermat Network without going through the established channels that include micro-use-licenses, or recompiled versions of Fermat with the micro-use-licenses removed or altered.
 
 
-##### Designers
+#### Designers
 
 -- Explanation needed --
 
