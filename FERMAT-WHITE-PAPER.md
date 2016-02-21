@@ -435,7 +435,11 @@ With all these options, the Fermat project aims to recruit thousands of develope
 
 The key idea here is the ownership of developed components. This is the core that enables developers to live out of a stream of micro payments flowing from around the globe. The Fermat system even allow them to trade that ownership by selling it to someone else.
 
-In order to safeguard the investment developers do while coding Fermat APPs and components, the Fermat Open Source project establishes the following rules and it's management will enforce them through the life of the project.
+##### Investors
+
+Developing Fermat components is an investment done by individual developers, dev teams, startups or investors betting on the success of the project.
+
+In order to safeguard the investment developers do while coding Fermat APPs and components, the Fermat Open Source project establishes the following rules and it's management will enforce them through the lifetime of the project. 
 
 **Component Owner**
 
