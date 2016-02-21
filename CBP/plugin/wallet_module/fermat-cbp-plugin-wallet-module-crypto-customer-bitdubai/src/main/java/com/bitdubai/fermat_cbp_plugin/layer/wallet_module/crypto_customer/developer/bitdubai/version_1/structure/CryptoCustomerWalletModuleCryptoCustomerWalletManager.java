@@ -424,9 +424,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public boolean associateIdentity(ActorIdentity customer, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
-//        CustomerIdentityWalletRelationship relationship = actorExtraDataManager.createNewCustomerIdentityWalletRelationship(customer, walletPublicKey);
-//        return relationship != null;
-        return true;
+        CustomerIdentityWalletRelationship relationship = actorExtraDataManager.createNewCustomerIdentityWalletRelationship(customer, walletPublicKey);
+        return relationship != null;
+//        return true;
     }
 
     @Override
