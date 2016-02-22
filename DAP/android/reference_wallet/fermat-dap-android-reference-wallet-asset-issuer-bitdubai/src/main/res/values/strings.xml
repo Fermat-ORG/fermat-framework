@@ -61,6 +61,8 @@
     <!-- menu items -->
     <string name="dap_issuer_wallet_action_deliver">Deliver Asset</string>
     <string name="dap_issuer_wallet_action_appropriate">Appropriate Asset</string>
+    <string name="dap_issuer_wallet_action_show_statistics">Show Statistics</string>
+    <string name="dap_issuer_wallet_action_show_transactions">Show Transactions</string>
     <!-- -->
 
     <!--Dialog Help - Init-->
