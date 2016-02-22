@@ -257,6 +257,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         super.onCreate(savedInstanceState);
 //System.out.println("**********LISTA:"+chatinfo.get(0).get(0)+" - "+chatinfo.get(0).get(1)+" - "+chatinfo.get(0).get(2));
      //   setContentView(getActivity());
+    //    System.out.println("appsession.getapppublickey="+appSession.getAppPublicKey());
         View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updatevalues();
@@ -305,6 +306,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                             } else {
                                 Toast.makeText(getActivity(), "No Contact now", Toast.LENGTH_SHORT).show();
                             }
+                       //     System.out.println("appsession.getapppublickey="+appSession.getAppPublicKey());
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }

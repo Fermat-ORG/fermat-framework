@@ -8,6 +8,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -16,6 +17,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
 /**
  * ChatFermatAppConnection
  *
@@ -23,6 +28,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
  * @version 1.0
  */
 public class ChatFermatAppConnection extends AppConnections {
+    private ErrorManager errorManager;
 
     public ChatFermatAppConnection(Activity activity) {
         super(activity);
@@ -63,5 +69,26 @@ public class ChatFermatAppConnection extends AppConnections {
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public NotificationPainter getNotificationPainter(String code){
+
+        NotificationPainter notification = null;
+        try
+        {
+            String[] params = code.split("|");
+            String usersend = params[0];
+            String message = params[1];
+            //find last transaction
+            notification = new ChatNotificationPainter("New Message Recive", usersend+":"+message ,"","");
+
+        }
+        catch(Exception e)
+        {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+
+        return notification;
     }
 }

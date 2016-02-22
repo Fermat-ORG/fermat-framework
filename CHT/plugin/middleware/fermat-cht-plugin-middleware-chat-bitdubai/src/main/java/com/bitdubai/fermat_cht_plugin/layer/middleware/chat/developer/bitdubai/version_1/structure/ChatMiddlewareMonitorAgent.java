@@ -458,6 +458,8 @@ public class ChatMiddlewareMonitorAgent implements
                                 Specialist.UNKNOWN_SPECIALIST);
                 UUID incomingTransactionChatId;
                 ChatMetadata incomingChatMetadata;
+                Contact contact;
+                String code;
                 if(pendingTransactionList==null){
                     /**
                      * In this version, when the NS return a null list, I'll ignore this this issue,
@@ -477,7 +479,10 @@ public class ChatMiddlewareMonitorAgent implements
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+      //                  broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+                        contact=getContactFromChatMetadata(incomingChatMetadata);
+                        code=contact.getRemoteName()+"|"+incomingChatMetadata.getMessage();
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW,incomingChatMetadata.getLocalActorPublicKey(),code);
                       //  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
                       //This happen when recive a message check first the message sent from here and then the recive message
                        //when response some wrong with this code down here
@@ -519,6 +524,11 @@ public class ChatMiddlewareMonitorAgent implements
                         "Checking the incoming chat pending transactions",
                         "Cannot get the message from database"
                 );
+            }catch (CantGetContactException e) {
+                    throw new CantGetPendingTransactionException(e,
+                            "Getting message from ChatMetadata",
+                            "Cannot get the contact");
+
             /*}
             catch (CantSendChatMessageNewStatusNotificationException e) {
                 throw new CantGetPendingTransactionException(
@@ -744,6 +754,40 @@ public class ChatMiddlewareMonitorAgent implements
             }
             chat.setContactAssociated(contactList);
             return chat;
+        }
+
+        /**
+         * This method get contact from incoming metadata
+         * @param chatMetadata
+         * @return
+         */
+        private Contact getContactFromChatMetadata(ChatMetadata chatMetadata)
+                throws
+                CantGetContactException{
+            if(chatMetadata==null){
+                throw new CantGetContactException("The chat metadata from network service is null");
+            }
+            try{
+                UUID chatId=chatMetadata.getChatId();
+                Chat chatFromDatabase=chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+                String contactLocalPublicKey=chatFromDatabase.getRemoteActorPublicKey();
+                Contact contact=chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
+
+                return contact;
+            } catch (DatabaseOperationException e) {
+                throw new CantGetContactException(e,
+                        "Getting contact from ChatMetadata",
+                        "Unexpected exception in database");
+            } catch (CantGetContactException e) {
+                throw new CantGetContactException(e,
+                        "Getting contact from ChatMetadata",
+                        "Cannot get the contact");
+            } catch (CantGetChatException e) {
+                throw new CantGetContactException(e,
+                        "Getting contact from ChatMetadata",
+                        "Cannot get the chat");
+            }
+
         }
 
         /**

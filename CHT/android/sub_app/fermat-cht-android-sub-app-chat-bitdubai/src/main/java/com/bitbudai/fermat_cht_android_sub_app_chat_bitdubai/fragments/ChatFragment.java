@@ -59,11 +59,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
 
-
-    ArrayList<String> historialmensaje = new ArrayList<>();
-    SwipeRefreshLayout mSwipeRefreshLayout;
-    Map<String,Contact>others=new HashMap<String,Contact>();
-    Map<String,Contact>me=new HashMap<String,Contact>();
     // Defines a tag for identifying log entries
     String TAG="CHT_ChatFragment";
 
