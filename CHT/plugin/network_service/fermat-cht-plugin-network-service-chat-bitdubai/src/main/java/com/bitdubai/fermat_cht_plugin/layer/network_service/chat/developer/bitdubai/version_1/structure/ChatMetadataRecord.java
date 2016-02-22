@@ -57,6 +57,16 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     private int sentCount;
 
+    private String msgXML;
+
+    public String getMsgXML() {
+        return msgXML;
+    }
+
+    public void setMsgXML(String msgXML) {
+        this.msgXML = msgXML;
+    }
+
     public ChatProtocolState getChatProtocolState() {
         return chatProtocolState;
     }

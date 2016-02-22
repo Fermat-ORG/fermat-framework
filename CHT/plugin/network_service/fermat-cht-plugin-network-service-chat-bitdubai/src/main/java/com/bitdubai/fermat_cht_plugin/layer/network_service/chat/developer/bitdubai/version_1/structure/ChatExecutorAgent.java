@@ -13,8 +13,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.Notificatio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.IncomingNotificationDAO;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.OutgoingNotificationDAO;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatMetadataRecordDAO;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -46,20 +45,17 @@ public final class ChatExecutorAgent extends FermatAgent {
     private final ChatNetworkServicePluginRoot chatNetworkServicePluginRoot;
     private final ErrorManager                              errorManager                             ;
     private final EventManager                              eventManager                             ;
-    private final IncomingNotificationDAO incomingNotificationDAO;
-    private final OutgoingNotificationDAO outgoingNotificationDAO;
+    private final ChatMetadataRecordDAO chatMetadataRecordDAO;
 
     public ChatExecutorAgent(final ChatNetworkServicePluginRoot chatNetworkServicePluginRoot,
                              final ErrorManager errorManager,
                              final EventManager eventManager,
-                             final IncomingNotificationDAO incomingNotificationDAO,
-                             final OutgoingNotificationDAO outgoingNotificationDAO) {
+                             final ChatMetadataRecordDAO chatMetadataRecordDAO) {
 
         this.chatNetworkServicePluginRoot = chatNetworkServicePluginRoot;
         this.errorManager                              = errorManager                             ;
         this.eventManager                              = eventManager                             ;
-        this.incomingNotificationDAO = incomingNotificationDAO;
-        this.outgoingNotificationDAO = outgoingNotificationDAO;
+        this.chatMetadataRecordDAO = chatMetadataRecordDAO;
 
         this.status                                    = AgentStatus.CREATED                      ;
 
@@ -142,20 +138,20 @@ public final class ChatExecutorAgent extends FermatAgent {
 
         try {
 
-            List<ChatMetadataRecord> chatMetadataRecords = outgoingNotificationDAO.listRequestsByChatProtocolState(
+            List<ChatMetadataRecord> chatMetadataRecords = chatMetadataRecordDAO.listRequestsByChatProtocolState(
                     ChatProtocolState.PROCESSING_SEND
             );
 
             for(ChatMetadataRecord chatMetadataRecord : chatMetadataRecords) {
 
                 if (sendMessageToRemote(
-                        EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadataRecord, chatMetadataRecord.getLocalActorType(), chatMetadataRecord.getRemoteActorType()),
+                        chatMetadataRecord.getMsgXML(),
                         chatMetadataRecord.getLocalActorPublicKey(),
                         chatMetadataRecord.getLocalActorType(),
                         chatMetadataRecord.getRemoteActorPublicKey(),
                         chatMetadataRecord.getRemoteActorType()
                 )) {
-                    changeDoneState(chatMetadataRecord.getTransactionId(), ChatProtocolState.DONE);
+                    changeDoneState(chatMetadataRecord.getTransactionId(), ChatProtocolState.SENT);
                 }
 
             }
@@ -252,7 +248,7 @@ public final class ChatExecutorAgent extends FermatAgent {
 
     private void changeDoneState(final UUID transactionID, ChatProtocolState chatProtocolState) throws NotificationNotFoundException, CHTException, CantGetNotificationException {
 
-        outgoingNotificationDAO.changeChatProtocolState(transactionID, chatProtocolState);
+        chatMetadataRecordDAO.changeChatProtocolState(transactionID, chatProtocolState);
     }
 
     private void reportUnexpectedError(final Exception e) {

@@ -62,4 +62,9 @@ public class ChatTransmissionJsonAttNames {
      */
 
     public final static String MESSAGE_ID = "msgid";
+    /**
+     *  Represents the value of MESSAGE_ID
+     */
+
+    public final static String PROTOCOL_STATE = "prstate";
 }
