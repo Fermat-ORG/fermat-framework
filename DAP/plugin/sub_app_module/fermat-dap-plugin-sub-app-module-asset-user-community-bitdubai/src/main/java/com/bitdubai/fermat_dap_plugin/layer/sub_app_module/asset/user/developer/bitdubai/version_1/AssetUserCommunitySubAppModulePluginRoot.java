@@ -62,6 +62,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * TODO explain here the main functionality of the plug-in.
@@ -131,10 +132,10 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             try {
                 BlockchainNetworkType blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
                 for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered(blockchainNetworkType)) {
-
-                    AssetUserActorRecord assetUserActorRecord = (AssetUserActorRecord) actorAssetUser;
-                    assetUserActorRecords.add(assetUserActorRecord);
-
+                    if(Objects.equals(actorAssetUser.getType().getCode(), Actors.DAP_ASSET_USER.getCode())) {
+                        AssetUserActorRecord assetUserActorRecord = (AssetUserActorRecord) actorAssetUser;
+                        assetUserActorRecords.add(assetUserActorRecord);
+                    }
                 }
 
             } catch (CantGetAssetUserActorsException e) {

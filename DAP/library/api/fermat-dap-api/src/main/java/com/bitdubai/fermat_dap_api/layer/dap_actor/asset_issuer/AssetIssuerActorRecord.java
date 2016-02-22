@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer;
 
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
@@ -18,18 +19,20 @@ import java.util.Arrays;
  */
 public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
-    private String publicLinkedIdentity;
-    private String actorPublicKey;
-    private String name;
-    private String description;
-    private long registrationDate;
-    private long lastConnectionDate;
-    private DAPConnectionState dapConnectionState;
-    private Location location;
-    private Double locationLatitude;
-    private Double locationLongitude;
-    private byte[] profileImage;
-    private String extendedPublicKey;
+    private String                  publicLinkedIdentity;
+    private String                  actorPublicKey;
+    private String                  name;
+    private String                  description;
+    private long                    registrationDate;
+    private long                    lastConnectionDate;
+    private DAPConnectionState      dapConnectionState;
+    private Location                location;
+    private Double                  locationLatitude;
+    private Double                  locationLongitude;
+    private byte[]                  profileImage;
+    private String                  extendedPublicKey;
+    private Actors                  actorsType              = Actors.DAP_ASSET_USER;
+
 
     /**
      * Constructor
@@ -78,16 +81,17 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                                   final String description,
                                   final String extendedPublicKey) {
 
-        this.actorPublicKey = actorPublicKey;
-        this.name = name;
+        this.actorPublicKey     = actorPublicKey;
+        this.name               = name;
         this.dapConnectionState = dapConnectionState;
-        this.locationLatitude = locationLatitude;
-        this.locationLongitude = locationLongitude;
-        this.registrationDate = registrationDate;
+        this.locationLatitude   = locationLatitude;
+        this.locationLongitude  = locationLongitude;
+        this.registrationDate   = registrationDate;
         this.lastConnectionDate = lastConnectionDate;
-        this.profileImage = profileImage.clone();
-        this.description = description;
-        this.extendedPublicKey = extendedPublicKey;
+        this.profileImage       = profileImage.clone();
+        this.description        = description;
+        this.extendedPublicKey  = extendedPublicKey;
+        this.actorsType         = actorsType;
     }
 
     private AssetIssuerActorRecord(JsonObject jsonObject, Gson gson) {
@@ -103,6 +107,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         this.locationLatitude = Double.valueOf(jsonObject.get("locationLatitude").getAsString());
         this.locationLongitude = Double.valueOf(jsonObject.get("locationLongitude").getAsString());
         this.profileImage = Base64.decode(jsonObject.get("profileImage").getAsString(), Base64.DEFAULT);
+        this.actorsType = gson.fromJson(jsonObject.get("actorsType").getAsString(), Actors.class);
         this.extendedPublicKey = jsonObject.get("extendedPublicKey").getAsString();
 
     }
@@ -129,6 +134,16 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * The method <code>getType</code> gives us the Enum of the represented a Actor
+     *
+     * @return Enum Actors
+     */
+    @Override
+    public Actors getType() {
+        return actorsType;
     }
 
     public void setName(String name) {
@@ -253,6 +268,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
         jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
+        jsonObject.addProperty("actorsType",            actorsType.toString());
         jsonObject.addProperty("extendedPublicKey",     extendedPublicKey);
         return gson.toJson(jsonObject);
     }
@@ -275,6 +291,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                 ", locationLatitude="       + locationLatitude +
                 ", locationLongitude="      + locationLongitude +
                 ", profileImage="           + profileImageIssuer +
+                ", actorsType="             + actorsType +
                 ", extendedPublicKey='"     + extendedPublicKey + '\'' +
                 '}';
     }

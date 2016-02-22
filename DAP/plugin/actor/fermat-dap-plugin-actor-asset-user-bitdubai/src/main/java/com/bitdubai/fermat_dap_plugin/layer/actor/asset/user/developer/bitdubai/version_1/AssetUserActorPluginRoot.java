@@ -217,6 +217,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         System.currentTimeMillis(),
                         System.currentTimeMillis(),
                         null,
+                        Actors.DAP_ASSET_USER,
                         assetUserActorprofileImage);
 
                 this.assetUserActorDao.createNewAssetUser(record);
@@ -245,6 +246,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         actorAssetUser.getRegistrationDate(),
                         System.currentTimeMillis(),
                         null,
+                        actorAssetUser.getType(),
                         assetUserActorprofileImage);
 
                 this.assetUserActorDao.updateAssetUser(record);

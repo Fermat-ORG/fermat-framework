@@ -941,6 +941,11 @@ public class AssetIssuerWalletDao {
             }
 
             @Override
+            public Actors getType() {
+                return Actors.DAP_ASSET_ISSUER;
+            }
+
+            @Override
             public byte[] getProfileImage() {
                 return new byte[0];
             }
