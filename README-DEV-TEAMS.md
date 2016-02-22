@@ -348,12 +348,18 @@ We are responsible of only one thing, making fermat a successfully project, shar
 
 #### Team Members:
 
-* **Victor Mars [New Team Leader]** <br/>
+* **Victor Mars [Team Leader]** <br/>
 ---
       Email:   marsvicam@gmail.com
       Skype:   yayotron
       Github:  https://github.com/yayotron
-      
+
+* **José Briceño [New Developer]** <br/>
+---
+      Email:   josebricenor@gmail.com@gmail.com
+      Skype:   josebricenor
+      Github:  https://github.com/josebricenor
+
 * **Frank Contreras [New Developer]** <br/>
 ---
       Email:   contrerasfrank@gmail.com

@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.util;
+package com.bitdubai.android_core.app.common.version_1.util.mail;
 
 import android.content.Context;
 import android.util.Log;
