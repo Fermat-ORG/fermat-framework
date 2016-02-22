@@ -14,9 +14,9 @@ import com.bitdubai.fermat_api.CantStartAgentException;
  * */
 public interface ConnectivityAgent {
 
-    public void start() throws CantStartAgentException;
+    void start() throws CantStartAgentException;
 
-    public void stop();
+    void stop();
 
-    public Network getConnectionInfo();
+    Network getConnectionInfo();
 }

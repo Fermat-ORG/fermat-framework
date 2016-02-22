@@ -19,11 +19,11 @@ import java.util.List;
 
  public interface ConnectivityManager {
 
-    public List<Network> getConnections() throws CantGetConnectionsException;
+    List<Network> getConnections() throws CantGetConnectionsException;
 
-    public Network getActiveConnection() throws CantGetActiveConnectionException;
+    Network getActiveConnection() throws CantGetActiveConnectionException;
 
-    public boolean isConnected(ConnectionType redType) throws CantGetIsConnectedException;
+    boolean isConnected(ConnectionType redType) throws CantGetIsConnectedException;
 
-    public void setContext (Object context);
+    void setContext(Object context);
 }
