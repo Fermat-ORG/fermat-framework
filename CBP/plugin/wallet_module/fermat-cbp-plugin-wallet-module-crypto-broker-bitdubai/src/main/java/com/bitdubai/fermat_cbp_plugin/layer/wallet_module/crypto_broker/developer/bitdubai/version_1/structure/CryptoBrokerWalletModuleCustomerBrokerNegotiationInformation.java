@@ -3,12 +3,18 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.develop
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
 
 /**
  * Customer and Broker Negotiation Information
@@ -54,8 +60,30 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implem
         clauses = new HashMap<>();
     }
 
-    public void addClause(ClauseInformation clause) {
-        clauses.put(clause.getType(), clause);
+    public CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(CustomerBrokerSaleNegotiation saleNegotiation, ActorIdentity customer, ActorIdentity broker) {
+
+        customerIdentity = customer;
+        brokerIdentity = broker;
+        status = saleNegotiation.getStatus();
+        note = saleNegotiation.getMemo();
+        lastNegotiationUpdateDate = saleNegotiation.getLastNegotiationUpdateDate();
+        expirationDatetime = saleNegotiation.getNegotiationExpirationDate();
+        negotiationId = saleNegotiation.getNegotiationId();
+        cancelReason = saleNegotiation.getCancelReason();
+
+        summary = new HashMap<>();
+        clauses = new HashMap<>();
+
+        Collection<Clause> saleNegotiationClauses;
+        try {
+            saleNegotiationClauses = saleNegotiation.getClauses();
+        } catch (CantGetListClauseException e) {
+            saleNegotiationClauses = new ArrayList<>();
+        }
+
+        for(Clause clause : saleNegotiationClauses){
+            clauses.put(clause.getType(), new CryptoBrokerWalletModuleClauseInformation(clause));
+        }
     }
 
     public long getNegotiationExpirationDate() {
@@ -91,8 +119,6 @@ public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implem
         summary.put(ClauseType.CUSTOMER_CURRENCY, clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue());
         summary.put(ClauseType.EXCHANGE_RATE, clauses.get(ClauseType.EXCHANGE_RATE).getValue());
         summary.put(ClauseType.BROKER_CURRENCY, clauses.get(ClauseType.BROKER_CURRENCY).getValue());
-        //Yordin: Debido al cambio en la estructura del StartNegotiation propuesta por luis esta clausula puede ser null y en ese caso genera un error
-//        summary.put(ClauseType.BROKER_PAYMENT_METHOD, clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue());
 
         return summary;
     }
