@@ -93,6 +93,8 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                     throw new CantInitializeCustomerBrokerSaleNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
                 }
             }
+
+            new NegotiationSaleTestData(this);
         }
 
         public void createCustomerBrokerSaleNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantCreateCustomerBrokerSaleNegotiationException {
