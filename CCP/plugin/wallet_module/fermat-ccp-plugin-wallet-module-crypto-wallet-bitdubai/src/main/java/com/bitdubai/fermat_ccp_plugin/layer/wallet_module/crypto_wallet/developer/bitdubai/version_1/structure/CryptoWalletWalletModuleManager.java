@@ -868,7 +868,19 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
                 for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
 
                     if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-                        bitcoinWalletTransactionList1.add(bwt);
+                        if (bitcoinWalletTransactionList1.isEmpty()){
+                            bitcoinWalletTransactionList1.add(bwt);
+                        }else {
+                            int count = 0;
+                            for (BitcoinWalletTransaction bwt1 : bitcoinWalletTransactionList1) {
+                                if (bwt1.getActorToPublicKey().equals(bwt.getActorToPublicKey())) {
+                                    count++;
+                                }
+                            }
+                            if (count == 0)
+                                bitcoinWalletTransactionList1.add(bwt);
+
+                        }
                     }
                 }
 

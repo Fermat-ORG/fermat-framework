@@ -1376,7 +1376,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
                 return cryptoTransaction;
         }
 
-        //this should never happen
+
+        //this might happen if the transaction has not been broadcasted yet.
         return null;
     }
 

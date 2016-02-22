@@ -32,6 +32,7 @@ buildscript {
     }
 }
 
+
 task serverJar(type: OneJar) {
     mainClass = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
     archiveName = project.name + '-with-dependencies-' + version + ".jar"
