@@ -166,7 +166,7 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransaction);
             String newTx = assetVaultManager.createBitcoinTransaction(digitalAssetMetadata.getLastTransactionHash(), actorAssetUser.getCryptoAddress());
-            digitalAssetMetadata = digitalAssetTransferVault.updateMetadataTransactionChain(genesisTransaction, newTx, null, cryptoTransaction.getBlockchainNetworkType());
+            digitalAssetMetadata = digitalAssetTransferVault.updateMetadataTransactionChain(genesisTransaction, newTx, null, digitalAssetMetadata.getNetworkType());
             System.out.println("ASSET TRANSFER set debit in asset issuer wallet:" + genesisTransaction);
             cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
             digitalAssetTransferVault.updateWalletBalance(digitalAssetMetadata, cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.RECEPTION, actorAssetUser.getActorPublicKey(), Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_ROLLBACK);
