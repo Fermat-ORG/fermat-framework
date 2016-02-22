@@ -288,7 +288,8 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_OPEN_CONNECTIONLIST("CHTOCONNLT"),
 
 
-    WPD_DESKTOP("WPD"),;
+    WPD_DESKTOP("WPD"),
+    DESKTOP_SETTING_FERMAT_NETWORK("DSFN");
 
     private String code;
 
@@ -745,6 +746,9 @@ public enum Activities implements FermatEnum {
                 return DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY;
             case "DWAUATSUA":
                 return DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY;
+
+            case "DSFN":
+                return DESKTOP_SETTING_FERMAT_NETWORK;
 
             default:
                 throw new InvalidParameterException(
