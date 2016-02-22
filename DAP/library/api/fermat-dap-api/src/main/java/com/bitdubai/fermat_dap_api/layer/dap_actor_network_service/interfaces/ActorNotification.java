@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.AssetNotificationDescriptor;
 
 import java.util.UUID;
@@ -34,4 +35,6 @@ public interface ActorNotification {
     AssetNotificationDescriptor getAssetNotificationDescriptor();
 
     long getSentDate();
+
+    BlockchainNetworkType getBlockchainNetworkType();
 }

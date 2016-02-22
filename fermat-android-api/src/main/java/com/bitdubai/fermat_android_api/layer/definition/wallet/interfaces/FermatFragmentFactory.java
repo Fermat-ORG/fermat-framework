@@ -17,6 +17,6 @@ public interface FermatFragmentFactory <S extends FermatSession,J extends Fermat
      * @param code the reference used to identify the fragment
      * @return the fragment referenced
      */
-    public Fragment getFragment(String code,S walletSession,J WalletSettings,R walletResourcesProviderManager) throws FragmentNotFoundException;
+    Fragment getFragment(String code, S walletSession, J WalletSettings, R walletResourcesProviderManager) throws FragmentNotFoundException;
 
 }

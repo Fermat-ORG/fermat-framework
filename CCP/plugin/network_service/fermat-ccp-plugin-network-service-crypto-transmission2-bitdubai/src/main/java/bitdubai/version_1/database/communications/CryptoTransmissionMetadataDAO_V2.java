@@ -171,10 +171,7 @@ public class CryptoTransmissionMetadataDAO_V2 {
             List<DatabaseTableRecord> records = metadataTable.getRecords();
 
 
-            if (!records.isEmpty())
-                return true;
-            else
-               return false;
+              return !records.isEmpty();
 
         } catch (CantLoadTableToMemoryException exception) {
 

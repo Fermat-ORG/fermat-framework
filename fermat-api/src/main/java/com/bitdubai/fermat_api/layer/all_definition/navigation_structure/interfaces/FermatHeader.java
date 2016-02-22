@@ -8,7 +8,7 @@ import java.io.Serializable;
 public interface FermatHeader extends Serializable {
 
 
-    public String getLabel();
+    String getLabel();
 
 
     boolean hasExpandable();

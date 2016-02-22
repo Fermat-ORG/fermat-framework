@@ -29,8 +29,8 @@ public class NavigationItemMenuViewHolder extends FermatViewHolder {
         label = (TextView) itemView.findViewById(R.id.textView_label);
         icon = (ImageView) itemView.findViewById(R.id.imageView_icon);
         row_container = (LinearLayout) itemView.findViewById(R.id.row_container);
-        badge = (View) itemView.findViewById(R.id.badge);
-        navigation_row_divider = (View) itemView.findViewById(R.id.navigation_row_divider);
+        badge = itemView.findViewById(R.id.badge);
+        navigation_row_divider = itemView.findViewById(R.id.navigation_row_divider);
 
     }
 

@@ -11,39 +11,39 @@ import java.util.UUID;
  */
 public interface CryptoTransmissionMetadata {
 
-    public UUID getTransactionId();
+    UUID getTransactionId();
 
-    public UUID getRequestId();
+    UUID getRequestId();
 
-    public CryptoCurrency getCryptoCurrency();
+    CryptoCurrency getCryptoCurrency();
 
-    public long getCryptoAmount();
+    long getCryptoAmount();
 
-    public String getSenderPublicKey();
+    String getSenderPublicKey();
 
-    public String getDestinationPublicKey();
+    String getDestinationPublicKey();
 
-    public String getAssociatedCryptoTransactionHash();
+    String getAssociatedCryptoTransactionHash();
 
-    public String getPaymentDescription();
+    String getPaymentDescription();
 
-    public CryptoTransmissionMetadataType getCryptoTransmissionMetadataType();
+    CryptoTransmissionMetadataType getCryptoTransmissionMetadataType();
 
-    public void setTypeMetadata(CryptoTransmissionMetadataType cryptoTransmissionMetadataType);
+    void setTypeMetadata(CryptoTransmissionMetadataType cryptoTransmissionMetadataType);
 
-    public CryptoTransmissionProtocolState getCryptoTransmissionProtocolState();
+    CryptoTransmissionProtocolState getCryptoTransmissionProtocolState();
 
-    public void changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState cryptoTransmissionProtocolState);
+    void changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState cryptoTransmissionProtocolState);
 
     void changeMetadataState(CryptoTransmissionMetadataState cryptoTransmissionNotificationStates);
 
     CryptoTransmissionMetadataState getCryptoTransmissionMetadataStates();
 
-    public boolean isPendigToRead();
+    boolean isPendigToRead();
 
-    public void confirmRead();
+    void confirmRead();
 
-    public long getTimestamp();
+    long getTimestamp();
 
     int getSentCount();
 

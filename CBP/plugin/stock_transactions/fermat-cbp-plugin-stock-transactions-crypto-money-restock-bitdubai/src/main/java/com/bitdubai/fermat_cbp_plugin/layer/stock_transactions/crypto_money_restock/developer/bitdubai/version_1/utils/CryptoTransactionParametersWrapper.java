@@ -35,7 +35,7 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
         this.publicKeyPlugin = publicKeyPlugin;
     }
 
-    public CryptoTransactionParametersWrapper(){};
+    public CryptoTransactionParametersWrapper(){}
 
     @Override
     public UUID getTransactionId() {

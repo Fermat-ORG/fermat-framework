@@ -16,7 +16,7 @@ public class CryptoBrokerWalletProviderSettingImpl implements CryptoBrokerWallet
     private String currencyFrom;
     private String currencyTo;
 
-    public CryptoBrokerWalletProviderSettingImpl(){};
+    public CryptoBrokerWalletProviderSettingImpl(){}
 
     @Override
     public UUID getId() {

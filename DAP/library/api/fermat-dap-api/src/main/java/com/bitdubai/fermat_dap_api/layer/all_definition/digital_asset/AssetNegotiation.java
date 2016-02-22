@@ -115,8 +115,7 @@ public class AssetNegotiation implements Serializable {
         if (!this.getAssetToOffer().equals(assetNegotiation.getAssetToOffer())) return false;
         if (this.getAmountPerUnity() != assetNegotiation.getAmountPerUnity()) return false;
         if (this.getTotalAmount() != assetNegotiation.getTotalAmount()) return false;
-        if (this.getQuantityToBuy() != assetNegotiation.getQuantityToBuy()) return false;
-        return true;
+        return this.getQuantityToBuy() == assetNegotiation.getQuantityToBuy();
     }
 
     @Override

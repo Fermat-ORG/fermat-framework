@@ -31,7 +31,7 @@ public class CashMoneyRestockTransactionImpl implements CashMoneyTransaction {
 
     public CashMoneyRestockTransactionImpl(){
 
-    };
+    }
 
     public CashMoneyRestockTransactionImpl(UUID transactionId,
                                            String actorPublicKey,

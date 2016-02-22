@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.i
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPNetworkService;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -34,7 +35,7 @@ public interface AssetUserActorNetworkServiceManager extends FermatManager, DAPN
      * @param actorAssetUserToRegister
      * @throws CantRegisterActorAssetUserException
      */
-    public void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
+    void registerActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
 
     /**
      * Update the ActorAssetUser in the cloud server like online
@@ -42,7 +43,7 @@ public interface AssetUserActorNetworkServiceManager extends FermatManager, DAPN
      * @param actorAssetUserToRegister
      * @throws CantRegisterActorAssetUserException
      */
-    public void updateActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
+    void updateActorAssetUser(ActorAssetUser actorAssetUserToRegister) throws CantRegisterActorAssetUserException;
 
 //    /**
 //     * Request a Crypto Address to the ActorAssetUser
@@ -68,14 +69,14 @@ public interface AssetUserActorNetworkServiceManager extends FermatManager, DAPN
      *
      * @return List<ActorAssetUser>
      */
-    public List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException;
+    List<ActorAssetUser> getListActorAssetUserRegistered() throws CantRequestListActorAssetUserRegisteredException;
 
     /**
      * Get the the ActorAssetUser registered by Public key
      *
      * @return List<ActorAssetUser>
      */
-    public List<ActorAssetUser> getActorAssetUserRegistered(String actorAssetUserPublicKey) throws CantRequestListActorAssetUserRegisteredException;
+    List<ActorAssetUser> getActorAssetUserRegistered(String actorAssetUserPublicKey) throws CantRequestListActorAssetUserRegisteredException;
 
     /**
      * The method <code>askConnectionActorAsset</code> sends a connection request to anothe intra user.
@@ -94,7 +95,8 @@ public interface AssetUserActorNetworkServiceManager extends FermatManager, DAPN
                                  String actorAssetToAddPublicKey,
                                  String actorAssetToAddName,
                                  Actors destinationType,
-                                 byte[] profileImage) throws CantAskConnectionActorAssetException;
+                                 byte[] profileImage,
+                                 BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException;
 
     /**
      * The method <code>acceptConnectionActorAsset</code> send an acceptance message of a connection request.
@@ -136,11 +138,11 @@ public interface AssetUserActorNetworkServiceManager extends FermatManager, DAPN
      *
      * @return List of IntraUserNotification
      */
-    public List<ActorNotification> getPendingNotifications() throws CantGetActorAssetNotificationException;
+    List<ActorNotification> getPendingNotifications() throws CantGetActorAssetNotificationException;
 
     /**
      * The method <coda>confirmActorAssetNotification</coda> confirm the pending notification
      */
-    public void confirmActorAssetNotification(UUID notificationID) throws CantConfirmActorAssetNotificationException;
+    void confirmActorAssetNotification(UUID notificationID) throws CantConfirmActorAssetNotificationException;
 
 }

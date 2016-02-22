@@ -14,13 +14,13 @@ public interface TranslatorIdentity {
      * Get the alias of the represented translator identity
      * @return String Alias
      */
-    public String getAlias();
+    String getAlias();
 
     /**
      * Get the public key of the represented developer
      * @return string pulic key
      */
-    public String getPublicKey();
+    String getPublicKey();
 
     /**
      * Sign a message with translator private key
@@ -28,6 +28,6 @@ public interface TranslatorIdentity {
      * @return string signed message
      * @throws CantSingMessageException
      */
-    public String createMessageSignature(String mensage) throws CantSingMessageException;
+    String createMessageSignature(String mensage) throws CantSingMessageException;
 
 }

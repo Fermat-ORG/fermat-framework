@@ -90,8 +90,8 @@ public class AvailableProjectsFragmentOld extends AbstractFermatFragment impleme
 //
 
                 Object[] o = new Object[2];
-                o[0] = (Object) startWalletNavigationStructure();
-                o[1] = (Object) wallets.get(i);
+                o[0] = startWalletNavigationStructure();
+                o[1] = wallets.get(i);
 
                 //TODO: Como tercer parametro me tenes que pasar el Skin de la wallet que vas a cambiar así lo pinto por pantalla y se va cambiando
 

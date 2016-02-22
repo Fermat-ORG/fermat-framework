@@ -39,7 +39,7 @@ public class FooterViewHolder extends FermatViewHolder implements View.OnClickLi
         this.walletManager = walletManager;
 
         addNoteButton = (CardView) itemView.findViewById(R.id.add_a_note_card_view);
-        negotiationNoteView = (View) itemView.findViewById(R.id.negotiation_note_layout);
+        negotiationNoteView = itemView.findViewById(R.id.negotiation_note_layout);
         negotiationNoteCancelButton =(Button)itemView.findViewById(R.id.cbw_negotiation_note_button_cancel);
         negotiationNoteCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -24,7 +24,7 @@ public class HoldCryptoMoneyTransactionImpl implements CryptoHoldTransaction {
 
     public HoldCryptoMoneyTransactionImpl(){
 
-    };
+    }
 
     @Override
     public CryptoTransactionStatus getStatus() {

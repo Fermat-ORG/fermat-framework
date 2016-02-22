@@ -17,7 +17,7 @@ public interface WalletSettingsManager extends FermatManager {
      * @param walletPublicKey the identifier of the wallet we want to work with
      * @return the settings of the specified wallet
      */
-    public WalletSettings getSettings(String walletPublicKey) throws CantLoadWalletSettings;
+    WalletSettings getSettings(String walletPublicKey) throws CantLoadWalletSettings;
 
 
     /**
@@ -26,7 +26,7 @@ public interface WalletSettingsManager extends FermatManager {
      * @param walletPublicKey the identifier of the wallet we want to work with
      * @return the settings of the specified wallet
      */
-    public void setSettings(String xmlWalletSetting,String walletPublicKey)throws CantSaveWalletSettings;
+    void setSettings(String xmlWalletSetting, String walletPublicKey)throws CantSaveWalletSettings;
 
 
 }

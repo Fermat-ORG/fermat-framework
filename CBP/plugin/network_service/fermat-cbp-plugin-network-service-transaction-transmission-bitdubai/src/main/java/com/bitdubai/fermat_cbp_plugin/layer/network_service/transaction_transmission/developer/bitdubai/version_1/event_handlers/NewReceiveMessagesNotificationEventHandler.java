@@ -35,7 +35,7 @@ public class NewReceiveMessagesNotificationEventHandler implements FermatEventHa
 
             //System.out.println("Transaction Transmission - NewReceiveMessagesNotificationEventHandler - handleNewMessages =" + message.toString());
 
-            ((TransactionTransmissionPluginRoot)transactionTransmissionPluginRoot).handleNewMessages(fermatMessageReceive);
+            transactionTransmissionPluginRoot.handleNewMessages(fermatMessageReceive);
 
         }
     }

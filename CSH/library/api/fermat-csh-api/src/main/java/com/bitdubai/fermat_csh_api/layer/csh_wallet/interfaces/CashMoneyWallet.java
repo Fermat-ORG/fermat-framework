@@ -56,14 +56,14 @@ public interface CashMoneyWallet {
      *
      * @return A List of CashMoneyWalletTransaction objects
      */
-    public List<CashMoneyWalletTransaction> getTransactions(List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException;
+    List<CashMoneyWalletTransaction> getTransactions(List<TransactionType> transactionTypes, List<BalanceType> balanceTypes, int max, int offset) throws CantGetCashMoneyWalletTransactionsException;
 
     /**
      * Returns a CashMoneyWalletTransactions filtered by its ID
      *
      * @return A CashMoneyWalletTransaction object
      */
-    public CashMoneyWalletTransaction getTransaction(UUID transactionId) throws CantGetCashMoneyWalletTransactionsException;
+    CashMoneyWalletTransaction getTransaction(UUID transactionId) throws CantGetCashMoneyWalletTransactionsException;
 
     /**
      * Returns the funds held on this Wallet by a specific Actor

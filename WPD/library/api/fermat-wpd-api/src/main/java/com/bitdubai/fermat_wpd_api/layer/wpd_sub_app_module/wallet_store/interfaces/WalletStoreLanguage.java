@@ -8,5 +8,5 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interf
  */
 public interface WalletStoreLanguage extends Language{
 
-    public InstallationStatus getInstallationStatus();
+    InstallationStatus getInstallationStatus();
 }

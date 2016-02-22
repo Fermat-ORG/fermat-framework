@@ -96,8 +96,8 @@ public class AcceptDialog extends FermatDialog<AssetUserCommunitySubAppSession, 
 //
                     getSession().getModuleManager().acceptActorAssetUser(
 //                            identity.getPublicKey(),
-                            actor.getName(),
-                            actor.getActorPublicKey()
+                            identity.getPublicKey(),//USER LOCAL
+                            actor.getActorPublicKey()//USER OUTSIDE
 //                            actor.getProfileImage()
                     );
                     getSession().setData(SessionConstantsAssetUserCommunity.IC_ACTION_USER_NOTIFICATIONS_ACCEPTED,Boolean.TRUE);

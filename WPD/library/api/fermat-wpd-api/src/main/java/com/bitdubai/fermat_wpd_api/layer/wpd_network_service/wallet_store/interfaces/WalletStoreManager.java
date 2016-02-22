@@ -31,34 +31,34 @@ import java.util.UUID;
  * Created by loui on 18/02/15.
  */
 public interface WalletStoreManager extends FermatManager {
-    public void publishWallet(CatalogItem catalogItem) throws CantPublishWalletInCatalogException;
+    void publishWallet(CatalogItem catalogItem) throws CantPublishWalletInCatalogException;
 
-    public void publishSkin(Skin skin) throws CantPublishSkinInCatalogException;
+    void publishSkin(Skin skin) throws CantPublishSkinInCatalogException;
 
-    public void publishLanguage(Language language) throws CantPublishLanguageInCatalogException;
+    void publishLanguage(Language language) throws CantPublishLanguageInCatalogException;
 
-    public void publishDesigner(Designer designer) throws CantPublishDesignerInCatalogException;
+    void publishDesigner(Designer designer) throws CantPublishDesignerInCatalogException;
 
-    public void publishDeveloper(Developer developer) throws CantPublishDeveloperInCatalogException;
+    void publishDeveloper(Developer developer) throws CantPublishDeveloperInCatalogException;
 
-    public void publishTranslator(Translator translator) throws CantPublishTranslatorInCatalogException, CantPublishLanguageInCatalogException;
+    void publishTranslator(Translator translator) throws CantPublishTranslatorInCatalogException, CantPublishLanguageInCatalogException;
 
 
-    public WalletCatalog getWalletCatalogue() throws CantGetWalletsCatalogException;
+    WalletCatalog getWalletCatalogue() throws CantGetWalletsCatalogException;
 
-    public CatalogItem getCatalogItem(UUID walletId) throws CantGetCatalogItemException;
+    CatalogItem getCatalogItem(UUID walletId) throws CantGetCatalogItemException;
 
-    public DetailedCatalogItem getDetailedCatalogItem(UUID walletId) throws CantGetCatalogItemException;
+    DetailedCatalogItem getDetailedCatalogItem(UUID walletId) throws CantGetCatalogItemException;
 
-    public Language getLanguage(UUID walletId) throws CantGetWalletLanguageException;
+    Language getLanguage(UUID walletId) throws CantGetWalletLanguageException;
 
-    public Skin getSkin(UUID walletId) throws CantGetSkinException;
+    Skin getSkin(UUID walletId) throws CantGetSkinException;
 
-    public DeveloperIdentity getDeveloper(UUID developerId) throws CantGetDeveloperException;
+    DeveloperIdentity getDeveloper(UUID developerId) throws CantGetDeveloperException;
 
-    public DesignerIdentity getDesigner(UUID designerId) throws CantGetDesignerException;
+    DesignerIdentity getDesigner(UUID designerId) throws CantGetDesignerException;
 
-    public TranslatorIdentity getTranslator(UUID translatorId) throws CantGetTranslatorException;
+    TranslatorIdentity getTranslator(UUID translatorId) throws CantGetTranslatorException;
 
 
     /**
@@ -66,49 +66,49 @@ public interface WalletStoreManager extends FermatManager {
      *
      * @return CatalogItem
      */
-    public CatalogItem constructEmptyCatalogItem();
+    CatalogItem constructEmptyCatalogItem();
 
-    public Language constructLanguage(UUID languageId,
-                                      Languages nameLanguage,
-                                      String languageLabel,
-                                      UUID walletId, //Todo: Refactor a String para que acepte PublicKey
-                                      Version version,
-                                      Version initialWalletVersion,
-                                      Version finalWalletVersion,
-                                      List<URL> videoPreviews,
-                                      long languageSizeInBytes,
-                                      TranslatorIdentity translator,
-                                      boolean isDefault);
+    Language constructLanguage(UUID languageId,
+                               Languages nameLanguage,
+                               String languageLabel,
+                               UUID walletId, //Todo: Refactor a String para que acepte PublicKey
+                               Version version,
+                               Version initialWalletVersion,
+                               Version finalWalletVersion,
+                               List<URL> videoPreviews,
+                               long languageSizeInBytes,
+                               TranslatorIdentity translator,
+                               boolean isDefault);
 
-    public Skin constructSkin(UUID skinId,
-                              String nameSkin,
-                              UUID walletId, //Todo: Refactor a String para que acepte PublicKey
-                              ScreenSize screenSize,
-                              Version version,
-                              Version initialWalletVersion,
-                              Version finalWalletVersion,
-                              byte[] presentationImage,
-                              List<byte[]> previewImageList,
-                              boolean hasVideoPreview,
-                              List<URL> videoPreviews,
-                              long skinSizeInBytes,
-                              com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer,
-                              boolean isDefault);
+    Skin constructSkin(UUID skinId,
+                       String nameSkin,
+                       UUID walletId, //Todo: Refactor a String para que acepte PublicKey
+                       ScreenSize screenSize,
+                       Version version,
+                       Version initialWalletVersion,
+                       Version finalWalletVersion,
+                       byte[] presentationImage,
+                       List<byte[]> previewImageList,
+                       boolean hasVideoPreview,
+                       List<URL> videoPreviews,
+                       long skinSizeInBytes,
+                       com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity designer,
+                       boolean isDefault);
 
-    public CatalogItem constructCatalogItem(UUID walletId, //Todo: Refactor a String para que acepte PublicKey
-                                            int defaultSizeInBytes,
-                                            String name, String description,
-                                            WalletCategory walletCategory,
-                                            byte[] icon,
-                                            Version version,
-                                            Version platformInitialVersion,
-                                            Version platformFinalVersion,
-                                            List<Skin> skins,
-                                            Skin skin,
-                                            Language language,
-                                            DeveloperIdentity developer,
-                                            List<Language> languages,
-                                            URL publisherWebsiteUrl) throws CantGetWalletIconException;
+    CatalogItem constructCatalogItem(UUID walletId, //Todo: Refactor a String para que acepte PublicKey
+                                     int defaultSizeInBytes,
+                                     String name, String description,
+                                     WalletCategory walletCategory,
+                                     byte[] icon,
+                                     Version version,
+                                     Version platformInitialVersion,
+                                     Version platformFinalVersion,
+                                     List<Skin> skins,
+                                     Skin skin,
+                                     Language language,
+                                     DeveloperIdentity developer,
+                                     List<Language> languages,
+                                     URL publisherWebsiteUrl) throws CantGetWalletIconException;
 
 }
 

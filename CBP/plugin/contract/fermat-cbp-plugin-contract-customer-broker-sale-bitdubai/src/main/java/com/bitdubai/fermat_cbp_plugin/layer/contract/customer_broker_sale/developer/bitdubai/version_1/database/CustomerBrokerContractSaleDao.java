@@ -270,7 +270,7 @@ public class CustomerBrokerContractSaleDao {
             DatabaseTable ContractClauseSaleTable = this.database.getTable(CustomerBrokerSaleContractDatabaseConstants.CLAUSE_CONTRACT_TABLE_NAME);
             ContractClauseSaleTable.addStringFilter(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
             for(ContractClause clause : clauses){
-                DatabaseTableRecord recordToInsert = ContractClauseSaleTable.getEmptyRecord();;
+                DatabaseTableRecord recordToInsert = ContractClauseSaleTable.getEmptyRecord();
                 loadRecordAsNewClause(
                         recordToInsert,
                         clause.getClauseId(),

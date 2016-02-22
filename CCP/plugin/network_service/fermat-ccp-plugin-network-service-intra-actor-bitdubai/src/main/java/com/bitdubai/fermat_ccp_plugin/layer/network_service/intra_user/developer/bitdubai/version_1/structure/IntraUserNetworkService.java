@@ -29,7 +29,7 @@ public class IntraUserNetworkService  implements IntraUserInformation {
 
     @Override
     public byte[] getProfileImage() {
-        return (profileImage!=null) ? (byte[] )this.profileImage.clone() : null;
+        return (profileImage!=null) ? this.profileImage.clone() : null;
     }
 
     @Override
