@@ -258,10 +258,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          * I compare both lists.
          */
         newAddresses.removeAll(watchedAddresses);
-        if (newAddresses.isEmpty())
-            return false;
-        else
-            return true;
+        return !newAddresses.isEmpty();
     }
 
     /**
@@ -343,10 +340,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         /**
          * If there are still keys, then we have new ones.
          */
-        if (tempKeyList.size() > 0)
-            return true;
-        else
-            return false;
+        return tempKeyList.size() > 0;
     }
 
     /**
@@ -356,10 +350,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return
      */
     private boolean isAgentRunning(BlockchainNetworkType blockchainNetworkType) {
-        if (runningAgents.get(blockchainNetworkType) == null)
-            return false;
-        else
-            return true;
+        return runningAgents.get(blockchainNetworkType) != null;
     }
 
     /**
