@@ -488,6 +488,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 redeemPointActorDao.newExtendedPublicKeyRegistered(getActorAssetRedeemPoint().getActorPublicKey(), dapActorSender.getActorPublicKey());
                 assetRedeemPointActorNetworkServiceManager.updateActorAssetRedeemPoint(redeemPointActorDao.getActorAssetRedeemPoint());
                 actorAssetIssuerManager.updateExtendedPublicKey(dapActorSender.getActorPublicKey(), extendedPublicKey.toString());
+                actorAssetIssuerManager.updateIssuerRegisteredDAPConnectionState(dapActorSender.getActorPublicKey(), DAPConnectionState.CONNECTED_ONLINE);
             } catch (CantInitializeWatchOnlyVaultException | CantInsertRecordException | CantGetAssetRedeemPointActorsException | CantUpdateActorAssetIssuerException | CantRegisterActorAssetRedeemPointException e) {
                 //handle this.
                 e.printStackTrace();
