@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -96,4 +98,12 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<Fermat
 
     //ASSET SELL METHODS
     void startSell(ActorAssetUser userToDeliver, long amountPerUnity, long totalAmount, int quantityToBuy, String assetToOffer) throws CantStartAssetSellTransactionException;
+
+    /**
+     * Gets the list of pending asset negotiations
+     * @param blockchainNetworkType the network type of the negotiations
+     * @return a list of pending asset negotiations
+     * @throws CantGetAssetNegotiationsException
+     */
+    List<AssetNegotiation> getPendingAssetNegotiations (BlockchainNetworkType blockchainNetworkType) throws CantGetAssetNegotiationsException;
 }
