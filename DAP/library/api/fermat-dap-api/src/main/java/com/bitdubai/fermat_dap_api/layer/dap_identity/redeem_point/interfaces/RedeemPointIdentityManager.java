@@ -43,6 +43,11 @@ public interface RedeemPointIdentityManager extends ModuleManager<FermatSettings
     RedeemPointIdentity createNewRedeemPoint(String alias,
                                              byte[] profileImage) throws CantCreateNewRedeemPointException;
 
+
+    RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,
+                                             String contactInformation, String countryName, String provinceName, String cityName,
+                                             String postalCode, String streetName, String houseNumber) throws CantCreateNewRedeemPointException;
+
     /**
      * The method <code>updateIdentityAssetIssuer</code> change a identity information data
      *
@@ -51,7 +56,9 @@ public interface RedeemPointIdentityManager extends ModuleManager<FermatSettings
      * @param profileImage
      * @throws CantUpdateIdentityRedeemPointException
      */
-    void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityRedeemPointException;
+    void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage,
+                                   String contactInformation, String countryName, String provinceName, String cityName,
+                                   String postalCode, String streetName, String houseNumber) throws CantUpdateIdentityRedeemPointException;
 
     /**
      * The method <code>hasAssetUserIdentity</code> returns if has a intra user identity created
@@ -62,4 +69,7 @@ public interface RedeemPointIdentityManager extends ModuleManager<FermatSettings
     boolean hasRedeemPointIdentity() throws CantListAssetRedeemPointException;
 
 
+    void createIdentity(String name, byte[] profile_img,
+                        String contactInformation, String countryName, String provinceName, String cityName,
+                        String postalCode, String streetName, String houseNumber) throws Exception;
 }
