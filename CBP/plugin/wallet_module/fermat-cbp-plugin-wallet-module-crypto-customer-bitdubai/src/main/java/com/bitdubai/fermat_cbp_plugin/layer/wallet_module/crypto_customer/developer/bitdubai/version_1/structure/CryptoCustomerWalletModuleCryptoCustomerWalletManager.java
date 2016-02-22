@@ -545,6 +545,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             customerBrokerPurchaseNegotiation.setNegotiationExpirationDate(time.getTime());
             customerBrokerPurchaseNegotiation.setLastNegotiationUpdateDate(negotiation.getNegotiationExpirationDate());
             customerBrokerPurchaseNegotiation.setMemo(negotiation.getMemo());
+            customerBrokerPurchaseNegotiation.setCancelReason(reason);
 
             customerBrokerUpdateManager.cancelNegotiation(customerBrokerPurchaseNegotiation);
 
