@@ -202,6 +202,7 @@ public class CreateCryptoCustomerIdentityFragment extends AbstractFermatFragment
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
+                        Toast.makeText(getActivity(), "Crypto Customer Identity Created.", Toast.LENGTH_LONG).show();
                         new Thread() {
                             @Override
                             public void run() {
