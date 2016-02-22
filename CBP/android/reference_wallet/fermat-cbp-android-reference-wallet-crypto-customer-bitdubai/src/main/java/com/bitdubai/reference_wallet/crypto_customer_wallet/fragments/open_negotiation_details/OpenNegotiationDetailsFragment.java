@@ -223,19 +223,28 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     ---------------------------------------------------------------------------------------------------*/
     @Override
     public void onConfirmCLicked(final ClauseInformation clause){
+        if (clause.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) && bankAccountList.size() == 0){
+            Toast.makeText(getActivity(), "Not Confirmated. The Bank Account List is Empty. Add Your Bank Account in the Settings Wallet.", Toast.LENGTH_LONG).show();
+        }else {
+            if (clause.getType().equals(ClauseType.CUSTOMER_PLACE_TO_DELIVER) && locationList.size() == 0) {
+                Toast.makeText(getActivity(), "Not Confirmated. The Locations List is Empty. Add Your Locations in the Settings Wallet.", Toast.LENGTH_LONG).show();
+            } else {
 
-        if(clausesTemp.get(clause.getType()) != null) {
+                if (clausesTemp.get(clause.getType()) != null) {
 
-            if (clausesTemp.get(clause.getType()).getValue().equals(clause.getValue()))
-                putClause(clause, ClauseStatus.ACCEPTED);
-            else
-                putClause(clause, ClauseStatus.CHANGED);
 
-        }else{
-            putClause(clause, ClauseStatus.ACCEPTED);
+                    if (clausesTemp.get(clause.getType()).getValue().equals(clause.getValue()))
+                        putClause(clause, ClauseStatus.ACCEPTED);
+                    else
+                        putClause(clause, ClauseStatus.CHANGED);
+
+                } else {
+                    putClause(clause, ClauseStatus.ACCEPTED);
+                }
+
+                adapter.changeDataSet(negotiationInfo);
+            }
         }
-
-        adapter.changeDataSet(negotiationInfo);
     }
 
     @Override
