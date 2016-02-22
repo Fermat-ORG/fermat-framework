@@ -166,6 +166,7 @@ public class ChatAdapterView extends LinearLayout {
                     msg.setId(chatManager.getMessageByChatId(chatid).get(i).getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else msg.setMe(false);
+                    msg.setStatus("Flechas");
                     msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatid).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString()
                     msg.setUserId(chatManager.getMessageByChatId(chatid).get(i).getContactId());
                     msg.setMessage(message);
@@ -201,7 +202,7 @@ public class ChatAdapterView extends LinearLayout {
         if (rightName != null) {
             meLabel.setText(rightName);
         } else {
-            meLabel.setText("Yo");
+            meLabel.setText("");
         }
 
         if (leftName != null ) {

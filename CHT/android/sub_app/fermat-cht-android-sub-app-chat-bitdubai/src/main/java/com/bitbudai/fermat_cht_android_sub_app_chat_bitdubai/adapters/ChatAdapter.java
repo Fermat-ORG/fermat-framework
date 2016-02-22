@@ -79,7 +79,8 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
         boolean myMsg = data.getIsme() ;//test to simulate whether it me or other sender
         setAlignment(holder, myMsg);
         holder.txtMessage.setText(data.getMessage());
-        holder.txtInfo.setText(data.getDate());
+        String base=data.getStatus() + data.getDate();
+        holder.txtInfo.setText(base);
 
 //        lblTitulo = (FermatTextView) convertView.findViewById(R.id.txtInfo);
 //        lblTitulo.setText(data.getMessage());
