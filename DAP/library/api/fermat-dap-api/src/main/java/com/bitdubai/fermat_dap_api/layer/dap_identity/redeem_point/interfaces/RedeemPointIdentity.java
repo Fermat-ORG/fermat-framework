@@ -25,4 +25,18 @@ public interface RedeemPointIdentity extends ActiveActorIdentityInformation {
      * @throws CantSingMessageException
      */
     String createMessageSignature(String message) ;
+
+    String getContactInformation();
+
+    String getCountryName();
+
+    String getProvinceName();
+
+    String getCityName();
+
+    String getPostalCode();
+
+    String getStreetName();
+
+    String getHouseNumber();
 }
