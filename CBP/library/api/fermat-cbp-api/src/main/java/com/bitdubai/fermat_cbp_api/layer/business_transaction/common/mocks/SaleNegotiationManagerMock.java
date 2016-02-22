@@ -76,8 +76,8 @@ public class SaleNegotiationManagerMock implements CustomerBrokerSaleNegotiation
 
     @Override
     public CustomerBrokerSaleNegotiation getNegotiationsByNegotiationId(UUID negotiationId) throws CantGetListSaleNegotiationsException {
-        //return new SaleNegotiationOfflineMock();
-        return new SaleNegotiationOnlineMock();
+        return new SaleNegotiationOfflineMock();
+        //return new SaleNegotiationOnlineMock();
     }
 
     @Override

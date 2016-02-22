@@ -157,6 +157,10 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
             try{
                 return Long.valueOf(stringValue);
             }catch (Exception exception){
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CUSTOMER_ONLINE_PAYMENT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        exception);
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
                         FermatException.wrapException(exception),
                         "Parsing String object to long",
@@ -192,37 +196,67 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
                     walletPublicKey,
                     cryptoAmount);
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "Cannot get the CustomerBrokerContractPurchase");
         } catch (CantInsertRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "Cannot insert a database record.");
         } catch (CantGetCryptoAddressException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "Cannot get the Broker Crypto Address");
         } catch (CantGetListPurchaseNegotiationsException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "Cannot get the CustomerBrokerPurchaseNegotiation list");
         } catch (CantGetCryptoAmountException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "Cannot get the Crypto Amount");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "An argument is null");
-        }catch (Exception exception){
-            throw new CantSendPaymentException(exception,"Sending online payment","Unexpected error");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantSendPaymentException(e,
+                    "Sending online payment",
+                    "Unexpected error");
         }
 
     }
@@ -242,7 +276,13 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
         }catch (Exception exception){
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"","Unexpected result");
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected Result",
+                    "Check the cause");
         }
     }
 

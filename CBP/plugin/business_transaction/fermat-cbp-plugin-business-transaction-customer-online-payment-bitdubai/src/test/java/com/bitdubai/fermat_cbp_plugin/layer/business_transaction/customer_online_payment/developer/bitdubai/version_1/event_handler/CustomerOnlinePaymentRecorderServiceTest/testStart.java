@@ -71,5 +71,4 @@ public class testStart {
         customerOnlinePaymentRecorderService.stop();
         assertEquals(customerOnlinePaymentRecorderService.getStatus(), ServiceStatus.STOPPED);
     }
-
 }

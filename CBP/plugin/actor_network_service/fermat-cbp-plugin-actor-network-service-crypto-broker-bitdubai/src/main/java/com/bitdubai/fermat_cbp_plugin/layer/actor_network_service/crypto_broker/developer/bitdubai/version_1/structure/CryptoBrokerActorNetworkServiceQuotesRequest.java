@@ -3,11 +3,14 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraDataInfo;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraDataInfoTemp;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.NetworkServiceMessage;
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -18,16 +21,16 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 06/02/2016.
  */
-public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkServiceMessage implements CryptoBrokerExtraData<CryptoBrokerQuote> {
+public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkServiceMessage implements CryptoBrokerExtraDataInfoTemp {
 
     private final UUID                    requestId            ;
     private final String                  requesterPublicKey   ;
     private final Actors                  requesterActorType   ;
     private final String                  cryptoBrokerPublicKey;
     private final long                    updateTime           ;
-    private final ArrayList<CryptoBrokerQuote> quotes               ;
     private final RequestType             type                 ;
     private final ProtocolState           state                ;
+    private final String                  quotes               ;
 
     public CryptoBrokerActorNetworkServiceQuotesRequest(final UUID                    requestId            ,
                                                         final String                  requesterPublicKey   ,
@@ -40,12 +43,17 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
 
         super(MessageTypes.QUOTES_REQUEST);
 
+        String xquotes = "";
+        for(CryptoBrokerQuote quo : quotes){
+            xquotes += quo.getMerchandise().getCode()+":"+quo.getPaymentCurrency().getCode()+":"+quo.getPrice()+";";
+        }
+
         this.requestId             = requestId            ;
         this.requesterPublicKey    = requesterPublicKey   ;
         this.requesterActorType    = requesterActorType   ;
         this.cryptoBrokerPublicKey = cryptoBrokerPublicKey;
         this.updateTime            = updateTime           ;
-        this.quotes                = quotes               ;
+        this.quotes                = xquotes              ;
         this.type                  = type                 ;
         this.state                 = state                ;
     }
@@ -59,7 +67,7 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
 
     public static CryptoBrokerActorNetworkServiceQuotesRequest fromJson(String jsonMessage) {
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().create();
         return gson.fromJson(jsonMessage, CryptoBrokerActorNetworkServiceQuotesRequest.class);
     }
 
@@ -89,7 +97,7 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
     }
 
     @Override
-    public ArrayList<CryptoBrokerQuote> listInformation() {
+    public String listInformation() {
         return quotes;
     }
 
