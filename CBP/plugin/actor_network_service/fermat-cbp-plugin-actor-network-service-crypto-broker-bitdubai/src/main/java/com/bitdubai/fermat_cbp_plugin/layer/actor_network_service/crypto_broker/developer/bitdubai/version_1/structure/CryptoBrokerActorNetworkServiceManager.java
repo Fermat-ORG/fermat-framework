@@ -63,6 +63,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     private final CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao;
     private final ErrorManager                   errorManager                  ;
     private final PluginVersionReference         pluginVersionReference        ;
+    private final QuotesHelpers helper;
 
 
     private PlatformComponentProfile platformComponentProfile;
@@ -76,6 +77,8 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
         this.cryptoBrokerActorNetworkServiceDao = cryptoBrokerActorNetworkServiceDao;
         this.errorManager                   = errorManager                  ;
         this.pluginVersionReference         = pluginVersionReference        ;
+
+        helper = new QuotesHelpers(errorManager, pluginVersionReference);
     }
 
     private ConcurrentHashMap<String, CryptoBrokerExposingData> cryptoBrokersToExpose;
@@ -356,17 +359,17 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
 
     @Override
-    public CryptoBrokerExtraDataInfo requestQuotes(final String requesterPublicKey   ,
-                                                                  final Actors requesterActorType   ,
-                                                                  final String cryptoBrokerPublicKey) throws CantRequestQuotesException {
+    public CryptoBrokerExtraDataInfo requestQuotes(
+            final String requesterPublicKey,
+            final Actors requesterActorType,
+            final String cryptoBrokerPublicKey) throws CantRequestQuotesException {
 
         try {
 
             final UUID newId = UUID.randomUUID();
 
-            final ProtocolState           state  = ProtocolState          .PROCESSING_SEND;
-            final RequestType             type   = RequestType            .SENT           ;
-
+            final ProtocolState state = ProtocolState.PROCESSING_SEND;
+            final RequestType   type  = RequestType.SENT;
 
             CryptoBrokerActorNetworkServiceQuotesRequest temp = (CryptoBrokerActorNetworkServiceQuotesRequest) cryptoBrokerActorNetworkServiceDao.createQuotesRequest(
                     newId                ,
@@ -377,41 +380,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     type
             );
 
-            List<CryptoBrokerQuote> quotes = new ArrayList<>();
-            if(temp.listInformation() != null && !temp.listInformation().equals("")) {
-                String[] quos = temp.listInformation().split(";");
-                for (int i = 0; i < quos.length; i++) {
-                    String[] quo = quos[i].split(":");
-                    Currency mer = null;
-                    Currency pay = null;
-                    Float pre = 0f;
-                    if(quo.length == 3) {
-                        try {
-                            mer = CryptoCurrency.getByCode(quo[0]);
-                        } catch (InvalidParameterException e) {
-                            try {
-                                mer = FiatCurrency.getByCode(quo[0]);
-                            } catch (InvalidParameterException e2) {
-                                errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                                throw new CantHandleNewMessagesException(e2, "", "Error invalid parameter.");
-                            }
-                        }
-                        try {
-                            pay = CryptoCurrency.getByCode(quo[1]);
-                        } catch (InvalidParameterException e) {
-                            try {
-                                pay = FiatCurrency.getByCode(quo[1]);
-                            } catch (InvalidParameterException e2) {
-                                errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                                throw new CantHandleNewMessagesException(e2, "", "Error invalid parameter.");
-                            }
-                        }
-                        pre = Float.parseFloat(quo[2]);
-                    }
-                    CryptoBrokerQuote q = new CryptoBrokerQuote(mer, pay, pre);
-                    quotes.add(q);
-                }
-            }
+            List<CryptoBrokerQuote> quotes = helper.getListQuotesForString(temp.listInformation());
 
             CryptoBrokerExtraDataInfo info = new CryptoBrokerActorNetworkServiceQuotesRequestTemp(
                     temp.getRequestId(),
@@ -449,42 +418,8 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
             if(!temp.isEmpty()) {
                 for (CryptoBrokerExtraDataInfoTemp t : temp) {
                     CryptoBrokerActorNetworkServiceQuotesRequest r = (CryptoBrokerActorNetworkServiceQuotesRequest) t;
-                    List<CryptoBrokerQuote> quotes = new ArrayList<>();
-                    if(t.listInformation() != null && !t.listInformation().equals("")) {
-                        String[] quos = t.listInformation().split(";");
-                        for (int i = 0; i < quos.length; i++) {
-                            String[] quo = quos[i].split(":");
-                            Currency mer = null;
-                            Currency pay = null;
-                            Float pre = 0f;
-                            if(quo.length == 3) {
-                                try {
-                                    mer = CryptoCurrency.getByCode(quo[0]);
-                                } catch (InvalidParameterException e) {
-                                    try {
-                                        mer = FiatCurrency.getByCode(quo[0]);
-                                    } catch (InvalidParameterException e2) {
-                                        errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                                        throw new CantHandleNewMessagesException(e2, "", "Error invalid parameter.");
-                                    }
-                                }
-                                try {
-                                    pay = CryptoCurrency.getByCode(quo[1]);
-                                } catch (InvalidParameterException e) {
-                                    try {
-                                        pay = FiatCurrency.getByCode(quo[1]);
-                                    } catch (InvalidParameterException e2) {
-                                        errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                                        throw new CantHandleNewMessagesException(e2, "", "Error invalid parameter.");
-                                    }
-                                }
-                                pre = Float.parseFloat(quo[2]);
-                            }
 
-                            CryptoBrokerQuote q = new CryptoBrokerQuote(mer, pay, pre);
-                            quotes.add(q);
-                        }
-                    }
+                    List<CryptoBrokerQuote> quotes = helper.getListQuotesForString(t.listInformation());
 
                     CryptoBrokerExtraDataInfo info = new CryptoBrokerActorNetworkServiceQuotesRequestTemp(
                             r.getRequestId(),
@@ -498,6 +433,10 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
                     );
 
                     res.add(info);
+
+                    if(requestType == RequestType.SENT){
+                        cryptoBrokerActorNetworkServiceDao.changeProtocolStateQuote(r.getRequestId(), ProtocolState.DONE);
+                    }
                 }
             }
 

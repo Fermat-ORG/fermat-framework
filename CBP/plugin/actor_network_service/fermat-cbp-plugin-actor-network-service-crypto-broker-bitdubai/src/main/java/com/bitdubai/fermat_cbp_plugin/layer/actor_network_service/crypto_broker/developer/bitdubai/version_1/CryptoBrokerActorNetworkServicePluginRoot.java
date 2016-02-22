@@ -38,6 +38,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceManager;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceQuotesRequest;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerExecutorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.QuotesHelpers;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -63,6 +64,8 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     private CryptoBrokerExecutorAgent cryptoBrokerExecutorAgent;
 
     private CryptoBrokerActorNetworkServiceDao cryptoBrokerActorNetworkServiceDao;
+
+    private QuotesHelpers helper;
 
     /**
      * Constructor of the Network Service.
@@ -97,6 +100,8 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     errorManager                       ,
                     getPluginVersionReference()
             );
+
+            helper = new QuotesHelpers(errorManager, getPluginVersionReference());
 
             initializeAgent();
 
@@ -259,49 +264,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
             CryptoBrokerActorNetworkServiceQuotesRequest quotesRequestInDatabase = cryptoBrokerActorNetworkServiceDao.getQuotesRequest(quotesRequestReceived.getRequestId());
 
-            List<CryptoBrokerQuote> quotes = new ArrayList<>();
-            if(!quotesRequestReceived.listInformation().equals("")) {
-                String[] quos = quotesRequestReceived.listInformation().split(";");
-                for (int i = 0; i < quos.length; i++) {
-                    String[] quo = quos[i].split(":");
-
-                    Currency mer = null;
-                    Currency pay = null;
-                    Float pre = 0f;
-
-                    if(quo.length == 3) {
-                        try {
-                            mer = CryptoCurrency.getByCode(quo[0]);
-                        } catch (InvalidParameterException e) {
-                            try {
-                                mer = FiatCurrency.getByCode(quo[0]);
-                            } catch (InvalidParameterException e2) {
-                                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                                throw new CantHandleNewMessagesException(e2, "", "Error invalid parameter.");
-                            }
-                        }
-
-                        try {
-                            pay = CryptoCurrency.getByCode(quo[1]);
-                        } catch (InvalidParameterException e) {
-                            try {
-                                pay = FiatCurrency.getByCode(quo[1]);
-                            } catch (InvalidParameterException e2) {
-                                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                                throw new CantHandleNewMessagesException(e2, "", "Error invalid parameter.");
-                            }
-                        }
-
-                        pre = Float.parseFloat(quo[2]);
-                    }
-
-
-                    CryptoBrokerQuote q = new CryptoBrokerQuote(mer, pay, pre);
-
-                    quotes.add(q);
-
-                }
-            }
+            List<CryptoBrokerQuote> quotes = helper.getListQuotesForString(quotesRequestReceived.listInformation());
 
             if (quotesRequestInDatabase != null) {
                 if (quotesRequestInDatabase.getType() == RequestType.SENT) {

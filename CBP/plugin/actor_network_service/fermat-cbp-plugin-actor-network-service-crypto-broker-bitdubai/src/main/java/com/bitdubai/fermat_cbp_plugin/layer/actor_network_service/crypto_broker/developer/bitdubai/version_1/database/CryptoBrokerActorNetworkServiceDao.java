@@ -536,6 +536,56 @@ public final class CryptoBrokerActorNetworkServiceDao {
     }
 
     /**
+     * change the protocol state
+     *
+     * @param requestId id of the address exchange request we want to confirm.
+     * @param state     protocol state to change
+     *
+     * @throws CantChangeProtocolStateException      if something goes wrong.
+     * @throws ConnectionRequestNotFoundException    if i can't find the record.
+     */
+    public void changeProtocolStateQuote(
+            final UUID          requestId,
+            final ProtocolState state
+    ) throws CantChangeProtocolStateException, ConnectionRequestNotFoundException  {
+
+        if (requestId == null)
+            throw new CantChangeProtocolStateException(null, "", "The requestId is required, can not be null");
+
+        if (state == null)
+            throw new CantChangeProtocolStateException(null, "", "The state is required, can not be null");
+
+        try {
+
+            DatabaseTable table = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_TABLE_NAME);
+
+            table.addUUIDFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+
+                record.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_STATE_COLUMN_NAME, state.getCode());
+
+                table.updateRecord(record);
+
+            } else
+                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an quote request with that requestId.");
+
+        } catch (CantUpdateRecordException e) {
+
+            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
+    /**
      * when i confirm a request i put it in the final state, indicating:
      * State : DONE.
      * Action: NONE.
