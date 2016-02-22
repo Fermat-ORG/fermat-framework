@@ -248,7 +248,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
         jsonObject.addProperty("description",           description);
         jsonObject.addProperty("registrationDate",      registrationDate);
         jsonObject.addProperty("lastConnectionDate",    lastConnectionDate);
-        jsonObject.addProperty("dapConnectionState",    dapConnectionState.getCode());
+        jsonObject.addProperty("dapConnectionState",    dapConnectionState.toString());
         jsonObject.addProperty("location",              location.toString());
         jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
@@ -270,7 +270,7 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
                 ", description='"           + description + '\'' +
                 ", registrationDate="       + registrationDate +
                 ", lastConnectionDate="     + lastConnectionDate +
-                ", dapConnectionState="     + dapConnectionState.getCode() +
+                ", dapConnectionState="     + dapConnectionState +
                 ", location="               + location +
                 ", locationLatitude="       + locationLatitude +
                 ", locationLongitude="      + locationLongitude +

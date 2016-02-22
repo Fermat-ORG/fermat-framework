@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.de
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -76,6 +77,7 @@ public class IncomingNotificationDao {
                                                             final ActorAssetProtocolState actorAssetProtocolState,
                                                             final boolean flagRead,
                                                             int sentCount,
+                                                            BlockchainNetworkType blockchainNetworkType,
                                                             UUID responseToNotificationId) throws CantCreateActorAssetNotificationException {
 
         try {
@@ -101,6 +103,7 @@ public class IncomingNotificationDao {
                         actorAssetProtocolState,
                         flagRead,
                         0,
+                        blockchainNetworkType,
                         responseToNotificationId
 
                 );
@@ -485,20 +488,19 @@ public class IncomingNotificationDao {
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME, record.getActorSenderType().getCode());
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME, record.getActorSenderPublicKey());
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME, record.getActorDestinationPublicKey());
-            dbRecord.setLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, record.getSentDate());
+            dbRecord.setLongValue  (CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME, record.getSentDate());
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME, record.getActorAssetProtocolState().getCode());
             dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME, String.valueOf(record.isFlagRead()));
-//            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME, record.getActorSenderPhrase());
+            dbRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, record.getBlockchainNetworkType().getCode());
+
             if (record.getResponseToNotificationId() != null)
                 dbRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME, record.getResponseToNotificationId());
-
 
             /**
              * Persist profile image on a file
              */
             if (record.getActorSenderProfileImage() != null && record.getActorSenderProfileImage().length > 0)
                 persistNewUserProfileImage(record.getActorSenderPublicKey(), record.getActorSenderProfileImage());
-
 
             return dbRecord;
 
@@ -521,20 +523,20 @@ public class IncomingNotificationDao {
             long timestamp = record.getLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
             String protocolState = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
             String flagRead = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
-//            String senderPhrase = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
+            String blockChainNetwork = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
             UUID responseToNotificationId = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
 
             ActorAssetProtocolState actorAssetProtocolState = ActorAssetProtocolState.getByCode(protocolState);
             Boolean read = Boolean.valueOf(flagRead);
             AssetNotificationDescriptor assetNotificationDescriptor = AssetNotificationDescriptor.getByCode(descriptor);
-
+            BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(blockChainNetwork);
             Actors actorDestinationType = Actors.getByCode(destinationType);
             Actors actorSenderType = Actors.getByCode(senderType);
 
             byte[] profileImage;
 
             try {
-                profileImage = getIntraUserProfileImagePrivateKey(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME));
+                profileImage = getActorUserProfileImagePrivateKey(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME));
             } catch (FileNotFoundException e) {
                 profileImage = new byte[0];
             }
@@ -553,6 +555,7 @@ public class IncomingNotificationDao {
                     actorAssetProtocolState,
                     read,
                     0,
+                    blockchainNetworkType,
                     responseToNotificationId
 
             );
@@ -587,7 +590,7 @@ public class IncomingNotificationDao {
     }
 
 
-    private byte[] getIntraUserProfileImagePrivateKey(final String publicKey) throws CantGetActorAssetProfileImageException, FileNotFoundException {
+    private byte[] getActorUserProfileImagePrivateKey(final String publicKey) throws CantGetActorAssetProfileImageException, FileNotFoundException {
 
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,

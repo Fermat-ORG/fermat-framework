@@ -74,7 +74,7 @@ public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSett
     /**
      * This method returns the resource of an asset factory object
      */
-    public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
+    PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException;
 
     /**
      * TThis method list all wallet installed in device, start the transaction

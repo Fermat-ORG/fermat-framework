@@ -350,9 +350,9 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
         jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
-        jsonObject.addProperty("contactInformation",                  contactInformation);
-        jsonObject.addProperty("hoursOfOperation",                  hoursOfOperation);
-        jsonObject.addProperty("address",                  address.toString());
+        jsonObject.addProperty("contactInformation",    contactInformation);
+        jsonObject.addProperty("hoursOfOperation",      hoursOfOperation);
+        jsonObject.addProperty("address",               address.toString());
         jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
         jsonObject.addProperty("registeredIssuers", String.valueOf(registeredIssuers));
         return gson.toJson(jsonObject);

@@ -336,6 +336,8 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
         try {
         ActorAssetIssuer actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
         if (actorAssetIssuer != null) {
+            blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+
             /**
              *Call Actor Intra User to add request connection
              */
@@ -344,14 +346,15 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
                         actorAssetIssuer.getActorPublicKey(),
                         actorAssetUser.getName(),
                         actorAssetUser.getActorPublicKey(),
-                        actorAssetUser.getProfileImage());
+                        actorAssetUser.getProfileImage(),
+                        blockchainNetworkType);
 
                 /**
                  *Call Network Service Intra User to add request connection
                  */
                 if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey()) != DAPConnectionState.REGISTERED_REMOTELY) {
                     System.out.println("The User you are trying to connect with is not connected" +
-                            "so we send the message to the intraUserNetworkService");
+                            "so we send the message to the assetUserActorNetworkService");
                     this.assetUserActorNetworkServiceManager.askConnectionActorAsset(
                             actorAssetIssuer.getActorPublicKey(),
                             actorAssetIssuer.getName(),
@@ -359,7 +362,8 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
                             actorAssetUser.getActorPublicKey(),
                             actorAssetUser.getName(),
                             Actors.DAP_ASSET_USER,
-                            actorAssetUser.getProfileImage());
+                            actorAssetIssuer.getProfileImage(),
+                            blockchainNetworkType);
                 } else {
                     this.assetUserActorNetworkServiceManager.acceptConnectionActorAsset(actorAssetIssuer.getActorPublicKey(), actorAssetUser.getActorPublicKey());
                     System.out.println("The actor asset user is connected");
