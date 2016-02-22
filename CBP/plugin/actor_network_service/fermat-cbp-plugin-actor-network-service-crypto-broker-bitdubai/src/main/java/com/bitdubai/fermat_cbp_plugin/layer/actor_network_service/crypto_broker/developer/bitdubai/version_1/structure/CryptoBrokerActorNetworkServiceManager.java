@@ -206,7 +206,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void disconnect(final UUID requestId) throws CantDisconnectException            ,
-                                                              ConnectionRequestNotFoundException {
+            ConnectionRequestNotFoundException {
 
         try {
 
@@ -235,7 +235,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void denyConnection(final UUID requestId) throws CantDenyConnectionRequestException ,
-                                                                  ConnectionRequestNotFoundException {
+            ConnectionRequestNotFoundException {
 
         try {
 
@@ -266,7 +266,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException,
-                                                                    ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException  {
 
     }
 
@@ -277,7 +277,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void acceptConnection(final UUID requestId) throws CantAcceptConnectionRequestException,
-                                                                    ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException  {
 
         try {
 
@@ -402,7 +402,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     public void answerQuotesRequest(final UUID                    requestId ,
                                     final long                    updateTime,
                                     final List<CryptoBrokerQuote> quotes    ) throws CantAnswerQuotesRequestException,
-                                                                                     QuotesRequestNotFoundException  {
+            QuotesRequestNotFoundException  {
 
         try {
 

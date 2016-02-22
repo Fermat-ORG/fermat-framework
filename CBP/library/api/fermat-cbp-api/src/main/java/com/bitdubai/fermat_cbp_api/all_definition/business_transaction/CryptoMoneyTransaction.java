@@ -48,7 +48,7 @@ public interface CryptoMoneyTransaction {
     void setCbpWalletPublicKey(String cbpWalletPublicKey);
 
     /**
-     * The property <code>getCryWalletPublicKey</code>  represented the public key Bitcoin Wallet
+     * The property <code>getCryptoWalletPublicKey</code>  represented the public key Bitcoin Wallet
      *
      * @return the Sting
      */
