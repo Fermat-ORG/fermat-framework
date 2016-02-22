@@ -50,7 +50,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -69,7 +69,6 @@ import bitdubai.version_1.database.communications.CommunicationNetworkServiceDev
 import bitdubai.version_1.database.communications.CryptoTransmissionMetadataDAO_V2;
 import bitdubai.version_1.database.communications.CryptoTransmissionNetworkServiceDatabaseConstants;
 import bitdubai.version_1.exceptions.CantGetCryptoTransmissionMetadataException;
-import bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import bitdubai.version_1.exceptions.CantSaveCryptoTransmissionMetadatatException;
 import bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import bitdubai.version_1.structure.CryptoTransmissionTransactionProtocolManager;
@@ -1048,7 +1047,7 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
     }
 
     private void lauchNotification(){
-        FermatEvent fermatEvent = this.getEventManager().getNewEvent(EventType.INCOMING_CRYPTO_METADATA);
+        FermatEvent fermatEvent = this.getEventManager().getNewEvent(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
         IncomingCryptoMetadataEvent incomingCryptoMetadataReceive = (IncomingCryptoMetadataEvent) fermatEvent;
         incomingCryptoMetadataReceive.setSource(EventSource.NETWORK_SERVICE_CRYPTO_TRANSMISSION);
         this.getEventManager().raiseEvent(incomingCryptoMetadataReceive);
