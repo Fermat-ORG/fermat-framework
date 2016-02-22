@@ -372,10 +372,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         }
     }
 
-    public void connectToActorAssetUser(String senderActorPublicKey,
-                                        Actors senderActorType,
-                                        String destinationActorPublicKey,
+    public void connectToActorAssetUser(String destinationActorPublicKey,
                                         Actors destinationActorType,
+                                        String senderActorPublicKey,
+                                        Actors senderActorType,
                                         BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetUserException {
         try {
 //            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
@@ -385,12 +385,12 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                             CryptoCurrency.BITCOIN,
                             senderActorType,
                             destinationActorType,
-                            destinationActorPublicKey,
                             senderActorPublicKey,
+                            destinationActorPublicKey,
                             CryptoAddressDealers.DAP_ASSET,
                             blockchainNetworkType);
 
-//                    this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(senderActorPublicKey, DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
+//                    this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(senderActorPublicKey, DAPConnectionState.CONNECTING, null, blockchainNetworkType);
 //                } catch (CantUpdateAssetUserConnectionException e) {
 //                    e.printStackTrace();
 //                }
@@ -548,7 +548,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                                                byte[] profileImage,
                                                BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException {
         try {
-            if (assetUserActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.PENDING_REMOTELY)) {
+            if (assetUserActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.CONNECTING)) {
                 throw new CantRequestAlreadySendActorAssetException("CAN'T INSERT ACTOR ASSET USER", null, "", "The request already sent to actor.");
             } else if (assetUserActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.PENDING_LOCALLY)){
                 this.assetUserActorDao.updateRegisteredConnectionState(
@@ -565,7 +565,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 //TODO ANALIZAR PROBLEMAS QUE PUEDA OCASIONAR USAR CONNECTING O PENDING_REMOTELY
                 this.assetUserActorDao.updateAssetUserConnectionStateCryptoAddress(
                         actorAssetUserToAddPublicKey,
-                        DAPConnectionState.PENDING_REMOTELY,
+                        DAPConnectionState.CONNECTING,
                         null,
                         blockchainNetworkType);
 

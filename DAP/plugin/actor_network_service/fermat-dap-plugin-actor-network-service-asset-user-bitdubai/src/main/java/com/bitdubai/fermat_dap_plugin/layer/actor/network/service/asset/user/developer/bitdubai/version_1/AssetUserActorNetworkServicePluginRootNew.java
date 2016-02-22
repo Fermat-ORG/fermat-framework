@@ -976,8 +976,13 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                             AssetNotificationDescriptor.ACCEPTED,
                             ActorAssetProtocolState.PENDING_ACTION);
 
+            Actors actorSwap = assetUserNetworkServiceRecord.getActorSenderType();
+
             assetUserNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
+            assetUserNetworkServiceRecord.setActorSenderType(assetUserNetworkServiceRecord.getActorDestinationType());
+
             assetUserNetworkServiceRecord.setActorDestinationPublicKey(ActorAssetToAddPublicKey);
+            assetUserNetworkServiceRecord.setActorDestinationType(actorSwap);
 
             assetUserNetworkServiceRecord.setActorSenderAlias(null);
 
@@ -1032,9 +1037,14 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                             AssetNotificationDescriptor.DENIED,
                             ActorAssetProtocolState.DONE);
 
+            Actors actorSwap = actorNetworkServiceRecord.getActorSenderType();
+
             actorNetworkServiceRecord.setActorDestinationPublicKey(actorAssetToRejectPublicKey);
+            actorNetworkServiceRecord.setActorSenderType(actorNetworkServiceRecord.getActorDestinationType());
 
             actorNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
+            actorNetworkServiceRecord.setActorDestinationType(actorSwap);
+
 
             actorNetworkServiceRecord.changeDescriptor(AssetNotificationDescriptor.DENIED);
 
@@ -1072,8 +1082,13 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                             AssetNotificationDescriptor.DISCONNECTED,
                             ActorAssetProtocolState.PROCESSING_SEND);
 
+            Actors actorSwap = assetUserNetworkServiceRecord.getActorSenderType();
+
             assetUserNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
+            assetUserNetworkServiceRecord.setActorSenderType(assetUserNetworkServiceRecord.getActorDestinationType());
+
             assetUserNetworkServiceRecord.setActorDestinationPublicKey(actorAssetToDisconnectPublicKey);
+            assetUserNetworkServiceRecord.setActorDestinationType(actorSwap);
 
             assetUserNetworkServiceRecord.setActorSenderAlias(null);
 
@@ -1151,9 +1166,13 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                             AssetNotificationDescriptor.CANCEL,
                             ActorAssetProtocolState.DONE);
 
-            assetUserNetworkServiceRecord.setActorDestinationPublicKey(actorAssetToCancelPublicKey);
+            Actors actorSwap = assetUserNetworkServiceRecord.getActorSenderType();
 
             assetUserNetworkServiceRecord.setActorSenderPublicKey(actorAssetLoggedInPublicKey);
+            assetUserNetworkServiceRecord.setActorSenderType(assetUserNetworkServiceRecord.getActorDestinationType());
+
+            assetUserNetworkServiceRecord.setActorDestinationPublicKey(actorAssetToCancelPublicKey);
+            assetUserNetworkServiceRecord.setActorDestinationType(actorSwap);
 
             assetUserNetworkServiceRecord.changeDescriptor(AssetNotificationDescriptor.CANCEL);
 
