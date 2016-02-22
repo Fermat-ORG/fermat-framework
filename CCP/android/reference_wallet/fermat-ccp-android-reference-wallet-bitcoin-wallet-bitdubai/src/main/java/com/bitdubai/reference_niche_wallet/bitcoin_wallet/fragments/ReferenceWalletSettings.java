@@ -1,6 +1,23 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Switch;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.mati.fermat_preference_settings.settings.FermatPreferenceFragment;
@@ -12,14 +29,35 @@ import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsSwi
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
+
 /**
  * Created by mati on 2016.02.09..
  */
 public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceWalletSession,WalletResourcesProviderManager> {
 
 
+
+    private ReferenceWalletSession referenceWalletSession;
+    private CryptoWallet cryptoWallet;
+    SettingsManager<BitcoinWalletSettings> settingsManager;
+
     public static ReferenceWalletSettings newInstance() {
         return new ReferenceWalletSettings();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        referenceWalletSession = (ReferenceWalletSession) appSession;
+        try {
+            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+        } catch (CantGetCryptoWalletException e) {
+            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+        }
     }
 
     @Override
@@ -49,12 +87,26 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
             @Override
             public List<PreferenceSettingsDialogItem> getOptionList() {
-             //  List<PreferenceSettingsDialogItem> strings = new ArrayList<PreferenceSettingsDialogItem>();
-               //strings.add(new PreferenceSettingsDialogItem("MainNet") );
-               // strings.add("TestNet");
-               // strings.add("RegTest");
-
-                return null;
+               List<PreferenceSettingsDialogItem> strings = new ArrayList<PreferenceSettingsDialogItem>();
+                strings.add(new PreferenceSettingsDialogItem(){
+                    @Override
+                    public String getText() {
+                        return "MainNet";
+                    }
+                } );
+                strings.add(new PreferenceSettingsDialogItem(){
+                    @Override
+                    public String getText() {
+                        return "TestNet";
+                    }
+                } );
+                strings.add(new PreferenceSettingsDialogItem(){
+                    @Override
+                    public String getText() {
+                        return "RegTest";
+                    }
+                } );
+                return strings;
 
             }
         });
@@ -69,6 +121,56 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
      */
     @Override
     public void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position) {
+        PreferenceSettingsDialogItem preferenceSettingsDialogItem =   (PreferenceSettingsDialogItem)preferenceSettingsItem;
+        BlockchainNetworkType blockchainNetworkType = null;
+
+
+
+        switch (preferenceSettingsDialogItem.getText()){
+
+            case "MainNet":
+                blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+                break;
+
+            case "TestNet":
+                blockchainNetworkType = BlockchainNetworkType.TEST_NET;
+                break;
+
+            case "RegTest":
+                blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+                break;
+
+            default: blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                break;
+
+        }
+
+        System.out.println("SETTING SELECTED IS "+preferenceSettingsDialogItem.getText());
+        System.out.println("NETWORK TYPE TO BE SAVED IS  "+blockchainNetworkType.getCode());
+
+        BitcoinWalletSettings bitcoinWalletSettings = null;
+        try {
+            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
+            e.printStackTrace();
+        }
+        bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+        if (blockchainNetworkType == null) {
+            if (bitcoinWalletSettings.getBlockchainNetworkType()!=null){
+                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            }else{
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            }
+        }
+        bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+        try {
+            settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+        } catch (CantPersistSettingsException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
