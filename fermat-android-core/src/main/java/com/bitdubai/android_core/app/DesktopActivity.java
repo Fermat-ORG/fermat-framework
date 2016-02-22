@@ -273,6 +273,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             }else{
 
+
                 if(activities.equals(Activities.DESKTOP_SETTING_FERMAT_NETWORK)){
                     Toast.makeText(this, "toca", Toast.LENGTH_SHORT).show();
 //                    List<AbstractFermatFragment> list = new ArrayList<>();

@@ -3,6 +3,7 @@ package com.bitdubai.android_core.app.common.version_1.classes;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.FermatActivity;
+import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.util.BroadcasterInterface;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
@@ -106,17 +107,23 @@ public class BroadcastManager implements BroadcasterInterface {
     }
 
     private void updateView(String code){
-        for(AbstractFermatFragment fragment : fermatActivity.get().getAdapter().getLstCurrentFragments()){
-            fragment.onUpdateView(code);
-            fragment.onUpdateViewUIThred(code);
+        TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
+        if(adapter!=null) {
+            for (AbstractFermatFragment fragment :adapter.getLstCurrentFragments()){
+                fragment.onUpdateView(code);
+                fragment.onUpdateViewUIThred(code);
+            }
         }
     }
 
     //TODO: esto va a ser del codigo de la app, el paquete del intent
     private void updateView(String appCode,String code){
-        for(AbstractFermatFragment fragment : fermatActivity.get().getAdapter().getLstCurrentFragments()){
-            fragment.onUpdateView(code);
-            fragment.onUpdateViewUIThred(code);
+        TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
+        if(adapter!=null) {
+            for (AbstractFermatFragment fragment :adapter.getLstCurrentFragments()){
+                fragment.onUpdateViewHandler(appCode,code);
+                fragment.onUpdateViewUIThred(code);
+            }
         }
     }
 

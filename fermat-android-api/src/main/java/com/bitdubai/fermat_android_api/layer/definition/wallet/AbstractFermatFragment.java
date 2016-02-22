@@ -238,6 +238,12 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
+    public final void onUpdateViewHandler(final String appCode,final String code){
+        if(appSession.getAppPublicKey().equals(appCode)){
+            onUpdateView(code);
+        }
+
+    }
 
     public final void onUpdateViewUIThred(final String code){
         getActivity().runOnUiThread(new Runnable() {
