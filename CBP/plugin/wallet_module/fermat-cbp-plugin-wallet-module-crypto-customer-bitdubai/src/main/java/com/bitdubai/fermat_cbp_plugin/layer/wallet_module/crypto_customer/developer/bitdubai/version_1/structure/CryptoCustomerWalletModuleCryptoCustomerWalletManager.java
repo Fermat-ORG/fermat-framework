@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
@@ -47,6 +48,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_online_pa
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.ListsForStatusPurchase;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.IdentityNotFoundException;
@@ -191,68 +193,45 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         try {
 
             List<ContractBasicInformation> contractsHistory = new ArrayList<>();
-
-            CryptoBrokerWalletModuleContractBasicInformation contract;
+            CryptoBrokerWalletModuleContractBasicInformation contract = null;
 
             if (status != null) {
 
-                //TODO: Preguntar de donde saco la demas informacion del contract "merchandise Moneda que recibe como mercancia el customer", "typeOfPayment Forma en la que paga el customer", "paymentCurrency Moneda que recibe como pago el broker"
                 for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(status)) {
-                    CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractPurchase.getNegotiatiotId()));
-                    if (customerBrokerContractPurchase.getStatus().equals(status))
-                        for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
-                            if (clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
-                                merchandise = clause.getValue();
-                            }
-                            if (clause.getType().getCode().equals(ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())) {
-                                typeOfPayment = clause.getValue();
-                            }
-                            if (clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())) {
-                                paymentCurrency = clause.getValue();
-                            }
-                        }
-                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContractPurchase.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, status, customerBrokerPurchaseNegotiation);
+
+                    CustomerBrokerPurchaseNegotiation PurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractPurchase.getNegotiatiotId()));
+                    if (customerBrokerContractPurchase.getStatus().equals(status)){
+                        merchandise = getClauseType(PurchaseNegotiation, ClauseType.CUSTOMER_CURRENCY);
+                        typeOfPayment = getClauseType(PurchaseNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
+                        paymentCurrency = getClauseType(PurchaseNegotiation, ClauseType.BROKER_CURRENCY);
+                    }
+
+                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContractPurchase.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, status, PurchaseNegotiation);
                     filteredList.add(contract);
                 }
                 contractsHistory = filteredList;
+
             } else {
-                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.CANCELLED)) {
-                    CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractPurchase.getNegotiatiotId()));
-                    if (customerBrokerContractPurchase.getStatus().equals(status))
-                        for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
-                            if (clause.getType().getCode() == ClauseType.CUSTOMER_CURRENCY.getCode()) {
-                                merchandise = clause.getValue();
-                            }
-                            if (clause.getType().getCode() == ClauseType.CUSTOMER_PAYMENT_METHOD.getCode()) {
-                                typeOfPayment = clause.getValue();
-                            }
-                            if (clause.getType().getCode() == ClauseType.BROKER_CURRENCY.getCode()) {
-                                paymentCurrency = clause.getValue();
-                            }
-                        }
-                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContractPurchase.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, ContractStatus.CANCELLED, customerBrokerPurchaseNegotiation);
-                    filteredList.add(contract);
-                }
-                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.COMPLETED)) {
-                    CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractPurchase.getNegotiatiotId()));
-                    if (customerBrokerContractPurchase.getStatus().equals(status))
-                        for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
-                            if (clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
-                                merchandise = clause.getValue();
-                            }
-                            if (clause.getType().getCode().equals(ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())) {
-                                typeOfPayment = clause.getValue();
-                            }
-                            if (clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())) {
-                                paymentCurrency = clause.getValue();
-                            }
-                        }
-                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContractPurchase.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, ContractStatus.COMPLETED, customerBrokerPurchaseNegotiation);
+
+                ListsForStatusPurchase history = customerBrokerContractPurchaseManager.getCustomerBrokerContractHistory();
+
+                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : history.getHistoryContracts()) {
+
+                    CustomerBrokerPurchaseNegotiation PurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractPurchase.getNegotiatiotId()));
+                    if (customerBrokerContractPurchase.getStatus().equals(status)) {
+                        merchandise = getClauseType(PurchaseNegotiation, ClauseType.CUSTOMER_CURRENCY);
+                        typeOfPayment = getClauseType(PurchaseNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
+                        paymentCurrency = getClauseType(PurchaseNegotiation, ClauseType.BROKER_CURRENCY);
+                    }
+
+                    contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContractPurchase.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, customerBrokerContractPurchase.getStatus(), PurchaseNegotiation);
                     filteredList.add(contract);
                 }
             }
 
             //TODO:Eliminar solo para que se terminen las pantallas
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.COMPLETED, null);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.COMPLETED, null);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, null);
             filteredList.add(contract);
             return contractsHistory;
@@ -265,54 +244,40 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public Collection<ContractBasicInformation> getContractsWaitingForBroker(int max, int offset) throws CantGetContractsWaitingForBrokerException {
+
         try {
             ContractBasicInformation contract;
             Collection<ContractBasicInformation> waitingForBroker = new ArrayList<>();
 
-            for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_MERCHANDISE)) {
-                CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractPurchase.getNegotiatiotId()));
-                for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
-                    if (clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
-                        merchandise = clause.getValue();
-                    }
-                    if (clause.getType().getCode().equals(ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())) {
-                        typeOfPayment = clause.getValue();
-                    }
-                    if (clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())) {
-                        paymentCurrency = clause.getValue();
-                    }
-                }
-                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContractPurchase.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, ContractStatus.PENDING_MERCHANDISE, customerBrokerPurchaseNegotiation);
+            ListsForStatusPurchase history = customerBrokerContractPurchaseManager.getCustomerBrokerContractHistory();
+
+            for (CustomerBrokerContractPurchase customerBrokerContract : history.getContractsWaitingForBroker()) {
+                CustomerBrokerPurchaseNegotiation negotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContract.getNegotiatiotId()));
+
+                merchandise = getClauseType(negotiation, ClauseType.CUSTOMER_CURRENCY);
+                typeOfPayment = getClauseType(negotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
+                paymentCurrency = getClauseType(negotiation, ClauseType.BROKER_CURRENCY);
+
+                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContract.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, customerBrokerContract.getStatus(), negotiation);
                 waitingForBroker.add(contract);
             }
-            for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.MERCHANDISE_SUBMIT)) {
-                CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractPurchase.getNegotiatiotId()));
-                for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
-                    if (clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
-                        merchandise = clause.getValue();
-                    }
-                    if (clause.getType().getCode().equals(ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())) {
-                        typeOfPayment = clause.getValue();
-                    }
-                    if (clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())) {
-                        paymentCurrency = clause.getValue();
-                    }
-                }
-                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContractPurchase.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, ContractStatus.PAYMENT_SUBMIT, customerBrokerPurchaseNegotiation);
-                waitingForBroker.add(contract);
-            }
+
             //TODO:Eliminar solo para que se terminen las pantallas
             contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null);
-            waitingForBroker.add(contract);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null);
             contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null);
             waitingForBroker.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null);
-            waitingForBroker.add(contract);
+
             return waitingForBroker;
 
-        } catch (Exception ex) {
+        }catch(CantGetListPurchaseNegotiationsException e){
+            throw new CantGetContractsWaitingForBrokerException("Cant get contracts waiting for the broker", e);
+        }catch(CantGetListCustomerBrokerContractPurchaseException e){
+            throw new CantGetContractsWaitingForBrokerException("Cant get contracts waiting for the broker", e);
+        }catch(Exception ex){
             throw new CantGetContractsWaitingForBrokerException("Cant get contracts waiting for the broker", ex);
         }
+
     }
 
     @Override
@@ -321,67 +286,57 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             ContractBasicInformation contract;
             Collection<ContractBasicInformation> waitingForBroker = new ArrayList<>();
 
-            for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.MERCHANDISE_SUBMIT)) {
-                CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractPurchase.getNegotiatiotId()));
-                for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
-                    if (clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
-                        merchandise = clause.getValue();
-                    }
-                    if (clause.getType().getCode().equals(ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())) {
-                        typeOfPayment = clause.getValue();
-                    }
-                    if (clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())) {
-                        paymentCurrency = clause.getValue();
-                    }
-                }
-                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContractPurchase.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, ContractStatus.MERCHANDISE_SUBMIT, customerBrokerPurchaseNegotiation);
+            ListsForStatusPurchase history = customerBrokerContractPurchaseManager.getCustomerBrokerContractHistory();
+
+            for (CustomerBrokerContractPurchase customerBrokerContract : history.getContractsWaitingForCustomer()) {
+                CustomerBrokerPurchaseNegotiation negotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContract.getNegotiatiotId()));
+
+                merchandise = getClauseType(negotiation, ClauseType.CUSTOMER_CURRENCY);
+                typeOfPayment = getClauseType(negotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
+                paymentCurrency = getClauseType(negotiation, ClauseType.BROKER_CURRENCY);
+
+                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContract.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, customerBrokerContract.getStatus(), negotiation);
                 waitingForBroker.add(contract);
             }
-            for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_PAYMENT)) {
-                CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractPurchase.getNegotiatiotId()));
-                for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
-                    if (clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
-                        merchandise = clause.getValue();
-                    }
-                    if (clause.getType().getCode().equals(ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())) {
-                        typeOfPayment = clause.getValue();
-                    }
-                    if (clause.getType().getCode().equals(ClauseType.BROKER_CURRENCY.getCode())) {
-                        paymentCurrency = clause.getValue();
-                    }
-                }
-                contract = new CryptoBrokerWalletModuleContractBasicInformation(customerBrokerContractPurchase.getPublicKeyCustomer(), merchandise, typeOfPayment, paymentCurrency, ContractStatus.PENDING_PAYMENT, customerBrokerPurchaseNegotiation);
-                waitingForBroker.add(contract);
-            }
+
             //TODO:Eliminar solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PENDING_PAYMENT, null);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PAYMENT_SUBMIT, null);
+            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PENDING_MERCHANDISE, null);
             waitingForBroker.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PENDING_PAYMENT, null);
-            waitingForBroker.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.PENDING_PAYMENT, null);
-            waitingForBroker.add(contract);
+
             return waitingForBroker;
 
-        } catch (Exception ex) {
+        }catch(CantGetListPurchaseNegotiationsException e){
+            throw new CantGetContractsWaitingForCustomerException("Cant get contracts waiting for the broker", e);
+        }catch(CantGetListCustomerBrokerContractPurchaseException e){
+            throw new CantGetContractsWaitingForCustomerException("Cant get contracts waiting for the broker", e);
+        }catch(Exception ex){
             throw new CantGetContractsWaitingForCustomerException("Cant get contracts waiting for the broker", ex);
         }
     }
 
-    /**
-     * Modified by Yordin Alayn 03.02.16
-     * this method return collection of negotiation in status Waiting for Broker
-     * @param max
-     * @param offset
-     * @throws CantGetNegotiationsWaitingForBrokerException exception in Wallet Module Crypto Customer
-     * @return Collection<CustomerBrokerNegotiationInformation>
-     */
+    private String getClauseType(CustomerBrokerPurchaseNegotiation purchaseNegotiation, ClauseType clauseType) throws CantGetListClauseException{
+        String value = null;
+        try {
+            for (Clause clause : purchaseNegotiation.getClauses()) {
+                if (clause.getType() == clauseType) {
+                    value = clause.getValue();
+                }
+            }
+        } catch (CantGetListClauseException e) {
+            throw new CantGetListClauseException("Cant get the clauses", e);
+        }
+        return value;
+    }
+
     @Override
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForBroker(int max, int offset) throws CantGetNegotiationsWaitingForBrokerException {
         try {
 
             Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
 
-            for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsBySendAndWaiting())
+            for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsBySendAndWaiting(ActorType.BROKER))
                 waitingForBroker.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_BROKER));
 
             return waitingForBroker;
@@ -391,25 +346,16 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         }
     }
 
-
-    /**
-     * Modified by Yordin Alayn 03.02.16
-     * this method return collection of negotiation in status Waiting for Customer
-     * @param max
-     * @param offset
-     * @throws CantGetNegotiationsWaitingForCustomerException exception in Wallet Module Crypto Customer
-     * @return Collection<CustomerBrokerNegotiationInformation>
-     */
     @Override
     public Collection<CustomerBrokerNegotiationInformation> getNegotiationsWaitingForCustomer(int max, int offset) throws CantGetNegotiationsWaitingForCustomerException {
         try {
 
-            Collection<CustomerBrokerNegotiationInformation> waitingForBroker = new ArrayList<>();
+            Collection<CustomerBrokerNegotiationInformation> waitingForCustomer = new ArrayList<>();
 
-            for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsByStatus(NegotiationStatus.WAITING_FOR_CUSTOMER))
-                waitingForBroker.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_CUSTOMER));
+            for (CustomerBrokerPurchaseNegotiation negotiation : customerBrokerPurchaseNegotiationManager.getNegotiationsBySendAndWaiting(ActorType.CUSTOMER))
+                waitingForCustomer.add(getItemNegotiationInformation(negotiation, NegotiationStatus.WAITING_FOR_BROKER));
 
-            return waitingForBroker;
+            return waitingForCustomer;
 
         } catch (Exception ex) {
             throw new CantGetNegotiationsWaitingForCustomerException("Cant get negotiations waiting for the broker", ex, "", "");
@@ -466,7 +412,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public CryptoCustomerIdentity getAssociatedIdentity(final String walletPublicKey) throws IdentityAssociatedNotFoundException,
-                                                                                             CantGetAssociatedIdentityException {
+            CantGetAssociatedIdentityException {
 
         try {
 
@@ -550,9 +496,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             customerBrokerUpdateManager.cancelNegotiation(customerBrokerPurchaseNegotiation);
 
             System.out.print("\nREFERENCE WALLET - CRYPTO CUSTOMER: CUSTOMER BROKER CANCEL " +
-                    "\n - NEGOTIATION ID "+ negotiation.getNegotiationId() + " | " + negotiationInformation.getNegotiationId() +
-                    "\n - STATUS "+ negotiation.getStatus() +" | "+ negotiationInformation.getStatus() +
-                    "\n - REASON: " + reason + " | " + negotiationInformation.getCancelReason()
+                            "\n - NEGOTIATION ID "+ negotiation.getNegotiationId() + " | " + negotiationInformation.getNegotiationId() +
+                            "\n - STATUS "+ negotiation.getStatus() +" | "+ negotiationInformation.getStatus() +
+                            "\n - REASON: " + reason + " | " + negotiationInformation.getCancelReason()
             );
             return negotiationInformation;
 //        } catch (CantCancelNegotiationException e) {
