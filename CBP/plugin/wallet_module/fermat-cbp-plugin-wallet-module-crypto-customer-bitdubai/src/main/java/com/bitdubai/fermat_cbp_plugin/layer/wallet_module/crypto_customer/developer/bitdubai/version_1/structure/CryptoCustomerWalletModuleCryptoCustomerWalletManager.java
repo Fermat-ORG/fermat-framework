@@ -728,7 +728,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
                 System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES NEGOTIATION****\n");
 
-                if(validateStatusClause.equals(ClauseStatus.CHANGED)) {
+                if(validateStatusClause.equals(ClauseStatus.CHANGED) || !customerBrokerPurchaseNegotiation.getMemo().isEmpty()) {
                     System.out.print("\n**** 1.3) MOCK MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES INFORMATION****\n");
                     customerBrokerUpdateManager.createCustomerBrokerUpdatePurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
                 }else if (validateStatusClause.equals(ClauseStatus.ACCEPTED)) {
