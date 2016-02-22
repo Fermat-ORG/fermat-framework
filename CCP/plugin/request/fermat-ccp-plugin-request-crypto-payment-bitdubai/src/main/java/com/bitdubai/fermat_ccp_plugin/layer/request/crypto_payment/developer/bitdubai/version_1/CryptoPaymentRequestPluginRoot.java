@@ -117,7 +117,8 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
                     errorManager,
                     outgoingIntraActorManager,
                     pluginDatabaseSystem,
-                    pluginId
+                    pluginId,
+                    broadcaster
             );
 
             cryptoPaymentRegistry.initialize();
@@ -200,7 +201,8 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
                     errorManager,
                     outgoingIntraActorManager,
                     pluginDatabaseSystem,
-                    pluginId
+                    pluginId,
+                    broadcaster
             );
 
             cryptoPaymentRegistry.initialize();
