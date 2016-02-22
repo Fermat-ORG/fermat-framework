@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.database.IntraActorNetworkServiceDataBaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantAddIntraWalletCacheUserException;
@@ -75,28 +77,67 @@ public class IntraActorNetworkServiceDao {
 
 
             for (IntraUserInformation intraUserInformation : intraUserInformationList) {
-                DatabaseTableRecord record = table.getEmptyRecord();
+
+                //if record exist I update data
+                if(existCacheRecord(intraUserInformation.getPublicKey()))
+                {
+                    table.addStringFilter(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, intraUserInformation.getPublicKey(), DatabaseFilterType.EQUAL);
+
+                    table.loadToMemory();
+
+                    if(table.getRecords().size() > 0) {
+                        DatabaseTableRecord record = table.getRecords().get(0);
 
 
-                record.setUUIDValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ID_COLUMN_NAME, UUID.randomUUID());
+                        record.setUUIDValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ID_COLUMN_NAME, UUID.randomUUID());
 
-                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, intraUserInformation.getPublicKey());
-                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME, intraUserInformation.getName());
+                        record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, intraUserInformation.getPublicKey());
+                        record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME, intraUserInformation.getName());
 
-                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME, intraUserInformation.getPhrase());
-                record.setLongValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TIMESTAMP_COLUMN_NAME, milliseconds);
-                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_CITY_COLUMN_NAME, "");
-                record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_COUNTRY_COLUMN_NAME, "");
-
-
-                /**
-                 * Persist profile image on a file
-                 */
-                if(intraUserInformation.getProfileImage()!=null && intraUserInformation.getProfileImage().length > 0)
-                    persistNewUserProfileImage(intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
+                        record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME, intraUserInformation.getPhrase());
+                        record.setLongValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TIMESTAMP_COLUMN_NAME, milliseconds);
+                        record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_CITY_COLUMN_NAME, "");
+                        record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_COUNTRY_COLUMN_NAME, "");
 
 
-                table.insertRecord(record);
+                        /**
+                         * Persist profile image on a file
+                         */
+                        if (intraUserInformation.getProfileImage() != null && intraUserInformation.getProfileImage().length > 0)
+                            persistNewUserProfileImage(intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
+
+
+                        table.updateRecord(record);
+                    }
+
+                }
+                                else
+                {
+                    DatabaseTableRecord record = table.getEmptyRecord();
+
+
+                    record.setUUIDValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ID_COLUMN_NAME, UUID.randomUUID());
+
+                    record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, intraUserInformation.getPublicKey());
+                    record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME, intraUserInformation.getName());
+
+                    record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME, intraUserInformation.getPhrase());
+                    record.setLongValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TIMESTAMP_COLUMN_NAME, milliseconds);
+                    record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_CITY_COLUMN_NAME, "");
+                    record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_COUNTRY_COLUMN_NAME, "");
+
+
+                    /**
+                     * Persist profile image on a file
+                     */
+                    if(intraUserInformation.getProfileImage()!=null && intraUserInformation.getProfileImage().length > 0)
+                        persistNewUserProfileImage(intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
+
+
+                    table.insertRecord(record);
+
+                }
+
             }
 
 
@@ -261,4 +302,29 @@ public class IntraActorNetworkServiceDao {
 
     }
 
+    public boolean existCacheRecord(String intraUserPublicKey) throws CantGetNotificationException {
+
+
+        try {
+
+            DatabaseTable table = this.database.getTable(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TABLE_NAME);
+
+            table.addStringFilter(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, intraUserPublicKey, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+
+            if (!records.isEmpty())
+                return true;
+            else
+                return false;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        }
+
+    }
 }

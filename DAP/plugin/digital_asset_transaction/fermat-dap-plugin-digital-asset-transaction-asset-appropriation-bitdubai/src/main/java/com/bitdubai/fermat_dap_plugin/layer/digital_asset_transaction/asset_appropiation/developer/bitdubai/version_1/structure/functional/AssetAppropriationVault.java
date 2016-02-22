@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
@@ -27,9 +25,6 @@ public class AssetAppropriationVault extends AbstractDigitalAssetVault{
     private final UUID pluginId;
     private final PluginFileSystem pluginFileSystem;
     private static final String STORAGE_PATH = "digital-asset-appropriation";
-    private static final FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
-    //TODO CHANGE PRIVACY TO PRIVATE
-    private static final FilePrivacy FILE_PRIVACY = FilePrivacy.PUBLIC;
 
     //CONSTRUCTORS
 

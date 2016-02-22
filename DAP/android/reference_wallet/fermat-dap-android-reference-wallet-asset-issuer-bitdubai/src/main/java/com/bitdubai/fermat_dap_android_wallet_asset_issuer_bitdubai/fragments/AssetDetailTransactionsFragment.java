@@ -11,6 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,40 +21,54 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.SizeUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.AssetDetailTransactionAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Transaction;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import static android.widget.Toast.makeText;
 
 /**
  * Created by frank on 12/15/15.
  */
-public class AssetDetailActivityFragment extends AbstractFermatFragment {
+public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Transaction>
+        implements FermatListItemListeners<Transaction> {
 
     private AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
@@ -61,13 +77,6 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private View rootView;
     private Toolbar toolbar;
     private Resources res;
-    private View assetDetailDeliverLayout;
-    private View assetDetailAppropiateBtnLayout;
-    private View assetDetailAvailableLayout;
-
-    private View assetDetailAppropiateLayout;
-
-    private View assetDetailRedeemedLayout;
 
     private ImageView assetImageDetail;
     private FermatTextView assetDetailNameText;
@@ -75,21 +84,20 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     private FermatTextView availableText;
     private FermatTextView pendingText;
     private FermatTextView assetDetailBtcText;
-    private FermatTextView assetDetailRemainingText;
-    private FermatTextView assetDetailDelivered;
-    private FermatTextView assetDetailRedeemText;
-    private FermatTextView assetDetailAppropriatedText;
 
     private DigitalAsset digitalAsset;
 
     SettingsManager<AssetIssuerSettings> settingsManager;
 
-    public AssetDetailActivityFragment() {
+    private View noTransactionsView;
+    private List<Transaction> transactions;
+
+    public AssetDetailTransactionsFragment() {
 
     }
 
-    public static AssetDetailActivityFragment newInstance() {
-        return new AssetDetailActivityFragment();
+    public static AssetDetailTransactionsFragment newInstance() {
+        return new AssetDetailTransactionsFragment();
     }
 
     @Override
@@ -103,19 +111,113 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
 
         settingsManager = appSession.getModuleManager().getSettingsManager();
 
+        transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
         configureToolbar();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dap_wallet_asset_issuer_asset_detail, container, false);
+    protected void initViews(View layout) {
+        super.initViews(layout);
+
+        Activity activity = getActivity();
+        LayoutInflater layoutInflater = activity.getLayoutInflater();
+        rootView = configureActivityHeader(layoutInflater);
+
         res = rootView.getResources();
 
         setupUI();
         setupUIData();
+        setupRecyclerView();
 
-        return rootView;
+        configureToolbar();
+
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            });
+        }
+
+        noTransactionsView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_transactions);
+        showOrHideNoTransactionsView(transactions.isEmpty());
+    }
+
+    private void setupRecyclerView() {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int mScrollOffset = 4;
+                if (Math.abs(dy) > mScrollOffset) {
+                    if (rootView != null) {
+                        if (dy > 0) {
+                            rootView.setVisibility(View.GONE);
+                        } else {
+                            rootView.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private View configureActivityHeader(LayoutInflater layoutInflater) {
+        RelativeLayout header = getToolbarHeader();
+        try {
+            header.removeAllViews();
+        } catch (Exception exception) {
+            CommonLogger.exception(TAG, "Error removing all views from header ", exception);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
+        }
+        header.setVisibility(View.VISIBLE);
+        View container = layoutInflater.inflate(R.layout.dap_wallet_asset_issuer_asset_detail, header, true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            container.getLayoutParams().height = SizeUtils.convertDpToPixels(428, getActivity());
+        }
+        return container;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    private void showOrHideNoTransactionsView(boolean show) {
+        if (show) {
+            recyclerView.setVisibility(View.GONE);
+            noTransactionsView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noTransactionsView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected boolean hasMenu() {
+        return true;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.dap_wallet_asset_issuer_asset_detail_transaction;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.swipe_refresh;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.dap_wallet_asset_issuer_asset_detail_transaction_recycler_view;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
     }
 
     private void setupUI() {
@@ -127,37 +229,6 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         availableText = (FermatTextView) rootView.findViewById(R.id.assetAvailable1);
         pendingText = (FermatTextView) rootView.findViewById(R.id.assetAvailable2);
         assetDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetDetailBtcText);
-        //Text = (FermatTextView) rootView.findViewById(R.id.assetDetailRemainingText);
-        assetDetailDelivered = (FermatTextView) rootView.findViewById(R.id.assetDetailAvailableText2);
-        assetDetailRedeemText = (FermatTextView) rootView.findViewById(R.id.assetDetailRedeemText);
-        assetDetailAppropriatedText = (FermatTextView) rootView.findViewById(R.id.assetDetailAppropriatedText);
-
-        assetDetailDeliverLayout = rootView.findViewById(R.id.assetDetailDeliverLayout);
-        assetDetailDeliverLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
-            }
-        });
-
-        assetDetailAppropiateBtnLayout = rootView.findViewById(R.id.assetDetailAppropiateBtnLayout);
-        assetDetailAppropiateBtnLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                new ConfirmDialog.Builder(getActivity(), appSession)
-                        .setTitle(getResources().getString(R.string.dap_issuer_wallet_confirm_title))
-                        .setMessage(getResources().getString(R.string.dap_issuer_wallet_confirm_sure))
-                        .setColorStyle(getResources().getColor(R.color.dap_issuer_wallet_principal))
-                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                            @Override
-                            public void onClick() {
-                                doAppropriate(digitalAsset.getAssetPublicKey(), digitalAsset.getWalletPublicKey());
-                            }
-                        }).build().show();
-            }
-        });
-
-        assetDetailAvailableLayout = rootView.findViewById(R.id.assetDetailAvailableLayout);
-        assetDetailAppropiateLayout = rootView.findViewById(R.id.assetDetailAppropiateLayout);
-        assetDetailRedeemedLayout = rootView.findViewById(R.id.assetDetailRedeemedLayout);
     }
 
     private void doAppropriate(final String assetPublicKey, final String walletPublicKey) {
@@ -246,8 +317,6 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetImageDetail, res, R.drawable.img_asset_without_image, false);
         bitmapWorkerTask.execute(img); //todo commenting to compile, please review
 
-        assetDetailDeliverLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
-
         assetDetailNameText.setText(digitalAsset.getName());
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());
 
@@ -263,39 +332,34 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
         }
 
         assetDetailBtcText.setText(digitalAsset.getFormattedAvailableBalanceBitcoin() + " BTC");
-        assetDetailDelivered.setText(digitalAsset.getUnused() + "");
-        assetDetailRedeemText.setText(digitalAsset.getRedeemed()+"");
-        assetDetailAppropriatedText.setText(digitalAsset.getAppropriated() + "");
 
-        assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (digitalAsset.getUnused() > 0) {
-                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST, appSession.getAppPublicKey());
-                } else {
-                    makeText(getActivity(), R.string.dap_issuer_wallet_no_assets_delivered, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        assetDetailAppropiateLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (digitalAsset.getAppropriated() > 0) {
-                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST, appSession.getAppPublicKey());
-                } else {
-                    makeText(getActivity(), R.string.dap_issuer_wallet_no_assets_appropriated, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        assetDetailRedeemedLayout.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (digitalAsset.getRedeemed() > 0) {
-                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
-                } else {
-                    makeText(getActivity(), R.string.dap_issuer_wallet_no_assets_redeemed, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        assetDetailAppropiateBtnLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
+//        assetDetailAvailableLayout.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                if (digitalAsset.getUnused() > 0) {
+//                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST, appSession.getAppPublicKey());
+//                } else {
+//                    makeText(getActivity(), R.string.dap_issuer_wallet_no_assets_delivered, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//        assetDetailAppropiateLayout.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                if (digitalAsset.getAppropriated() > 0) {
+//                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST, appSession.getAppPublicKey());
+//                } else {
+//                    makeText(getActivity(), R.string.dap_issuer_wallet_no_assets_appropriated, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
+//        assetDetailRedeemedLayout.setOnClickListener(new View.OnClickListener() {
+//            public void onClick(View v) {
+//                if (digitalAsset.getRedeemed() > 0) {
+//                    changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_USER_REDEEMED_LIST, appSession.getAppPublicKey());
+//                } else {
+//                    makeText(getActivity(), R.string.dap_issuer_wallet_no_assets_redeemed, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
     }
 
     private String pendingText(long pendingValue) {
@@ -343,8 +407,14 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL, 0, "Help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        if (digitalAsset != null && digitalAsset.getAvailableBalanceQuantity() > 0) {
+            menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_DELIVER, 0, getResources().getString(R.string.dap_issuer_wallet_action_deliver))
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+            menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_APPROPRIATE, 1, getResources().getString(R.string.dap_issuer_wallet_action_appropriate))
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        }
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL, 2, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -355,13 +425,102 @@ public class AssetDetailActivityFragment extends AbstractFermatFragment {
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL) {
                 setUpHelpAssetDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
+            } else if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_DELIVER) {
+                changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());
+            } else if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_APPROPRIATE) {
+                new ConfirmDialog.Builder(getActivity(), appSession)
+                        .setTitle(getResources().getString(R.string.dap_issuer_wallet_confirm_title))
+                        .setMessage(getResources().getString(R.string.dap_issuer_wallet_confirm_sure))
+                        .setColorStyle(getResources().getColor(R.color.dap_issuer_wallet_principal))
+                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                            @Override
+                            public void onClick() {
+                                doAppropriate(digitalAsset.getAssetPublicKey(), digitalAsset.getWalletPublicKey());
+                            }
+                        }).build().show();
             }
-
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), R.string.dap_issuer_wallet_system_error,
                     Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onItemClickListener(Transaction data, int position) {
+
+    }
+
+    @Override
+    public void onLongItemClickListener(Transaction data, int position) {
+
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            if (result != null && result.length > 0) {
+                transactions = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(transactions);
+
+                showOrHideNoTransactionsView(transactions.isEmpty());
+            }
+        }
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+        isRefreshing = false;
+        if (isAttached) {
+            swipeRefreshLayout.setRefreshing(false);
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public FermatAdapter getAdapter() {
+        if (adapter == null) {
+            adapter = new AssetDetailTransactionAdapter(getActivity(), transactions, moduleManager);
+            adapter.setFermatListEventListener(this);
+        }
+        return adapter;
+    }
+
+    @Override
+    public RecyclerView.LayoutManager getLayoutManager() {
+        if (layoutManager == null) {
+            layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        }
+        return layoutManager;
+    }
+
+    @Override
+    public List<Transaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<Transaction> transactions = new ArrayList<>();
+        if (moduleManager != null) {
+            try {
+                transactions = Data.getTransactions(moduleManager, digitalAsset);
+
+                appSession.setData("transactions_sent", transactions);
+
+            } catch (Exception ex) {
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(
+                            Wallets.DAP_ASSET_USER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            ex);
+            }
+        } else {
+            Toast.makeText(getActivity(),
+                    getResources().getString(R.string.dap_issuer_wallet_system_error),
+                    Toast.LENGTH_SHORT).
+                    show();
+        }
+        return transactions;
     }
 }
