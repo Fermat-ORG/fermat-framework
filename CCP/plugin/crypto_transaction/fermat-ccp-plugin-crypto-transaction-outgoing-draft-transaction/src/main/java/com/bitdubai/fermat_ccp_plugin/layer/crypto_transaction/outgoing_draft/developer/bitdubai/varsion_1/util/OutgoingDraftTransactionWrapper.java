@@ -51,6 +51,24 @@ public class OutgoingDraftTransactionWrapper {
         this.referenceWallet = referenceWallet;
     }
 
+    public OutgoingDraftTransactionWrapper(UUID requestId, DraftTransaction bitcoinTransaction, CryptoAddress sellerCryptoAddress, CryptoAddress buyerCryptoAddress, String walletPublicKey, long valueToSend, CryptoAddress addressTo, ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType, String actorFromPublicKey, String actorToPublicKey, Actors actorFromType, Actors actorToType, String memo, long timestamp) {
+        this.requestId = requestId;
+        this.bitcoinTransaction = bitcoinTransaction;
+        this.sellerCryptoAddress = sellerCryptoAddress;
+        this.buyerCryptoAddress = buyerCryptoAddress;
+        this.walletPublicKey = walletPublicKey;
+        this.valueToSend = valueToSend;
+        this.addressTo = addressTo;
+        this.referenceWallet = referenceWallet;
+        this.blockchainNetworkType = blockchainNetworkType;
+        this.actorFromPublicKey = actorFromPublicKey;
+        this.actorToPublicKey = actorToPublicKey;
+        this.actorFromType = actorFromType;
+        this.actorToType = actorToType;
+        this.memo = memo;
+        this.timestamp = timestamp;
+    }
+
     public CryptoAddress getBuyerCryptoAddress() {
         return buyerCryptoAddress;
     }
