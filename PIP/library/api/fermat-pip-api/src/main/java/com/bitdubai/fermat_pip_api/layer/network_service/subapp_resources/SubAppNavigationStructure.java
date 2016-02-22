@@ -9,7 +9,7 @@ import java.util.UUID;
  */
 public interface SubAppNavigationStructure {
 
-    public UUID getNavigationStructureId();
+    UUID getNavigationStructureId();
 
-    public String getSubAppNavigationStructure() throws CantGetSubAppNavigationStructureException;
+    String getSubAppNavigationStructure() throws CantGetSubAppNavigationStructureException;
 }

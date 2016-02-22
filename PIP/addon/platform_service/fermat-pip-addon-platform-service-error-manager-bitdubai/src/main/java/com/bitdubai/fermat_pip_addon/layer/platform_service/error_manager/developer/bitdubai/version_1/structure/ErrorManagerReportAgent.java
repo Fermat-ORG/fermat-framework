@@ -53,9 +53,9 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
 
         this.errorReportAgent = new ErrorReportAgent ();
 
-        ((DealsWithPlatformDatabaseSystem) this.errorReportAgent).setPlatformDatabaseSystem(this.platformDatabaseSystem);
+        this.errorReportAgent.setPlatformDatabaseSystem(this.platformDatabaseSystem);
 
-        ((ErrorReportAgent) this.errorReportAgent).initialize();
+        this.errorReportAgent.initialize();
 
         this.agentThread = new Thread(new ErrorReportAgent());
         this.agentThread.start();
