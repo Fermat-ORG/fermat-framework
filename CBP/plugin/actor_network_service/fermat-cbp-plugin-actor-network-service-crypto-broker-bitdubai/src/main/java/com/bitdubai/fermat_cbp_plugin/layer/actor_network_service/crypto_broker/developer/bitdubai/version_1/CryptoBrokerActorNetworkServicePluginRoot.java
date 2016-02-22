@@ -331,7 +331,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     );
             }
 
-         } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
+        } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
             // i inform to error manager the error.
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
