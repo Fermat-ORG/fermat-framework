@@ -336,7 +336,7 @@ public class DigitalAssetCryptoTransactionFactory implements DealsWithErrors {
         try {
             setDigitalAssetLocalFilePath();
             String digitalAssetInnerXML = digitalAsset.toString();
-            PluginTextFile digitalAssetFile = this.pluginFileSystem.createTextFile(this.pluginId, this.digitalAssetFileStoragePath, this.digitalAssetFileName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+            PluginTextFile digitalAssetFile = this.pluginFileSystem.createTextFile(this.pluginId, this.digitalAssetFileStoragePath, this.digitalAssetFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             digitalAssetFile.setContent(digitalAssetInnerXML);
             digitalAssetFile.persistToMedia();
         } catch (CantCreateFileException exception) {
