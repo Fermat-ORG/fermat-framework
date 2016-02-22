@@ -5,5 +5,5 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_a
  */
 public interface DealsWithRegistry {
 
-    public void setRegistry(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry registry);
+    void setRegistry(com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry registry);
 }

@@ -46,7 +46,7 @@ public class NewSentMessageNotificationEventHandler extends AbstractCommunicatio
 //            if(event.getNetworkServiceTypeApplicant().equals(NetworkServiceType.INTRA_USER))
             if(networkService!=null) networkService.handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
             else if (ns!=null) {
-                ((IntraActorNetworkServicePluginRoot)ns).handleNewSentMessageNotificationEvent((FermatMessage)event.getData());
+                ns.handleNewSentMessageNotificationEvent((FermatMessage) event.getData());
             }
 
         }

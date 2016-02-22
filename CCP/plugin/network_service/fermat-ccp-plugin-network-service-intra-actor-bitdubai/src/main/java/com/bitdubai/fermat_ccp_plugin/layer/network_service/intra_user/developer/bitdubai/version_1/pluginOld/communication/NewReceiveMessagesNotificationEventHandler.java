@@ -30,7 +30,7 @@ public class NewReceiveMessagesNotificationEventHandler extends AbstractCommunic
         //(networkService).handleNewMessages((FermatMessage) event.getData());
         if(networkService!=null) networkService.handleNewMessages((FermatMessage) event.getData());
         else if (ns!=null) {
-            ((IntraActorNetworkServicePluginRoot)ns).handleNewMessages((FermatMessage)event.getData());
+            ns.handleNewMessages((FermatMessage) event.getData());
         }
     }
 

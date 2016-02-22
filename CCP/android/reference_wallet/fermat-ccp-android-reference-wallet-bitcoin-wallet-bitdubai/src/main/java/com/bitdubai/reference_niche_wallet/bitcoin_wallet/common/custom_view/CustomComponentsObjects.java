@@ -5,9 +5,9 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.custom_view;
  */
 public interface CustomComponentsObjects {
 
-    public String getTitle();
+    String getTitle();
 
-    public String getDetail();
+    String getDetail();
 
-    public byte[] getImage();
+    byte[] getImage();
 }

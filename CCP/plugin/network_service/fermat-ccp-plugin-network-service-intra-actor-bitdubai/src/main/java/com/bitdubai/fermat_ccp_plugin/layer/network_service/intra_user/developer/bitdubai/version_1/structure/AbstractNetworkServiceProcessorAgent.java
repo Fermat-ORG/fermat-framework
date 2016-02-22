@@ -98,7 +98,7 @@ public abstract class AbstractNetworkServiceProcessorAgent<N extends NetworkServ
     private void sendCycle() {
         try {
             if(networkServicePluginRoot.isRegister()) processSend();
-            toSend.sleep(sendThreadSleepTime);
+            Thread.sleep(sendThreadSleepTime);
         } catch (InterruptedException e) {
             reportUnexpectedError(FermatException.wrapException(e));
         } catch(Exception e) {
@@ -109,7 +109,7 @@ public abstract class AbstractNetworkServiceProcessorAgent<N extends NetworkServ
     private void receiveCycle() {
         try {
             if(networkServicePluginRoot.isRegister()) processReceive();
-            toReceive.sleep(receiveThreadSleepTime);
+            Thread.sleep(receiveThreadSleepTime);
         } catch (InterruptedException e) {
             reportUnexpectedError(FermatException.wrapException(e));
         } catch(Exception e) {

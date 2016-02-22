@@ -135,7 +135,6 @@ public interface CryptoWallet extends Serializable {
                                                           String        walletPublicKey,
                                                           CryptoCurrency walletCryptoCurrency,
                                                           BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
-        ;
 
     /**
      *
@@ -153,15 +152,15 @@ public interface CryptoWallet extends Serializable {
      * @param blockchainNetworkType
      */
 
-    public void sendAddressExchangeRequest(String        actorAlias,
-                                           Actors        actorConnectedType,
-                                           String        actorConnectedPublicKey,
-                                           byte[]        actorPhoto,
-                                           Actors        actorWalletType ,
-                                           String        identityWalletPublicKey,
-                                           String        walletPublicKey,
-                                           CryptoCurrency walletCryptoCurrency,
-                                           BlockchainNetworkType blockchainNetworkType);
+    void sendAddressExchangeRequest(String actorAlias,
+                                    Actors actorConnectedType,
+                                    String actorConnectedPublicKey,
+                                    byte[] actorPhoto,
+                                    Actors actorWalletType,
+                                    String identityWalletPublicKey,
+                                    String walletPublicKey,
+                                    CryptoCurrency walletCryptoCurrency,
+                                    BlockchainNetworkType blockchainNetworkType);
 
     /**
      * Create a new contact with a photo for an specific wallet

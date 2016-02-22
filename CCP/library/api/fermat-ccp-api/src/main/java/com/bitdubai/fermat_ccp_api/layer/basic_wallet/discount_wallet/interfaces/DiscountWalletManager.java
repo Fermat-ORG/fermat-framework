@@ -12,9 +12,9 @@ import java.util.UUID;
  */
 public interface DiscountWalletManager {
 
-    public void loadWallet (UUID walletId) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.CantLoadWalletException;
+    void loadWallet(UUID walletId) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.CantLoadWalletException;
 
-    public void createWallet (UUID walletId, FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency) throws CantCreateWalletException;
+    void createWallet(UUID walletId, FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency) throws CantCreateWalletException;
     
-    public DiscountWallet getCurrentDiscountWallet();
+    DiscountWallet getCurrentDiscountWallet();
 }
