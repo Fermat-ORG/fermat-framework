@@ -6,6 +6,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCon
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
 
 import java.util.List;
@@ -88,5 +90,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @throws CantConnectToActorAssetUserException
      */
     void sendMessage(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetUserException;
+
+    void disconnectToActorAssetRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws RedeemPointNotFoundException, CantUpdateRedeemPointException;
 
 }

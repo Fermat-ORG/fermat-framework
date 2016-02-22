@@ -10,11 +10,15 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 
 /**
@@ -99,30 +103,27 @@ public class DisconectDialog extends FermatDialog<AssetRedeemPointCommunitySubAp
         int i = v.getId();
 
         if (i == R.id.positive_button) {
-//            try {
-//                //image null
-//                if (actor != null && identity != null) {
-//
-//                    getSession().getModuleManager().disconnectIntraUSer(identity.getPublicKey(),actor.getPublicKey());
-//
-//                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-//                    prefs.edit().putBoolean("Connected", true).apply();
-//                    Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
-//                    broadcast.putExtra(Constants.BROADCAST_DISCONNECTED_UPDATE, true);
-//                    sendLocalBroadcast(broadcast);
-//
+            try {
+                //image null
+                if (actor != null) {
+
+                    getSession().getModuleManager().disconnectToActorAssetRedeemPoint(null,actor);
+
                     Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
-//
-//                } else {
-//                    super.toastDefaultError();
-//                }
-//                dismiss();
-//
-//            } catch (final IntraUserDisconnectingFailedException e) {
-//
-//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-//                super.toastDefaultError();
-//            }
+                } else {
+                    super.toastDefaultError();
+                }
+                dismiss();
+
+            } catch (CantAssetRedeemPointActorNotFoundException e) {
+
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            } catch (CantUpdateRedeemPointException e) {
+
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            }
 
             dismiss();
         }else if( i == R.id.negative_button){
