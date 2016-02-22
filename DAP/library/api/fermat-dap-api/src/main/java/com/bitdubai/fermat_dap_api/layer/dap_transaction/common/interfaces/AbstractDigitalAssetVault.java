@@ -17,6 +17,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
@@ -262,6 +263,10 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
                 AssetIssuerWalletBalance assetIssuerWalletBalance = issuerWallet.getBalance();
                 mySelf = this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
                 Actors mySelfType = Actors.DAP_ASSET_ISSUER;
+                if (Validate.isObjectNull(externalActorPublicKey)) {
+                    externalActorPublicKey = mySelf;
+                    externalActorType = mySelfType;
+                }
                 switch (transactionType) {
                     case CREDIT: {
                         AssetIssuerWalletTransactionRecordWrapper assetIssuerWalletTransactionRecordWrapper = new AssetIssuerWalletTransactionRecordWrapper(
@@ -297,6 +302,10 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
                 AssetUserWalletBalance assetUserWalletBalance = userWallet.getBalance();
                 mySelf = this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
                 Actors mySelfType = Actors.DAP_ASSET_USER;
+                if (Validate.isObjectNull(externalActorPublicKey)) {
+                    externalActorPublicKey = mySelf;
+                    externalActorType = mySelfType;
+                }
                 switch (transactionType) {
                     case DEBIT: {
                         AssetUserWalletTransactionRecordWrapper assetUserWalletTransactionRecordWrapper = new AssetUserWalletTransactionRecordWrapper(

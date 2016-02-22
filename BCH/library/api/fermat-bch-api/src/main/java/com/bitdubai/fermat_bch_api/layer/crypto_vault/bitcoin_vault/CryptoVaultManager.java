@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
@@ -111,5 +112,13 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
      */
     DraftTransaction addInputsToDraftTransaction (DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo) throws CantCreateDraftTransactionException;
 
+    /**
+     * Returns a stored draft transaction
+     * @param blockchainNetworkType the network type this transaction was created
+     * @param txHash the txHash of the draft transaction
+     * @return a previously stored draft transaction
+     * @throws CantGetDraftTransactionException
+     */
+    DraftTransaction getDraftTransaction(BlockchainNetworkType blockchainNetworkType, String txHash) throws CantGetDraftTransactionException;
 
 }
