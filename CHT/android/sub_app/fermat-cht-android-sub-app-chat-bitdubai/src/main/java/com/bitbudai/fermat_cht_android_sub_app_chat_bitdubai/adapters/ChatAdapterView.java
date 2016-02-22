@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -64,6 +65,7 @@ public class ChatAdapterView extends LinearLayout {
     private ErrorManager errorManager;
     private ChatSession chatSession;
     private FermatSession appSession;
+    private Toolbar toolbar;
     private EditText messageET;
     private ViewGroup rootView;
     private String leftName;
@@ -88,6 +90,7 @@ public class ChatAdapterView extends LinearLayout {
         this.errorManager=errorManager;
         this.chatSession=chatSession;
         this.appSession=appSession;
+        this.toolbar=toolbar;
         //this.background=background;
         initControls();
     }
@@ -166,7 +169,7 @@ public class ChatAdapterView extends LinearLayout {
                     msg.setId(chatManager.getMessageByChatId(chatid).get(i).getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else msg.setMe(false);
-                    msg.setStatus("Flechas");
+                    msg.setStatus(chatManager.getMessageByChatId(chatid).get(i).getStatus().toString());
                     msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatid).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString()
                     msg.setUserId(chatManager.getMessageByChatId(chatid).get(i).getContactId());
                     msg.setMessage(message);
@@ -206,7 +209,8 @@ public class ChatAdapterView extends LinearLayout {
         }
 
         if (leftName != null ) {
-            companionLabel.setText(leftName);
+            toolbar.setTitle(leftName);
+            //companionLabel.setText(leftName);
         } else {
             companionLabel.setText("Contacto");
         }
@@ -389,6 +393,10 @@ public class ChatAdapterView extends LinearLayout {
         this.appSession = appSession;
     }
 
+    private void setToolbar(Toolbar toolbar) {
+        this.toolbar = toolbar;
+    }
+
     private void loadDummyHistory(boolean loadDummyData) {
         this.loadDummyData = loadDummyData;
     }
@@ -403,6 +411,7 @@ public class ChatAdapterView extends LinearLayout {
         private ErrorManager errorManager;
         private ChatSession chatSession;
         private FermatSession appSession;
+        private Toolbar toolbar;
         private boolean loadDummyData = false;
         private int background = -1;
         private float chatTextSize;
@@ -471,6 +480,11 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
+        public Builder addToolbar(Toolbar toolbar) {
+            this.toolbar = toolbar;
+            return this;
+        }
+
         public Builder addAppSession(FermatSession appSession) {
             this.appSession = appSession;
             return this;
@@ -509,6 +523,9 @@ public class ChatAdapterView extends LinearLayout {
             }
             if (rightName != null) {
                 chatView.addRightName(rightName);
+            }
+            if (toolbar != null) {
+                chatView.setToolbar(toolbar);
             }
             if (background != -1) {
                 chatView.setBackground(background);

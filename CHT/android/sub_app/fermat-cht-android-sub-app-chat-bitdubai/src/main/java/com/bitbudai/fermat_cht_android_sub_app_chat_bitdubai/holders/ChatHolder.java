@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,8 +19,9 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
  */
 public class ChatHolder extends FermatViewHolder {
 
-    public TextView txtMessage;//TextView
-    public TextView txtInfo;//TextView
+    public TextView txtMessage;
+    public TextView txtInfo;
+    public ImageView tickstatusimage;
     public LinearLayout content;
     public LinearLayout contentWithBG;
 
@@ -33,17 +35,20 @@ public class ChatHolder extends FermatViewHolder {
     public ChatHolder(View itemView) {
         super(itemView);
 
-        txtMessage      = (TextView)  itemView.findViewById(R.id.txtMessage);
-        content         = (LinearLayout)    itemView.findViewById(R.id.content);
-        contentWithBG   = (LinearLayout)    itemView.findViewById(R.id.contentWithBackground);
-        txtInfo         = (TextView)  itemView.findViewById(R.id.txtInfo);
+        txtMessage         = (TextView)  itemView.findViewById(R.id.txtMessage);
+        content            = (LinearLayout)    itemView.findViewById(R.id.content);
+        contentWithBG      = (LinearLayout)    itemView.findViewById(R.id.contentWithBackground);
+        txtInfo            = (TextView)  itemView.findViewById(R.id.txtInfo);
+        tickstatusimage  = (ImageView)  itemView.findViewById(R.id.tick_status_image);
 
-        /*rowView = (LinearLayout) itemView.findViewById(R.id.row_view);
-        bitcoins = (FermatTextView) itemView.findViewById(R.id.asset_bitcoins);*/
     }
 
     public TextView getTxtMessage() {
         return txtMessage;
+    }
+
+    public ImageView getTickStatusImage() {
+        return tickstatusimage;
     }
 
     public TextView getTxtInfo() {

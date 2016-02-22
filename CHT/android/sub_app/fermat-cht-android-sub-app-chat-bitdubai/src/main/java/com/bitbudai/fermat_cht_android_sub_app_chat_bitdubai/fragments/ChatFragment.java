@@ -3,6 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -59,6 +60,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    private Toolbar toolbar;
 
 
     ArrayList<String> historialmensaje = new ArrayList<>();
@@ -91,6 +93,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             moduleManager = chatSession.getModuleManager();
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
+            toolbar = getToolbar();
             whattodo();
             //     Chat chat=chatSession.getSelectedChat();
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
@@ -170,6 +173,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 .addChatSession(chatSession)
                 .addAppSession(appSession)
                 .addChatManager(chatManager)
+                .addToolbar(toolbar)
                 .build();
 
         // Inflate the layout for this fragment
