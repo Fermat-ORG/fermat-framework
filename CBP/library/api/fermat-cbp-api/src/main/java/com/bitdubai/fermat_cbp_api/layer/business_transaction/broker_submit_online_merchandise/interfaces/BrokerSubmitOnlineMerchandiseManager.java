@@ -37,7 +37,7 @@ public interface BrokerSubmitOnlineMerchandiseManager extends BrokerSubmitMercha
             String cbpWalletPublicKey,
             String cryptoWalletPublicKey,
             String contractHash,
-            BlockchainNetworkType blockchainNetworkType)throws CantSubmitMerchandiseException;
+            BlockchainNetworkType blockchainNetworkType) throws CantSubmitMerchandiseException;
 
     /**
      * This method submit the merchandise according the contract clauses.
