@@ -270,7 +270,7 @@ Think about two biological cells, each one with the same DNA, and both being par
 
 In this metaphor, the Fermat p2p Network would be the nervous system that allows these cells to send information to each other and in that way coordinate whatever tasks or business they have between each other. Cryto currency networks would be like the circulatory system that is not designed to transport information, but to transport value. Fermat has no intention in replicating what is already working, in fact one of our premises is "Reuse What Already Works".
 
->>>> INSERT INFO GRAPHIC HERE EXPLAINING THE PREVIOUS PARAGRAPHS  <<<<
+>>>> INSERT INFO GRAPHIC #1 HERE EXPLAINING THE PREVIOUS PARAGRAPHS  <<<<
 
 #### The Fermat Framework
 
@@ -283,6 +283,8 @@ Fermat APPs are not downloaded by end users from the Apple APP Store or Google P
 That means that we need a special Fermat APP to give the end user the illusion they are downloading and installing a Fermat APP. We call this Fermat APP the _Fermat APP Store_. So no APP on this store catalog is really downloaded, what is really happening is that they are activated and the Framework makes them visible, because the pre-installed components are already there. Besides that, resource files do need to be downloaded. The _Fermat APP Store_ will try to download those resources from other peers and if it is not possible it will go to a centralized place to find the seeds.
 
 Up to this point Fermat is a Framework that extends the OS capabilities enabling it to run Fermat APPs, which in turn are very similar to mobile APPs from then end users point of view, but underneath the skin they are a set of components interacting between each other. Probably a few of them were built for an specific Fermat APP while the rest are part of a pool or reusable components that increases each time a new Fermat APP is added to the system.
+
+>>>> INSERT INFO GRAPHIC #2 HERE EXPLAINING THE PREVIOUS PARAGRAPH (frameweork)  <<<<
 
 ##### Multi-Layer Design Pattern
 
@@ -364,6 +366,8 @@ In the case of the lowest layers we encapsulate the access to the OS into severa
 
 Finally, we noticed that many layers were independent of end user's use cases implemented above them. We grouped these layers into what we called _Super Layers_. A _Super Layer_ is then a group of use case independent layers that have some logical connection between them.
 
+>>>> INSERT INFO GRAPHIC #3 HERE EXPLAINING THE PREVIOUS PARAGRAPH (layers)  <<<<
+
 #### The Ecosystem of Fermat APPs
 
 Our design constraint here was that we need to implement all possible use cases and do it according to a master plan, phase by phase. We already know that Fermat APPs are a set of reusable components that goes to a pool organized in layers. Still, there is a need to organize that pool into different compartments with all the components related to similar use cases.
@@ -396,6 +400,7 @@ After analyzing several use cases we found out that it was possible to create a 
 
 Each platform usually has one or more Fermat APPs on top of it, and in this way is how the Ecosystem of Fermat APPs is organized.
 
+>>>> INSERT INFO GRAPHIC #4 HERE EXPLAINING THE PREVIOUS PARAGRAPH (platforms)  <<<<
 <br>
 ### Key Value Propositions
 
@@ -508,6 +513,7 @@ The key value proposition to end users is to reduce pricing (by eliminating or m
 **Job Boards** : A p2p version designed to allow employers to post job requirements for a position. Fully automated with no intermediaries.  
 
 
+>>>> INSERT INFO GRAPHIC #5 HERE EXPLAINING THE PREVIOUS PARAGRAPHS (human networks and business model)  <<<<
 
 <br><br>
 ## Part II - Fermat In Detail
