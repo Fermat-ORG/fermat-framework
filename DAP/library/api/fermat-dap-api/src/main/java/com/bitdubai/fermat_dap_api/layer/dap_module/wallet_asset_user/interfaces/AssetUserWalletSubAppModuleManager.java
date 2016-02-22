@@ -101,9 +101,8 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<Fermat
 
     /**
      * Gets the list of pending asset negotiations
-     * @param blockchainNetworkType the network type of the negotiations
      * @return a list of pending asset negotiations
      * @throws CantGetAssetNegotiationsException
      */
-    List<AssetNegotiation> getPendingAssetNegotiations (BlockchainNetworkType blockchainNetworkType) throws CantGetAssetNegotiationsException;
+    List<AssetNegotiation> getPendingAssetNegotiations() throws CantGetAssetNegotiationsException;
 }

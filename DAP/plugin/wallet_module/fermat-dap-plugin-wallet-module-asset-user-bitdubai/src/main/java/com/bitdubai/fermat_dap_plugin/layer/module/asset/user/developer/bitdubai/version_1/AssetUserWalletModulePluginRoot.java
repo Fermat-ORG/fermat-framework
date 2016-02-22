@@ -410,7 +410,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public List<AssetNegotiation> getPendingAssetNegotiations(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetNegotiationsException {
+    public List<AssetNegotiation> getPendingAssetNegotiations() throws CantGetAssetNegotiationsException {
         //todo implement
         return null;
     }
