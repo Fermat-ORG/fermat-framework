@@ -257,9 +257,7 @@ public class CashMoneyWalletDao {
             return false;
         }
 
-        if (record.getStringValue(CashMoneyWalletDatabaseConstants.WALLETS_WALLET_PUBLIC_KEY_COLUMN_NAME).equals(walletPublicKey))
-            return true;
-        else return false;
+        return record.getStringValue(CashMoneyWalletDatabaseConstants.WALLETS_WALLET_PUBLIC_KEY_COLUMN_NAME).equals(walletPublicKey);
     }
 
 
