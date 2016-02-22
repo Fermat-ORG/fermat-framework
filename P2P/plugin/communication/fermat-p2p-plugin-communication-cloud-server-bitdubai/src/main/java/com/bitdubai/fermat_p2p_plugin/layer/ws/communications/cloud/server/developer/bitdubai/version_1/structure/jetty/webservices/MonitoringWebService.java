@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.ws.rs.GET;
@@ -66,48 +67,47 @@ public class MonitoringWebService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response monitoringData() {
 
+        LOG.info("Executing monitoringData()");
+
         JsonObject globalData = new JsonObject();
-        globalData.addProperty("PENDING_CLIENT_CONNECTION", MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().size());
-        globalData.addProperty("REGISTERED_CLIENT_CONNECTION",  MemoryCache.getInstance().getRegisteredClientConnectionsCache().size());
+        globalData.addProperty("pendingClientConnection", MemoryCache.getInstance().getPendingRegisterClientConnectionsCache().size());
+        globalData.addProperty("registeredClientConnection",  MemoryCache.getInstance().getRegisteredClientConnectionsCache().size());
 
-        JsonObject networkServiceData = new JsonObject();
-
+        Map<NetworkServiceType, Integer> networkServiceData = new HashMap<>();
+        int totalNs = 0;
         for (NetworkServiceType networkServiceType : MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet()) {
-            networkServiceData.addProperty(networkServiceType.toString(), MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).size());
+            networkServiceData.put(networkServiceType, MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).size());
+            totalNs = totalNs + MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).size();
         }
 
-        globalData.addProperty("REGISTERED_NETWORK_SERVICE", gson.toJson(networkServiceData));
+        globalData.addProperty("registeredNetworkServiceTotal", totalNs);
+        globalData.addProperty("registeredNetworkServiceDetail", gson.toJson(networkServiceData, Map.class));
 
-        JsonObject otherComponentData = new JsonObject();
-
+        Map<PlatformComponentType, Integer> otherComponentData = new HashMap<>();
+        int totalOc = 0;
         for (PlatformComponentType platformComponentType : MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().keySet()) {
-            otherComponentData.addProperty(platformComponentType.toString(), MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).size());
+            otherComponentData.put(platformComponentType, MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).size());
+            totalOc = totalOc + MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).size();
         }
 
-        globalData.addProperty("OCR", gson.toJson(otherComponentData));
-
-        return Response.status(200).entity(gson.toJson(globalData)).build();
-    }
-
-    @GET
-    @Path("/current/vpn/data")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response monitoringVpnData() {
+        globalData.addProperty("registerOtherComponentTotal", totalOc);
+        globalData.addProperty("registerOtherComponentDetail", gson.toJson(otherComponentData, Map.class));
 
         Map<NetworkServiceType, Map<String, VpnClientConnection>> vpnMap = ShareMemoryCacheForVpnClientsConnections.getConnectionMapCopy();
 
-        JsonObject globalData = new JsonObject();
-        globalData.addProperty("VPN_COUNT", vpnMap.size());
+        globalData.addProperty("vpnTotal", vpnMap.size());
 
-        JsonObject networkServiceData = new JsonObject();
+        JsonObject vpnNetworkServiceData = new JsonObject();
 
         for (NetworkServiceType networkServiceType : vpnMap.keySet()) {
-            networkServiceData.addProperty(networkServiceType.toString(), vpnMap.get(networkServiceType).size());
+            vpnNetworkServiceData.addProperty(networkServiceType.toString(), vpnMap.get(networkServiceType).size());
         }
 
-        globalData.addProperty("VPN_BY_NETWORK_SERVICE", gson.toJson(networkServiceData));
+        globalData.addProperty("vpnByNetworkServiceDetails", gson.toJson(vpnNetworkServiceData));
 
+        //return Response.status(200).entity("angular.callbacks._0 (" + gson.toJson(globalData)+")").build();
         return Response.status(200).entity(gson.toJson(globalData)).build();
+
     }
 
 }

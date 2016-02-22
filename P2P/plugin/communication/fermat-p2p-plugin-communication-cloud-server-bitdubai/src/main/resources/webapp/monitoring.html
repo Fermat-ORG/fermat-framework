@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<!-- saved from url=(0039)http://getbootstrap.com/examples/cover/ -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en" ng-app="monitoringApp">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Cloud Server Monitoring Dashboard Page">
+    <meta name="author" content="Fermat.org">
     <!-- <link rel="icon" href="http://getbootstrap.com/favicon.ico"> -->
 
-    <title>Fermat - Network Node</title>
+    <title>Fermat - Cloud Server</title>
 
     <!-- Bootstrap core CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="./css/cover.css" rel="stylesheet">
+    <link href="./css/angular-chart.min.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="./js/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -28,40 +30,166 @@
     <![endif]-->
   </head>
 
-  <body>
+  <body role="document" ng-controller="monitoringCtrl" >
 
-    <div class="site-wrapper">
+      <!-- Fixed navbar -->
+      <nav class="navbar navbar-inverse navbar-fixed-top">
+          <div class="container">
+              <div class="navbar-header">
+                  <ul class="nav navbar-nav">
+                      <li><img src="https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png" class="img-responsive" alt="Fermat.org" width="95px" height="95px" /></li>
+                      <li><a class="navbar-brand" href="#">Cloud Server</a></li>
+                  </ul>
+              </div>
+              <div id="navbar" class="navbar-collapse collapse">
+                  <ul class="nav navbar-nav">
+                      <li class="active"><a href="index.html">Home</a></li>
+                      <li><a href="#contact">Contact</a></li>
+                  </ul>
+              </div><!--/.nav-collapse -->
+          </div>
+      </nav>
 
-      <div class="site-wrapper-inner">
+      <div class="container theme-showcase" role="main">
 
-        <div class="cover-container">
+          <br/>
 
-          <div class="masthead clearfix">
-            <div class="inner">
-              <h3 class="masthead-brand">Fermat</h3>
-              <nav>
-                <ul class="nav masthead-nav">
-                  <li class="active"><a href="index.html">Home</a></li>
-                  <li><a href="monitoring.html">Monitoring</a></li>
-                  <li><a href="#">Contact</a></li>
-                </ul>
-              </nav>
-            </div>
+          <h1 class="page-header">Dashboard</h1>
+
+          <div class="jumbotron">
+              <canvas id="line" class="chart chart-line" chart-data="charData" chart-labels="labels" chart-legend="true" chart-series="series" ></canvas>
           </div>
 
-          <div class="inner cover">
-              Monitoring
-          </div>
+          <div class="row">
+              <div class="col-md-3">
 
-          <div class="mastfoot">
-            <div class="inner">
-              <p>Develop a <a href="http://fermat.org/">Fermat.org</a>, by <a href="https://BitDubai.com">BitDubai</a>.</p>
-            </div>
-          </div>
+                  <div class="panel panel-primary">
+                      <div class="panel-heading">
+                          <h3 class="panel-title">Panel title</h3>
+                      </div>
+                      <div class="panel-body">
+                          Panel content
+                      </div>
+                  </div>
 
-        </div>
+              </div>
 
-      </div>
+                  <div class="col-md-9 main">
+
+                      <div class="row placeholders">
+                          <div class="col-xs-6 col-sm-3 placeholder">
+                              <div class="panel panel-success">
+                                  <div class="panel-heading">
+                                      <span class="glyphicon glyphicon-phone" style="float:left;"></span>
+                                      <h3 class="panel-title">Devices (Client)</h3>
+                                  </div>
+                                  <div class="panel-body">
+                                      <h1>{{ monitoringData.registeredClientConnection }}</h1>
+                                      <span class="text-muted">Registered</span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-3 placeholder">
+                              <div class="panel panel-info">
+                                  <div class="panel-heading">
+                                      <span class="glyphicon glyphicon-cog" style="float:left;"></span>
+                                      <h3 class="panel-title">Network Service</h3>
+                                  </div>
+                                  <div class="panel-body">
+                                      <h1>{{ monitoringData.registeredNetworkServiceTotal }}</h1>
+                                      <span class="text-muted">Registered</span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-3 placeholder">
+                              <div class="panel panel-warning">
+                                  <div class="panel-heading">
+                                      <span class="glyphicon glyphicon-user" style="float:left;" ></span>
+                                      <h3 class="panel-title">Identities</h3>
+                                  </div>
+                                  <div class="panel-body">
+                                      <h1>{{ monitoringData.registerOtherComponentTotal }}</h1>
+                                      <span class="text-muted">Registered</span>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="col-xs-6 col-sm-3 placeholder">
+                              <div class="panel panel-danger">
+                                  <div class="panel-heading">
+                                      <span class="glyphicon glyphicon-transfer" style="float:left;"></span>
+                                      <h3 class="panel-title">Vpn</h3>
+                                  </div>
+                                  <div class="panel-body">
+                                      <h1>{{ monitoringData.vpnTotal }}</h1>
+                                      <span class="text-muted">Actives</span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                      <h2 class="sub-header">Network Service Registered Details</h2>
+                      <div class="table-responsive">
+                          <table class="table">
+                              <thead>
+                              <tr>
+                                  <th>Type</th>
+                                  <th>Total</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr ng-repeat="(key, value) in registeredNetworkServiceDetail" >
+                                  <td>{{ key }}</td>
+                                  <td>{{ value }}</td>
+                              </tr>
+                              </tbody>
+                          </table>
+                      </div>
+
+                      <h2 class="sub-header">Identities Registered Details</h2>
+                      <div class="table-responsive">
+                          <table class="table">
+                              <thead>
+                              <tr>
+                                  <th>Type</th>
+                                  <th>Total</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr ng-repeat="(key, value) in registerOtherComponentDetail" >
+                                  <td>{{ key }}</td>
+                                  <td>{{ value }}</td>
+                              </tr>
+                              </tbody>
+                          </table>
+                      </div>
+
+                      <h2 class="sub-header">VPN by Network Services Details</h2>
+                      <div class="table-responsive">
+                          <table class="table">
+                              <thead>
+                              <tr>
+                                  <th>Type</th>
+                                  <th>Total</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr ng-repeat="(key, value) in vpnByNetworkServiceDetails" >
+                                  <td>{{ key }}</td>
+                                  <td>{{ value }}</td>
+                              </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                  </div>
+              </div>
+
+      <br/>
+      <br/>
+      <br/>
+      <footer>
+          <p class="pull-right"><a href="#"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;Back to top</a></p>
+          <p>© 2016 Develop a <a href="http://fermat.org/">Fermat.org</a>, by <a href="https://BitDubai.com">BitDubai</a>.</p>
+      </footer>
 
     </div>
 
@@ -70,8 +198,13 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="./js/jquery.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
-    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="./js/angular.min.js"></script>
+    <script src="./js/monitoringApp.js"></script>
+    <script src="./js/Chart.min.js"></script>
+    <script src="./js/angular-chart.min.js"></script>
+
+
+      <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="./js/ie10-viewport-bug-workaround.js"></script>
-  
 
 </body></html>
