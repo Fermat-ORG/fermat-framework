@@ -1,7 +1,6 @@
 package com.bitdubai.android_core.app;
 
 import android.animation.AnimatorListenerAdapter;
-import android.app.ActionBar;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -42,7 +41,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -107,6 +105,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
@@ -127,7 +126,6 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
-import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -562,6 +560,16 @@ public abstract class FermatActivity extends AppCompatActivity
                 new AppStatusDialog(view.getContext(), androidCoreModule, appStatusListener).show();
             }
         });
+
+
+        ImageButton btn_fermat_network = (ImageButton)mRevealView.findViewById(R.id.btn_fermat_network);
+        btn_fermat_network.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(),ApplicationConstants.SETTINGS_FERMAT_NETWORK);
+            }
+        });
+
 
 
 
@@ -1327,15 +1335,15 @@ public abstract class FermatActivity extends AppCompatActivity
             }
             screenPagerAdapter = new ScreenPagerAdapter(getFragmentManager(), fragments);
 
-            final ViewPager pager = (ViewPager) super.findViewById(R.id.pager);
-            pager.setVisibility(View.VISIBLE);
+            pagertabs = (ViewPager) super.findViewById(R.id.pager);
+            pagertabs.setVisibility(View.VISIBLE);
 
             //set default page to show
-            pager.setCurrentItem(0);
+            pagertabs.setCurrentItem(0);
 
             final RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radiogroup);
             radioGroup.setVisibility(View.VISIBLE);
-            pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            pagertabs.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
@@ -1358,19 +1366,19 @@ public abstract class FermatActivity extends AppCompatActivity
 
                 }
             });
-            pager.setAdapter(this.screenPagerAdapter);
+            pagertabs.setAdapter(this.screenPagerAdapter);
 
             for(int childPos = 0 ; childPos < radioGroup.getChildCount();childPos++){
                 final int finalChildPos = childPos;
                 radioGroup.getChildAt(childPos).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        pager.setCurrentItem(finalChildPos, true);
+                        pagertabs.setCurrentItem(finalChildPos, true);
                     }
                 });
             }
 
-            if (pager.getBackground() == null) {
+            if (pagertabs.getBackground() == null) {
                 if(ApplicationSession.applicationState==ApplicationSession.STATE_STARTED) {
                     //Drawable d = Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null);
                     //getWindow().setBackgroundDrawable(Drawable.createFromStream(getAssets().open("drawables/mdpi.jpg"), null));
@@ -1403,14 +1411,7 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void paintComboBoxInActionBar(ArrayAdapter adapter, ActionBar.OnNavigationListener listener) {
-        getActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        //ArrayAdapter<String> itemsAdapter =
-        //      new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, values);
-        getActionBar().setListNavigationCallbacks(adapter, listener);
-        adapter.notifyDataSetChanged();
-    }
+
 
     protected void bottomNavigationEnabled(boolean enabled){
         if(enabled) {
@@ -1499,13 +1500,6 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     protected SubAppResourcesProviderManager getSubAppResourcesProviderManager() {
         return FermatSystemUtils.getSubAppResourcesProviderManager();
-    }
-
-    /**
-     * Get NotificationManager
-     */
-    private NotificationManagerMiddleware getNotificationManager() {
-        return FermatSystemUtils.getNotificationManager();
     }
 
     /**
@@ -1741,6 +1735,8 @@ public abstract class FermatActivity extends AppCompatActivity
     }
     public abstract FermatStructure getAppInUse();
     public abstract FermatSession getFermatSessionInUse(String appPublicKey);
+    public abstract void changeActivity(String activityName,String appBackPublicKey, Object... objects);
+
 
     @Override
     public boolean onNavigationItemSelected(final MenuItem item) {
@@ -1951,6 +1947,10 @@ public abstract class FermatActivity extends AppCompatActivity
 
     public ScreenPagerAdapter getScreenAdapter() {
         return screenPagerAdapter;
+    }
+
+    public ViewPager getPagertabs() {
+        return pagertabs;
     }
 
     public ActivityType getType() {
