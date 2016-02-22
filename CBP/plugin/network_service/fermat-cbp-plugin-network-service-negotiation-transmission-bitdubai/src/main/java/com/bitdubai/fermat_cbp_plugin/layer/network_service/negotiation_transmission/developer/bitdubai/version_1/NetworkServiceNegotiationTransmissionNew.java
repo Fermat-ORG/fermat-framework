@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -176,21 +177,21 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
 
         try {
 
-            Gson gson = new Gson();
+//            Gson gson = new Gson();
 //            NegotiationTransmissionMessage negotiationTransmissionMessage = gson.fromJson(fermatMessage.getContent(), NegotiationTransmissionMessage.class);
             NegotiationTransmission negotiationTransmission = NegotiationTransmissionImpl.fronJson(fermatMessage.getContent());
-//            System.out.println("**12345 after gson");
+            System.out.println("**12345 after gson");
 //            System.out.println(negotiationTransmission);
             switch (negotiationTransmission.getTransmissionType()) {
                 case TRANSMISSION_NEGOTIATION:
-//                    System.out.println("**12345 TESTING NEGOTIATION" + negotiationTransmission.toString());
+                    System.out.println("**12345 TESTING NEGOTIATION" + negotiationTransmission.toString());
 //                    NegotiationMessage negotiationMessage = gson.fromJson(fermatMessage.getContent(), NegotiationMessage.class);
 //                    receiveNegotiation(negotiationMessage);
                     receiveNegotiation(negotiationTransmission);
                     break;
 
                 case TRANSMISSION_CONFIRM:
-//                    System.out.println("**12345 TESTING CONFIRM" + negotiationTransmission.toString());
+                    System.out.println("**12345 TESTING CONFIRM" + negotiationTransmission.toString());
 //                    ConfirmMessage confirmMessage = gson.fromJson(fermatMessage.getContent(), ConfirmMessage.class);
 //                    receiveConfirm(confirmMessage);
                     receiveConfirm(negotiationTransmission);
@@ -281,6 +282,28 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
                         NetworkServiceType.NEGOTIATION_TRANSMISSION,
                         PlatformComponentType.NETWORK_SERVICE,
                         "");
+    }
+
+    public PlatformComponentProfile constructBasicPlatformComponentProfile(String identityPublicKey,
+                                                                           Actors actorType        ) {
+
+
+        return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
+                .constructBasicPlatformComponentProfileFactory(
+                        identityPublicKey,
+                        NetworkServiceType.UNDEFINED,
+                        platformComponentTypeSelectorByActorType(actorType)
+                );
+    }
+
+    private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type)  {
+
+        switch (type) {
+
+            case CBP_CRYPTO_BROKER    : return PlatformComponentType.ACTOR_CRYPTO_BROKER  ;
+            case CBP_CRYPTO_CUSTOMER  : return PlatformComponentType.ACTOR_CRYPTO_CUSTOMER;
+            default: return null;
+        }
     }
 
     @Override
