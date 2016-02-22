@@ -347,7 +347,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * @param txHash
      * @return
      */
-    private Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException {
+    public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException {
         try {
             PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(this.pluginId, TRANSACTION_DIRECTORY, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String transactionContent = pluginTextFile.getContent();

@@ -340,7 +340,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
         try {
 
-            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION TEST: createCustomerBrokerNewPurchaseNegotiationTranasction() ****\n");
+            System.out.print("\n**** MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION TEST: createCustomerBrokerNewPurchaseNegotiationTransaction() ****\n");
 
             CustomerBrokerPurchaseNegotiation negotiationMock = purchaseNegotiationMockTest();
             System.out.print("\n\n**** 1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - PLUGINROOT - PURCHASE NEGOTIATION ****\n" +
@@ -361,7 +361,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             );
 
             //CREATE CUSTOMER BROKER NEW NEGOTIATION.
-            customerBrokerNewManagerImpl.createCustomerBrokerNewPurchaseNegotiationTranasction(negotiationMock);
+            customerBrokerNewManagerImpl.createCustomerBrokerNewPurchaseNegotiationTransaction(negotiationMock);
 
             //GET TRANSACTION OF NEGOTIATION
             System.out.print("\n\n\n\n------------------------------- NEGOTIATION TRANSACTION -------------------------------");
@@ -403,9 +403,9 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
         try {
 
-            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: getAllCustomerBrokerNewNegotiationTranasction() ****\n");
+            System.out.print("\n**** MOCK CUSTOMER BROKER NEW. PURCHASE NEGOTIATION. TEST: getAllCustomerBrokerNewNegotiationTransaction() ****\n");
             //LIST CUSTOMER BROKER NEW TRANSACTION.
-            List<CustomerBrokerNew> list = customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTranasction();
+            List<CustomerBrokerNew> list = customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTransaction();
             if (!list.isEmpty()) {
 
                 System.out.print("\n------------------------------- LIST NEGOTIATION TRANSACTION -------------------------------");

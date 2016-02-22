@@ -85,8 +85,6 @@ public class CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory i
                    */
                 throw new CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException(cantCreateDatabaseException.getMessage());
             }
-        }catch(Exception exception){
-            throw new CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException(CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Unexpected error","Check the cause");
         }
     }
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {

@@ -2,8 +2,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -152,6 +152,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                     Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
+        }catch (Exception exception){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
         }
 
         this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
@@ -161,7 +166,14 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
 
     @Override
     public void stop() {
-        this.agentThread.interrupt();
+        try{
+            this.agentThread.interrupt();
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+        }
     }
 
     @Override
@@ -289,7 +301,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 brokerSubmitOnlineMerchandiseBusinessTransactionDao =new BrokerSubmitOnlineMerchandiseBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,
+                        errorManager);
 
                 UUID outgoingCryptoTransactionId;
                 BusinessTransactionRecord businessTransactionRecord;
@@ -309,12 +322,13 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             cryptoMoneyDeStockRecord.getPublicKeyActor(),
                             cryptoMoneyDeStockRecord.getCryptoCurrency(),
                             cryptoMoneyDeStockRecord.getCbpWalletPublicKey(),
-                            cryptoMoneyDeStockRecord.getCryWalletPublicKey(),
+                            cryptoMoneyDeStockRecord.getCryptoWalletPublicKey(),
                             cryptoMoneyDeStockRecord.getAmount(),
                             cryptoMoneyDeStockRecord.getMemo(),
                             cryptoMoneyDeStockRecord.getPriceReference(),
                             cryptoMoneyDeStockRecord.getOriginTransaction(),
-                            pendingToDeStockTransaction.getContractHash());
+                            pendingToDeStockTransaction.getContractHash(),
+                            cryptoMoneyDeStockRecord.getBlockchainNetworkType()); //TODO: Manuel debemos de ver como nos llega esto desde android
                     pendingToDeStockTransaction.setContractTransactionStatus(
                             ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE);
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
@@ -339,7 +353,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             Actors.CBP_CRYPTO_BROKER,
                             Actors.CBP_CRYPTO_CUSTOMER,
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                            BlockchainNetworkType.getDefaultBlockchainNetworkType()
+                            businessTransactionRecord.getBlockchainNetworkType()
                     );
                     //Updating the business transaction record
                     businessTransactionRecord.setTransactionId(
@@ -455,8 +469,6 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 for(String eventId : pendingEventsIdList){
                     checkPendingEvent(eventId);
                 }
-
-
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new CannotSendContractHashException(

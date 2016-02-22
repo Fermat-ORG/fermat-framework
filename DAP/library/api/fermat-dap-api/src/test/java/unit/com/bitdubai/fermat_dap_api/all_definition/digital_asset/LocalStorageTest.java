@@ -116,7 +116,7 @@ public class LocalStorageTest {
         //Contract
         DigitalAssetContract contract = new DigitalAssetContract();
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, Boolean.TRUE));
-        //Expiration date - we choose 90 days from now, you can change for testing
+        Expiration date - we choose 90 days from now, you can change for testing
         Timestamp expirationDateTimestamp=getExpirationDate(90);
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, expirationDateTimestamp));
         mockedDigitalAsset.setContract(contract);
@@ -166,7 +166,8 @@ public class LocalStorageTest {
     }
 
     private ActorAssetUser getActorAssetUserForTest(){
-        ActorAssetUser mockedActorAssetUser=new ActorAssetUser() {
+        ActorAssetUser mockedActorAssetUser=new ActorAssetUser()
+        {
             @Override
             public String getPublicLinkedIdentity() {
                 return new ECCKeyPair().getPublicKey();
@@ -204,6 +205,8 @@ public class LocalStorageTest {
              *
              * @return the Location of the Asset user
              */
+
+            /*
             @Override
             public Location getLocation() {
                 return null;

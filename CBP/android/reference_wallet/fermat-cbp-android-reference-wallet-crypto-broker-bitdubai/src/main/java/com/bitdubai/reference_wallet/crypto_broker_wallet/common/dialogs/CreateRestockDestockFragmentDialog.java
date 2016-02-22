@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -193,7 +194,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
                         cryptoBrokerWalletManager.createTransactionDestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey());
                     }
                     if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey());
+                        cryptoBrokerWalletManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
                     }
                     dismiss();
                     return;

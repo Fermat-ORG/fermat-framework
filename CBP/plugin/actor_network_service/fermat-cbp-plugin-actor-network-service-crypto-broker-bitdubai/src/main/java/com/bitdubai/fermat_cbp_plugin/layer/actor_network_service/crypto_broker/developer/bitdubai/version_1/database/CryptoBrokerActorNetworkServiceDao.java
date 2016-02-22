@@ -390,7 +390,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void denyConnection(final UUID          requestId,
                                final ProtocolState state    ) throws CantDenyConnectionRequestException ,
-                                                                     ConnectionRequestNotFoundException {
+            ConnectionRequestNotFoundException {
 
         if (requestId == null)
             throw new CantDenyConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -444,7 +444,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void disconnectConnection(final UUID          requestId,
                                      final ProtocolState state    ) throws CantDisconnectException            ,
-                                                                           ConnectionRequestNotFoundException {
+            ConnectionRequestNotFoundException {
 
         if (requestId == null)
             throw new CantDisconnectException(null, "", "The requestId is required, can not be null");
@@ -496,7 +496,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void changeProtocolState(final UUID          requestId,
                                     final ProtocolState state    ) throws CantChangeProtocolStateException,
-                                                                          ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException  {
 
         if (requestId == null)
             throw new CantChangeProtocolStateException(null, "", "The requestId is required, can not be null");
@@ -545,7 +545,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      * @throws ConnectionRequestNotFoundException      if i can't find the record.
      */
     public void confirmActorConnectionRequest(final UUID requestId) throws CantConfirmConnectionRequestException,
-                                                                           ConnectionRequestNotFoundException   {
+            ConnectionRequestNotFoundException   {
 
         if (requestId == null) {
             throw new CantConfirmConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -608,7 +608,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void acceptConnection(final UUID          requestId,
                                  final ProtocolState state    ) throws CantAcceptConnectionRequestException,
-                                                                       ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException  {
 
         if (requestId == null)
             throw new CantAcceptConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -926,7 +926,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         );
     }
 
-    private List<CryptoBrokerQuote> listQuotes(UUID requestId) throws CantListPendingQuotesRequestsException {
+    private ArrayList<CryptoBrokerQuote> listQuotes(UUID requestId) throws CantListPendingQuotesRequestsException {
 
         try {
             final DatabaseTable quotesTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_TABLE_NAME);
@@ -937,12 +937,12 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             final List<DatabaseTableRecord> records = quotesTable.getRecords();
 
-            List<CryptoBrokerQuote> quotesList = new ArrayList<>();
+            ArrayList<CryptoBrokerQuote> quotesList = new ArrayList<>();
 
             for(DatabaseTableRecord record : records) {
 
-                String merchandiseString         = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     );
-                String merchandiseTypeString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          );
+                String merchandiseString         = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          );
+                String merchandiseTypeString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     );
                 String paymentCurrencyString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     );
                 String paymentCurrencyTypeString = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
                 Float  price                     = record.getFloatValue (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                );
@@ -951,11 +951,11 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 Currency paymentCurrency = CurrencyHelper.getCurrency(paymentCurrencyTypeString, paymentCurrencyString);
 
                 quotesList.add(
-                    new CryptoBrokerQuote(
-                            merchandise,
-                            paymentCurrency,
-                            price
-                    )
+                        new CryptoBrokerQuote(
+                                merchandise,
+                                paymentCurrency,
+                                price
+                        )
                 );
             }
 
@@ -1009,7 +1009,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
     }
 
     public void confirmQuotesRequest(final UUID requestId) throws CantConfirmQuotesRequestException,
-                                                                  QuotesRequestNotFoundException   {
+            QuotesRequestNotFoundException   {
 
         if (requestId == null) {
             throw new CantConfirmQuotesRequestException(null, "", "The requestId is required, can not be null");
@@ -1167,7 +1167,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
 
     private byte[] getProfileImage(final String publicKey) throws CantGetProfileImageException,
-                                                                  FileNotFoundException       {
+            FileNotFoundException       {
 
         try {
 

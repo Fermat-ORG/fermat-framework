@@ -17,7 +17,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitd
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -50,7 +49,7 @@ public class pruebaExtraData {
 
         try {
             this.dao.createCustomerExtraData(actorExtraData_1);
-            this.dao.createActorQoutes(actorExtraData_1);
+            this.dao.createActorQuotes(actorExtraData_1);
         } catch (CantCreateNewActorExtraDataException e) {
             System.out.println("VLZ: Error creando el registro 1");
         }
@@ -73,7 +72,7 @@ public class pruebaExtraData {
 
         try {
             this.dao.createCustomerExtraData(actorExtraData_2);
-            this.dao.createActorQoutes(actorExtraData_2);
+            this.dao.createActorQuotes(actorExtraData_2);
         } catch (CantCreateNewActorExtraDataException e) {
             System.out.println("VLZ: Error creando el registro 1");
         }

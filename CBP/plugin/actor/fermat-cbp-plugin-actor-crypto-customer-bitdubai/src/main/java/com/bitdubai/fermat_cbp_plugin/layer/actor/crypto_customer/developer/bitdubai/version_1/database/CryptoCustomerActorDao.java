@@ -30,13 +30,15 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.RelationshipNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantCheckIfExistsException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetCryptoCustomerActorProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageExtraDataException;
@@ -89,7 +91,7 @@ public class CryptoCustomerActorDao {
                 }
             }
 
-            new pruebaExtraData(this);
+            //new pruebaExtraData(this);
         }
 
         public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
@@ -114,7 +116,7 @@ public class CryptoCustomerActorDao {
             }
         }
 
-        public Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetListCustomerIdentityWalletRelationshipException {
+        public Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetCustomerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
                 RelationshipTable.loadToMemory();
@@ -126,15 +128,15 @@ public class CryptoCustomerActorDao {
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetCustomerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
                 RelationshipTable.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
@@ -146,31 +148,41 @@ public class CryptoCustomerActorDao {
                 }
                 return null;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(final String walletPublicKey) throws CantGetCustomerIdentityWalletRelationshipException,
+                                                                                                                                     RelationshipNotFoundException                      {
+
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
+
                 RelationshipTable.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+
                 RelationshipTable.loadToMemory();
+
                 List<DatabaseTableRecord> records = RelationshipTable.getRecords();
-                RelationshipTable.clearAllFilters();
-                for (DatabaseTableRecord record : records) {
-                    return  constructCryptoCustomerActorRelationshipFromRecord(record);
-                }
-                return null;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+
+
+                if (!records.isEmpty())
+                    return  constructCryptoCustomerActorRelationshipFromRecord(records.get(0));
+                else
+                    throw new RelationshipNotFoundException("walletPublicKey: "+walletPublicKey, "Relationshio not found for the given wallet public key.");
+
+            } catch (final CantLoadTableToMemoryException e) {
+
+                throw new CantGetCustomerIdentityWalletRelationshipException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            } catch (final InvalidParameterException e) {
+
+                throw new CantGetCustomerIdentityWalletRelationshipException(e, "", "There is a problem with some enum code.");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+
+                throw new CantGetCustomerIdentityWalletRelationshipException(e, "", "There is a problem listing the clauses of relationship.");
             }
         }
 
@@ -233,7 +245,7 @@ public class CryptoCustomerActorDao {
             }
         }
 
-        public void createActorQoutes(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
+        public void createActorQuotes(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
             try {
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
                 DatabaseTableRecord record;
@@ -282,7 +294,7 @@ public class CryptoCustomerActorDao {
                 record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
                 table.deleteRecord(record);
 
-                this.createActorQoutes(actorExtraData);
+                this.createActorQuotes(actorExtraData);
             } catch (CantDeleteRecordException e) {
                 throw new CantUpdateActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (CantCreateNewActorExtraDataException e) {
@@ -429,39 +441,47 @@ public class CryptoCustomerActorDao {
             return quotes;
         }
 
-        public boolean existBrokerExtraData(String customerPublicKey, String brokerPublicKey){
+        public boolean existBrokerExtraData(final String brokerPublicKey  ,
+                                            final String customerPublicKey) throws CantCheckIfExistsException {
+
             try {
+
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
+
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME  , brokerPublicKey  , DatabaseFilterType.EQUAL);
                 table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerPublicKey, DatabaseFilterType.EQUAL);
-                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerPublicKey, DatabaseFilterType.EQUAL);
+
                 table.loadToMemory();
+
                 List<DatabaseTableRecord> records = table.getRecords();
-                table.clearAllFilters();
-                if (records.isEmpty() ){
-                    return false;
-                }else {
-                    return true;
-                }
+
+                return !records.isEmpty();
+
             } catch (CantLoadTableToMemoryException e) {
-                return false;
+
+                throw new CantCheckIfExistsException(e, "brokerPublicKey: "+brokerPublicKey+" - customerPublicKey: "+customerPublicKey, "Error checking if broker extra DATA exists.");
             }
         }
 
-        public boolean existBrokerExtraDataQuotes(String brokerPublicKey, String customerPublicKey){
+        public boolean existBrokerExtraDataQuotes(final String brokerPublicKey  ,
+                                                  final String customerPublicKey) throws CantCheckIfExistsException {
+
             try {
+
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
-                table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerPublicKey, DatabaseFilterType.EQUAL);
+
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME  , brokerPublicKey  , DatabaseFilterType.EQUAL);
                 table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerPublicKey, DatabaseFilterType.EQUAL);
+
                 table.loadToMemory();
+
                 List<DatabaseTableRecord> records = table.getRecords();
-                table.clearAllFilters();
-                if (records.isEmpty() ){
-                    return false;
-                }else {
-                    return true;
-                }
+
+                return !records.isEmpty();
+
             } catch (CantLoadTableToMemoryException e) {
-                return false;
+
+                throw new CantCheckIfExistsException(e, "brokerPublicKey: "+brokerPublicKey+" - customerPublicKey: "+customerPublicKey, "Error checking if broker extra data QUOTES exists.");
             }
         }
 
