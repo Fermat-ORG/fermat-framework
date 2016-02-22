@@ -121,7 +121,7 @@ public class ViewInflater {
                         if(parent != null){
                                 this.parent = parent;
                                 root = parent;
-                                layoutStack.push((ViewGroup)parent);
+                                layoutStack.push(parent);
                         }
 
                         while (evt != XmlPullParser.END_DOCUMENT) {
@@ -250,7 +250,7 @@ public class ViewInflater {
                 }
 
                 if (result instanceof View) {
-                        View v = (View) result;
+                        View v = result;
                 /* API 11
                  String alpha = findAttribute(atts, "android:alpha");
                  if (alpha != null) {
@@ -318,8 +318,8 @@ public class ViewInflater {
 
             boolean[] deco = new boolean[4];
 
-            deco[0] = paddingLeftValue == 0;;
-            deco[1] = paddingTopValue == 0;
+            deco[0] = paddingLeftValue == 0;
+                deco[1] = paddingTopValue == 0;
             deco[2] = paddingRightValue == 0;
             deco[3] = paddingBottomValue == 0;
 
@@ -784,7 +784,7 @@ public class ViewInflater {
                 }
 
 
-                Constructor viewConstructor = klass.getConstructor(new Class[]{Context.class});
+                Constructor viewConstructor = klass.getConstructor(Context.class);
 
                 return (View) viewConstructor.newInstance(context);
 

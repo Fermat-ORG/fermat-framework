@@ -44,7 +44,7 @@ public interface SubAppResourcesInstalationManager extends FermatManager {
 
 
 
-    public void uninstallSkinForSubApp(UUID skinId,String subAppPublicKey) throws CantUninstallSubAppSkinException;
+    void uninstallSkinForSubApp(UUID skinId, String subAppPublicKey) throws CantUninstallSubAppSkinException;
 
 
     /**
@@ -55,7 +55,7 @@ public interface SubAppResourcesInstalationManager extends FermatManager {
      * @throws CantUninstallSubAppLanguageException
      */
 
-    public void uninstallLanguageForSubApp(UUID skinId, String languageName,  String subAppPublicKey) throws CantUninstallSubAppLanguageException;
+    void uninstallLanguageForSubApp(UUID skinId, String languageName, String subAppPublicKey) throws CantUninstallSubAppLanguageException;
 
 
 
@@ -64,5 +64,5 @@ public interface SubAppResourcesInstalationManager extends FermatManager {
      *  Get enum type of wallet instalation progress
      * @return
      */
-    public InstalationProgress getInstallationProgress();
+    InstalationProgress getInstallationProgress();
 }

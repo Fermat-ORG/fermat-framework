@@ -8,9 +8,9 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.develo
  */
 public interface TransactionService {
 
-    public void start () throws CantStartServiceException;
+    void start() throws CantStartServiceException;
 
-    public void stop();
+    void stop();
     
-    public ServiceStatus getStatus ();
+    ServiceStatus getStatus();
 }

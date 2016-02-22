@@ -23,6 +23,6 @@ public interface NetworkServiceLocal {
      * @param senderIdentityPublicKey
      * @param messageContent
      */
-    public void sendMessage(final String senderIdentityPublicKey,final String receiverPublicKey ,final String messageContent);
+    void sendMessage(final String senderIdentityPublicKey, final String receiverPublicKey, final String messageContent);
 
 }

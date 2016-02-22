@@ -9,9 +9,9 @@ import java.util.Map;
  */
 public interface FermatLanguagePackage {
 
-    public String getName();
+    String getName();
 
-    public Languages getLanguage();
+    Languages getLanguage();
 
-    public Map<String, String> getTranslation();
+    Map<String, String> getTranslation();
 }

@@ -22,18 +22,18 @@ public interface SubApp extends FermatApp,FermatStructure {
      * @return SubApps
      */
 
-    public SubApps getType();
+    SubApps getType();
 
     /**
      * SubApp publicKey
      * @return publicKey
      */
-    public String getPublicKey();
+    String getPublicKey();
     /**
      * Screens in a SubApp
      */
 
-    public Map<Activities, Activity> getActivities();
+    Map<Activities, Activity> getActivities();
 
     /**
      *  Search screen in the SubApp activities
@@ -42,13 +42,13 @@ public interface SubApp extends FermatApp,FermatStructure {
      * @return Activity
      */
 
-    public Activity getActivity(Activities activities);
+    Activity getActivity(Activities activities);
 
     /**
      * Last screen active
      */
 
-    public Activity getLastActivity();
+    Activity getLastActivity();
 
     /**
      * Main screen of a SubApp
@@ -56,14 +56,14 @@ public interface SubApp extends FermatApp,FermatStructure {
      * @param activity
      */
 
-    public void addPosibleStartActivity(Activities activity);
+    void addPosibleStartActivity(Activities activity);
 
     /**
      *  Available languages
      *
      * @return Map of languages
      */
-    
-    public Map<String,LanguagePackage> getLanguagePackages();
+
+    Map<String,LanguagePackage> getLanguagePackages();
 
 }

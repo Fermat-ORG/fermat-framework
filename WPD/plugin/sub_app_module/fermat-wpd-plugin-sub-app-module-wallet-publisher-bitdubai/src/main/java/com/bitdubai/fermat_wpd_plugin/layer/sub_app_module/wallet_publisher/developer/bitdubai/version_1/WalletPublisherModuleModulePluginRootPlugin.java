@@ -189,7 +189,7 @@ public class WalletPublisherModuleModulePluginRootPlugin extends AbstractPlugin 
     @Override
     public List<WalletFactoryProject> getProjectsReadyToPublish() throws CantGetWalletFactoryProjectException {
 
-        return (List<WalletFactoryProject>) walletFactoryProjectManager.getWalletFactoryProjectByState(WalletFactoryProjectState.CLOSED);
+        return walletFactoryProjectManager.getWalletFactoryProjectByState(WalletFactoryProjectState.CLOSED);
 
     }
 

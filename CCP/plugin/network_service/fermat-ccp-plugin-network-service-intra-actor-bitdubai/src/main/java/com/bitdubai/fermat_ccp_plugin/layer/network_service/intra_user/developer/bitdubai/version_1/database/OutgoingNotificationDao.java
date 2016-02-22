@@ -258,7 +258,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
 
 
     public void changeProtocolState(final UUID                 notitficationId    ,
-                                    final ActorProtocolState protocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, Exception {
+                                    final ActorProtocolState protocolState) throws Exception {
 
         if (notitficationId == null)
             throw new CantUpdateRecordDataBaseException("notification id null "   , null);
@@ -631,10 +631,7 @@ public class OutgoingNotificationDao implements com.bitdubai.fermat_ccp_plugin.l
                 List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
 
-                if (!records.isEmpty())
-                    return true;
-                else
-                   return false;
+                return !records.isEmpty();
 
             } catch (CantLoadTableToMemoryException exception) {
 

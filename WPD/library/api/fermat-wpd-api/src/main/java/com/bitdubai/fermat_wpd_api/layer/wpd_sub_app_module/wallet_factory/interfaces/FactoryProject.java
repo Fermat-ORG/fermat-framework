@@ -12,18 +12,18 @@ import java.util.UUID;
 
 public interface FactoryProject {
 
-    public UUID getId();
+    UUID getId();
 
-    public String getName();
+    String getName();
 
-    public String getDeveloperPublicKey();
+    String getDeveloperPublicKey();
 
-    public WalletCategory getWalletCategory();
+    WalletCategory getWalletCategory();
 
-    public WalletType getWalletType();
+    WalletType getWalletType();
 
-    public Map<UUID, String> getMapSkins();
+    Map<UUID, String> getMapSkins();
 
-    public Map<UUID, String> getMapLanguages();
+    Map<UUID, String> getMapLanguages();
 
 }

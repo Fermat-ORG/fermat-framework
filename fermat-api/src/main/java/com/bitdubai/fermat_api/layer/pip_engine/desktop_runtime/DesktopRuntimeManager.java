@@ -10,9 +10,9 @@ import java.util.List;
 public interface DesktopRuntimeManager extends RuntimeManager {
 
 
-    public DesktopObject getLastDesktopObject();
+    DesktopObject getLastDesktopObject();
 
-    public DesktopObject getDesktopObject(String desktopObjectType);
+    DesktopObject getDesktopObject(String desktopObjectType);
 
-    public List<DesktopObject> listDesktops();
+    List<DesktopObject> listDesktops();
 }

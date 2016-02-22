@@ -94,13 +94,13 @@ public class ActorBrokerExtraDataEventActions {
             }
             return quotes;
         } catch (CantGetCryptoBrokerWalletSettingException e) {
-            throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetExtraDataActorException(CantGetCryptoBrokerWalletSettingException.DEFAULT_MESSAGE, e, "", "");
         } catch (CryptoBrokerWalletNotFoundException e) {
-            throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetExtraDataActorException(CryptoBrokerWalletNotFoundException.DEFAULT_MESSAGE, e, "", "");
         } catch (CantGetListBrokerIdentityWalletRelationshipException e) {
-            throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetExtraDataActorException(CantGetListBrokerIdentityWalletRelationshipException.DEFAULT_MESSAGE, e, "", "");
         } catch (CantGetCryptoBrokerQuoteException e) {
-            throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetExtraDataActorException(CantGetCryptoBrokerQuoteException.DEFAULT_MESSAGE, e, "", "");
         }
     }
 }

@@ -20,7 +20,7 @@ public class CryptoCustomerWalletAssociatedSettingImpl implements CryptoBrokerWa
     String       bankAccount;
     MoneyType moneyType;
 
-    public CryptoCustomerWalletAssociatedSettingImpl(){};
+    public CryptoCustomerWalletAssociatedSettingImpl(){}
 
     @Override
     public UUID getId() {

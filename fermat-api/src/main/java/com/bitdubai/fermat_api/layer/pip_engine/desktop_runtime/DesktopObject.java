@@ -17,7 +17,7 @@ public interface DesktopObject{
      *
      * @return
      */
-    public String getType();
+    String getType();
 
     /**
      *  screens for desktop
@@ -25,7 +25,7 @@ public interface DesktopObject{
      * @return
      */
 
-    public Map<Activities, Activity> getActivities();
+    Map<Activities, Activity> getActivities();
 
     /**
      *  get specific screen
@@ -34,7 +34,7 @@ public interface DesktopObject{
      * @return
      */
 
-    public Activity getActivity(Activities activities);
+    Activity getActivity(Activities activities);
 
     /**
      * get last used screen
@@ -42,7 +42,7 @@ public interface DesktopObject{
      * @return
      */
 
-    public Activity getLastActivity();
+    Activity getLastActivity();
 
 
     /**
@@ -51,5 +51,5 @@ public interface DesktopObject{
      * @return
      */
 
-    public Map<String,LanguagePackage> getLanguagePackages();
+    Map<String,LanguagePackage> getLanguagePackages();
 }

@@ -13,10 +13,10 @@ import java.util.List;
 
 public interface DatabaseManagerForDevelopers {
 
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory);
+    List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory);
 
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase);
+    List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase);
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
+    List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
 
 }

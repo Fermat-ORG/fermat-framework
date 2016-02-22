@@ -159,7 +159,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 /**
                  * I will calculate the current threshold to see if we need to create new keys
                  */
-                currentThreshold = (int) Math.round(100 - ((currentUsedKeys * 100) / currentGeneratedKeys));
+                currentThreshold = Math.round(100 - ((currentUsedKeys * 100) / currentGeneratedKeys));
 
                 List<ECKey> keys;
                 if (currentThreshold <= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD) {

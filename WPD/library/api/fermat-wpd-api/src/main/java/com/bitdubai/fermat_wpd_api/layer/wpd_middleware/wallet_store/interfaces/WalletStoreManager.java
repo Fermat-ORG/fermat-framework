@@ -23,8 +23,8 @@ import java.util.UUID;
  */
 public interface WalletStoreManager extends FermatManager {
 
-    public InstallationStatus getInstallationStatus(CatalogItems catalogItemType, UUID itemId) throws CantGetItemInformationException;
+    InstallationStatus getInstallationStatus(CatalogItems catalogItemType, UUID itemId) throws CantGetItemInformationException;
 
 
-    public void setInstallationStatus(CatalogItems catalogItemType, UUID itemId, InstallationStatus installationStatus) throws CantSetInstallationStatusException;
+    void setInstallationStatus(CatalogItems catalogItemType, UUID itemId, InstallationStatus installationStatus) throws CantSetInstallationStatusException;
 }

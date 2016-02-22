@@ -129,7 +129,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      */
 
     public void changeApplicationState(int applicationState){
-        this.applicationState=applicationState;
+        ApplicationSession.applicationState =applicationState;
     }
 
     /**

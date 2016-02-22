@@ -18,7 +18,7 @@ public interface WalletInstallationProcess {
      *
      * @return an InstallationStatus enum that reflects the said progress
      */
-    public InstallationStatus getInstallationProgress();
+    InstallationStatus getInstallationProgress();
 
 
     /**
@@ -45,23 +45,23 @@ public interface WalletInstallationProcess {
      * @param navigationStructureVersion
      * @throws CantInstallWalletException
      */
-    public void startInstallation(WalletType walletType,
-                                  String walletName,
-                                  String walletPublicKey,
-                                  String walletPrivateKey,
-                                  String deviceUserPublicKey,
-                                  String walletIconName,
-                                  UUID walletCatalogueId,
-                                  Version walletVersion,
-                                  String screenSize,
-                                  UUID skinId,
-                                  Version skinVersion,
-                                  String skinName,
-                                  String skinPreview,
-                                  UUID languageId,
-                                  Version languageVersion,
-                                  Languages languageName ,
-                                  String languageLabel,
-                                   String developer,
-                                  String navigationStructureVersion) throws CantInstallWalletException;
+    void startInstallation(WalletType walletType,
+                           String walletName,
+                           String walletPublicKey,
+                           String walletPrivateKey,
+                           String deviceUserPublicKey,
+                           String walletIconName,
+                           UUID walletCatalogueId,
+                           Version walletVersion,
+                           String screenSize,
+                           UUID skinId,
+                           Version skinVersion,
+                           String skinName,
+                           String skinPreview,
+                           UUID languageId,
+                           Version languageVersion,
+                           Languages languageName,
+                           String languageLabel,
+                           String developer,
+                           String navigationStructureVersion) throws CantInstallWalletException;
 }

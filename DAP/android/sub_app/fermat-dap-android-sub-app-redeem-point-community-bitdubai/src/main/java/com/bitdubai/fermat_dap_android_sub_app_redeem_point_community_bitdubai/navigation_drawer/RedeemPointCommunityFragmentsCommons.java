@@ -34,9 +34,9 @@ public class RedeemPointCommunityFragmentsCommons {
                 if (identityAssetIssuer.getImage().length > 0) {
                     imageView.setImageBitmap((BitmapFactory.decodeByteArray(identityAssetIssuer.getImage(), 0, identityAssetIssuer.getImage().length)));
                 } else
-                    Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
+                    Picasso.with(activity).load(R.drawable.reddem_point_community).into(imageView);
             } else
-                Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
+                Picasso.with(activity).load(R.drawable.reddem_point_community).into(imageView);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             fermatTextView.setText(identityAssetIssuer.getAlias());
         }

@@ -14,7 +14,8 @@ public class CurrencyPairImpl implements CurrencyPair {
     {
         this.currencyFrom = currencyFrom;
         this.currencyTo   = currencyTo;
-    };
+    }
+
     @Override
     public Currency getFrom() {
         return currencyFrom;

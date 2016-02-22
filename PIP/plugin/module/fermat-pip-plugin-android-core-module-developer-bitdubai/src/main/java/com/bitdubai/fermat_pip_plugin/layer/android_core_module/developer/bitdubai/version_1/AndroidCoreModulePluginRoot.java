@@ -22,8 +22,6 @@ import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidC
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettingsManager;
 import com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdubai.version_1.structure.AndroidCoreModuleManager;
 
-;
-
 
 /**
  * TODO: This plugin do .

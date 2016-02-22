@@ -25,7 +25,7 @@ public class IntraUserModuleInformation implements IntraUserInformation {
     {
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = (byte[] )profileImage.clone();
+        this.profileImage = profileImage.clone();
         this.connectionState = connectionState;
         this.phrase = phrase;
         this.state = state;
@@ -66,7 +66,7 @@ public class IntraUserModuleInformation implements IntraUserInformation {
      */
     @Override
     public byte[] getProfileImage() {
-        return (profileImage!=null) ? (byte[] )this.profileImage.clone() : null;
+        return (profileImage!=null) ? this.profileImage.clone() : null;
     }
 
     /**

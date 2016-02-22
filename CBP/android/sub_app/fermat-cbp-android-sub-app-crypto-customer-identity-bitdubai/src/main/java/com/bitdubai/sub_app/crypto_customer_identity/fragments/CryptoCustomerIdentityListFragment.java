@@ -248,7 +248,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
     public boolean onQueryTextChange(String text) {
         if (filter == null) {
             CryptoCustomerIdentityInfoAdapter infoAdapter = (CryptoCustomerIdentityInfoAdapter) this.adapter;
-            filter = (CryptoCustomerIdentityListFilter) infoAdapter.getFilter();
+            filter = infoAdapter.getFilter();
             filter.setNoMatchViews(noMatchView, recyclerView);
         }
         filter.filter(text);

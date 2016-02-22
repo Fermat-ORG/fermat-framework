@@ -27,7 +27,7 @@ public class RuntimeSubApp implements SubApp {
 
     Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
 
-    private List<Activities> startActivities = new ArrayList<>();;
+    private List<Activities> startActivities = new ArrayList<>();
     private int actualStart = 0;
 
     Activities lastActivity;

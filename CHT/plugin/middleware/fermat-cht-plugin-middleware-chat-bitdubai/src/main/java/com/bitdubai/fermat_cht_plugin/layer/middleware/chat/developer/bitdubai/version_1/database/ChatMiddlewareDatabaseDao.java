@@ -754,10 +754,7 @@ public class ChatMiddlewareDatabaseDao {
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+        return table.getRecords().isEmpty();
     }
 
     private DatabaseTableRecord getContactRecord(Contact contact) throws DatabaseOperationException
@@ -1285,11 +1282,7 @@ public class ChatMiddlewareDatabaseDao {
             databaseTableFilter.setValue(id.toString());
             databaseTableFilter.setColumn(databaseColumn);
             List<DatabaseTableRecord> records=getChatData(databaseTableFilter);
-            if(records==null||records.isEmpty()){
-                return false;
-            }else{
-                return true;
-            }
+            return !(records == null || records.isEmpty());
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetChatException(
                     e,

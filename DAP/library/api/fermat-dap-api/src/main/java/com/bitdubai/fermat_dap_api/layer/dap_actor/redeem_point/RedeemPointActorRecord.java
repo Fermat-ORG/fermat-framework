@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point;
 
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -32,8 +33,9 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     private String              contactInformation  ;
     private String              hoursOfOperation    ;
     private Address             address             ;
+    private Actors              actorsType          = Actors.DAP_ASSET_REDEEM_POINT;
     private byte[]              profileImage        ;
-    private List<String>        registeredIssuers;
+    private List<String>        registeredIssuers   ;
 
     {
         registeredIssuers = new ArrayList<>();
@@ -154,6 +156,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         this.contactInformation = jsonObject.get("contactInformation").getAsString();
         this.hoursOfOperation = jsonObject.get("hoursOfOperation").getAsString();
         this.address = gson.fromJson(jsonObject.get("address").getAsString(), Address.class);
+        this.actorsType = gson.fromJson(jsonObject.get("actorsType").getAsString(), Actors.class);
         this.profileImage = Base64.decode(jsonObject.get("profileImage").getAsString(), Base64.DEFAULT);
         this.registeredIssuers = gson.fromJson(jsonObject.get("registeredIssuers").getAsString(), List.class);
     }
@@ -180,6 +183,16 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * The method <code>getType</code> gives us the Enum of the represented a Actor
+     *
+     * @return Enum Actors
+     */
+    @Override
+    public Actors getType() {
+        return actorsType;
     }
 
     public void setName(String name) {
@@ -350,9 +363,10 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
         jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
-        jsonObject.addProperty("contactInformation",                  contactInformation);
-        jsonObject.addProperty("hoursOfOperation",                  hoursOfOperation);
-        jsonObject.addProperty("address",                  address.toString());
+        jsonObject.addProperty("contactInformation",    contactInformation);
+        jsonObject.addProperty("hoursOfOperation",      hoursOfOperation);
+        jsonObject.addProperty("address",               address.toString());
+        jsonObject.addProperty("actorsType",            actorsType.toString());
         jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
         jsonObject.addProperty("registeredIssuers", String.valueOf(registeredIssuers));
         return gson.toJson(jsonObject);
@@ -376,6 +390,7 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
                 ", contactInformation='"    + contactInformation + '\'' +
                 ", hoursOfOperation='"      + hoursOfOperation + '\'' +
                 ", address="                + address +
+                ", actorsType="             + actorsType +
                 ", profileImage="           + profileImageRedeem +
                 ", registeredIssuers="      + registeredIssuers +
                 '}';

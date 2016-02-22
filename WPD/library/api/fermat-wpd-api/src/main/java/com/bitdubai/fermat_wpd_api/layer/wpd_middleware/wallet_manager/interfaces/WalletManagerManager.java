@@ -41,14 +41,14 @@ public interface WalletManagerManager extends FermatManager {
      * @param newName the name to give to the wallet
      * @throws CantCreateNewWalletException
      */
-    public void createNewWallet(UUID walletIdInTheDevice, String newName) throws CantCreateNewWalletException;
+    void createNewWallet(UUID walletIdInTheDevice, String newName) throws CantCreateNewWalletException;
 
        /**
      * This method returns the list of installed wallets in the device
      *
      * @return A list with the installed wallets information
      */
-    public List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstalledWallets() throws CantListWalletsException;
+       List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstalledWallets() throws CantListWalletsException;
 
     /**
 
@@ -61,7 +61,7 @@ public interface WalletManagerManager extends FermatManager {
      * @param version the version of the language package
      * @throws CantInstallLanguageException
      */
-    public void installLanguage(UUID walletCatalogueId, UUID languageId, Languages language, String label, Version version) throws CantInstallLanguageException;
+    void installLanguage(UUID walletCatalogueId, UUID languageId, Languages language, String label, Version version) throws CantInstallLanguageException;
 
     /**
      * This method starts the process of installing a new skin for an specific wallet
@@ -73,7 +73,7 @@ public interface WalletManagerManager extends FermatManager {
      * @param version the version of the skin
      * @throws CantInstallSkinException
      */
-    public void installSkin(UUID walletCatalogueId, UUID skinId, String alias, String Preview, Version version) throws CantInstallSkinException;
+    void installSkin(UUID walletCatalogueId, UUID skinId, String alias, String Preview, Version version) throws CantInstallSkinException;
 
     /**
      *
@@ -86,7 +86,7 @@ public interface WalletManagerManager extends FermatManager {
      * @return an interface to manage the installation of a new wallet
      * @throws CantFindProcessException
      */
-    public com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException;
+    com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletInstallationProcess installWallet(WalletCategory walletCategory, String walletPlatformIdentifier) throws CantFindProcessException;
 
 
     /**
@@ -95,7 +95,7 @@ public interface WalletManagerManager extends FermatManager {
      * @param walletCatalogueId the identifier of the wallet where we want to uninstall the language
      * @param languageId the identifier of the language to uninstall
      */
-    public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantUninstallLanguageException;
+    void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantUninstallLanguageException;
 
     /**
      * This method starts the process of uninstalling a new skin for an specific wallet
@@ -103,14 +103,14 @@ public interface WalletManagerManager extends FermatManager {
      * @param walletCatalogueId the identifier of the wallet in which we want to uninstall the language
      * @param skinId the identifier of the skin
      */
-    public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantUninstallSkinException;
+    void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantUninstallSkinException;
 
     /**
      * This method starts the uninstalling process of a walled
      *
      * @param walletIdInThisDevice the id of the wallet to uninstall
      */
-    public void uninstallWallet(UUID walletIdInThisDevice) throws CantUninstallWalletException;
+    void uninstallWallet(UUID walletIdInThisDevice) throws CantUninstallWalletException;
 
     /**
      * This method removes a wallet created by a user. <p>
@@ -120,7 +120,7 @@ public interface WalletManagerManager extends FermatManager {
      * @param walletIdInTheDevice the identifier of the wallet to delete
      * @throws CantRemoveWalletException
      */
-    public void removeWallet(UUID walletIdInTheDevice) throws CantRemoveWalletException;
+    void removeWallet(UUID walletIdInTheDevice) throws CantRemoveWalletException;
 
     /**
      * This method let us change the name (alias) of a given wallet.
@@ -129,7 +129,7 @@ public interface WalletManagerManager extends FermatManager {
      * @param newName the new name for the wallet
      * @throws CantRenameWalletException
      */
-    public void renameWallet(UUID walletIdInTheDevice, String newName) throws CantRenameWalletException;
+    void renameWallet(UUID walletIdInTheDevice, String newName) throws CantRenameWalletException;
 
     /**
      *  get Installed wallet

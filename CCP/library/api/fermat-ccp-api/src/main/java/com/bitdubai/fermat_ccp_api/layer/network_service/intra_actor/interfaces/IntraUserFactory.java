@@ -16,5 +16,5 @@ public interface IntraUserFactory {
      * @param profileImage
      * @return
      */
-    public IntraUserInformation constructIntraUser(String publicKey,String intraUserName, byte[] profileImage);
+    IntraUserInformation constructIntraUser(String publicKey, String intraUserName, byte[] profileImage);
 }

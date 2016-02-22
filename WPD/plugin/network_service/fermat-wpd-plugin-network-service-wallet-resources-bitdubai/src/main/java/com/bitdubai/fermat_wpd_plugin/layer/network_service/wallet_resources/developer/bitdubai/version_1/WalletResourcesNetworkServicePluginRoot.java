@@ -149,7 +149,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
     /**
      *  Wallet instalation progress
      */
-    private InstalationProgress instalationProgress;;
+    private InstalationProgress instalationProgress;
 
     //para testear
    // private Map<String, byte[]> imagenes;
@@ -1010,7 +1010,7 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
                 String reponame = repository.getPath() + walletPublicKey +"/"; //+"skins/"+repository.getSkinName()+"/";
 
-                String filename = skinId.toString() + "_navigation_structure.xml";;
+                String filename = skinId.toString() + "_navigation_structure.xml";
 
                 //get Xml from disk
                 PluginTextFile layoutFile;
