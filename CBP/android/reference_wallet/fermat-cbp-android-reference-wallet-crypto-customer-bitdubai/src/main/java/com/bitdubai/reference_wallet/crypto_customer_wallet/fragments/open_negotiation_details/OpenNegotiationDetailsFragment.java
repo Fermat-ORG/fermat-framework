@@ -34,8 +34,6 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCreateCustomerBrokerUpdatePurchaseNegotiationTransactionException;
@@ -856,17 +854,17 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             item.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS)
         ) {
 
-            if (item.getType().equals(ClauseType.BROKER_BANK_ACCOUNT) && (brokerPaymentMethod.equals(MoneyType.BANK.getFriendlyName())))
+            if (item.getType().equals(ClauseType.BROKER_BANK_ACCOUNT) && (brokerPaymentMethod.equals(MoneyType.BANK.getCode())))
                 return true;
-            else if (item.getType().equals(ClauseType.BROKER_PLACE_TO_DELIVER) && ((brokerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getFriendlyName())) || (brokerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getFriendlyName()))))
+            else if (item.getType().equals(ClauseType.BROKER_PLACE_TO_DELIVER) && ((brokerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getCode())) || (brokerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getCode()))))
                 return true;
-            else if (item.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS) && (brokerPaymentMethod.equals(MoneyType.CRYPTO.getFriendlyName())))
+            else if (item.getType().equals(ClauseType.BROKER_CRYPTO_ADDRESS) && (brokerPaymentMethod.equals(MoneyType.CRYPTO.getCode())))
                 return true;
-            else if (item.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) && (customerPaymentMethod.equals(MoneyType.BANK.getFriendlyName())))
+            else if (item.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) && (customerPaymentMethod.equals(MoneyType.BANK.getCode())))
                 return true;
-            else if (item.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD) && ((customerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getFriendlyName())) || (customerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getFriendlyName()))))
+            else if (item.getType().equals(ClauseType.CUSTOMER_PAYMENT_METHOD) && ((customerPaymentMethod.equals(MoneyType.CASH_DELIVERY.getCode())) || (customerPaymentMethod.equals(MoneyType.CASH_ON_HAND.getCode()))))
                 return true;
-            else if (item.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS) && (customerPaymentMethod.equals(MoneyType.CRYPTO.getFriendlyName())))
+            else if (item.getType().equals(ClauseType.CUSTOMER_CRYPTO_ADDRESS) && (customerPaymentMethod.equals(MoneyType.CRYPTO.getCode())))
                 return true;
             else
                 return false;
@@ -966,17 +964,17 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         String currencyType = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD).getValue();
         if(currencyType != null) {
-            if (currencyType.equals(MoneyType.CRYPTO.getFriendlyName())) {
+            if (currencyType.equals(MoneyType.CRYPTO.getCode())) {
                 if (clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null) {
                     putClause(ClauseType.BROKER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
                 }
 
-            } else if (currencyType.equals(MoneyType.BANK.getFriendlyName())) {
+            } else if (currencyType.equals(MoneyType.BANK.getCode())) {
                 if (clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null) {
                     putClause(ClauseType.BROKER_BANK_ACCOUNT, "The Bank Info is Intro For The Broker");
                 }
 
-            } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getFriendlyName()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getFriendlyName()))) {
+            } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
                 if (clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null) {
                     putClause(ClauseType.BROKER_PLACE_TO_DELIVER, "The Delivery Info is Intro For The Broker");
                 }
@@ -990,12 +988,12 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         String currencyType = clauses.get(ClauseType.BROKER_PAYMENT_METHOD).getValue();
         if(currencyType != null) {
-            if (currencyType.equals(MoneyType.CRYPTO.getFriendlyName())) {
+            if (currencyType.equals(MoneyType.CRYPTO.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null) {
                     putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
                 }
 
-            } else if (currencyType.equals(MoneyType.BANK.getFriendlyName())) {
+            } else if (currencyType.equals(MoneyType.BANK.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
                     String bankAccount = "INSERT BANK ACCOUNT IN SETTINGS WALLET.";
                     if(bankAccountList.size() > 0)
@@ -1003,7 +1001,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     putClause(ClauseType.CUSTOMER_BANK_ACCOUNT, bankAccount);
                 }
 
-            } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getFriendlyName()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getFriendlyName()))) {
+            } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
                 if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) {
                     String infoDelivery = "INSERT LOCATION IN SETTINGS WALLET.";
                     if(locationList.size() > 0)
