@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.exceptions.CantInitializeCloseContractBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,16 +36,19 @@ public class CloseContractBusinessTransactionDao {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId            ;
+    private final ErrorManager errorManager;
 
     private Database database;
 
     public CloseContractBusinessTransactionDao(final PluginDatabaseSystem pluginDatabaseSystem,
                                               final UUID                 pluginId           ,
-                                              final Database database) {
+                                              final Database database,
+                                               final ErrorManager errorManager) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
         this.database = database;
+        this.errorManager = errorManager;
     }
 
     public void initialize() throws CantInitializeCloseContractBusinessTransactionDatabaseException {
