@@ -136,11 +136,30 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
                 addNewClause(negotiation.getNegotiationId(), _clause);
             }
 
+            //Add Yordin Alayn 19.02.16
+            updateNegotiationMemo(negotiation.getNegotiationId(), negotiation.getMemo());
+
         } catch (CantGetListClauseException e) {
             throw new CantUpdateCustomerBrokerPurchaseNegotiationException(e.DEFAULT_MESSAGE, e, "", "");
         } catch (CantAddNewClausesException e) {
             throw new CantUpdateCustomerBrokerPurchaseNegotiationException(e.DEFAULT_MESSAGE, e, "", "");
         } catch (CantDeleteRecordException e) {
+            throw new CantUpdateCustomerBrokerPurchaseNegotiationException(e.DEFAULT_MESSAGE, e, "", "");
+        }
+    }
+
+    //Add Yordin Alayn 19.02.16
+    public void updateNegotiationMemo(UUID negotiationId, String memo) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        try {
+            DatabaseTable PurchaseNegotiationClauseTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME);
+
+            PurchaseNegotiationClauseTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiationId, DatabaseFilterType.EQUAL);
+            DatabaseTableRecord recordsToUpdate = PurchaseNegotiationClauseTable.getEmptyRecord();
+
+            recordsToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_MEMO_COLUMN_NAME, memo);
+            PurchaseNegotiationClauseTable.updateRecord(recordsToUpdate);
+
+        } catch (CantUpdateRecordException e) {
             throw new CantUpdateCustomerBrokerPurchaseNegotiationException(e.DEFAULT_MESSAGE, e, "", "");
         }
     }

@@ -195,6 +195,9 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
             //TEST GET ALL EVENT
 //            getAllEvent();
 
+            //TEST GET ALL TRANSACTION
+//            customerBrokerUpdateManagerImpl.getAllTranasctionTest();
+
             //Startes Service
             this.serviceStatus = ServiceStatus.STARTED;
 //            System.out.print("-----------------------\n CUSTOMER BROKER UPDATE: SUCCESSFUL START \n-----------------------\n");
