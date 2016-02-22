@@ -829,6 +829,18 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             businessTransactionRecord.setPriceReference(
                     referencePrice
             );
+            //Setting the blockchain network type.
+            BlockchainNetworkType blockchainNetworkType;
+            String blockchainNetworkTypeString = record.getStringValue(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME
+            );
+            if(blockchainNetworkTypeString==null||blockchainNetworkTypeString.isEmpty()){
+                blockchainNetworkType=BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            } else {
+                blockchainNetworkType=BlockchainNetworkType.getByCode(blockchainNetworkTypeString);
+            }
+            businessTransactionRecord.setBlockchainNetworkType(blockchainNetworkType);
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
