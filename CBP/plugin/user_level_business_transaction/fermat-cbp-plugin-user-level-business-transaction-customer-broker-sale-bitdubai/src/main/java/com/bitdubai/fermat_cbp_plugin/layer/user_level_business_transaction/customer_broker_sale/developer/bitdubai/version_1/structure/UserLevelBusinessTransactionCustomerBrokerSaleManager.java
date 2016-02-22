@@ -14,18 +14,18 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 public class UserLevelBusinessTransactionCustomerBrokerSaleManager implements CustomerBrokerSaleManager {
     public static String REVIEW_NEGOTIATION_NOTIFICATION = "Review negotiation";
     UserLevelBusinessTransactionCustomerBrokerSalePluginRoot userLevelBusinessTransactionCustomerBrokerSalePluginRoot = new UserLevelBusinessTransactionCustomerBrokerSalePluginRoot();
-    public UserLevelBusinessTransactionCustomerBrokerSaleManager(){};
+    public UserLevelBusinessTransactionCustomerBrokerSaleManager(){}
 
     @Override
     public void notificationReviewNegotiation(String publicKey, String tittle, String body) throws CantSendNotificationReviewNegotiation {
 
         ReviewNegotiationNotificationEvent event = (ReviewNegotiationNotificationEvent) userLevelBusinessTransactionCustomerBrokerSalePluginRoot.getEventManager().getNewEvent(com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType.REVIEW_NEGOTIATION_NOTIFICATION);
         event.setLocalPublicKey(publicKey);
-        event.setAlertTitle(getSourceString(userLevelBusinessTransactionCustomerBrokerSalePluginRoot.EVENT_SOURCE));
+        event.setAlertTitle(getSourceString(UserLevelBusinessTransactionCustomerBrokerSalePluginRoot.EVENT_SOURCE));
         event.setTextTitle(tittle);
         event.setTextBody(body);
         event.setNotificationType(NotificationType.REVIEW_NOTIFICATION.getCode());
-        event.setSource(userLevelBusinessTransactionCustomerBrokerSalePluginRoot.EVENT_SOURCE);
+        event.setSource(UserLevelBusinessTransactionCustomerBrokerSalePluginRoot.EVENT_SOURCE);
         this.userLevelBusinessTransactionCustomerBrokerSalePluginRoot.getEventManager().raiseEvent(event);
         System.out.println("UserLevelBusinessTransactionCustomerBrokerSALEPluginRoot - ReviewNegotiationNotificationEvent fired!: " + event.toString());
     }

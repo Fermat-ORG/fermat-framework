@@ -30,7 +30,7 @@ public class CryptoMoneyDestockTransactionImpl implements CryptoMoneyTransaction
 
     public CryptoMoneyDestockTransactionImpl(){
 
-    };
+    }
 
     public CryptoMoneyDestockTransactionImpl(UUID transactionId,
                                              String actorPublicKey,

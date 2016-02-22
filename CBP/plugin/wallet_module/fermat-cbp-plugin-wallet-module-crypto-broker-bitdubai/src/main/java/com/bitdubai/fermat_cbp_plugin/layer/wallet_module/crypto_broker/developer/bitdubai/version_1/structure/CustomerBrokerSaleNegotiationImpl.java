@@ -21,7 +21,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
 
     public CustomerBrokerSaleNegotiationImpl(UUID negotiationId){
         this.negotiationId = negotiationId;
-    };
+    }
 
     /**
      * @return the broker public key

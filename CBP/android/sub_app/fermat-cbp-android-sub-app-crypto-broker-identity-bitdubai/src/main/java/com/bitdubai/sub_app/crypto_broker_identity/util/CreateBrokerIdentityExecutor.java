@@ -81,8 +81,7 @@ public class CreateBrokerIdentityExecutor {
 
     private boolean imageIsInvalid() {
         if (imageInBytes == null) return true;
-        if (imageInBytes.length == 0) return true;
-        return false;
+        return imageInBytes.length == 0;
     }
 
     private boolean entryDataIsInvalid() {
@@ -90,7 +89,6 @@ public class CreateBrokerIdentityExecutor {
         if (imageInBytes == null) return true;
         if (imageInBytes.length == 0) return true;
         if (identityName == null) return true;
-        if (identityName.isEmpty()) return true;
-        return false;
+        return identityName.isEmpty();
     }
 }

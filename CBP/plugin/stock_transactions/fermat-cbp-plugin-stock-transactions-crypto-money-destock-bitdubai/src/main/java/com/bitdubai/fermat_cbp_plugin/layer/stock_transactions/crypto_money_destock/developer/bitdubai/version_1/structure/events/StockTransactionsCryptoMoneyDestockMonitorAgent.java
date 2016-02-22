@@ -195,7 +195,6 @@ public class StockTransactionsCryptoMoneyDestockMonitorAgent extends FermatAgent
 
                         } catch (CryptoBrokerWalletNotFoundException e) {
                             errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                            ;
                         } catch (CantGetStockCryptoBrokerWalletException e) {
                             e.printStackTrace();
                         } catch (CantAddCreditCryptoBrokerWalletException e) {

@@ -50,10 +50,8 @@ public class BrokerIdentityWalletRelationshipInformation implements BrokerIdenti
             return false;
         if( !this.wallet.equals(compare.getWallet()) )
             return false;
-        if( !this.relationshipId.equals(compare.getRelationshipId()) )
-            return false;
+        return this.relationshipId.equals(compare.getRelationshipId());
 
-        return true;
     }
 
     @Override

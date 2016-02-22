@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -369,7 +370,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                     changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
 
                 } catch (CouldNotCancelNegotiationException | CantCancelNegotiationException e){
-                    Toast.makeText(getActivity(), "ERROR IN CANCELLATION OF NEGOTIATION: "+ e.DEFAULT_MESSAGE, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "ERROR IN CANCELLATION OF NEGOTIATION: "+ FermatException.DEFAULT_MESSAGE, Toast.LENGTH_LONG).show();
                 }
 
             }
@@ -908,9 +909,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     private void validateChange(String oldValue, String newValue) {
 
-        valuesHasChanged = false;
-        if (oldValue != newValue)
-            valuesHasChanged = true;
+        valuesHasChanged = oldValue != newValue;
 
     }
 

@@ -104,10 +104,8 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
             return false;
         if(!this.status.equals(compare.getStatus()))
             return false;
-        if(!this.clause.equals(compare.getContractClause()))
-            return false;
+        return this.clause.equals(compare.getContractClause());
 
-        return true;
     }
 
     @Override

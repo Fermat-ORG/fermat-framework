@@ -177,7 +177,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             this.transactionTransmissionContractHashDao.confirmReception(transactionID);
         } catch (CantUpdateRecordDataBaseException e) {
             throw new CantConfirmTransactionException(
-                    e.DEFAULT_MESSAGE,
+                    CantUpdateRecordDataBaseException.DEFAULT_MESSAGE,
                     e,
                     "Confirm reception",
                     "Cannot update the flag in database");
@@ -188,7 +188,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                     "Cannot find the transaction id in database\n"+transactionID);
         } catch (CantGetTransactionTransmissionException e) {
             throw new CantConfirmTransactionException(
-                    e.DEFAULT_MESSAGE,
+                    CantGetTransactionTransmissionException.DEFAULT_MESSAGE,
                     e,
                     "Confirm reception",
                     "Cannot get the business transaction record from the database");
