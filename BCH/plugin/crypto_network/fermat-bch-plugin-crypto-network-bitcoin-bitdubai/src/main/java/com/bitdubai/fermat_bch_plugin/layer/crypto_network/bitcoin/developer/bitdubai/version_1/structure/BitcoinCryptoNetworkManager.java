@@ -147,6 +147,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          * For each network that is active to be monitored I will...
          */
         for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes) {
+            System.out.println("***CryptoNetwork*** Monitor Request from " + cryptoVault.getCode() + " vault on " + blockchainNetworkType.getCode() + " for " + keyList.size() + " keys...");
 
             /**
              * load (if any) existing wallet.
@@ -233,7 +234,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
-                System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for "  + cryptoVault.getCode() + " vault...");
+                System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");
 
                 bitcoinCryptoNetworkMonitor.start();
             }

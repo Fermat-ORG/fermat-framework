@@ -125,17 +125,27 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             peerGroup.stop();
             while (peerGroup.isRunning()){
                 //peergroup is still running.
+                System.out.println("***CryptoNetwork*** stopping peer group service...");
             }
-            monitorAgentThread.interrupt();
-            try {
-                monitorAgentThread.join();
-                System.out.println("***CryptoNetwork*** Thread and peer group successfully stopped.");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            System.out.println("***CryptoNetwork*** Thread and peer group successfully stopped.");
+
+            try{
+                monitorAgentThread.interrupt();
+                System.out.println("***CryptoNetwork*** Monitor Agent Thread state is: " + monitorAgentThread.getState().name());
+            } catch (Exception e){
+
             }
+
         }
     }
 
+    public MonitorAgent getMonitorAgent() {
+        return monitorAgent;
+    }
+
+    /**
+     * private class that runs on a separate thread
+     */
     private class MonitorAgent implements Runnable{
         /**
          * private class variables
@@ -205,15 +215,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
 
         /**
-         * Wallet setter
-         * @param wallet
-         */
-        public void setWallet(Wallet wallet) {
-            this.wallet = wallet;
-        }
-
-
-        /**
          * Agent main method
          */
         private void doTheMainTask() throws Exception {
@@ -223,8 +224,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * creates the blockchain object for the specified network.
                  */
-                BitcoinCryptoNetworkBlockChain CryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(pluginFileSystem, NETWORK_PARAMETERS, wallet);
-                blockChain = CryptoNetworkBlockChain.getBlockChain();
+                BitcoinCryptoNetworkBlockChain cryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(pluginFileSystem, NETWORK_PARAMETERS, wallet);
+                blockChain = cryptoNetworkBlockChain.getBlockChain();
 
                 /**
                  * creates the peerGroup object
@@ -267,8 +268,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  */
                 peerGroup.setDownloadTxDependencies(true);
                 peerGroup.start();
-                peerGroup.downloadBlockChain();
-                System.out.println("***CryptoNetwork*** Blockchain Download completed. Total blocks: " + blockChain.getBestChainHeight());
+                peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
+
 
                 /**
                  * I will broadcast any transaction that might be in broadcasting status.
@@ -704,4 +705,34 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             return null;
         }
     }
+
+    /**
+     * Public methods to access private MonitorAgent class
+     */
+
+    public synchronized void broadcastTransaction(final String txHash) throws CantBroadcastTransactionException{
+        this.monitorAgent.broadcastTransaction(txHash);
+    }
+
+    public Transaction getTransactionFromBlockChain(String transactionHash, String transactionBlockHash) throws CantGetTransactionException{
+        return this.monitorAgent.getTransactionFromBlockChain(transactionHash, transactionBlockHash);
+    }
+
+    public synchronized void storeBitcoinTransaction (Transaction tx, UUID transactionId, boolean commit) throws CantStoreBitcoinTransactionException{
+        this.monitorAgent.storeBitcoinTransaction(tx, transactionId, commit);
+    }
+
+
+    public void cancelBroadcast(String txHash) throws CantCancellBroadcastTransactionException{
+        this.monitorAgent.cancelBroadcast(txHash);
+    }
+
+    public BlockchainConnectionStatus getBlockchainConnectionStatus() throws CantGetBlockchainConnectionStatusException{
+        return this.monitorAgent.getBlockchainConnectionStatus();
+    }
+
+    public Transaction loadTransactionFromDisk(String txHash) throws CantLoadTransactionFromFileException{
+        return this.monitorAgent.loadTransactionFromDisk(txHash);
+    }
+
 }
