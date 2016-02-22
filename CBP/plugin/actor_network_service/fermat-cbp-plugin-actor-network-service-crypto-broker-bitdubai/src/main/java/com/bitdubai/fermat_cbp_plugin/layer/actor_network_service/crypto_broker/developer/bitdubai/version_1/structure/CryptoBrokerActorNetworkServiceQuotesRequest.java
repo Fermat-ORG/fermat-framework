@@ -1,13 +1,17 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.ProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.adapters.CurrencyTypeAdapter;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapterFactory;
 
 import java.util.List;
 import java.util.UUID;
@@ -25,9 +29,9 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
     private final Actors                  requesterActorType   ;
     private final String                  cryptoBrokerPublicKey;
     private final long                    updateTime           ;
-    private final List<CryptoBrokerQuote> quotes               ;
     private final RequestType             type                 ;
     private final ProtocolState           state                ;
+    private final List<CryptoBrokerQuote> quotes               ;
 
     public CryptoBrokerActorNetworkServiceQuotesRequest(final UUID                    requestId            ,
                                                         final String                  requesterPublicKey   ,
@@ -53,15 +57,21 @@ public class CryptoBrokerActorNetworkServiceQuotesRequest extends NetworkService
     @Override
     public String toJson() {
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeHierarchyAdapter(Currency.class, new CurrencyTypeAdapter())
+                .create();
         return gson.toJson(this);
     }
 
     public static CryptoBrokerActorNetworkServiceQuotesRequest fromJson(String jsonMessage) {
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeHierarchyAdapter(Currency.class, new CurrencyTypeAdapter())
+                .create();
+
         return gson.fromJson(jsonMessage, CryptoBrokerActorNetworkServiceQuotesRequest.class);
     }
+
 
     @Override
     public UUID getRequestId() {

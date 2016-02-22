@@ -30,7 +30,7 @@ public class CreateCustomerBrokerNewPurchaseNegotiationTranasctionTest {
     public void createCustomerBrokerNewPurchaseNegotiationTranasction() throws Exception{
 
         CustomerBrokerNewManagerImpl customerBrokerNewManagerImpl = mock(CustomerBrokerNewManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
-        doCallRealMethod().when(customerBrokerNewManagerImpl).createCustomerBrokerNewPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+        doCallRealMethod().when(customerBrokerNewManagerImpl).createCustomerBrokerNewPurchaseNegotiationTransaction(customerBrokerPurchaseNegotiation);
 
     }
 }

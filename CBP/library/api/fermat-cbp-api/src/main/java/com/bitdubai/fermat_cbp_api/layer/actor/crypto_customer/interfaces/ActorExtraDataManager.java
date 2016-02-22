@@ -6,12 +6,15 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListPlatformsException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantSendActorNetworkServiceException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantRequestBrokerExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateActorExtraDataException;
 
 import java.util.Collection;
 
 /**
+ *
+ * TODO ADD A DESCRIPTION FOR THE INTERFACE AND FOR EACH OF ITS METHODS
+ *
  * Created by angel on 13/1/16.
  */
 public interface ActorExtraDataManager extends CryptoCustomerActorManager {
@@ -68,10 +71,14 @@ public interface ActorExtraDataManager extends CryptoCustomerActorManager {
     Collection<Platforms> getPlatformsSupport(String CustomerPublicKey, Currency currency) throws CantGetListPlatformsException;
 
     /**
+     * Through the method <code>requestBrokerExtraData</code> we can ask a broker its extra data.
+     * In this case we're requesting quotes information.
      *
-     * @param actorExtraData
-     * @throws CantSendActorNetworkServiceException
+     * @param actorExtraData data needed to ask for the quotes.
+     *
+     * @throws CantRequestBrokerExtraDataException if something goes wrong.
      */
-    void requestBrokerExtraData(ActorExtraData actorExtraData) throws CantSendActorNetworkServiceException;
+    @Deprecated //TODO WE CAN'T USE THIS METHOD FROM OUTSIDE THE PLUG-IN, IF NEEDED DELETE FROM THE INTERFACE.
+    void requestBrokerExtraData(ActorExtraData actorExtraData) throws CantRequestBrokerExtraDataException;
 
 }

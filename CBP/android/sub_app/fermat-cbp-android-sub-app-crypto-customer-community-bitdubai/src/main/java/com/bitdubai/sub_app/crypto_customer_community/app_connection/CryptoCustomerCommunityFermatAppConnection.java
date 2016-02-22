@@ -56,10 +56,8 @@ public class CryptoCustomerCommunityFermatAppConnection extends AppConnections{
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-
-
         return new CustomerCommunityNavigationViewPainter(getActivity(), getActiveIdentity(),
-                (CryptoCustomerCommunitySubAppModuleManager) getFullyLoadedSession().getModuleManager());
+                (CryptoCustomerCommunitySubAppSession) getFullyLoadedSession());
 
     }
 
