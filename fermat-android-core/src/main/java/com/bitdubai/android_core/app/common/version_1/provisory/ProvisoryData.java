@@ -174,7 +174,7 @@ public class ProvisoryData {
         lst.add(item2);
 
         //store
-        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","Wallet Store","public_key_store","wallet_store",new Version(1,0,0));
+        installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_STORE,null,null,"wallet_store","App Store","public_key_store","wallet_store",new Version(1,0,0));
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.ic_03);
         item2.setPosition(4);

@@ -6,15 +6,19 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.CloseContractPluginRoot;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 /**
  * Created by Manuel Perez on 29/11/2015.
  */
 
 public class DeveloperBitDubai  extends AbstractPluginDeveloper implements PluginLicensor {
+    ErrorManager errorManager;
 
     public DeveloperBitDubai() {
         super(new PluginDeveloperReference(Developers.BITDUBAI));
@@ -27,6 +31,12 @@ public class DeveloperBitDubai  extends AbstractPluginDeveloper implements Plugi
             this.registerVersion(new CloseContractPluginRoot());
 
         } catch (CantRegisterVersionException e) {
+
+
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
 
             throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
         }

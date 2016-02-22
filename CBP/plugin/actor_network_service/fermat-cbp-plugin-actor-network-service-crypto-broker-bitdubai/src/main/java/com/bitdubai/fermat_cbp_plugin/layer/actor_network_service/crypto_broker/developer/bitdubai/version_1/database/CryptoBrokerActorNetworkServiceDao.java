@@ -43,7 +43,6 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraDataInfoTemp;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
@@ -391,7 +390,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void denyConnection(final UUID          requestId,
                                final ProtocolState state    ) throws CantDenyConnectionRequestException ,
-                                                                     ConnectionRequestNotFoundException {
+            ConnectionRequestNotFoundException {
 
         if (requestId == null)
             throw new CantDenyConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -445,7 +444,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void disconnectConnection(final UUID          requestId,
                                      final ProtocolState state    ) throws CantDisconnectException            ,
-                                                                           ConnectionRequestNotFoundException {
+            ConnectionRequestNotFoundException {
 
         if (requestId == null)
             throw new CantDisconnectException(null, "", "The requestId is required, can not be null");
@@ -497,7 +496,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void changeProtocolState(final UUID          requestId,
                                     final ProtocolState state    ) throws CantChangeProtocolStateException,
-                                                                          ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException  {
 
         if (requestId == null)
             throw new CantChangeProtocolStateException(null, "", "The requestId is required, can not be null");
@@ -546,7 +545,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      * @throws ConnectionRequestNotFoundException      if i can't find the record.
      */
     public void confirmActorConnectionRequest(final UUID requestId) throws CantConfirmConnectionRequestException,
-                                                                           ConnectionRequestNotFoundException   {
+            ConnectionRequestNotFoundException   {
 
         if (requestId == null) {
             throw new CantConfirmConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -609,7 +608,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void acceptConnection(final UUID          requestId,
                                  final ProtocolState state    ) throws CantAcceptConnectionRequestException,
-                                                                       ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException  {
 
         if (requestId == null)
             throw new CantAcceptConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -742,7 +741,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public final CryptoBrokerExtraDataInfoTemp createQuotesRequest(final UUID                    requestId            ,
+    public final CryptoBrokerExtraData<CryptoBrokerQuote> createQuotesRequest(final UUID                    requestId            ,
                                                                               final String                  requesterPublicKey   ,
                                                                               final Actors                  requesterActorType   ,
                                                                               final String                  cryptoBrokerPublicKey,
@@ -842,7 +841,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public final List<CryptoBrokerExtraDataInfoTemp> listPendingQuotesRequests(final ProtocolState protocolState, final RequestType requestType) throws CantListPendingQuotesRequestsException {
+    public final List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(final ProtocolState protocolState, final RequestType requestType) throws CantListPendingQuotesRequestsException {
 
         try {
 
@@ -855,7 +854,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
 
-            final List<CryptoBrokerExtraDataInfoTemp> quotesRequestsList = new ArrayList<>();
+            final List<CryptoBrokerExtraData<CryptoBrokerQuote>> quotesRequestsList = new ArrayList<>();
 
             for (final DatabaseTableRecord record : records)
                 quotesRequestsList.add(buildQuotesRequestObject(record));
@@ -952,11 +951,11 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 Currency paymentCurrency = CurrencyHelper.getCurrency(paymentCurrencyTypeString, paymentCurrencyString);
 
                 quotesList.add(
-                    new CryptoBrokerQuote(
-                            merchandise,
-                            paymentCurrency,
-                            price
-                    )
+                        new CryptoBrokerQuote(
+                                merchandise,
+                                paymentCurrency,
+                                price
+                        )
                 );
             }
 
@@ -1010,7 +1009,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
     }
 
     public void confirmQuotesRequest(final UUID requestId) throws CantConfirmQuotesRequestException,
-                                                                  QuotesRequestNotFoundException   {
+            QuotesRequestNotFoundException   {
 
         if (requestId == null) {
             throw new CantConfirmQuotesRequestException(null, "", "The requestId is required, can not be null");
@@ -1168,7 +1167,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
 
     private byte[] getProfileImage(final String publicKey) throws CantGetProfileImageException,
-                                                                  FileNotFoundException       {
+            FileNotFoundException       {
 
         try {
 
