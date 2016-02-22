@@ -1,6 +1,11 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Path;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,8 +52,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-//import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.MessageType;
-
 /**
  * Created by miguel on 22/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 09/01/16.
@@ -80,7 +84,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
-                           ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, int background) {
+                           ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, int background, Toolbar toolbar) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         addView(inflater.inflate(R.layout.chat, (rootView != null) ? rootView : null));
@@ -193,31 +197,40 @@ public class ChatAdapterView extends LinearLayout {
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-
-        TextView meLabel = (TextView) findViewById(R.id.meLbl);
-        TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
+        messageET.setText("Type message");
+        //TextView meLabel = (TextView) findViewById(R.id.meLbl);
+        //TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
         RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 
         if(chatSession!= null){
             whattodo();
             findmessage();
         }
-        if (rightName != null) {
-            meLabel.setText(rightName);
-        } else {
-            meLabel.setText("");
-        }
+//        if (rightName != null) {
+//            meLabel.setText(rightName);
+//        } else {
+//            meLabel.setText("");
+//        }
 
         if (leftName != null ) {
             toolbar.setTitle(leftName);
-            //companionLabel.setText(leftName);
-        } else {
-            companionLabel.setText("Contacto");
+            toolbar.setLogo(R.drawable.ic_contact_picture_holo_light);
         }
+            //companionLabel.setText(leftName);
+//        } else {
+//            companionLabel.setText("Contacto");
+//        }
 
         if (background != -1) {
             container.setBackgroundColor(background);
         }
+
+        messageET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                messageET.setText("");
+            }
+        });
 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -496,7 +509,7 @@ public class ChatAdapterView extends LinearLayout {
 
         public ChatAdapterView build() {
             ChatAdapterView chatView = new ChatAdapterView(context, chatHistory,
-                    chatManager, moduleManager, errorManager, chatSession, appSession, background);
+                    chatManager, moduleManager, errorManager, chatSession, appSession, background, toolbar);
             if (rootView != null) {
                 chatView.setRootView(rootView);
             }

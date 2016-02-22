@@ -94,6 +94,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
             toolbar = getToolbar();
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back));
             whattodo();
             //     Chat chat=chatSession.getSelectedChat();
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
@@ -165,7 +166,12 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+            }
+        });
         return new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addModuleManager(moduleManager)

@@ -3,10 +3,11 @@
     android:id="@+id/swipe_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:id="@+id/container"
@@ -46,11 +47,12 @@
                 android:layout_alignParentTop="false"
                 android:layout_marginBottom="20dp"
                 android:layout_above="@+id/messageEdit"
-                android:layout_below="@+id/meLbl"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="2dp"
                 android:listSelector="@android:color/transparent"
                 android:transcriptMode="alwaysScroll"
                 android:divider="@null" />
+<!--
+android:layout_below="@+id/meLbl"
 
             <TextView
                 android:id="@+id/friendLabel"
@@ -70,26 +72,8 @@
                 android:text="MySelf"
                 android:textColor="@color/text_color"
                 android:textSize="20dp" />
-            <!--
-            <TextView
-                android:id="@+id/meLbl"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="MySelf"
-                android:textColor="@color/background_floating_material_dark"
-                android:singleLine="false"
-                android:textSize="20dp" />
+                -->
 
-            <TextView
-                android:id="@+id/friendLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|start"
-                android:textColor="@color/background_floating_material_dark"
-                android:text="Friend"
-                android:textSize="20dp" />
-    -->
         </RelativeLayout>
     </LinearLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

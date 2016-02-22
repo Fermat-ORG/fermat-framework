@@ -2823,7 +2823,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 //        runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Messages");
+        runtimeTitleBar.setLabel("");//set title in fragment
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);

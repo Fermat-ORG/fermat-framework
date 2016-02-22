@@ -61,11 +61,11 @@ public class ContactAdapter extends ArrayAdapter<String> {
                 case "detail":
                     item = inflater.inflate(R.layout.contact_detail_item, null, true);
 
-                    FermatTextView name2 = (FermatTextView) item.findViewById(R.id.contact_detail_header);
-                    name2.setText("Alias");//name2.setText(contactName.get(0));
+                    TextView name2 = (TextView) item.findViewById(R.id.contact_detail_header);
+                    name2.setText(" ");//name2.setText(contactName.get(0));
 
-                    FermatTextView alias2 = (FermatTextView) item.findViewById(R.id.alias);
-                    alias2.setText(contactAlias.get(0));
+                    TextView alias2 = (TextView) item.findViewById(R.id.alias);
+                    alias2.setText(contactName.get(0));
                     break;
             }
         }catch (Exception e)
