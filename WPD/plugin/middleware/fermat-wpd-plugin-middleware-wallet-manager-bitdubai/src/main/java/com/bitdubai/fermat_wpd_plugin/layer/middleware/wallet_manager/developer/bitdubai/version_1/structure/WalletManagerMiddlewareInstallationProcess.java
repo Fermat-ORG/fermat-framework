@@ -69,8 +69,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
         try {
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
             InstalledWallet installedWallet = walletManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
-            if (installedWallet != null) return true;
-            else return false;
+            return installedWallet != null;
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantExecuteDatabaseOperationException(exception, "Error checking if the wallet is installed", "Please, check the cause");
         } catch (CantGetInstalledWalletsException exception) {

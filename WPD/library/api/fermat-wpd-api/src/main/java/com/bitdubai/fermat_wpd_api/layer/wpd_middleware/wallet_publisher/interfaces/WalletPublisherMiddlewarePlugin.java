@@ -23,5 +23,5 @@ public interface WalletPublisherMiddlewarePlugin extends FermatManager {
      *
      * @return WalletPublisherMiddlewareManager
      */
-    public WalletPublisherMiddlewareManager getWalletPublisherMiddlewareManagerInstance();
+    WalletPublisherMiddlewareManager getWalletPublisherMiddlewareManagerInstance();
 }

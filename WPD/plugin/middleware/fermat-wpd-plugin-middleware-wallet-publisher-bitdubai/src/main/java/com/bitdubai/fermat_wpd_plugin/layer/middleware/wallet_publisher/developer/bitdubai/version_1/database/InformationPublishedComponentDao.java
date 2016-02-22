@@ -204,7 +204,6 @@ public class InformationPublishedComponentDao {
         }
         return walletPublishedMiddlewareInformation;
     }
-    ;
 
     /**
      * Method that list the all entities on the data base.
@@ -304,8 +303,6 @@ public class InformationPublishedComponentDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -422,8 +419,6 @@ public class InformationPublishedComponentDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -553,8 +548,6 @@ public class InformationPublishedComponentDao {
          */
         return list;
     }
-
-    ;
 
     /**
      * Method that create a new entity in the data base.

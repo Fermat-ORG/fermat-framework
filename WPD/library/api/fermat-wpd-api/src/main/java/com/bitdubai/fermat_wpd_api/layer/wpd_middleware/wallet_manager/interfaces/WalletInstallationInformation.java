@@ -12,19 +12,19 @@ public interface WalletInstallationInformation {
      *
      * @return the identifier
      */
-    public UUID getWalletCatalogId();
+    UUID getWalletCatalogId();
 
     /**
      * This method tells us the identifier of the selected skin to install
      *
      * @return the identifier
      */
-    public UUID getSkinId();
+    UUID getSkinId();
 
     /**
      * This method gives us the identifier of the language selected to install
      *
      * @return the identifier
      */
-    public UUID getLanguageId();
+    UUID getLanguageId();
 }

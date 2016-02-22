@@ -31,76 +31,76 @@ public interface ComponentVersionDetail {
      *
      * @return UUID
      */
-    public UUID getId();
+    UUID getId();
 
     /**
      * Get the Catalog Id
      *
      * @return UUID
      */
-    public UUID getCatalogId();
+    UUID getCatalogId();
 
     /**
      * Get the Screen Size
      *
      * @return ScreenSize
      */
-    public ScreenSize getScreenSize();
+    ScreenSize getScreenSize();
 
     /**
      * Get the Initial Wallet Version Supported
      *
      * @return Version
      */
-    public Version getInitialWalletVersion();
+    Version getInitialWalletVersion();
 
     /**
      * Get the Final Wallet Version Supported
      *
      * @return Version
      */
-    public Version getFinalWalletVersion();
+    Version getFinalWalletVersion();
 
     /**
      * Get the Initial Platform Version Supported
      *
      * @return Version
      */
-    public Version getInitialPlatformVersion();
+    Version getInitialPlatformVersion();
 
     /**
      * Get the Final Platform Version Supported
      *
      * @return Version
      */
-    public Version getFinalPlatformVersion();
+    Version getFinalPlatformVersion();
 
     /**
      * Get the Version
      *
      * @return Version
      */
-    public Version getVersion();
+    Version getVersion();
 
     /**
      * Get the Version Timestamp
      *
      * @return Timestamp
      */
-    public Timestamp getVersionTimestamp();
+    Timestamp getVersionTimestamp();
 
     /**
      * Get the Component Id
      *
      * @return UUID
      */
-    public UUID getComponentId();
+    UUID getComponentId();
 
     /**
      * Get the observations
      *
      * @return String
      */
-    public String getObservations();
+    String getObservations();
 
 }
