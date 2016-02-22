@@ -209,6 +209,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * and the wallet was reseted because new keys were added
                  */
                 if (isWalletReset) {
+                    System.out.println("***CryptoNetwork*** new keys added from " + cryptoVault.getCode() + " vault in " + blockchainNetworkType.getCode() + " network...");
+
                     BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = runningAgents.get(blockchainNetworkType);
                     bitcoinCryptoNetworkMonitor.stop();
                     runningAgents.remove(blockchainNetworkType);
@@ -230,6 +232,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
                 BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
+
+                System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for "  + cryptoVault.getCode() + " vault...");
 
                 bitcoinCryptoNetworkMonitor.start();
             }
