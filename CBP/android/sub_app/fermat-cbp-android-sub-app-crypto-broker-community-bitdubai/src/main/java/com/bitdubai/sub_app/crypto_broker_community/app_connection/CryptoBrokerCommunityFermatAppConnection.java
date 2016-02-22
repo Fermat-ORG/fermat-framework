@@ -56,11 +56,8 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections{
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        //System.out.println("CBC getNavigationViewPainter.. llamando a getActiveIdentity..");
-
         return new BrokerCommunityNavigationViewPainter(getActivity(), getActiveIdentity(),
                 (CryptoBrokerCommunitySubAppSession) getFullyLoadedSession());
-
     }
 
     @Override

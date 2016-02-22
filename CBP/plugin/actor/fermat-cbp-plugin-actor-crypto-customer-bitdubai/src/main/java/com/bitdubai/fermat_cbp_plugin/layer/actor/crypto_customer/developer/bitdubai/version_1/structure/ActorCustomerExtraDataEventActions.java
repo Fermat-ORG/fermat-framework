@@ -33,9 +33,14 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * TODO ADD A DESCRIPTION HERE
+ * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.ActorCustomerExtraDataEventActions</code>
+ * It contains all the necessary logic to manage events related to receiving quotes broker
+ * <p/>
+ * Created by Angel Veloz - (vlzangel91@gmail.com) on 4/02/16.
  *
- * Created by angel on 4/02/16.
+ * @author angel
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public final class ActorCustomerExtraDataEventActions {
 
@@ -131,28 +136,26 @@ public final class ActorCustomerExtraDataEventActions {
 
             List<CryptoBrokerExtraData<CryptoBrokerQuote>> dataNS = cryptoBrokerANSManager.listPendingQuotesRequests(RequestType.SENT);
 
-            if(dataNS != null) {
+            for (CryptoBrokerExtraData<CryptoBrokerQuote> extraDate : dataNS) {
 
-                for (CryptoBrokerExtraData<CryptoBrokerQuote> extraDate : dataNS) {
+                Collection<QuotesExtraData> quotes = new ArrayList<>();
+                ActorIdentity identity = new ActorExtraDataIdentity("", extraDate.getCryptoBrokerPublicKey(), null);
 
-                    Collection<QuotesExtraData> quotes = new ArrayList<>();
-                    ActorIdentity identity = new ActorExtraDataIdentity("", extraDate.getCryptoBrokerPublicKey(), null);
-
-                    for (CryptoBrokerQuote quo : extraDate.listInformation()) {
-                        QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), quo.getMerchandise(), quo.getPaymentCurrency(), quo.getPrice());
-                        quotes.add(quote);
-                    }
-
-                    ActorExtraData actorExtraData = new ActorExtraDataInformation(extraDate.getRequesterPublicKey(), identity, quotes, null);
-
-                    if( this.cryptoCustomerActorDao.existBrokerExtraDataQuotes(identity.getPublicKey(), extraDate.getRequesterPublicKey()) ){
-
-                        this.cryptoCustomerActorDao.updateQuotes(actorExtraData);
-                    }else{
-
-                        this.cryptoCustomerActorDao.createCustomerExtraData(actorExtraData);
-                    }
+                for (CryptoBrokerQuote quo : extraDate.listInformation()) {
+                    QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), quo.getMerchandise(), quo.getPaymentCurrency(), quo.getPrice());
+                    quotes.add(quote);
                 }
+
+                ActorExtraData actorExtraData = new ActorExtraDataInformation(extraDate.getRequesterPublicKey(), identity, quotes, null);
+
+                if( this.cryptoCustomerActorDao.existBrokerExtraDataQuotes(identity.getPublicKey(), extraDate.getRequesterPublicKey()) ){
+
+                    this.cryptoCustomerActorDao.updateQuotes(actorExtraData);
+                }else{
+                    this.cryptoCustomerActorDao.createActorQuotes(actorExtraData);
+                }
+
+                cryptoBrokerANSManager.confirmQuotesRequest(extraDate.getRequestId());
             }
 
         } catch (CantUpdateActorExtraDataException e) {
