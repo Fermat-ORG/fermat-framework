@@ -8,6 +8,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.CheckpointManager;
+import org.bitcoinj.core.DownloadProgressTracker;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.BlockStore;
@@ -39,7 +40,7 @@ import javax.print.attribute.standard.DateTimeAtCompleted;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BitcoinCryptoNetworkBlockChain implements Serializable{
+public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker implements Serializable {
 
     /**
      * Classes variables
