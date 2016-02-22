@@ -22,6 +22,8 @@ public class IncomingCryptoDataBaseConstants {
 
     // Cryoto Transaction associated to the fermat transaction
     public static final ColumnDefinition INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN = new ColumnDefinition("TransactionHash", DatabaseDataType.STRING, 64,false);
+    // Transaction Network type
+    public static final ColumnDefinition INCOMING_CRYPTO_REGISTRY_TABLE_NETWORK_TYPE_COLUMN = new ColumnDefinition("network_type", DatabaseDataType.STRING, 20,false);
     // Crypto Address where the currency was sent
     public static final ColumnDefinition INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_TO_COLUMN = new ColumnDefinition("AddressTo", DatabaseDataType.STRING, 34,false);
     // Crypto currency of the transaction (Bitcoin, Litecoin, etc)
