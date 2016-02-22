@@ -30,6 +30,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_sell
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 11/02/16.
@@ -89,7 +90,7 @@ public final class AssetSellerTransactionManager {
 
     private void sendMessage(AssetNegotiation negotiation, DAPActor from, DAPActor to) throws CantSetObjectException, CantSendMessageException {
         DAPContentMessage content = new AssetNegotiationContentMessage(AssetSellStatus.WAITING_CONFIRMATION, negotiation);
-        DAPMessage message = new DAPMessage(content, from, to, DAPMessageSubject.NEW_NEGOTIATION_STARTED);
+        DAPMessage message = new DAPMessage(UUID.randomUUID(), content, from, to, DAPMessageSubject.NEW_NEGOTIATION_STARTED);
         assetTransmission.sendMessage(message);
     }
 

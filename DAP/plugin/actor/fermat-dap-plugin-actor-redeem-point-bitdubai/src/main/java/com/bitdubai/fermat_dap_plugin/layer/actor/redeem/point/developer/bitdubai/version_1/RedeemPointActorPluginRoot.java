@@ -72,6 +72,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by Nerio on 09/09/15.
@@ -346,6 +347,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             try {
                 AssetExtendedPublicKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublicKeyContentMessage();
                 DAPMessage dapMessage = new DAPMessage(
+                        UUID.randomUUID(),
                         assetExtendedPublickKeyContentMessage,
                         requester,
                         actorAssetIssuer);

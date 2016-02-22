@@ -73,6 +73,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * Created by Nerio on 09/09/15.
@@ -319,6 +320,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             try {
                 AssetExtendedPublicKeyContentMessage assetExtendedPublickKeyContentMessage = new AssetExtendedPublicKeyContentMessage();
                 DAPMessage dapMessage = new DAPMessage(
+                        UUID.randomUUID(),
                         assetExtendedPublickKeyContentMessage,
                         requester,
                         actorAssetRedeemPoint);
@@ -438,6 +440,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
              */
             try {
                 DAPMessage dapMessageSend = new DAPMessage(
+                        UUID.randomUUID(),
                         assetExtendedPublickKeyContentMessage,
                         issuer,
                         redeemPoint);
