@@ -63,7 +63,7 @@ public class DepositBankMoneyTransactionDao {
         try {
             table.insertRecord(record);
         }catch (CantInsertRecordException e){
-
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
