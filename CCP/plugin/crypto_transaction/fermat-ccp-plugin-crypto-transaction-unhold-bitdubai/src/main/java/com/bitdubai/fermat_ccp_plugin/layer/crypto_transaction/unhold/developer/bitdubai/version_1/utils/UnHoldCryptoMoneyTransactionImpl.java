@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransaction;
@@ -20,6 +21,7 @@ public class UnHoldCryptoMoneyTransactionImpl implements CryptoUnholdTransaction
     private float                   amount;
     private CryptoCurrency          currency;
     private String                  memo;
+    private BlockchainNetworkType blockChainNetworkType;
 
     public UnHoldCryptoMoneyTransactionImpl(){
 
@@ -53,6 +55,16 @@ public class UnHoldCryptoMoneyTransactionImpl implements CryptoUnholdTransaction
     @Override
     public void setTimestampConfirmedRejected(long timestampConfirmedRejected) {
         this.timestampConfirmedRejected = timestampConfirmedRejected;
+    }
+
+    @Override
+    public BlockchainNetworkType getBlockChainNetworkType() {
+        return blockChainNetworkType;
+    }
+
+    @Override
+    public void setBlockChainNetworkType(BlockchainNetworkType blockChainNetworkType) {
+    this.blockChainNetworkType = blockChainNetworkType;
     }
 
     @Override
@@ -124,4 +136,16 @@ public class UnHoldCryptoMoneyTransactionImpl implements CryptoUnholdTransaction
     public void setMemo(String memo) {
         this.memo = memo;
     }
+
+    @Override
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockChainNetworkType;
+    }
+
+    @Override
+    public void setBlockchainNetworkType(BlockchainNetworkType blockChainNetworkType) {
+        this.blockChainNetworkType = blockChainNetworkType;
+    }
+
+
 }

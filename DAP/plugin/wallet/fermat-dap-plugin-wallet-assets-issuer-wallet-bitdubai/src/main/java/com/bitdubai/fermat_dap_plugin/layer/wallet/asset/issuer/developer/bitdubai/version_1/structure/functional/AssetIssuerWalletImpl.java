@@ -52,6 +52,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -280,6 +281,35 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         assetIssuerWalletTransactions = assetIssuerWalletDao.distributeAssets(assetPublicKey);
         return assetIssuerWalletTransactions;
     }
+
+
+    @Override
+    public List<AssetIssuerWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException {
+        List<AssetIssuerWalletTransaction> creditAvailable = getTransactionsAll(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
+        List<AssetIssuerWalletTransaction> creditBook = getTransactionsAll(BalanceType.BOOK, TransactionType.CREDIT, assetPublicKey);
+        List<AssetIssuerWalletTransaction> debitAvailable = getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
+        List<AssetIssuerWalletTransaction> debitBook = getTransactionsAll(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
+        List<AssetIssuerWalletTransaction> toReturn = new ArrayList<>();
+        toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
+        toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
+        Collections.sort(toReturn, new Comparator<AssetIssuerWalletTransaction>() {
+            @Override
+            public int compare(AssetIssuerWalletTransaction o1, AssetIssuerWalletTransaction o2) {
+                return (int) (o2.getTimestamp() - o1.getTimestamp());
+            }
+        });
+        return toReturn;
+    }
+
+    private List<AssetIssuerWalletTransaction> getTransactionsForDisplay(List<AssetIssuerWalletTransaction> available, List<AssetIssuerWalletTransaction> book) {
+        for (AssetIssuerWalletTransaction transaction : book) {
+            if (!available.contains(transaction)) {
+                available.add(transaction);
+            }
+        }
+        return available;
+    }
+
 
     @Override
     public DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException {

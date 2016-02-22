@@ -150,6 +150,7 @@ public class BitcoinWatchOnlyCryptoVaultDeveloperDatabaseFactory  implements Dea
         key_Maintenance_DetailColumns.add(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME);
         key_Maintenance_DetailColumns.add(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME);
         key_Maintenance_DetailColumns.add(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME);
+        key_Maintenance_DetailColumns.add(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
 
         /**
          * Table key_Maintenance_Detail addition.

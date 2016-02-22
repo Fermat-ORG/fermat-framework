@@ -50,7 +50,7 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new CryptoWalletUserFermatAppConnection(activity);
                 break;
             case "public_key_intra_user_commmunity":
-                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity,fermatSession);
+                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
                 break;
 
             //DAP WALLETS
@@ -80,7 +80,7 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new CommunityAssetIssuerFermatAppConnection(activity);
                 break;
             case "public_key_dap_user_community":
-                fermatAppConnection = new CommunityAssetUserFermatAppConnection(activity);
+                fermatAppConnection = new CommunityAssetUserFermatAppConnection(activity, fermatSession);
                 break;
             case "public_key_dap_redeem_point_community":
                 fermatAppConnection = new CommunityRedeemPointFermatAppConnection(activity);

@@ -35,6 +35,7 @@ public class CryptoTransaction{
     /**
      * Overloaded constructor
      * @param transactionHash
+     * @param blockchainNetworkType
      * @param addressFrom
      * @param addressTo
      * @param cryptoCurrency
@@ -42,14 +43,14 @@ public class CryptoTransaction{
      * @param cryptoStatus
      */
     public CryptoTransaction(String transactionHash,
+                             BlockchainNetworkType blockchainNetworkType,
                              CryptoAddress addressFrom,
                              CryptoAddress addressTo,
                              CryptoCurrency cryptoCurrency,
                              long cryptoAmount,
                              CryptoStatus cryptoStatus) {
         this.transactionHash = transactionHash;
-        // will create by default a transaction in the DEFAULT network.
-        this.blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        this.blockchainNetworkType = blockchainNetworkType;
         this.addressFrom = addressFrom;
         this.addressTo = addressTo;
         this.cryptoCurrency = cryptoCurrency;

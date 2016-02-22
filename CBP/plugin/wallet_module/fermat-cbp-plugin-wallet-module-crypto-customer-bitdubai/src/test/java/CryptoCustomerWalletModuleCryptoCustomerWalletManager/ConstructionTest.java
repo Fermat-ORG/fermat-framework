@@ -402,17 +402,17 @@ public class ConstructionTest {
     };
     private final CustomerBrokerNewManager customerBrokerNewManager = new CustomerBrokerNewManager() {
         @Override
-        public void createCustomerBrokerNewPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
+        public void createCustomerBrokerNewPurchaseNegotiationTransaction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
 
         }
 
         @Override
-        public CustomerBrokerNew getCustomerBrokerNewNegotiationTranasction(UUID transactionId) throws CantGetCustomerBrokerNewNegotiationTransactionException {
+        public CustomerBrokerNew getCustomerBrokerNewNegotiationTransaction(UUID transactionId) throws CantGetCustomerBrokerNewNegotiationTransactionException {
             return null;
         }
 
         @Override
-        public List<CustomerBrokerNew> getAllCustomerBrokerNewNegotiationTranasction() throws CantGetListCustomerBrokerNewNegotiationTransactionException {
+        public List<CustomerBrokerNew> getAllCustomerBrokerNewNegotiationTransaction() throws CantGetListCustomerBrokerNewNegotiationTransactionException {
             return null;
         }
     };

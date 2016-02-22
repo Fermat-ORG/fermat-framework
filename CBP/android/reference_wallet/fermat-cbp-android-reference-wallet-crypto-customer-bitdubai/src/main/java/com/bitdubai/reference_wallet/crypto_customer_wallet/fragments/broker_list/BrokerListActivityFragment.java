@@ -50,7 +50,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     private ErrorManager errorManager;
 
     // Data
-    private ArrayList<BrokerIdentityBusinessInfo> brokerList;
+    private List<BrokerIdentityBusinessInfo> brokerList;
     private CryptoCustomerWalletManager walletManager;
 
     //UI
@@ -70,7 +70,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            brokerList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            brokerList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -98,7 +98,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new BrokerListAdapter(getActivity(), brokerList, walletManager);
+            adapter = new BrokerListAdapter(getActivity(), brokerList);
             adapter.setFermatListEventListener(this);
         }
         return adapter;

@@ -15,7 +15,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSendPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
@@ -29,7 +29,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.ex
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantUpdateBankAccountPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.exceptions.CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetAssociatedIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
@@ -43,6 +43,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exception
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantNewEmptyCustomerBrokerNegotiationInformationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantSaveCryptoCustomerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotStartNegotiationException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.IdentityAssociatedNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -73,9 +74,24 @@ public interface CryptoCustomerWalletManager extends WalletManager {
     boolean associateIdentity(ActorIdentity customer, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException;
 
 
-    boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetListCustomerIdentityWalletRelationshipException;
+    boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetCustomerIdentityWalletRelationshipException;
 
-    CryptoCustomerIdentity getAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetListCustomerIdentityWalletRelationshipException, CantGetAssociatedIdentity;
+    /**
+     * Through this method you can get the customer identity associated to any crypto customer wallet.
+     *
+     * @param walletPublicKey the public key of the crypto customer wallet that we're trying to get the associated identity.
+     *
+     * @return an instance of CryptoCustomerIdentity associated to the wallet.
+     *
+     * @throws CantGetAssociatedIdentityException            if something goes wrong.
+     * @throws IdentityAssociatedNotFoundException  if can't find the identity associated with the wallet.
+     */
+    CryptoCustomerIdentity getAssociatedIdentity(
+
+            String walletPublicKey
+
+    ) throws CantGetAssociatedIdentityException,
+             IdentityAssociatedNotFoundException;
 
     /**
      * @return list of identities associated with this wallet

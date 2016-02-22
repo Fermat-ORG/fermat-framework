@@ -7,9 +7,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDeliveryFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDeliverySelectGroupsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDeliverySelectUsersFragment;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDetailActivityFragment;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.IssuerHistoryActivityFragment;
-import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.IssuerStadisticsActivityFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.AssetDetailTransactionsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MainActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.MyAssetsActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.fragments.SettingsAssetIssuerFragment;
@@ -55,7 +53,7 @@ public class IssuerWalletFragmentFactory extends FermatFragmentFactory<AssetIssu
 //                    currentFragment = new IssuerStadisticsActivityFragment();
 //                    break;
                 case DAP_WALLET_ASSET_ISSUER_ASSET_DETAIL:
-                    currentFragment = new AssetDetailActivityFragment();
+                    currentFragment = new AssetDetailTransactionsFragment();
                     break;
                 case DAP_WALLET_ASSET_ISSUER_USER_DELIVERY_LIST:
                     currentFragment = new UserDeliveryListFragment();

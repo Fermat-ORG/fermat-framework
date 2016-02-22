@@ -32,6 +32,7 @@ public class CryptoCustomerExtraDataEventHandler implements FermatEventHandler {
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (this.cryptoCustomerActorPluginRoot.getStatus() == ServiceStatus.STARTED) {
+
             if (fermatEvent instanceof GenericCBPFermatEvent) {
                 this.actorExtraDataEventAction.handleNewsEvent();
             } else {

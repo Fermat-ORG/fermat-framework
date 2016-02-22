@@ -33,6 +33,8 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantValidateActiveNetworkException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.InvalidSeedException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.AddressFormatException;
@@ -90,6 +92,7 @@ public class AssetCryptoVaultManager  {
     BitcoinNetworkManager bitcoinNetworkManager;
     PluginFileSystem pluginFileSystem;
     PluginDatabaseSystem pluginDatabaseSystem;
+    ErrorManager errorManager;
 
 
     /**
@@ -101,18 +104,20 @@ public class AssetCryptoVaultManager  {
                                    PluginFileSystem pluginFileSystem,
                                    PluginDatabaseSystem pluginDatabaseSystem,
                                    String seedFileName,
-                                   BitcoinNetworkManager bitcoinNetworkManager) throws InvalidSeedException {
+                                   BitcoinNetworkManager bitcoinNetworkManager,
+                                   ErrorManager errorManager) throws InvalidSeedException {
 
         this.pluginId = pluginId;
         ASSET_VAULT_SEED_FILENAME = seedFileName;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.errorManager = errorManager;
 
         /**
          * I will let the VaultKeyHierarchyGenerator to start and generate the hierarchy in a new thread
          */
-        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(getAssetVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId);
+        vaultKeyHierarchyGenerator = new VaultKeyHierarchyGenerator(getAssetVaultSeed(), pluginDatabaseSystem, this.bitcoinNetworkManager, this.pluginId, errorManager);
         new Thread(vaultKeyHierarchyGenerator).start();
     }
 
@@ -203,7 +208,9 @@ public class AssetCryptoVaultManager  {
             output.append(inputTransaction);
             output.append(System.lineSeparator());
             output.append("doesn't exists in the CryptoNetwork.");
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+            CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -213,7 +220,9 @@ public class AssetCryptoVaultManager  {
         try {
             address = getBitcoinAddress(networkParameters,addressTo);
         } catch (AddressFormatException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+            CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -223,13 +232,17 @@ public class AssetCryptoVaultManager  {
         try {
             wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
         } catch (InvalidSeedException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
+            CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         try {
             wallet.importKeys(getKeysForAllAccounts(networkParameters));
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+            CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -253,7 +266,9 @@ public class AssetCryptoVaultManager  {
             output.append(System.lineSeparator());
             output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + wallet.getBalance() + " - " + fee.getValue() + ")");
 
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+            CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, null, output.toString(), null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -278,7 +293,9 @@ public class AssetCryptoVaultManager  {
             output.append("Current balance available for this transaction: " + wallet.getBalance().getValue());
             output.append(System.lineSeparator());
             output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, output.toString(), null);
+            CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, output.toString(), null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         try {
@@ -288,9 +305,13 @@ public class AssetCryptoVaultManager  {
             bitcoinNetworkManager.storeBitcoinTransaction(networkType, sendRequest.tx, UUID.randomUUID(), true);
             bitcoinNetworkManager.broadcastTransaction(sendRequest.tx.getHashAsString());
         } catch (CantStoreBitcoinTransactionException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "There was an error storing the created transaction in the CryptoNetwork", "Crypto Network issue");
+            CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "There was an error storing the created transaction in the CryptoNetwork", "Crypto Network issue");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         } catch (CantBroadcastTransactionException e) {
-            throw new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "There was an error broadcasting in the CryptoNetwork", "Crypto Network issue");
+            CantSendAssetBitcoinsToUserException exception = new CantSendAssetBitcoinsToUserException(CantSendAssetBitcoinsToUserException.DEFAULT_MESSAGE, e, "There was an error broadcasting in the CryptoNetwork", "Crypto Network issue");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         return sendRequest.tx.getHashAsString();
@@ -472,7 +493,9 @@ public class AssetCryptoVaultManager  {
         try {
             this.getDao().addNewHierarchyAccount(hierarchyAccount);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantAddHierarchyAccountException(CantAddHierarchyAccountException.DEFAULT_MESSAGE, e, "Can't insert the next Hierarchy in the database.", "database issue");
+            CantAddHierarchyAccountException exception = new CantAddHierarchyAccountException(CantAddHierarchyAccountException.DEFAULT_MESSAGE, e, "Can't insert the next Hierarchy in the database.", "database issue");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -512,7 +535,9 @@ public class AssetCryptoVaultManager  {
                 redeemPointAccount = createNewRedeemPointAccount(redeemPointPublicKey);
                 this.vaultKeyHierarchyGenerator.getVaultKeyHierarchy().addVaultAccount(redeemPointAccount);
             } catch (CantExecuteDatabaseOperationException e) {
-                throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "There was an error creating and persisting the new account in database.", "database issue");
+                CantGetExtendedPublicKeyException exception = new  CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "There was an error creating and persisting the new account in database.", "database issue");
+                errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                throw exception;
             }
         } else{
             /**
@@ -521,7 +546,9 @@ public class AssetCryptoVaultManager  {
             try {
                 redeemPointAccount = getDao().getHierarchyAccount(redeemPointPublicKey);
             } catch (CantExecuteDatabaseOperationException e) {
-                throw new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "Error getting existing Hierarchy Account", "database issue");
+                CantGetExtendedPublicKeyException exception = new CantGetExtendedPublicKeyException(CantGetExtendedPublicKeyException.DEFAULT_MESSAGE, e, "Error getting existing Hierarchy Account", "database issue");
+                errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                throw exception;
             }
         }
 
@@ -608,6 +635,7 @@ public class AssetCryptoVaultManager  {
                 throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, null, "the specified public key " + redeemPointPublicKey + " is not from a Redeem Point account", null);
 
         } catch (CantExecuteDatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActiveRedeemPointAddressesException(CantGetActiveRedeemPointAddressesException.DEFAULT_MESSAGE, e, "Error getting hierarchy account from database.", "database error");
         }
 
@@ -669,6 +697,7 @@ public class AssetCryptoVaultManager  {
                     publicKeys.add(hierarchyAccount.getDescription());
             }
         } catch (CantExecuteDatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActiveRedeemPointsException(CantGetActiveRedeemPointsException.DEFAULT_MESSAGE, e, "database error getting the list of active hierarchy accounts.", "database issue");
         }
 
@@ -800,7 +829,9 @@ public class AssetCryptoVaultManager  {
         try {
             address = getBitcoinAddress(networkParameters,addressTo);
         } catch (AddressFormatException e) {
-            throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+            CantCreateBitcoinTransactionException exception = new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -810,13 +841,17 @@ public class AssetCryptoVaultManager  {
         try {
             wallet = Wallet.fromSeed(networkParameters, getAssetVaultSeed());
         } catch (InvalidSeedException e) {
-            throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
+            CantCreateBitcoinTransactionException exception = new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Unable to create wallet from seed.", "seed issue");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         try {
             wallet.importKeys(getKeysForAllAccounts(networkParameters));
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+            CantCreateBitcoinTransactionException exception = new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, "Error getting the stored accounts to get the keys", "database issue");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -840,7 +875,9 @@ public class AssetCryptoVaultManager  {
             output.append(System.lineSeparator());
             output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + wallet.getBalance() + " - " + fee.getValue() + ")");
 
-            throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+            CantCreateBitcoinTransactionException exception = new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -865,7 +902,12 @@ public class AssetCryptoVaultManager  {
             output.append("Current balance available for this transaction: " + wallet.getBalance().getValue());
             output.append(System.lineSeparator());
             output.append("Current value to send: " + coinToSend.getValue() + " (+fee: " + fee.getValue() + ")");
-            throw new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, output.toString(), null);
+
+            CantCreateBitcoinTransactionException exception = new CantCreateBitcoinTransactionException(CantCreateBitcoinTransactionException.DEFAULT_MESSAGE, e, output.toString(), null);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
+
         }
 
         try {
@@ -926,7 +968,10 @@ public class AssetCryptoVaultManager  {
         try {
             networkType = validateNetorkIsActiveForCryptoAddress(addressTo);
         } catch (CantValidateActiveNetworkException e) {
-            throw new CantCreateDraftTransactionException (CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "Network is not active for this address.", "wrong address");
+            CantCreateDraftTransactionException  exception = new CantCreateDraftTransactionException (CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "Network is not active for this address.", "wrong address");
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         final NetworkParameters networkParameters = BitcoinNetworkSelector.getNetworkParameter(networkType);
@@ -944,7 +989,10 @@ public class AssetCryptoVaultManager  {
             output.append(inputTransaction);
             output.append(System.lineSeparator());
             output.append("doesn't exists in the CryptoNetwork.");
-            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+            CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -954,7 +1002,9 @@ public class AssetCryptoVaultManager  {
         try {
             address = getBitcoinAddress(networkParameters,addressTo);
         } catch (AddressFormatException e) {
-            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+            CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "The specified address " + addressTo.getAddress() + " is not valid.", null);
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**
@@ -973,7 +1023,10 @@ public class AssetCryptoVaultManager  {
             output.append(System.lineSeparator());
             output.append("We are trying to send " + coinToSend.getValue() + " satoshis, which is ValueToSend - fee (" + genesisTransaction.getOutput(0).getValue().getValue() + " - " + fee.getValue() + ")");
 
-            throw new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+            CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, null, output.toString(), null);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
 
         /**

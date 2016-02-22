@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -69,22 +70,13 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
 
             } else if (choice instanceof MoneyType) {
                 MoneyType moneyType = (MoneyType) choice;
+                data.add(moneyType.getFriendlyName());
 
-                switch (moneyType) {
-                    case BANK:
-                        data.add("Bank Money");
-                        break;
-                    case CASH_DELIVERY:
-                        data.add("Cash Delivery");
-                        break;
-                    case CASH_ON_HAND:
-                        data.add("Cash on Hand");
-                        break;
-                    case CRYPTO:
-                        data.add("Crypto Money");
-                        break;
-                }
-            } else {
+            } else if (choice instanceof NegotiationLocations) {
+                NegotiationLocations location = (NegotiationLocations) choice;
+                data.add(location.getLocation());
+
+            }else {
                 data.add(choice.toString());
             }
         }
