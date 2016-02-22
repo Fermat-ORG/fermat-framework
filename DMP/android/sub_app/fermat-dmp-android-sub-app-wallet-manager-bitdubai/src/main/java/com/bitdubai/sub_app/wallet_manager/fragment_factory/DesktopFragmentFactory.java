@@ -5,30 +5,41 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.DesktopSettings;
 import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
+import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
 
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
  */
-public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession, ResourceProviderManager,IntraUserIdentityFragmentsEnumType> {
+public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession, ResourceProviderManager,DesktopFragmentsEnumType> {
 
 
     @Override
-    public AbstractFermatFragment getFermatFragment(IntraUserIdentityFragmentsEnumType fragments) throws FragmentNotFoundException {
+    public AbstractFermatFragment getFermatFragment(DesktopFragmentsEnumType fragments) throws FragmentNotFoundException {
 
-        if (fragments.equals(IntraUserIdentityFragmentsEnumType.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT))
-            return DesktopFragment.newInstance();
+        AbstractFermatFragment abstractFermatFragment = null;
+
+        switch (fragments){
+            case DESKTOP_MAIN:
+                abstractFermatFragment = DesktopFragment.newInstance();
+                break;
+            case SETTINGS:
+                abstractFermatFragment = FermatNetworkSettings.newInstance();
+                break;
+            default:
+                abstractFermatFragment = DesktopFragment.newInstance();
+        }
 
 
-        throw createFragmentNotFoundException(fragments);
+        return abstractFermatFragment;
+
     }
 
     @Override
-    public IntraUserIdentityFragmentsEnumType getFermatFragmentEnumType(String key) {
-        return IntraUserIdentityFragmentsEnumType.getValue(key);
+    public DesktopFragmentsEnumType getFermatFragmentEnumType(String key) {
+        return DesktopFragmentsEnumType.getValue(key);
     }
 
     private FragmentNotFoundException createFragmentNotFoundException(FermatFragmentsEnumType fragments) {

@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 
 
@@ -25,6 +27,8 @@ public class RuntimeDesktopObject implements DesktopObject {
      */
      private String desktopType;
 
+    private String appPublicKey;
+
     /**
      *  Desktop identifier
      */
@@ -37,6 +41,8 @@ public class RuntimeDesktopObject implements DesktopObject {
     private Activities lastActivity;
 
     private Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
+
+
 
 
     /**
@@ -70,9 +76,29 @@ public class RuntimeDesktopObject implements DesktopObject {
     }
 
     @Override
+    public FermatApps getFermatApp() {
+        return FermatApps.MAIN_DESKTOP;
+    }
+
+    @Override
+    public FermatAppType getFermatAppType() {
+        return FermatAppType.DESKTOP;
+    }
+
+    @Override
+    public String getPublicKey() {
+        return appPublicKey;
+    }
+
+    @Override
     public Activity getActivity(Activities activities) {
         this.lastActivity=activities;
         return this.activities.get(activities);
+    }
+
+    @Override
+    public Activity getStartActivity() {
+        return activities.get(startActivity);
     }
 
     @Override
@@ -81,6 +107,11 @@ public class RuntimeDesktopObject implements DesktopObject {
             return activities.get(startActivity);
         }
         return activities.get(lastActivity);
+    }
+
+    @Override
+    public void changeActualStartActivity(int option) throws IllegalArgumentException {
+
     }
 
     public void setStartActivity(Activities activity) {
@@ -93,4 +124,8 @@ public class RuntimeDesktopObject implements DesktopObject {
         return languagePackages;
     }
 
+
+    public void setAppPublicKey(String appPublicKey) {
+        this.appPublicKey = appPublicKey;
+    }
 }

@@ -6,15 +6,15 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  * Created by Matias Furszyfer on 2015.07.22..
  */
 
-public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumType<IntraUserIdentityFragmentsEnumType> {
+public enum DesktopFragmentsEnumType implements FermatFragmentsEnumType<DesktopFragmentsEnumType> {
 
-    CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_MAIN_FRAGMENT("CCPSACCIMF"),
-    CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT("CCPSACCICIF")
+    DESKTOP_MAIN("DAM"),
+    SETTINGS("DS")
     ;
 
     private String key;
 
-    IntraUserIdentityFragmentsEnumType(String key) {
+    DesktopFragmentsEnumType(String key) {
         this.key = key;
     }
 
@@ -29,8 +29,8 @@ public enum IntraUserIdentityFragmentsEnumType implements FermatFragmentsEnumTyp
         return key;
     }
 
-    public static IntraUserIdentityFragmentsEnumType getValue(String name) {
-        for (IntraUserIdentityFragmentsEnumType fragments : IntraUserIdentityFragmentsEnumType.values()) {
+    public static DesktopFragmentsEnumType getValue(String name) {
+        for (DesktopFragmentsEnumType fragments : DesktopFragmentsEnumType.values()) {
             if (fragments.key.equals(name)) {
                 return fragments;
             }

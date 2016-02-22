@@ -28,6 +28,7 @@ import com.bitdubai.sub_app.crypto_customer_identity.app_connection.CryptoCustom
 import com.bitdubai.sub_app.developer.app_connection.DeveloperFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_community.app_connection.CryptoWalletUserCommunityFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserFermatAppConnection;
+import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnection;
 import com.bitdubai.sub_app.wallet_store.app_connection.WalletStoreFermatAppConnection;
 
 /**
@@ -37,7 +38,7 @@ public class FermatAppConnectionManager {
 
 
 
-    public static AppConnections switchStatement(Activity activity,String publicKey,FermatSession fermatSession){
+    private static AppConnections switchStatement(Activity activity,String publicKey,FermatSession fermatSession){
         AppConnections fermatAppConnection = null;
 
         switch (publicKey){
@@ -51,6 +52,11 @@ public class FermatAppConnectionManager {
                 break;
             case "public_key_intra_user_commmunity":
                 fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
+                break;
+
+            //DESKTOP
+            case "main_desktop":
+                fermatAppConnection = new DesktopFermatAppConnection(activity);
                 break;
 
             //DAP WALLETS
@@ -148,7 +154,6 @@ public class FermatAppConnectionManager {
 
 
     public static AppConnections getFermatAppConnection(String appPublicKey, Activity activity) {
-        AppConnections fermatAppConnection = switchStatement(activity,appPublicKey, null);
-        return fermatAppConnection;
+        return switchStatement(activity,appPublicKey, null);
     }
 }

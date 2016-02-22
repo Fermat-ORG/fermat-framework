@@ -1,5 +1,6 @@
-package com.bitdubai.android_core.app.common.version_1.top_settings;
+package com.bitdubai.sub_app.wallet_manager.fragment;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.mati.fermat_preference_settings.settings.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsDialogItem;
@@ -13,6 +14,10 @@ import java.util.List;
  */
 public class FermatNetworkSettings extends FermatPreferenceFragment{
 
+
+    public static AbstractFermatFragment newInstance() {
+        return new FermatNetworkSettings();
+    }
 
     @Override
     protected boolean hasMenu() {
@@ -37,6 +42,7 @@ public class FermatNetworkSettings extends FermatPreferenceFragment{
 
 
     }
+
 
 
 }

@@ -266,7 +266,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 
             Activity activity = walletNavigationStructure.getLastActivity();
 //            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this, getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this, getWalletSessionManager().getWalletSession(walletNavigationStructure.getPublicKey()));
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletNavigationStructure.getPublicKey(), this, getFermatSessionManager().getAppsSession(walletNavigationStructure.getPublicKey()));
 
             FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
             loadBasicUI(activity,fermatAppConnection);
@@ -449,10 +449,6 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         return null;
     }
 
-    @Override
-    public FermatSession getFermatSessionInUse(String appPublicKey) {
-        return null;
-    }
 
     @Override
     public void selectSubApp(InstalledSubApp installedSubApp) {
