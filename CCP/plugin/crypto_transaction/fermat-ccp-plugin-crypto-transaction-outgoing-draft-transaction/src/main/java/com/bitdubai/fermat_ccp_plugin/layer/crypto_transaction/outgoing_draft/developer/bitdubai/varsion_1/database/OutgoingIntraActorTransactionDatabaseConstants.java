@@ -1,13 +1,5 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.database;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
-
-import java.util.UUID;
-
 /**
  * The Class <code>OutgoingIntraActorTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
@@ -50,24 +42,9 @@ public class OutgoingIntraActorTransactionDatabaseConstants {
     public static final String OUTGOING_DRAFT_WALLET_REFERENCE_TYPE_COLUMN_NAME = "reference_wallet";
     public static final String OUTGOING_DRAFT_SAME_DEVICE_COLUMN_NAME = "same_device";
     public static final String OUTGOING_DRAFT_RUNNING_NETWORK_TYPE = "runningNetworkType";
+    public static final String OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME = "read_mark";
     public static final String OUTGOING_DRAFT_FIRST_KEY_COLUMN = "transaction_id";
 
 
 
-
-    private UUID requestId;
-    private DraftTransaction bitcoinTransaction;
-    private CryptoAddress sellerCryptoAddress;
-    private CryptoAddress buyerCryptoAddress;
-    private String walletPublicKey;
-    private long valueToSend;
-    private CryptoAddress addressTo;
-    private ReferenceWallet referenceWallet;
-    private BlockchainNetworkType blockchainNetworkType;
-    private String actorFromPublicKey;
-    private String actorToPublicKey;
-    private Actors actorFromType;
-    private Actors actorToType;
-    private String memo;
-    private long timestamp;
 }

@@ -79,7 +79,7 @@ public class OutgoingDraftTransactionDao {
 
 
     public void registerNewTransaction( UUID            transactionId,
-                                        UUID            requestId,
+                                        String          txHash,
                                         String          walletPublicKey,
                                         CryptoAddress   destinationAddress,
                                         long            cryptoAmount,
@@ -95,7 +95,7 @@ public class OutgoingDraftTransactionDao {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
-            loadRecordAsNew(recordToInsert, transactionId, requestId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet, sameDevice,blockchainNetworkType);
+            loadRecordAsNew(recordToInsert, transactionId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet, sameDevice,blockchainNetworkType);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
@@ -132,6 +132,15 @@ public class OutgoingDraftTransactionDao {
     public List<OutgoingDraftTransactionWrapper> getSentToCryptoVaultTransactions() throws OutgoingIntraActorCantGetTransactionsException {
         try {
             return getAllInState(TransactionState.SENT_TO_CRYPTO_VOULT);
+        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
+            throw new OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraActorCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
+    }
+    public List<OutgoingDraftTransactionWrapper> getSentToCryptoVaultTransactionsAndNotRead() throws OutgoingIntraActorCantGetTransactionsException {
+        try {
+            return getAllInStateAndNotRead(TransactionState.SENT_TO_CRYPTO_VOULT);
         } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
             throw new OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
         } catch (Exception exception) {
@@ -182,9 +191,12 @@ public class OutgoingDraftTransactionDao {
 
 
 
+
+
+
+
     private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord,
                                  UUID                trxId,
-                                 UUID                requestId,
                                  String              walletPublicKey,
                                  CryptoAddress       destinationAddress,
                                  long                cryptoAmount,
@@ -273,6 +285,56 @@ public class OutgoingDraftTransactionDao {
 
         return mapConvertToBT(records);
     }
+
+    public List<OutgoingDraftTransactionWrapper> getAllInStateAndNotRead(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
+
+        DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
+        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME, Boolean.FALSE.toString(), DatabaseFilterType.EQUAL);
+        transactionTable.loadToMemory();
+        List<DatabaseTableRecord> records = transactionTable.getRecords();
+        transactionTable.clearAllFilters();
+
+        return mapConvertToBT(records);
+    }
+
+    public OutgoingDraftTransactionWrapper getTransaction(UUID txId) throws CantLoadTableToMemoryException, InvalidParameterException {
+        DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+        transactionTable.addUUIDFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
+        transactionTable.loadToMemory();
+        List<DatabaseTableRecord> records = transactionTable.getRecords();
+        transactionTable.clearAllFilters();
+
+        return mapConvertToBT(records).get(0);
+    }
+
+    //TODO: mejorar, el plugin de mierda de db es un asco
+    public void markReadTransaction(UUID requestId) {
+        try {
+            DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+            transactionTable.addUUIDFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            transactionTable.loadToMemory();
+            List<DatabaseTableRecord> records = transactionTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+                //set new record values
+                record.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME, Boolean.TRUE.toString());
+
+                transactionTable.updateRecord(record);
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            e.printStackTrace();
+        } catch (CantUpdateRecordException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
+
 
     public void setToCryptoStatus(OutgoingDraftTransactionWrapper transactionWrapper, CryptoStatus cryptoStatus) throws CantUpdateRecordException, CantLoadTableToMemoryException, OutgoingIntraActorInconsistentTableStateException {
         try {
@@ -404,6 +466,7 @@ public class OutgoingDraftTransactionDao {
         }
 
     }
+
 
 
 }
