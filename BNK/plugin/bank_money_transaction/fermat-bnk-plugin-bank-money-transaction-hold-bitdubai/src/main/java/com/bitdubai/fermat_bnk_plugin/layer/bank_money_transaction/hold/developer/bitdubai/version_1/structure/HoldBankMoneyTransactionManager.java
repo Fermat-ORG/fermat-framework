@@ -80,11 +80,7 @@ public class HoldBankMoneyTransactionManager implements HoldManager {
         BankTransactionStatus status= null;
         try {
             status = holdBankMoneyTransactionDao.getHoldTransaction(transactionId).getBankTransactionStatus();
-            if (status!=null){
-                return true;
-            } else {
-                return false;
-            }
+            return status != null;
         }catch (FermatException e){
             return false;
         }
