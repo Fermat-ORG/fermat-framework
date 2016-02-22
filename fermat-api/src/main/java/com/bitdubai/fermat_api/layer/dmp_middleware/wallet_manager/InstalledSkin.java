@@ -14,26 +14,26 @@ public interface InstalledSkin {
      *
      * @return the skin name
      */
-    public String getAlias();
+    String getAlias();
 
     /**
      * This method gives us the identifier of an skin
      *
      * @return the skin identifier
      */
-    public UUID getId();
+    UUID getId();
 
     /**
      * This method gives us the name of the preview image of the skin
      *
      * @return the name of the image used to reach it in the wallet resources plug-in
      */
-    public String getPreview();
+    String getPreview();
 
     /**
      * This method gives us the version of the skin
      *
      * @return the skin version
      */
-    public Version getVersion();
+    Version getVersion();
 }

@@ -15,7 +15,6 @@ public enum FermatApps  implements FermatEnum {
     BITCOIN_REFERENCE_WALLET                         ("BRW"),
     INTRA_WALLET_USER_IDENTITY                    ("IWUI"),
     INTRA_WALLET_USER_COMMUNITY              ("IWUC");
-            ;
 
     private final String code;
 

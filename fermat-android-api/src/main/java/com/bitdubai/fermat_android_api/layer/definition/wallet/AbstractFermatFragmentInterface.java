@@ -9,11 +9,11 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 public interface AbstractFermatFragmentInterface<S extends FermatSession,R extends ResourceProviderManager> {
 
 
-    public void setAppSession(S appSession);
+    void setAppSession(S appSession);
 
-    public void setAppResourcesProviderManager(R appResourcesProviderManager);
+    void setAppResourcesProviderManager(R appResourcesProviderManager);
 
 
-    public void onUpdateViewOnUIThread(String code);
-    public void onUpdateView(String code);
+    void onUpdateViewOnUIThread(String code);
+    void onUpdateView(String code);
 }

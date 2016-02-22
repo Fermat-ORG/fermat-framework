@@ -5,6 +5,6 @@ package com.bitdubai.fermat_api.layer.osa_android.file_system;
  */
 public interface DealsWithPlatformFileSystem {
 
-    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem);
+    void setPlatformFileSystem(PlatformFileSystem platformFileSystem);
     
 }

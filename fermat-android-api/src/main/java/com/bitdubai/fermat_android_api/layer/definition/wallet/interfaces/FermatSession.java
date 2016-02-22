@@ -17,14 +17,14 @@ public interface FermatSession<A extends FermatApp,M extends ModuleManager>{
      * @param key
      * @param object
      */
-    public void setData (String key,Object object);
+    void setData(String key, Object object);
 
     /**
      *
      * @param key
      * @return
      */
-    public Object getData (String key);
+    Object getData(String key);
 
     /**
      *
@@ -35,7 +35,7 @@ public interface FermatSession<A extends FermatApp,M extends ModuleManager>{
      *
      * @return
      */
-    public ErrorManager getErrorManager();
+    ErrorManager getErrorManager();
 
 
     String getAppPublicKey();
