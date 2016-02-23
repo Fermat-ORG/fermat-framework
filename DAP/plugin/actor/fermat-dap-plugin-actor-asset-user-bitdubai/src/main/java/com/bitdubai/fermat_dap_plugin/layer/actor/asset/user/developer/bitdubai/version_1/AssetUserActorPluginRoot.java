@@ -56,7 +56,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
@@ -119,6 +122,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
     private AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     private AssetUserActorDao assetUserActorDao;
 
@@ -428,12 +434,18 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         CryptoAddressDealers.DAP_WATCH_ONLY,
                         BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
+
+                actorAssetRedeemPointManager.updateRedeemPointDAPConnectionStateActorNetworService(actorAssetRedeemPoint.getActorPublicKey(), DAPConnectionState.CONNECTING);
 //                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
 //                } catch (CantUpdateAssetUserConnectionException e) {
 //                    e.printStackTrace();
 //                }
             }
         } catch (CantSendAddressExchangeRequestException e) {
+            e.printStackTrace();
+        } catch (CantUpdateRedeemPointException e) {
+            e.printStackTrace();
+        } catch (RedeemPointNotFoundException e) {
             e.printStackTrace();
         }
     }
