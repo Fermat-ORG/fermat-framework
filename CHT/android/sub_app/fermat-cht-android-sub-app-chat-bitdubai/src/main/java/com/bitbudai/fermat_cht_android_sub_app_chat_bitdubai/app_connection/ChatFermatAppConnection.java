@@ -77,9 +77,9 @@ public class ChatFermatAppConnection extends AppConnections {
         NotificationPainter notification = null;
         try
         {
-            String[] params = code.split("|");
-            String usersend = params[0];
-            String message = params[1];
+
+            String usersend = code.split("@#@#")[0];
+            String message = code.split("@#@#")[1];
             //find last transaction
             notification = new ChatNotificationPainter("New Message Recive", usersend+":"+message ,"","");
 

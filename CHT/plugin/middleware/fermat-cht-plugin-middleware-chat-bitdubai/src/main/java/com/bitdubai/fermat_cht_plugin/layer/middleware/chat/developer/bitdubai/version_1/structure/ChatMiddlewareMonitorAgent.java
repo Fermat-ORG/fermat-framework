@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
@@ -481,8 +482,8 @@ public class ChatMiddlewareMonitorAgent implements
                         //TODO TEST NOTIFICATION TO PIP
       //                  broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
                         contact=getContactFromChatMetadata(incomingChatMetadata);
-                        code=contact.getRemoteName()+"|"+incomingChatMetadata.getMessage();
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW,incomingChatMetadata.getLocalActorPublicKey(),code);
+                        code=contact.getRemoteName()+"@#@#"+incomingChatMetadata.getMessage();
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_NEWMESSAGE.getCode(),code);
                       //  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
                       //This happen when recive a message check first the message sent from here and then the recive message
                        //when response some wrong with this code down here

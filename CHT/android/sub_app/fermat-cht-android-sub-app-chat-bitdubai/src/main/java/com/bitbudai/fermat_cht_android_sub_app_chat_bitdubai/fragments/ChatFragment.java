@@ -86,6 +86,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
             whattodo();
+      //      System.out.println("appSession.getAppPublicKey():"+appSession.getAppPublicKey());
             //     Chat chat=chatSession.getSelectedChat();
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
                 setHasOptionsMenu(true);
@@ -136,9 +137,9 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         super.onUpdateViewOnUIThread(code);
     //    Toast.makeText(getActivity(),"broadcaster chat", Toast.LENGTH_SHORT).show();
 
-        if(code.equals("13")){
+
             adapter.refreshEvents();
-        }
+
     }
 
 

@@ -272,7 +272,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 String values = infochat.get(position);
                 List<String> converter = new ArrayList<String>();
                 converter.addAll(Arrays.asList(values.split("@#@#")));
-                Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+           //     Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
                 try{
                     appSession.setData("whocallme", "chatlist");
                     appSession.setData("contactid", chatManager.getContactByContactId(UUID.fromString(converter.get(4))));//esto no es necesario, haces click a un chat
@@ -325,10 +325,10 @@ public class ChatListFragment extends AbstractFermatFragment{
     public void onUpdateViewOnUIThread(String code) {
         super.onUpdateViewOnUIThread(code);
    //     Toast.makeText(getActivity(), "Broadcast chatlist", Toast.LENGTH_SHORT).show();
-        if(code.equals("13")){
+
             updatevalues();
             adapter.refreshEvents(infochat, imgid);
-        }
+
     }
 
     @Override

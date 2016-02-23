@@ -286,9 +286,11 @@ public class ContactsListFragment extends AbstractFermatFragment {
                             List <Contact> con=  chatManager.getContacts();
                             if (con.size() > 0) {
                                 for (int i=0;i<con.size();i++){
-                                    contactname.add(con.get(i).getAlias());
-                                    contactid.add(con.get(i).getContactId());
-                                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                    if(!con.get(i).getRemoteName().equals("Not registered contact") && !contactname.contains(con.get(i).getRemoteName())) {
+                                        contactname.add(con.get(i).getAlias());
+                                        contactid.add(con.get(i).getContactId());
+                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                    }
                                 }
                                 final ContactListAdapter adaptador =
                                         new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
