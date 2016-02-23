@@ -322,7 +322,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             CustomerBrokerContractSale customerBrokerContractSale,
             MoneyType paymentType,
             String actorPublicKey,
-            ContractTransactionStatus contractTransactionStatus)
+            ContractTransactionStatus contractTransactionStatus,
+            FiatCurrency currencyType)
             throws CantInsertRecordException {
 
         try{
@@ -333,7 +334,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     customerBrokerContractSale,
                     paymentType,
                     actorPublicKey,
-                    contractTransactionStatus
+                    contractTransactionStatus,
+                    currencyType
             );
             databaseTable.insertRecord(databaseTableRecord);
         } catch (ObjectNotSetException exception) {
@@ -432,7 +434,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             CustomerBrokerContractSale customerBrokerContractSale,
             MoneyType paymentType,
             String actorPublicKey,
-            ContractTransactionStatus contractTransactionStatus) throws
+            ContractTransactionStatus contractTransactionStatus,
+            FiatCurrency currencyType) throws
             ObjectNotSetException,
             InvalidParameterException {
 
@@ -468,6 +471,9 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                         ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME,
                 paymentType.getCode());
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
+                        ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME,
+                currencyType.getCode());
 
         return record;
     }
@@ -685,7 +691,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         record.setStringValue(
                 BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                         ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME,
-                businessTransactionRecord.getPaymentType().getCode());
+                businessTransactionRecord.getCurrencyType().getCode());
         //Set the external Id
         record.setStringValue(
                 BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.

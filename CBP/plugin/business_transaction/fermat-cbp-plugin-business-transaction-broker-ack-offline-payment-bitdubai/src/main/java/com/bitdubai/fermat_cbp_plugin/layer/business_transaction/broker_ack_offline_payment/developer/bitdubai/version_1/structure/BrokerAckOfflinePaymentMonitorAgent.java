@@ -511,11 +511,13 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             customerBrokerContractSale,
                             "The customerBrokerContractSale is null");
                     MoneyType paymentType=getMoneyTypeFromContract(customerBrokerContractSale);
+                    FiatCurrency currencyType=getCurrencyTypeFromContract(customerBrokerContractSale);
                     brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
                             customerBrokerContractSale,
                             paymentType,
                             customerBrokerContractSale.getPublicKeyBroker(),
-                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT);
+                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT,
+                            currencyType);
                     brokerAckOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
@@ -606,17 +608,17 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 long customerAmountLong;
                 for (Clause clause : clauses) {
                     clauseType = clause.getType();
-                    if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY)) {
+                    if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
                         customerCurrency=FiatCurrency.getByCode(clause.getValue());
                     }
-                    if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)) {
+                    if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())) {
                         customerAmountString=clause.getValue();
                         customerAmountLong=parseToLong(customerAmountString);
                         customerAmount=BigDecimal.valueOf(customerAmountLong);
                     }
                 }
                 //Get the Bank wallet public key
-                String cashWalletPublicKey="cashWalletPublicKey";
+                String cashWalletPublicKey="cash_wallet";
                 CryptoBrokerWallet cryptoBrokerWallet=cryptoBrokerWalletManager.
                         loadCryptoBrokerWallet(
                                 cryptoWalletPublicKey);
@@ -629,7 +631,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
                         cryptoBrokerWalletAssociatedSettingList){
                     moneyType=cryptoBrokerWalletAssociatedSetting.getMoneyType();
-                    if(moneyType== paymentType){
+                    if(moneyType.getCode().equals(paymentType.getCode())){
                         walletBankCurrency=cryptoBrokerWalletAssociatedSetting.getMerchandise();
                         if(customerCurrency.getCode().equals(walletBankCurrency.getCode())){
                             cashWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
@@ -726,15 +728,15 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 String account="bankAccount";
                 for (Clause clause : clauses) {
                     clauseType = clause.getType();
-                    if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY)) {
+                    if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
                         customerCurrency=FiatCurrency.getByCode(clause.getValue());
                     }
-                    if (clauseType.equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)) {
+                    if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())) {
                         customerAmountString=clause.getValue();
                         customerAmountLong=parseToLong(customerAmountString);
                         customerAmount=BigDecimal.valueOf(customerAmountLong);
                     }
-                    if (clauseType.equals(ClauseType.BROKER_BANK_ACCOUNT)) {
+                    if (clauseType.getCode().equals(ClauseType.BROKER_BANK_ACCOUNT.getCode())) {
                         account=clause.getValue();
                     }
                 }
@@ -752,7 +754,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
                         cryptoBrokerWalletAssociatedSettingList){
                     moneyType=cryptoBrokerWalletAssociatedSetting.getMoneyType();
-                    if(moneyType== MoneyType.BANK){
+                    if(moneyType.getCode().equals(MoneyType.BANK.getCode())){
                         walletBankCurrency=cryptoBrokerWalletAssociatedSetting.getMerchandise();
                         if(customerCurrency.getCode().equals(walletBankCurrency.getCode())){
                             bankWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
@@ -835,6 +837,48 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 }
 
             }
+        }
+
+        /**
+         * This method returns the currency type from a contract
+         *
+         * @param customerBrokerContractSale
+         * @return
+         * @throws CantGetListSaleNegotiationsException
+         */
+        private FiatCurrency getCurrencyTypeFromContract(
+                CustomerBrokerContractSale customerBrokerContractSale) throws
+                CantGetListSaleNegotiationsException {
+            try {
+                String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+                CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation =
+                        customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(
+                                UUID.fromString(negotiationId));
+                ObjectChecker.checkArgument(customerBrokerSaleNegotiation,"The customerBrokerSaleNegotiation is null");
+                Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
+                ClauseType clauseType;
+                for (Clause clause : clauses) {
+                    clauseType = clause.getType();
+                    if (clauseType.getCode().equals(
+                            ClauseType.CUSTOMER_CURRENCY.getCode())) {
+                        return FiatCurrency.getByCode(clause.getValue());
+                    }
+                }
+                throw new CantGetListSaleNegotiationsException(
+                        "Cannot find the proper clause");
+            } catch (InvalidParameterException e) {
+                throw new CantGetListSaleNegotiationsException(
+                        "Cannot get the negotiation list",
+                        e);
+            } catch (CantGetListClauseException e) {
+                throw new CantGetListSaleNegotiationsException(
+                        "Cannot find clauses list");
+            } catch (ObjectNotSetException e) {
+                throw new CantGetListSaleNegotiationsException(
+                        "The customerBrokerSaleNegotiation is null",
+                        e);
+            }
+
         }
 
         /**

@@ -283,7 +283,7 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             //System.out.println("Broker Ack Offline Payment Starting");
             //Testing method
             //newOpenedContractRaiseEventTest();
-            //testAck();
+            testAck();
         } catch (CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException exception) {
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),

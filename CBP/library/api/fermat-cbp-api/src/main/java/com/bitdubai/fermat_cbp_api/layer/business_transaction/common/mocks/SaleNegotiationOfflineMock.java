@@ -80,7 +80,7 @@ public class SaleNegotiationOfflineMock implements CustomerBrokerSaleNegotiation
                 "2000"));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_CURRENCY,
-                MoneyType.CASH_ON_HAND.getCode()));
+                FiatCurrency.US_DOLLAR.getCode()));
         clauses.add(new ClauseMock(UUID.randomUUID(),
                 ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER,
                 "100"));
