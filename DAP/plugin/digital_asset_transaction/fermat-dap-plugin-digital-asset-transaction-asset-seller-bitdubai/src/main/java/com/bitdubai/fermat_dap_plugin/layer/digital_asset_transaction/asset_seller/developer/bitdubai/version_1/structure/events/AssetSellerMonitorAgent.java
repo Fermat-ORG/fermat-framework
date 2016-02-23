@@ -25,15 +25,12 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetNegotiationContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetSellContentMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetUserWalletTransactionRecordWrapper;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
@@ -43,7 +40,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database.AssetSellerDAO;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional.NegotiationRecord;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional.SellingRecord;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -149,19 +145,28 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             try {
                 checkUnreadMessages();
                 checkPendingSells();
-                checkPendingNegotiation();
             } catch (CantLoadTableToMemoryException | CantUpdateRecordException | DAPException | CantLoadWalletException | CantSignTransactionException | CantCreateDraftTransactionException | CantDeleteRecordException | CantBroadcastTransactionException | CantCreateBitcoinTransactionException | CantGetTransactionsException | CantRegisterDebitException | CantGetBroadcastStatusException | CantGetCryptoTransactionException e) {
                 //TODO EXCEPTION HANDLING.
                 e.printStackTrace();
             }
         }
 
-        private void checkUnreadMessages() throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException, CantGetDAPMessagesException, CantUpdateMessageStatusException {
+        private void checkUnreadMessages() throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantDeleteRecordException {
             //NEGOTIATION
             for (DAPMessage message : assetTransmission.getUnreadDAPMessagesByType(DAPMessageType.ASSET_NEGOTIATION)) {
                 AssetNegotiationContentMessage content = (AssetNegotiationContentMessage) message.getMessageContent();
-                dao.updateNegotiationStatus(content.getAssetNegotiation().getNegotiationId(), content.getSellStatus());
-                dao.updateAssetNegotiation(content.getAssetNegotiation());
+                SellingRecord sellingRecord = dao.getLastSellingRecord(content.getAssetNegotiation().getNegotiationId());
+                switch (content.getSellStatus()) {
+                    case NEGOTIATION_CONFIRMED: {
+                        dao.updateSellingStatus(sellingRecord.getRecordId(), AssetSellStatus.NEGOTIATION_CONFIRMED);
+                        break;
+                    }
+                    case NEGOTIATION_REJECTED: {
+                        //TODO UNLOCK IN WALLET.
+                        dao.deleteSellingRecord(sellingRecord.getRecordId());
+                        break;
+                    }
+                }
                 assetTransmission.confirmReception(message);
             }
             //SIGNED TRANSACTIONS
@@ -226,39 +231,6 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                             }
                         }
                     }
-                }
-            }
-        }
-
-        private void checkPendingNegotiation() throws DAPException, CantDeleteRecordException, CantLoadTableToMemoryException, CantUpdateRecordException, CantLoadWalletException {
-            for (NegotiationRecord record : dao.getActionRequiredNegotiations()) {
-                switch (record.getNegotiationStatus()) {
-                    case NEGOTIATION_CONFIRMED: {
-                        List<SellingRecord> sellingRecords = dao.getSellingRecordsForNegotiation(record.getNegotiation().getNegotiationId());
-                        int index = 0;
-                        for (SellingRecord sellingRecord : sellingRecords) {
-                            //If we agree with the user that we want to sell him lower than the initial contract then we will start the
-                            //selling transaction and delete the remaining records.
-                            if (index > record.getNegotiation().getQuantityToBuy()) {
-                                dao.deleteSellingRecord(sellingRecord.getRecordId());
-                            } else {
-                                dao.updateNegotiationStatus(sellingRecord.getRecordId(), AssetSellStatus.NEGOTIATION_CONFIRMED);
-                            }
-                            index++;
-                        }
-                        break;
-                    }
-                    case NEGOTIATION_REJECTED: {
-                        List<SellingRecord> sellingRecords = dao.getSellingRecordsForNegotiation(record.getNegotiation().getNegotiationId());
-                        for (SellingRecord sellingRecord : sellingRecords) {
-                            //UNLOCK THESE TRANSACTIONS
-                            dao.deleteSellingRecord(sellingRecord.getRecordId());
-                        }
-                        break;
-                    }
-                    case DEAL_CHANGED:
-                        //TODO
-                        break;
                 }
             }
         }

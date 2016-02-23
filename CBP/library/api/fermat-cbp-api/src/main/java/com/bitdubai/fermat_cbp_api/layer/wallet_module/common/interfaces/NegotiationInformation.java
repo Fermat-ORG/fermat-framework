@@ -27,6 +27,8 @@ public interface NegotiationInformation {
 
     long getNegotiationExpirationDate();
 
+    void setNegotiationExpirationDate(long expirationDatetime);
+
     UUID getNegotiationId();
 
     void setCancelReason(String cancelReason);

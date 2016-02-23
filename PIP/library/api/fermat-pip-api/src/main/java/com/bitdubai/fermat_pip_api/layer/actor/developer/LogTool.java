@@ -13,15 +13,15 @@ import java.util.List;
  */
 public interface LogTool {
 
-    public List<Plugins> getAvailablePluginList ();
+    List<Plugins> getAvailablePluginList();
 
-    public List<Addons> getAvailableAddonList ();
+    List<Addons> getAvailableAddonList();
 
-    public List<ClassHierarchyLevels> getClassesHierarchyPlugins(Plugins plugin) throws com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetClasessHierarchyPlugins;
+    List<ClassHierarchyLevels> getClassesHierarchyPlugins(Plugins plugin) throws com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetClasessHierarchyPlugins;
 
-    public List<ClassHierarchyLevels> getClassesHierarchyAddons(Addons addon) throws CantGetClasessHierarchyAddons;
+    List<ClassHierarchyLevels> getClassesHierarchyAddons(Addons addon) throws CantGetClasessHierarchyAddons;
 
-    public void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass);
+    void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass);
 
 
 }

@@ -32,10 +32,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.de
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -95,11 +94,8 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         this.transactionProcessorAgent = new TransactionProcessorAgent();
         this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.bitcoinNetworkManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager, this.broadcaster);
         this.agentThread               = new Thread(this.transactionProcessorAgent);
-        this.transactionProcessorAgent.initialize(this.errorManager, this.outgoingIntraActorDao, this.bitcoinWalletManager, this.cryptoVaultManager, this.transactionHandlerFactory, this.cryptoTransmissionNetworkServiceManager, eventManager, this.broadcaster);
-        this.agentThread = new Thread(this.transactionProcessorAgent);
-        this.agentThread.start();
         this.status = AgentStatus.STARTED;
-        System.out.println("CryptoTransmissionAgent - started ");
+        System.out.println("Agent started - started ");
     }
 
     public boolean isRunning() {
@@ -234,7 +230,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
 
                         BitcoinWalletTransactionRecord bitcoinWalletTransactionRecord = buildBitcoinTransaction(
                                 transaction.getRequestId(),
-                                transaction.getBitcoinTransaction().getTxHash(),
+                                transaction.getTxHash(),
                                 transaction.getAddressTo(),
                                 transaction.getActorFromPublicKey(),
                                 transaction.getActorToPublicKey(),
@@ -252,7 +248,6 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                         } else {
                             dao.cancelTransaction(transaction);
                             roolback(bitcoinWalletTransactionRecord,transaction.getReferenceWallet(),transaction.getWalletPublicKey(),false);
-                            // TODO: Lanzar un evento de fondos insuficientes
                             System.out.print("fondos insuficientes");
                             System.out.print("ROLLBACK 1");
                         }
@@ -260,7 +255,6 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                             | CantRegisterDebitException | OutgoingIntraActorCantCancelTransactionException
                             | CantLoadWalletException e) {
                         //reportUnexpectedException(e);
-                        // Todo: Rodrigo, since the wallet cant be loaded at this time, I'm still putting the transacction in PIA
                         dao.setToDIW(transaction);
 
                     }
@@ -269,14 +263,16 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                 // Now we check for all the transactions that have been discounted from the available amount
                 // but bot applied to vault
 
-                //TODO: hacer esto
                 transactionList = dao.getAllInState(TransactionState.DEBITED_IN_WALLET);
 
 
                 for (OutgoingDraftTransactionWrapper transaction : transactionList) {
                     try {
+
+                        DraftTransaction draftTransaction = cryptoVaultManager.getDraftTransaction(transaction.getBlockchainNetworkType(), transaction.getTxHash());
+
                         System.out.print("-------------- send draft to cryptoVaultManager");
-                        DraftTransaction draftTransaction = cryptoVaultManager.addInputsToDraftTransaction(transaction.getBitcoinTransaction(), transaction.getValueToSend(), transaction.getAddressTo());
+                        draftTransaction = cryptoVaultManager.addInputsToDraftTransaction(draftTransaction, transaction.getValueToSend(), transaction.getAddressTo());
 
                         // just send the metadata in this place. This MUST be corrected.
                         dao.setToSTCV(transaction);
@@ -286,15 +282,15 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                         reportUnexpectedException(e);
 
                         //if I spend more than five minutes I canceled
-                        Date sentDate = transaction.getBitcoinTransaction().getBitcoinTransaction().getUpdateTime();
+                        long sentDate = transaction.getTimestamp();
                         long currentTime = System.currentTimeMillis();
-                        long dif = currentTime - sentDate.getTime();
+                        long dif = currentTime - sentDate;
 
                         if(dif >= 180000) {
                             dao.cancelTransaction(transaction);
                             roolback(buildBitcoinTransaction(
                                     transaction.getRequestId(),
-                                    transaction.getBitcoinTransaction().getTxHash(),
+                                    transaction.getTxHash(),
                                     transaction.getAddressTo(),
                                     transaction.getActorFromPublicKey(),
                                     transaction.getActorToPublicKey(),
@@ -320,15 +316,20 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
              * balance. We need to check the state of the transaction to the crypto vault before
              * discounting it
              */
-                transactionList = dao.getSentToCryptoVaultTransactions();
+                //TODO mejorar esto
+                transactionList = dao.getSentToCryptoVaultTransactionsAndNotRead();
 
                 /**
-                 * Now we proceed to send the transaction hash to the vault to send it(in future will be the transaction to the crypto network)
+                 * Now we proceed to launch the notification
                  */
-                //TODO: Esto lo voy a hacer cuando rodrigo aplique sus cambios
-                for (OutgoingDraftTransactionWrapper transaction : transactionList){
-                   launchFinishNotification();
+                if(!transactionList.isEmpty()){
+                    launchFinishNotification();
+                }else{
+                    running.set(false);
                 }
+//                for (OutgoingDraftTransactionWrapper transaction : transactionList){
+//                   launchFinishNotification();
+//                }
 
 
             } catch (OutgoingIntraActorCantGetTransactionsException e) {

@@ -47,8 +47,8 @@ public class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
                     //}
                 } else {
                     if(isCircle)
-                    Picasso.with(imageView.getContext()).load(R.drawable.profile_image_standard).transform(new CircleTransform()).into(imageView);
-                    else Picasso.with(imageView.getContext()).load(R.drawable.profile_image_standard).into(imageView);
+                    Picasso.with(imageView.getContext()).load(R.drawable.asset_issuer_identity).transform(new CircleTransform()).into(imageView);
+                    else Picasso.with(imageView.getContext()).load(R.drawable.asset_issuer_identity).into(imageView);
 
                 }
             }

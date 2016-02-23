@@ -105,25 +105,53 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
             }
 
     } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "Unexpected result from database");
     } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "Cannot get the contract from customerBrokerContractSaleManager");
     } catch (CantInsertRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "Cannot insert the contract record in database");
     } catch (CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "Cannot update the contract status in database");
     } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantAckMerchandiseException(e,
                 "Creating Customer Ack Offline Merchandise Business Transaction",
                 "The contract hash/Id is null");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantAckMerchandiseException(e,
+                    "Unexpected Result",
+                    "Check the cause");
         }
 
     }
@@ -148,6 +176,14 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Unexpected Result",
+                    "Check the cause");
         }
 
     }

@@ -301,8 +301,6 @@ public enum Plugins implements FermatPluginsEnum {
 
     // End  new Plugins
 
-    ;
-
     private final String code;
 
     Plugins(final String code) {

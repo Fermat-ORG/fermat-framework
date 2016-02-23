@@ -16,13 +16,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
  * */
 public interface PluginBinaryFile {
     
-    public byte[] getContent ();
+    byte[] getContent();
 
-    public void setContent (byte[] content);
+    void setContent(byte[] content);
 
-    public void persistToMedia() throws CantPersistFileException;
+    void persistToMedia() throws CantPersistFileException;
 
-    public void loadFromMedia() throws CantLoadFileException;
+    void loadFromMedia() throws CantLoadFileException;
 
-    public void delete() throws FileNotFoundException;
+    void delete() throws FileNotFoundException;
 }

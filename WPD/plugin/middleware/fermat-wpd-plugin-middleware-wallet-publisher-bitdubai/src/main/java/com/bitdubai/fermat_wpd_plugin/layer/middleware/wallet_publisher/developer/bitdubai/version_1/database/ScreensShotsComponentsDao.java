@@ -176,8 +176,6 @@ public class ScreensShotsComponentsDao {
         return walletPublishedMiddlewareInformation;
     }
 
-    ;
-
     /**
      * Method that list the all entities on the data base.
      *
@@ -281,8 +279,6 @@ public class ScreensShotsComponentsDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -398,8 +394,6 @@ public class ScreensShotsComponentsDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -527,8 +521,6 @@ public class ScreensShotsComponentsDao {
          */
         return list;
     }
-
-    ;
 
     /**
      * Method that update an entity in the data base.

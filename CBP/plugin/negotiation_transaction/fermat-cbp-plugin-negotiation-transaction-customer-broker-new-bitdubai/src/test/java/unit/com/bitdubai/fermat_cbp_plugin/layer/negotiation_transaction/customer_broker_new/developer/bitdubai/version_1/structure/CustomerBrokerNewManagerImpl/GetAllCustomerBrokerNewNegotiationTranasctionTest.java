@@ -27,8 +27,8 @@ public class GetAllCustomerBrokerNewNegotiationTranasctionTest {
         List<CustomerBrokerNew> list = new ArrayList<>();
 
         CustomerBrokerNewManagerImpl customerBrokerNewManagerImpl = mock(CustomerBrokerNewManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
-        when(customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTranasction()).thenReturn(list).thenCallRealMethod();
-        assertThat(customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTranasction()).isNotNull();
+        when(customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTransaction()).thenReturn(list).thenCallRealMethod();
+        assertThat(customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTransaction()).isNotNull();
 
     }
 }

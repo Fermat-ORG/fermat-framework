@@ -67,7 +67,7 @@ public class NoIdentityFragment extends AbstractFermatFragment {
 
 
     private void setUpUI() {
-        ((Button) rootView.findViewById(R.id.btn_create)).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.btn_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {

@@ -18,7 +18,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.de
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.interfaces.OutgoingIntraActorTransactionHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.util.OutgoingDraftTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraActorTransactionSentEvent;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.OutgoingIntraActorTransactionSentEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 /**

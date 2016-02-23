@@ -1,34 +1,70 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
  * Created by franklin on 05/01/16.
  */
 public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNegotiation {
+    long startDate;
+    long negotiationUpdateDatetime;
+    long expirationDatetime;
+    boolean nearExpirationDatetime;
     String cancelReason;
     String memo;
     String customerPublicKey;
     String brokerPublicKey;
-    UUID   negotiationId;
-    Long   startDate;
+    UUID negotiationId;
+    NegotiationStatus status;
+    Collection<Clause> clauses;
+    boolean dataHasChanged;
 
-    public CustomerBrokerSaleNegotiationImpl(UUID negotiationId){
+
+    public CustomerBrokerSaleNegotiationImpl(UUID negotiationId) {
+        dataHasChanged = false;
+
         this.negotiationId = negotiationId;
-    };
+        clauses = new ArrayList<>();
+        status = null;
+    }
+
+    public CustomerBrokerSaleNegotiationImpl(CustomerBrokerSaleNegotiation negotiationInfo) {
+        dataHasChanged = false;
+
+        startDate = negotiationInfo.getStartDate();
+        negotiationUpdateDatetime = negotiationInfo.getLastNegotiationUpdateDate();
+        expirationDatetime = negotiationInfo.getNegotiationExpirationDate();
+        nearExpirationDatetime = negotiationInfo.getNearExpirationDatetime();
+        cancelReason = negotiationInfo.getCancelReason();
+        memo = negotiationInfo.getMemo();
+        customerPublicKey = negotiationInfo.getCustomerPublicKey();
+        brokerPublicKey = negotiationInfo.getBrokerPublicKey();
+        negotiationId = negotiationInfo.getNegotiationId();
+        status = negotiationInfo.getStatus();
+        try {
+            clauses = negotiationInfo.getClauses();
+        } catch (CantGetListClauseException e) {
+            clauses = new ArrayList<>();
+        }
+    }
 
     /**
      * @return the broker public key
      */
     @Override
     public String getCustomerPublicKey() {
-        return null;
+        return customerPublicKey;
     }
 
     /**
@@ -36,7 +72,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
      */
     @Override
     public String getBrokerPublicKey() {
-        return null;
+        return brokerPublicKey;
     }
 
     /**
@@ -52,7 +88,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
      */
     @Override
     public Long getStartDate() {
-        return null;
+        return startDate;
     }
 
     /**
@@ -60,15 +96,15 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
      */
     @Override
     public Long getLastNegotiationUpdateDate() {
-        return null;
+        return negotiationUpdateDatetime;
     }
 
     /**
-     * @param lastNegotiationUpdateDate
+     * @param lastNegotiationUpdateDate the last negotiation update datetime y millis
      */
     @Override
     public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) {
-
+        negotiationUpdateDatetime = lastNegotiationUpdateDate;
     }
 
     /**
@@ -76,7 +112,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
      */
     @Override
     public Long getNegotiationExpirationDate() {
-        return null;
+        return expirationDatetime;
     }
 
     /**
@@ -84,7 +120,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
      */
     @Override
     public NegotiationStatus getStatus() {
-        return null;
+        return status;
     }
 
     /**
@@ -92,7 +128,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
      */
     @Override
     public Boolean getNearExpirationDatetime() {
-        return null;
+        return nearExpirationDatetime;
     }
 
     /**
@@ -101,7 +137,7 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
      */
     @Override
     public Collection<Clause> getClauses() throws CantGetListClauseException {
-        return null;
+        return clauses;
     }
 
     /**
@@ -140,5 +176,45 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     @Override
     public String getMemo() {
         return memo;
+    }
+
+    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status) {
+        dataHasChanged = expirationDatetime != negotiationInfo.getNegotiationExpirationDate();
+        expirationDatetime = negotiationInfo.getNegotiationExpirationDate();
+
+        dataHasChanged = dataHasChanged || Objects.equals(cancelReason, negotiationInfo.getCancelReason());
+        cancelReason = negotiationInfo.getCancelReason();
+
+        dataHasChanged = dataHasChanged || !Objects.equals(memo, negotiationInfo.getMemo());
+        memo = negotiationInfo.getMemo();
+        this.status = status;
+
+        Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
+        clauses = new ArrayList<>();
+        for (final ClauseInformation value : values) {
+            dataHasChanged = dataHasChanged || (value.getStatus() == ClauseStatus.CHANGED);
+            clauses.add(new ClauseImpl(value, brokerPublicKey));
+        }
+
+    }
+
+    public boolean dataHasChanged() {
+        return dataHasChanged;
+    }
+
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this).
+                add("startDate", startDate).
+                add("negotiationUpdateDatetime", negotiationUpdateDatetime).
+                add("nearExpirationDatetime", nearExpirationDatetime).
+                add("cancelReason", cancelReason).
+                add("memo", memo).
+                add("customerPublicKey", customerPublicKey).
+                add("brokerPublicKey", brokerPublicKey).
+                add("negotiationId", negotiationId).
+                add("status", status).
+                add("clauses", clauses).
+                toString();
     }
 }

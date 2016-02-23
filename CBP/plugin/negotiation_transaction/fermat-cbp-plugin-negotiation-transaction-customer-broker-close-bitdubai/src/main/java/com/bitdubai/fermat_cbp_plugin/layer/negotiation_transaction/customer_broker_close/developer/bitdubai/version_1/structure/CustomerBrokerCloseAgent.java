@@ -147,11 +147,11 @@ public class CustomerBrokerCloseAgent  implements
 //        LOG.info("CUSTMER BROKER NEW AGENT STARTING...");
         monitorAgentTransaction = new MonitorAgentTransaction();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgentTransaction).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgentTransaction).setErrorManager(this.errorManager);
+        this.monitorAgentTransaction.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgentTransaction.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgentTransaction) this.monitorAgentTransaction).Initialize();
+            this.monitorAgentTransaction.Initialize();
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_CLOSE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }

@@ -70,8 +70,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
         accountsList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
@@ -104,6 +103,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
             }
         }catch (FermatException e){
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
     }
 

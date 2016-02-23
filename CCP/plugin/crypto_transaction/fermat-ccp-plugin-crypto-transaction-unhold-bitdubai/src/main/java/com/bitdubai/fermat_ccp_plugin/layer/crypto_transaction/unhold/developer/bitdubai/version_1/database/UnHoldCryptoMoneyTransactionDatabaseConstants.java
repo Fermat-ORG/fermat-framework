@@ -28,7 +28,7 @@ public class UnHoldCryptoMoneyTransactionDatabaseConstants {
     public static final String UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME = "timestamp_acknowledge";
     public static final String UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME = "timestamp_confirm_reject";
     public static final String UNHOLD_STATUS_COLUMN_NAME = "status";
-
+    public static final String UNHOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME = "block_chain_network_type";
     public static final String UNHOLD_FIRST_KEY_COLUMN = "transaction_id";
 
 }

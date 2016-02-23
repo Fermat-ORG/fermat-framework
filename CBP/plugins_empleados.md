@@ -455,7 +455,7 @@ Plugins y Flujos:
     - Clausula `CUSTOMER_PAYMENT_METHOD`
     - Revisar las notas de este documento
   - **Crear Nueva negociacion** >> `Crypto Customer New Negotiation Transaction`
-    - Se le pasa un objeto `CustomerBrokerPurchaseNegotiation` al metodo `createCustomerBrokerNewPurchaseNegotiationTranasction()`
+    - Se le pasa un objeto `CustomerBrokerPurchaseNegotiation` al metodo `createCustomerBrokerNewPurchaseNegotiationTransaction()`
     - Me deberia devolver un registro `NegotiationInformation` con los datos de esta nueva negociacion
 
 #### Market Rates [I]
