@@ -507,10 +507,10 @@ public class ContactFragment extends AbstractFermatFragment {
           try {
               appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(con.getContactId()));
               changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
-            } catch (CantGetContactException e) {
-              CommonLogger.exception(TAG + "onOptionItemSelected", e.getMessage(), e);
-              Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
+          }catch(CantGetContactException e) {
+              errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+          }catch (Exception e){
+              errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
           }
             return true;
         }
@@ -538,13 +538,10 @@ public class ContactFragment extends AbstractFermatFragment {
                                         new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
                                 adaptador.refreshEvents(contactname, contacticon, contactid);
                             }
-                        } catch (CantGetContactException e) {
-                            CommonLogger.exception(TAG + "clickYes", e.getMessage(), e);
-                            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-                        } catch (Exception e) {
-                            CommonLogger.exception(TAG + "clickYes", e.getMessage(), e);
-                            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
+                        }catch(CantGetContactException e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }catch (Exception e){
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
                         changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                         }
@@ -554,7 +551,11 @@ public class ContactFragment extends AbstractFermatFragment {
                     "No",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
+                            try {
+                                dialog.cancel();
+                            }catch (Exception e){
+                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                            }
                         }
                     });
             AlertDialog alert11 = builder1.create();
