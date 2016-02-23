@@ -31,6 +31,9 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.s
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -103,8 +106,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dap_redeem_point_community_fragment_connections_other_profile, container, false);
         toolbar = getToolbar();
-        if (toolbar != null)
-            toolbar.setTitle(actor.getName());
+//        if (toolbar != null)
+//            toolbar.setTitle(actor.getName());
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
        // userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
@@ -153,7 +156,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                     connectionSend();
                     break;
             }*/
-            connectRequest();
+
 
         try {
             userName.setText(actor.getName());
@@ -164,9 +167,11 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             if(actor.getCryptoAddress() != null){
                 userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
                 userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
+                disconnectRequest();
             } else{
                 userCryptoAddres.setText("No");
                 userCryptoCurrency.setText("None");
+                connectRequest();
             }
 
             //redeemRegistrationDate.setText(DAPStandardFormats.DATE_FORMAT.format(new Date(actor.getRegistrationDate())));
@@ -193,7 +198,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.dap_other_profile_system_error_toast , Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
@@ -233,8 +238,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                 disconectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        connectRequest();
-                       // updateButton();
+                        //connectRequest();
+                       updateButton();
                     }
                 });
                 disconectDialog.show();
@@ -260,15 +265,39 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         }
         if (i == R.id.btn_connection_request_send) {
             //CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
-            Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.dap_other_profile_request_send_toast, Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
            // CommonLogger.info(TAG, "User connection state " + actor.getConnectionState());
-            Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.dap_other_profile_request_reject_toast, Toast.LENGTH_SHORT).show();
         }
     }
 
     private void updateButton() {
+
+
+        ActorAssetRedeemPoint redeemPoint = null;
+        try {
+            redeemPoint = manager.getActorRedeemPoint(actor.getActorPublicKey());
+
+            if(redeemPoint.getCryptoAddress() != null){
+                userCryptoAddres.setText(actor.getCryptoAddress().getAddress());
+                userCryptoCurrency.setText(actor.getCryptoAddress().getCryptoCurrency().getFriendlyName());
+                disconnectRequest();
+            } else{
+                userCryptoAddres.setText("No");
+                userCryptoCurrency.setText("None");
+                connectRequest();
+            }
+
+        } catch (CantAssetRedeemPointActorNotFoundException e) {
+            //TODO No seamos flojos
+            e.printStackTrace();
+        } catch (CantGetAssetRedeemPointActorsException e) {
+            //TODO No seamos flojos
+            e.printStackTrace();
+        }
+
         /*try {
             connectionState = manager.getIntraUsersConnectionStatus(this.actor.getPublicKey());
         } catch (CantGetIntraUserConnectionStatusException e) {
@@ -300,7 +329,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                 conectionAccept();
                 break;
         }*/
-        disconnectRequest();
+        //disconnectRequest();
     }
 
 

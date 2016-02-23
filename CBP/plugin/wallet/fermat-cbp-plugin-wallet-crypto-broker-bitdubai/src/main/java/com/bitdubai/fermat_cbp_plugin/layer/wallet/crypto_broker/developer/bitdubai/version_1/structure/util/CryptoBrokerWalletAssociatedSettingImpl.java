@@ -23,8 +23,6 @@ public class CryptoBrokerWalletAssociatedSettingImpl implements CryptoBrokerWall
     public CryptoBrokerWalletAssociatedSettingImpl() {
     }
 
-    ;
-
     /**
      * {@inheritDoc}
      */

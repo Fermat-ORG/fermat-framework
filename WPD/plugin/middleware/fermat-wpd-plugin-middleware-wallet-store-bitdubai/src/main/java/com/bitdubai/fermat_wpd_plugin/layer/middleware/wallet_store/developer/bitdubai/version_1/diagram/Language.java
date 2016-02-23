@@ -6,5 +6,5 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_store.developer.b
 public enum Language {
 
     ENGLISH,
-    ESPAÑOL;
+    ESPAÑOL
 }

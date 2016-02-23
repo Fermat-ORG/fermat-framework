@@ -125,7 +125,7 @@ public class TabbedDialogFragment extends DialogFragment {
 
 		@Override
 		public boolean isViewFromObject(View v, Object o) {
-			return v == ((View) o);
+			return v == o;
 		}
 
 	}

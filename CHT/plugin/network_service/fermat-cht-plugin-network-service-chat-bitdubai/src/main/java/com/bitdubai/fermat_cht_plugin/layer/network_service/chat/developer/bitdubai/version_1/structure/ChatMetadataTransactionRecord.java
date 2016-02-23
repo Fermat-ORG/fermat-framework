@@ -86,9 +86,7 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
             return false;
         if(this.distributionStatus == null)
             return false;
-        if(this.processed == null || processed.isEmpty())
-            return false;
-        return true;
+        return !(this.processed == null || processed.isEmpty());
     }
 
     @Override
@@ -127,9 +125,7 @@ public class ChatMetadataTransactionRecord implements ChatMetadata{
             return false;
         if(this.distributionStatus != ((ChatMetadataTransactionRecord) obj).getDistributionStatus())
             return false;
-        if(!Objects.equals(this.processed, ((ChatMetadataTransactionRecord) obj).getProcessed()))
-            return false;
-        return true;
+        return Objects.equals(this.processed, ((ChatMetadataTransactionRecord) obj).getProcessed());
     }
 
     /**

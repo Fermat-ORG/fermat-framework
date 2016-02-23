@@ -173,7 +173,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             System.out.print("\n\n**** 19.2.2) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT, CONFIRM TRANSAMISSION ****\n");
 
         } catch (CantRegisterSendNegotiationTransmissionException | CantUpdateRecordException e) {
-            throw new CantRegisterSendNegotiationTransmissionException(e.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
+            throw new CantRegisterSendNegotiationTransmissionException(FermatException.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
     }
 
@@ -307,7 +307,7 @@ public class NegotiationTransmissionNetworkServiceDatabaseDao {
             table.updateRecord(record);
 
         }  catch (CantLoadTableToMemoryException e) {
-            throw new CantRegisterSendNegotiationTransmissionException(e.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
+            throw new CantRegisterSendNegotiationTransmissionException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
     }
     /*public void changeState(UUID transmissionId, NegotiationTransmissionState negotiationTransmissionState) throws CantRegisterSendNegotiationTransmissionException {

@@ -51,6 +51,6 @@ public interface CryptoAddressRequest {
 
     String getMessageType();
 
-    public boolean isReadMark();
+    boolean isReadMark();
 
 }

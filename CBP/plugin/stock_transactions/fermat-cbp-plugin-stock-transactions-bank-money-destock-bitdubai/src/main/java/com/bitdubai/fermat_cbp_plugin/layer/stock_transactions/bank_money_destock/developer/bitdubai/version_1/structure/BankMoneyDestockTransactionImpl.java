@@ -30,7 +30,7 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
 
     public BankMoneyDestockTransactionImpl(){
 
-    };
+    }
 
     public BankMoneyDestockTransactionImpl(UUID transactionId,
                                            String actorPublicKey,

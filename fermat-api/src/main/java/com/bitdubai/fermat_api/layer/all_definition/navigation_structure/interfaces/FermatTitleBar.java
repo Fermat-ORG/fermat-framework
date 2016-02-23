@@ -25,6 +25,6 @@ public interface FermatTitleBar  extends Serializable {
 
     void setColor(String color);
 
-    public boolean isTitleTextStatic();
+    boolean isTitleTextStatic();
 
 }

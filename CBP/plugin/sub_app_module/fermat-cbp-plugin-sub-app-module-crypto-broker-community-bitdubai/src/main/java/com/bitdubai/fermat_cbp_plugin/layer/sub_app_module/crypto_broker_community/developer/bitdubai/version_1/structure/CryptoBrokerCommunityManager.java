@@ -520,11 +520,10 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
         //No registered users in device
         if(customerIdentitiesInDevice.size() + brokerIdentitiesInDevice.size() == 0)
-            throw new CantGetSelectedActorIdentityException("", null, "", "");;
+            throw new CantGetSelectedActorIdentityException("", null, "", "");
 
 
-
-            //If appSettings exists, get its selectedActorIdentityPublicKey property
+        //If appSettings exists, get its selectedActorIdentityPublicKey property
         if(appSettings != null)
         {
             String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();

@@ -47,12 +47,12 @@ public class FragmentsCommons {
                         //bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
                         //imageView.setImageBitmap(bitmap);
                     } else
-                        Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
+                        Picasso.with(activity).load(R.drawable.asset_issuer_identity).into(imageView);
                 }
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(identityAssetIssuer.getAlias());
             } else {
-                Picasso.with(activity).load(R.drawable.profile_image_standard).into(imageView);
+                Picasso.with(activity).load(R.drawable.asset_issuer_identity).into(imageView);
                 FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
                 fermatTextView.setText(R.string.dap_identity_alias_default_text);
             }

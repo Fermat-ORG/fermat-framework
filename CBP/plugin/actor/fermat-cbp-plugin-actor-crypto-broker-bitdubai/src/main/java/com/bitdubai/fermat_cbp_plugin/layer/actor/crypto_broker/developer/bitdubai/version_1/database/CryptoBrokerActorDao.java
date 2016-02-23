@@ -137,11 +137,11 @@ public class CryptoBrokerActorDao {
                 }
                 return null;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListBrokerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListBrokerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListBrokerIdentityWalletRelationshipException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListBrokerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListBrokerIdentityWalletRelationshipException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 

@@ -22,41 +22,41 @@ import java.util.UUID;
 public interface DAO {
 
 
-    public ActorNetworkServiceRecord createNotification(UUID                        notificationId        ,
-                                           String                      senderPublicKey,
-                                           Actors                      senderType     ,
-                                           String                      destinationPublicKey   ,
-                                           String                      senderAlias,
-                                           String                      senderPhrase,
-                                           byte[]                      senderProfileImage,
-                                           Actors                      destinationType        ,
-                                           NotificationDescriptor descriptor      ,
-                                           long                        timestamp   ,
-                                           ActorProtocolState protocolState    ,
-                                           boolean                     flagReaded,
-                                            int sentCount,
-                                           UUID responseToNotificationId             ) throws CantCreateNotificationException;
+    ActorNetworkServiceRecord createNotification(UUID notificationId,
+                                                 String senderPublicKey,
+                                                 Actors senderType,
+                                                 String destinationPublicKey,
+                                                 String senderAlias,
+                                                 String senderPhrase,
+                                                 byte[] senderProfileImage,
+                                                 Actors destinationType,
+                                                 NotificationDescriptor descriptor,
+                                                 long timestamp,
+                                                 ActorProtocolState protocolState,
+                                                 boolean flagReaded,
+                                                 int sentCount,
+                                                 UUID responseToNotificationId) throws CantCreateNotificationException;
 
-    public ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetNotificationException, NotificationNotFoundException;
-
-
-
-    public void changeIntraUserNotificationDescriptor(final String                 senderPublicKey    ,
-                                                      final NotificationDescriptor notificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException;
-
-    public void changeProtocolState(final UUID                 requestId    ,
-                                    final ActorProtocolState protocolState) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, Exception;
+    ActorNetworkServiceRecord getNotificationById(final UUID notificationId) throws CantGetNotificationException, NotificationNotFoundException;
 
 
-    public List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState,
-                                                                              final NotificationDescriptor notificationDescriptor) throws CantListIntraWalletUsersException;
+
+    void changeIntraUserNotificationDescriptor(final String senderPublicKey,
+                                               final NotificationDescriptor notificationDescriptor) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException;
+
+    void changeProtocolState(final UUID requestId,
+                             final ActorProtocolState protocolState) throws Exception;
 
 
-    public List<IntraUserNotification> listUnreadNotifications() throws CantListIntraWalletUsersException;
+    List<ActorNetworkServiceRecord> listRequestsByProtocolStateAndType(final ActorProtocolState protocolState,
+                                                                       final NotificationDescriptor notificationDescriptor) throws CantListIntraWalletUsersException;
 
-    public void markNotificationAsRead(UUID notificationId) throws CantConfirmNotificationException;
+
+    List<IntraUserNotification> listUnreadNotifications() throws CantListIntraWalletUsersException;
+
+    void markNotificationAsRead(UUID notificationId) throws CantConfirmNotificationException;
 
 
-    public void update(ActorNetworkServiceRecord entity) throws CantUpdateRecordDataBaseException;
+    void update(ActorNetworkServiceRecord entity) throws CantUpdateRecordDataBaseException;
 
 }

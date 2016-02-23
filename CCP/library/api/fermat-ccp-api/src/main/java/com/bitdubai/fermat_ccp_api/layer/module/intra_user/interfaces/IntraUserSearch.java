@@ -8,7 +8,7 @@ import java.util.List;
  */
 public interface IntraUserSearch {
 
-    public void setNameToSearch(String nameToSearch);
+    void setNameToSearch(String nameToSearch);
 
     List<IntraUserInformation> getResult() throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserSearchResult;
 

@@ -177,7 +177,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_asset_user)
+                .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
                 .setTitleTextColor(R.color.dap_community_user_view_color)
@@ -360,15 +360,14 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                         if (actor.selected)
                                             toConnect.add(actor);
                                     }
-                                    //// TODO: 28/10/15 get Actor asset Redeem Point
-//                                    manager.askActorAssetUserForConnection(toConnect);
-//
-//                                    Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
-//                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
-//                                    sendLocalBroadcast(broadcast);
-//                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                    // TODO: 28/10/15 get Actor asset Redeem Point
+                                    manager.askActorAssetUserForConnection(toConnect);
 
-                                    manager.connectToActorAssetUser(null, toConnect);
+                                    Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                    sendLocalBroadcast(broadcast);
+
+//                                    manager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
                             };

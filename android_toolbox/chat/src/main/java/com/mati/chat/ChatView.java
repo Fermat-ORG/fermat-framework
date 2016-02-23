@@ -145,7 +145,7 @@ public class ChatView extends LinearLayout{
 
         private Context context;
         private ViewGroup rootView;
-        private ArrayList<ChatMessage> chatHistory;;
+        private ArrayList<ChatMessage> chatHistory;
         private boolean loadDummyData = false;
         private Drawable background;
         private float chatTextSize;

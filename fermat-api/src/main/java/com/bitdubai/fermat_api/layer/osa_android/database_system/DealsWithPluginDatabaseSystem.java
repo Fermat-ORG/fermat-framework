@@ -5,6 +5,6 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
  */
 public interface DealsWithPluginDatabaseSystem {
 
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem);
+    void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem);
     
 }

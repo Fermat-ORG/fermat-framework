@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions.FiatCurre
  */
 public interface CryptoIndexManager {
     
-    public double getMarketPrice (FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException,CryptoCurrencyNotSupportedException;
+    double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency, long time) throws FiatCurrencyNotSupportedException,CryptoCurrencyNotSupportedException;
     
     
 }

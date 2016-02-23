@@ -7,6 +7,6 @@ import java.util.UUID;
  */
 public interface DealsWithPluginIdentity {
 
-    public void setPluginId (UUID pluginId);
+    void setPluginId(UUID pluginId);
     
 }

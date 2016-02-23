@@ -15,14 +15,14 @@ public interface InstalledLanguage {
      *
      * @return the identifier
      */
-    public UUID getId();
+    UUID getId();
 
     /**
      * This method gives us the language of the package
      *
      * @return the language
      */
-    public Languages getLanguage();
+    Languages getLanguage();
 
     /**
      * This method gives us the label of the language package. </p></>
@@ -30,13 +30,13 @@ public interface InstalledLanguage {
      *
      * @return the label of the language
      */
-    public String getLabel();
+    String getLabel();
 
     /**
      * This method gives us the version of the language package
      *
      * @return the version
      */
-    public Version getVersion();
+    Version getVersion();
 
 }

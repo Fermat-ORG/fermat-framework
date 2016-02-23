@@ -288,7 +288,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
         record.setStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_ID_COLUMN_NAME, developer.getPublicKey()); //Todo: Revisar Esta caso si guardara el publickey o id UUID
         if (developer.getAlias() != null)
-            record.setStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME, developer.getAlias());;
+            record.setStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_NAME_COLUMN_NAME, developer.getAlias());
         record.setStringValue(WalletStoreCatalogDatabaseConstants.DEVELOPER_PUBLICKEY_COLUMN_NAME, developer.getPublicKey());
 
         return record;
@@ -521,7 +521,7 @@ public class WalletStoreCatalogDatabaseDao implements DealsWithErrors, DealsWith
 
         List<com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Language> languages = new ArrayList<>();
         for (DatabaseTableRecord record : records){
-            languages.add((com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interfaces.Language) getLanguageFromDatabase(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME)));
+            languages.add(getLanguageFromDatabase(record.getUUIDValue(WalletStoreCatalogDatabaseConstants.WALLETLANGUAGE_ID_COLUMN_NAME)));
         }
 
         if (languages.size() == 0)

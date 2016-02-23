@@ -42,7 +42,7 @@ public abstract class AbstractViewPagerAdapter<I> extends PagerAdapter {
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
-        return view == ((View)object);
+        return view == object;
     }
 
     @Override
@@ -56,7 +56,7 @@ public abstract class AbstractViewPagerAdapter<I> extends PagerAdapter {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View item_view = layoutInflater.inflate(getItemLayout(lstItems.get(position),position),container,false);
         bindHolder(item_view);
-        ((ViewPager)container).addView(item_view);
+        container.addView(item_view);
         return item_view;
     }
 

@@ -179,10 +179,7 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
         try {
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            if (getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(loggedUser).size() > 0)
-                return true;
-            else
-                return false;
+            return getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(loggedUser).size() > 0;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListAssetRedeemPointException("CAN'T GET IF NEW REDEEM POINT IDENTITIES  EXISTS", e, "Error get logged user device", "");
         } catch (CantListAssetRedeemPointIdentitiesException e) {

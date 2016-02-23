@@ -50,9 +50,9 @@ public interface FermatTabStrip  extends Serializable {
 
     int getStartItem();
 
-    public boolean isHasIcon();
+    boolean isHasIcon();
 
-    public boolean isHasText();
+    boolean isHasText();
 
 
 }

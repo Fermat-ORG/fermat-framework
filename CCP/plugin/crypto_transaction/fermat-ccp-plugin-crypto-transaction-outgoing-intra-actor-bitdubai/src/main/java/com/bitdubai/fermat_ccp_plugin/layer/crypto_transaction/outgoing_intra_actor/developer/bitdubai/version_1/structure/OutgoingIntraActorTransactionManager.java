@@ -51,7 +51,6 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
 
         try {
             BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            ;
             long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
             if (cryptoAmount > funds)
@@ -101,7 +100,6 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                            BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantSendFundsExceptions, OutgoingIntraActorInsufficientFundsException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-            ;
             long funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
             if (cryptoAmount > funds)

@@ -33,104 +33,104 @@ public interface InformationPublishedComponent {
      *
      * @return UUID
      */
-    public UUID getId();
+    UUID getId();
 
     /**
      * Get the Descriptor Factory Project Id
      *
      * @return String
      */
-    public String getWalletFactoryProjectId();
+    String getWalletFactoryProjectId();
 
     /**
      * Get the Descriptor Factory Project Name
      *
      * @return String
      */
-    public String getWalletFactoryProjectName();
+    String getWalletFactoryProjectName();
 
     /**
      * Get the Type
      *
      * @return InformationPublishedComponentType
      */
-    public InformationPublishedComponentType getType();
+    InformationPublishedComponentType getType();
 
     /**
      * Get the Descriptions
      *
      * @return String
      */
-    public String getDescriptions();
+    String getDescriptions();
 
     /**
      * Get the icon image
      *
      * @return ImageMiddleware
      */
-    public Image getIconImg();
+    Image getIconImg();
 
     /**
      * Get the main screen shot image
      *
      * @return ImageMiddleware
      */
-    public Image getMainScreenShotImg();
+    Image getMainScreenShotImg();
 
     /**
      * Get the video url
      *
      * @return URL
      */
-    public URL getVideoUrl();
+    URL getVideoUrl();
 
     /**
      * Get the Status
      *
      * @return ComponentPublishedInformationStatus
      */
-    public ComponentPublishedInformationStatus getStatus();
+    ComponentPublishedInformationStatus getStatus();
 
     /**
      * Get the Status Timestamp
      *
      * @return Timestamp
      */
-    public Timestamp getStatusTimestamp();
+    Timestamp getStatusTimestamp();
 
     /**
      * Get the Publication Timestamp
      *
      * @return Timestamp
      */
-    public Timestamp getPublicationTimestamp();
+    Timestamp getPublicationTimestamp();
 
     /**
      * Get the Publisher Id
      *
      * @return String
      */
-    public String getPublisherIdentityPublicKey();
+    String getPublisherIdentityPublicKey();
 
     /**
      * Get the Signature for this component
      *
      * @return String
      */
-    public String getSignature();
+    String getSignature();
 
     /**
      * Get the Component Versions Details List
      *
      * @return List<ComponentVersionDetailMiddleware>
      */
-    public List<ComponentVersionDetail> getComponentVersionDetailList();
+    List<ComponentVersionDetail> getComponentVersionDetailList();
 
     /**
      * Get the Screens Shots Component List
      *
      * @return List<ImageMiddleware>
      */
-    public List<Image> getScreensShotsComponentList();
+    List<Image> getScreensShotsComponentList();
 
 }

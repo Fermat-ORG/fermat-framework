@@ -7,8 +7,8 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.develo
  */
 public interface TransactionAgent {
     
-    public void start () throws CantStartAgentException;
+    void start() throws CantStartAgentException;
 
-    public void stop();
+    void stop();
     
 }

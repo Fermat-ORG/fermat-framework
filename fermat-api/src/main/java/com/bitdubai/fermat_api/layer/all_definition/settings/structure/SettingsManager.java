@@ -43,7 +43,7 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> {
         this.pluginId         = pluginId        ;
 
         this.moduleSettingsMap = new ConcurrentHashMap<>();
-    };
+    }
 
     /**
      * Through the method <code>persistSettings</code> we can persist the settings of the specific

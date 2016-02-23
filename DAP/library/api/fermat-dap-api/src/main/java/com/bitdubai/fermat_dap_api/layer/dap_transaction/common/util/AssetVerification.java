@@ -37,10 +37,7 @@ public final class AssetVerification {
                 return false;
             }
             String digitalAssetHash = digitalAssetMetadata.getDigitalAssetHash();
-            if (Validate.isValidString(digitalAssetHash)) {
-                return false;
-            }
-            return true;
+            return !Validate.isValidString(digitalAssetHash);
         } catch (ObjectNotSetException e) {
             return false;
         }

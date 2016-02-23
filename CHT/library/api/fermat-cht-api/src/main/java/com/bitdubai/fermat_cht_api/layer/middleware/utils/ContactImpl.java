@@ -18,7 +18,8 @@ public class ContactImpl implements Contact {
     private String remoteActorPublicKey;
     private long creationDate;
 
-    public ContactImpl(){};
+    public ContactImpl(){}
+
     public ContactImpl(UUID contactId,
                        String remoteName,
                        String alias,
@@ -32,7 +33,8 @@ public class ContactImpl implements Contact {
         this.remoteActorType      = remoteActorType;
         this.remoteActorPublicKey = remoteActorPublicKey;
         this.creationDate         = creationDate;
-    };
+    }
+
     @Override
     public UUID getContactId() {
         return this.contactId;

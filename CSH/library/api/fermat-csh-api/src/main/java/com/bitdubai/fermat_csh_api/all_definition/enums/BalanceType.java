@@ -11,7 +11,6 @@ public enum BalanceType implements FermatEnum {
     AVAILABLE("AVAILABLE"),
     BOOK("BOOK"),
     ALL("ALL");
-    ;
 
     private final String code;
 

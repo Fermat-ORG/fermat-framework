@@ -14,4 +14,4 @@ public class Constants {
 
     public static final int SELECT_IDENTITY = 0;
 
-};
+}

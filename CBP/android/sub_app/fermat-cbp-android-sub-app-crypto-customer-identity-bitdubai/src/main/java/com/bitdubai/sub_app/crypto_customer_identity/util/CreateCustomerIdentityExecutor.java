@@ -78,7 +78,6 @@ public class CreateCustomerIdentityExecutor {
         if (imageInBytes == null) return true;
         if (imageInBytes.length == 0) return true;
         if (identityName == null) return true;
-        if (identityName.isEmpty()) return true;
-        return false;
+        return identityName.isEmpty();
     }
 }

@@ -30,6 +30,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultM
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
@@ -306,5 +307,17 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
     @Override
     public DraftTransaction addInputsToDraftTransaction(DraftTransaction draftTransaction, long valueToSend, CryptoAddress addressTo) throws CantCreateDraftTransactionException {
         return bitcoinCurrencyCryptoVaultManager.addInputsToDraftTransaction(draftTransaction, valueToSend, addressTo);
+    }
+
+    /**
+     * Returns a stored draft transaction
+     * @param blockchainNetworkType
+     * @param txHash
+     * @return
+     * @throws CantGetDraftTransactionException
+     */
+    @Override
+    public DraftTransaction getDraftTransaction(BlockchainNetworkType blockchainNetworkType, String txHash) throws CantGetDraftTransactionException{
+        return bitcoinCurrencyCryptoVaultManager.getDraftTransaction(blockchainNetworkType, txHash);
     }
 }

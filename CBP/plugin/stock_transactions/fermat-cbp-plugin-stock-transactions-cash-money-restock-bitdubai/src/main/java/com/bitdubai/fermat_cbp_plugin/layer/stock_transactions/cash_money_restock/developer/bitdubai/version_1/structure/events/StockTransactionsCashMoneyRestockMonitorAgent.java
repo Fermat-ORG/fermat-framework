@@ -189,11 +189,11 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                     case IN_EJECUTION:
                         CashTransactionStatus castTransactionStatus = cashHoldTransactionManager.getCashHoldTransactionStatus(cashMoneyTransaction.getTransactionId());
 
-                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {
+                        if (CashTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
                             stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
                         }
-                        if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode()) {
+                        if (CashTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode()) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
                         }

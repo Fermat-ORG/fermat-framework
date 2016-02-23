@@ -13,11 +13,11 @@ public interface WalletStatistics {
      *
      * @return The wallet id in the wallet catalogue.
      */
-    public UUID getWalletCatalogueId();
+    UUID getWalletCatalogueId();
 
     /**
      * This method gives us the number of installations of the represented wallet
      * @return the number of installations of the represented wallet
      */
-    public int getNumberOfDownloads();
+    int getNumberOfDownloads();
 }

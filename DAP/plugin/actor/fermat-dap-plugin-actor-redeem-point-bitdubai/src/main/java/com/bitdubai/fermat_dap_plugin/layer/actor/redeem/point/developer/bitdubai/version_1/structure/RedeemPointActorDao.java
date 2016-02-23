@@ -239,6 +239,49 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
+    public void deleteCryptoCurrencyFromRedeemPointRegistered(ActorAssetRedeemPoint redeemPoint) throws CantUpdateRedeemPointException, RedeemPointNotFoundException {
+
+        DatabaseTable table;
+
+        try {
+            /**
+             * 1) Get the table.
+             */
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Redeem Point actor list, table not found.", "Redeem Point Actor", "");
+            }
+
+            // 2) Find the Redeem Point , filter by keys.
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, redeemPoint.getActorPublicKey(), DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            if (table.getRecords().isEmpty()) {
+                throw new RedeemPointNotFoundException("The following public key was not found: " + redeemPoint.getActorPublicKey());
+            }
+
+            // 3) Get Redeem Point record and update state.
+            for (DatabaseTableRecord record : table.getRecords()) {
+
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, "");
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, "");
+                table.updateRecord(record);
+            }
+
+        } catch (CantLoadTableToMemoryException | CantUpdateRecordException e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), e, "Redeem Point Actor", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor", "Cant get developer identity list, unknown failure.");
+        } finally {
+
+        }
+    }
+
     public void newExtendedPublicKeyRegistered(String redeemPointPublicKey, String extendedPublicKey) throws CantInsertRecordException {
         DatabaseTable table = getRegisteredIssuersTable();
         DatabaseTableRecord newRecord = table.getEmptyRecord();
@@ -1156,7 +1199,7 @@ public class RedeemPointActorDao implements Serializable {
         RedeemPointActorRecord redeemPointActor = null;
         for (DatabaseTableRecord record : records) {
             CryptoAddress cryptoAddress = null;
-            if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
+            if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME) != null && !record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME).isEmpty() ) {
                 cryptoAddress = new CryptoAddress(
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME),
                         CryptoCurrency.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
@@ -1183,7 +1226,7 @@ public class RedeemPointActorDao implements Serializable {
         RedeemPointActorRecord redeemPointActor = null;
         for (DatabaseTableRecord record : records) {
             CryptoAddress cryptoAddress = null;
-            if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
+            if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null && !record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME).isEmpty()) {
                 cryptoAddress = new CryptoAddress(
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
                         CryptoCurrency.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
@@ -1219,7 +1262,7 @@ public class RedeemPointActorDao implements Serializable {
 
         for (DatabaseTableRecord record : records) {
             CryptoAddress cryptoAddress = null;
-            if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
+            if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null && !record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME).isEmpty()) {
                 cryptoAddress = new CryptoAddress(
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
                         CryptoCurrency.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
