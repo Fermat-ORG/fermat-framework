@@ -60,10 +60,8 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.ListsForStatusSale;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantGetCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
@@ -417,17 +415,23 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             ActorIdentity customerIdentity;
             try {
                 customerIdentity = getCustomerInfoByPublicKey(saleNegotiation.getBrokerPublicKey(), saleNegotiation.getCustomerPublicKey());
-            } catch (CantListActorConnectionsException e) {
                 // TODO esto es temporal mientras se pueda obtener la info que trae el NS
-                customerIdentity = new CryptoBrokerWalletActorIdentity("Customer", new byte[0]);
+                if (customerIdentity == null)
+                    customerIdentity = new CryptoBrokerWalletActorIdentity(saleNegotiation.getCustomerPublicKey(), "Customer", new byte[0]);
+            } catch (Exception e) {
+                // TODO esto es temporal mientras se pueda obtener la info que trae el NS
+                customerIdentity = new CryptoBrokerWalletActorIdentity(saleNegotiation.getCustomerPublicKey(), "Customer", new byte[0]);
             }
 
             ActorIdentity brokerIdentity;
             try {
                 brokerIdentity = cryptoBrokerIdentityManager.getCryptoBrokerIdentity(saleNegotiation.getBrokerPublicKey());
-            } catch (CantGetCryptoBrokerIdentityException | IdentityNotFoundException e) {
                 // TODO esto es temporal mientras se pueda obtener la info que trae el NS
-                brokerIdentity = new CryptoBrokerWalletActorIdentity("Broker", new byte[0]);
+                if (brokerIdentity == null)
+                    brokerIdentity = new CryptoBrokerWalletActorIdentity(saleNegotiation.getBrokerPublicKey(), "Broker", new byte[0]);
+            } catch (Exception e) {
+                // TODO esto es temporal mientras se pueda obtener la info que trae el NS
+                brokerIdentity = new CryptoBrokerWalletActorIdentity(saleNegotiation.getBrokerPublicKey(), "Broker", new byte[0]);
             }
 
             waitingForBroker.add(new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(saleNegotiation, customerIdentity, brokerIdentity));
@@ -452,17 +456,23 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             ActorIdentity customerIdentity;
             try {
                 customerIdentity = getCustomerInfoByPublicKey(saleNegotiation.getBrokerPublicKey(), saleNegotiation.getCustomerPublicKey());
-            } catch (CantListActorConnectionsException e) {
                 // TODO esto es temporal mientras se pueda obtener la info que trae el NS
-                customerIdentity = new CryptoBrokerWalletActorIdentity("Customer", new byte[0]);
+                if (customerIdentity == null)
+                    customerIdentity = new CryptoBrokerWalletActorIdentity(saleNegotiation.getCustomerPublicKey(), "Customer", new byte[0]);
+            } catch (Exception e) {
+                // TODO esto es temporal mientras se pueda obtener la info que trae el NS
+                customerIdentity = new CryptoBrokerWalletActorIdentity(saleNegotiation.getCustomerPublicKey(), "Customer", new byte[0]);
             }
 
             ActorIdentity brokerIdentity;
             try {
                 brokerIdentity = cryptoBrokerIdentityManager.getCryptoBrokerIdentity(saleNegotiation.getBrokerPublicKey());
-            } catch (CantGetCryptoBrokerIdentityException | IdentityNotFoundException e) {
                 // TODO esto es temporal mientras se pueda obtener la info que trae el NS
-                brokerIdentity = new CryptoBrokerWalletActorIdentity("Broker", new byte[0]);
+                if (brokerIdentity == null)
+                    brokerIdentity = new CryptoBrokerWalletActorIdentity(saleNegotiation.getBrokerPublicKey(), "Broker", new byte[0]);
+            } catch (Exception e) {
+                // TODO esto es temporal mientras se pueda obtener la info que trae el NS
+                brokerIdentity = new CryptoBrokerWalletActorIdentity(saleNegotiation.getBrokerPublicKey(), "Broker", new byte[0]);
             }
 
             waitingForCustomer.add(new CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation(saleNegotiation, customerIdentity, brokerIdentity));
