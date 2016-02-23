@@ -372,7 +372,8 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
             brokerAckOfflinePaymentTransactionManager.ackPayment(
                     "walletPublicKeyTest",
                     "888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2",
-                    "brokerPublicKey");
+                    "brokerPublicKey",
+                    "Fox Mulder");
         }catch (Exception e){
             System.out.println("Exception in ACK OFFLINE PAYMENT:");
             e.printStackTrace();
