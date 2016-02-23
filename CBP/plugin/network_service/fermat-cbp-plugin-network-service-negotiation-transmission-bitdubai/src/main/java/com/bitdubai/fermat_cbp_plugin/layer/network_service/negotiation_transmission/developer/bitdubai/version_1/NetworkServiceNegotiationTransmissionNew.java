@@ -148,7 +148,7 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
             outgoingNotificationDao = new OutgoingNotificationDao(dataBase, pluginFileSystem, pluginId);
 
             //Initialize Manager
-            negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(outgoingNotificationDao, this);
+            negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(outgoingNotificationDao,incomingNotificationDao, this);
         } catch (CantInitializeNetworkServiceDatabaseException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
