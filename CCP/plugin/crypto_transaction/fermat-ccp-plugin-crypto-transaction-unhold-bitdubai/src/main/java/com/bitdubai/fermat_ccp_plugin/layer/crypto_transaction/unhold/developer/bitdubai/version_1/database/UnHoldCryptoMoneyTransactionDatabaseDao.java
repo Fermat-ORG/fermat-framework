@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -81,17 +82,14 @@ public class UnHoldCryptoMoneyTransactionDatabaseDao {
         record.setLongValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, cryptoUnHoldTransaction.getTimestampAcknowledged());
         record.setLongValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, cryptoUnHoldTransaction.getTimestampConfirmedRejected());
         record.setStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME, cryptoUnHoldTransaction.getStatus().getCode());
-
+        record.setStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME, cryptoUnHoldTransaction.getBlockchainNetworkType().getCode());
         return record;
     }
 
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+        return table.getRecords().isEmpty();
     }
 
     private List<DatabaseTableRecord> getHoldCryptoData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
@@ -119,7 +117,7 @@ public class UnHoldCryptoMoneyTransactionDatabaseDao {
         unHoldCryptoMoneyTransaction.setTimestampAcknowledged(crtyptoUnHoldTransactionRecord.getLongValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
         unHoldCryptoMoneyTransaction.setTimestampConfirmedRejected(crtyptoUnHoldTransactionRecord.getLongValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
         unHoldCryptoMoneyTransaction.setStatus(CryptoTransactionStatus.getByCode(crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_STATUS_COLUMN_NAME)));
-
+        unHoldCryptoMoneyTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(crtyptoUnHoldTransactionRecord.getStringValue(UnHoldCryptoMoneyTransactionDatabaseConstants.UNHOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME)));
         return unHoldCryptoMoneyTransaction;
     }
 

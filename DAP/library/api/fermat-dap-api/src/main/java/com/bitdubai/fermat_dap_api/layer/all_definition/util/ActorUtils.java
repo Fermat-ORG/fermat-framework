@@ -38,6 +38,11 @@ public final class ActorUtils {
             }
 
             @Override
+            public Actors getType() {
+                return identity.getActorType();
+            }
+
+            @Override
             public byte[] getProfileImage() {
                 return identity.getImage();
             }

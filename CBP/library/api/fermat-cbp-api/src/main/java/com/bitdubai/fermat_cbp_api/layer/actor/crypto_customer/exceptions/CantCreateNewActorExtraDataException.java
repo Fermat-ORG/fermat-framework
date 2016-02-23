@@ -23,4 +23,8 @@ public class CantCreateNewActorExtraDataException extends FermatException {
         super(message, cause, context, possibleReason);
     }
 
+    public CantCreateNewActorExtraDataException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
 }

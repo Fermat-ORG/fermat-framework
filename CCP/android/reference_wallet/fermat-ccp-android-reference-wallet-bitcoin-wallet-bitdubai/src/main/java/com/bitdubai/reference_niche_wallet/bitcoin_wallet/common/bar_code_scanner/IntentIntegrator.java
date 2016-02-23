@@ -60,7 +60,7 @@ public final class IntentIntegrator {
 
   public IntentIntegrator(Activity activity,EditText textResult) {
     this.activity = activity;
-    this.textResult = textResult;
+    IntentIntegrator.textResult = textResult;
     title = DEFAULT_TITLE;
     message = DEFAULT_MESSAGE;
     buttonYes = DEFAULT_YES;

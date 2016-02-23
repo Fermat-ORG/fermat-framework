@@ -39,7 +39,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
@@ -49,7 +48,6 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -309,18 +307,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
                     String walletPublicKey = (String) bundle.get(WALLET_PUBLIC_KEY);
                     lastWallet = getWalletManager().getInstalledWallet(walletPublicKey);
                 }
-                String publicKey = lastWallet.getAppPublicKey();
-
-//                AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
-
-                AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this);
-
-                ModuleManager moduleManager = getModuleManager(fermatAppConnection.getPluginVersionReference());
-                if (getWalletSessionManager().isWalletOpen(lastWallet.getWalletPublicKey())) {
-                    walletSession = getWalletSessionManager().getWalletSession(lastWallet.getWalletPublicKey());
-                } else {
-                    walletSession = getWalletSessionManager().openWalletSession(lastWallet,getErrorManager(),moduleManager,fermatAppConnection);
-                }
+                walletSession = createOrGetSession(lastWallet);
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -375,7 +362,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         } catch (ResourcesManagerNotFoundException |
                 CantGetResourcesManagerException e) {
 
-            getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);;
+            getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             return null;
         } catch (Exception e) {
@@ -419,7 +406,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             if(!isConnectionWithOtherApp) {
                 if (!nextActivity.equals(lastActivity)) {
                     resetThisActivity();
-                    loadUI(getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()));
+                    loadUI(getFermatSessionManager().getAppsSession(getWalletRuntimeManager().getLastWallet().getPublicKey()));
                 }
             }else{
                 connectWithSubApp(null,objects,subApp);
@@ -451,10 +438,6 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         return getWalletRuntimeManager().getLastWallet();
     }
 
-    @Override
-    public FermatSession getFermatSessionInUse(String appPublicKey) {
-        return getWalletSessionManager().getWalletSession(appPublicKey);
-    }
 
 
     @Override
@@ -469,10 +452,10 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
 
 //            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletPublicKey,this,getIntraUserModuleManager().getActiveIntraUserIdentity(), getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
 
-            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletPublicKey,this,getWalletSessionManager().getWalletSession(walletPublicKey));
+            FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(walletPublicKey,this,getFermatSessionManager().getAppsSession(walletPublicKey));
 
             FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //com.bitdubai.android_core.app.common.version_1.fragment_factory.WalletFragmentFactory.getFragmentFactoryByWalletType(walletCategory, walletType, walletPublicKey);
-            Fragment fragment = walletFragmentFactory.getFragment(fragmentType,getWalletSessionManager().getWalletSession(getWalletRuntimeManager().getLastWallet().getPublicKey()),getWalletResourcesProviderManager());
+            Fragment fragment = walletFragmentFactory.getFragment(fragmentType,getFermatSessionManager().getAppsSession(getWalletRuntimeManager().getLastWallet().getPublicKey()),getWalletResourcesProviderManager());
             FragmentTransaction FT = this.getFragmentManager().beginTransaction();
             FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             FT.replace(R.id.fragment_container2, fragment);
@@ -608,7 +591,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             }else
                 changeActivity(activityCode,appLickPublicKey);
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 

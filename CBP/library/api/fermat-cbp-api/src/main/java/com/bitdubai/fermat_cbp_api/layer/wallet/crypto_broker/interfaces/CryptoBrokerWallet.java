@@ -68,13 +68,6 @@ public interface CryptoBrokerWallet  {
     Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException;
 
     /**
-     * This method load the update the transaction mark field seen in true
-     * @return void
-     * @exception CantMarkAsSeenException
-     */
-    void markAsSeen(UUID transactionId) throws CantMarkAsSeenException;
-
-    /**
      * Through this method you can mark a transaction as seen by the matching engine plug-in.
      *
      * @param transactionIds  a list with all the ids of the transaction that we want to mark as seen.

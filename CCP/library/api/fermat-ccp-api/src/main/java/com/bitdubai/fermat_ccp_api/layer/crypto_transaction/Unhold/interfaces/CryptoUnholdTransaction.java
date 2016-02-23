@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 
 
@@ -29,4 +30,8 @@ public interface CryptoUnholdTransaction extends CryptoTransaction {
      */
     long getTimestampConfirmedRejected();
     void setTimestampConfirmedRejected(long timestampConfirmedRejected);
+
+    BlockchainNetworkType getBlockChainNetworkType();
+
+    void setBlockChainNetworkType(BlockchainNetworkType blockChainNetworkType);
 }

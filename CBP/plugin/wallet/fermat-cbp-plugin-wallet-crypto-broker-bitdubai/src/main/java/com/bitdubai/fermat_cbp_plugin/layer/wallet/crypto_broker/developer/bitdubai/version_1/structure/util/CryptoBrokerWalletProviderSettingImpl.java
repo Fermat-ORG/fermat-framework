@@ -19,8 +19,6 @@ public class CryptoBrokerWalletProviderSettingImpl implements CryptoBrokerWallet
     public CryptoBrokerWalletProviderSettingImpl() {
     }
 
-    ;
-
     /**
      * {@inheritDoc}
      */

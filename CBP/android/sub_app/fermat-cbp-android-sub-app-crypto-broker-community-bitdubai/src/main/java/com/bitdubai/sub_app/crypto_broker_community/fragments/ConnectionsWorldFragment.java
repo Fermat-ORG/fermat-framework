@@ -124,11 +124,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                     e.printStackTrace();
                 }
             }
-           // moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-
+            //Check if a default identity is configured
             try{
-                CryptoBrokerCommunitySelectableIdentity i = moduleManager.getSelectedActorIdentity();
+                moduleManager.getSelectedActorIdentity();
             }catch (CantGetSelectedActorIdentityException e){
                 //There are no identities in device
                 launchActorCreationDialog = true;
@@ -141,8 +140,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             //mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
             //mNotificationsCount = 4;
             //new FetchCountTask().execute();
-
-            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -175,8 +172,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
-            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
 
             if(launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -191,18 +186,17 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                         .setImageRight(R.drawable.ic_profile_male)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                invalidate();
-                                onRefresh();
-                            }
-                        });
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        invalidate();
+                        onRefresh();
+                    }
+                });
                 presentationDialog.show();
             }
             else if(launchListIdentitiesDialog)
             {
                 ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, null);
-                listIdentitiesDialog.setTitle("Connection Request");
                 listIdentitiesDialog.show();
                 listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override

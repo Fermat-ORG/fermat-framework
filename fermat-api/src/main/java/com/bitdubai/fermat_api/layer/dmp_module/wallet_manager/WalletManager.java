@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
+import java.util.List;
+
 /**
  * Created by ciencias on 25.01.15.
  */
@@ -40,4 +42,5 @@ public interface WalletManager extends ModuleManager<FermatSettings, ActiveActor
      */
     boolean hasIntraUserIdentity() throws CantGetIfIntraWalletUsersExistsException;
 
+    List<InstalledWallet> getInstalledWallets()throws Exception;
 }
