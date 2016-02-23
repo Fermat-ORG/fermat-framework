@@ -38,7 +38,7 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
         this.blockchainNetworkType = blockchainNetworkType;
     }
 
-    public CryptoTransactionParametersWrapper(){};
+    public CryptoTransactionParametersWrapper(){}
 
     @Override
     public UUID getTransactionId() {

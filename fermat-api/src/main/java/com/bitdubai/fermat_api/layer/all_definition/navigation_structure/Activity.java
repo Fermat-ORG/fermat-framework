@@ -217,7 +217,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
         Iterator<Map.Entry<String, Fragment>> eSubApp = fragments.entrySet().iterator();
         while (eSubApp.hasNext()) {
             Map.Entry<String, Fragment> fragmentEntryEntry = eSubApp.next();
-            Fragment subApp = (Fragment) fragmentEntryEntry.getValue();
+            Fragment subApp = fragmentEntryEntry.getValue();
             if (subApp.getType().equals(fragment)) {
                 lastFragment = fragment;
                 return subApp;
