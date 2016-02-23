@@ -1,5 +1,5 @@
 /*
- * @#ExampleResourceImpl.java - 2016
+ * @#MonitoringWebService.java - 2016
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -27,10 +27,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 /**
- * The class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices.ExampleResourceImpl</code>
+ * The class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices.MonitoringWebService</code>
  * </p>
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 10/01/16.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 20/02/16.
  *
  * @version 1.0
  * @since Java JDK 1.7

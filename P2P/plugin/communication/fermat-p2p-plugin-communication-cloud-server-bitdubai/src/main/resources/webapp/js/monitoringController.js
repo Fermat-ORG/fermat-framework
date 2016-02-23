@@ -1,18 +1,8 @@
-var app = angular.module("monitoringApp",  ["chart.js"]);
+angular.module("serverApp").controller("MonitoringCtrl", ['$scope', '$http', '$interval', '$filter', '$window', function($scope, $http, $interval, $filter, $window) {
 
-  app.config(function (ChartJsProvider) {
-    // Configure all charts
-    ChartJsProvider.setOptions({
-      colours: ['#97BBCD', '#DCDCDC', '#F7464A', '#46BFBD', '#FDB45C', '#949FB1', '#4D5360'],
-      responsive: true
-    });
-    // Configure all doughnut charts
-    ChartJsProvider.setOptions('Doughnut', {
-      animateScale: true
-    });
-  });
-
-app.controller("monitoringCtrl", ['$scope', '$http', '$interval', '$filter', function($scope, $http, $interval, $filter) {
+    if(window.localStorage['jwtAuthToke'] !== null){
+          $http.defaults.headers.common['Auth-Token'] = $window.localStorage['jwtAuthToke'];
+    }
 
       $scope.labels = [];
       $scope.series = ['Client Connections', 'Actives VPN'];
@@ -22,7 +12,7 @@ app.controller("monitoringCtrl", ['$scope', '$http', '$interval', '$filter', fun
 
             $http({
                     method: 'GET',
-                    url: 'http://127.0.1.1:9090/fermat/api/monitoring/current/data?callback=JSON_CALLBACK'
+                    url: '/fermat/api/monitoring/current/data'
                   }).
                   success(function(data){
 
@@ -40,12 +30,13 @@ app.controller("monitoringCtrl", ['$scope', '$http', '$interval', '$filter', fun
                       console.log('status: ' + status);
                       console.log('headers: ' + headers);
                       console.log('config: ' + config);
+                      alert(status+" - Service error");
                   });
 
       };
 
      requestMonitoringData();
 
-    $interval(requestMonitoringData, 20000);
+    $interval(requestMonitoringData, 60000);
 
 }]);
