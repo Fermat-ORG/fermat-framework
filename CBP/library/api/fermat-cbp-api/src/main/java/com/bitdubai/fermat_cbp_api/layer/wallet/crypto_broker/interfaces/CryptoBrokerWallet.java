@@ -74,7 +74,7 @@ public interface CryptoBrokerWallet  {
      *
      * @throws CantMarkAsSeenException if something goes wrong.
      */
-    void markAsSeen(List<String> transactionIds) throws CantMarkAsSeenException;
+    void markAsSeen(List<UUID> transactionIds) throws CantMarkAsSeenException;
 
     /**
      * This method load the list CurrencyMatching
