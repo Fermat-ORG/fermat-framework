@@ -23,8 +23,11 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
@@ -319,9 +322,23 @@ public class CryptoVaultBitcoinCurrencyPluginRoot extends AbstractPlugin impleme
         return bitcoinCurrencyCryptoVaultManager.getDraftTransaction(blockchainNetworkType, txHash);
     }
 
-    //TODO: Completame XXOO
+    /**
+     * Persists a draft transaction in the vault.
+     * @param draftTransaction the draft Transaction to store
+     * @throws CantStoreBitcoinTransactionException
+     */
     @Override
-    public void saveTransaction(DraftTransaction draftTransaction) {
-
+    public void saveTransaction(DraftTransaction draftTransaction) throws CantStoreBitcoinTransactionException {
+        try {
+            bitcoinCurrencyCryptoVaultManager.storeDraftTransaction(draftTransaction);
+        } catch (Exception e){
+            CantStoreBitcoinTransactionException exception = new CantStoreBitcoinTransactionException(
+                    CantStoreBitcoinTransactionException.DEFAULT_MESSAGE,
+                    e,
+                    "There was an error persisting the transaction on the vault",
+                    "IO Error");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
     }
 }

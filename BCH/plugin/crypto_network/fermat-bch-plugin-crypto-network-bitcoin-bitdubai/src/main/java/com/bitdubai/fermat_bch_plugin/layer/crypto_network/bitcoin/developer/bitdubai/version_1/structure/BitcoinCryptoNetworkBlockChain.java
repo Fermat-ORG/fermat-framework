@@ -120,12 +120,12 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
          * I create the blockstore.
          */
         try {
-            blockStore = new SPVBlockStore(wallet.getContext().getParams(), blockChainFile);
+            blockStore = new SPVBlockStore(context.getParams(), blockChainFile);
         } catch (Exception e) {
             /**
              * If there is an error saving it to file, I will save it to memory
              */
-            blockStore = new MemoryBlockStore(wallet.getContext().getParams());
+            blockStore = new MemoryBlockStore(context.getParams());
             System.out.println("*** Crypto Network Warning, error creating file to store blockchain, will save it to memory.");
             System.out.println("*** Crypto Network: " + e.toString());
 
@@ -147,12 +147,12 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
         /**
          * I initialize the blockchain object
          */
-        blockChain = new BlockChain(wallet.getContext(), wallet, blockStore);
+        blockChain = new BlockChain(context, wallet, blockStore);
     }
 
     private void initializeInMemory() throws BlockStoreException {
-        blockStore = new MemoryBlockStore(wallet.getContext().getParams());
-        blockChain = new BlockChain(wallet.getContext().getParams(), wallet, blockStore);
+        blockStore = new MemoryBlockStore(context.getParams());
+        blockChain = new BlockChain(context, wallet, blockStore);
     }
 
     /**
