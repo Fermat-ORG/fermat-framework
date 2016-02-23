@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -61,6 +62,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import android.text.format.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -84,6 +86,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private FermatTextView sellingDetails;
     private FermatTextView exchangeRateSummary;
     private FermatTextView brokerName;
+    private FermatTextView expirationDate;
+    private Layout layoutExpirationDate;
     private RecyclerView recyclerView;
     private boolean valuesHasChanged;
     private ClauseType clauseInformationType;
@@ -367,6 +371,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         brokerName = (FermatTextView) rootView.findViewById(R.id.ccw_broker_name);
         sellingDetails = (FermatTextView) rootView.findViewById(R.id.ccw_selling_summary);
         exchangeRateSummary = (FermatTextView) rootView.findViewById(R.id.ccw_buying_exchange_rate);
+        expirationDate = (FermatTextView) rootView.findViewById(R.id.ccw_expiration_date);
         recyclerView = (RecyclerView) rootView.findViewById(R.id.ccw_open_negotiation_details_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
@@ -426,6 +431,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         brokerName.setText(broker.getAlias());
         sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, amount, merchandise));
         exchangeRateSummary.setText(getResources().getString(R.string.ccw_exchange_rate_summary, merchandise, exchangeAmount, payment));
+//        CharSequence dateExp = "";
+//        if(negotiationInfo.getNegotiationExpirationDate() != 0) {
+//            dateExp = "Expiration Date. " + DateFormat.format("dd MMM yyyy", negotiationInfo.getNegotiationExpirationDate());
+//            expirationDate.setVisibility(View.VISIBLE);
+//        }
+//        expirationDate.setText(dateExp);
+
+
 
         //PRINT CLAUSE STATUS TEST
         validateStatusClauseTest(clauses);
