@@ -1,7 +1,7 @@
-package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database;
+package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications;
 
 /**
- * The Class <code>com.bitdubai.fermat_cht_plugin.layer.network_service.network_service_chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_cht_plugin.layer.network_service.network_service_chat.developer.bitdubai.version_1.database.CommunicationChatNetworkServiceDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
@@ -10,7 +10,8 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
  * @version 1.0
  * @since Java JDK 1.7
  */
-public final class NetworkServiceChatNetworkServiceDatabaseConstants {
+
+public final class CommunicationChatNetworkServiceDatabaseConstants {
 
     public static final String DATA_BASE_NAME  = "chat_network_service_data_base";
 
@@ -47,28 +48,30 @@ public final class NetworkServiceChatNetworkServiceDatabaseConstants {
     public static final String OUTGOING_MESSAGES_FIRST_KEY_COLUMN = OUTGOING_MESSAGES_ID_COLUMN_NAME;
 
     /**
-     * Chat database table definition.
+     * incomingchatmetadata database table definition.
      */
     public static final String CHAT_TABLE_NAME = "chatmetadata";
 
-    public static final String CHAT_TRANSACTION_ID_COLUMN_NAME = "transaction_id";
-    public static final String CHAT_TRANSACTION_HASH_COLUMN_NAME = "transaction_hash";
-    public static final String CHAT_IDCHAT_COLUMN_NAME = "idchat";
-    public static final String CHAT_IDOBJECTO_COLUMN_NAME = "idobjecto";
-    public static final String CHAT_LOCALACTORTYPE_COLUMN_NAME = "localactortype";
-    public static final String CHAT_LOCALACTORPUBKEY_COLUMN_NAME = "localactorpubkey";
-    public static final String CHAT_REMOTEACTORTYPE_COLUMN_NAME = "remoteactortype";
-    public static final String CHAT_REMOTEACTORPUBKEY_COLUMN_NAME = "remoteactorpubkey";
-    public static final String CHAT_CHATNAME_COLUMN_NAME = "chatname";
-    public static final String CHAT_CHATSTATUS_COLUMN_NAME = "chatstatus";
-    public static final String CHAT_MESSAGE_STATUS_COLUMN_NAME = "chatmessagestatus";
-    public static final String CHAT_DATE_COLUMN_NAME = "date";
-    public static final String CHAT_IDMENSAJE_COLUMN_NAME = "idmensaje";
-    public static final String CHAT_MESSAGE_COLUMN_NAME = "message";
-    public static final String CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME = "distributionstatus";
-    public static final String CHAT_PROCCES_STATUS_COLUMN_NAME = "process";
+    public static final String CHAT_TRANSACTION_ID_COLUMN_NAME = "incoming_transaction_id";
+    public static final String CHAT_TRANSACTION_HASH_COLUMN_NAME = "incoming_transaction_hash";
+    public static final String CHAT_IDCHAT_COLUMN_NAME = "incoming_idchat";
+    public static final String CHAT_IDOBJECTO_COLUMN_NAME = "incoming_idobjecto";
+    public static final String CHAT_LOCALACTORTYPE_COLUMN_NAME = "incoming_localactortype";
+    public static final String CHAT_LOCALACTORPUBKEY_COLUMN_NAME = "incoming_localactorpubkey";
+    public static final String CHAT_REMOTEACTORTYPE_COLUMN_NAME = "incoming_remoteactortype";
+    public static final String CHAT_REMOTEACTORPUBKEY_COLUMN_NAME = "incoming_remoteactorpubkey";
+    public static final String CHAT_CHATNAME_COLUMN_NAME = "incoming_chatname";
+    public static final String CHAT_CHATSTATUS_COLUMN_NAME = "incoming_chatstatus";
+    public static final String CHAT_MESSAGE_STATUS_COLUMN_NAME = "incoming_chatmessagestatus";
+    public static final String CHAT_DATE_COLUMN_NAME = "incoming_date";
+    public static final String CHAT_IDMENSAJE_COLUMN_NAME = "incoming_idmensaje";
+    public static final String CHAT_MESSAGE_COLUMN_NAME = "incoming_message";
+    public static final String CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME = "incoming_distributionstatus";
+    public static final String CHAT_PROCCES_STATUS_COLUMN_NAME = "incoming_process";
 
-    public static final String CHAT_FIRST_KEY_COLUMN = CHAT_TRANSACTION_ID_COLUMN_NAME;
+
+    public static final String INCOMING_CHAT_FIRST_KEY_COLUMN = CHAT_TABLE_NAME;
+
 
 
 }
