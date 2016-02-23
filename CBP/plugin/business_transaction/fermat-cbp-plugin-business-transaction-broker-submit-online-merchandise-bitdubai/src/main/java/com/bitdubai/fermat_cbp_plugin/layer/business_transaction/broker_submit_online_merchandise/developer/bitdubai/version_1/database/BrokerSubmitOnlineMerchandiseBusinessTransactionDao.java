@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -375,7 +376,8 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             String cryptoWalletPublicKey,
             long cryptoAmount,
             String cbpWalletPublicKey,
-            BigDecimal referencePrice)
+            BigDecimal referencePrice,
+            BlockchainNetworkType blockchainNetworkType)
             throws CantInsertRecordException {
         try{
             DatabaseTable databaseTable=getDatabaseSubmitTable();
@@ -387,7 +389,8 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     cryptoWalletPublicKey,
                     cryptoAmount,
                     cbpWalletPublicKey,
-                    referencePrice
+                    referencePrice,
+                    blockchainNetworkType
             );
             databaseTable.insertRecord(databaseTableRecord);
         }catch(CantInsertRecordException exception){
@@ -462,7 +465,8 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             String walletPublicKey,
             long cryptoAmount,
             String cbpWalletPublicKey,
-            BigDecimal referencePrice) {
+            BigDecimal referencePrice,
+            BlockchainNetworkType blockchainNetworkType) {
 
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
@@ -497,6 +501,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         record.setDoubleValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME,
                 referencePrice.doubleValue()
+        );
+        if(blockchainNetworkType==null){
+            blockchainNetworkType=BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        }
+        record.setStringValue(
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME,
+                blockchainNetworkType.getCode()
         );
         return record;
     }
@@ -818,6 +829,18 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             businessTransactionRecord.setPriceReference(
                     referencePrice
             );
+            //Setting the blockchain network type.
+            BlockchainNetworkType blockchainNetworkType;
+            String blockchainNetworkTypeString = record.getStringValue(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME
+            );
+            if(blockchainNetworkTypeString==null||blockchainNetworkTypeString.isEmpty()){
+                blockchainNetworkType=BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            } else {
+                blockchainNetworkType=BlockchainNetworkType.getByCode(blockchainNetworkTypeString);
+            }
+            businessTransactionRecord.setBlockchainNetworkType(blockchainNetworkType);
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,

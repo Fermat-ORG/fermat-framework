@@ -163,7 +163,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
      * @throws CantGetTransactionCryptoBrokerWalletMatchingException
      */
     @Override
-    public void markAsSeen(List<String> transactionIds) throws CantMarkAsSeenException {
+    public void markAsSeen(List<UUID> transactionIds) throws CantMarkAsSeenException {
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);

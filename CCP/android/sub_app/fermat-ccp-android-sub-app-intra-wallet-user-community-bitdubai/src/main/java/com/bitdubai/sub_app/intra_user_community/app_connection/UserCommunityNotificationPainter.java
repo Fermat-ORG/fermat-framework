@@ -21,6 +21,7 @@ public class UserCommunityNotificationPainter implements NotificationPainter{
         this.title    = title;
         this.textBody = textBody;
         this.image    = image;
+        remoteViews = null;
 
 
     }

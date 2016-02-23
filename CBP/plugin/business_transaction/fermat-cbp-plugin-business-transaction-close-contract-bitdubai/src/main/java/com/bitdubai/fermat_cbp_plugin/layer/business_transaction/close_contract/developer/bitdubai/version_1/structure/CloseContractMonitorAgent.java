@@ -181,6 +181,12 @@ public class CloseContractMonitorAgent implements
                 try {
                     Thread.sleep(SLEEP_TIME);
                 } catch (InterruptedException interruptedException) {
+
+
+                    errorManager.reportUnexpectedPluginException(
+                            Plugins.CLOSE_CONTRACT,
+                            UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                            interruptedException);
                     return;
                 }
 
@@ -208,6 +214,11 @@ public class CloseContractMonitorAgent implements
                         CloseContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
             }
             catch (DatabaseNotFoundException databaseNotFoundException) {
+
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CLOSE_CONTRACT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        databaseNotFoundException);
 
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("Database in Close Contract monitor agent doesn't exists");
@@ -244,7 +255,7 @@ public class CloseContractMonitorAgent implements
                 closeContractBusinessTransactionDao=new CloseContractBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,errorManager);
                 /**
                  * Check if exist in database new close contracts to send
                  */

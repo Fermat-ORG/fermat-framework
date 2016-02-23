@@ -218,7 +218,7 @@ public class CryptoPaymentRequestEventActions {
                     record.getNetworkType()
             );
 
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, installedWallet.getWalletPublicKey(), "PAYMENT_DENIED|" + requestId.toString());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, installedWallet.getWalletPublicKey(), "PAYMENTDENIED_" + requestId.toString());
 
 
         } catch(CantChangeCryptoPaymentRequestStateException |
@@ -259,7 +259,7 @@ public class CryptoPaymentRequestEventActions {
                         cryptoPaymentRequest.getNetworkType()
                 );
 
-                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, installedWallet.getWalletPublicKey(), "PAYMENT_REQUEST|" + cryptoPaymentRequest.getRequestId().toString());
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, installedWallet.getWalletPublicKey(), "PAYMENTREQUEST_" + cryptoPaymentRequest.getRequestId().toString());
 
             } catch (CantGetCryptoPaymentRequestException e) {
 
@@ -306,7 +306,7 @@ public class CryptoPaymentRequestEventActions {
 
                     cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
 
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,installedWallet.getWalletPublicKey() ,"PAYMENT_REQUEST|" + cryptoPaymentRequest.getRequestId().toString());
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,installedWallet.getWalletPublicKey() ,"PAYMENTREQUEST_" + cryptoPaymentRequest.getRequestId().toString());
 
 
                 } catch(DefaultWalletNotFoundException z) {
@@ -361,7 +361,7 @@ public class CryptoPaymentRequestEventActions {
                     record.getNetworkType()
             );
 
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, installedWallet.getWalletPublicKey(), "PAYMENT_DENIED|" + requestId.toString());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, installedWallet.getWalletPublicKey(), "PAYMENTDENIED_" + requestId.toString());
 
 
         } catch(CantChangeCryptoPaymentRequestStateException |

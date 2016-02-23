@@ -5,7 +5,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
@@ -18,6 +26,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSe
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantCreateAssetVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CryptoTransactionAlreadySentException;
@@ -76,6 +85,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
      */
     private final String BITCOIN_VAULT_SEED_FILEPATH = "BitcoinVaultSeed";
     private final String BITCOIN_VAULT_SEED_FILENAME;
+    private final String DRAFT_TRANSACTION_PATH = "draftTransactions";
 
 
     /**
@@ -725,6 +735,54 @@ public class BitcoinCurrencyCryptoVaultManager  {
          * updates the bitcoin transaction
          */
         draftTransaction.setBitcoinTransaction(sendRequest.tx);
+
+        /**
+         * I will store this transaction to be able to return it later
+         */
+        try {
+            storeDraftTransaction(draftTransaction);
+        } catch (CantCreateFileException | CantPersistFileException e) {
+            CantCreateDraftTransactionException exception = new CantCreateDraftTransactionException(CantCreateDraftTransactionException.DEFAULT_MESSAGE, e, "Draft Transaction could not be stored on disk", "IO error");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
+
         return draftTransaction;
+    }
+
+    /**
+     * Will store on disk this draft transaction
+     * @param draftTransaction
+     */
+    private void storeDraftTransaction(DraftTransaction draftTransaction) throws CantCreateFileException, CantPersistFileException {
+        byte [] serializedDraftTransaction = draftTransaction.serialize();
+
+        PluginBinaryFile pluginBinayFile = pluginFileSystem.createBinaryFile(this.pluginId, DRAFT_TRANSACTION_PATH, draftTransaction.getTxHash(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+        pluginBinayFile.setContent(serializedDraftTransaction);
+        pluginBinayFile.persistToMedia();
+    }
+
+
+    /**
+     * Returns a stored draft transaction
+     * @param blockchainNetworkType
+     * @param txHash
+     * @return
+     * @throws CantGetDraftTransactionException
+     */
+    public DraftTransaction getDraftTransaction(BlockchainNetworkType blockchainNetworkType, String txHash) throws CantGetDraftTransactionException{
+        try {
+            PluginBinaryFile pluginBinaryFile = pluginFileSystem.getBinaryFile(pluginId, DRAFT_TRANSACTION_PATH, txHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginBinaryFile.loadFromMedia();
+            byte[] serializedDraftTransaction = pluginBinaryFile.getContent();
+
+            DraftTransaction draftTransaction = DraftTransaction.deserialize(blockchainNetworkType, serializedDraftTransaction);
+            return draftTransaction;
+        } catch (Exception e) {
+            CantGetDraftTransactionException exception = new CantGetDraftTransactionException(CantGetDraftTransactionException.DEFAULT_MESSAGE, e, "IO error while getting the draft transaction from disk. txHash: " + txHash, "PluginFileSystem");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
     }
 }

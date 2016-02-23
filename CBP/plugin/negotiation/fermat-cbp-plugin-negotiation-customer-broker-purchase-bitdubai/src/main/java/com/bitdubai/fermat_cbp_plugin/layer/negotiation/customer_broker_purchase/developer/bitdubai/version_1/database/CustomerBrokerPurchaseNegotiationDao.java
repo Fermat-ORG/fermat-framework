@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -85,6 +86,8 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
                 throw new CantInitializeCustomerBrokerPurchaseNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
+
+        new NegotiationPurchaseTestData(this);
     }
 
     public void createCustomerBrokerPurchaseNegotiation(CustomerBrokerPurchaseNegotiation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException {
@@ -183,8 +186,12 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
         try {
             DatabaseTable PurchaseNegotiationTable = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME);
             DatabaseTableRecord recordToUpdate = PurchaseNegotiationTable.getEmptyRecord();
+
             PurchaseNegotiationTable.addUUIDFilter(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
+
             recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME, NegotiationStatus.CANCELLED.getCode());
+            recordToUpdate.setStringValue(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_CANCEL_REASON_COLUMN_NAME, negotiation.getCancelReason());
+
             PurchaseNegotiationTable.updateRecord(recordToUpdate);
         } catch (CantUpdateRecordException e) {
             throw new CantUpdateCustomerBrokerPurchaseNegotiationException(e.DEFAULT_MESSAGE, e, "", "");
@@ -325,31 +332,54 @@ public class CustomerBrokerPurchaseNegotiationDao implements NegotiationClauseMa
         }
     }
 
-    public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListPurchaseNegotiationsException {
+    public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting(ActorType actorType) throws CantGetListPurchaseNegotiationsException {
         try {
             DatabaseTable table = this.database.getTable(CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME);
+            String Query = null;
 
-            String Query = "SELECT * FROM " +
-                    CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME +
-                    " WHERE " +
-                    CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME +
-                    " = '" +
-                    NegotiationStatus.SENT_TO_BROKER.getCode() +
-                    "' OR " +
-                    CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME +
-                    " = '" +
-                    NegotiationStatus.WAITING_FOR_BROKER.getCode() +
-                    "' ORDER BY " +
-                    CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_START_DATE_TIME_COLUMN_NAME +
-                    " DESC";
-
-            Collection<DatabaseTableRecord> res = table.customQuery(Query, true);
-            Collection<CustomerBrokerPurchaseNegotiation> negs = new ArrayList<>();
-            for (DatabaseTableRecord record : res) {
-                negs.add(constructCustomerBrokerPurchaseFromRecordByQuery(record));
+            if(actorType == ActorType.BROKER){
+                Query = "SELECT * FROM " +
+                        CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME +
+                        " WHERE " +
+                        CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.SENT_TO_BROKER.getCode() +
+                        "' OR " +
+                        CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.WAITING_FOR_BROKER.getCode() +
+                        "' ORDER BY " +
+                        CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_START_DATE_TIME_COLUMN_NAME +
+                        " DESC";
             }
 
-            return negs;
+            if(actorType == ActorType.CUSTOMER){
+                Query = "SELECT * FROM " +
+                        CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_TABLE_NAME +
+                        " WHERE " +
+                        CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.SENT_TO_CUSTOMER.getCode() +
+                        "' OR " +
+                        CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_STATUS_COLUMN_NAME +
+                        " = '" +
+                        NegotiationStatus.WAITING_FOR_CUSTOMER.getCode() +
+                        "' ORDER BY " +
+                        CustomerBrokerPurchaseNegotiationDatabaseConstants.NEGOTIATIONS_PURCHASE_START_DATE_TIME_COLUMN_NAME +
+                        " DESC";
+            }
+
+            if(Query != null){
+                Collection<DatabaseTableRecord> res = table.customQuery(Query, true);
+                Collection<CustomerBrokerPurchaseNegotiation> negs = new ArrayList<>();
+                for (DatabaseTableRecord record : res) {
+                    negs.add(constructCustomerBrokerPurchaseFromRecordByQuery(record));
+                }
+
+                return negs;
+            }else{
+                throw new CantGetListPurchaseNegotiationsException("Type of actor invalid");
+            }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetListPurchaseNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
         } catch (InvalidParameterException e) {

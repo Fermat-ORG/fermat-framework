@@ -152,7 +152,7 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * @throws CantRequestQuotesException if something goes wrong.
      */
-    CryptoBrokerExtraDataInfo requestQuotes(String                  requesterPublicKey   ,
+    CryptoBrokerExtraData<CryptoBrokerQuote> requestQuotes(String                  requesterPublicKey   ,
                                                            Actors                  requesterActorType   ,
                                                            String                  cryptoBrokerPublicKey) throws CantRequestQuotesException;
 
@@ -168,7 +168,7 @@ public interface CryptoBrokerManager extends FermatManager {
      *
      * @throws CantListPendingQuotesRequestsException if something goes wrong.
      */
-    List<CryptoBrokerExtraDataInfo> listPendingQuotesRequests(RequestType requestType) throws CantListPendingQuotesRequestsException;
+    List<CryptoBrokerExtraData<CryptoBrokerQuote>> listPendingQuotesRequests(RequestType requestType) throws CantListPendingQuotesRequestsException;
 
     /**
      * Through this method you can send the response of the quotes request to its requester.
@@ -183,6 +183,16 @@ public interface CryptoBrokerManager extends FermatManager {
     void answerQuotesRequest(UUID                    requestId ,
                              long                    updateTime,
                              List<CryptoBrokerQuote> quotes    ) throws CantAnswerQuotesRequestException, QuotesRequestNotFoundException;
+
+    /**
+     * Through the method <code>confirmQuotesRequest</code> we can mark as done and confirmed a pending quotes request.
+     *
+     * @param requestId  id of the quotes request to confirm.
+     *
+     * @throws CantConfirmException                if something goes wrong.
+     * @throws QuotesRequestNotFoundException      if the quotes request cannot be found.
+     */
+    void confirmQuotesRequest(final UUID requestId) throws CantConfirmException, QuotesRequestNotFoundException;
 
     /**
      * Through the method <code>confirm</code> we can mark as done and confirmed a pending connection new or update.

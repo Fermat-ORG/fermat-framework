@@ -29,8 +29,8 @@ public class GetContractPropertiesTest {
         DigitalAssetContract digitalAssetContract=new DigitalAssetContract();
         ContractProperty redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE,"Test redeemable" );
         ContractProperty expirationDate= new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, "test expiration date");
-       // digitalAssetContract.setContractProperty(redeemable);
-        //digitalAssetContract.setContractProperty(expirationDate);
+        digitalAssetContract.setContractProperty(redeemable);
+        digitalAssetContract.setContractProperty(expirationDate);
         List<ContractProperty> contractPropertyList=digitalAssetContract.getContractProperties();
         for(ContractProperty contractProperty : contractPropertyList){
             System.out.println(contractProperty.getName());

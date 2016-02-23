@@ -46,7 +46,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
             final PluginDatabaseSystem pluginDatabaseSystem,
             final UUID pluginId,
             final Database database,
-            ErrorManager errorManager) {
+            final ErrorManager errorManager) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;

@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -27,7 +27,7 @@ public class xmlTests {
     public void fromObjectToXml(){
         Activity runtimeActivity;
         Fragment runtimeFragment;
-      //  WalletNavigationStructure runtimeWalletNavigationStructure;
+        WalletNavigationStructure runtimeWalletNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
         MainMenu runtimeMainMenu;
@@ -39,19 +39,19 @@ public class xmlTests {
 
         String publicKey;
 
-        //runtimeWalletNavigationStructure = new WalletNavigationStructure();
-       // runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
-       // runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+       runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+       runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         publicKey="reference_wallet";
-      //  runtimeWalletNavigationStructure.setPublicKey(publicKey);
+       runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
 
         runtimeActivity= new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setColor("#8bba9e");
-      //  runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-      //  runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.setStartActivity(runtimeActivity.getType());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("bitDubai bitcoin Wallet");
@@ -224,7 +224,7 @@ public class xmlTests {
         runtimeActivity.setColor("#8bba9e");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
 
-       // runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("bitdubai bitcoin Wallet");
@@ -304,8 +304,8 @@ public class xmlTests {
          */
 
 
-       // String xml =XMLParser.parseObject(runtimeWalletNavigationStructure);
-      //  System.out.println(xml);
+       String xml =XMLParser.parseObject(runtimeWalletNavigationStructure);
+      System.out.println(xml);
     }
 
 }

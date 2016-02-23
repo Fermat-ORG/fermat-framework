@@ -42,6 +42,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -193,7 +195,13 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         List<AssetUserWalletTransaction> debitBook = getTransactions(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
         List<AssetUserWalletTransaction> toReturn = new ArrayList<>();
         toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
-        toReturn.addAll(getTransactionsForDisplay(debitAvailable, debitBook));
+        toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
+        Collections.sort(toReturn, new Comparator<AssetUserWalletTransaction>() {
+            @Override
+            public int compare(AssetUserWalletTransaction o1, AssetUserWalletTransaction o2) {
+                return (int) (o2.getTimestamp() - o1.getTimestamp());
+            }
+        });
         return toReturn;
     }
 

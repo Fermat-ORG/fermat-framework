@@ -16,6 +16,7 @@ import java.util.Map;
  * Created by rodrigo on 2/10/16.
  */
 public class DraftTransaction {
+
     private Transaction bitcoinTransaction;
     private CryptoAddress sellerCryptoAddress;
     private CryptoAddress buyerCryptoAddress;
