@@ -121,7 +121,11 @@ public class OpenContractMonitorAgent implements
 
     @Override
     public void stop() {
-        this.agentThread.interrupt();
+        try{
+            this.agentThread.interrupt();
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
     }
 
     @Override

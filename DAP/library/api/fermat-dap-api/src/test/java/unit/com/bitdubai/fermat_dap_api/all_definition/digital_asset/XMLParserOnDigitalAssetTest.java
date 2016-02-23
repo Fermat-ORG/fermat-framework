@@ -103,7 +103,7 @@ public class XMLParserOnDigitalAssetTest {
         digitalAsset.setName("Asset de prueba");
         digitalAsset.setIdentityAssetIssuer(identityAssetIssuer);
         DigitalAssetContract contract = new DigitalAssetContract();
-       // contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, Boolean.TRUE));
+        contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, Boolean.TRUE));
         digitalAsset.setContract(contract);
 
         System.out.println(digitalAsset.toString());

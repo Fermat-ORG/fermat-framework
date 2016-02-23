@@ -123,7 +123,9 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         try {
             selectedCurrency = FiatCurrency.getByCode(fiatCurrencies.get(position));
 
-        } catch(InvalidParameterException e) { }
+        } catch(InvalidParameterException e) {
+            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        }
 
     }
 
@@ -136,6 +138,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         try {
             super.onActivityCreated(new Bundle());
         } catch (Exception e){
+            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
     }

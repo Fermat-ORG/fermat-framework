@@ -77,6 +77,7 @@
     <string name="ccw_no_selected_bank_account">No Selected Bank Accounts</string>
     <string name="ccw_no_selected_providers">No Selected Providers</string>
     <string name="ccw_no_selected_wallets">No Selected Wallets</string>
+    <string name="ccw_open_negotiation_details_cancel_negotiation_menu_text">Cancel Negotiation</string>
     <string name="ccw_price">Price</string>
     <string name="ccw_providers">Providers</string>
     <string name="ccw_save">Save</string>

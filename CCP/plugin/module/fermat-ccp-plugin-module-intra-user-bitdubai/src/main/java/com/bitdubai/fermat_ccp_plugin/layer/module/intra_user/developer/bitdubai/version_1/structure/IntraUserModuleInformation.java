@@ -17,15 +17,19 @@ public class IntraUserModuleInformation implements IntraUserInformation {
     private String publicKey;
     private byte[] profileImage;
     private ConnectionState connectionState;
+    private String state = "Online";
 
 
-    public IntraUserModuleInformation(String name,String phrase,String publicKey,byte[] profileImage, ConnectionState connectionState)
+
+    public IntraUserModuleInformation(String name,String phrase,String publicKey,byte[] profileImage, ConnectionState connectionState,String state)
     {
         this.name = name;
         this.publicKey = publicKey;
         this.profileImage = (byte[] )profileImage.clone();
         this.connectionState = connectionState;
         this.phrase = phrase;
+        this.state = state;
+
     }
     /**
      * That method returns the public key of the represented Intra User
@@ -73,5 +77,10 @@ public class IntraUserModuleInformation implements IntraUserInformation {
     @Override
     public ConnectionState getConnectionState() {
         return this.connectionState;
+    }
+
+    @Override
+    public String getState() {
+        return this.state ;
     }
 }

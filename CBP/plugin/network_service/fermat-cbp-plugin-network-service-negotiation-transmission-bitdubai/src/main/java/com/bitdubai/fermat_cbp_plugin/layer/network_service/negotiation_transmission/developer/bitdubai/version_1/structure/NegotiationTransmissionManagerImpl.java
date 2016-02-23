@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmi
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmis
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantConstructNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.IncomingNotificationDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.OutgoingNotificationDao;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.interfaces.IntraUserManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
@@ -46,6 +48,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
     private NegotiationTransmissionNetworkServiceDatabaseDao negotiationTransmissionNetworkServiceDatabaseDao;
     private OutgoingNotificationDao outgoingNotificationDao;
+    private IncomingNotificationDao incomingNotificationDao;
 
     private NetworkServiceNegotiationTransmissionNew networkServiceNegotiationTransmissionNew;
 
@@ -60,10 +63,12 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
 
     public NegotiationTransmissionManagerImpl(
             OutgoingNotificationDao outgoingNotificationDao,
+            IncomingNotificationDao incomingNotificationDao,
             NetworkServiceNegotiationTransmissionNew networkServiceNegotiationTransmissionNew
     ) {
         this.outgoingNotificationDao = outgoingNotificationDao;
         this.networkServiceNegotiationTransmissionNew = networkServiceNegotiationTransmissionNew;
+        this.incomingNotificationDao = incomingNotificationDao;
         executorService = Executors.newFixedThreadPool(3);
     }
 
@@ -100,8 +105,9 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
-                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -150,9 +156,11 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 @Override
                 public void run() {
 
+
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -203,8 +211,9 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
-                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -255,8 +264,9 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -293,8 +303,9 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -332,7 +343,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
         try {
 
 //            List<NegotiationTransmission> negotiationTransmissionList = negotiationTransmissionNetworkServiceDatabaseDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
-            List<NegotiationTransmission> negotiationTransmissionList = outgoingNotificationDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
+            List<NegotiationTransmission> negotiationTransmissionList = incomingNotificationDao.findAllByTransmissionState(NegotiationTransmissionState.PENDING_ACTION);
             if (!negotiationTransmissionList.isEmpty()) {
 
                 for (NegotiationTransmission negotiationTransmission : negotiationTransmissionList) {
@@ -350,7 +361,6 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
             throw new CantDeliverPendingTransactionsException("CAN'T GET PENDING NOTIFICATIONS", e, "Negotiation Transmission network service", "database error");
         } catch (Exception e) {
             throw new CantDeliverPendingTransactionsException("CAN'T GET PENDING NOTIFICATIONS", e, "Negotiation Transmission network service", "database error");
-
         }
     }
 

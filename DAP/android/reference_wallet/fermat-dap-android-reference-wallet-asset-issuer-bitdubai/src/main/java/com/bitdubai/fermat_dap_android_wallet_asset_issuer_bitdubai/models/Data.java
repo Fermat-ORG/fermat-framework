@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -10,8 +11,11 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.sql.Timestamp;
@@ -156,5 +160,22 @@ public class Data {
         digitalAsset.setUnused(unused);
         digitalAsset.setAppropriated(appropriated);
         digitalAsset.setRedeemed(redeemed);
+    }
+
+    public static List<Transaction> getTransactions(AssetIssuerWalletSupAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException {
+        List<Transaction> transactions = new ArrayList<>();
+        List<AssetIssuerWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetIssuerWallet(WalletUtilities.WALLET_PUBLIC_KEY).getTransactionsForDisplay(digitalAsset.getAssetPublicKey());
+        DAPActor dapActor;
+        for (AssetIssuerWalletTransaction assetUserWalletTransaction :
+                assetUserWalletTransactions) {
+            if (assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
+                dapActor = assetUserWalletTransaction.getActorFrom();
+            } else {
+                dapActor = assetUserWalletTransaction.getActorTo();
+            }
+            Transaction transaction = new Transaction(assetUserWalletTransaction, dapActor);
+            transactions.add(transaction);
+        }
+        return transactions;
     }
 }

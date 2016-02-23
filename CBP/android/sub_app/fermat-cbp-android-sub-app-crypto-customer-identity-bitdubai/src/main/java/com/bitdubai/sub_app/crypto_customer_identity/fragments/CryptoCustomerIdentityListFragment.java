@@ -92,7 +92,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
             emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
-                .setBannerRes(R.drawable.banner_identity)
+                .setBannerRes(R.drawable.banner_identity_customer)
                 .setBody(R.string.cbp_customer_identity_welcome_body)
                 .setSubTitle(R.string.cbp_customer_identity_welcome_subTitle)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)

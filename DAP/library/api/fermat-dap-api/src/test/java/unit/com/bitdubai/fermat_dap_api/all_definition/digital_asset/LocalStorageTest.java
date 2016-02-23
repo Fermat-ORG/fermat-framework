@@ -115,10 +115,10 @@ public class LocalStorageTest {
         mockedDigitalAsset.setIdentityAssetIssuer(testIdentity);
         //Contract
         DigitalAssetContract contract = new DigitalAssetContract();
-        //contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, Boolean.TRUE));
-        //Expiration date - we choose 90 days from now, you can change for testing
+        contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, Boolean.TRUE));
+        Expiration date - we choose 90 days from now, you can change for testing
         Timestamp expirationDateTimestamp=getExpirationDate(90);
-      //  contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, expirationDateTimestamp));
+        contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, expirationDateTimestamp));
         mockedDigitalAsset.setContract(contract);
         //Description
         mockedDigitalAsset.setDescription("Skynet is working for you");
@@ -164,7 +164,7 @@ public class LocalStorageTest {
 
         return mockedDigitalAsset;
     }
-/*
+
     private ActorAssetUser getActorAssetUserForTest(){
         ActorAssetUser mockedActorAssetUser=new ActorAssetUser()
         {
@@ -250,7 +250,7 @@ public class LocalStorageTest {
         };
         return mockedActorAssetUser;
     }
-*/
+
     /**
      * This method returns a fake date, days after the present time, according the daysFromNow Argument.
      * We will add daysFromNow to actual date and returns this new date.

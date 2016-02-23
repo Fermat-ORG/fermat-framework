@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation.customer_broker_purchas
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
@@ -166,9 +167,9 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerPurchaseNego
         }
 
         @Override
-        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListPurchaseNegotiationsException {
+        public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting(ActorType actorType) throws CantGetListPurchaseNegotiationsException {
             try{
-                return this.customerBrokerPurchaseNegotiationDao.getNegotiationsBySendAndWaiting();
+                return this.customerBrokerPurchaseNegotiationDao.getNegotiationsBySendAndWaiting(actorType);
             } catch (CantGetListPurchaseNegotiationsException e) {
                 this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantGetListPurchaseNegotiationsException(e.getMessage(), e, "", "Cant Get List Purchase Negotiations");

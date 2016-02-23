@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantProcessRequestAcceptedException;
@@ -85,6 +86,7 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
 
             //notified to Transmission NS that transaction Credit in Wallet
             cryptoTransmissionNetworkServiceManager.informTransactionCreditedInWallet(transaction.getTransactionMetadata().getTransactionID());
+
 
         } catch (IncomingIntraUserCantGenerateTransactionException e) {
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");

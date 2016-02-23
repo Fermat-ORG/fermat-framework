@@ -20,12 +20,6 @@
             android:layout_marginLeft="7dp"
             android:textColor="@color/color_white"/>
 
-        <View
-            android:layout_width="fill_parent"
-            android:layout_height="2dip"
-            android:background="@color/color_white"
-            android:layout_alignParentBottom="true"/>
-
     </RelativeLayout>
 
     <LinearLayout
@@ -53,7 +47,7 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout
-            android:id="@+id/dap_wallet_asset_issuer_no_transactions_sent"
+            android:id="@+id/dap_wallet_asset_user_no_transactions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"

@@ -189,6 +189,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     public void setUpReferences() {
+        dataSet = new ArrayList<>();
         rootView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -513,9 +514,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
             List<IntraUserInformation> userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
-             dataSet.addAll(userList);
+             //dataSet.addAll(userList);
 
-           /* if(userCacheList.size() == 0)
+            if(userCacheList.size() == 0)
             {
                 dataSet.addAll(userList);
             }
@@ -528,15 +529,21 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 else
                 {
                     for (IntraUserInformation intraUserCache : userCacheList) {
-
-                        if(!userList.contains(intraUserCache.getPublicKey()))
+                        boolean exist = false;
+                        for (IntraUserInformation intraUser : userList) {
+                            if(intraUserCache.getPublicKey().equals(intraUser.getPublicKey())){
+                                exist = true;
+                                break;
+                            }
+                        }
+                        if(!exist)
                             userList.add(intraUserCache);
                     }
                     //guardo el cache
                     moduleManager.saveCacheIntraUsersSuggestions(userList);
                     dataSet.addAll(userList);
                 }
-            }*/
+            }
 
             offset = dataSet.size();
 
@@ -632,6 +639,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     private void showCriptoUsersCache() {
+
+        IntraUserModuleManager moduleManager = intraUserSubAppSession.getModuleManager();
+        if(moduleManager==null){
+            getActivity().onBackPressed();
+        }else{
+            invalidate();
+        }
         if (dataSet.isEmpty()) {
             showEmpty(true, emptyView);
             swipeRefresh.post(new Runnable() {

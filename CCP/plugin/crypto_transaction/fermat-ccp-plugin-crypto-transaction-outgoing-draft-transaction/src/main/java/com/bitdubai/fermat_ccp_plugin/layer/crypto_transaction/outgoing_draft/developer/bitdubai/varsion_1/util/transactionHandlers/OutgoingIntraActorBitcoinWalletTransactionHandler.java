@@ -16,7 +16,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.de
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorInconsistentTableStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorUnexpectedCryptoStatusException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.interfaces.OutgoingIntraActorTransactionHandler;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.util.OutgoingIntraActorTransactionWrapper;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.util.OutgoingDraftTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraActorTransactionSentEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -40,7 +40,7 @@ public class OutgoingIntraActorBitcoinWalletTransactionHandler implements Outgoi
     }
     
     @Override
-    public void handleTransaction(OutgoingIntraActorTransactionWrapper transaction, CryptoStatus newCryptoStatus) throws OutgoingIntraActorCantHandleTransactionException {
+    public void handleTransaction(OutgoingDraftTransactionWrapper transaction, CryptoStatus newCryptoStatus) throws OutgoingIntraActorCantHandleTransactionException {
         try {
             CryptoStatus oldStatus = transaction.getCryptoStatus();
             this.bitcoinWallet = this.bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
@@ -61,7 +61,7 @@ public class OutgoingIntraActorBitcoinWalletTransactionHandler implements Outgoi
         }
     }
     
-    private void handleOldCryptoStatusIsPendingSubmit(OutgoingIntraActorTransactionWrapper transaction, CryptoStatus newCryptoStatus) throws OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException, CantUpdateRecordException, CantRegisterCreditException, OutgoingIntraActorCantCancelTransactionException, CantRegisterDebitException, OutgoingIntraActorUnexpectedCryptoStatusException {
+    private void handleOldCryptoStatusIsPendingSubmit(OutgoingDraftTransactionWrapper transaction, CryptoStatus newCryptoStatus) throws OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException, CantUpdateRecordException, CantRegisterCreditException, OutgoingIntraActorCantCancelTransactionException, CantRegisterDebitException, OutgoingIntraActorUnexpectedCryptoStatusException {
         switch (newCryptoStatus) {
             case PENDING_SUBMIT:
                 return;
@@ -97,7 +97,7 @@ public class OutgoingIntraActorBitcoinWalletTransactionHandler implements Outgoi
 
     
     
-    private void handleOldCryptoStatusIsOnCryptoNetwork(OutgoingIntraActorTransactionWrapper transaction, CryptoStatus newCryptoStatus) throws OutgoingIntraActorUnexpectedCryptoStatusException, CantRegisterCreditException, OutgoingIntraActorCantCancelTransactionException, CantRegisterDebitException, OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException, CantUpdateRecordException {
+    private void handleOldCryptoStatusIsOnCryptoNetwork(OutgoingDraftTransactionWrapper transaction, CryptoStatus newCryptoStatus) throws OutgoingIntraActorUnexpectedCryptoStatusException, CantRegisterCreditException, OutgoingIntraActorCantCancelTransactionException, CantRegisterDebitException, OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException, CantUpdateRecordException {
         switch (newCryptoStatus) {
             case PENDING_SUBMIT:
                 throw new OutgoingIntraActorUnexpectedCryptoStatusException("Unexpected crypto status", null, "Old crypto status: " + transaction.getCryptoStatus().getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "CryptoStatus found: " + newCryptoStatus.getCode(),"");
@@ -132,7 +132,7 @@ public class OutgoingIntraActorBitcoinWalletTransactionHandler implements Outgoi
     
     
     
-    private void handleOldCryptoStatusIsOnBlockchain(OutgoingIntraActorTransactionWrapper transaction, CryptoStatus newCryptoStatus) throws OutgoingIntraActorUnexpectedCryptoStatusException, CantRegisterCreditException, OutgoingIntraActorCantCancelTransactionException, CantRegisterDebitException {
+    private void handleOldCryptoStatusIsOnBlockchain(OutgoingDraftTransactionWrapper transaction, CryptoStatus newCryptoStatus) throws OutgoingIntraActorUnexpectedCryptoStatusException, CantRegisterCreditException, OutgoingIntraActorCantCancelTransactionException, CantRegisterDebitException {
         switch (newCryptoStatus) {
             case PENDING_SUBMIT:
                 throw new OutgoingIntraActorUnexpectedCryptoStatusException("Unexpected crypto status", null, "Old crypto status: " + transaction.getCryptoStatus().getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "CryptoStatus found: " + newCryptoStatus.getCode(),"");
@@ -155,7 +155,7 @@ public class OutgoingIntraActorBitcoinWalletTransactionHandler implements Outgoi
         }
     }
 
-    private void raiseNotificationEvent(OutgoingIntraActorTransactionWrapper transaction) {
+    private void raiseNotificationEvent(OutgoingDraftTransactionWrapper transaction) {
         FermatEvent eventToLaunch = this.eventManager.getNewEvent(EventType.OUTGOING_INTRA_ACTOR_TRANSACTION_SENT);
         ((OutgoingIntraActorTransactionSentEvent) eventToLaunch).setTransactionHash(transaction.getTransactionHash());
         this.eventManager.raiseEvent(eventToLaunch);

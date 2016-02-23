@@ -6,7 +6,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
-import com.bitdubai.android_core.app.common.version_1.util.YourOwnSender;
+import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;

@@ -20,7 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetCryptoStatusException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.CantInitializeOutgoingIntraActorDaoException;
@@ -28,9 +28,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.de
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantGetTransactionHashException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantGetTransactionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantInsertRecordException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantSetTranactionHashException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorInconsistentTableStateException;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.util.OutgoingIntraActorTransactionWrapper;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.util.OutgoingDraftTransactionWrapper;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -55,24 +54,24 @@ public class OutgoingDraftTransactionDao {
 
     public void initialize(UUID pluginId) throws CantInitializeOutgoingIntraActorDaoException {
         try {
-            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DATABASE_NAME);
+            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
 
             OutgoingIntraActorTransactionDatabaseFactory databaseFactory = new OutgoingIntraActorTransactionDatabaseFactory(this.pluginDatabaseSystem);
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
             try {
-                this.database = databaseFactory.createDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DATABASE_NAME);
+                this.database = databaseFactory.createDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeOutgoingIntraActorDaoException("I couldn't create the database", cantCreateDatabaseException, "Database Name: " + OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DATABASE_NAME, "");
+                throw new CantInitializeOutgoingIntraActorDaoException("I couldn't create the database", cantCreateDatabaseException, "Database Name: " + OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME, "");
             } catch (Exception exception) {
                 throw new CantInitializeOutgoingIntraActorDaoException(CantInitializeOutgoingIntraActorDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
             }
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeOutgoingIntraActorDaoException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DATABASE_NAME, "");
+            throw new CantInitializeOutgoingIntraActorDaoException("I couldn't open the database", cantOpenDatabaseException, "Database Name: " + OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME, "");
         } catch (Exception exception) {
             throw new CantInitializeOutgoingIntraActorDaoException(CantInitializeOutgoingIntraActorDaoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
@@ -80,7 +79,7 @@ public class OutgoingDraftTransactionDao {
 
 
     public void registerNewTransaction( UUID            transactionId,
-                                        UUID            requestId,
+                                        String          txHash,
                                         String          walletPublicKey,
                                         CryptoAddress   destinationAddress,
                                         long            cryptoAmount,
@@ -94,9 +93,9 @@ public class OutgoingDraftTransactionDao {
                                         boolean sameDevice,
                                         BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantInsertRecordException {
         try {
-            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
+            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
             DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
-            loadRecordAsNew(recordToInsert, transactionId, requestId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet, sameDevice,blockchainNetworkType);
+            loadRecordAsNew(recordToInsert, transactionId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet, sameDevice,blockchainNetworkType);
             transactionTable.insertRecord(recordToInsert);
         } catch (CantInsertRecordException e) {
             throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
@@ -105,22 +104,22 @@ public class OutgoingDraftTransactionDao {
         }
     }
 
-    public void registerNewTransaction(BitcoinWalletTransaction bitcoinWalletTransaction, String walletPublicKey,ReferenceWallet referenceWallet) throws OutgoingIntraActorCantInsertRecordException {
-        try {
-            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-            DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
-            loadRecordAsNew(recordToInsert, bitcoinWalletTransaction.getTransactionId(), null, walletPublicKey, bitcoinWalletTransaction.getAddressTo(), bitcoinWalletTransaction.getAmount(), null, bitcoinWalletTransaction.getMemo(),
-                    bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),
-                    referenceWallet, true,bitcoinWalletTransaction.getBlockchainNetworkType());
-            transactionTable.insertRecord(recordToInsert);
-        } catch (CantInsertRecordException e) {
-            throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
-        } catch (Exception exception) {
-            throw new OutgoingIntraActorCantInsertRecordException(OutgoingIntraActorCantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
+    public void registerNewTransaction(DraftTransaction bitcoinWalletTransaction, String walletPublicKey,ReferenceWallet referenceWallet) throws OutgoingIntraActorCantInsertRecordException {
+//        try {
+//            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
+//            DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
+//            loadRecordAsNew(recordToInsert, bitcoinWalletTransaction.getTransactionId(), null, walletPublicKey, bitcoinWalletTransaction.getAddressTo(), bitcoinWalletTransaction.getAmount(), null, bitcoinWalletTransaction.getMemo(),
+//                    bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),
+//                    referenceWallet, true,bitcoinWalletTransaction.getBlockchainNetworkType());
+//            transactionTable.insertRecord(recordToInsert);
+//        } catch (CantInsertRecordException e) {
+//            throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
+//        } catch (Exception exception) {
+//            throw new OutgoingIntraActorCantInsertRecordException(OutgoingIntraActorCantInsertRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+//        }
     }
 
-    public List<OutgoingIntraActorTransactionWrapper> getNewTransactions() throws OutgoingIntraActorCantGetTransactionsException {
+    public List<OutgoingDraftTransactionWrapper> getNewTransactions() throws OutgoingIntraActorCantGetTransactionsException {
         try {
             return getAllInState(TransactionState.NEW);
         } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
@@ -130,7 +129,7 @@ public class OutgoingDraftTransactionDao {
         }
     }
 
-    public List<OutgoingIntraActorTransactionWrapper> getSentToCryptoVaultTransactions() throws OutgoingIntraActorCantGetTransactionsException {
+    public List<OutgoingDraftTransactionWrapper> getSentToCryptoVaultTransactions() throws OutgoingIntraActorCantGetTransactionsException {
         try {
             return getAllInState(TransactionState.SENT_TO_CRYPTO_VOULT);
         } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
@@ -139,8 +138,17 @@ public class OutgoingDraftTransactionDao {
             throw new OutgoingIntraActorCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
         }
     }
+    public List<OutgoingDraftTransactionWrapper> getSentToCryptoVaultTransactionsAndNotRead() throws OutgoingIntraActorCantGetTransactionsException {
+        try {
+            return getAllInStateAndNotRead(TransactionState.SENT_TO_CRYPTO_VOULT);
+        } catch (CantLoadTableToMemoryException | InvalidParameterException exception) {
+            throw new OutgoingIntraActorCantGetTransactionsException("An exception happened",exception,"","");
+        } catch (Exception exception) {
+            throw new OutgoingIntraActorCantGetTransactionsException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
+    }
 
-    public void cancelTransaction(OutgoingIntraActorTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
+    public void cancelTransaction(OutgoingDraftTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
         try {
             setToState(bitcoinTransaction, TransactionState.CANCELED);
         } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
@@ -150,7 +158,7 @@ public class OutgoingDraftTransactionDao {
         }
     }
 
-    public void setToNew(OutgoingIntraActorTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
+    public void setToNew(OutgoingDraftTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
         try {
             setToState(bitcoinTransaction, TransactionState.NEW);
         } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
@@ -161,7 +169,7 @@ public class OutgoingDraftTransactionDao {
     }
 
 
-    public void setToDIW(OutgoingIntraActorTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
+    public void setToDIW(OutgoingDraftTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
         try {
             setToState(bitcoinTransaction, TransactionState.DEBITED_IN_WALLET);
         } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
@@ -171,7 +179,7 @@ public class OutgoingDraftTransactionDao {
         }
     }
 
-    public void setToSTCV(OutgoingIntraActorTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
+    public void setToSTCV(OutgoingDraftTransactionWrapper bitcoinTransaction) throws OutgoingIntraActorCantCancelTransactionException {
         try {
             setToState(bitcoinTransaction, TransactionState.SENT_TO_CRYPTO_VOULT);
         } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
@@ -181,25 +189,14 @@ public class OutgoingDraftTransactionDao {
         }
     }
 
-    public void setTransactionHash(OutgoingIntraActorTransactionWrapper bitcoinTransaction, String hash) throws OutgoingIntraActorCantSetTranactionHashException {
-        try {
-            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-            DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getTransactionId());
-            recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME, hash);
-            transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, bitcoinTransaction.getTransactionId().toString(), DatabaseFilterType.EQUAL);
 
-            transactionTable.updateRecord(recordToUpdate);
-        } catch (CantUpdateRecordException | OutgoingIntraActorInconsistentTableStateException | CantLoadTableToMemoryException exception) {
-            throw new OutgoingIntraActorCantSetTranactionHashException("An exception happened",exception,"","");
-        } catch (Exception exception) {
-            throw new OutgoingIntraActorCantSetTranactionHashException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
-        }
-    }
+
+
+
 
 
     private void loadRecordAsNew(DatabaseTableRecord databaseTableRecord,
                                  UUID                trxId,
-                                 UUID                requestId,
                                  String              walletPublicKey,
                                  CryptoAddress       destinationAddress,
                                  long                cryptoAmount,
@@ -215,57 +212,57 @@ public class OutgoingDraftTransactionDao {
 
         UUID transactionId = trxId;
 
-        databaseTableRecord.setUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionId);
-        if(requestId != null)
-            databaseTableRecord.setUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_REQUEST_ID_COLUMN_NAME, requestId);
+        databaseTableRecord.setUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, transactionId);
+//        if(requestId != null)
+//            databaseTableRecord.setUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_REQUEST_ID_COLUMN_NAME, requestId);
 
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME, walletPublicKey);
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME, walletPublicKey);
 
         // TODO: This will be completed when the vault gives it to us
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME, "UNKNOWN YET");
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_HASH_COLUMN_NAME, "UNKNOWN YET");
 
         // TODO: This need to be completed in the future
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ADDRESS_FROM_COLUMN_NAME, "MY_ADDRESS");
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ADDRESS_TO_COLUMN_NAME, destinationAddress.getAddress());
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_COLUMN_NAME, destinationAddress.getCryptoCurrency().getCode());
-        databaseTableRecord.setLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ADDRESS_FROM_COLUMN_NAME, "MY_ADDRESS");
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ADDRESS_TO_COLUMN_NAME, destinationAddress.getAddress());
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_CURRENCY_COLUMN_NAME, destinationAddress.getCryptoCurrency().getCode());
+        databaseTableRecord.setLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
         if (op_Return != null)
-            databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_OP_RETURN_COLUMN_NAME, op_Return);
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.NEW.getCode());
+            databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_OP_RETURN_COLUMN_NAME, op_Return);
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.NEW.getCode());
 
         // TODO: This have to be changed for the tinestamp when the network recognize the transaction
 
         // eze te saco la division para obtener el timestamp bien
-        databaseTableRecord.setLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DESCRIPTION_COLUMN_NAME, notes);
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_STATUS_COLUMN_NAME, CryptoStatus.PENDING_SUBMIT.getCode());
+        databaseTableRecord.setLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis());
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DESCRIPTION_COLUMN_NAME, notes);
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_STATUS_COLUMN_NAME, CryptoStatus.PENDING_SUBMIT.getCode());
 
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME, deliveredByActorPublicKey);
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_FROM_TYPE_COLUMN_NAME, deliveredByActorType.getCode());
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME, deliveredToActorPublicKey);
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_TO_TYPE_COLUMN_NAME, deliveredToActorType.getCode());
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_SAME_DEVICE_COLUMN_NAME, String.valueOf(sameDevice));
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_REFERENCE_TYPE_COLUMN_NAME, referenceWallet.getCode());
-        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode());
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME, deliveredByActorPublicKey);
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_FROM_TYPE_COLUMN_NAME, deliveredByActorType.getCode());
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME, deliveredToActorPublicKey);
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_TO_TYPE_COLUMN_NAME, deliveredToActorType.getCode());
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_SAME_DEVICE_COLUMN_NAME, String.valueOf(sameDevice));
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_WALLET_REFERENCE_TYPE_COLUMN_NAME, referenceWallet.getCode());
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode());
 
     }
 
 
-    private void setToState(OutgoingIntraActorTransactionWrapper bitcoinTransaction, TransactionState status) throws CantUpdateRecordException, OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException {
-        DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-        DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getTransactionId());
+    private void setToState(OutgoingDraftTransactionWrapper bitcoinTransaction, TransactionState status) throws CantUpdateRecordException, OutgoingIntraActorInconsistentTableStateException, CantLoadTableToMemoryException {
+        DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+        DatabaseTableRecord recordToUpdate   = getByPrimaryKey(bitcoinTransaction.getRequestId());
 
-        recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
+        recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
 
-        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, bitcoinTransaction.getTransactionId().toString(), DatabaseFilterType.EQUAL);
+        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, bitcoinTransaction.getRequestId().toString(), DatabaseFilterType.EQUAL);
         transactionTable.updateRecord(recordToUpdate);
     }
 
 
     private DatabaseTableRecord getByPrimaryKey(UUID id) throws CantLoadTableToMemoryException, OutgoingIntraActorInconsistentTableStateException {
-        DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
+        DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
 
-        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
+        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
 
         List<DatabaseTableRecord> records = transactionTable.getRecords();
@@ -278,10 +275,10 @@ public class OutgoingDraftTransactionDao {
         return records.get(0);
     }
 
-    public List<OutgoingIntraActorTransactionWrapper> getAllInState(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
+    public List<OutgoingDraftTransactionWrapper> getAllInState(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
 
-        DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
+        DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
         List<DatabaseTableRecord> records = transactionTable.getRecords();
         transactionTable.clearAllFilters();
@@ -289,13 +286,63 @@ public class OutgoingDraftTransactionDao {
         return mapConvertToBT(records);
     }
 
-    public void setToCryptoStatus(OutgoingIntraActorTransactionWrapper transactionWrapper, CryptoStatus cryptoStatus) throws CantUpdateRecordException, CantLoadTableToMemoryException, OutgoingIntraActorInconsistentTableStateException {
-        try {
-            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-            DatabaseTableRecord recordToUpdate   = getByPrimaryKey(transactionWrapper.getTransactionId());
+    public List<OutgoingDraftTransactionWrapper> getAllInStateAndNotRead(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
 
-            recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
-            transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionWrapper.getTransactionId().toString(), DatabaseFilterType.EQUAL);
+        DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
+        transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME, Boolean.FALSE.toString(), DatabaseFilterType.EQUAL);
+        transactionTable.loadToMemory();
+        List<DatabaseTableRecord> records = transactionTable.getRecords();
+        transactionTable.clearAllFilters();
+
+        return mapConvertToBT(records);
+    }
+
+    public OutgoingDraftTransactionWrapper getTransaction(UUID txId) throws CantLoadTableToMemoryException, InvalidParameterException {
+        DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+        transactionTable.addUUIDFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
+        transactionTable.loadToMemory();
+        List<DatabaseTableRecord> records = transactionTable.getRecords();
+        transactionTable.clearAllFilters();
+
+        return mapConvertToBT(records).get(0);
+    }
+
+    //TODO: mejorar, el plugin de mierda de db es un asco
+    public void markReadTransaction(UUID requestId) {
+        try {
+            DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+            transactionTable.addUUIDFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+            transactionTable.loadToMemory();
+            List<DatabaseTableRecord> records = transactionTable.getRecords();
+
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+                //set new record values
+                record.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME, Boolean.TRUE.toString());
+
+                transactionTable.updateRecord(record);
+            }
+        } catch (CantLoadTableToMemoryException e) {
+            e.printStackTrace();
+        } catch (CantUpdateRecordException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+
+
+
+
+    public void setToCryptoStatus(OutgoingDraftTransactionWrapper transactionWrapper, CryptoStatus cryptoStatus) throws CantUpdateRecordException, CantLoadTableToMemoryException, OutgoingIntraActorInconsistentTableStateException {
+        try {
+            DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+            DatabaseTableRecord recordToUpdate   = getByPrimaryKey(transactionWrapper.getRequestId());
+
+            recordToUpdate.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_STATUS_COLUMN_NAME, cryptoStatus.getCode());
+            transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, transactionWrapper.getRequestId().toString(), DatabaseFilterType.EQUAL);
 
             transactionTable.updateRecord(recordToUpdate);
 
@@ -306,72 +353,72 @@ public class OutgoingDraftTransactionDao {
         }
     }
     
-    private OutgoingIntraActorTransactionWrapper convertToBT(DatabaseTableRecord record) throws InvalidParameterException {
-        OutgoingIntraActorTransactionWrapper bitcoinTransaction = new OutgoingIntraActorTransactionWrapper();
-        boolean sameDevice = Boolean.valueOf(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_SAME_DEVICE_COLUMN_NAME));
-        String           walletPublicKey    = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME);
-        UUID             transactionId      = record.getUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME);
-        String           transactionHash    = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME);
-        long             amount             = record.getLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_AMOUNT_COLUMN_NAME);
+    private OutgoingDraftTransactionWrapper convertToBT(DatabaseTableRecord record) throws InvalidParameterException {
+        OutgoingDraftTransactionWrapper bitcoinTransaction = new OutgoingDraftTransactionWrapper();
+        boolean sameDevice = Boolean.valueOf(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_SAME_DEVICE_COLUMN_NAME));
+        String           walletPublicKey    = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME);
+        UUID             transactionId      = record.getUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME);
+        String           transactionHash    = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_HASH_COLUMN_NAME);
+        long             amount             = record.getLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_AMOUNT_COLUMN_NAME);
         String           op_Return          = null;
         UUID            requestId = null;
 
-        if (record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_OP_RETURN_COLUMN_NAME) != null){
-            op_Return          = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_OP_RETURN_COLUMN_NAME);
+        if (record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_OP_RETURN_COLUMN_NAME) != null){
+            op_Return          = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_OP_RETURN_COLUMN_NAME);
         }
 
-        if (record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_REQUEST_ID_COLUMN_NAME)!= null){
-            requestId          = record.getUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_REQUEST_ID_COLUMN_NAME);
-        }
+//        if (record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_REQUEST_ID_COLUMN_NAME)!= null){
+//            requestId          = record.getUUIDValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_REQUEST_ID_COLUMN_NAME);
+//        }
 
-        TransactionState state              = TransactionState.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME));
-        long             timestamp          = record.getLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TIMESTAMP_COLUMN_NAME);
-        String           memo               = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DESCRIPTION_COLUMN_NAME);
-        CryptoStatus     cryptoStatus       = CryptoStatus.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_STATUS_COLUMN_NAME));
-        Actors           actorFromType      = Actors.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_FROM_TYPE_COLUMN_NAME));
-        Actors           actorToType        = Actors.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_TO_TYPE_COLUMN_NAME));
-        String           actorFromPublicKey = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME);
-        String           actorToPublicKey   = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME);
-        ReferenceWallet  referenceWallet    = ReferenceWallet.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_REFERENCE_TYPE_COLUMN_NAME));
+        TransactionState state              = TransactionState.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME));
+        long             timestamp          = record.getLongValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TIMESTAMP_COLUMN_NAME);
+        String           memo               = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DESCRIPTION_COLUMN_NAME);
+        CryptoStatus     cryptoStatus       = CryptoStatus.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_STATUS_COLUMN_NAME));
+        Actors           actorFromType      = Actors.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_FROM_TYPE_COLUMN_NAME));
+        Actors           actorToType        = Actors.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_TO_TYPE_COLUMN_NAME));
+        String           actorFromPublicKey = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME);
+        String           actorToPublicKey   = record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME);
+        ReferenceWallet  referenceWallet    = ReferenceWallet.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_WALLET_REFERENCE_TYPE_COLUMN_NAME));
         CryptoAddress    addressFrom        = new CryptoAddress(
-                                                    record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ADDRESS_FROM_COLUMN_NAME),
-                                                    CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_COLUMN_NAME))
+                                                    record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ADDRESS_FROM_COLUMN_NAME),
+                                                    CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_CURRENCY_COLUMN_NAME))
                                                   );
         CryptoAddress    addressTo          = new CryptoAddress(
-                                                    record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ADDRESS_TO_COLUMN_NAME),
-                                                    CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_COLUMN_NAME))
+                                                    record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ADDRESS_TO_COLUMN_NAME),
+                                                    CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_CURRENCY_COLUMN_NAME))
                                                   );
 
-        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_RUNNING_NETWORK_TYPE));
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_RUNNING_NETWORK_TYPE));
 
 
-        bitcoinTransaction.setWalletPublicKey(walletPublicKey);
-        bitcoinTransaction.setIdTransaction(transactionId);
-        bitcoinTransaction.setIdRequest(requestId);
-        bitcoinTransaction.setTransactionHash(transactionHash);
-        bitcoinTransaction.setAddressFrom(addressFrom);
-        bitcoinTransaction.setAddressTo(addressTo);
-        bitcoinTransaction.setAmount(amount);
-        bitcoinTransaction.setOp_Return(op_Return);
-        bitcoinTransaction.setState(state);
-        bitcoinTransaction.setTimestamp(timestamp);
-        bitcoinTransaction.setMemo(memo);
-        bitcoinTransaction.setCryptoStatus(cryptoStatus);
-        bitcoinTransaction.setActorFromPublicKey(actorFromPublicKey);
-        bitcoinTransaction.setActorFromType(actorFromType);
-        bitcoinTransaction.setActorToPublicKey(actorToPublicKey);
-        bitcoinTransaction.setActorToType(actorToType);
-        bitcoinTransaction.setReferenceWallet(referenceWallet);
-        bitcoinTransaction.setSameDevice(sameDevice);
-        bitcoinTransaction.setBlockchainNetworkType(blockchainNetworkType);
+//        bitcoinTransaction.setWalletPublicKey(walletPublicKey);
+//        bitcoinTransaction.setIdTransaction(transactionId);
+//        bitcoinTransaction.setIdRequest(requestId);
+//        bitcoinTransaction.setTransactionHash(transactionHash);
+//        bitcoinTransaction.setAddressFrom(addressFrom);
+//        bitcoinTransaction.setAddressTo(addressTo);
+//        bitcoinTransaction.setAmount(amount);
+//        bitcoinTransaction.setOp_Return(op_Return);
+//        bitcoinTransaction.setState(state);
+//        bitcoinTransaction.setTimestamp(timestamp);
+//        bitcoinTransaction.setMemo(memo);
+//        bitcoinTransaction.setCryptoStatus(cryptoStatus);
+//        bitcoinTransaction.setActorFromPublicKey(actorFromPublicKey);
+//        bitcoinTransaction.setActorFromType(actorFromType);
+//        bitcoinTransaction.setActorToPublicKey(actorToPublicKey);
+//        bitcoinTransaction.setActorToType(actorToType);
+//        bitcoinTransaction.setReferenceWallet(referenceWallet);
+//        bitcoinTransaction.setSameDevice(sameDevice);
+//        bitcoinTransaction.setBlockchainNetworkType(blockchainNetworkType);
 
 
         return bitcoinTransaction;
     }
 
     // Apply convertToBT to all the elements in a list
-    private List<OutgoingIntraActorTransactionWrapper> mapConvertToBT(List<DatabaseTableRecord> transactions) throws InvalidParameterException {
-        List<OutgoingIntraActorTransactionWrapper> bitcoinTransactionList = new ArrayList<>();
+    private List<OutgoingDraftTransactionWrapper> mapConvertToBT(List<DatabaseTableRecord> transactions) throws InvalidParameterException {
+        List<OutgoingDraftTransactionWrapper> bitcoinTransactionList = new ArrayList<>();
 
         for (DatabaseTableRecord record : transactions)
             bitcoinTransactionList.add(convertToBT(record));
@@ -381,13 +428,13 @@ public class OutgoingDraftTransactionDao {
 
     public CryptoStatus getCryptoStatus(String transactionHash) throws OutgoingIntraActorCantGetCryptoStatusException {
         try {
-            DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-            transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
+            DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+            transactionTable.addStringFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_HASH_COLUMN_NAME, transactionHash, DatabaseFilterType.EQUAL);
             transactionTable.loadToMemory();
             List<DatabaseTableRecord> records = transactionTable.getRecords();
             transactionTable.clearAllFilters();
 
-            return CryptoStatus.getByCode(records.get(0).getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_STATUS_COLUMN_NAME));
+            return CryptoStatus.getByCode(records.get(0).getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_STATUS_COLUMN_NAME));
         } catch (InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new OutgoingIntraActorCantGetCryptoStatusException("An exception happened",e,"","");
         } catch (Exception e) {
@@ -403,15 +450,15 @@ public class OutgoingDraftTransactionDao {
      */
     public String getSendCryptoTransactionHash(UUID transactionId) throws OutgoingIntraActorCantGetTransactionHashException {
         try{
-            DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-            transactionTable.addUUIDFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            DatabaseTable transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME);
+            transactionTable.addUUIDFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
 
             transactionTable.loadToMemory();
             List<DatabaseTableRecord> records = transactionTable.getRecords();
             transactionTable.clearAllFilters();
 
             if (records.size() != 0)
-                return records.get(0).getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME);
+                return records.get(0).getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_HASH_COLUMN_NAME);
             else
                 return null;
         } catch (CantLoadTableToMemoryException e) {
@@ -419,6 +466,7 @@ public class OutgoingDraftTransactionDao {
         }
 
     }
+
 
 
 }

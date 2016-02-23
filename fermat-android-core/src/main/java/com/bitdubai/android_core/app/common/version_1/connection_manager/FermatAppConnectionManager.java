@@ -50,7 +50,7 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new CryptoWalletUserFermatAppConnection(activity);
                 break;
             case "public_key_intra_user_commmunity":
-                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity,fermatSession);
+                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
                 break;
 
             //DAP WALLETS

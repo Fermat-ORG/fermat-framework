@@ -133,7 +133,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
             CloseContractBusinessTransactionDao closeContractBusinessTransactionDao =
                     new CloseContractBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,errorManager);
 
             /**
              * Init event recorder service.

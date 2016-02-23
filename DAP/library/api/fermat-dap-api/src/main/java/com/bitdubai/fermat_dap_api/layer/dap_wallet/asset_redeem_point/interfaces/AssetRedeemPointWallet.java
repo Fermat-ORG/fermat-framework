@@ -29,6 +29,10 @@ public interface AssetRedeemPointWallet {
                                                             int max,
                                                             int offset, String assetPublicKey) throws CantGetTransactionsException;
 
+    List<AssetRedeemPointWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException;
+
+    List<AssetRedeemPointWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException;
+
     List<AssetRedeemPointWalletTransaction> getTransactionsByActor(String actorPublicKey,
                                                                    BalanceType balanceType,
                                                                    int max,

@@ -34,7 +34,9 @@ People of this future have in their pocket not only their money, but a whole sui
 
 We are building Fermat to get into that future in the fastest way possible. And to discover what kind of system to build, we traced back the path from that future into present times, we have identified all the challenges that needed to be addressed and all the obstacles that needed to be overcome. We put everything that had to be done into a huge master plan and started developing the first phase of it. The result is a system that rocks the foundations of many established paradigms and with such a disruptive potential that its final effects are difficult to measure or even project at present times.
 
-This white paper does not describe a theoretical system that might work one day to get us to that future. It describes a system that already works and it is in alpha testing right now. It also describes the organization of several networks of people spanning different disciplines and countries collaborating to produce the most ambitious project in the industry.
+From end users perspective, Fermat is an extension of the operating system. In the same way Windows is deployed with some fundamental APPs like the notepad, calculator, photo editor, and many others, Fermat is distributed with a set of fundamental P2P APPs like chat, crypto wallets, digital assets, crypto broker, shops and many others. The equivalent of the Microsoft Office suite of applications in Fermat are the P2P version of popular services like Uber but without Uber Inc., AirBNB without AirBNB inc, LinkedIn, Tinder, eBay, etc., all of them without the middlemen.  
+
+This white paper does not describe a theoretical system that might work one day to get us to that future. It describes a system that already works and some parts of it are in alpha testing right now. It also describes the organization of several networks of people spanning different disciplines and countries collaborating to produce the most ambitious project in the industry.
 
 <br><br>
 
@@ -47,7 +49,7 @@ In this section you will get an overview of the Fermat System to describe the ge
 
 Since the last technical barrier to issue digital money has already been overcome with the invention of bitcoin [1] - the double spend problem -, there is little doubt that governments of the world are on the way of digitalizing cash. As soon as the US or EU can achieve this, the rest of the world will follow suit. So, this part of our envisioned future is already on the way to happen and there is no need for us to intervene in any way except to handle in Fermat the fact that money is going to be digital and paper money is going to disappear. This means that our mission can be condensed into designing a system that:
 
-* Makes technically possible that crypto currency can go mainstream.
+* Makes it technically possible for crypto currency to go mainstream.
 * Encourages the code production to make this happen in the least time possible. 
 * Allows people to safely store digital value by themselves.
 * Creates APPs that understand digital fiat and crypto.
@@ -118,7 +120,7 @@ We must think of Fermat as a system with no visible end, so it must be designed 
 
 **Master Plan**
 
-We define a long term master plan with everything that needs to be done, and considering all possible use cases. Then we all collaborate building the pieces of that master plan, in order, phase by phase. The master excludes duplicate functionality thus we eliminate duplicate efforts and save time and money.
+We define a long term master plan with everything that needs to be done, and considering all possible use cases. Then we all collaborate building the pieces of that master plan, in order, phase by phase. The master plan excludes duplicate functionality thus we eliminate duplicate efforts and save time and money.
 
 #### Promote Collaboration
 
@@ -208,7 +210,7 @@ On top of the software layer where developers and designers are encouraged by th
 
 Designing a system that is going to deal with digital money and is going to run on an uncontrolled environment (end users devices) where anyone can add new components its quite challenging. Several concerns have to be addressed in order to make the system reliable. The most obvious ones are:
 
-* How do we prevent money to be lost in the event that one device gets suddenly shut down and transactional processes are interrupted?
+* How do we prevent money from being lost in the event that one device suddenly shut down and the transactional processes are interrupted?
 * How do we prevent one component from stealing funds from others?
 * How do we prevent users to loose their funds if their device is lost or stolen?
 
@@ -225,7 +227,7 @@ The Fermat P2P network interconnects devices between each other in order to exch
 
 **The Fermat Framework**
 
-The Fermat Framework is what keep all the reusable pieces together and enables developers to add more pieces to the system.
+The Fermat Framework is what keeps all the reusable pieces together and enables developers to add more pieces to the system.
 
 **The Ecosystem of Fermat APPs**
 
@@ -234,11 +236,26 @@ The Ecosystem of Fermat APPs offers different products to end users. From the ou
 
 #### The Fermat Network
 
-Fermat runs on end users devices. Phones, tablets, laptops, PCs. It can also run on web servers of wherever is needed. One of our design constraints was to create a censorship resistant system. Since these devices need to communicate to each other in order to exchange information the need for a p2p network to enable this communication without going through third parties arose. If device to device communications were to go thought centralized service providers, then the system could be shut down buy censoring those centralized points.
+Fermat runs on end users devices. Phones, tablets, laptops, PCs. It can also run on web servers or wherever is needed. One of our design constraints was to create a censorship resistant system. Since these devices need to communicate to each other in order to exchange information the need for a p2p network to enable this communication without going through third parties arose. If device to device communications were to go thought centralized service providers, then the system could be shut down buy censoring those centralized points.
+
+##### Why is it needed?
+
+A well known peer-to-peer software is [BitTorrent](https://en.wikipedia.org/wiki/BitTorrent) and its purpose is to enable its users to share files between each other. BitTorrent clients are the network nodes themselves. Anyone could argue why the need in Fermat to have specialized nodes for interconecting devices and don't let them connect between each other freely.
+
+There are two main reasons for this:
+
+1. Fermat is mobile first, and many mobile operators forbids incomming connections into mobile phones. This leaves these mobile devices with the only option to initiate the connection. Fermat nodes can be seen as relay servers described at the [NAT traversal](https://en.wikipedia.org/wiki/NAT_traversal) techniques.
+
+2. Mobile devices that their telco company do allows them to accept incomming connections are not good candidates to be relay servers either since not all mobile data plans globally have unlimitted data transfer.
+
+This creates the need for specialized nodes within Fermat that can take the role of relay servers and an incentive mechanism for their operators in order tu run them. Operators would usually set up these nodes at hardware that can receive incomming conections naturally or with some configuration, and at places were they are charged for bandwith with unlimited data traffic.
+
+##### Network Architecture
 
 Architecturally, we describe the Fermat p2p Network as having two levels:
 
-**Network Nodes** : Are the devices that inter-connects other devices and let them talk between each other through them.
+**Network Nodes** : Are the devices that interconnects other devices and let them talk between each other through them.
+
 **Network Clients** : Are the devices that use Network Nodes as a bridge to get connected to other Network Clients.
 
 The Fermat p2p Network of Nodes is the main tissue connecting devices running the Fermat Framework, though it is not the only one. You will learn later that the Framework is designed to use the Fermat p2p Network when it can not find a more direct way of connecting to the target device, like a shared WiFi connection, blue-tooth, NFC, etc.
@@ -247,7 +264,7 @@ To avoid confusion we call the Fermat p2p Network of Nodes directly "The Fermat 
 
 ##### Fermat p2p Network
 
-By allowing devices to interconnect to each other we open many possibilities to our system. Now transactional processes can span one device and continue into others, and in some cases the work-flow comes back to the original device to finish the transaction. This is extremely powerful since we are not talking about a device accessing a third party API, but a system accessing another copy of itself running on another device. 
+By allowing devices to interconnect to each other we open many possibilities to our system. Now transactional processes can span one device and continue into others, and in some cases the workflow comes back to the original device to finish the transaction. This is extremely powerful since we are not talking about a device accessing a third party API, but a system accessing another copy of itself running on another device. 
 
 Think about two biological cells, each one with the same DNA, and both being part of a higher level organism built out of these cells. When we talk about Fermat, the system, we refer to this higher level organism many cells.
 
@@ -341,7 +358,7 @@ Throughout the first 18 months of the project, the following layers emerged:
 |OSA|Multi OS|Java|
 |OSA|Android|Java-Android|
 
-As you might have noticed we chose Java as the programming language for most of the components inside Fermat, except for the ones that lives at the up-most and the lowest layers. The rationale for doing so is that we wanted most of the codebase to be portable to other OS. At the up-most layers we decided to allow native user interfaces, and for that reason, at our first target OS, Android, those components need to be written in Java-Android.
+As you might have noticed we chose Java as the programming language for most of the components inside Fermat, except for the ones that live at the upmost and the lowest layers. The rationale for doing so is that we wanted most of the codebase to be portable to other OS. At the upmost layers we decided to allow native user interfaces, and for that reason, at our first target OS, Android, those components need to be written in Java-Android.
 
 In the case of the lowest layers we encapsulate the access to the OS into several components that are OS dependent, while the rest of the components at the top layers are not (except the ones related to the user interface).
 
@@ -377,37 +394,31 @@ After analyzing several use cases we found out that it was possible to create a 
 |CBP|Crypto Broker Platform|
 |CDN|Crypto Distribution Network|
 
-Each platform usually have one or more Fermat APPs on top of it, and in this way is how the Ecosystem of Fermat APPs is organized.
+Each platform usually has one or more Fermat APPs on top of it, and in this way is how the Ecosystem of Fermat APPs is organized.
 
 <br>
-### Business Model
+### Key Value Propositions
 
-We had to design a business model that works fine for several different actors. On one side we need Fermat p2p Network nodes operators to provide their hardware and bandwidth to inter-connect end users. On the other side we need developers to write the code of this massive system. We also need entrepreneurs to run business on top of what developers build. And finally we need end users to find value on the Fermat APPs they use.
+We considerd in our design a business model that works fine for several different actors. On one side we need Fermat p2p Network nodes operators to provide their hardware and bandwidth to inter-connect end users. On the other side we need developers to write the code. We also need entrepreneurs to run business on top of what developers build. And finally we need end users to find value on the Fermat APPs they use.
 
 We divided the challenge of creating incentives for everybody in the following way:
 
-#### Computer Networks
+#### Fermat Miners - Nodes Operators
 
-##### Fermat Miners
-
-We believe there is a need for an application token system that can be mined in order to encourage nodes operators to put their hardware and band-with to work for the Fermat p2p Network. Lets call these tokens _fermats_.
+We believe there is a need for an application token system that can be mined in order to encourage nodes operators to put their hardware and bandwith to work for the Fermat p2p Network. Lets call these tokens _fermats_.
 
 The business model for miners consist of:
 
-* End users paying miners a fee in _fermats_for the band-with provided.
-* Miners getting newly _fermats_ issued by the Fermat Protocol according to a _Proof of Work_ algorithm based on band-with, not CPU power as bitcoin.
+* End users paying miners a fee in _fermats_for the bandwith provided.
+* Miners getting newly _fermats_ issued by the Fermat Protocol according to a _Proof of Work_ algorithm based on bandwith, not CPU power as bitcoin.
 
 So basically is the same model that bitcoin in the sense that at the begining we need to bootstrap the Fermat Network by letting the Fermat Protocol to issue tokens. Users need them in order to pay for the fees required to use that network. 
 
 As we have a premise of reusing what is working, instead of handling these tokens transactions by ourselves, we are outsourcing the bitcoin network to do that for us. With this in mind, our blockchain will only need to record _coinbase_ or newly issued tokens transaction, while transfers from user to user can be handled directly by the bitcoin network itself.
 
-We chose the same economic parameters than the bitcoin network itself: 21 million units, generated every 10 minutes approximately, staring with 50 per block and halving this number every 4 years. The intended effect would be that a diverse community of nodes operators arise encouraged by the block reward, while there is not enough user base to profit from the selling of band-with to end users.
+We chose the same economic parameters than the bitcoin network itself: 21 million units, generated every 10 minutes approximately, staring with 50 per block and halving this number every 4 years. The intended effect would be that a diverse community of nodes operators arise encouraged by the block reward, while there is not enough user base to profit from the selling of bandwith to end users.
 
-NOTE: The current implementation of the Fermat p2p Network does not include the mining scheme yet, meaning that no _fermats_ have been mined at present time.
-
-#### Human Networks
-
-##### Developers
+#### Developers
 
 In bitcoin, the focus of the system is in creating an unmutalbe distributed layer across parties that don't trust each other. In that case the issuing of their token, bitcoins is tightly coupled with the mining process, that is the key element to achieve their goal.
 
@@ -429,13 +440,44 @@ Developers have several business models they can choose from. Each one are initi
 
 All these programs are run and managed by the Fermat Foundation. There is an intention to automate most of these programs inside the fermat system itself in order to avoid single points of failure.
 
-With all these options, the Fermat project aims to recruite thousands of developers into a global network with the highest software developing power ever. In this way developers can achieve sustainable self-employment desintermediating software development corporations.
+With all these options, the Fermat project aims to recruit thousands of developers into a global network with the highest software developing power ever. This way developers can achieve sustainable self-employment disintermediating software development corporations.
 
-The key idea here is the ownership of developed components. This is the core that enables developers to live out of a stream of micro-payments flowing from around the globe. The Fermat system even allow them to trade that ownership by selling it to someone else.
+The key idea here is the ownership of developed components. This is the core that enables developers to live out of a stream of micro payments flowing from around the globe. The Fermat system even allow them to trade that ownership by selling it to someone else.
 
-##### Designers
+#### Investors
 
--- Explanation needed --
+Developing Fermat components is an investment done by individual developers, dev teams, startups or investors betting on the success of the project.
+
+In order to safeguard the investment developers do while coding Fermat APPs and components, the Fermat Open Source project establishes the following rules and it's management will enforce them through the lifetime of the project. Following, a set of definitions:
+
+**Component Owner**
+
+Each component has an Owner from its very inception. During the life cycle of a component, the first owner is the Fermat Foundation that is the one designing the Fermat Master Plan. Once a component is assigned to a developer, the ownership is transfered to the original author or whoever financed its development. Later the ownership can be transferred or sold to anyone using the Fermat system itself to do so. Ownership can be shared by more than one entity in any proportion they see fit. Ownership is tracked within the Fermat system itself. Ownership can be partially or totally lost and returned to the Fermat Foundation if owners don't comply with the terms of service agreements.
+
+**Component Maintainer**
+
+Each component has a Maintainer team. Owners assign a Maintainer team with which they share part of the revenues (micro use licenses) that that component produces in whatever proportion they agree upon. Maintainers are responsible for keeping components updated, well performing, documented, and without bugs. They also process all the upgrades needed to be done in order to support needed functionality not implemented in the original version for any reason in a timely manner.
+
+**Component Support Team**
+
+Each component has a Technical Support team. Owners create these teams and share with them some of the micro-use-licenses fees. Fermat has an embedded technical support functionality that enables the possibility to give support to end users when technical problems arise at their devices. This system allows problems to be addressed in a distributed environment and several support teams to interact with each other in order to track the reasons of the failure and agree on the component responsible of it. Once the responsibility is established the Maintainer team of that component has some dead lines to solve the issue before triggering some procedures that would alert the Owner.
+
+**Component Level**
+
+Components are classified at a the master plan level according to their difficulty and how critical they are, from 1 to 10. Each level is then translated into the amount of fermats a component collect per month as micro-use-licenses. The level also determines the service level that is required for that component in terms of time to fix bugs, make upgrades, availability of their support team, and so on.
+
+**Fermat Property Law**
+
+These are a set of rules to safeguard developers and investors on building Fermat components.
+
+1. Fermat Components have an specific well defined role or responsibility and there will not be other components in the system with an overlapping role or responsibility. This rule is enforced by design at the master plan level.
+
+2. Components not being correctly maintained according to the Fermat Project Guidelines and rules and the service agreement, are subject to be reclaimed by the Fermat Foundation and their ownership partially or totally revoked. This is specially true when the terms of service of the component are not met (time to fix critical bugs, provide technical support, etc.). This can only be done under a special procedure that includes several warning to the owner and orders to replace the maintainer / support team and to futfill their obligations. 
+
+3. The Fermat System will provide an API to be consumed by other mobile APPs ruining on the same device. This API will expose only high level components or transactions to other mobile APPs in order to safeguard the investment on the development of lower level components within the system. This means that outside Fermat APPs replicating inside Fermat functionality wont be able to bypass the copied functionality by invoking directly lower level components. They are forced to pay micro-use-licenses even running outside the Fermat environment.
+
+4. Fermat Nodes before servicing clients (end user devices) with their connectivity services, will check if these clients are paying the micro-use-license fees. This can be enforced since nodes know who the owners of the components are, and can query the bitcoin blockchain to confirm there are transactions from the client's identities going to components owners. This prevents outside APPs to access the Fermat Network without going through the established channels that include micro-use-licenses, or recompiled versions of Fermat with the micro-use-licenses removed or altered.
+
 
 #### Business Operators
 
@@ -443,9 +485,29 @@ On top of the functionality built by the developers network, business operators 
 
 This functionality was developed by the developers network with the only intention that business operator would pick it up and run their business using their code.
 
-There is no limit on the different kind of business that the Fermat system can support. It is only a matter of time until the most popular global services like Uber, AirBNB, social networks, dating APPs, etc. will be replicated into Fermat. That would open the door for thousands of regional operators to fine tune these business models to adapt them to local audiences. 
+There is no limit on the different kind of business that the Fermat system can support. Fermat is distributed with different layers of applications. The first layer includes very basic infraestructure APPs that often don't need business operators at all. Examples of these APPs are Chat, Crypto Wallets, etc. Besides those simple APPs, the next layer includes a suite of APPs that requires business operators to run them: Crypto Broker APPs, Digital Assets APPs, etc. A third layer contains the most popular global services like Uber, AirBNB, social networks, dating APPs, etc. In this case these APPs will cut cost to end users since the business operator will only be required optionally and for specific situations were the value they add cannot be automated. That opens the door for thousands of regional operators to fine tune these business models to adapt them to local audiences. 
 
-The sinergy produced by having more and more use cases covered by the same platform would be unmatcheable. This openess allows any of these use cases to increase the overal system user base, which in turn benefits all other use cases since one of the key problem for adoption is how end users end up with crypto currency in the first place. If one use case brings the in, they would likely jump to other use cases available since that barrier has already been overcome.
+The sinergy produced by having more and more use cases covered by the same platform would be unmatcheable. This openess allows any of these use cases to increase the overal system user base, which in turn benefits all other use cases since one of the key problem for adoption is how end users end up with crypto currency in the first place. If one use case brings them in, they would likely jump to other use cases available since that barrier has already been overcome.
+
+#### End Users
+
+The key value proposition to end users is to reduce pricing (by eliminating or minimizing the need of third party intermediaries) and accelerate the participation in shared economy. To achive this the Fermat Master Plan includes the p2p version of several popular services spanning many different industries:
+
+**Transportation** : A p2p version of an Uber like service with several optional shades of third party operator required. End users are allowed to choose between a fully automated and operator-free network of drivers and operated networks where the role of the operator shifts from the current one of matching riders and drivers and focus on value added services like drivers background checks, insurance, marketing, and others.
+
+**Lodging** : A p2p version of an Airbnb like service, again with end user freedom to choose between no third party at all doing the guest and host matching, or some third party operated networks for cases were these operatos add value added services like insurance, marketing, etc.
+
+**e-Commerce** : A p2p version of an eBay like service, without the third party. In this case the matching between buyers and sellers is automated as well as the value exchange that is also peer to peer.
+
+**Classified Advertising** : Users of this p2p version with no third parties serve classified ads directly from their devices while other users can see them with a specialized Fermat APP. No middle man needed.
+
+**Online Dating Service** : A p2p version of a personal introductory system where individuals can find and contact each other over the Internet to arrange a date. Fully automated with no middle men.
+
+**Professional Network Service** : A p2p version of a LinkedIn like service with no intermediaries.
+
+**Job Boards** : A p2p version designed to allow employers to post job requirements for a position. Fully automated with no intermediaries.  
+
+
 
 <br><br>
 ## Part II - Fermat In Detail
@@ -590,13 +652,13 @@ Bandwidth tokens (_fermats_) have not been issued yet. Their issuing will start 
 
 Fundraiser Fermat developer tokens (_fermats_) are issued by a non-profit organization called Fermat.org that will never receive financial benefits from the Fermat system. This organization has the following responsibilities:
 
-* Issuance of initial  _fermats_ tokens
-* Holding of developer  _fermats_ tokens
-* Managing of bounty payments
+* Issuing initial  _fermats_ tokens
+* Holding developer  _fermats_ tokens
+* Managing bounty payments
 * Determining the Fermat System direction
 * Collecting and distributing statistical information from the Fermat System
 
-Fermat.org will make decisions in a decentralized manner, using a “proof of stake” voting mechanism for any decision once the project is mature enough. Meanwhile the direction of the project is determined by its founders.
+Fermat.org will make decisions in a decentralized manner, using a “proof-of-stake” voting mechanism for any decision once the project is mature enough. Meanwhile the direction of the project is determined by its founders.
 
 ##### Fermat Protocol
 
@@ -651,7 +713,7 @@ Miners receive two types of rewards for mining: new _fermats_ tokens created wit
 
 To earn this reward, the miners compete to sell incoming bandwidth to network clients, i.e. being their home node, Network Clients are free to choose which node to use as their home and at some point they pay in _fermats_ to these nodes for their services. Fermat "proof of work" consists on nodes proving that they have received payments for being a home node.
 
-The amount of newly created _fermats_ that can be added to a block decreases approximately every four years. It starts at 50 fermats per block and halves by 2 every 4 years. Based on this formula, fermat mining rewards decrease exponentially until all fermats (21,000,000 million) have been issued. After that, no new fermats will be issued.
+The amount of newly created _fermats_ that can be added to a block decreases approximately every four years. It starts at 50 fermats per block and it halves by 2 every 4 years. Based on this formula, fermat mining rewards decrease exponentially until all fermats (21,000,000 million) have been issued. After that, no new fermats will be issued.
 
 ##### Home Node Fees
 
@@ -696,7 +758,7 @@ The sum of the amounts of all these transactions must not exceed the amount of f
 
 #### Rationale
 
-By using the fees payed by network clients as "proof of work" we discourage dishonest nodes to lie to the rest of the network about the value added. Network Clients will often pay after the service is delivered. Of course node operators can create fake fees to qualify for the race, but they will need to pay bitcoin mining fees for this and they are not guaranteed that they will win the race to the blockchain. In fact to have better chances to win the race they will have to invest in higher bitcoin miner fees in order to be included first, again without any guarantee of being among the first 10%.
+By using the fees payed by network clients as "proof-of-work" we discourage dishonest nodes to lie to the rest of the network about the value added. Network Clients will often pay after the service is delivered. Of course node operators can create fake fees to qualify for the race, but they will need to pay bitcoin mining fees for this and they are not guaranteed that they will win the race to the blockchain. In fact to have better chances to win the race they will have to invest in higher bitcoin miner fees in order to be included first, again without any guarantee of being among the first 10%.
 
 
 <br>

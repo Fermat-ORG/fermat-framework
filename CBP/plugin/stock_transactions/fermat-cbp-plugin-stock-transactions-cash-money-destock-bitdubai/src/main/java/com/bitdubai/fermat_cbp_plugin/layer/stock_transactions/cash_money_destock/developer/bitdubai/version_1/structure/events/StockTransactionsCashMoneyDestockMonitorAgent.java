@@ -32,6 +32,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -237,11 +238,11 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
                         break;
                     case IN_EJECUTION:
                         CashTransactionStatus castTransactionStatus = cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
-                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {
+                        if (Objects.equals(castTransactionStatus.CONFIRMED.getCode(), castTransactionStatus.getCode())) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
                             stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         }
-                        if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode()) {
+                        if (Objects.equals(castTransactionStatus.REJECTED.getCode(), castTransactionStatus.getCode())) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         }

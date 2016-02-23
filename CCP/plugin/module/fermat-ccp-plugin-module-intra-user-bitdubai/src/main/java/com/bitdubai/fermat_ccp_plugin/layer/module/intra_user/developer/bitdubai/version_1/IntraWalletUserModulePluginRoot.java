@@ -283,7 +283,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
                 ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
                 //return intra user information - if not connected - status return null
-                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState,"Online");
                 intraUserInformationModuleList.add(intraUserInformation);
             }
 
@@ -314,7 +314,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
                 ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
                 //return intra user information - if not connected - status return null
-                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState,"Offline");
                 intraUserInformationModuleList.add(intraUserInformation);
             }
 
@@ -536,7 +536,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPhrase(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPhrase(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),""));
             }
             return intraUserList;
         } catch (CantGetIntraWalletUsersException e) {
@@ -563,7 +563,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),""));
             }
 
             return intraUserList;
@@ -672,7 +672,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getWaitingTheirAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),""));
             }
             return intraUserList;
         } catch (CantGetIntraWalletUsersException e) {

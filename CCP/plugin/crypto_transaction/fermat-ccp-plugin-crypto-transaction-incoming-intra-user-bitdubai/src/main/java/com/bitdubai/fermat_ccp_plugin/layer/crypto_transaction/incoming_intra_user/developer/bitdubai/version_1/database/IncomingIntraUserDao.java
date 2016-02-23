@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -303,6 +304,7 @@ public class IncomingIntraUserDao {
 
         CryptoTransaction cryptoTransaction = new CryptoTransaction(
                 databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TRANSACTION_HASH_COLUMN_NAME),
+                BlockchainNetworkType.getDefaultBlockchainNetworkType(), //todo Natalia, acá lo tienen que corregir.
                 cryptoAddressFrom,
                 cryptoAddressTo,
                 CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_CRYPTO_CURRENCY_COLUMN_NAME)),

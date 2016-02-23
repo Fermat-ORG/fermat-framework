@@ -44,6 +44,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -193,6 +195,46 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
     public List<AssetRedeemPointWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException {
         try {
             return assetRedeemPointWalletDao.listsTransactionsByAssets(balanceType, transactionType, max, offset, assetPublicKey);
+        } catch (CantGetTransactionsException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw exception;
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public List<AssetRedeemPointWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException {
+        List<AssetRedeemPointWalletTransaction> creditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
+        List<AssetRedeemPointWalletTransaction> creditBook = getTransactions(BalanceType.BOOK, TransactionType.CREDIT, assetPublicKey);
+        List<AssetRedeemPointWalletTransaction> debitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
+        List<AssetRedeemPointWalletTransaction> debitBook = getTransactions(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
+        List<AssetRedeemPointWalletTransaction> toReturn = new ArrayList<>();
+        toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
+        toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
+        Collections.sort(toReturn, new Comparator<AssetRedeemPointWalletTransaction>() {
+            @Override
+            public int compare(AssetRedeemPointWalletTransaction o1, AssetRedeemPointWalletTransaction o2) {
+                return (int) (o2.getTimestamp() - o1.getTimestamp());
+            }
+        });
+        return toReturn;
+    }
+
+    private List<AssetRedeemPointWalletTransaction> getTransactionsForDisplay(List<AssetRedeemPointWalletTransaction> available, List<AssetRedeemPointWalletTransaction> book) {
+        for (AssetRedeemPointWalletTransaction transaction : book) {
+            if (!available.contains(transaction)) {
+                available.add(transaction);
+            }
+        }
+        return available;
+    }
+
+    @Override
+    public List<AssetRedeemPointWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException {
+        try {
+            return assetRedeemPointWalletDao.listsTransactionsByAssets(balanceType, transactionType, assetPublicKey);
         } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;

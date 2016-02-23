@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -178,7 +179,8 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
     }
 
     /**
-     * This method creates the Broker Submit Online Merchandise Business Transaction
+     * This method creates the Broker Submit Online Merchandise Business Transaction.
+     * The BlockchainNetworkType is set as default.
      * @param cbpWalletPublicKey
      * @param walletPublicKey
      * @param contractHash
@@ -191,6 +193,29 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             String walletPublicKey,
             String contractHash)
             throws CantSubmitMerchandiseException {
+        submitMerchandise(
+                referencePrice,
+                cbpWalletPublicKey,
+                walletPublicKey,
+                contractHash,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType());
+    }
+
+    /**
+     * This method creates the Broker Submit Online Merchandise Business Transaction
+     * @param cbpWalletPublicKey
+     * @param walletPublicKey
+     * @param contractHash
+     * @throws CantSubmitMerchandiseException
+     */
+    @Override
+    public void submitMerchandise(
+            BigDecimal referencePrice,
+            String cbpWalletPublicKey,
+            String walletPublicKey,
+            String contractHash,
+            BlockchainNetworkType blockchainNetworkType) throws
+            CantSubmitMerchandiseException {
         try {
             //Checking the arguments
             Object[] arguments={referencePrice, cbpWalletPublicKey, walletPublicKey, contractHash};
@@ -216,7 +241,8 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                     walletPublicKey,
                     cryptoAmount,
                     cbpWalletPublicKey,
-                    referencePrice);
+                    referencePrice,
+                    blockchainNetworkType);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
@@ -279,7 +305,8 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
     /**
      * This method send a payment according the contract clauses.
      * In this case, this method submit merchandise and not requires the cbpWalletPublicKey,
-     * this public key can be obtained from the crypto broker wallet
+     * this public key can be obtained from the crypto broker wallet.
+     * BlockchainNetworkType is set as default.
      * @param referencePrice
      * @param cbpWalletPublicKey
      * @param contractHash
@@ -290,6 +317,29 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             BigDecimal referencePrice,
             String cbpWalletPublicKey,
             String contractHash) throws CantSubmitMerchandiseException {
+        submitMerchandise(
+                referencePrice,
+                cbpWalletPublicKey,
+                contractHash,
+                BlockchainNetworkType.getDefaultBlockchainNetworkType());
+    }
+
+    /**
+     * This method send a payment according the contract clauses.
+     * In this case, this method submit merchandise and not requires the cbpWalletPublicKey,
+     * this public key can be obtained from the crypto broker wallet.
+     * @param referencePrice
+     * @param cbpWalletPublicKey
+     * @param contractHash
+     * @param blockchainNetworkType
+     * @throws CantSubmitMerchandiseException
+     */
+    @Override
+    public void submitMerchandise(
+            BigDecimal referencePrice,
+            String cbpWalletPublicKey,
+            String contractHash,
+            BlockchainNetworkType blockchainNetworkType) throws CantSubmitMerchandiseException {
         try{
             //Checking the arguments
             Object[] arguments={referencePrice, cbpWalletPublicKey, contractHash};
@@ -308,7 +358,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             boolean isCryptoWalletSets=false;
             String cryptoWalletPublicKey="WalletNotSet";
             for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
-                cryptoBrokerWalletAssociatedSettingList){
+                    cryptoBrokerWalletAssociatedSettingList){
                 MoneyType moneyType =cryptoBrokerWalletAssociatedSetting.getMoneyType();
                 //System.out.println("Currency type: "+moneyType);
                 switch (moneyType){
@@ -337,7 +387,8 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
                     referencePrice,
                     cbpWalletPublicKey,
                     cryptoWalletPublicKey,
-                    contractHash);
+                    contractHash,
+                    blockchainNetworkType);
         } catch (CryptoBrokerWalletNotFoundException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
