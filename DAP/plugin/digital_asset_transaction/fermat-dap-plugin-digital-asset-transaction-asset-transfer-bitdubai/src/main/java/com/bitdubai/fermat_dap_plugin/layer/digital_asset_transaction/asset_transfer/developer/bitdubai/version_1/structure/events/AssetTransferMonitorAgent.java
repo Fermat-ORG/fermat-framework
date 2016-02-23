@@ -3,15 +3,12 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_tra
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
@@ -32,14 +29,17 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetTransferContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.DistributionStatusUpdateContentMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -51,10 +51,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantGetIssuerNetworkServiceMessageListException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingTransactionNotificationAgent;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_transfer.exceptions.CantTransferDigitalAssetsException;
@@ -285,7 +283,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
                 throw new CantCheckTransferProgressException(e, "Exception in asset distribution monitor agent", "There was a problem while reversing a transaction.");
             } catch (CantAssetUserActorNotFoundException | CantGetAssetUserActorsException e) {
                 throw new CantCheckTransferProgressException(e, "Exception in asset distribution monitor agent", "There was a problem while getting the user list.");
-            } catch (CantCancellBroadcastTransactionException | CantGetDAPMessagesException | CantSetObjectException | CantCreateDigitalAssetFileException | CantGetBroadcastStatusException | CantBroadcastTransactionException | InvalidParameterException | CantSendMessageException | CantGetIssuerNetworkServiceMessageListException | CantCreateAssetUserActorException | CantSaveStatisticException e) {
+            } catch (CantCancellBroadcastTransactionException | CantGetDAPMessagesException | CantSetObjectException | CantCreateDigitalAssetFileException | CantGetBroadcastStatusException | CantBroadcastTransactionException | InvalidParameterException | CantSendMessageException | CantGetIssuerNetworkServiceMessageListException | CantCreateAssetUserActorException | CantSaveStatisticException | CantUpdateMessageStatusException e) {
                 e.printStackTrace();
             }
         }
@@ -353,35 +351,27 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
 
         }
 
-        private void checkPendingNetworkEvents() throws CantExecuteQueryException, CantCheckTransferProgressException, UnexpectedResultReturnedFromDatabaseException, CantTransferDigitalAssetsException, CantConfirmTransactionException, CantSendAssetBitcoinsToUserException, CantGetDigitalAssetFromLocalStorageException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantLoadWalletException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, CantSendMessageException, CantSetObjectException, CantGetTransactionsException, CantGetAssetIssuerActorsException, CantRegisterDebitException, CantRegisterCreditException {
+        private void checkPendingNetworkEvents() throws CantExecuteQueryException, CantCheckTransferProgressException, UnexpectedResultReturnedFromDatabaseException, CantTransferDigitalAssetsException, CantConfirmTransactionException, CantSendAssetBitcoinsToUserException, CantGetDigitalAssetFromLocalStorageException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantLoadWalletException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, CantSendMessageException, CantSetObjectException, CantGetTransactionsException, CantGetAssetIssuerActorsException, CantRegisterDebitException, CantRegisterCreditException, CantGetDAPMessagesException, CantUpdateMessageStatusException {
             if (isPendingNetworkLayerEvents()) {
                 System.out.println("ASSET TRANSFER is network layer pending events");
-                List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
-                System.out.println("ASSET TRANSFER is " + pendingEventsList.size() + " events");
-                for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
-                    if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER) {
-                        DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
-                        System.out.println("ASSET TRANSFER Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
-                        DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
-                        System.out.println("ASSET TRANSFER Digital Asset Metadata Transaction Type: " + digitalAssetMetadataTransactionType);
-                        if (digitalAssetMetadataTransactionType == DigitalAssetMetadataTransactionType.TRANSACTION_STATUS_UPDATE) {
-                            String userId = digitalAssetMetadataTransaction.getSenderId();
-                            System.out.println("ASSET TRANSFER User Id: " + userId);
-                            String genesisTransaction = digitalAssetMetadataTransaction.getGenesisTransaction();
-                            System.out.println("ASSET TRANSFER Genesis Transaction: " + genesisTransaction);
-                            if (!assetTransferDAO.isGenesisTransactionRegistered(genesisTransaction)) {
-                                System.out.println("ASSET TRANSFER This genesisTransaction is not registered in database: " + genesisTransaction);
-                                continue;
-                            }
-                            String registeredUserActorId = assetTransferDAO.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
-                            System.out.println("ASSET TRANSFER User Actor Is: " + registeredUserActorId);
-                            if (!registeredUserActorId.equals(userId)) {
-                                throw new CantTransferDigitalAssetsException("User id from Asset distribution: " + userId + "\nRegistered publicKey: " + registeredUserActorId + "They are not equals");
-                            }
-                            assetTransferDAO.updateDistributionStatusByGenesisTransaction(digitalAssetMetadataTransaction.getDistributionStatus(), genesisTransaction);
-                            assetTransmissionManager.confirmReception(transaction.getTransactionID());
-                        }
+                List<DAPMessage> newStatuses = assetTransmissionManager.getUnreadDAPMessageBySubject(DAPMessageSubject.ASSET_TRANSFER);
+                for (DAPMessage message : newStatuses) {
+                    DistributionStatusUpdateContentMessage content = (DistributionStatusUpdateContentMessage) message.getMessageContent();
+                    String userId = message.getActorSender().getActorPublicKey();
+                    System.out.println("ASSET TRANSFER User Id: " + userId);
+                    String genesisTransaction = content.getGenesisTransaction();
+                    System.out.println("ASSET TRANSFER Genesis Transaction: " + genesisTransaction);
+                    if (!assetTransferDAO.isGenesisTransactionRegistered(genesisTransaction)) {
+                        System.out.println("ASSET TRANSFER This genesisTransaction is not registered in database: " + genesisTransaction);
+                        continue;
                     }
+                    String registeredUserActorId = assetTransferDAO.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
+                    System.out.println("ASSET TRANSFER User Actor Is: " + registeredUserActorId);
+                    if (!registeredUserActorId.equals(userId)) {
+                        throw new CantTransferDigitalAssetsException("User id from Asset distribution: " + userId + "\nRegistered publicKey: " + registeredUserActorId + "They are not equals");
+                    }
+                    assetTransferDAO.updateDistributionStatusByGenesisTransaction(content.getNewStatus(), genesisTransaction);
+                    assetTransmissionManager.confirmReception(message);
                 }
                 assetTransferDAO.updateEventStatus(assetTransferDAO.getPendingNetworkLayerEvents().get(0));
             }
@@ -493,7 +483,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
             AssetTransferContentMessage content = new AssetTransferContentMessage(newUser, digitalAssetMetadata.getMetadataId(), networkType);
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
             ActorAssetIssuer actorReceiver = (ActorAssetIssuer) ActorUtils.constructActorFromIdentity(digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer());
-            DAPMessage dapMessage = new DAPMessage(UUID.randomUUID(), content, actorSender, actorReceiver);
+            DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver);
             assetIssuerActorNetworkServiceManager.sendMessage(dapMessage);
         }
 
