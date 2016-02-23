@@ -28,7 +28,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.de
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorCantGetTransactionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.exceptions.OutgoingIntraActorWalletNotSupportedException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.util.OutgoingDraftTransactionWrapper;
-import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_draft.developer.bitdubai.varsion_1.util.OutgoingIntraActorTransactionHandlerFactory;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
@@ -49,7 +48,6 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
     private BitcoinNetworkManager bitcoinNetworkManager;
     private BitcoinWalletManager bitcoinWalletManager;
     private OutgoingDraftTransactionDao outgoingIntraActorDao;
-    private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
     private EventManager eventManager;
     private Broadcaster broadcaster;
@@ -65,7 +63,6 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                                                        final BitcoinNetworkManager bitcoinNetworkManager,
                                                        final BitcoinWalletManager bitcoinWalletManager,
                                                        final OutgoingDraftTransactionDao outgoingIntraActorDao,
-                                                       final OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                                        final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
                                                        final EventManager eventManager,
                                                         final Broadcaster broadcaster
@@ -76,12 +73,10 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         this.bitcoinNetworkManager                   = bitcoinNetworkManager;
         this.bitcoinWalletManager                    = bitcoinWalletManager;
         this.outgoingIntraActorDao                   = outgoingIntraActorDao;
-        this.transactionHandlerFactory               = transactionHandlerFactory;
         this.errorManager = errorManager;
         this.cryptoVaultManager = cryptoVaultManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.outgoingIntraActorDao = outgoingIntraActorDao;
-        this.transactionHandlerFactory = transactionHandlerFactory;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
         this.eventManager = eventManager;
         this.broadcaster = broadcaster;
@@ -92,7 +87,7 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
 
     public void start() {
         this.transactionProcessorAgent = new TransactionProcessorAgent();
-        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.bitcoinNetworkManager,this.transactionHandlerFactory,this.cryptoTransmissionNetworkServiceManager, this.broadcaster);
+        this.transactionProcessorAgent.initialize(this.errorManager,this.outgoingIntraActorDao,this.bitcoinWalletManager,this.cryptoVaultManager,this.bitcoinNetworkManager,this.cryptoTransmissionNetworkServiceManager, this.broadcaster);
         this.agentThread               = new Thread(this.transactionProcessorAgent);
         this.status = AgentStatus.STARTED;
         System.out.println("Agent started - started ");
@@ -118,7 +113,6 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
         private BitcoinWalletManager bitcoinWalletManager;
         private CryptoVaultManager cryptoVaultManager;
         private BitcoinNetworkManager bitcoinNetworkManager;
-        private OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory;
         private CryptoTransmissionNetworkServiceManager cryptoTransmissionManager;
         private EventManager eventManager;
         private Broadcaster broadcaster;
@@ -135,7 +129,6 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                                  BitcoinWalletManager                       bitcoinWalletManager,
                                  CryptoVaultManager cryptoVaultManager,
                                  BitcoinNetworkManager bitcoinNetworkManager,
-                                 OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                  CryptoTransmissionNetworkServiceManager    cryptoTransmissionNetworkServiceManager,
                                  Broadcaster broadcaster
                                  ) {
@@ -151,7 +144,6 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
                                 OutgoingDraftTransactionDao dao,
                                 BitcoinWalletManager bitcoinWalletManager,
                                 CryptoVaultManager cryptoVaultManager,
-                                OutgoingIntraActorTransactionHandlerFactory transactionHandlerFactory,
                                 CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
                                 EventManager eventManager,
                                 Broadcaster broadcaster) {
@@ -159,7 +151,6 @@ public class OutgoingDraftTransactionAgent extends FermatAgent {
             this.errorManager = errorManager;
             this.cryptoVaultManager = cryptoVaultManager;
             this.bitcoinWalletManager = bitcoinWalletManager;
-            this.transactionHandlerFactory = transactionHandlerFactory;
             this.cryptoTransmissionManager = cryptoTransmissionNetworkServiceManager;
             this.eventManager = eventManager;
             this.broadcaster = broadcaster;
