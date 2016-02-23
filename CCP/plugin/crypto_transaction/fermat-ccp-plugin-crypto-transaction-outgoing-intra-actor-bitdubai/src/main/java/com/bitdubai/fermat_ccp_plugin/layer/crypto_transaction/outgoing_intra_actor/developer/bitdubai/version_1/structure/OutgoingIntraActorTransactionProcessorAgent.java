@@ -456,11 +456,12 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
 
                         //change transaction state to reversed and update balance to revert
+                        bitcoinWalletWallet.revertTransaction(transaction,credit);
 
-                       if(credit)
+                     /*  if(credit)
                             bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(transaction);
                         else
-                           bitcoinWalletWallet.getBalance(BalanceType.BOOK).debit(transaction);
+                           bitcoinWalletWallet.getBalance(BalanceType.BOOK).debit(transaction);*/
 
                         bitcoinWalletWallet.deleteTransaction(transaction.getTransactionId());
 
