@@ -26,14 +26,14 @@ public interface DiscoveryQueryParameters {
      *
      * @return String
      */
-    public String getIdentityPublicKey();
+    String getIdentityPublicKey();
 
     /**
      * Get the alias
      *
      * @return String
      */
-    public String getAlias();
+    String getAlias();
 
 
 
@@ -43,56 +43,56 @@ public interface DiscoveryQueryParameters {
      *
      * @return String
      */
-    public String getName();
+    String getName();
 
     /**
      * Get the location for geo localization
      *
      * @return Double
      */
-    public Location getLocation();
+    Location getLocation();
 
     /**
      * Get the distance from geo localization
      *
      * @return Double
      */
-    public Double getDistance();
+    Double getDistance();
 
     /**
      * Return the platform component type
      *
      * @return PlatformComponentType
      */
-    public PlatformComponentType getPlatformComponentType();
+    PlatformComponentType getPlatformComponentType();
 
     /**
      * Get the network service type of the packet
      *
      * @return NetworkServiceType
      */
-    public NetworkServiceType getNetworkServiceType();
+    NetworkServiceType getNetworkServiceType();
 
     /**
      * Return the extra data
      *
      * @return String
      */
-    public String getExtraData();
+    String getExtraData();
 
     /**
      * Get the first record to make pagination
      *
      * @return int
      */
-    public Integer getOffset();
+    Integer getOffset();
 
     /**
      * Get the number of max the record to return
      *
      * @return int
      */
-    public Integer getMax();
+    Integer getMax();
 
     /**
      * Return the platform component type from other component type,
@@ -102,7 +102,7 @@ public interface DiscoveryQueryParameters {
      *
      * @return PlatformComponentType
      */
-    public PlatformComponentType getFromOtherPlatformComponentType();
+    PlatformComponentType getFromOtherPlatformComponentType();
 
     /**
      * Get the network service type of the packet from other component type,
@@ -112,14 +112,14 @@ public interface DiscoveryQueryParameters {
      *
      * @return NetworkServiceType
      */
-    public NetworkServiceType getFromOtherNetworkServiceType();
+    NetworkServiceType getFromOtherNetworkServiceType();
 
     /**
      * Convert this object to json string
      *
      * @return String json
      */
-    public String toJson();
+    String toJson();
 
     /**
      * Convert to DiscoveryQueryParameters from json
@@ -127,6 +127,6 @@ public interface DiscoveryQueryParameters {
      * @param json string object
      * @return DiscoveryQueryParameters
      */
-    public DiscoveryQueryParameters fromJson(String json);
+    DiscoveryQueryParameters fromJson(String json);
 
 }

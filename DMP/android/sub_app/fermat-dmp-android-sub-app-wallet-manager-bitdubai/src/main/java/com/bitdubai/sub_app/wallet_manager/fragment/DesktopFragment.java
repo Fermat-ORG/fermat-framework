@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResources;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
@@ -59,7 +60,7 @@ import static android.widget.Toast.makeText;
  */
 
 
-public class DesktopFragment extends AbstractFermatFragment implements SearchView.OnCloseListener,
+public class DesktopFragment extends AbstractFermatFragment<DesktopSession,SubAppResources> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,
@@ -85,8 +86,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
 
     private String searchName;
     private List<InstalledWallet> lstInstalledWallet;
-    private DesktopSession desktopSession;
-    private WalletManagerModule moduleManager;
+
 
     ArrayList<Item> lstItems;
 
@@ -107,9 +107,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
      */
     @Deprecated
     public static DesktopFragment newInstance(WalletManagerModule manager) {
-        DesktopFragment desktopFragment = new DesktopFragment();
-        desktopFragment.setModuleManager(manager);
-        return desktopFragment;
+        return new DesktopFragment();
     }
 
     @Override
@@ -187,11 +185,13 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
     }
 
     private void setUpData() {
-        if (moduleManager != null)
+        if (appSession.getModuleManager() != null)
             try {
-                lstInstalledWallet = moduleManager.getInstalledWallets();
+                lstInstalledWallet = appSession.getModuleManager().getInstalledWallets();
 
             } catch (WalletsListFailedToLoadException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         if(lstInstalledWallet!=null)
@@ -300,12 +300,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
     @Override
     public boolean onQueryTextChange(String s) {
         //Toast.makeText(getActivity(), "Probando busqueda completa", Toast.LENGTH_SHORT).show();
-        if(s.length()==0 && isStartList){
-            //((IntraUserConnectionsAdapter)adapter).setAddButtonVisible(false);
-            //adapter.changeDataSet(IntraUserConnectionListItem.getTestData(getResources()));
-            return true;
-        }
-        return false;
+        return s.length() == 0 && isStartList;
     }
 
     @Override
@@ -325,7 +320,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
         try {
             lstItems = new ArrayList<>();
 
-            lstInstalledWallet = moduleManager.getInstalledWallets();
+            lstInstalledWallet = appSession.getModuleManager().getInstalledWallets();
             lstItemsWithIcon = new ArrayList<>();
             Item[] arrItemsWithoutIcon = new Item[12];
 
@@ -500,10 +495,6 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
 
 
 
-    public void setModuleManager(WalletManagerModule moduleManager) {
-        this.moduleManager = moduleManager;
-    }
-
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
@@ -526,7 +517,7 @@ public class DesktopFragment extends AbstractFermatFragment implements SearchVie
                 case EMPTY:
                     break;
                 case FOLDER:
-                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,desktopSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
+                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,appSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
 //                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 //                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
 //                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();

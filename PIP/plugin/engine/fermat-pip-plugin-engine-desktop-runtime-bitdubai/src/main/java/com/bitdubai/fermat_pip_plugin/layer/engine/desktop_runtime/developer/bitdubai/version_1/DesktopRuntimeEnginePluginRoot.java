@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
@@ -165,12 +166,15 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
              */
 
             runtimeDesktopObject = new RuntimeDesktopObject();
+            runtimeDesktopObject.setAppPublicKey("main_desktop");
             runtimeDesktopObject.setType("DCCP");
             lastDesktopObject = runtimeDesktopObject.getType();
 
             runtimeDesktopObject.setStartActivity(Activities.CCP_DESKTOP);
 
             Activity activity = new Activity();
+            activity.setActivityType(Activities.CCP_DESKTOP.getCode());
+            activity.setType(Activities.CCP_DESKTOP);
             activity.setFullScreen(true);
             /**
              * set type home
@@ -179,28 +183,54 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             //activity.setType(Activities.dmp_DESKTOP_HOME);
             activity.setActivityType("CCPDHA");
             Fragment fragment = new Fragment();
+            fragment.setType(Fragments.DESKTOP_APPS_MAIN.getKey());
+            activity.addFragment(Fragments.DESKTOP_APPS_MAIN.getKey(), fragment);
+            activity.setStartFragment(Fragments.DESKTOP_APPS_MAIN.getKey());
             runtimeDesktopObject.addActivity(activity);
 
-            /**
-             * Add WalletManager fragment
-             */
 
-            // dmp_WALLET_MANAGER_FRAGMENT
-            fragment.setType("CCPWMF");
-            activity.addFragment("CCPWMF",fragment);
-            runtimeDesktopObject.setStartActivity(activity.getType());
 
-            /**
-             * Add home subApps fragment
-             */
-
-            fragment = new Fragment();
-            // dmp_SUB_APP_MANAGER_FRAGMENT
-            fragment.setType("CCPSAMF");
-            activity.addFragment("CCPSAMF", fragment);
+            activity = new Activity();
+            activity.setFullScreen(true);
+            activity.setActivityType(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode());
+            activity.setStartFragment(Fragments.DESKTOP_SETTINGS.getKey());
+            activity.setBackActivity(Activities.CCP_DESKTOP);
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.DESKTOP_SETTINGS.getKey());
+            runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+            activity.addFragment(Fragments.DESKTOP_SETTINGS.getKey(), runtimeFragment);
+            runtimeDesktopObject.addActivity(activity);
 
 
             lstDesktops.add(runtimeDesktopObject);
+
+
+
+
+
+
+
+//            runtimeDesktopObject = new RuntimeDesktopObject();
+//            /**
+//             * Add WalletManager fragment
+//             */
+//
+//            // dmp_WALLET_MANAGER_FRAGMENT
+//            fragment.setType("CCPWMF");
+//            activity.addFragment("CCPWMF",fragment);
+//            runtimeDesktopObject.setStartActivity(activity.getType());
+//
+//            /**
+//             * Add home subApps fragment
+//             */
+//
+//            fragment = new Fragment();
+//            // dmp_SUB_APP_MANAGER_FRAGMENT
+//            fragment.setType("CCPSAMF");
+//            activity.addFragment("CCPSAMF", fragment);
+
+
+
             /**
              * End Desktop CCP
              */

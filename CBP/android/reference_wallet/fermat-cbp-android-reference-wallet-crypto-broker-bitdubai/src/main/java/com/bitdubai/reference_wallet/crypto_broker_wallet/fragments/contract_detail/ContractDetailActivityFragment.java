@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
@@ -121,6 +123,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         detailDate = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_date);
         detailRate = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_rate);
         negotiationButton = (FermatButton) rootView.findViewById(R.id.cbw_contract_details_negotiation_details);
+
         recyclerView = (RecyclerView) rootView.findViewById(R.id.cbw_contract_details_contract_steps_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
@@ -139,6 +142,24 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
     private void bindData() {
 
+        negotiationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, data);
+                String a = appSession.getAppPublicKey();
+
+                try {
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, a);
+                }catch (Exception e)
+                {
+                    System.out.println(e+"");
+                }
+
+
+
+
+            }
+        });
         String paymentCurrency=data.getPaymentCurrency();
         brokerName.setText(data.getCryptoCustomerAlias());
         sellingSummary.setText("SELLING "+paymentCurrency);
@@ -149,9 +170,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //detailRate.setText("1 BTC @ 254 USD");
         double exchangeRateAmount= getFormattedNumber(data.getExchangeRateAmount());
         double amount= getFormattedNumber(data.getAmount());
-        detailRate.setText(
-                exchangeRateAmount+" "+paymentCurrency+" @ "+amount+" "+data.getMerchandise()
-        );
 
 
         //Create adapter

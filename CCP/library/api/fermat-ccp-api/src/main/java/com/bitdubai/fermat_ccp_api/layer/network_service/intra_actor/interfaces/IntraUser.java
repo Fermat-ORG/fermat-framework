@@ -25,19 +25,19 @@ public interface IntraUser {
      *
      * @return
      */
-    public String getPublicKey();
+    String getPublicKey();
 
     /**
      *
      * @return
      */
-    public byte[]  getProfileImage();
+    byte[]  getProfileImage();
 
     /**
      * Return the userName
      *
      * @return String
      */
-    public String getName ();
+    String getName();
 
 }

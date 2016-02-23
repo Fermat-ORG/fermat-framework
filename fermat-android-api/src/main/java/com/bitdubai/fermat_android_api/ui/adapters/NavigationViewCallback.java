@@ -5,6 +5,6 @@ package com.bitdubai.fermat_android_api.ui.adapters;
  */
 public interface NavigationViewCallback {
 
-    public void onClickListener();
+    void onClickListener();
 
 }

@@ -35,7 +35,7 @@ public interface WizardPageListener {
      *
      * @param data Custom key -> object temp shared data between pages
      */
-    public void onActivated(Map<String, Object> data);
+    void onActivated(Map<String, Object> data);
 
 
     /**

@@ -75,7 +75,7 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DATABASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -96,7 +96,7 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
                   /*
                    * We create the new database
                    */
-                database = outgoingIntraActorTransactionDatabaseFactory.createDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DATABASE_NAME);
+                database = outgoingIntraActorTransactionDatabaseFactory.createDatabase(pluginId, OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -125,31 +125,31 @@ public class OutgoingIntraActorTransactionDeveloperDatabaseFactory implements De
          */
         List<String> outgoingIntraUserColumns = new ArrayList<String>();
 
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_REQUEST_ID_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_HASH_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ADDRESS_FROM_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ADDRESS_TO_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_AMOUNT_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_OP_RETURN_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_STATUS_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_DESCRIPTION_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TIMESTAMP_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_STATUS_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_FROM_TYPE_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_TO_TYPE_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_REFERENCE_TYPE_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_SAME_DEVICE_COLUMN_NAME);
-        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_RUNNING_NETWORK_TYPE);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_ID_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_WALLET_ID_TO_DEBIT_FROM_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_HASH_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ADDRESS_FROM_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ADDRESS_TO_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_CURRENCY_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_AMOUNT_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_OP_RETURN_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_STATUS_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_DESCRIPTION_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TIMESTAMP_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_CRYPTO_STATUS_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_FROM_PUBLIC_KEY_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_FROM_TYPE_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_TO_PUBLIC_KEY_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_ACTOR_TO_TYPE_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_WALLET_REFERENCE_TYPE_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_SAME_DEVICE_COLUMN_NAME);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_RUNNING_NETWORK_TYPE);
+        outgoingIntraUserColumns.add(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TRANSACTION_MARK_COLUMN_NAME);
 
         /**
          * Table Outgoing Intra User addition.
          */
-        DeveloperDatabaseTable outgoingIntraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME, outgoingIntraUserColumns);
+        DeveloperDatabaseTable outgoingIntraUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_DRAFT_TABLE_NAME, outgoingIntraUserColumns);
         tables.add(outgoingIntraUserTable);
 
 

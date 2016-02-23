@@ -2,9 +2,12 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
@@ -27,6 +32,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Sing
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -70,6 +76,13 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
                 appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
+                if (locationList.size()==0){
+                    Collection<NegotiationLocations> listAux= walletManager.getAllLocations(NegotiationType.PURCHASE);
+                    for (NegotiationLocations locationAux: listAux){
+                        locationList.add(locationAux.getLocation());
+                    }
+
+                }
             }
             if(locationList.size()>0) {
                 int pos = locationList.size() - 1;
@@ -117,10 +130,21 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
                 saveSettingAndGoNextStep();
             }
         });
-
+        configureToolbar();
         showOrHideRecyclerView();
 
         return layout;
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
     }
 
     @Override

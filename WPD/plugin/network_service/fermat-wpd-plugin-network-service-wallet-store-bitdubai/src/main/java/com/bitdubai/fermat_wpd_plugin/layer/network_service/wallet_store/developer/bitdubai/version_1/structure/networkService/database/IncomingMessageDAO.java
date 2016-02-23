@@ -474,12 +474,10 @@ public class IncomingMessageDAO {
             walletStoreNetworkServiceMessage.setId(record.getLongValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME));
             walletStoreNetworkServiceMessage.setSender(UUID.fromString(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME)));
             walletStoreNetworkServiceMessage.setReceiver(UUID.fromString(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME)));
-            ;
             walletStoreNetworkServiceMessage.setTextContent(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
             walletStoreNetworkServiceMessage.setMessageType(MessagesTypes.getByCode(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME)));
             walletStoreNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
             walletStoreNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));
-            ;
             walletStoreNetworkServiceMessage.setStatus(MessagesStatus.getByCode(record.getStringValue(WalletStoreNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {

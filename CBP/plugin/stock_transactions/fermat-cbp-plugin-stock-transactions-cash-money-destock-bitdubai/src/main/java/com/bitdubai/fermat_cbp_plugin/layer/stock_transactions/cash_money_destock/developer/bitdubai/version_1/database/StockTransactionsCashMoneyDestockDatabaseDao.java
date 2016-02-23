@@ -96,10 +96,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+        return table.getRecords().isEmpty();
     }
 
     private List<DatabaseTableRecord> getCashMoneyRestockData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
