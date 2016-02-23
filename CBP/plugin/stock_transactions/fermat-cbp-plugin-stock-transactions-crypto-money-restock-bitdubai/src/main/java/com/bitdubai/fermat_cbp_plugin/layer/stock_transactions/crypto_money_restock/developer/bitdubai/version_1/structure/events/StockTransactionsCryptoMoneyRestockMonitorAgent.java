@@ -176,7 +176,8 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
                                 cryptoMoneyTransaction.getActorPublicKey(),
                                 cryptoMoneyTransaction.getAmount(),
                                 cryptoMoneyTransaction.getMemo(),
-                                pluginId.toString());
+                                pluginId.toString(),
+                                cryptoMoneyTransaction.getBlockchainNetworkType());
                         cryptoUnholdTransactionManager.createCryptoUnholdTransaction(cryptoTransactionParametersWrapper);
 
                         cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
