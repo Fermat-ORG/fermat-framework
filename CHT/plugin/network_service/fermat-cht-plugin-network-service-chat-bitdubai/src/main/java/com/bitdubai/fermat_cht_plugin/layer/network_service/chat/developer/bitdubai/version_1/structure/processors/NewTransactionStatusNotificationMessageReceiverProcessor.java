@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.processors;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
@@ -104,7 +105,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
             }
 
         } catch (Exception e) {
-            getChatNetworkServicePluginRoot().getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            getChatNetworkServicePluginRoot().reportUnexpectedException(FermatException.wrapException(e));
         }
 
 

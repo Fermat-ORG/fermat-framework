@@ -2,10 +2,12 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -17,6 +19,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,15 +52,23 @@ public class CommunicationChatNetworkServiceDeveloperDatabaseFactory implements 
 
     Database database;
 
+    private ErrorManager errorManager;
+
     /**
      * Constructor
      *
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public CommunicationChatNetworkServiceDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
+
+    public CommunicationChatNetworkServiceDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ErrorManager errorManager) {
+      this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
+        this.errorManager = errorManager;
+    }
+
+    public void reportUnexpectedException(FermatException e){
+        errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     /**
@@ -74,13 +86,16 @@ public class CommunicationChatNetworkServiceDeveloperDatabaseFactory implements 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeChatNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
+            CantInitializeChatNetworkServiceDatabaseException cantInitializeChatNetworkServiceDatabaseException = new CantInitializeChatNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
+            reportUnexpectedException(cantInitializeChatNetworkServiceDatabaseException);
+            throw cantInitializeChatNetworkServiceDatabaseException;
         } catch (DatabaseNotFoundException e) {
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            CommunicationChatNetworkServiceDatabaseFactory communicationChatNetworkServiceDatabaseFactory = new CommunicationChatNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+
+            CommunicationChatNetworkServiceDatabaseFactory communicationChatNetworkServiceDatabaseFactory = new CommunicationChatNetworkServiceDatabaseFactory(pluginDatabaseSystem,errorManager);
             try {
                   /*
                    * We create the new database
@@ -90,7 +105,9 @@ public class CommunicationChatNetworkServiceDeveloperDatabaseFactory implements 
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeChatNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
+                CantInitializeChatNetworkServiceDatabaseException cantInitializeChatNetworkServiceDatabaseException = new CantInitializeChatNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
+                reportUnexpectedException(cantInitializeChatNetworkServiceDatabaseException);
+                throw cantInitializeChatNetworkServiceDatabaseException;
             }
         }
     }

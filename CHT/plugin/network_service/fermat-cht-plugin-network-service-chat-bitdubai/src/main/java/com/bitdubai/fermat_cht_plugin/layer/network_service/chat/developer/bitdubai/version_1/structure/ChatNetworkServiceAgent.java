@@ -195,7 +195,7 @@ public class ChatNetworkServiceAgent {
         } catch (Exception e) {
             e.printStackTrace();
             FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE,FermatException.wrapException(e), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+            reportUnexpectedException(ex);
         }
 
     }
@@ -211,10 +211,7 @@ public class ChatNetworkServiceAgent {
             try {
                 chatMetaDataDao.initialize();
             } catch (CantInitializeChatNetworkServiceDatabaseException e) {
-                this.errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_NETWORK_SERVICE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                        e);
+                reportUnexpectedException(e);
             }
             //Start the Thread
             toSend.start();
@@ -222,10 +219,7 @@ public class ChatNetworkServiceAgent {
             System.out.println("TransactionTransmissionAgent - started ");
         } catch (Exception exception){
             FermatException ex = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_NETWORK_SERVICE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    ex);
+            reportUnexpectedException(ex);
         }
 
     }
@@ -279,11 +273,10 @@ public class ChatNetworkServiceAgent {
             Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            reportUnexpectedException(FermatException.wrapException(e));
         } catch (Exception e) {
-            e.printStackTrace();
             FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE,FermatException.wrapException(e), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+            reportUnexpectedException(ex);
 
         }
 
@@ -355,20 +348,16 @@ public class ChatNetworkServiceAgent {
                                     "-----------------------\n STATE: " + chatMetadataRecord.getDistributionStatus());
 
                         } catch (CantUpdateRecordDataBaseException e) {
-                            e.printStackTrace();
+                            reportUnexpectedException(e);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            reportUnexpectedException(FermatException.wrapException(e));
                         }
                     }
                 }
             }
 
-        } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantEstablishConnectionException e) {
-            e.printStackTrace();
-        }  catch (CantLoadTableToMemoryException e) {
-            e.printStackTrace();
+        } catch (CantReadRecordDataBaseException | CantEstablishConnectionException | CantLoadTableToMemoryException e) {
+            reportUnexpectedException(e);
         }
     }
 
@@ -396,7 +385,7 @@ public class ChatNetworkServiceAgent {
             Thread.sleep(RECEIVE_SLEEP_TIME);
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            reportUnexpectedException(FermatException.wrapException(e));
         }
 
     }
@@ -507,7 +496,7 @@ public class ChatNetworkServiceAgent {
            // throw new ObjectNotSetException(ex, "CAN NOT SET THE OBJECT","");
             ex.printStackTrace();
             FermatException e = new ObjectNotSetException(FermatException.wrapException(ex), "","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            reportUnexpectedException(e);
         }
 
     }
@@ -535,6 +524,9 @@ public class ChatNetworkServiceAgent {
 //        incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
 //        eventManager.raiseEvent(incomingNewContractStatusUpdate);
 //    }
+private void reportUnexpectedException(FermatException e){
+    errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+}
 
 
 }

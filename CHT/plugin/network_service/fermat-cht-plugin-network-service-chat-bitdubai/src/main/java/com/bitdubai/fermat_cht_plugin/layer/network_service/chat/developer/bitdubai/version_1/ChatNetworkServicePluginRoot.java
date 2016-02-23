@@ -273,7 +273,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            reportUnexpectedException(pluginStartException);
+            reportUnexpectedException(pluginStartException);
             throw pluginStartException;
 
 
@@ -369,14 +370,18 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             String possibleCause = "Plugin was not registered";
 
             FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e, "", "I can't List the resquest");
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
+            reportUnexpectedException(ex);
 
         } catch (Exception e) {
             FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e, "", "I can't List the resquest");
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
+            reportUnexpectedException(ex);
 
         }
 
+    }
+
+    public void reportUnexpectedException(FermatException e){
+        getErrorManager().reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
     }
 
     @Override
@@ -453,7 +458,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
                 System.out.println("------------------CHATPLUGINROOT NETWORK SERVICE REGISTED------------------------------------");
             } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
+                FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE, e, "", "CAN'T REGISTER COMPONENT");
+                reportUnexpectedException(ex);
             }
 
         }
@@ -606,7 +612,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             String possibleCause = "BAD ARGUMENTS";
 
             CantInitializeCommunicationNetworkServiceConnectionManagerException communicationNetworkServiceConnectionManagerException = new CantInitializeCommunicationNetworkServiceConnectionManagerException(CantInitializeCommunicationNetworkServiceConnectionManagerException.DEFAULT_MESSAGE, ex, context, possibleCause);
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, communicationNetworkServiceConnectionManagerException);
+            reportUnexpectedException(communicationNetworkServiceConnectionManagerException);
 
         }
     }
@@ -663,7 +669,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             /*
              * Initialize Developer Database Factory
              */
-            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationChatNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+            communicationNetworkServiceDeveloperDatabaseFactory = new CommunicationChatNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId,getErrorManager());
             communicationNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
              /*
@@ -698,14 +704,16 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            reportUnexpectedException(pluginStartException);
             throw pluginStartException;
         } catch (Exception exception) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
             String context = contextBuffer.toString();
             String possibleCause = "The plugin was unable to start";
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), context, possibleCause);
+            CantStartPluginException cantStartPluginException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), context, possibleCause);
+            reportUnexpectedException(cantStartPluginException);
+            throw cantStartPluginException;
         }
 
     }
@@ -754,8 +762,10 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 /*
                  * The file cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-                throw new CantStartPluginException(exception.getLocalizedMessage());
+                CantStartPluginException cantStartPluginException = new CantStartPluginException(exception.getLocalizedMessage());
+                reportUnexpectedException(cantStartPluginException);
+
+                throw cantStartPluginException;
             }
 
 
@@ -764,8 +774,10 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             /*
              * The file cannot be load. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
-            throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
+            CantStartPluginException cantStartPluginException = new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
+            reportUnexpectedException(cantStartPluginException);
+
+            throw cantStartPluginException;
 
         }
 
@@ -805,16 +817,18 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             /*
              * Open new database connection
              */
+
             this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-            this.chatMetaDataDao = new ChatMetaDataDao(dataBase, pluginDatabaseSystem, pluginId);
+            this.chatMetaDataDao = new ChatMetaDataDao(dataBase, pluginDatabaseSystem, pluginId,getErrorManager());
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeChatNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+            CantInitializeChatNetworkServiceDatabaseException cantInitializeChatNetworkServiceDatabaseException = new CantInitializeChatNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+            reportUnexpectedException(cantInitializeChatNetworkServiceDatabaseException);
+            throw cantInitializeChatNetworkServiceDatabaseException;
 
         } catch (DatabaseNotFoundException e) {
 
@@ -822,27 +836,31 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            CommunicationChatNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationChatNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+            CommunicationChatNetworkServiceDatabaseFactory communicationNetworkServiceDatabaseFactory = new CommunicationChatNetworkServiceDatabaseFactory(pluginDatabaseSystem,getErrorManager());
 
             try {
 
                 /*
                  * We create the new database
                  */
+
                 this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-                this.chatMetaDataDao = new ChatMetaDataDao(dataBase, pluginDatabaseSystem, pluginId);
+                this.chatMetaDataDao = new ChatMetaDataDao(dataBase, pluginDatabaseSystem, pluginId,getErrorManager());
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
-                throw new CantInitializeChatNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+                CantInitializeChatNetworkServiceDatabaseException cantInitializeChatNetworkServiceDatabaseException = new CantInitializeChatNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+                reportUnexpectedException(cantInitializeChatNetworkServiceDatabaseException);
+                throw cantInitializeChatNetworkServiceDatabaseException;
 
             }
         } catch (Exception exception) {
-            throw new CantInitializeChatNetworkServiceDatabaseException(CantInitializeChatNetworkServiceDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            CantInitializeChatNetworkServiceDatabaseException cantInitializeChatNetworkServiceDatabaseException = new CantInitializeChatNetworkServiceDatabaseException(exception.getLocalizedMessage());
+            reportUnexpectedException(cantInitializeChatNetworkServiceDatabaseException);
+            throw cantInitializeChatNetworkServiceDatabaseException;
         }
 
     }
@@ -979,7 +997,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             CantSendChatMessageMetadataException pluginStartException = new CantSendChatMessageMetadataException(CantSendChatMessageMetadataException.DEFAULT_MESSAGE, e, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, pluginStartException);
+            reportUnexpectedException(pluginStartException);
 
             throw pluginStartException;
         }catch (Exception e) {
@@ -1009,13 +1027,12 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                         getChatMetaDataDao().create(chatMetadataRecord);
                     }
                 } catch (Exception e1) {
-
+                    reportUnexpectedException(FermatException.wrapException(e1));
                 }
             }
             CantSendChatMessageMetadataException pluginStartException = new CantSendChatMessageMetadataException(CantSendChatMessageMetadataException.DEFAULT_MESSAGE, e, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, pluginStartException);
-
+            reportUnexpectedException(pluginStartException);
             throw pluginStartException;
         }
     }
@@ -1115,9 +1132,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             String possibleCause = "Plugin was not registered";
 
             CantSendChatMessageNewStatusNotificationException pluginStartException = new CantSendChatMessageNewStatusNotificationException(CantSendChatMessageNewStatusNotificationException.DEFAULT_MESSAGE, e, context, possibleCause);
-
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
+            reportUnexpectedException(pluginStartException);
             throw pluginStartException;
         }
     }
@@ -1221,8 +1236,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             CantSendChatMessageNewStatusNotificationException pluginStartException = new CantSendChatMessageNewStatusNotificationException(CantSendChatMessageNewStatusNotificationException.DEFAULT_MESSAGE, e, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
+            reportUnexpectedException(pluginStartException);
             throw pluginStartException;
         }
     }
@@ -1353,7 +1367,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(this.getNetworkServiceType(), platformComponentProfileToReconnect);
 
             } catch (CantRegisterComponentException e) {
-                e.printStackTrace();
+                reportUnexpectedException(e);
             }
 
                 /*
@@ -1392,7 +1406,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             contextBuffer.append("errorManager: " + errorManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("eventManager: " + eventManager);
-            throw new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "Database error");
+            CantConfirmTransactionException cantConfirmTransactionException = new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "Database error");
+            reportUnexpectedException(cantConfirmTransactionException);
+            throw cantConfirmTransactionException;
         }
     }
 
@@ -1425,7 +1441,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             contextBuffer.append("errorManager: " + errorManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("eventManager: " + eventManager);
-            throw new CantDeliverPendingTransactionsException(CantDeliverPendingTransactionsException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "No pending Transaction");
+            CantDeliverPendingTransactionsException cantDeliverPendingTransactionsException = new CantDeliverPendingTransactionsException(CantDeliverPendingTransactionsException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "No pending Transaction");
+            reportUnexpectedException(cantDeliverPendingTransactionsException);
+            throw cantDeliverPendingTransactionsException;
         }
         return pendingTransactions;
     }

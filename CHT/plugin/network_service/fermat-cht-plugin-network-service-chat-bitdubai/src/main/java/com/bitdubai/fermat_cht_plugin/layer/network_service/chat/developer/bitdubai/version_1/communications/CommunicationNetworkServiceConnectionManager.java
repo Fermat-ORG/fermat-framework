@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -101,12 +102,14 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
         this.communicationsClientConnection = communicationsClientConnection;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
-        this.incomingMessageDao = new IncomingMessageDao(dataBase);
-        this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
+        this.incomingMessageDao = new IncomingMessageDao(dataBase,errorManager);
+        this.outgoingMessageDao = new OutgoingMessageDao(dataBase,errorManager);
         this.communicationNetworkServiceLocalsCache = new HashMap<>();
         this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
     }
-
+    private void reportUnexpectedException(FermatException e){
+        errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    }
 
     /**
      * (non-javadoc)
@@ -124,7 +127,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
 
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
+            reportUnexpectedException(FermatException.wrapException(new Exception("Can not connect to remote network service ")));
         }
 
     }
@@ -222,8 +225,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
+            reportUnexpectedException(FermatException.wrapException(new Exception("Can not get connection")));
         }
     }
 

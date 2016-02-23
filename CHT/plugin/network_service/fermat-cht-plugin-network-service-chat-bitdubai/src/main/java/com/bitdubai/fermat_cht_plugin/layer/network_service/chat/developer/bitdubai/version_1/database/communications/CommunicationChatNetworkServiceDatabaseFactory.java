@@ -1,6 +1,8 @@
 
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -10,6 +12,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -30,15 +34,19 @@ public class CommunicationChatNetworkServiceDatabaseFactory implements DealsWith
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
-
+    private ErrorManager errorManager;
     /**
      * Constructor with parameters to instantiate class
      * .
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public CommunicationChatNetworkServiceDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public CommunicationChatNetworkServiceDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.errorManager = errorManager;
+    }
+    public void reportUnexpectedException(FermatException e){
+        errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
     }
 
     /**
@@ -90,9 +98,13 @@ public class CommunicationChatNetworkServiceDatabaseFactory implements DealsWith
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                CantCreateDatabaseException cantCreateDatabaseException= new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                reportUnexpectedException(cantCreateDatabaseException);
+                throw cantCreateDatabaseException;
             } catch(Exception e){
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
+                CantCreateDatabaseException cantCreateDatabaseException= new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
+                reportUnexpectedException(cantCreateDatabaseException);
+                throw cantCreateDatabaseException;
             }
             /**
              * Create outgoing messages table.
@@ -114,10 +126,13 @@ public class CommunicationChatNetworkServiceDatabaseFactory implements DealsWith
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-            catch(Exception e){
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
+                CantCreateDatabaseException cantCreateDatabaseException= new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                reportUnexpectedException(cantCreateDatabaseException);
+                throw cantCreateDatabaseException;
+            } catch(Exception e){
+                CantCreateDatabaseException cantCreateDatabaseException= new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
+                reportUnexpectedException(cantCreateDatabaseException);
+                throw cantCreateDatabaseException;
             }
 
             /**
@@ -149,9 +164,13 @@ public class CommunicationChatNetworkServiceDatabaseFactory implements DealsWith
                 databaseFactory.createTable(ownerId, table);
               //  System.out.println("ChatNetworkServicePluginRoot - table:" + table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }catch(Exception e){
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
+                CantCreateDatabaseException cantCreateDatabaseException= new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                reportUnexpectedException(cantCreateDatabaseException);
+                throw cantCreateDatabaseException;
+            } catch(Exception e){
+                CantCreateDatabaseException cantCreateDatabaseException= new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
+                reportUnexpectedException(cantCreateDatabaseException);
+                throw cantCreateDatabaseException;
             }
 
         } catch (InvalidOwnerIdException invalidOwnerId) {
@@ -159,7 +178,9 @@ public class CommunicationChatNetworkServiceDatabaseFactory implements DealsWith
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+            CantCreateDatabaseException cantCreateDatabaseException= new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+            reportUnexpectedException(cantCreateDatabaseException);
+            throw cantCreateDatabaseException;
         }
         return database;
     }

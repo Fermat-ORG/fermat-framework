@@ -6,7 +6,9 @@
  */
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -32,6 +34,8 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
 
@@ -57,6 +61,7 @@ public class ChatMetaDataDao {
 
     private PluginDatabaseSystem pluginDatabaseSystem;
     private UUID pluginId;
+    private ErrorManager errorManager;
 
     /**
      * Constructor
@@ -64,13 +69,16 @@ public class ChatMetaDataDao {
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public ChatMetaDataDao(Database database, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public ChatMetaDataDao(Database database, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ErrorManager errorManager) {
         super();
         this.database = database;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
+        this.errorManager = errorManager;
     }
-
+    private void reportUnexpectedException(FermatException e){
+        errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    }
     /**
      * Return the Database
      *
@@ -138,6 +146,7 @@ public class ChatMetaDataDao {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            reportUnexpectedException(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
 
@@ -170,7 +179,9 @@ public class ChatMetaDataDao {
             }
 
         } catch (Exception e){
-            throw new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+            reportUnexpectedException(cantReadRecordDataBaseException);
+            throw cantReadRecordDataBaseException;
         }
 
         return list;
@@ -186,27 +197,30 @@ public class ChatMetaDataDao {
         } catch (DatabaseNotFoundException e) {
 
             try {
-
-                CommunicationChatNetworkServiceDatabaseFactory databaseFactory = new CommunicationChatNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+                CommunicationChatNetworkServiceDatabaseFactory databaseFactory = new CommunicationChatNetworkServiceDatabaseFactory(pluginDatabaseSystem,errorManager);
                 database = databaseFactory.createDatabase(
                         pluginId,
                         CommunicationChatNetworkServiceDatabaseConstants.DATA_BASE_NAME
                 );
 
             } catch (CantCreateDatabaseException f) {
-
-                throw new CantInitializeChatNetworkServiceDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
+                CantInitializeChatNetworkServiceDatabaseException cantInitializeChatNetworkServiceDatabaseException = new CantInitializeChatNetworkServiceDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
+                reportUnexpectedException(cantInitializeChatNetworkServiceDatabaseException);
+                throw cantInitializeChatNetworkServiceDatabaseException;
             } catch (Exception z) {
-
-                throw new CantInitializeChatNetworkServiceDatabaseException(CantInitializeChatNetworkServiceDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
+                CantInitializeChatNetworkServiceDatabaseException cantInitializeChatNetworkServiceDatabaseException = new CantInitializeChatNetworkServiceDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, z, "", "There is a problem and i cannot create the database.");
+                reportUnexpectedException(cantInitializeChatNetworkServiceDatabaseException);
+                throw cantInitializeChatNetworkServiceDatabaseException;
             }
 
         } catch (CantOpenDatabaseException e) {
-
-            throw new CantInitializeChatNetworkServiceDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+            CantInitializeChatNetworkServiceDatabaseException cantInitializeChatNetworkServiceDatabaseException = new CantInitializeChatNetworkServiceDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+            reportUnexpectedException(cantInitializeChatNetworkServiceDatabaseException);
+            throw cantInitializeChatNetworkServiceDatabaseException;
         } catch (Exception e) {
-
-            throw new CantInitializeChatNetworkServiceDatabaseException(CantInitializeChatNetworkServiceDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
+            CantInitializeChatNetworkServiceDatabaseException cantInitializeChatNetworkServiceDatabaseException = new CantInitializeChatNetworkServiceDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
+            reportUnexpectedException(cantInitializeChatNetworkServiceDatabaseException);
+            throw cantInitializeChatNetworkServiceDatabaseException;
         }
     }
 
@@ -258,6 +272,7 @@ public class ChatMetaDataDao {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            reportUnexpectedException(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
 
@@ -316,76 +331,12 @@ public class ChatMetaDataDao {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            reportUnexpectedException(cantReadRecordDataBaseException);
             throw cantReadRecordDataBaseException;
         }
 
         return newUUID;
     }
-
-    /**
-     * Method that list the all entities on the data base.
-     *
-     * @return All ChatMetadataRecord.
-     * @throws CantReadRecordDataBaseException
-     */
-    public List<ChatMetadataRecord> findAll() throws CantReadRecordDataBaseException {
-
-
-        List<ChatMetadataRecord> list = null;
-
-        try {
-
-            /*
-             * 1 - load the data base to memory
-             */
-            DatabaseTable networkIntraUserTable = getDatabaseTable();
-            networkIntraUserTable.loadToMemory();
-
-            /*
-             * 2 - read all records
-             */
-            List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
-
-            /*
-             * 3 - Create a list of ChatMetadataRecord objects
-             */
-            list = new ArrayList<>();
-            list.clear();
-
-            /*
-             * 4 - Convert into ChatMetadataRecord objects
-             */
-            for (DatabaseTableRecord record : records) {
-
-                /*
-                 * 4.1 - Create and configure a  ChatMetadataRecord
-                 */
-                ChatMetadataRecord ChatMetadaTransactionRecord = constructFrom(record);
-
-                /*
-                 * 4.2 - Add to the list
-                 */
-                list.add(ChatMetadaTransactionRecord);
-
-            }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
-        }
-
-        /*
-         * return the list
-         */
-        return list;
-    }
-
 
     /**
      * Method that list the all entities on the data base. The valid value of
@@ -453,97 +404,8 @@ public class ChatMetaDataDao {
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
-        }
-
-        /*
-         * return the list
-         */
-        return list;
-    }
-
-
-    /**
-     * Method that list the all entities on the data base. The valid value of
-     * the key are the att of the <code>CommunicationChatNetworkServiceDatabaseConstants</code>
-     *
-     * @param filters
-     * @return List<ChatMetadataRecord>
-     * @throws CantReadRecordDataBaseException
-     */
-    public List<ChatMetadataRecord> findAll(Map<String, Object> filters) throws CantReadRecordDataBaseException {
-
-        if (filters == null ||
-                filters.isEmpty()) {
-
-            throw new IllegalArgumentException("The filters are required, can not be null or empty");
-        }
-
-        List<ChatMetadataRecord> list = null;
-        List<DatabaseTableFilter> filtersTable = new ArrayList<>();
-
-        try {
-
-
-            /*
-             * 1- Prepare the filters
-             */
-            DatabaseTable templateTable = getDatabaseTable();
-
-            for (String key : filters.keySet()) {
-
-                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
-                newFilter.setType(DatabaseFilterType.EQUAL);
-                newFilter.setColumn(key);
-                newFilter.setValue((String) filters.get(key));
-
-                filtersTable.add(newFilter);
-            }
-
-
-            /*
-             * 2 - load the data base to memory with filters
-             */
-            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
-            templateTable.loadToMemory();
-
-            /*
-             * 3 - read all records
-             */
-            List<DatabaseTableRecord> records = templateTable.getRecords();
-
-            /*
-             * 4 - Create a list of ChatMetadataRecord objects
-             */
-            list = new ArrayList<>();
-            list.clear();
-
-            /*
-             * 5 - Convert into ChatMetadataRecord objects
-             */
-            for (DatabaseTableRecord record : records) {
-
-                /*
-                 * 5.1 - Create and configure a  ChatMetadataRecord
-                 */
-                ChatMetadataRecord ChatMetadaTransactionRecord = constructFrom(record);
-
-                /*
-                 * 5.2 - Add to the list
-                 */
-                list.add(ChatMetadaTransactionRecord);
-
-            }
-
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
-            throw cantReadRecordDataBaseException;
+            reportUnexpectedException(cantReadRecordDataBaseException);
+           throw cantReadRecordDataBaseException;
         }
 
         /*
@@ -588,6 +450,7 @@ public class ChatMetaDataDao {
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            reportUnexpectedException(cantInsertRecordDataBaseException);
             throw cantInsertRecordDataBaseException;
 
         }catch(Exception e){
@@ -597,6 +460,7 @@ public class ChatMetaDataDao {
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself\n"+e.getMessage();
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(e.getMessage(), e, context, possibleCause);
+            reportUnexpectedException(cantInsertRecordDataBaseException);
             throw cantInsertRecordDataBaseException;
         }
 
@@ -635,6 +499,7 @@ public class ChatMetaDataDao {
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
             CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            reportUnexpectedException(cantUpdateRecordDataBaseException);
             throw cantUpdateRecordDataBaseException;
 
         }
@@ -690,6 +555,7 @@ public class ChatMetaDataDao {
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
             CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            reportUnexpectedException(cantDeleteRecordDataBaseException);
             throw cantDeleteRecordDataBaseException;
 
         }
@@ -729,7 +595,7 @@ public class ChatMetaDataDao {
 
         } catch (InvalidParameterException e) {
             //this should not happen, but if it happens return null
-            e.printStackTrace();
+            reportUnexpectedException(FermatException.wrapException(e));
             return null;
         }
 
