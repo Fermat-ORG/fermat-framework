@@ -562,7 +562,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
             ExchangeRate currentExchangeRate = providerReference.getCurrentExchangeRate(new CurrencyPairImpl(from, to));
 
-            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(currentExchangeRate, providerId));
+            summaryList.add(new CryptoBrokerWalletModuleIndexInfoSummary(currentExchangeRate, providerReference));
         }
 
         return summaryList;
