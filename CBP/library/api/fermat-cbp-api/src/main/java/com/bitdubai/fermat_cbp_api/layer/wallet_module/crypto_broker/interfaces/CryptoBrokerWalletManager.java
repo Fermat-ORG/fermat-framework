@@ -369,7 +369,8 @@ public interface CryptoBrokerWalletManager extends WalletManager {
             String memo,
             BigDecimal priceReference,
             OriginTransaction originTransaction,
-            String originTransactionId
+            String originTransactionId,
+            BlockchainNetworkType blockchainNetworkType
     ) throws CantCreateCryptoMoneyRestockException;
 
 
