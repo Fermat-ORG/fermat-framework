@@ -39,7 +39,7 @@ import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.Incomin
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
-
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.GenericEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 
@@ -999,7 +999,12 @@ public enum EventType implements FermatEventEnum {
 //            return new ReviewNegotiationEvent(this);
 //        }
 //    },
-    ;
+    OUTGOING_DRAFT_TRANSACTION_FINISHED("ODTF") {
+    @Override
+    public FermatEvent getNewEvent() {
+        return new GenericEvent(this);
+    }
+};
 
 
     /**

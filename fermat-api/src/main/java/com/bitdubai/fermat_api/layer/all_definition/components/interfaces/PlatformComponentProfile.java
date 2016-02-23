@@ -27,42 +27,42 @@ public interface PlatformComponentProfile extends Cloneable {
      *
      * @return String
      */
-    public String getIdentityPublicKey();
+    String getIdentityPublicKey();
 
     /**
      * Get the alias
      *
      * @return String
      */
-    public String getAlias();
+    String getAlias();
 
     /**
      * Get the name
      *
      * @return String
      */
-    public String getName();
+    String getName();
 
     /**
      * Get the location for geo localization
      *
      * @return Double
      */
-    public Location getLocation();
+    Location getLocation();
 
     /**
      * Return the platform component type
      *
      * @return PlatformComponentType
      */
-    public PlatformComponentType getPlatformComponentType();
+    PlatformComponentType getPlatformComponentType();
 
     /**
      * Get the network service type of the packet
      *
      * @return NetworkServiceType
      */
-    public NetworkServiceType getNetworkServiceType();
+    NetworkServiceType getNetworkServiceType();
 
     /**
      * Return the public key that represent the identity of the Web Socket Communication Cloud Client,
@@ -70,21 +70,21 @@ public interface PlatformComponentProfile extends Cloneable {
      *
      * @return String
      */
-    public String getCommunicationCloudClientIdentity();
+    String getCommunicationCloudClientIdentity();
 
     /**
      * Return the extra data
      *
      * @return String
      */
-    public String getExtraData();
+    String getExtraData();
 
     /**
      * Convert this object to json string
      *
      * @return String json
      */
-    public String toJson();
+    String toJson();
 
     /**
      * Convert to PlatformComponentProfile from json
@@ -92,6 +92,6 @@ public interface PlatformComponentProfile extends Cloneable {
      * @param json string object
      * @return PlatformComponentProfile
      */
-    public PlatformComponentProfile fromJson(String json);
+    PlatformComponentProfile fromJson(String json);
 
 }

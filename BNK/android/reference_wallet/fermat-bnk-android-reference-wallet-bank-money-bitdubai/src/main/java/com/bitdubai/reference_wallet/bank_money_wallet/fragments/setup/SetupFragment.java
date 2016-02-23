@@ -53,7 +53,9 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         walletSettings = null;
         try {
             walletSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-        }catch (Exception e){ walletSettings = null; }
+        }catch (Exception e){ walletSettings = null;
+            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        }
 
         if(walletSettings == null){
             walletSettings = new BankMoneyWalletPreferenceSettings();
@@ -61,7 +63,7 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
             try {
                 moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),walletSettings);
             }catch (Exception e){
-                e.printStackTrace();
+                errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
             }
         }
     }

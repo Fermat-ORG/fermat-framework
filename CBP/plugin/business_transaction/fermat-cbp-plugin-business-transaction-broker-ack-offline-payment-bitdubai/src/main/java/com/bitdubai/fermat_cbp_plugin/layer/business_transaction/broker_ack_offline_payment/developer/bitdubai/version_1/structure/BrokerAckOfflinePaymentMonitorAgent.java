@@ -149,11 +149,11 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         LOG.info("Customer online payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
+            this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_ACK_OFFLINE_PAYMENT,
@@ -316,7 +316,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 List<BusinessTransactionRecord> pendingToBankCreditList=
                         brokerAckOfflinePaymentBusinessTransactionDao.getPendingToBankCreditList();
                 for(BusinessTransactionRecord pendingToBankCreditRecord : pendingToBankCreditList){
-                    contractHash=pendingToBankCreditRecord.getTransactionHash();
+                    contractHash=pendingToBankCreditRecord.getContractHash();
                     cryptoWalletPublicKey=pendingToBankCreditRecord.getCBPWalletPublicKey();
                     bankTransactionParametersRecord=getBankTransactionParametersRecordFromContractId(
                             contractHash, cryptoWalletPublicKey);
@@ -338,7 +338,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 List<BusinessTransactionRecord> pendingToCashCreditList=
                         brokerAckOfflinePaymentBusinessTransactionDao.getPendingToCashCreditList();
                 for(BusinessTransactionRecord pendingToCashCreditRecord : pendingToCashCreditList){
-                    contractHash=pendingToCashCreditRecord.getTransactionHash();
+                    contractHash=pendingToCashCreditRecord.getContractHash();
                     cryptoWalletPublicKey=pendingToCashCreditRecord.getCBPWalletPublicKey();
                     cashTransactionParametersRecord=getCashTransactionParametersRecordFromContractId(
                             contractHash,
@@ -514,8 +514,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
                             customerBrokerContractSale,
                             paymentType,
-                            customerBrokerContractSale.getPublicKeyBroker());
-
+                            customerBrokerContractSale.getPublicKeyBroker(),
+                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT);
+                    brokerAckOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
             } catch (CantUpdateRecordException exception) {

@@ -73,7 +73,7 @@ public class ChatImpl implements Chat {
         this.status               = status;
         this.date                 = date;
         this.lastMessageDate      = lastMessageDate;
-    };
+    }
 
     @Override
     public UUID getChatId() {

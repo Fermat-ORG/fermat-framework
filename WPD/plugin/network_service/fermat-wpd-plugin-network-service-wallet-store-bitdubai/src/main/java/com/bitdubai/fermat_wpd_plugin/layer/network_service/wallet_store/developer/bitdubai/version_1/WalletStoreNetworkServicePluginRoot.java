@@ -201,7 +201,7 @@ public class WalletStoreNetworkServicePluginRoot extends AbstractPlugin implemen
 
     @Override
     public void publishSkin(Skin skin) throws CantPublishSkinInCatalogException {
-        getWalletStoreManager().publishSkin((com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.structure.catalog.Skin) skin);
+        getWalletStoreManager().publishSkin(skin);
     }
 
     @Override
