@@ -56,7 +56,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     private final CloseContractManager closeContractManager;
     private final CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     private final FiatIndexManager fiatIndexManager;
-    private final NotificationManagerMiddleware notificationManagerMiddleware;
+    //private final NotificationManagerMiddleware notificationManagerMiddleware;
     private final UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager;
 
     public final int DELAY_HOURS = 2;
@@ -71,7 +71,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                                                                           CloseContractManager closeContractManager,
                                                                           CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
                                                                           FiatIndexManager fiatIndexManager,
-                                                                          NotificationManagerMiddleware notificationManagerMiddleware,
+                                                                          //NotificationManagerMiddleware notificationManagerMiddleware,
                                                                           UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager) {
 
         this.errorManager = errorManager;
@@ -80,7 +80,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
         this.closeContractManager = closeContractManager;
         this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
         this.fiatIndexManager = fiatIndexManager;
-        this.notificationManagerMiddleware = notificationManagerMiddleware;
+        //this.notificationManagerMiddleware = notificationManagerMiddleware;
         this.userLevelBusinessTransactionCustomerBrokerPurchaseManager = userLevelBusinessTransactionCustomerBrokerPurchaseManager;
 
         this.userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao(pluginDatabaseSystem, pluginId);
@@ -310,7 +310,10 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantUpdateCustomerBrokerContractPurchaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+
     }
 
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {

@@ -129,11 +129,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 chatwascreate = true;
             } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
                 findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
-                if (chatid != null) {//Here it is define if we need to create a new chat or just add the message to chat created previously
-                    chatwascreate = true;
-                } else {
-                    chatwascreate = false;
-                }
+                //Here it is define if we need to create a new chat or just add the message to chat created previously
+                chatwascreate = chatid != null;
             }
         }catch(Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

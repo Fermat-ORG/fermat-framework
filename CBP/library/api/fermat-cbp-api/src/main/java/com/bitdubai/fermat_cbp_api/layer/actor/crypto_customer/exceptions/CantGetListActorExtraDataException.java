@@ -23,4 +23,8 @@ public class CantGetListActorExtraDataException extends FermatException {
         super(message, cause, context, possibleReason);
     }
 
+    public CantGetListActorExtraDataException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
 }

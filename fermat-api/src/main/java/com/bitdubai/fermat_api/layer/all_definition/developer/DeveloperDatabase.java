@@ -5,8 +5,8 @@ package com.bitdubai.fermat_api.layer.all_definition.developer;
  */
 public interface DeveloperDatabase {
 
-    public String getName();
+    String getName();
 
-    public String getId();
+    String getId();
 
 }

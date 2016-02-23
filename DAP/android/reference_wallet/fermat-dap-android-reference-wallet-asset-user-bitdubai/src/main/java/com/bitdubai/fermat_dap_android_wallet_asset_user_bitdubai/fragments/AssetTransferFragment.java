@@ -108,7 +108,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dap_wallet_asset_user_asset_transfer, container, false);
         res = rootView.getResources();
-
+        moduleManager.clearDeliverList();
         setupUI();
         setupUIData();
 

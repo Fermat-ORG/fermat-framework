@@ -23,4 +23,8 @@ public class CantCreateNewCustomerIdentityWalletRelationshipException extends Fe
         super(message, cause, context, possibleReason);
     }
 
+    public CantCreateNewCustomerIdentityWalletRelationshipException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
 }

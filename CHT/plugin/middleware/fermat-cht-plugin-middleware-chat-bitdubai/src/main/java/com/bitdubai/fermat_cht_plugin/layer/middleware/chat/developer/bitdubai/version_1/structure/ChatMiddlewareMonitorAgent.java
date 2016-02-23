@@ -116,11 +116,11 @@ public class ChatMiddlewareMonitorAgent implements
         //LOG.info("Open contract monitor agent starting");
         monitorAgent = new MonitorAgent();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
+            this.monitorAgent.Initialize();
         } catch (CantInitializeCHTAgent exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CHAT_MIDDLEWARE,
@@ -473,7 +473,7 @@ public class ChatMiddlewareMonitorAgent implements
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         saveChat(incomingChatMetadata);
                         //If message exists in database, this message will be update
-                   //     saveChat(incomingChatMetadata);
+                        saveChat(incomingChatMetadata);
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP

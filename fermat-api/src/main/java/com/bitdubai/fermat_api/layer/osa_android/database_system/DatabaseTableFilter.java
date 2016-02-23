@@ -13,16 +13,16 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 public interface DatabaseTableFilter {
     
     
-    public void setColumn (String column);
+    void setColumn(String column);
 
-    public void setType (DatabaseFilterType type);
+    void setType(DatabaseFilterType type);
 
-    public void setValue (String value);
+    void setValue(String value);
 
-    public String  getColumn ();
+    String  getColumn();
 
-    public String getValue ();
+    String getValue();
 
-    public DatabaseFilterType getType ();
+    DatabaseFilterType getType();
     
 }

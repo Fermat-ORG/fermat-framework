@@ -95,8 +95,8 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.dap_issuer_community_fragment_connections_other_profile, container, false);
         toolbar = getToolbar();
-        if (toolbar != null)
-            toolbar.setTitle(actorIssuer.getRecord().getName());
+//        if (toolbar != null)
+//            toolbar.setTitle(actorIssuer.getRecord().getName());
         issuerProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
         //issuerStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         issuerName = (FermatTextView) rootView.findViewById(R.id.username);
