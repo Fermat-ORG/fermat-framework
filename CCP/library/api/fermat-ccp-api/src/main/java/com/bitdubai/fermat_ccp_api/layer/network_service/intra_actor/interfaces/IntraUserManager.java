@@ -31,7 +31,7 @@ public interface IntraUserManager extends FermatManager {
      * @return
      * @throws ErrorInIntraUserSearchException
      */
-    public List<IntraUserInformation> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException;
+    List<IntraUserInformation> searchIntraUserByName(String intraUserAlias) throws ErrorInIntraUserSearchException;
 
     /**
      * The method <code>getIntraUsersSuggestions</code> returns a list of intra users that the logged in
@@ -40,7 +40,7 @@ public interface IntraUserManager extends FermatManager {
      * @return The list of suggestions
      * @throws ErrorSearchingSuggestionsException
      */
-    public List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException;
+    List<IntraUserInformation> getIntraUsersSuggestions(int max, int offset) throws ErrorSearchingSuggestionsException;
 
 
     /**
@@ -103,7 +103,7 @@ public interface IntraUserManager extends FermatManager {
      *
      * @return List of IntraUserNotification
      */
-    public List<IntraUserNotification> getPendingNotifications() throws CantGetNotificationsException;
+    List<IntraUserNotification> getPendingNotifications() throws CantGetNotificationsException;
 
 
     /**
@@ -116,13 +116,13 @@ public interface IntraUserManager extends FermatManager {
     /**
      *
      */
-    public void confirmNotification(UUID notificationID) throws CantConfirmNotificationException;
+    void confirmNotification(UUID notificationID) throws CantConfirmNotificationException;
 
 
     /**
      * Regist
      */
-    public void registrateActors(List<Actor> actor);
+    void registrateActors(List<Actor> actor);
     void registrateActor(Actor actor);
 
     Actor contructIdentity(String publicKey, String alias, String phrase, Actors actors ,byte[] profileImage);

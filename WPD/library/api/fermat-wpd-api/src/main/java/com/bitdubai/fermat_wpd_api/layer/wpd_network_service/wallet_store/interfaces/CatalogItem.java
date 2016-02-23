@@ -16,23 +16,23 @@ public interface CatalogItem {
     /**
      * Catalog Wallet identifiers
      */
-    public UUID getId(); //Todo: Refactor a String para que acepte PublicKey
-    public String getName();
-    public WalletCategory getCategory();
+    UUID getId(); //Todo: Refactor a String para que acepte PublicKey
+    String getName();
+    WalletCategory getCategory();
 
 
     /**
      * Catalog wallet information to be shown
      */
-    public String getDescription();
-    public int getDefaultSizeInBytes();
-    public byte[] getIcon() throws CantGetWalletIconException;
-    public URL getpublisherWebsiteUrl();
+    String getDescription();
+    int getDefaultSizeInBytes();
+    byte[] getIcon() throws CantGetWalletIconException;
+    URL getpublisherWebsiteUrl();
 
     /**
      * Detailed information of the item
      */
-    public DetailedCatalogItem getDetailedCatalogItemImpl() throws CantGetWalletDetailsException;
+    DetailedCatalogItem getDetailedCatalogItemImpl() throws CantGetWalletDetailsException;
 
 
 }
