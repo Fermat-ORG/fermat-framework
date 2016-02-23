@@ -98,17 +98,17 @@ public class IncomingIntraUserBitcoinBasicWalletTransactionExecutor implements T
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
        }
 
-        //Esto se hiso aca hasta pensar mejor el proceso para cambiar el estado del request
-        try
-        {
-        if(transaction.getTransactionMetadata().getInformation().getRequestId() != null)
-        {
-            processPaymentRequest(transaction.getTransactionMetadata().getInformation().getRequestId());
-        }
-
-        } catch (CantProcessRequestAcceptedException e) {
-            throw new CantRegisterCreditException("I couldn't update request payment",e,"","");
-        }
+//        //Esto se hiso aca hasta pensar mejor el proceso para cambiar el estado del request
+//        try
+//        {
+//        if(transaction.getTransactionMetadata().getInformation().getRequestId() != null)
+//        {
+//            processPaymentRequest(transaction.getTransactionMetadata().getInformation().getRequestId());
+//        }
+//
+//        } catch (CantProcessRequestAcceptedException e) {
+//            throw new CantRegisterCreditException("I couldn't update request payment",e,"","");
+//        }
     }
 
     private void processReversedOnCryptoNetworkTransaction(TransactionCompleteInformation transaction) throws CantRegisterDebitException {
