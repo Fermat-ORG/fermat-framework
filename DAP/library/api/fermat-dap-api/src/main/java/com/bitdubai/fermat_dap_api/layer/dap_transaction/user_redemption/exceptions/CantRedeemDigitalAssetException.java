@@ -15,4 +15,8 @@ public class CantRedeemDigitalAssetException extends DAPException {
     public CantRedeemDigitalAssetException(final String message) {
         this(null, DEFAULT_MESSAGE, message);
     }
+
+    public CantRedeemDigitalAssetException(Exception exception) {
+        super(exception);
+    }
 }
