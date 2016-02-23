@@ -209,7 +209,7 @@ public class ContactsListFragment extends AbstractFermatFragment {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-        adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
+        adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
 
@@ -217,45 +217,45 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                try{
-                    Contact contactexist= chatSession.getSelectedContactToUpdate();
-                    if(contactexist!=null) {
-                        if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")){
-                            UUID contactidnew = contactexist.getContactId();
-                            contactexist=chatManager.getContactByContactId(contactid.get(position));
-                            Chat chat=chatSession.getSelectedChat();
-                            chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-                            chatManager.saveChat(chat);
-                            Contact contactnew = new ContactImpl();
-                            contactnew=chatManager.getContactByContactId(contactidnew);
-                            contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
-                            contactnew.setAlias(contactexist.getAlias());
-                            contactnew.setRemoteName(contactexist.getRemoteName());
-                            contactnew.setRemoteActorType(contactexist.getRemoteActorType());
-                            chatManager.saveContact(contactnew);
-                            chatManager.deleteContact(contactexist);
-                            appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, null);
-                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-                            appSession.setData("whocallme", "contact");
-                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
-                            changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-                        }
-                    }else {
+            try{
+                Contact contactexist= chatSession.getSelectedContactToUpdate();
+                if(contactexist!=null) {
+                    if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")){
+                        UUID contactidnew = contactexist.getContactId();
+                        contactexist=chatManager.getContactByContactId(contactid.get(position));
+                        Chat chat=chatSession.getSelectedChat();
+                        chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
+                        chatManager.saveChat(chat);
+                        Contact contactnew = new ContactImpl();
+                        contactnew=chatManager.getContactByContactId(contactidnew);
+                        contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
+                        contactnew.setAlias(contactexist.getAlias());
+                        contactnew.setRemoteName(contactexist.getRemoteName());
+                        contactnew.setRemoteActorType(contactexist.getRemoteActorType());
+                        chatManager.saveContact(contactnew);
+                        chatManager.deleteContact(contactexist);
+                        appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, null);
+                        changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                         appSession.setData("whocallme", "contact");
-                        appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                        appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
                         changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                     }
-                }catch(CantSaveChatException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch(CantDeleteContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch(CantSaveContactException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch(CantGetContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch (Exception e){
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }else {
+                    appSession.setData("whocallme", "contact");
+                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                    changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 }
+            }catch(CantSaveChatException e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }catch(CantDeleteContactException e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }catch(CantSaveContactException e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }catch(CantGetContactException e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }catch (Exception e){
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
             }
         });
 
@@ -263,51 +263,53 @@ public class ContactsListFragment extends AbstractFermatFragment {
 
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                try{
-                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
-                    changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
-                }catch(CantGetContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch (Exception e){
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-                return true;
+            try{
+                appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(position)));
+                changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
+            }catch(CantGetContactException e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }catch (Exception e){
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+            return true;
             }
         });
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
-                            List <Contact> con=  chatManager.getContacts();
-                            if (con.size() > 0) {
-                                for (int i=0;i<con.size();i++){
-                                    contactname.add(con.get(i).getAlias());
-                                    contactid.add(con.get(i).getContactId());
-                                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
-                                }
-                                final ContactListAdapter adaptador =
-                                        new ContactListAdapter(getActivity(), contactname, contacticon, contactid);
-                                adaptador.refreshEvents(contactname, contacticon, contactid);
-                                adaptador.notifyDataSetChanged();
-                                list.invalidateViews();
-                                list.requestLayout();
-                            }else{
-                                Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (CantGetContactException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        } catch (Exception e) {
-                            //TODO: fix this
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                try {
+                    Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
+                    List <Contact> con=  chatManager.getContacts();
+                    if (con.size() > 0) {
+                        contactname.clear();
+                        contactid.clear();
+                        contacticon.clear();
+                        for (int i=0;i<con.size();i++){
+                            contactname.add(con.get(i).getAlias());
+                            contactid.add(con.get(i).getContactId());
+                            contacticon.add(R.drawable.ic_contact_picture_holo_light);
                         }
-                        mSwipeRefreshLayout.setRefreshing(false);
+                        final ContactListAdapter adaptador =
+                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
+                        adaptador.refreshEvents(contactname, contacticon, contactid);
+                        //adaptador.notifyDataSetChanged();
+                        list.invalidateViews();
+                        list.requestLayout();
+                    }else{
+                        Toast.makeText(getActivity(), "No Contacts", Toast.LENGTH_SHORT).show();
                     }
-                }, 2500);
+                } catch (CantGetContactException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+                }
+            }, 2500);
             }
         });
         // Inflate the list fragment layout

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
@@ -17,6 +18,8 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,11 +53,18 @@ public class ChatMiddlewareContactFactory {
      */
     HashMap<String, Object> compatiblesActorNetworkServiceMap;
 
+    /**
+     * Represents the ErrorManager
+     */
+    ErrorManager errorManager;
+
     public ChatMiddlewareContactFactory(
-            HashMap<String, Object> actorNetworkServiceMap) throws
+            HashMap<String, Object> actorNetworkServiceMap,
+            ErrorManager errorManager) throws
             CantGetCompatiblesActorNetworkServiceListException {
         this.actorNetworkServiceMap = actorNetworkServiceMap;
-        this.compatiblesActorNetworkServiceMap =getCompatiblesActorNetworkService();
+        this.compatiblesActorNetworkServiceMap = getCompatiblesActorNetworkService();
+        this.errorManager = errorManager;
     }
 
     /**
@@ -128,6 +138,10 @@ public class ChatMiddlewareContactFactory {
                 return compatiblesActorNetworkServiceList;
             }
         } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
             throw new CantGetCompatiblesActorNetworkServiceListException(
                     FermatException.wrapException(exception),
                     "Cannot get the compatibles actor network service list",
@@ -169,7 +183,8 @@ public class ChatMiddlewareContactFactory {
                     if(appPublicKey==null){
                         continue;
                     }
-                    List<IntraUserInformation> ccpActorList=intraActorManager.getAllIntraUsers(appPublicKey
+                    List<IntraUserInformation> ccpActorList=intraActorManager.getAllIntraUsers(
+                            appPublicKey
                             , 20, 0);
                     for(IntraUserInformation intraUserInformation : ccpActorList){
                         remoteName=intraUserInformation.getName();
@@ -211,28 +226,48 @@ public class ChatMiddlewareContactFactory {
             }
             return contactList;
         } catch (ClassCastException exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
             throw new CantGetContactException(
-                    exception,
+                    FermatException.wrapException(exception),
                     "Discovering the connected actors",
                     "Something goes wrong with the casting");
         } catch (CantGetActiveLoginIdentityException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetContactException(
                     e,
                     "Discovering the connected actors",
                     "Cannot get the active login identity");
         } catch (CantGetIntraUsersListException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetContactException(
                     e,
                     "Discovering the connected actors",
                     "Cannot get the intra user list identity");
         } catch (CantRequestListActorAssetUserRegisteredException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetContactException(
                     e,
                     "Discovering the connected actors",
                     "Cannot request actor user registered list");
         } catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
             throw new CantGetContactException(
-                    exception,
+                    FermatException.wrapException(exception),
                     "Discovering the connected actors",
                     "Unexpected Exception");
         }
