@@ -155,6 +155,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         this.note           = negotiationInformation.getMemo();
         this.lastUpdateDate = negotiationInformation.getLastNegotiationUpdateDate();
         this.cancelReason   = cancelReason;
+        this.expirationDatetime = negotiationInformation.getNegotiationExpirationDate();
     }
 
     @Override
