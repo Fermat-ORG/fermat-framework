@@ -34,6 +34,7 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChain;
+import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
@@ -65,6 +66,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     final NetworkParameters NETWORK_PARAMETERS;
     final BlockchainNetworkType BLOCKCHAIN_NETWORKTYPE;
+    final Context context;
 
 
     /**
@@ -80,7 +82,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
      * Constructor
      * @param pluginDatabaseSystem
      */
-    public BitcoinCryptoNetworkMonitor(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Wallet wallet, File walletFilename, PluginFileSystem pluginFileSystem, ErrorManager errorManager) {
+    public BitcoinCryptoNetworkMonitor(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Wallet wallet, File walletFilename, PluginFileSystem pluginFileSystem, ErrorManager errorManager, Context context) {
         /**
          * I initialize the local variables
          */
@@ -90,11 +92,12 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         this.walletFileName = walletFilename;
         this.pluginFileSystem = pluginFileSystem;
         this.errorManager = errorManager;
+        this.context = context;
 
         /**
          * Define the constants
          */
-        NETWORK_PARAMETERS = wallet.getNetworkParameters();
+        NETWORK_PARAMETERS = context.getParams();
         BLOCKCHAIN_NETWORKTYPE = BitcoinNetworkSelector.getBlockchainNetworkType(NETWORK_PARAMETERS);
     }
 
@@ -104,7 +107,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * I define the MonitorAgent private class
          */
-        monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginDatabaseSystem, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE );
+        monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginDatabaseSystem, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, this.context);
 
         // I define the thread name and start it.
         threadName = "CryptoNetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode();
@@ -161,6 +164,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         final BlockchainNetworkType BLOCKCHAIN_NETWORKTYPE;
         final String TRANSACTION_DIRECTORY = "CryptoNetworkTransactions";
 
+        final Context context;
 
 
         /**
@@ -190,7 +194,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                             PluginFileSystem pluginFileSystem,
                             ErrorManager errorManager,
                             NetworkParameters networkParameters,
-                            BlockchainNetworkType blockchainNetworkType) {
+                            BlockchainNetworkType blockchainNetworkType,
+                            Context context) {
 
             this.wallet = wallet;
             this.walletFileName = walletFileName;
@@ -200,6 +205,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             this.errorManager = errorManager;
             this.NETWORK_PARAMETERS = networkParameters;
             this.BLOCKCHAIN_NETWORKTYPE = blockchainNetworkType;
+            this.context = context;
         }
 
         @Override
@@ -223,7 +229,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * creates the blockchain object for the specified network.
                  */
-                BitcoinCryptoNetworkBlockChain cryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(pluginFileSystem, NETWORK_PARAMETERS, wallet);
+                BitcoinCryptoNetworkBlockChain cryptoNetworkBlockChain = new BitcoinCryptoNetworkBlockChain(pluginFileSystem, NETWORK_PARAMETERS, wallet, context);
                 blockChain = cryptoNetworkBlockChain.getBlockChain();
 
                 /**

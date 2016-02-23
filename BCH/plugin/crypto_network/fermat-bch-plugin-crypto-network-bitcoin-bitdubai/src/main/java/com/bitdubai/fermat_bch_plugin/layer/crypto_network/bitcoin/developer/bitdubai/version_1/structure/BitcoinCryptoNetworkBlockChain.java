@@ -8,6 +8,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.CheckpointManager;
+import org.bitcoinj.core.Context;
 import org.bitcoinj.core.DownloadProgressTracker;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Wallet;
@@ -53,16 +54,18 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
     private final String BLOCKCHAIN_PATH;
     private final String CHECKPOINT_FILENAME;
     private final BlockchainNetworkType BLOCKCHAIN_NETWORK_TYPE;
+    private final Context context;
     PluginFileSystem pluginFileSystem;
 
 
     /**
      * Constructor
      */
-    public BitcoinCryptoNetworkBlockChain(PluginFileSystem pluginFileSystem, NetworkParameters networkParameters, Wallet wallet) throws BlockchainException {
+    public BitcoinCryptoNetworkBlockChain(PluginFileSystem pluginFileSystem, NetworkParameters networkParameters, Wallet wallet, Context context) throws BlockchainException {
         this.pluginFileSystem = pluginFileSystem;
         this.wallet = wallet;
-        this.networkParameters= wallet.getContext().getParams();
+        this.context = context;
+        this.networkParameters= this.context.getParams();
 
         this.BLOCKCHAIN_NETWORK_TYPE = BitcoinNetworkSelector.getBlockchainNetworkType(this.networkParameters);
         this.BLOCKCHAIN_PATH = pluginFileSystem.getAppPath();

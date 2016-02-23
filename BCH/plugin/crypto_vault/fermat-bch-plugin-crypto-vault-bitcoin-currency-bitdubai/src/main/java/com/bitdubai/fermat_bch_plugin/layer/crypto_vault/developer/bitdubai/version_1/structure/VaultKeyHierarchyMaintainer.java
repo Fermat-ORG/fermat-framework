@@ -112,7 +112,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * Sleep time of the agent between iterations
          */
-        final long AGENT_SLEEP_TIME = 60000; //default time is 10 minutes
+        final long AGENT_SLEEP_TIME = 120000; //default time is 2 minutes
 
 
         @Override
