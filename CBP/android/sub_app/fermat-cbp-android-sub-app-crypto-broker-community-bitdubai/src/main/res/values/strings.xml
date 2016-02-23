@@ -16,6 +16,6 @@
     <string name="cbp_cbc_launch_action_creation_dialog_sub_title">This app let\'s you connect to other Crypto Broker users within the Fermat Network. \nThis app\'s main features are:</string>
     <string name="cbp_cbc_launch_action_creation_dialog_body">* Browse users around you.\n * Connect to to users from anywhere.\n * See other user\'s profiles.\n * Send connection requests to users.\n * Receive connection requests from users.</string>
     <string name="cbp_cbc_launch_action_creation_dialog_footer">To begin, choose an avatar below.\nYou may change it later.</string>
-    <string name="cbp_cbc_launch_action_creation_name_left">John Doe</string>
-    <string name="cbp_cbc_launch_action_creation_name_right">Jane Doe</string>
+    <string name="cbp_cbc_launch_action_creation_name_left">Customer</string>
+    <string name="cbp_cbc_launch_action_creation_name_right">Broker</string>
 </resources>

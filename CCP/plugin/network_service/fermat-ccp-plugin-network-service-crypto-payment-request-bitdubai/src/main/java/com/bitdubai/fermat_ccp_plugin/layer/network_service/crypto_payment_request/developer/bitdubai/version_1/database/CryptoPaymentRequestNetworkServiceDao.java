@@ -151,6 +151,88 @@ public final class CryptoPaymentRequestNetworkServiceDao {
         }
     }
 
+    public Actors getActorTypeFromRequest(String identityPublicKeySender) throws CantGetRequestException {
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, identityPublicKeySender, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                return buildCryptoPaymentRequestRecord(records.get(0)).getIdentityType();
+            else{
+
+                cryptoPaymentRequestTable.clearAllFilters();
+                cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME, identityPublicKeySender, DatabaseFilterType.EQUAL);
+                cryptoPaymentRequestTable.loadToMemory();
+                List<DatabaseTableRecord> records1 = cryptoPaymentRequestTable.getRecords();
+                if (!records1.isEmpty())
+                    return buildCryptoPaymentRequestRecord(records1.get(0)).getActorType();
+                else
+                    throw new CantGetRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+
+            }
+
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException e) {
+            throw new CantGetRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (Exception e) {
+            throw new CantGetRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
+    public Actors getActorTypeToRequest(String identityPublicKeyDestination) throws CantGetRequestException {
+        try {
+
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_ACTOR_PUBLIC_KEY_COLUMN_NAME, identityPublicKeyDestination, DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                return buildCryptoPaymentRequestRecord(records.get(0)).getActorType();
+            else{
+
+                cryptoPaymentRequestTable.clearAllFilters();
+                cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, identityPublicKeyDestination, DatabaseFilterType.EQUAL);
+                cryptoPaymentRequestTable.loadToMemory();
+                List<DatabaseTableRecord> records1 = cryptoPaymentRequestTable.getRecords();
+                if (!records1.isEmpty())
+                    return buildCryptoPaymentRequestRecord(records1.get(0)).getIdentityType();
+                else
+                    throw new CantGetRequestException(new Exception(), "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+
+            }
+
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetRequestException(exception, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException e) {
+            throw new CantGetRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        } catch (Exception e) {
+            throw new CantGetRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+
+        }
+
+
     public boolean isPendingRequestByProtocolState(final RequestProtocolState protocolState) throws CantListRequestsException {
 
         if (protocolState == null)

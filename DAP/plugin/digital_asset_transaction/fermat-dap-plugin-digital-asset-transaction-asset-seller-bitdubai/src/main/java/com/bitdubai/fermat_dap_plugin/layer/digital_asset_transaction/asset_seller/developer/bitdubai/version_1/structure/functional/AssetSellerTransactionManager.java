@@ -6,6 +6,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegot
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetNegotiationContentMessage;
@@ -88,7 +89,7 @@ public final class AssetSellerTransactionManager {
 
     private void sendMessage(AssetNegotiation negotiation, DAPActor from, DAPActor to) throws CantSetObjectException, CantSendMessageException {
         DAPContentMessage content = new AssetNegotiationContentMessage(AssetSellStatus.WAITING_CONFIRMATION, negotiation);
-        DAPMessage message = new DAPMessage(content, from, to);
+        DAPMessage message = new DAPMessage(content, from, to, DAPMessageSubject.NEW_NEGOTIATION_STARTED);
         assetTransmission.sendMessage(message);
     }
 

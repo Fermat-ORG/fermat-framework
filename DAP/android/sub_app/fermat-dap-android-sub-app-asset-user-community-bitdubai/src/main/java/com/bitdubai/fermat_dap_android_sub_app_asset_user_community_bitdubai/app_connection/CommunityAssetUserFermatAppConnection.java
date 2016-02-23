@@ -6,8 +6,10 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -17,14 +19,20 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.factory.CommunityUserFragmentFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.navigation_drawer.UserCommunityNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
 public class CommunityAssetUserFermatAppConnection extends AppConnections {
 
-    public CommunityAssetUserFermatAppConnection(Activity activity) {
+    private AssetUserCommunitySubAppModuleManager manager;
+    private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+
+    public CommunityAssetUserFermatAppConnection(Activity activity, FermatSession fullyLoadedSession) {
         super(activity);
+        this.assetUserCommunitySubAppSession = (AssetUserCommunitySubAppSession) fullyLoadedSession;
     }
 
     @Override
@@ -61,5 +69,31 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections {
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public NotificationPainter getNotificationPainter(String code) {
+        NotificationPainter notification = null;
+        try {
+            manager = assetUserCommunitySubAppSession.getModuleManager();
+            String[] params = code.split("|");
+            String notificationType = params[0];
+            String senderActorPublicKey = params[1];
+
+            switch (notificationType) {
+                case "CONNECTION_REQUEST":
+                    try {
+                        //find last notification by sender actor public key
+                        ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
+                        notification = new UserAssetCommunityNotificationPainter("New Request connection", "Receiving request connection by: " + senderActor.getName(), "", "");
+                        break;
+                    } catch (Exception e) {
+
+                    }
+            }
+        } catch (Exception e) {
+
+        }
+        return notification;
     }
 }

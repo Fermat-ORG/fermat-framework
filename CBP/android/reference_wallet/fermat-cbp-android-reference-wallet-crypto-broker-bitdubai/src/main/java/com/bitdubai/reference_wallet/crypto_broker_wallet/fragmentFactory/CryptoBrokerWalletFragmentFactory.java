@@ -82,6 +82,8 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
                 return WizardPageOtherSettingsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_CREATE_NEW_LOCATION_IN_SETTINGS:
                 return CreateNewLocationFragment.newInstance();
+            case CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS:
+                return SettingsMylocationsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT:
                 return SettingsBankAccountsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES:

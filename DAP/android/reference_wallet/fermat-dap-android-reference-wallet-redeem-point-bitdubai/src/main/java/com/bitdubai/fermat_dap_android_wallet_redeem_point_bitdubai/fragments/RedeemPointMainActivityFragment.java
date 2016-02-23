@@ -208,7 +208,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 return false;
             }
         });
-        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_asset_redeem_help_icon)
+        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_asset_redeem_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 

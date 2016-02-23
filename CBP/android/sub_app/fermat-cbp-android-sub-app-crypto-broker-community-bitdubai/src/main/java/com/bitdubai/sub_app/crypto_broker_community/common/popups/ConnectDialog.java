@@ -127,7 +127,7 @@ public class ConnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSessi
                     Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
 
                     //set flag so that the preceding fragment reads it on dismiss()
-                    getSession().setData("connectionresult", true);
+                    getSession().setData("connectionresult", 2);
 
                 } else {
                     Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();

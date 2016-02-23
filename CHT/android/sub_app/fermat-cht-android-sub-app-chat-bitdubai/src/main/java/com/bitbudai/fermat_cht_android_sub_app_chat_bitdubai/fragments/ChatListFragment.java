@@ -107,6 +107,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    ChatListAdapter adapter;
 
     ListView list;
     // Defines a tag for identifying log entries
@@ -255,31 +256,31 @@ public class ChatListFragment extends AbstractFermatFragment{
         View layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updatevalues();
-        final ChatListAdapter adapter=new ChatListAdapter(getActivity(), infochat, imgid, errorManager);
+        adapter=new ChatListAdapter(getActivity(), infochat, imgid, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // TODO Auto-generated method stub
-            String Slecteditem = infochat.get(position).toString();
-            String values = infochat.get(position);
-            List<String> converter = new ArrayList<String>();
-            converter.addAll(Arrays.asList(values.split("@#@#")));
-            Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
-            try{
-                appSession.setData("whocallme", "chatlist");
-                appSession.setData("contactid", chatManager.getContactByContactId(UUID.fromString(converter.get(4))));//esto no es necesario, haces click a un chat
-                //appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(UUID.fromString(converter.get(3))));//este si hace falta
-                changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-            } catch (CantGetContactException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                //CommonLogger.exception(TAG+"clickoncontact", e.getMessage(), e);
-                //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            } catch(Exception e)
-            {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
+                // TODO Auto-generated method stub
+                String Slecteditem = infochat.get(position).toString();
+                String values = infochat.get(position);
+                List<String> converter = new ArrayList<String>();
+                converter.addAll(Arrays.asList(values.split("@#@#")));
+                Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
+                try{
+                    appSession.setData("whocallme", "chatlist");
+                    appSession.setData("contactid", chatManager.getContactByContactId(UUID.fromString(converter.get(4))));//esto no es necesario, haces click a un chat
+                    //appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(UUID.fromString(converter.get(3))));//este si hace falta
+                    changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
+                } catch (CantGetContactException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    //CommonLogger.exception(TAG+"clickoncontact", e.getMessage(), e);
+                    //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+                } catch(Exception e)
+                {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
             }
         });
 
@@ -309,6 +310,18 @@ public class ChatListFragment extends AbstractFermatFragment{
         return layout;
     }
 
+    //FINALLY
+
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        super.onUpdateViewOnUIThread(code);
+   //     Toast.makeText(getActivity(), "Broadcast chatlist", Toast.LENGTH_SHORT).show();
+        if(code.equals("13")){
+            updatevalues();
+            adapter.refreshEvents(infochat, imgid);
+        }
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

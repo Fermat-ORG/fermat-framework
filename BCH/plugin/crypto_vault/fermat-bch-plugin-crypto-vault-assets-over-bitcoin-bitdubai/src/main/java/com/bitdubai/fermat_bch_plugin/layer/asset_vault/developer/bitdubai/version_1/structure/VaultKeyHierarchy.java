@@ -2,6 +2,7 @@ package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.vers
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
@@ -11,6 +12,8 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.ChildNumber;
@@ -54,16 +57,18 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      */
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
+    ErrorManager errorManager;
 
     /**
      * Constructor
      * @param rootKey (m) key
      */
-    public VaultKeyHierarchy(DeterministicKey rootKey, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public VaultKeyHierarchy(DeterministicKey rootKey, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ErrorManager errorManager) {
         super(rootKey);
         accountsMasterKeys = new HashMap<>();
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
+        this.errorManager = errorManager;
     }
 
     /**
@@ -120,7 +125,9 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         try {
             ecKey = getNextAvailableKey(hierarchyAccount);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "There was an error getting the actual unused Key depth to derive a new key.", "database problem.");
+            GetNewCryptoAddressException exception = new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "There was an error getting the actual unused Key depth to derive a new key.", "database problem.");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
         /**
          * I will create the CryptoAddress with the key I just got
@@ -141,7 +148,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * I will update the detailed key maintenance information by adding this generated address to the table.
          */
         try {
-            updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress);
+            updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress, blockchainNetworkType);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, null, null);
         }
@@ -154,10 +161,11 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccountId
      * @param ecKey
      * @param cryptoAddress
+     * @param blockchainNetworkType
      */
-    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws UnexpectedResultReturnedFromDatabaseException {
+    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) throws UnexpectedResultReturnedFromDatabaseException {
         try {
-            getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress);
+            getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress, blockchainNetworkType);
         } catch (CantExecuteDatabaseOperationException e) {
             /**
              * will continue because this is not critical.

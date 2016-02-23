@@ -54,6 +54,14 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantL
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSettings;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteBankAccountSaleException;
@@ -177,6 +185,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager;
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
     private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
+    private final MatchingEngineManager matchingEngineManager;
 
     /*
     *Constructor with Parameters
@@ -201,7 +210,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                              BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager,
                                                              BrokerAckOnlinePaymentManager brokerAckOnlinePaymentManager,
                                                              BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
-                                                             BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager) {
+                                                             BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
+                                                             MatchingEngineManager matchingEngineManager) {
         this.walletManagerManager = walletManagerManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.bankMoneyWalletManager = bankMoneyWalletManager;
@@ -223,6 +233,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         this.brokerAckOnlinePaymentManager = brokerAckOnlinePaymentManager;
         this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
         this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
+        this.matchingEngineManager = matchingEngineManager;
     }
 
     private String merchandise = null, typeOfPayment = null, paymentCurrency = null;
@@ -566,8 +577,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public List<CryptoBrokerIdentity> getListOfIdentities() throws CantGetCryptoBrokerIdentityListException, CantListCryptoBrokerIdentitiesException {
-        List<CryptoBrokerIdentity> cryptoBrokerIdentities = cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
-        return cryptoBrokerIdentities;//getListOfIdentitiesTestData();
+        return cryptoBrokerIdentityManager.listIdentitiesFromCurrentDeviceUser();
     }
 
     @Override
@@ -1472,6 +1482,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         }
 
     }
+
     /**
      * This method return the ContractClauseType included in a CustomerBrokerSaleNegotiation clauses
      *
@@ -1532,7 +1543,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public void submitMerchandise(String contractHash) throws CantSubmitMerchandiseException {
-        try{
+        try {
             CustomerBrokerContractSale customerBrokerContractSale;
             //TODO: This is the real implementation
             /*
@@ -1541,9 +1552,9 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     contractHash);
                     */
             //TODO: for testing
-            CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock=new
+            CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock = new
                     CustomerBrokerContractSaleManagerMock();
-            customerBrokerContractSale=customerBrokerContractSaleManagerMock.
+            customerBrokerContractSale = customerBrokerContractSaleManagerMock.
                     getCustomerBrokerContractSaleForContractId(contractHash);
             //End of Mock testing
             //I need to discover the merchandise type (online or offline)
@@ -1645,7 +1656,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     contractClauseType.getCode() == ContractClauseType.CASH_ON_HAND.getCode()) {
                 //TODO: this is a hardcoded public key
                 String cryptoBrokerPublicKey = "walletPublicKeyTest";
-                this.brokerAckOfflinePaymentManager.ackPayment(cryptoBrokerPublicKey, contractHash);
+                this.brokerAckOfflinePaymentManager.ackPayment(
+                        cryptoBrokerPublicKey,
+                        contractHash,
+                        customerBrokerContractSale.getPublicKeyBroker()
+                );
                 return customerBrokerContractSale.getStatus();
             }
 
@@ -1667,5 +1682,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     "Cannot ack the merchandise",
                     "Cannot get the negotiation list");
         }
+    }
+
+    @Override
+    public EarningsPair addEarningsPairToEarningSettings(Currency earningCurrency, Currency linkedCurrency, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantAssociatePairException, PairAlreadyAssociatedException {
+        EarningsSettings earningsSettings = matchingEngineManager.loadEarningsSettings(new WalletReference(brokerWalletPublicKey));
+        return earningsSettings.registerPair(earningCurrency, linkedCurrency, new WalletReference(earningWalletPublicKey));
     }
 }

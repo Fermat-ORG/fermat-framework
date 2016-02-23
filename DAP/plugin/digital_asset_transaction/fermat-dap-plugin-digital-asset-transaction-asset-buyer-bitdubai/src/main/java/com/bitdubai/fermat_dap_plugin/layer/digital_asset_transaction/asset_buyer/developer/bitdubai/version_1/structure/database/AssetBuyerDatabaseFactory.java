@@ -4,22 +4,23 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 
 import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
  */
-public class AssetBuyerDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public final class AssetBuyerDatabaseFactory {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID pluginId;
 
     /**
      * Constructor with parameters to instantiate class
@@ -27,25 +28,25 @@ public class AssetBuyerDatabaseFactory implements DealsWithPluginDatabaseSystem 
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public AssetBuyerDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public AssetBuyerDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.pluginId = pluginId;
     }
 
     /**
      * Create the database
      *
-     * @param ownerId the owner id
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    public Database createDatabase(UUID ownerId) throws CantCreateDatabaseException {
+    public Database createDatabase() throws CantCreateDatabaseException {
         Database database;
 
         /**
          * I will create the database where I am going to store the information of this wallet.
          */
         try {
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, AssetBuyerDatabaseConstants.ASSET_BUYER_DATABASE);
+            database = this.pluginDatabaseSystem.createDatabase(pluginId, AssetBuyerDatabaseConstants.ASSET_BUYER_DATABASE);
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
             /**
              * I can not handle this situation.
@@ -63,25 +64,48 @@ public class AssetBuyerDatabaseFactory implements DealsWithPluginDatabaseSystem 
             /**
              * Create Asset Reception table.
              */
-            table = databaseFactory.newTableFactory(ownerId, AssetBuyerDatabaseConstants.ASSET_BUYER_TABLE_NAME);
+            table = databaseFactory.newTableFactory(pluginId, AssetBuyerDatabaseConstants.ASSET_BUYER_TABLE_NAME);
 
             table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_ENTRY_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_GENESIS_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_METADATA_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_TX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
 
             table.addIndex(AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
-                databaseFactory.createTable(ownerId, table);
+                databaseFactory.createTable(pluginId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
-            DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(ownerId, AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_TABLE_NAME);
+            /**
+             * Create Negotiation table.
+             */
+            table = databaseFactory.newTableFactory(pluginId, AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TABLE_NAME);
+
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_OBJECT_XML_COLUMN_NAME, DatabaseDataType.STRING, Validate.MAX_SIZE_STRING_COLUMN, Boolean.FALSE);
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_SELLER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+
+            table.addIndex(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(pluginId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+            DatabaseTableFactory eventsRecorderTable = databaseFactory.newTableFactory(pluginId, AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_TABLE_NAME);
 
             eventsRecorderTable.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
             eventsRecorderTable.addColumn(AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_EVENT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
@@ -93,7 +117,7 @@ public class AssetBuyerDatabaseFactory implements DealsWithPluginDatabaseSystem 
 
             try {
                 //Create the table
-                databaseFactory.createTable(ownerId, eventsRecorderTable);
+                databaseFactory.createTable(pluginId, eventsRecorderTable);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "Creating " + AssetBuyerDatabaseConstants.ASSET_BUYER_EVENTS_RECORDED_TABLE_NAME + " table", "Exception not handled by the plugin, There is a problem and I cannot create the table.");
             }
@@ -105,13 +129,5 @@ public class AssetBuyerDatabaseFactory implements DealsWithPluginDatabaseSystem 
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
         }
         return database;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }

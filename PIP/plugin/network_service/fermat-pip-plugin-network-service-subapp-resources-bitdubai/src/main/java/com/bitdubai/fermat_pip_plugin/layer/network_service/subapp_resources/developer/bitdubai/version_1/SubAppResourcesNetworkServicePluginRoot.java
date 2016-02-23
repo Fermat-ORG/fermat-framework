@@ -43,7 +43,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.except
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantUninstallSubAppLanguageException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantUninstallSubAppSkinException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesInstallationNetworkServiceDAO;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.database.SubAppResourcesNetworkServiceDatabaseConstants;
@@ -64,6 +63,7 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.dev
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantGetRepositoryPathRecordException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantInitializeNetworkServicesSubAppResourcesDatabaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_resources.developer.bitdubai.version_1.exceptions.CantUninstallSubApp;
+import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.exceptions.CantCreateRepositoryException;
 
 import java.io.IOException;

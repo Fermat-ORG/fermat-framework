@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import com.bitdubai.fermat_android_api.ui.adapters.AbstractViewPagerAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,10 +18,10 @@ import java.util.List;
 public class ImageSlider<I> extends RelativeLayout {
 
     ViewPager viewPager;
-    ScreenPagerAdapter<I> sliderAdapter;
+    AbstractViewPagerAdapter<I> sliderAdapter;
     private ViewGroup parent;
 
-    public ImageSlider(Context context,ScreenPagerAdapter sliderAdapter) {
+    public ImageSlider(Context context,AbstractViewPagerAdapter sliderAdapter) {
         super(context);
         this.sliderAdapter = sliderAdapter;
         initView();
@@ -46,15 +48,12 @@ public class ImageSlider<I> extends RelativeLayout {
         viewPager.setAdapter(sliderAdapter);
     }
 
-    public void init(){
-        initView();
-    }
 
     public void setParent(RelativeLayout parent) {
         this.parent = parent;
     }
 
-    public void setSliderAdapter(ScreenPagerAdapter<I> sliderAdapter) {
+    public void setSliderAdapter(AbstractViewPagerAdapter<I> sliderAdapter) {
         this.sliderAdapter = sliderAdapter;
     }
 
@@ -70,7 +69,7 @@ public class ImageSlider<I> extends RelativeLayout {
         private Context context;
         private RelativeLayout parent;
         private List<I> lstItems;
-        private ScreenPagerAdapter sliderAdapter;
+        private AbstractViewPagerAdapter sliderAdapter;
 
         public Builder(Context context) {
             this.context = context;
@@ -82,7 +81,7 @@ public class ImageSlider<I> extends RelativeLayout {
             return this;
         }
 
-        public Builder setSliderAdapter(ScreenPagerAdapter sliderAdapter) {
+        public Builder setSliderAdapter(AbstractViewPagerAdapter sliderAdapter) {
             this.sliderAdapter = sliderAdapter;
             return this;
         }
@@ -93,10 +92,9 @@ public class ImageSlider<I> extends RelativeLayout {
         }
 
         public ImageSlider build() {
+            sliderAdapter.changeListItems(lstItems);
             ImageSlider imageSlider = new ImageSlider(context,sliderAdapter);
             imageSlider.setParent(parent);
-            sliderAdapter.changeListItems(lstItems);
-            imageSlider.init();
             return imageSlider;
         }
 

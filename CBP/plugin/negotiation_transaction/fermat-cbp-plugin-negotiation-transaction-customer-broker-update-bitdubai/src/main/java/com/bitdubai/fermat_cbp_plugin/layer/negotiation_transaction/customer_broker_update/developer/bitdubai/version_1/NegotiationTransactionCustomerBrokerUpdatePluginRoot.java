@@ -638,7 +638,8 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                timestamp
         );
     }
 
@@ -663,7 +664,8 @@ public class NegotiationTransactionCustomerBrokerUpdatePluginRoot  extends Abstr
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                timestamp
         );
     }
 

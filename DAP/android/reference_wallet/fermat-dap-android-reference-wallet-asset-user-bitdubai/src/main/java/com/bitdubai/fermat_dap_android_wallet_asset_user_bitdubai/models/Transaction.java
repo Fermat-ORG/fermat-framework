@@ -18,6 +18,9 @@ public class Transaction {
     private TransactionType transactionType;
     private BalanceType balanceType;
     private Timestamp date;
+    private double amount;
+    private int quantity;
+    private String memo;
 
     private AssetUserWalletTransaction assetUserWalletTransaction;
 
@@ -25,10 +28,12 @@ public class Transaction {
         setAssetUserWalletTransaction(assetUserWalletTransaction);
         setActorName(dapActor.getName());
         setAmount(assetUserWalletTransaction.getAmount());
+//        setQuantity(assetUserWalletTransaction.get);
         setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
         setActorImage(dapActor.getProfileImage());
         setTransactionType(assetUserWalletTransaction.getTransactionType());
         setBalanceType(assetUserWalletTransaction.getBalanceType());
+        setMemo(assetUserWalletTransaction.getMemo());
     }
 
     public Transaction() {
@@ -41,8 +46,6 @@ public class Transaction {
     public void setActorImage(byte[] actorImage) {
         this.actorImage = actorImage;
     }
-
-    private double amount;
 
     public String getActorName() {
         return actorName;
@@ -87,6 +90,22 @@ public class Transaction {
 
     public void setBalanceType(BalanceType balanceType) {
         this.balanceType = balanceType;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     public AssetUserWalletTransaction getAssetUserWalletTransaction() {

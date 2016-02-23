@@ -236,12 +236,11 @@ public class AndroidPluginTextFile implements PluginTextFile {
                 decryptedContent = this.decrypt(stringBuilder.toString());
             }catch (CantDecryptException ex) {
                 String message = CantPersistFileException.DEFAULT_MESSAGE;
-                FermatException cause = ex;
                 String context = "File Path: " + file.getPath();
                 context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
                 context += "Owner Id: " + this.ownerId;
                 String possibleReason = "This might have something to do specifically with the encryption algorithm and its implementation";
-                throw new CantLoadFileException(message, cause, context, possibleReason);
+                throw new CantLoadFileException(message, ex, context, possibleReason);
             }
             /**
              * Finally, I load it into memory.

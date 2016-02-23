@@ -136,23 +136,15 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:textColor="@color/black"
             tools:text="Month"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:text="End"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="end|center_vertical"
+            android:gravity="center"
             android:textColor="@color/black"
             android:text="Earnings"/>
     </LinearLayout>

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -31,7 +32,6 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
@@ -309,7 +309,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
                         CryptoTransaction transactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.getDigitalAssetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
                         if (transactionOnBlockChain == null) break; //Not yet....
                         DigitalAssetMetadata digitalAssetMetadata = digitalAssetTransferVault.updateMetadataTransactionChain(record.getGenesisTransaction(), transactionOnBlockChain);
-                        digitalAssetTransferVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, digitalAssetMetadata, AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.RECEPTION, record.getActorAssetUserPublicKey());
+                        digitalAssetTransferVault.updateWalletBalance(digitalAssetMetadata, transactionOnBlockChain, BalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.RECEPTION, record.getActorAssetUserPublicKey(), Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
                         assetTransferDAO.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.DISTRIBUTION_FINISHED);
                         updateDistributionStatus(DistributionStatus.DISTRIBUTION_FINISHED, record.getGenesisTransaction());
                         break;
@@ -345,7 +345,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
                         break;
                     case CANCELLED:
                         record.getDigitalAssetMetadata().removeLastTransaction();
-                        digitalAssetTransferVault.updateWalletBalance(record.getDigitalAssetMetadata(), distributor.foundCryptoTransaction(record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, record.getActorAssetUserPublicKey());
+                        digitalAssetTransferVault.updateWalletBalance(record.getDigitalAssetMetadata(), distributor.foundCryptoTransaction(record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, record.getActorAssetUserPublicKey(), Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_ROLLBACK);
                         assetTransferDAO.failedToSendCrypto(record.getTransactionId());
                         break;
                 }
@@ -353,7 +353,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
 
         }
 
-        private void checkPendingNetworkEvents() throws CantExecuteQueryException, CantCheckTransferProgressException, UnexpectedResultReturnedFromDatabaseException, CantTransferDigitalAssetsException, CantConfirmTransactionException, CantSendAssetBitcoinsToUserException, CantGetDigitalAssetFromLocalStorageException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantLoadWalletException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, CantSendMessageException, CantSetObjectException {
+        private void checkPendingNetworkEvents() throws CantExecuteQueryException, CantCheckTransferProgressException, UnexpectedResultReturnedFromDatabaseException, CantTransferDigitalAssetsException, CantConfirmTransactionException, CantSendAssetBitcoinsToUserException, CantGetDigitalAssetFromLocalStorageException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantLoadWalletException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, CantSendMessageException, CantSetObjectException, CantGetTransactionsException, CantGetAssetIssuerActorsException, CantRegisterDebitException, CantRegisterCreditException {
             if (isPendingNetworkLayerEvents()) {
                 System.out.println("ASSET TRANSFER is network layer pending events");
                 List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
@@ -430,7 +430,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
                 }
                 String userPublicKey = assetTransferDAO.getActorUserPublicKeyByGenesisTransaction(assetRejectedGenesisTransaction);
                 System.out.println("ASSET REJECTED BY CONTRACT!!! : " + digitalAssetMetadata);
-                digitalAssetTransferVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(genesisTransactionList.get(0), digitalAssetMetadata, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, userPublicKey);
+                digitalAssetTransferVault.updateWalletBalance(digitalAssetMetadata, genesisTransactionList.get(0), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, userPublicKey, Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
             }
 
             List<String> assetRejectedByHashGenesisTransactionList = assetTransferDAO.getGenesisTransactionByAssetRejectedByHashStatus();
@@ -443,7 +443,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
                 }
                 System.out.println("ASSET REJECTED BY HASH!!! : " + digitalAssetMetadata);
                 String userPublicKey = assetTransferDAO.getActorUserPublicKeyByGenesisTransaction(assetRejectedGenesisTransaction);
-                digitalAssetTransferVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(genesisTransactionList.get(0), digitalAssetMetadata, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, userPublicKey);
+                digitalAssetTransferVault.updateWalletBalance(digitalAssetMetadata, genesisTransactionList.get(0), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, userPublicKey, Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
             }
         }
 
@@ -457,7 +457,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
                         e.printStackTrace();
                     }
                     record.getDigitalAssetMetadata().removeLastTransaction();
-                    digitalAssetTransferVault.updateWalletBalance(record.getDigitalAssetMetadata(), distributor.foundCryptoTransaction(record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, record.getActorAssetUserPublicKey());
+                    digitalAssetTransferVault.updateWalletBalance(record.getDigitalAssetMetadata(), distributor.foundCryptoTransaction(record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, record.getActorAssetUserPublicKey(), Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_ROLLBACK);
                     assetTransferDAO.cancelDelivering(record.getTransactionId());
                 }
             }

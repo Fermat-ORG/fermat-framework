@@ -365,8 +365,8 @@ public class CustomerBrokerCloseAgent  implements
                 }
 
                 //PROCES PENDING EVENT
-                List<String> pendingEventsIdList=customerBrokerCloseNegotiationTransactionDatabaseDao.getPendingEvents();
-                for(String eventId : pendingEventsIdList){
+                List<UUID> pendingEventsIdList=customerBrokerCloseNegotiationTransactionDatabaseDao.getPendingEvents();
+                for(UUID eventId : pendingEventsIdList){
                     checkPendingEvent(eventId);
                 }
 
@@ -386,7 +386,7 @@ public class CustomerBrokerCloseAgent  implements
         }
 
         //CHECK PENDING EVEN
-        private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
+        private void checkPendingEvent(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
             try {
                 UUID                                transactionId;
@@ -407,6 +407,7 @@ public class CustomerBrokerCloseAgent  implements
 
                         negotiationTransmission = record.getInformation();
                         negotiationXML          = negotiationTransmission.getNegotiationXML();
+                        transmissionId          = negotiationTransmission.getTransmissionId();
                         transactionId           = negotiationTransmission.getTransactionId();
                         negotiationType         = negotiationTransmission.getNegotiationType();
 
@@ -440,7 +441,9 @@ public class CustomerBrokerCloseAgent  implements
                             }
 
                             //NOTIFIED EVENT
-                            customerBrokerCloseNegotiationTransactionDatabaseDao.updateEventTansactionStatus(transactionId, EventStatus.NOTIFIED);
+                            customerBrokerCloseNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
+                            //CONFIRM TRANSMISSION
+                            negotiationTransmissionManager.confirmReception(transmissionId);
 
                         }
 

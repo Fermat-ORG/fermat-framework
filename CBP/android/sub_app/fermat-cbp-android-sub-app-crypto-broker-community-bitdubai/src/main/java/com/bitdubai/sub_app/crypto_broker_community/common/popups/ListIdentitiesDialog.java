@@ -21,6 +21,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunityManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_community.R;
@@ -38,14 +40,20 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager> implements FermatListItemListeners<CryptoBrokerCommunitySelectableIdentity> {
+public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubAppSession, SubAppResourcesProviderManager>
+        implements FermatListItemListeners<CryptoBrokerCommunitySelectableIdentity> {
 
     /**
      * UI components
      */
     private CharSequence   title       ;
-
     private AppSelectableIdentitiesListAdapter adapter;
+
+
+    /**
+     * Managers
+     */
+    private CryptoBrokerCommunitySubAppModuleManager manager;
 
     public ListIdentitiesDialog(final Activity                                activity       ,
                                 final CryptoBrokerCommunitySubAppSession      subAppSession  ,
@@ -56,6 +64,8 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubA
                 subAppSession,
                 subAppResources
         );
+
+        manager = subAppSession.getModuleManager();
     }
 
     @SuppressLint("SetTextI18n")
@@ -67,7 +77,7 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubA
 
         try {
 
-            cryptoBrokerCommunitySelectableIdentitiesList = getSession().getModuleManager().listSelectableIdentities();
+            cryptoBrokerCommunitySelectableIdentitiesList = manager.listSelectableIdentities();
 
         } catch (final CantListIdentitiesToSelectException cantListIdentitiesToSelectException) {
 
@@ -85,7 +95,7 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubA
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
         recyclerView.setHasFixedSize(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -93,14 +103,14 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubA
 
     @Override
     public void onItemClickListener(CryptoBrokerCommunitySelectableIdentity data, int position) {
-
-        System.out.println("****** Seleccione esta identidad: "+data);
+        manager.setSelectedActorIdentity(data);
+        dismiss();
     }
 
     @Override
     public void onLongItemClickListener(CryptoBrokerCommunitySelectableIdentity data, int position) {
-
-        System.out.println("****** Seleccione largamente esta identidad: "+data);
+        manager.setSelectedActorIdentity(data);
+        dismiss();
     }
 
     @Override
@@ -110,7 +120,7 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoBrokerCommunitySubA
 
     @Override
     protected int setLayoutId() {
-        return R.layout.fragment_connections_list;
+        return R.layout.cbc_fragment_list_identities;
     }
 
     @Override

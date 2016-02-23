@@ -72,6 +72,8 @@ public class CustomerOfflinePaymentTransactionManager implements CustomerOffline
                     e,
                     "Sending online payment",
                     "The contract hash/Id is null.");
+        }catch (Exception exception){
+            throw new CantSendPaymentException(exception,"Sending online payment","Unexpected error");
         }
 
     }
@@ -91,6 +93,8 @@ public class CustomerOfflinePaymentTransactionManager implements CustomerOffline
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
+        }catch (Exception exception){
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,"","Unexpected result");
         }
 
     }

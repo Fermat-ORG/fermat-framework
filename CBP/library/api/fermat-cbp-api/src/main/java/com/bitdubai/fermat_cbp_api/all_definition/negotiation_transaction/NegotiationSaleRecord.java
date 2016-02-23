@@ -14,6 +14,66 @@ import java.util.UUID;
 public class NegotiationSaleRecord implements CustomerBrokerSaleNegotiation {
 
     UUID                negotiationId;
+    String              customerPublicKey;
+    String              brokerPublicKey;
+    //    String              publicKeyCustomer;
+//    String              publicKeyBroker;
+    Long                startDate;
+    //    Long                startDataTime;
+    Long                negotiationExpirationDate;
+    NegotiationStatus   status;
+    //    NegotiationStatus   statusNegotiation;
+    Boolean             nearExpirationDatetime;
+    Collection<Clause>  clauses;
+    Long                lastNegotiationUpdateDate;
+    String              cancelReason;
+    String              memo;
+
+    public UUID getNegotiationId(){ return this.negotiationId; }
+
+    //    public String getCustomerPublicKey(){ return this.publicKeyCustomer; }
+    public String getCustomerPublicKey(){ return this.customerPublicKey; }
+
+    //    public String getBrokerPublicKey(){ return this.publicKeyBroker; }
+    public String getBrokerPublicKey(){ return this.brokerPublicKey; }
+
+    //    public Long getStartDate(){ return this.startDataTime; }
+    public Long getStartDate(){ return this.startDate; }
+
+    public Long getNegotiationExpirationDate(){ return this.negotiationExpirationDate; }
+
+    //    public NegotiationStatus getStatus(){return this.statusNegotiation; }
+    public NegotiationStatus getStatus(){
+        return this.status;
+    }
+
+    public Collection<Clause> getClauses() throws CantGetListClauseException{ return this.clauses; }
+
+    public Boolean getNearExpirationDatetime() { return nearExpirationDatetime; }
+
+    public Long getLastNegotiationUpdateDate(){ return this.lastNegotiationUpdateDate; }
+
+    public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate){ this.lastNegotiationUpdateDate = lastNegotiationUpdateDate; }
+
+    public void setNearExpirationDatetime(Boolean nearExpirationDatetime) { this.nearExpirationDatetime = nearExpirationDatetime; }
+
+    public void setCancelReason(String cancelReason){
+        this.cancelReason = cancelReason;
+    }
+
+    public String getCancelReason(){
+        return this.cancelReason;
+    }
+
+    public void setMemo(String memo){
+        this.memo = memo;
+    }
+
+    public String getMemo(){
+        return this.memo;
+    }
+
+/*    UUID                negotiationId;
     String              publicKeyCustomer;
     String              publicKeyBroker;
     Long                startDataTime;
@@ -68,5 +128,5 @@ public class NegotiationSaleRecord implements CustomerBrokerSaleNegotiation {
 
     public String getMemo(){
         return this.memo;
-    }
+    }*/
 }

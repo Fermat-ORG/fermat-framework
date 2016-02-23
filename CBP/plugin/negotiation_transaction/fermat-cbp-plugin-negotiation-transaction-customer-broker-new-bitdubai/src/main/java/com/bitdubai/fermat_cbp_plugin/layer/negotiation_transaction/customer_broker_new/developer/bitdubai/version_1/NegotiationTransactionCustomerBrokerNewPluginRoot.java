@@ -408,10 +408,10 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             List<CustomerBrokerNew> list = customerBrokerNewManagerImpl.getAllCustomerBrokerNewNegotiationTranasction();
             if (!list.isEmpty()) {
 
-                System.out.print("\n\n\n\n------------------------------- LIST NEGOTIATION TRANSACTION -------------------------------");
+                System.out.print("\n------------------------------- LIST NEGOTIATION TRANSACTION -------------------------------");
                 for (CustomerBrokerNew ListNegotiation : list) {
 
-                    System.out.print("\n\n --- Negotiation Transaction Date" +
+                    System.out.print("\n --- Negotiation Transaction Date" +
                                     "\n- NegotiationId = " + ListNegotiation.getNegotiationId() +
                                     "\n- TransactionId = " + ListNegotiation.getTransactionId() +
                                     "\n- CustomerPublicKey = " + ListNegotiation.getPublicKeyCustomer() +
@@ -426,7 +426,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                         System.out.print("\n- NegotiationXML = " + ListNegotiation.getNegotiationXML());
                         purchaseNegotiationXML = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(ListNegotiation.getNegotiationXML(), purchaseNegotiationXML);
                         if (purchaseNegotiationXML.getNegotiationId() != null) {
-                            System.out.print("\n\n\n --- NegotiationXML Date" +
+                            System.out.print("\n --- NegotiationXML Date" +
                                             "\n- NegotiationId = " + purchaseNegotiationXML.getNegotiationId() +
                                             "\n- CustomerPublicKey" + purchaseNegotiationXML.getCustomerPublicKey() +
                                             "\n- BrokerPublicKey" + purchaseNegotiationXML.getBrokerPublicKey() +
@@ -578,7 +578,8 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
                 negotiationExpirationDate,
                 statusNegotiation,
                 clauses,
-                nearExpirationDatetime
+                nearExpirationDatetime,
+                timestamp
         );
     }
 

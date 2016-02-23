@@ -448,7 +448,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public CustomerBrokerNegotiationInformation cancelNegotiation(CustomerBrokerNegotiationInformation negotiation, String reason) throws CouldNotCancelNegotiationException {
-        return null;
+        negotiation.setCancelReason(reason);
+
+        System.out.print("\nREFERENCE WALLET - CRYPTO CUSTOMER: CANCELLATION NEGOTIATION. REASON: "+reason+" vs "+negotiation.getCancelReason());
+        return negotiation;
     }
 
     @Override

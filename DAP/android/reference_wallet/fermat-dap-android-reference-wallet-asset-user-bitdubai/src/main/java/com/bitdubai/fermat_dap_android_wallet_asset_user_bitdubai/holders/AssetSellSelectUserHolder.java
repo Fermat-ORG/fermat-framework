@@ -20,7 +20,6 @@ public class AssetSellSelectUserHolder extends FermatViewHolder {
     private Resources res;
 
     private FermatTextView nameText;
-    private ImageView selectRedeemPointButton;
 
     /**
      * Constructor
@@ -34,27 +33,9 @@ public class AssetSellSelectUserHolder extends FermatViewHolder {
         res = itemView.getResources();
 
         nameText = (FermatTextView) itemView.findViewById(R.id.userName);
-        selectRedeemPointButton = (ImageView) itemView.findViewById(R.id.selectUserButton);
     }
 
-    public void bind(final User redeemPoint) {
-        nameText.setText(redeemPoint.getName());
-        if (redeemPoint.isSelected()) {
-            selectRedeemPointButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_remove));
-        } else {
-            selectRedeemPointButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_add));
-        }
-
-        selectRedeemPointButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (!redeemPoint.isSelected()) {
-                    redeemPoint.setSelected(true);
-                    selectRedeemPointButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_remove));
-                } else {
-                    redeemPoint.setSelected(false);
-                    selectRedeemPointButton.setImageDrawable(res.getDrawable(R.drawable.ic_deliver_user_add));
-                }
-            }
-        });
+    public void bind(final User user) {
+        nameText.setText(user.getName());
     }
 }

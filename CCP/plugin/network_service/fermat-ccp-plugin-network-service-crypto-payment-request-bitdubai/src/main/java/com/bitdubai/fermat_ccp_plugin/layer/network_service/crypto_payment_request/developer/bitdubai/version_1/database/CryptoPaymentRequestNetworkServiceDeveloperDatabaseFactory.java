@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestNetworkServiceDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,7 +94,7 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
 
                 database = cryptoPaymentRequestNetworkServiceDatabaseFactory.createDatabase(
                         pluginId,
-                        pluginId.toString()
+                        CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME
                 );
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
@@ -199,12 +199,13 @@ public class CryptoPaymentRequestNetworkServiceDeveloperDatabaseFactory {
     }
 
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabase developerDatabase,
                                                                       final DeveloperDatabaseTable developerDatabaseTable) {
 
 
         try {
 
-            if(!developerDatabaseTable.getName().equals(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME))
+            if(!developerDatabase.getName().equals(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME))
                 initializeDatabaseCommunication();
             else
                 initializeDatabase();

@@ -1,24 +1,24 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
-//import android.support.v4.content.ContextCompat;
-//import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
-import android.view.View;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
-//import com.bitdubai.fermat_cht_api.layer.cht_middleware.cht_chat_factory.interfaces.ChatFactory; //data del middleware
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 
 import java.util.ArrayList;
 import java.util.List;
+
+//import android.support.v4.content.ContextCompat;
+//import android.support.v7.widget.RecyclerView;
+//import com.bitdubai.fermat_cht_api.layer.cht_middleware.cht_chat_factory.interfaces.ChatFactory; //data del middleware
 
 /**
  * ChatAdapter

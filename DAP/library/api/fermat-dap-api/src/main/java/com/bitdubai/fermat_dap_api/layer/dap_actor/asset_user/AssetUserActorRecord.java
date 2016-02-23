@@ -84,22 +84,28 @@ public class AssetUserActorRecord implements ActorAssetUser {
 
         this.actorPublicKey         =       actorPublicKey          ;
         this.name                   =       name                    ;
-        this.age                    =       age                     ;
-        this.genders                =       genders                 ;
+        if (age != null)
+            this.age                =       age                     ;
+        if (genders != null)
+            this.genders            =       genders                 ;
+
         this.dapConnectionState     =       dapConnectionState      ;
 
-        if (locationLatitude != null)
+        if (locationLatitude != -1)
             this.locationLatitude       = locationLatitude          ;
-        if(locationLongitude != null)
+        if(locationLongitude != -1)
             this.locationLongitude      = locationLongitude         ;
 
         if(cryptoAddress != null)
             this.cryptoAddress          = cryptoAddress             ;
         if(blockchainNetworkType != null)
             this.blockchainNetworkType  =    blockchainNetworkType  ;
+
         this.registrationDate       =       registrationDate        ;
         this.lastConnectionDate     =       lastConnectionDate      ;
-        this.profileImage           =       profileImage.clone()    ;
+
+        if(profileImage != null)
+            this.profileImage           =       profileImage.clone()    ;
 
     }
 

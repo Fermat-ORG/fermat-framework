@@ -42,6 +42,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,6 +62,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     {
         createdWallets = new ArrayList<>();
     }
+
     private AssetUserWalletDao assetUserWalletDao;
     private final ErrorManager errorManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
@@ -182,6 +185,33 @@ public class AssetUserWalletImpl implements AssetUserWallet {
             allCreditAvailable.remove(transaction);
         }
         return allCreditAvailable;
+    }
+
+    @Override
+    public List<AssetUserWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException {
+        List<AssetUserWalletTransaction> creditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
+        List<AssetUserWalletTransaction> creditBook = getTransactions(BalanceType.BOOK, TransactionType.CREDIT, assetPublicKey);
+        List<AssetUserWalletTransaction> debitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
+        List<AssetUserWalletTransaction> debitBook = getTransactions(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
+        List<AssetUserWalletTransaction> toReturn = new ArrayList<>();
+        toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
+        toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
+        Collections.sort(toReturn, new Comparator<AssetUserWalletTransaction>() {
+            @Override
+            public int compare(AssetUserWalletTransaction o1, AssetUserWalletTransaction o2) {
+                return (int) (o2.getTimestamp() - o1.getTimestamp());
+            }
+        });
+        return toReturn;
+    }
+
+    private List<AssetUserWalletTransaction> getTransactionsForDisplay(List<AssetUserWalletTransaction> available, List<AssetUserWalletTransaction> book) {
+        for (AssetUserWalletTransaction transaction : book) {
+            if (!available.contains(transaction)) {
+                available.add(transaction);
+            }
+        }
+        return available;
     }
 
     @Override

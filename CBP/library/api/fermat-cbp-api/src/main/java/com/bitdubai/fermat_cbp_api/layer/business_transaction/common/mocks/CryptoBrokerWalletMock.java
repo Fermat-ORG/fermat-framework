@@ -11,13 +11,17 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerStockTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetTransactionCryptoBrokerWalletMatchingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantMarkAsSeenException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/01/16.
@@ -45,6 +49,34 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
 
     @Override
     public Quote getQuote(Currency merchandise, float quantity, Currency payment) throws CantGetCryptoBrokerQuoteException {
+        return null;
+    }
+
+    /**
+     * This method load the list CryptoBrokerStockTransaction
+     *
+     * @param transactionId
+     * @return void
+     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
+     */
+    @Override
+    public void markAsSeen(UUID transactionId) throws CantMarkAsSeenException {
+
+    }
+
+    @Override
+    public void markAsSeen(List<UUID> transactionId) throws CantMarkAsSeenException {
+
+    }
+
+    /**
+     * This method load the list CurrencyMatching
+     *
+     * @return CurrencyMatching
+     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
+     */
+    @Override
+    public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyInputs() throws CantGetTransactionCryptoBrokerWalletMatchingException {
         return null;
     }
 }

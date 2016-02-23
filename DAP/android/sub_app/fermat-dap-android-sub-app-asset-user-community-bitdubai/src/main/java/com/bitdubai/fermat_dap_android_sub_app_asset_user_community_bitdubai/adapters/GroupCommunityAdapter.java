@@ -48,17 +48,6 @@ public class GroupCommunityAdapter extends FermatAdapter<Group, GroupViewHolder>
             if (data.getGroupName() != null) {
                 holder.groupName.setText(String.format("%s", data.getGroupName()));
             }
-            holder.itemView.setLongClickable(true);
-            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    if (menuItemClick != null) {
-                        menuItemClick.onMenuItemClickListener(view, data, position);
-                    }
-                    return true;
-                }
-            });
-
 
             holder.groupMembers.setText(R.string.group_members);
             holder.groupMembers.append(String.format("%s",data.getMembers()));

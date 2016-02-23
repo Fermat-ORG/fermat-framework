@@ -507,6 +507,14 @@ public interface CryptoWallet extends Serializable {
      * @return
      * @throws CantListTransactionsException
      */
-    CryptoWalletTransaction getTransaction(UUID transactionId,String walletPublicKey) throws CantListTransactionsException;
+    CryptoWalletTransaction getTransaction(UUID transactionId,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantListTransactionsException;
 
+
+    /**
+     *
+     * @param requestId
+     * @return
+     * @throws CantListReceivePaymentRequestException
+     */
+    PaymentRequest getPaymentRequest(UUID requestId) throws CantListReceivePaymentRequestException;
 }

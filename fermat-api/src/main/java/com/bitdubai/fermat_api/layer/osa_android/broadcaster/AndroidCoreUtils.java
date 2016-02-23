@@ -7,4 +7,6 @@ public interface AndroidCoreUtils {
 
 
     public void publish(BroadcasterType broadcasterType, String code);
+
+    public void publish(BroadcasterType broadcasterType,String appCode, String code);
 }

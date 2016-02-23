@@ -17,6 +17,7 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.app_connecti
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
 //import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
@@ -49,7 +50,7 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new CryptoWalletUserFermatAppConnection(activity);
                 break;
             case "public_key_intra_user_commmunity":
-                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity,fermatSession);
+                fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
                 break;
 
             //DAP WALLETS
@@ -79,7 +80,7 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new CommunityAssetIssuerFermatAppConnection(activity);
                 break;
             case "public_key_dap_user_community":
-                fermatAppConnection = new CommunityAssetUserFermatAppConnection(activity);
+                fermatAppConnection = new CommunityAssetUserFermatAppConnection(activity, fermatSession);
                 break;
             case "public_key_dap_redeem_point_community":
                 fermatAppConnection = new CommunityRedeemPointFermatAppConnection(activity);
@@ -117,9 +118,9 @@ public class FermatAppConnectionManager {
                 break;
 
             //BANKING WALLET
-           // case "banking_wallet":
-               // fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
-               // break;
+           case "banking_wallet":
+               fermatAppConnection = new BankMoneyWalletFermatAppConnection(activity);
+               break;
 
             // WPD Sub Apps
             case "public_key_store":

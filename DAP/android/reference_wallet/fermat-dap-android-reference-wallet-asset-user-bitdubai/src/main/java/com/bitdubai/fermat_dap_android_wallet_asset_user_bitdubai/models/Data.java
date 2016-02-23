@@ -11,15 +11,13 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -96,17 +94,29 @@ public class Data {
     public static List<ActorAssetRedeemPoint> getRedeemPoints(List<RedeemPoint> redeemPoints) {
         List<ActorAssetRedeemPoint> actorAssetRedeemPoints = new ArrayList<>();
         for (RedeemPoint redeemPoint : redeemPoints) {
-            actorAssetRedeemPoints.add(redeemPoint.getActorAssetRedeemPoint());
+            if (redeemPoint.isSelected()) {
+                actorAssetRedeemPoints.add(redeemPoint.getActorAssetRedeemPoint());
+            }
         }
         return actorAssetRedeemPoints;
     }
 
+    public static List<User> getConnectedUsers(AssetUserWalletSubAppModuleManager moduleManager) throws CantGetAssetUserActorsException {
+        List<User> users = new ArrayList<>();
+        List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
+        for (ActorAssetUser actorAssetUser : actorAssetUsers) {
+            User newUser = new User(actorAssetUser.getName(), actorAssetUser);
+            users.add(newUser);
+        }
+        return users;
+    }
+
     public static List<Transaction> getTransactions(AssetUserWalletSubAppModuleManager moduleManager, DigitalAsset digitalAsset) throws CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException {
         List<Transaction> transactions = new ArrayList<>();
-        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet("walletPublicKeyTest").getAllTransactions(digitalAsset.getAssetPublicKey());
+        List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY).getTransactionsForDisplay(digitalAsset.getAssetPublicKey());
         DAPActor dapActor;
         for (AssetUserWalletTransaction assetUserWalletTransaction :
-             assetUserWalletTransactions) {
+                assetUserWalletTransactions) {
             if (assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
                 dapActor = assetUserWalletTransaction.getActorFrom();
             } else {

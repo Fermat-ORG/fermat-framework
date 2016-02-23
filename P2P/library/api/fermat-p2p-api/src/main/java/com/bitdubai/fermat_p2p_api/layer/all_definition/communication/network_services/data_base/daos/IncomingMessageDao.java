@@ -446,7 +446,7 @@ public final class IncomingMessageDao {
              * 2.- Create a new transaction and execute
              */
 
-        DatabaseTable incomingMessageTable = getDatabaseTable();
+            DatabaseTable incomingMessageTable = getDatabaseTable();
             DatabaseTransaction transaction = getDataBase().newTransaction();
 
             //set filter

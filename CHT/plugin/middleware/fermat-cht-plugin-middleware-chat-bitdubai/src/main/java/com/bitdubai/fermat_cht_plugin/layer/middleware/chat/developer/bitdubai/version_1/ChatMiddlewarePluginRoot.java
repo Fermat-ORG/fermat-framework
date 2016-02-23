@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -92,6 +93,9 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.INTRA_WALLET_USER)
     private IntraUserModuleManager intraUserModuleManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
 
     public static EventSource EVENT_SOURCE = EventSource.MIDDLEWARE_CHAT_MANAGER;
 
@@ -179,27 +183,45 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot");
-        return returnedClasses;
+        try{
+            returnedClasses.add("com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot");
+            return returnedClasses;
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+                    FermatException.wrapException(exception));
+            //I'll return an empty list
+            return returnedClasses;
+        }
+
     }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        /*
+        try{
+            /*
          * I will check the current values and update the LogLevel in those which is different
          */
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
 
             /*
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (ChatMiddlewarePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                ChatMiddlewarePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                ChatMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                ChatMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (ChatMiddlewarePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    ChatMiddlewarePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    ChatMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                } else {
+                    ChatMiddlewarePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                }
             }
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
         }
+
     }
 
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
@@ -219,7 +241,9 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                 Platforms.CRYPTO_CURRENCY_PLATFORM.getCode(),
                 intraUserModuleManager);
         this.chatMiddlewareContactFactory =
-                new ChatMiddlewareContactFactory(actorNetworkServiceMap);
+                new ChatMiddlewareContactFactory(
+                        actorNetworkServiceMap,
+                        errorManager);
     }
 
     @Override
@@ -235,7 +259,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             /*
              * Initialize Developer Database Factory
              */
-            //System.out.println("OPEN_CONTRACT Facti");
             chatMiddlewareDeveloperDatabaseFactory = new
                     ChatMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem,
                     pluginId);
@@ -247,7 +270,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao=
                     new ChatMiddlewareDatabaseDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
             //chatMiddlewareDatabaseDao.initialize();
             /**
              * Init developer database factory
@@ -266,7 +290,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     chatMiddlewareDatabaseDao,
                     this.chatMiddlewareContactFactory,
                     this,
-                    this.networkServiceChatManager
+                    this.networkServiceChatManager,
+                    this.errorManager
             );
 
             /**
@@ -274,7 +299,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
              */
             ChatMiddlewareRecorderService chatMiddlewareRecorderService=new ChatMiddlewareRecorderService(
                     chatMiddlewareDatabaseDao,
-                    eventManager);
+                    eventManager,
+                    errorManager);
             chatMiddlewareRecorderService.start();
 
             /**
@@ -287,7 +313,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     eventManager,
                     pluginId,
                     networkServiceChatManager,
-                    chatMiddlewareManager);
+                    chatMiddlewareManager,
+                    broadcaster);
             openContractMonitorAgent.start();
 
 
@@ -302,36 +329,60 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             //getContactTest();
 
         } catch (CantInitializeDatabaseException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
                     "Starting open contract plugin",
                     "Cannot initialize plugin database");
         } catch (CantInitializeChatMiddlewareDatabaseException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting open contract plugin",
                     "Unexpected Exception");
         } catch (CantStartServiceException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting open contract plugin",
                     "Cannot start recorder service");
         } catch (CantSetObjectException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting open contract plugin",
                     "Cannot set an object");
-//        } catch (CantStartAgentException exception) {
-//            throw new CantStartPluginException(
-//                    CantStartPluginException.DEFAULT_MESSAGE,
-//                    FermatException.wrapException(exception),
-//                    "Starting open contract plugin",
-//                    "Cannot start the monitor agent");
+        } catch (CantStartAgentException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(
+                    CantStartPluginException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(exception),
+                    "Starting open contract plugin",
+                    "Cannot start the monitor agent");
         } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
@@ -362,17 +413,42 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return chatMiddlewareDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        try{
+            return chatMiddlewareDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            return null;
+        }
+
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return chatMiddlewareDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        try{
+            return chatMiddlewareDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            return null;
+        }
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return chatMiddlewareDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        try{
+            return chatMiddlewareDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            return null;
+        }
     }
 
     public static LogLevel getLogLevelByClass(String className) {

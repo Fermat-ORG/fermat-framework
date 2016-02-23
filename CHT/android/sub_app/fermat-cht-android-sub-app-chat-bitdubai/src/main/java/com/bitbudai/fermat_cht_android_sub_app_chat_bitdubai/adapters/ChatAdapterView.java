@@ -131,8 +131,9 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    void whattodo(){
+    public void whattodo(){
         try {
+            System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
             if (chatSession.getData("whocallme").equals("chatlist")) {
                 findvalues((Contact)chatSession.getData("contactid"));//if I choose a chat, this will retrieve the chatid
                 chatwascreate = true;
@@ -149,14 +150,20 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    void findmessage(){
+    public void findmessage(){
         String message;
         String inorout;
         ChatMessage msg;
+        Chat chat;
         int messsize;
         try {
             setChatHistory(null);
-            Chat chat=chatSession.getSelectedChat();
+            if(chatid!=null){
+                chat=chatManager.getChatByChatId(chatid);
+            }else{
+                chat=chatSession.getSelectedChat();
+            }
+
             if(chat!=null)
                 chatid=chat.getChatId();
             if (chatHistory == null) {
@@ -197,7 +204,7 @@ public class ChatAdapterView extends LinearLayout {
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        messageET.setText("Type message");
+        //messageET.setText("Type message");
         //TextView meLabel = (TextView) findViewById(R.id.meLbl);
         //TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
         RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
@@ -228,7 +235,7 @@ public class ChatAdapterView extends LinearLayout {
         messageET.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                messageET.setText("");
+                //messageET.setText("");
             }
         });
 
@@ -324,6 +331,8 @@ public class ChatAdapterView extends LinearLayout {
         });
     }
 
+
+
     private void loadDummyHistory() {
 
         if (loadDummyData) {
@@ -359,6 +368,12 @@ public class ChatAdapterView extends LinearLayout {
     public void displayMessage(ChatMessage message) {
         adapter.addItem(message);
         adapter.notifyDataSetChanged();
+        scroll();
+    }
+
+    public void refreshEvents() {
+        whattodo();
+        findmessage();
         scroll();
     }
 

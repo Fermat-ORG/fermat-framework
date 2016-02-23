@@ -28,6 +28,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_onli
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdateManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
@@ -137,6 +138,9 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE)
     BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.MATCHING_ENGINE)
+    MatchingEngineManager matchingEngineManager;
+
 
     public CryptoBrokerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -174,7 +178,8 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
                         brokerAckOfflinePaymentManager,
                         brokerAckOnlinePaymentManager,
                         brokerSubmitOfflineMerchandiseManager,
-                        brokerSubmitOnlineMerchandiseManager);
+                        brokerSubmitOnlineMerchandiseManager,
+                        matchingEngineManager);
 
             return walletManager;
         } catch (Exception e) {

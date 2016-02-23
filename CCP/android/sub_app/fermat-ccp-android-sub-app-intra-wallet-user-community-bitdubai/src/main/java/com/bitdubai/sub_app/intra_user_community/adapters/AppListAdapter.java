@@ -45,23 +45,49 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
                     holder.connectionState.setVisibility(View.VISIBLE);
                 break;
             case BLOCKED_LOCALLY:
+                break;
             case BLOCKED_REMOTELY:
+                break;
             case CANCELLED_LOCALLY:
+                break;
             case CANCELLED_REMOTELY:
+                if (holder.connectionState.getVisibility() == View.GONE){
+                    holder.connectionState.setImageResource(R.drawable.icon_contact_no_conect);
+                    holder.connectionState.setVisibility(View.VISIBLE);
+                }
+                break;
             case NO_CONNECTED:
+                break;
             case DENIED_LOCALLY:
+                break;
             case DENIED_REMOTELY:
+                if (holder.connectionState.getVisibility() == View.GONE){
+                    holder.connectionState.setImageResource(R.drawable.icon_contact_no_conect);
+                    holder.connectionState.setVisibility(View.VISIBLE);
+                }
+                break;
             case DISCONNECTED_LOCALLY:
+                break;
             case DISCONNECTED_REMOTELY:
+                break;
             case ERROR:
+                break;
             case INTRA_USER_NOT_FOUND:
+                break;
             case PENDING_LOCALLY_ACCEPTANCE:
+                break;
             case PENDING_REMOTELY_ACCEPTANCE:
+                if (holder.connectionState.getVisibility() == View.GONE){
+                    holder.connectionState.setImageResource(R.drawable.icon_contact_standby);
+                    holder.connectionState.setVisibility(View.VISIBLE);
+                }
+                break;
             default:
                 if (holder.connectionState.getVisibility() == View.VISIBLE)
                     holder.connectionState.setVisibility(View.GONE);
                 break;
         }
+        holder.row_connection_state.setText(data.getState());
         holder.name.setText(data.getName());
         byte[] profileImage = data.getProfileImage();
         if (profileImage != null && profileImage.length > 0) {

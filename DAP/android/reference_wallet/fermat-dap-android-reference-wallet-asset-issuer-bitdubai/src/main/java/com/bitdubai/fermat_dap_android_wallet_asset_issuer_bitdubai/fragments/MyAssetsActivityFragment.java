@@ -203,8 +203,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 return false;
             }
         });
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 //        super.onCreateOptionsMenu(menu, inflater);
 //        searchView = (SearchView) menu.getItem(1).getActionView();

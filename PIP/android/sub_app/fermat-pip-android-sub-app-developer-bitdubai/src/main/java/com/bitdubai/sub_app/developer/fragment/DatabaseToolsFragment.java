@@ -177,6 +177,7 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
 
                     Resource item = (Resource) listView.getItemAtPosition(position);
                     developerSubAppSession.setData("resource", item);
+                    developerSubAppSession.setData("filterString", adapter.getFilterString());
 //                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), R.id.startContainer, null);
                     changeActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE, appSession.getAppPublicKey());
 
@@ -210,6 +211,8 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
 
         List<Resource> filteredData;
         List<Resource> originalData;
+
+        private String filterString;
 
         public AppListAdapter(Context context, int layoutResource, List<Resource> objects) {
             super(context, layoutResource);
@@ -286,6 +289,14 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
         public Filter getFilter() {
             return new DeveloperPluginFilter(mlist, adapter);
         }
+
+        public void setFilterString(String filterString) {
+            this.filterString = filterString;
+        }
+
+        public String getFilterString() {
+            return filterString;
+        }
     }
 
     /**
@@ -316,6 +327,13 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
                 return false;
             }
         });
+        if (developerSubAppSession.getData("filterString") != null) {
+            String filterString = (String) developerSubAppSession.getData("filterString");
+            if (filterString.length() > 0) {
+                searchView.setQuery(filterString, true);
+                searchView.setIconified(false);
+            }
+        }
     }
 
     @Override

@@ -288,8 +288,8 @@ public class CustomerBrokerNewAgent implements
                 NegotiationType         negotiationType;
                 UUID                    transactionId;
                 List<CustomerBrokerNew> negotiationPendingToSubmitList;
-                CustomerBrokerPurchaseNegotiation  purchaseNegotiation = new NegotiationPurchaseRecord();
-                CustomerBrokerSaleNegotiation  saleNegotiation = new NegotiationSaleRecord();
+                CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
+                CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
 
 //                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PENDING LIST SENDING ****\n");
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.Test.mocks;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -12,12 +13,17 @@ import java.util.UUID;
  * Created by Yordin Alayn 04.01.16.
  */
 public class SaleNegotiationMock implements CustomerBrokerSaleNegotiation {
+
     private final UUID   negotiationId;
-    private final String publicKeyCustomer;
-    private final String publicKeyBroker;
-    private final Long   startDataTime;
+    String              customerPublicKey;
+    String              brokerPublicKey;
+//    private final String publicKeyCustomer;
+//    private final String publicKeyBroker;
+    Long                startDate;
+//    private final Long   startDataTime;
     private final Long   negotiationExpirationDate;
-    private NegotiationStatus statusNegotiation;
+    NegotiationStatus   status;
+//    private NegotiationStatus statusNegotiation;
     private final Collection<Clause> clauses;
 
     private final Boolean nearExpirationDatetime;
@@ -28,32 +34,34 @@ public class SaleNegotiationMock implements CustomerBrokerSaleNegotiation {
 
     public SaleNegotiationMock(
             UUID   negotiationId,
-            String publicKeyCustomer,
-            String publicKeyBroker,
-            Long startDataTime,
+            String customerPublicKey,
+            String brokerPublicKey,
+            Long startDate,
             Long negotiationExpirationDate,
-            NegotiationStatus statusNegotiation,
+            NegotiationStatus status,
             Collection<Clause> clauses,
-            Boolean nearExpirationDatetime
+            Boolean nearExpirationDatetime,
+            Long lastNegotiationUpdateDate
     ){
         this.negotiationId = negotiationId;
-        this.publicKeyCustomer = publicKeyCustomer;
-        this.publicKeyBroker = publicKeyBroker;
-        this.startDataTime = startDataTime;
+        this.customerPublicKey = customerPublicKey;
+        this.brokerPublicKey = brokerPublicKey;
+        this.startDate = startDate;
         this.negotiationExpirationDate = negotiationExpirationDate;
-        this.statusNegotiation = statusNegotiation;
+        this.status = status;
         this.clauses = clauses;
         this.nearExpirationDatetime = nearExpirationDatetime;
+        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
     }
 
     @Override
     public String getCustomerPublicKey() {
-        return this.publicKeyCustomer;
+        return this.customerPublicKey;
     }
 
     @Override
     public String getBrokerPublicKey() {
-        return this.publicKeyBroker;
+        return this.brokerPublicKey;
     }
 
     @Override
@@ -63,7 +71,7 @@ public class SaleNegotiationMock implements CustomerBrokerSaleNegotiation {
 
     @Override
     public Long getStartDate() {
-        return this.startDataTime;
+        return this.startDate;
     }
 
     @Override
@@ -83,7 +91,7 @@ public class SaleNegotiationMock implements CustomerBrokerSaleNegotiation {
 
     @Override
     public NegotiationStatus getStatus() {
-        return this.statusNegotiation;
+        return this.status;
     }
 
     @Override

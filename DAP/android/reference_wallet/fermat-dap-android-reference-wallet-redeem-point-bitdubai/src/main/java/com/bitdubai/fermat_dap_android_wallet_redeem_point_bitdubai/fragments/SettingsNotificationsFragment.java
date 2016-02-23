@@ -93,7 +93,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS_NETWORK, 0, "help").setIcon(R.drawable.dap_asset_redeem_help_icon)
+        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS_NETWORK, 0, "Help").setIcon(R.drawable.dap_asset_redeem_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 

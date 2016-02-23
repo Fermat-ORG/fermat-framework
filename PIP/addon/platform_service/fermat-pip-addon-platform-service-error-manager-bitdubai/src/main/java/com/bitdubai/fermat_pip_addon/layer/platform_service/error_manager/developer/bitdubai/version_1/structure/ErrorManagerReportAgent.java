@@ -6,7 +6,6 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.develo
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.interfaces.ConnectivityState;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.interfaces.ErrorAgent;
 
-import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,6 +14,8 @@ import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by ciencias on 4/3/15.
@@ -132,7 +133,7 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
             /**
              * Infinite loop.
              */
-            while (true == true) {
+            while (true) {
 
                 /**
                  * Sleep for a while.

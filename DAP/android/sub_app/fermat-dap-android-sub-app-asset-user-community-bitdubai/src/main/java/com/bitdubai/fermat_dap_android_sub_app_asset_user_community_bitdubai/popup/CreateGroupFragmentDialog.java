@@ -167,4 +167,9 @@ public class CreateGroupFragmentDialog extends Dialog implements
 
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
+
 }

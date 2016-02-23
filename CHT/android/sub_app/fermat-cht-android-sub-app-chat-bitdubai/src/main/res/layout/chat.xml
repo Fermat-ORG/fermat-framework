@@ -24,7 +24,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_toLeftOf="@+id/chatSendButton"
                 android:autoText="true"
-                android:hint="Type message"
+                android:textColorHint="#bdbdbd"
+                android:hint="@string/defaulttext"
                 android:backgroundTint="#acaaaa"
                 android:inputType="textAutoComplete"
                 android:textColor="#000000" />

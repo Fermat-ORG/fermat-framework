@@ -21,9 +21,11 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_ccp_api.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNotificationException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
@@ -112,7 +114,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
     private long reprocessTimer =  300000; //five minutes
 
-    private Timer timer = new Timer();
+    private  Timer timer = new Timer();
 
     /**
      * Executor
@@ -159,12 +161,11 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
             executorService = Executors.newFixedThreadPool(3);
 
             // change message state to process again first time
-            reprocessMessages();
+            reprocessPendingMessage();
 
             //declare a schedule to process waiting request message
 
             this.startTimer();
-
 
         }catch (Exception e){
             e.printStackTrace();
@@ -206,7 +207,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
                     //NOTIFICATION LAUNCH
                     lauchNotification();
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + actorNetworkServiceRecord.getActorSenderPublicKey());
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CCP_COMMUNITY.getCode(),"CONNECTIONREQUEST_" + actorNetworkServiceRecord.getActorSenderPublicKey());
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
                     break;
@@ -383,10 +384,33 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
                                                                                "");
     }
 
-    @Override
-    protected void reprocessMessages() {
+
+    private void reprocessPendingMessage()
+    {
         try {
-           outgoingNotificationDao.changeStatusNotSentMessage();
+            outgoingNotificationDao.changeStatusNotSentMessage();
+
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndNotDone(
+                    ActorProtocolState.PROCESSING_SEND
+            );
+
+
+            for (final ActorNetworkServiceRecord cpr : lstActorRecord) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
+                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
+                                    cpr.toJson());
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedError(e);
+                        }
+                    }
+                });
+            }
 
         }
         catch(CantListIntraWalletUsersException e)
@@ -398,11 +422,69 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
             e.printStackTrace();
         }
     }
+    @Override
+    protected void reprocessMessages() {
+       /* try {
+           outgoingNotificationDao.changeStatusNotSentMessage();
+
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndNotDone(
+                    ActorProtocolState.PROCESSING_SEND
+            );
+
+
+            for (final ActorNetworkServiceRecord cpr : lstActorRecord) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
+                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
+                                    cpr.toJson());
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedError(e);
+                        }
+                    }
+                });
+            }
+
+        }
+        catch(CantListIntraWalletUsersException e)
+        {
+            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            e.printStackTrace();
+        } catch (Exception e) {
+            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            e.printStackTrace();
+        }*/
+    }
 
     @Override
     protected void reprocessMessages(String identityPublicKey) {
-        try {
+       /* try {
            outgoingNotificationDao.changeStatusNotSentMessage(identityPublicKey);
+
+            List<ActorNetworkServiceRecord> lstActorRecord = outgoingNotificationDao.listRequestsByProtocolStateAndNotDone(
+                    ActorProtocolState.PROCESSING_SEND
+            );
+
+
+            for (final ActorNetworkServiceRecord cpr : lstActorRecord) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(cpr.getActorSenderPublicKey()),
+                                    getProfileDestinationToRequestConnection(cpr.getActorDestinationPublicKey()),
+                                    cpr.toJson());
+                        } catch (CantSendMessageException e) {
+                            reportUnexpectedError(e);
+                        }
+                    }
+                });
+            }
 
         }
         catch(CantListIntraWalletUsersException  e)
@@ -412,7 +494,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
         } catch (Exception e) {
             System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
             e.printStackTrace();
-        }
+        }*/
     }
 
     private void lauchNotification(){
@@ -701,20 +783,21 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
             //Create a thread to save intra user cache list
 
-            Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try
-                    {
-                        intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
-                    } catch (CantAddIntraWalletCacheUserException e) {
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            if(lstIntraUser.size() > 0) {
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+                        } catch (CantAddIntraWalletCacheUserException e) {
+                            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
+                        }
                     }
-                }
-            },"Thread Cache");
+                }, "Thread Cache");
 
-            thread.start();
+                thread.start();
+            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -732,6 +815,19 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
         } catch (CantListIntraWalletCacheUserException e) {
             throw new ErrorSearchingCacheSuggestionsException("CAN'T GET INTRA USER CACHE LIST",e,"","error get table records");
         }
+    }
+
+    @Override
+    public void saveCacheIntraUsersSuggestions(List<IntraUserInformation> lstIntraUser) throws CantInsertRecordException {
+
+            try
+            {
+                intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+            } catch (CantAddIntraWalletCacheUserException e) {
+
+                throw new CantInsertRecordException("CAN'T Save INTRA USER CACHE LIST",e,"","error saved table records");
+
+            }
     }
 
     @Override
@@ -1093,8 +1189,8 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                        (actor.getName().toLowerCase()),
-                        (actor.getName().toLowerCase() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
+                        (actor.getName()),
+                        (actor.getName() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);
@@ -1147,8 +1243,8 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(actor.getActorPublicKey(),
-                        (actor.getName().toLowerCase()),
-                        (actor.getName().toLowerCase() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
+                        (actor.getName()),
+                        (actor.getName() + "_" + this.getNetworkServiceProfile().getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_INTRA_USER,
                         extraData);
@@ -1175,16 +1271,6 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     }
 
 
-    private void startTimer(){
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // change message state to process retry later
-                reprocessMessages();
-            }
-        },0, reprocessTimer);
-    }
-
 
     //DatabaseManagerForDevelopers Implementation
     /**
@@ -1204,7 +1290,10 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
      */
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        if(developerDatabase.getName().equals(IntraActorNetworkServiceDataBaseConstants.DATA_BASE_NAME))
+            return new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
+        else
+            return new IntraActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);
     }
 
     /**
@@ -1214,7 +1303,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
      */
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        return intraActorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase,developerDatabaseTable);
     }
 
 
@@ -1228,4 +1317,15 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
 
     }
+
+    private void startTimer(){
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // change message state to process retry later
+                reprocessPendingMessage();
+            }
+        },0, reprocessTimer);
+    }
+
 }

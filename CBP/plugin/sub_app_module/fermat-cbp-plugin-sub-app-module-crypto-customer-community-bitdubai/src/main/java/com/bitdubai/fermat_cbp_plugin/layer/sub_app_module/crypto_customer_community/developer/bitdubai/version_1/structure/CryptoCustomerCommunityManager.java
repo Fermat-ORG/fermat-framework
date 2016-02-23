@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcceptActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -17,12 +18,15 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interf
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerSearchResult;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantLoginCustomerException;
@@ -79,13 +83,61 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     }
 
 
+
+
+    @Override
+    public List<CryptoCustomerCommunityInformation> listWorldCryptoCustomers(CryptoCustomerCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListCryptoCustomersException {
+        List<CryptoCustomerCommunityInformation> worldCustomerList;
+        List<CryptoCustomerActorConnection> actorConnections;
+
+        try{
+            worldCustomerList = getCryptoCustomerSearch().getResult();
+        } catch (CantGetCryptoCustomerSearchResult e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Error in listWorldCryptoCustomers trying to list world customers");
+        }
+
+
+        try {
+
+            final CryptoCustomerLinkedActorIdentity linkedActorIdentity = new CryptoCustomerLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
+            final CryptoCustomerActorConnectionSearch search = cryptoCustomerActorConnectionManager.getSearch(linkedActorIdentity);
+            search.addConnectionState(ConnectionState.CONNECTED);
+
+            actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+
+        } catch (final CantListActorConnectionsException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListCryptoCustomersException(e, "", "Error trying to list actor connections.");
+        }
+
+
+        CryptoCustomerCommunityInformation worldCustomer;
+        for(int i = 0; i < worldCustomerList.size(); i++)
+        {
+            worldCustomer = worldCustomerList.get(i);
+            for(CryptoCustomerActorConnection connectedCustomer : actorConnections)
+            {
+                if(worldCustomer.getPublicKey().equals(connectedCustomer.getPublicKey()))
+                    worldCustomerList.set(i, new CryptoCustomerCommunitySubAppModuleInformation(worldCustomer.getPublicKey(), worldCustomer.getAlias(), worldCustomer.getImage(), connectedCustomer.getConnectionState(), connectedCustomer.getConnectionId()));
+            }
+        }
+
+        return worldCustomerList;
+    }
+
+
+
+
+
+
     @Override
     public List<CryptoCustomerCommunityInformation> getSuggestionsToContact(int max, int offset) throws CantGetCryptoCustomerListException {
         return null;
     }
 
     @Override
-    public CryptoCustomerCommunitySearch getCryptoCustomerSearch(CryptoCustomerCommunitySelectableIdentity cryptoCustomerCommunitySelectableIdentity) {
+    public CryptoCustomerCommunitySearch getCryptoCustomerSearch() {
         return new CryptoCustomerCommunitySubAppModuleCommunitySearch(cryptoCustomerActorNetworkServiceManager);
     }
 
@@ -117,8 +169,24 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     }
 
     @Override
-    public void disconnectCryptoCustomer(String cryptoCustomerToDisconnectPublicKey) throws CryptoCustomerDisconnectingFailedException {
+    public void disconnectCryptoCustomer(final UUID requestId) throws CryptoCustomerDisconnectingFailedException {
 
+        try {
+                cryptoCustomerActorConnectionManager.disconnect(requestId);
+
+        } catch (final CantDisconnectFromActorException | UnexpectedConnectionStateException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CryptoCustomerDisconnectingFailedException("", e, "", "Error trying to disconnect the actor connection.");
+        } catch (final ActorConnectionNotFoundException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CryptoCustomerDisconnectingFailedException("", e, "", "Connection request not found.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CryptoCustomerDisconnectingFailedException("", e, "", "Unhandled Exception.");
+        }
     }
 
     @Override

@@ -20,6 +20,8 @@ public class AssetNegotiation implements Serializable {
         negotiationId = UUID.randomUUID();
     }
 
+    private long totalAmount;
+
     /**
      * The amount that cost each asset, represented in satoshis.
      */
@@ -61,7 +63,26 @@ public class AssetNegotiation implements Serializable {
         this.quantityToBuy = quantityToBuy;
         this.assetToOffer = assetToOffer;
         this.networkType = networkType;
+        this.totalAmount = amountPerUnity * quantityToBuy;
     }
+
+    public AssetNegotiation(long totalAmount, long amountPerUnity, int quantityToBuy, DigitalAsset assetToOffer, BlockchainNetworkType networkType) {
+        this.totalAmount = totalAmount;
+        this.amountPerUnity = amountPerUnity;
+        this.quantityToBuy = quantityToBuy;
+        this.assetToOffer = assetToOffer;
+        this.networkType = networkType;
+    }
+
+    public AssetNegotiation(UUID negotiationId, long totalAmount, long amountPerUnity, int quantityToBuy, DigitalAsset assetToOffer, BlockchainNetworkType networkType) {
+        this.negotiationId = negotiationId;
+        this.totalAmount = totalAmount;
+        this.amountPerUnity = amountPerUnity;
+        this.quantityToBuy = quantityToBuy;
+        this.assetToOffer = assetToOffer;
+        this.networkType = networkType;
+    }
+
     //PUBLIC METHODS
 
     /**
@@ -93,6 +114,7 @@ public class AssetNegotiation implements Serializable {
     public boolean isSameDeal(AssetNegotiation assetNegotiation) {
         if (!this.getAssetToOffer().equals(assetNegotiation.getAssetToOffer())) return false;
         if (this.getAmountPerUnity() != assetNegotiation.getAmountPerUnity()) return false;
+        if (this.getTotalAmount() != assetNegotiation.getTotalAmount()) return false;
         if (this.getQuantityToBuy() != assetNegotiation.getQuantityToBuy()) return false;
         return true;
     }
@@ -150,6 +172,14 @@ public class AssetNegotiation implements Serializable {
 
     public void setNetworkType(BlockchainNetworkType networkType) {
         this.networkType = networkType;
+    }
+
+    public long getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(long totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     //INNER CLASSES

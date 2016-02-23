@@ -52,4 +52,6 @@ public interface IntraUserInformation extends IdentityUserInformation {
      * @return ConnectionState object
      */
     ConnectionState getConnectionState();
+
+    public String getState();
 }

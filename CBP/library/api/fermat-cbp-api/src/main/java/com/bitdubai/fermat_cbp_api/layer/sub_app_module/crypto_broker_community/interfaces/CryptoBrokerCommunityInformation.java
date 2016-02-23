@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerIdentityInformation</code>
@@ -44,6 +45,12 @@ public interface CryptoBrokerCommunityInformation {
      * @return ConnectionState object
      */
     ConnectionState getConnectionState();
+
+    /**
+     * The method <code>getConnectionId</code> returns the Connection UUID this actor has with the selected actor
+     * @return UUID object
+     */
+    UUID getConnectionId();
 
 }
 

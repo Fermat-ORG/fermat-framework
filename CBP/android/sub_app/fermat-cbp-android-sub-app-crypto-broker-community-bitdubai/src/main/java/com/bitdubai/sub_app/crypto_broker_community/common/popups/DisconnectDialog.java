@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerConnectionDenialFailedException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -116,20 +117,17 @@ public class DisconnectDialog extends FermatDialog<CryptoBrokerCommunitySubAppSe
             try {
                 if (cryptoBrokerCommunityInformation != null && identity != null) {
 
-                    getSession().getModuleManager().denyConnection(UUID.randomUUID());
+                    getSession().getModuleManager().disconnectCryptoBroker(cryptoBrokerCommunityInformation.getConnectionId());
                     Toast.makeText(getContext(), "Disconnected successfully", Toast.LENGTH_SHORT).show();
 
                     //set flag so that the preceding fragment reads it on dismiss()
-                    getSession().setData("connectionresult", false);
+                    getSession().setData("connectionresult", 1);
 
-
-
-                    Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
-            } catch (CryptoBrokerConnectionDenialFailedException e) {
+            } catch (CryptoBrokerDisconnectingFailedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getContext(), "Could not disconnect, please try again", Toast.LENGTH_SHORT).show();
             } catch (ConnectionRequestNotFoundException e) {

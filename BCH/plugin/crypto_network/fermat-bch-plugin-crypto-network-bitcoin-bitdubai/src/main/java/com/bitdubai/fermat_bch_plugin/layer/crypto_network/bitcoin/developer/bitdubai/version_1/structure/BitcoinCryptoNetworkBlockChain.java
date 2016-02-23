@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
@@ -48,20 +49,23 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
     private Wallet wallet;
     private NetworkParameters networkParameters;
     private final String BLOCKCHAIN_FILENAME;
+    private final String BLOCKCHAIN_PATH;
     private final String CHECKPOINT_FILENAME;
     private final BlockchainNetworkType BLOCKCHAIN_NETWORK_TYPE;
+    PluginFileSystem pluginFileSystem;
 
 
     /**
      * Constructor
      */
-    public BitcoinCryptoNetworkBlockChain(NetworkParameters networkParameters, Wallet wallet) throws BlockchainException {
+    public BitcoinCryptoNetworkBlockChain(PluginFileSystem pluginFileSystem, NetworkParameters networkParameters, Wallet wallet) throws BlockchainException {
+        this.pluginFileSystem = pluginFileSystem;
         this.networkParameters= networkParameters;
         this.wallet = wallet;
 
         this.BLOCKCHAIN_NETWORK_TYPE = BitcoinNetworkSelector.getBlockchainNetworkType(this.networkParameters);
-
-        this.BLOCKCHAIN_FILENAME = "/data/data/com.bitdubai.fermat/files/bitcoin_Blockchain_" + BLOCKCHAIN_NETWORK_TYPE.getCode();
+        this.BLOCKCHAIN_PATH = pluginFileSystem.getAppPath();
+        this.BLOCKCHAIN_FILENAME = "bitcoin_Blockchain_" + BLOCKCHAIN_NETWORK_TYPE.getCode();
         this.CHECKPOINT_FILENAME = "checkpoints-" + BLOCKCHAIN_NETWORK_TYPE.getCode();
 
         /**
@@ -92,7 +96,7 @@ public class BitcoinCryptoNetworkBlockChain implements Serializable{
          * I will define the SPV blockstore were I will save the blockchain.
          * I will be saving the file under the network type I'm being created for.
          */
-        File blockChainFile = new File(BLOCKCHAIN_FILENAME);
+        File blockChainFile = new File(BLOCKCHAIN_PATH, BLOCKCHAIN_FILENAME);
 
         /**
          * I will verify in the blockchain file already exists.

@@ -21,7 +21,8 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0.0
  */
-public class AppSelectableIdentitiesListAdapter extends FermatAdapter<CryptoBrokerCommunitySelectableIdentity, AppSelectableIdentitiesListAdapter.AppSelectableIdentityHolder> {
+public class AppSelectableIdentitiesListAdapter
+        extends FermatAdapter<CryptoBrokerCommunitySelectableIdentity, AppSelectableIdentitiesListAdapter.AppSelectableIdentityHolder> {
 
     public AppSelectableIdentitiesListAdapter(Context context, List<CryptoBrokerCommunitySelectableIdentity> dataSet) {
         super(context, dataSet);

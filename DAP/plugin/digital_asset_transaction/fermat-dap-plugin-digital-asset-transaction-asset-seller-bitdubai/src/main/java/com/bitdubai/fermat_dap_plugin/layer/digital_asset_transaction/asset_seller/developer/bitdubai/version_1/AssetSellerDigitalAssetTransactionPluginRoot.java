@@ -121,7 +121,6 @@ public class AssetSellerDigitalAssetTransactionPluginRoot extends AbstractPlugin
         try {
             agent.stop();
             recorderService.stop();
-            super.stop();
         } catch (CantStopAgentException e) {
             e.printStackTrace();
         } finally {

@@ -76,7 +76,13 @@ public class ComponentConnectionRespondTyrusPacketProcessor extends FermatTyrusP
             PlatformComponentProfile remotePlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             PlatformComponentProfile remoteNsPlatformComponentProfile = gson.fromJson(respond.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN).getAsString(), PlatformComponentProfileCommunication.class);
 
-            vpnServerUri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + vpnServerUri);
+            /*
+             * get the Server ip and port
+             */
+            String ServerIp = getWsCommunicationsTyrusCloudClientChannel().getWsCommunicationsTyrusCloudClientConnection().getWsCommunicationsCloudClientPluginRoot().getServerIp();
+            Integer ServerPort = getWsCommunicationsTyrusCloudClientChannel().getWsCommunicationsTyrusCloudClientConnection().getWsCommunicationsCloudClientPluginRoot().getServerPort();
+
+            vpnServerUri = new URI(ServerConf.WS_PROTOCOL + ServerIp + ":" + ServerPort + vpnServerUri);
 
             System.out.println("ComponentConnectionRespondTyrusPacketProcessor - vpnServerUri to connect = "+vpnServerUri);
 

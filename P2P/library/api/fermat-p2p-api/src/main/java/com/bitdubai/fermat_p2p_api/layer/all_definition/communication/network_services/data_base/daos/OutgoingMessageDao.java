@@ -16,12 +16,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -385,18 +387,20 @@ public final class OutgoingMessageDao {
 
             if(findById(String.valueOf(entity.getId()))== null)
             {
-                   /*
-             * 1- Create the record to the entity
-             */
-                DatabaseTableRecord entityRecord = constructFrom(entity);
+                        /*
+                     * 1- Create the record to the entity
+                     */
+                    DatabaseTableRecord entityRecord = constructFrom(entity);
 
-            /*
-             * 2.- Create a new transaction and execute
-             */
-                DatabaseTransaction transaction = getDataBase().newTransaction();
-                transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-                getDataBase().executeTransaction(transaction);
-            }
+                    /*
+                     * 2.- Create a new transaction and execute
+                     */
+                    DatabaseTransaction transaction = getDataBase().newTransaction();
+                    transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
+                    getDataBase().executeTransaction(transaction);
+
+             }
+
 
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
@@ -502,6 +506,12 @@ public final class OutgoingMessageDao {
                 newFilter.setValue(countFailMax.toString());
                 filtersTable.add(newFilter);
             }
+
+            DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+            newFilter.setType(DatabaseFilterType.EQUAL);
+            newFilter.setColumn(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
+            newFilter.setValue(FermatMessagesStatus.PENDING_TO_SEND.getCode());
+            filtersTable.add(newFilter);
 
             templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
             templateTable.loadToMemory();
@@ -665,6 +675,33 @@ public final class OutgoingMessageDao {
          * return the new table record
          */
         return entityRecord;
+
+    }
+
+    public boolean existPendingNotification(final UUID notificationId) throws CantGetNotificationException {
+
+
+        try {
+
+            DatabaseTable outgoingTable = getDatabaseTable();
+
+            outgoingTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
+            outgoingTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode(), DatabaseFilterType.EQUAL);
+
+            outgoingTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = outgoingTable.getRecords();
+
+
+            if (!records.isEmpty())
+                return true;
+            else
+                return false;
+
+        } catch (CantLoadTableToMemoryException exception) {
+
+            throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        }
 
     }
 

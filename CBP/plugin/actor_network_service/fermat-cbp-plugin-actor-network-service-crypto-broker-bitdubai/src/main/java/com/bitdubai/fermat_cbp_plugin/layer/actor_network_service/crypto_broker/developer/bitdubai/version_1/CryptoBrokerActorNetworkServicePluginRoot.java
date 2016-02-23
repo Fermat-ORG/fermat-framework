@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enu
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.ConnectionRequestNotFoundException;
@@ -33,7 +34,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerActorNetworkServiceQuotesRequest;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerExecutorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
@@ -288,10 +288,6 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         }
     }
 
-    public WsCommunicationsCloudClientManager getWsCommunicationsCloudClientManager() {
-        return wsCommunicationsCloudClientManager;
-    }
-
     /**
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING_RECEIVE.    .
@@ -301,19 +297,33 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
         try {
 
             ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
+
             switch (informationMessage.getAction()) {
+
                 case ACCEPT:
+
                     cryptoBrokerActorNetworkServiceDao.acceptConnection(
                             informationMessage.getRequestId(),
                             state
                     );
                     break;
+
                 case DENY:
+
                     cryptoBrokerActorNetworkServiceDao.denyConnection(
                             informationMessage.getRequestId(),
                             state
                     );
                     break;
+
+                case DISCONNECT:
+
+                    cryptoBrokerActorNetworkServiceDao.disconnectConnection(
+                            informationMessage.getRequestId(),
+                            state
+                    );
+                    break;
+
                 default:
                     throw new CantHandleNewMessagesException(
                             "action not supported: " +informationMessage.getAction(),
@@ -321,7 +331,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     );
             }
 
-         } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException e) {
+         } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
             // i inform to error manager the error.
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
@@ -377,18 +387,41 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
     }
 
     @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseList(developerObjectFactory);
+    public List<DeveloperDatabase> getDatabaseList(final DeveloperObjectFactory developerObjectFactory) {
 
+        return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(
+                pluginDatabaseSystem,
+                pluginId
+        ).getDatabaseList(
+                developerObjectFactory
+        );
     }
 
     @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory, developerDatabase);
+    public List<DeveloperDatabaseTable> getDatabaseTableList(final DeveloperObjectFactory developerObjectFactory,
+                                                             final DeveloperDatabase      developerDatabase     ) {
+
+        return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(
+                pluginDatabaseSystem,
+                pluginId
+        ).getDatabaseTableList(
+                developerObjectFactory,
+                developerDatabase
+        );
     }
 
     @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabase      developerDatabase     ,
+                                                                      final DeveloperDatabaseTable developerDatabaseTable) {
+
+        return new CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory(
+                pluginDatabaseSystem,
+                pluginId
+        ).getDatabaseTableContent(
+                developerObjectFactory,
+                developerDatabase     ,
+                developerDatabaseTable
+        );
     }
 }

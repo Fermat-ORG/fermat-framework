@@ -6,6 +6,8 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.E
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantLoadOrCreateWalletReferenceException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 /**
@@ -35,11 +37,26 @@ public final class MatchingEngineMiddlewareManager implements MatchingEngineMana
     @Override
     public EarningsSettings loadEarningsSettings(final WalletReference walletReference) throws CantLoadEarningSettingsException {
 
-        return new MatchingEngineMiddlewareEarningsSettings(
-                walletReference       ,
-                dao                   ,
-                errorManager          ,
-                pluginVersionReference
-        );
+        try {
+
+            dao.loadOrCreateWalletReference(walletReference);
+
+            return new MatchingEngineMiddlewareEarningsSettings(
+                    walletReference,
+                    dao,
+                    errorManager,
+                    pluginVersionReference
+            );
+
+        } catch (CantLoadOrCreateWalletReferenceException cantLoadOrCreateWalletReferenceException) {
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadOrCreateWalletReferenceException);
+            throw new CantLoadEarningSettingsException(cantLoadOrCreateWalletReferenceException, "walletReference: "+walletReference, "Problem trying to load or create the wallet reference in database");
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantLoadEarningSettingsException(e, null, "Unhandled Exception.");
+        }
+
     }
 }

@@ -78,7 +78,8 @@
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:paddingTop="8dp">
+        android:paddingTop="8dp"
+        android:visibility="gone">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="0dp"
@@ -116,7 +117,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="left"
-            android:text="CURRENCY PREFERENCES"
+            android:text="PROVIDERS"
             android:textSize="16dp"
             android:textColor="@color/white"/>
 

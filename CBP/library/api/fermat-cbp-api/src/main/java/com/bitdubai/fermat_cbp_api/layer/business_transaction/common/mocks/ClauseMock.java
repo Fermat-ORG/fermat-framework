@@ -38,7 +38,7 @@ public class ClauseMock implements Clause {
 
     @Override
     public ClauseStatus getStatus() {
-        return null;
+        return ClauseStatus.DRAFT;
     }
 
     @Override

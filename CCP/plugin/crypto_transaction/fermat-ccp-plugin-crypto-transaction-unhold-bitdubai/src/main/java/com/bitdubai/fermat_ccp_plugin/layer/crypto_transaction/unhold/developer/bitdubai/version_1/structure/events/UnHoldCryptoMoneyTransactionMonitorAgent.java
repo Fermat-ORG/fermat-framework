@@ -1,9 +1,13 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
@@ -11,15 +15,18 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransaction;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.database.UnHoldCryptoMoneyTransactionDatabaseConstants;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.exceptions.MissingUnHoldCryptoDataException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.structure.UnHoldCryptoMoneyTransactionManager;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.unhold.developer.bitdubai.version_1.utils.BitcoinWalletTransactionRecordImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Date;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 /**
@@ -147,6 +154,22 @@ public class UnHoldCryptoMoneyTransactionMonitorAgent implements Agent{
 
                 if(availableBalance >= cryptoUnholdTransaction.getAmount()) {
                     //TODO: llamar metodo Hold de la wallet que se implementara luego que se pruebe las wallet CSH y BNK;
+                    CryptoAddress cryptoAddress = new CryptoAddress(cryptoUnholdTransaction.getPublicKeyActor(), CryptoCurrency.BITCOIN);
+                    BitcoinWalletTransactionRecordImpl bitcoinWalletTransactionRecord = new BitcoinWalletTransactionRecordImpl(UUID.randomUUID(),
+                            cryptoUnholdTransaction.getTransactionId(),
+                            cryptoUnholdTransaction.getPublicKeyActor(),
+                            cryptoUnholdTransaction.getPublicKeyActor(),
+                            Actors.CBP_CRYPTO_BROKER,
+                            Actors.CBP_CRYPTO_BROKER,
+                            cryptoUnholdTransaction.getTransactionId().toString(), //Hash
+                            cryptoAddress, //addressFrom
+                            cryptoAddress, //addressTo
+                            (long)cryptoUnholdTransaction.getAmount(),
+                            new Date().getTime() / 1000,
+                            "UNHOLD",
+                            BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
+
+                    bitcoinWalletManager.loadWallet(cryptoUnholdTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionRecord);
                     cryptoUnholdTransaction.setStatus(CryptoTransactionStatus.CONFIRMED);
                     cryptoUnholdTransaction.setTimestampAcknowledged(new Date().getTime() / 1000);
                     unHoldCryptoMoneyTransactionManager.saveUnHoldCryptoMoneyTransactionData(cryptoUnholdTransaction);
@@ -158,15 +181,17 @@ public class UnHoldCryptoMoneyTransactionMonitorAgent implements Agent{
                 }
             }
         } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (MissingUnHoldCryptoDataException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantLoadWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCalculateBalanceException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantRegisterCreditException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_UNHOLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 }

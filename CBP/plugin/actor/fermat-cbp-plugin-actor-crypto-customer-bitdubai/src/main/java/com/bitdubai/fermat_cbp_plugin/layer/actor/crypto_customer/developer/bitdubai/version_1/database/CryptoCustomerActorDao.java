@@ -93,7 +93,6 @@ public class CryptoCustomerActorDao {
         }
 
         public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
-
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
                 DatabaseTableRecord recordToInsert   = RelationshipTable.getEmptyRecord();

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.user_rede
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -28,7 +29,6 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.Bitco
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetBalanceType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -50,6 +50,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.Unexp
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -226,13 +227,13 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         e.printStackTrace();
                     }
                     record.getDigitalAssetMetadata().removeLastTransaction();
-                    digitalAssetUserRedemptionVault.updateWalletBalance(record.getDigitalAssetMetadata(), AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey());
+                    digitalAssetUserRedemptionVault.updateWalletBalance(record.getDigitalAssetMetadata(), AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey(), Actors.DAP_ASSET_REDEEM_POINT, WalletUtilities.DEFAULT_MEMO_ROLLBACK);
                     userRedemptionDao.cancelDelivering(record.getTransactionId());
                 }
             }
         }
 
-        private void checkNetworkLayerEvents() throws CantConfirmTransactionException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetUserRedemptionProgressException, CantGetDigitalAssetFromLocalStorageException, CantSendAssetBitcoinsToUserException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDistributeDigitalAssetsException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantCreateDigitalAssetFileException, CantLoadWalletException {
+        private void checkNetworkLayerEvents() throws CantConfirmTransactionException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetUserRedemptionProgressException, CantGetDigitalAssetFromLocalStorageException, CantSendAssetBitcoinsToUserException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDistributeDigitalAssetsException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantCreateDigitalAssetFileException, CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantRegisterCreditException {
             List<Transaction<DigitalAssetMetadataTransaction>> pendingEventsList = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_ISSUER_SPECIALIST);
             if (!userRedemptionDao.getPendingNetworkLayerEvents().isEmpty()) {
                 for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingEventsList) {
@@ -293,7 +294,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 }
                 System.out.println("ASSET REJECTED BY CONTRACT!! : " + digitalAssetMetadata);
                 String userPublicKey = userRedemptionDao.getActorUserPublicKeyByGenesisTransaction(assetRejectedGenesisTransaction);
-                digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(genesisTransactionList.get(0), digitalAssetMetadata, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, userPublicKey);
+                digitalAssetUserRedemptionVault.updateWalletBalance(digitalAssetMetadata, genesisTransactionList.get(0), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, userPublicKey, Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_ROLLBACK);
             }
 
             List<String> assetRejectedByHashGenesisTransactionList = userRedemptionDao.getGenesisTransactionByAssetRejectedByHashStatus();
@@ -306,7 +307,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 }
                 System.out.println("ASSET REJECTED BY HASH!! : " + digitalAssetMetadata);
                 String userPublicKey = userRedemptionDao.getActorUserPublicKeyByGenesisTransaction(assetRejectedGenesisTransaction);
-                digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(genesisTransactionList.get(0), digitalAssetMetadata, AssetBalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, userPublicKey);
+                digitalAssetUserRedemptionVault.updateWalletBalance(digitalAssetMetadata, genesisTransactionList.get(0), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, userPublicKey, Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_ROLLBACK);
             }
         }
 
@@ -328,7 +329,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                         CryptoTransaction transactionOnBlockChain = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.getDigitalAssetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
                         if (transactionOnBlockChain == null) break; //not yet...
                         DigitalAssetMetadata digitalAssetMetadata = digitalAssetUserRedemptionVault.updateMetadataTransactionChain(record.getGenesisTransaction(), transactionOnBlockChain);
-                        digitalAssetUserRedemptionVault.setDigitalAssetMetadataAssetIssuerWalletTransaction(transactionOnBlockChain, digitalAssetMetadata, AssetBalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey());
+                        digitalAssetUserRedemptionVault.updateWalletBalance(digitalAssetMetadata, transactionOnBlockChain, BalanceType.BOOK, TransactionType.DEBIT, DAPTransactionType.RECEPTION, record.getRedeemPointPublicKey(), Actors.DAP_ASSET_REDEEM_POINT, WalletUtilities.DEFAULT_MEMO_REDEMPTION);
                         userRedemptionDao.updateDeliveringStatusForTxId(record.getTransactionId(), DistributionStatus.DISTRIBUTION_FINISHED);
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
@@ -360,7 +361,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                     case BROADCASTING:
                         break;
                     case CANCELLED:
-                        digitalAssetUserRedemptionVault.updateWalletBalance(record.getDigitalAssetMetadata(), AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, record.getRedeemPointPublicKey());
+                        digitalAssetUserRedemptionVault.updateWalletBalance(record.getDigitalAssetMetadata(), AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.getDigitalAssetMetadata()), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.DISTRIBUTION, record.getRedeemPointPublicKey(), Actors.DAP_ASSET_REDEEM_POINT, WalletUtilities.DEFAULT_MEMO_ROLLBACK);
                         userRedemptionDao.failedToSendCrypto(record.getTransactionId());
                         break;
                 }

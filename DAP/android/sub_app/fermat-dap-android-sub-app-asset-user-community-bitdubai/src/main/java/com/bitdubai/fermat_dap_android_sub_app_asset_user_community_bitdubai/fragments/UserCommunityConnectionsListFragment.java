@@ -29,6 +29,9 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.SessionConstantsAssetUserCommunity;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAppFriendsListAdapter;
@@ -50,7 +53,7 @@ import static android.widget.Toast.makeText;
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class UserCommunityConnectionsListFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<Actor> {
 
-    public static final String INTRA_USER_SELECTED = "intra_user";
+    public static final String USER_SELECTED = "user";
     private static final int MAX = 20;
     protected final String TAG = "ConnectionNotificationsFragment";
     private int offset = 0;
@@ -153,7 +156,7 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         //menu.clear();
@@ -239,13 +242,23 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
 
     private synchronized List<Actor> getMoreData() {
         List<Actor> dataSet = new ArrayList<>();
-       /* try {
-            
-           //TODO dataSet.addAll(moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
-        } catch (CantGetIntraUsersListException | CantGetActiveLoginIdentityException e) {
+
+        List<ActorAssetUser> result = new ArrayList<>();
+        try {
+            if (moduleManager == null)
+                throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
+
+            result = moduleManager.getAllActorAssetUserConnected();
+            if (result != null && result.size() > 0) {
+                for (ActorAssetUser record : result) {
+                    dataSet.add((new Actor((AssetUserActorRecord)record)));
+                }
+            }
+        }
+
+        catch (CantGetAssetUserActorsException e) {
             e.printStackTrace();
         }
-*/
         return dataSet;
     }
     
@@ -268,8 +281,8 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
 
     @Override
     public void onItemClickListener(Actor data, int position) {
-        appSession.setData(INTRA_USER_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        appSession.setData(USER_SELECTED, data);
+        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

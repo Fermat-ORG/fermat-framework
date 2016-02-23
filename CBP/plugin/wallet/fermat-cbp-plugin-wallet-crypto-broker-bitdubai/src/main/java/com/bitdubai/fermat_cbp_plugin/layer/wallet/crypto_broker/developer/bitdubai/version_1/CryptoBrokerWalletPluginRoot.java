@@ -231,6 +231,7 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
         try {
             CryptoBrokerWalletImpl cryptoBrokerWalletImpl = new CryptoBrokerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, providerFilter);
 
+            walletPublicKey = "walletPublicKeyTest"; // TODO. solo para pruebas, hay que quitarlo despues
             UUID internalWalletId = cryptoBrokerWallet.get(walletPublicKey);
             cryptoBrokerWalletImpl.initialize(internalWalletId);
             return cryptoBrokerWalletImpl;
