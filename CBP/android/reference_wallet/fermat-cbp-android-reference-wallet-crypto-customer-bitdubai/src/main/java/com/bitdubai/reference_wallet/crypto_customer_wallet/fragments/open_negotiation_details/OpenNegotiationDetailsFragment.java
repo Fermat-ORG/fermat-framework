@@ -431,12 +431,13 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         brokerName.setText(broker.getAlias());
         sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, amount, merchandise));
         exchangeRateSummary.setText(getResources().getString(R.string.ccw_exchange_rate_summary, merchandise, exchangeAmount, payment));
-//        CharSequence dateExp = "";
-//        if(negotiationInfo.getNegotiationExpirationDate() != 0) {
-//            dateExp = "Expiration Date. " + DateFormat.format("dd MMM yyyy", negotiationInfo.getNegotiationExpirationDate());
-//            expirationDate.setVisibility(View.VISIBLE);
-//        }
-//        expirationDate.setText(dateExp);
+        CharSequence dateExp = "";
+        if(negotiationInfo.getNegotiationExpirationDate() == 0) {
+            expirationDate.setVisibility(View.GONE);
+        }else{
+            dateExp = "Expiration Date. " + DateFormat.format("dd MMM yyyy", negotiationInfo.getNegotiationExpirationDate());
+        }
+        expirationDate.setText(dateExp);
 
 
 
