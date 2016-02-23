@@ -473,7 +473,7 @@ public class ChatMiddlewareMonitorAgent implements
                     if(eventChatId.toString().equals(incomingTransactionChatId.toString())){
                         saveChat(incomingChatMetadata);
                         //If message exists in database, this message will be update
-                   //     saveChat(incomingChatMetadata);
+                        saveChat(incomingChatMetadata);
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
