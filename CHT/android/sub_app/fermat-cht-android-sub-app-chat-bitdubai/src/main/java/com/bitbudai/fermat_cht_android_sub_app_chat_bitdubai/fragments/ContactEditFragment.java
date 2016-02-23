@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AlphabetIndexer;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -26,6 +28,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -79,6 +82,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    private Toolbar toolbar;
     //Defines a tag for identifying log entries
     private static final String TAG = "CHT_ContactEditFragment";
 
@@ -123,6 +127,8 @@ public class ContactEditFragment extends AbstractFermatFragment {
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
+            toolbar = getToolbar();
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back));
         } catch (Exception e) {
            // CommonLogger.exception(TAG + "oncreate", e.getMessage(), e);
             if(errorManager != null)
@@ -193,6 +199,14 @@ public class ContactEditFragment extends AbstractFermatFragment {
             //name.setText(contactname.get(0));
             //FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
             //id.setText(contactid.get(0).toString());
+
+            // create bitmap from resource
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
+
+            // set circle bitmap
+            ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
+            mImage.setImageBitmap(getCircleBitmap(bm));
+
             aliasET =(EditText)layout.findViewById(R.id.aliasEdit);
             aliasET.setText(contactalias.get(0));
             saveBtn = (Button) layout.findViewById(R.id.saveContactButton);
@@ -203,25 +217,13 @@ public class ContactEditFragment extends AbstractFermatFragment {
         }
 
 
-//        LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
-//
-//        final int adapterCount = adapter.getCount();
-//
-//        for (int i = 0; i < adapterCount; i++) {
-//            View item = adapter.getView(i, null, null);
-//            detalles.addView(item);
-//        }
-
-        /*list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                // TODO Auto-generated method stub
-                //String Slecteditem= contactname[position];
-                //Toast.makeText(getActivity(), Slecteditem, Toast.LENGTH_SHORT).show();
-
+            public void onClick(View v) {
+                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
             }
-        });*/
+        });
+
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
