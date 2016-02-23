@@ -770,7 +770,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                                 customerAmount,
                                 account,
                                 customerCurrency,
-                                "Payment from Contract "+contractHash
+                                "Payment from Customer "+contractHash
                                 );
                 return bankTransactionParametersRecord;
             } catch (CantGetListCustomerBrokerContractSaleException e) {
