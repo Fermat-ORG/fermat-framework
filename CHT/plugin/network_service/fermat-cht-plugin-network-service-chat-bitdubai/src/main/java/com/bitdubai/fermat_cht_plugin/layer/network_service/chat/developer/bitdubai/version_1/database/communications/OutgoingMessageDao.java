@@ -40,7 +40,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@Deprecated
+
 public class OutgoingMessageDao {
 
     /**

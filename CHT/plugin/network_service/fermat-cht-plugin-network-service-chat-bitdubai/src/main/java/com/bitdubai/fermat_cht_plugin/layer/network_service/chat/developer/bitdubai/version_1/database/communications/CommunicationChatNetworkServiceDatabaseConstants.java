@@ -10,7 +10,7 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
  * @version 1.0
  * @since Java JDK 1.7
  */
-@Deprecated
+
 public final class CommunicationChatNetworkServiceDatabaseConstants {
 
     public static final String DATA_BASE_NAME  = "chat_network_service_data_base";
