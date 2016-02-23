@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -88,7 +89,7 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME, cryptoMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransaction().getCode());
         record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, cryptoMoneyTransaction.getOriginTransactionId());
-
+        record.setStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME, cryptoMoneyTransaction.getBlockchainNetworkType().getCode());
         return record;
     }
 
@@ -129,7 +130,7 @@ public class StockTransactionsCryptoMoneyRestockDatabaseDao {
         cryptoMoneyRestockTransaction.setPriceReference(new BigDecimal(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         cryptoMoneyRestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
         cryptoMoneyRestockTransaction.setOriginTransactionId(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME));
-
+        cryptoMoneyRestockTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(cryptoMoneyRestockTransactionRecord.getStringValue(StockTransactionsCrpytoMoneyRestockDatabaseConstants.CRYPTO_MONEY_RESTOCK_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME)));
         return cryptoMoneyRestockTransaction;
     }
 
