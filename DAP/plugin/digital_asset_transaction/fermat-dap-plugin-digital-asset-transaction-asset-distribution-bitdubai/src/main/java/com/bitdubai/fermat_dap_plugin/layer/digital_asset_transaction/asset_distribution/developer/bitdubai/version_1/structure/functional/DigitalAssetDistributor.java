@@ -207,7 +207,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             System.out.println("ASSET DISTRIBUTION Sender Actor name: " + actorAssetIssuerManager.getActorAssetIssuer().getName());
             System.out.println("ASSET DISTRIBUTION Before deliver - remote asset user ");
             assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), remoteActorAssetUser.getActorPublicKey(), networkType);
-            DAPMessage metadataMessage = new DAPMessage(UUID.randomUUID(), new AssetMetadataContentMessage(digitalAssetMetadata), actorAssetIssuerManager.getActorAssetIssuer(), remoteActorAssetUser, DAPMessageSubject.ASSET_DISTRIBUTION);
+            DAPMessage metadataMessage = new DAPMessage(new AssetMetadataContentMessage(digitalAssetMetadata), actorAssetIssuerManager.getActorAssetIssuer(), remoteActorAssetUser, DAPMessageSubject.ASSET_RECEPTION);
             this.assetTransmissionNetworkServiceManager.sendMessage(metadataMessage);
         } catch (CantExecuteQueryException | CantStartDeliveringException exception) {
             throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
