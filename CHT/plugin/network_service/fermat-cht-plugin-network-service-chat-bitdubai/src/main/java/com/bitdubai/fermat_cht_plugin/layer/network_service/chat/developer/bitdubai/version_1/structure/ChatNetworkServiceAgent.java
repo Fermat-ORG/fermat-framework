@@ -13,7 +13,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.Distribution
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.ChatNetworkServiceMetadataDao;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.ChatMetaDataDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.CommunicationChatNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -80,7 +80,7 @@ public class ChatNetworkServiceAgent {
     /**
      * DAO TransactionTransmission
      */
-    ChatNetworkServiceMetadataDao chatNetworkServiceMetadataDao;
+    ChatMetaDataDao chatMetaDataDao;
 
     /**
      *  Represent the remoteNetworkServicesRegisteredList
@@ -137,7 +137,7 @@ public class ChatNetworkServiceAgent {
     /**
      * Constructor
      * @param chatNetworkServicePluginRoot
-     * @param chatNetworkServiceMetadataDao
+     * @param chatMetaDataDao
      * @param communicationNetworkServiceConnectionManager
      * @param wsCommunicationsCloudClientManager
      * @param platformComponentProfile
@@ -148,7 +148,7 @@ public class ChatNetworkServiceAgent {
      */
     public ChatNetworkServiceAgent(
             ChatNetworkServicePluginRoot chatNetworkServicePluginRoot,
-            ChatNetworkServiceMetadataDao chatNetworkServiceMetadataDao,
+            ChatMetaDataDao chatMetaDataDao,
             CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager,
             WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager,
             PlatformComponentProfile platformComponentProfile,
@@ -159,7 +159,7 @@ public class ChatNetworkServiceAgent {
         try{
 
             this.chatNetworkServicePluginRoot = chatNetworkServicePluginRoot;
-            this.chatNetworkServiceMetadataDao = chatNetworkServiceMetadataDao;
+            this.chatMetaDataDao = chatMetaDataDao;
             this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
             this.wsCommunicationsCloudClientManager =wsCommunicationsCloudClientManager;
             this.errorManager = errorManager;
@@ -209,7 +209,7 @@ public class ChatNetworkServiceAgent {
         this.running  = Boolean.TRUE;
         try {
             try {
-                chatNetworkServiceMetadataDao.initialize();
+                chatMetaDataDao.initialize();
             } catch (CantInitializeChatNetworkServiceDatabaseException e) {
                 this.errorManager.reportUnexpectedPluginException(
                         Plugins.CHAT_NETWORK_SERVICE,
@@ -293,12 +293,13 @@ public class ChatNetworkServiceAgent {
 
         try {
             Map<String, Object> filters = new HashMap<>();
-            filters.put(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_TRANSACTION_HASH_COLUMN_NAME, DistributionStatus.DELIVERING.getCode());
+            filters.put(CommunicationChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME, DistributionStatus.DELIVERING.getCode());
 
          /*
          * Read all pending BusinessTransactionMetadata from database
          */
-            List<ChatMetadataRecord> chatMetadataRecordList = chatNetworkServiceMetadataDao.findAllToSend();
+
+            List<ChatMetadataRecord> chatMetadataRecordList = chatMetaDataDao.findAllToSend();
 
 
             for (ChatMetadataRecord chatMetadataRecord : chatMetadataRecordList) {
@@ -346,7 +347,8 @@ public class ChatNetworkServiceAgent {
 
                             communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),receiverPublicKey,msjContent);
 
-                            chatNetworkServiceMetadataDao.update(chatMetadataRecord);
+
+                            chatMetaDataDao.update(chatMetadataRecord);
 
                             System.out.print("-----------------------\n" +
                                     "CHAT METADATA -----------------------\n" +
@@ -410,7 +412,7 @@ public class ChatNetworkServiceAgent {
 //         /*
 //         * Read all pending CryptoTransmissionMetadata from database
 //         */
-//            List<BusinessTransactionMetadata> businessTransactionMetadataList = chatNetworkServiceMetadataDao.findAllToReceive(filters);
+//            List<BusinessTransactionMetadata> businessTransactionMetadataList = chatMetaDataDao.findAllToReceive(filters);
 //
 //
 //            for(BusinessTransactionMetadata businessTransactionMetadata : businessTransactionMetadataList){
@@ -453,7 +455,7 @@ public class ChatNetworkServiceAgent {
 //
 //                                businessTransactionMetadata.setState(TransactionTransmissionStates.SEEN_BY_OWN_NETWORK_SERVICE);
 //                                businessTransactionMetadata.setBusinessTransactionTransactionType(businessTransactionMetadata.getType());
-//                                chatNetworkServiceMetadataDao.update(businessTransactionMetadata);
+//                                chatMetaDataDao.update(businessTransactionMetadata);
 //
 //                                System.out.print("-----------------------\n" +
 //                                        "RECEIVING BUSINESS TRANSACTION -----------------------\n" +

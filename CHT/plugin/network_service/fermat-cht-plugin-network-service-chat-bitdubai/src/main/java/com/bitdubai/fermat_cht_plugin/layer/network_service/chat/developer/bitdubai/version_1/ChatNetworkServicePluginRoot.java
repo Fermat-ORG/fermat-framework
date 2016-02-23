@@ -60,7 +60,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.Network
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.ChatNetworkServiceMetadataDao;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.ChatMetaDataDao;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.CommunicationChatNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.CommunicationChatNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.CommunicationChatNetworkServiceDeveloperDatabaseFactory;
@@ -167,7 +167,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                 ", identity=" + identity +
                 ", platformComponentProfile=" + platformComponentProfile +
                 ", listenersAdded=" + listenersAdded +
-                ", chatNetworkServiceMetadataDao=" + chatNetworkServiceMetadataDao +
+                ", chatMetaDataDao=" + chatMetaDataDao +
                 ", communicationNetworkServiceConnectionManager=" + communicationNetworkServiceConnectionManager +
                 ", remoteNetworkServicesRegisteredList=" + remoteNetworkServicesRegisteredList +
                 ", communicationNetworkServiceDeveloperDatabaseFactory=" + communicationNetworkServiceDeveloperDatabaseFactory +
@@ -198,10 +198,10 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     /**
      * Represent the OutgoinChatMetaDataDao
      */
-    private ChatNetworkServiceMetadataDao chatNetworkServiceMetadataDao;
+    private ChatMetaDataDao chatMetaDataDao;
 
-    public ChatNetworkServiceMetadataDao getChatNetworkServiceMetadataDao() {
-        return chatNetworkServiceMetadataDao;
+    public ChatMetaDataDao getChatMetaDataDao() {
+        return chatMetaDataDao;
     }
 
     /**
@@ -502,7 +502,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             requestRemoteNetworkServicesRegisteredList(discoveryQueryParameters);
             chatNetworkServiceAgent = new ChatNetworkServiceAgent(
                     this,
-                    getChatNetworkServiceMetadataDao(),
+                    getChatMetaDataDao(),
                     communicationNetworkServiceConnectionManager,
                     wsCommunicationsCloudClientManager,
                     platformComponentProfile,
@@ -806,7 +806,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
              * Open new database connection
              */
             this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-            this.chatNetworkServiceMetadataDao = new ChatNetworkServiceMetadataDao(dataBase, pluginDatabaseSystem, pluginId);
+            this.chatMetaDataDao = new ChatMetaDataDao(dataBase, pluginDatabaseSystem, pluginId);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -830,7 +830,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
                  * We create the new database
                  */
                 this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-                this.chatNetworkServiceMetadataDao = new ChatNetworkServiceMetadataDao(dataBase, pluginDatabaseSystem, pluginId);
+                this.chatMetaDataDao = new ChatMetaDataDao(dataBase, pluginDatabaseSystem, pluginId);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -883,7 +883,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
            // System.out.println("ChatNetworkServicePluginRoot - Message encoded:\n" + msjContent);
 
             String msgHash = CryptoHasher.performSha256(chatMetadata.getChatId().toString() + chatMetadata.getMessageId().toString());
-            chatMetadataRecord.setTransactionId(getChatNetworkServiceMetadataDao().getNewUUID(UUID.randomUUID().toString()));
+            chatMetadataRecord.setTransactionId(getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
             chatMetadataRecord.setTransactionHash(msgHash);
             chatMetadataRecord.setChatId(chatMetadata.getChatId());
             chatMetadataRecord.setObjectId(chatMetadata.getObjectId());
@@ -910,7 +910,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             /*
              * Save into data base
              */
-            getChatNetworkServiceMetadataDao().create(chatMetadataRecord);
+
+            getChatMetaDataDao().create(chatMetadataRecord);
+
 
           //  System.out.println("ChatMetadata to send:\n" + chatMetadataRecord);
 
@@ -998,13 +1000,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
             if(chatMetadataRecord.isFilled()){
                 try {
-                    ChatMetadataRecord chatMetadataRecord1 = getChatNetworkServiceMetadataDao().findById(chatMetadataRecord.getTransactionId().toString());
+                    ChatMetadataRecord chatMetadataRecord1 = getChatMetaDataDao().findById(chatMetadataRecord.getTransactionId().toString());
                     if(chatMetadataRecord.equals(chatMetadataRecord1)){
                             chatMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERING);
-                            getChatNetworkServiceMetadataDao().update(chatMetadataRecord);
+                            getChatMetaDataDao().update(chatMetadataRecord);
                     }else{
                         chatMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERING);
-                        getChatNetworkServiceMetadataDao().create(chatMetadataRecord);
+                        getChatMetaDataDao().create(chatMetadataRecord);
                     }
                 } catch (Exception e1) {
 
@@ -1371,12 +1373,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
         try {
 
-            ChatMetadataRecord chatMetadataRecord = getChatNetworkServiceMetadataDao().findById(transactionID.toString());
+
+            ChatMetadataRecord chatMetadataRecord = getChatMetaDataDao().findById(transactionID.toString());
             chatMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERED);
             chatMetadataRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
             chatMetadataRecord.setMessageStatus(MessageStatus.DELIVERED);
             chatMetadataRecord.setProcessed(ChatMetadataRecord.PROCESSED);
-            getChatNetworkServiceMetadataDao().update(chatMetadataRecord);
+            getChatMetaDataDao().update(chatMetadataRecord);
 
         } catch (Exception e) {
             StringBuilder contextBuffer = new StringBuilder();
@@ -1397,7 +1400,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
     public List<Transaction<ChatMetadata>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
         List<Transaction<ChatMetadata>> pendingTransactions = new ArrayList<>();
         try {
-            List<ChatMetadataRecord> pendingChatMetadataTransactions = getChatNetworkServiceMetadataDao().findAll(CommunicationChatNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_CHAT_PROCCES_STATUS_COLUMN_NAME, ChatMetadataRecord.NO_PROCESSED);
+
+            List<ChatMetadataRecord> pendingChatMetadataTransactions = getChatMetaDataDao().findAll(CommunicationChatNetworkServiceDatabaseConstants.CHAT_PROCCES_STATUS_COLUMN_NAME, ChatMetadataRecord.NO_PROCESSED);
             if (!pendingChatMetadataTransactions.isEmpty()) {
                 for (ChatMetadataRecord chatMetadataRecord : pendingChatMetadataTransactions) {
                     Transaction<ChatMetadata> transaction = new Transaction<>(chatMetadataRecord.getTransactionId(),

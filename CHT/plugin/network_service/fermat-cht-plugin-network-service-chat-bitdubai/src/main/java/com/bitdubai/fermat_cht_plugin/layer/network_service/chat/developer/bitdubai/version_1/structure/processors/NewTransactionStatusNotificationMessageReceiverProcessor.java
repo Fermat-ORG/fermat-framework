@@ -72,7 +72,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
              */
 
             String transactionHash = CryptoHasher.performSha256(chatID.toString() + messageID.toString());
-            ChatMetadataRecord chatMetadataRecord =  getChatNetworkServicePluginRoot().getChatNetworkServiceMetadataDao().findByTransactionHash(transactionHash);
+            ChatMetadataRecord chatMetadataRecord =  getChatNetworkServicePluginRoot().getChatMetaDataDao().findByTransactionHash(transactionHash);
 
             if(chatMetadataRecord != null){
 
@@ -81,7 +81,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 if(messageStatus != null)
                     chatMetadataRecord.setMessageStatus(messageStatus);
                 chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
-                getChatNetworkServicePluginRoot().getChatNetworkServiceMetadataDao().update(chatMetadataRecord);
+                getChatNetworkServicePluginRoot().getChatMetaDataDao().update(chatMetadataRecord);
 
 
                 /*

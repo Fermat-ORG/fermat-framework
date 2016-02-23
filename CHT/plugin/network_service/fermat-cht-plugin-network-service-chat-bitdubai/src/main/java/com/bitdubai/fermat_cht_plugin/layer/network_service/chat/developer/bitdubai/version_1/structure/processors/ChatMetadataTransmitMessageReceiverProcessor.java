@@ -74,14 +74,15 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
              * Save into data base for audit control
              */
             //get the transactions an UUID
-            chatMetadataRecord.setTransactionId(getChatNetworkServicePluginRoot().getChatNetworkServiceMetadataDao().getNewUUID(UUID.randomUUID().toString()));
+
+            chatMetadataRecord.setTransactionId(getChatNetworkServicePluginRoot().getChatMetaDataDao().getNewUUID(UUID.randomUUID().toString()));
             String transactionHash = CryptoHasher.performSha256(chatMetadataRecord.getChatId().toString() + chatMetadataRecord.getMessageId().toString());
             chatMetadataRecord.setTransactionHash(transactionHash);
             chatMetadataRecord.setChatMessageStatus(ChatMessageStatus.CREATED_CHAT);
             chatMetadataRecord.setMessageStatus(MessageStatus.CREATED);
             chatMetadataRecord.setDistributionStatus(DistributionStatus.DELIVERING);
             chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
-            getChatNetworkServicePluginRoot().getChatNetworkServiceMetadataDao().create(chatMetadataRecord);
+            getChatNetworkServicePluginRoot().getChatMetaDataDao().create(chatMetadataRecord);
 
             /*
              * Mark the message as read
