@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -8,6 +9,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -23,10 +26,14 @@ import java.util.UUID;
  */
 public class ChatNetworkServiceDatabaseFactory {
     private final PluginDatabaseSystem pluginDatabaseSystem;
-
-    public ChatNetworkServiceDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem) {
+    private ErrorManager errorManager;
+    public ChatNetworkServiceDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.errorManager = errorManager;
+    }
+    private void reportUnexpectedError(final Exception e) {
+        errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
     public Database createDatabase(UUID ownerId     ,
@@ -75,9 +82,13 @@ public class ChatNetworkServiceDatabaseFactory {
                 databaseFactory.createTable(ownerId, table);
                 //  System.out.println("ChatNetworkServicePluginRoot - table:" + table);
             } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                CantCreateDatabaseException cantCreateDatabaseException = new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+                reportUnexpectedError(cantCreateDatabaseException);
+                throw cantCreateDatabaseException;
             }catch(Exception e){
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
+                CantCreateDatabaseException cantCreateDatabaseException = new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", e.getMessage());
+                reportUnexpectedError(cantCreateDatabaseException);
+                throw cantCreateDatabaseException;
             }
 
 
@@ -87,7 +98,9 @@ public class ChatNetworkServiceDatabaseFactory {
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              */
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+            CantCreateDatabaseException cantCreateDatabaseException = new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
+            reportUnexpectedError(cantCreateDatabaseException);
+            throw cantCreateDatabaseException;
         }
     }
 }

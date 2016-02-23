@@ -83,8 +83,9 @@ public final class ChatExecutorAgent extends FermatAgent {
                 agentThread.start();
 
             } catch (Exception exception) {
-
-                throw new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+                CantStartAgentException cantStartAgentException = new CantStartAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
+                reportUnexpectedError(cantStartAgentException);
+                throw cantStartAgentException;
             }
         }
     }
