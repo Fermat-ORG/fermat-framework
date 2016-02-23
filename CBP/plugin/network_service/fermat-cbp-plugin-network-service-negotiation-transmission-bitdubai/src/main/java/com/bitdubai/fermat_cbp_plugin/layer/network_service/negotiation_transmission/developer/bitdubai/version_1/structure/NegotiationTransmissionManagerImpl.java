@@ -101,8 +101,9 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
-                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -152,11 +153,7 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
 
-
                     try {
-//                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-//                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
-//                                negotiationTransmission.toJson()
                         networkServiceNegotiationTransmissionNew.sendNewMessage(
                                 networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
                                 networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
@@ -210,8 +207,9 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
-                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -262,8 +260,9 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
@@ -300,8 +299,9 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 public void run() {
 
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
