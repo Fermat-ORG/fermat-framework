@@ -122,26 +122,25 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         System.out.println("***CryptoNetwork*** Stopping monitor agent for " + BLOCKCHAIN_NETWORKTYPE.getCode());
         if (monitorAgentThread != null){
             PeerGroup peerGroup = monitorAgent.getPeerGroup();
-            peerGroup.stop();
-            while (peerGroup.isRunning()){
-                //peergroup is still running.
-                System.out.println("***CryptoNetwork*** stopping peer group service...");
+            if (peerGroup != null){
+                peerGroup.stop();
+
+                while (peerGroup.isRunning()){
+                    //peergroup is still running.
+                    System.out.println("***CryptoNetwork*** stopping peer group service...");
+                }
             }
             System.out.println("***CryptoNetwork*** Thread and peer group successfully stopped.");
-
             try{
                 monitorAgentThread.interrupt();
                 System.out.println("***CryptoNetwork*** Monitor Agent Thread state is: " + monitorAgentThread.getState().name());
             } catch (Exception e){
-
+                e.printStackTrace();
             }
 
         }
     }
 
-    public MonitorAgent getMonitorAgent() {
-        return monitorAgent;
-    }
 
     /**
      * private class that runs on a separate thread
@@ -218,7 +217,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * Agent main method
          */
         private void doTheMainTask() throws Exception {
-            System.out.println("***CryptoNetwork***  starting and connecting...");
+            System.out.println("***CryptoNetwork***  starting and connecting on " + BLOCKCHAIN_NETWORKTYPE.getCode() + "...");
 
             try{
                 /**
@@ -269,6 +268,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 peerGroup.setDownloadTxDependencies(true);
                 peerGroup.start();
                 peerGroup.startBlockChainDownload(cryptoNetworkBlockChain);
+
+                System.out.println("***CryptoNetwork*** Successful monitoring " + wallet.getImportedKeys().size() + " keys in " + BLOCKCHAIN_NETWORKTYPE.getCode() + " network.");
 
 
                 /**

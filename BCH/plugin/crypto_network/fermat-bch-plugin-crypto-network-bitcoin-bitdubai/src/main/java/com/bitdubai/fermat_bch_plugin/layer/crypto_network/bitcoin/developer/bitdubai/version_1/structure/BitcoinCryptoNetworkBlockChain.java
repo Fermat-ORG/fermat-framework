@@ -61,8 +61,8 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
      */
     public BitcoinCryptoNetworkBlockChain(PluginFileSystem pluginFileSystem, NetworkParameters networkParameters, Wallet wallet) throws BlockchainException {
         this.pluginFileSystem = pluginFileSystem;
-        this.networkParameters= networkParameters;
         this.wallet = wallet;
+        this.networkParameters= wallet.getContext().getParams();
 
         this.BLOCKCHAIN_NETWORK_TYPE = BitcoinNetworkSelector.getBlockchainNetworkType(this.networkParameters);
         this.BLOCKCHAIN_PATH = pluginFileSystem.getAppPath();
@@ -73,9 +73,16 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
          * initialize the objects
          */
         try {
-            initialize(false);
+            initialize();
         } catch (BlockStoreException e) {
-            throw new BlockchainException(BlockchainException.DEFAULT_MESSAGE, e, "Could not create blockchain to store block headers.", null);
+            if (BLOCKCHAIN_NETWORK_TYPE == BlockchainNetworkType.REG_TEST){
+                try {
+                    initializeInMemory();
+                } catch (BlockStoreException e1) {
+                    throw new BlockchainException(BlockchainException.DEFAULT_MESSAGE, e1, "Could not create blockchain to store block headers.", null);
+                }
+            } else
+                throw new BlockchainException(BlockchainException.DEFAULT_MESSAGE, e, "Could not create blockchain to store block headers.", null);
         }
     }
 
@@ -89,10 +96,9 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
 
     /**
      * Initializes the blockchain and blockstore objects.
-     * @param withError since I'm using this recursively, I will use this parameter to avoid a loop.
      * @throws BlockStoreException if something went wrong and I can't create the blockchain
      */
-    private void initialize(boolean withError) throws BlockStoreException {
+    private void initialize() throws BlockStoreException {
         /**
          * I will define the SPV blockstore were I will save the blockchain.
          * I will be saving the file under the network type I'm being created for.
@@ -108,24 +114,15 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
             firstTime = false;
 
         /**
-         * If this is the RegTest Network, I will delete any previous blockstore
-         * Since this blockchain will be very small, I will rebuild it each time.
-         */
-        if (BLOCKCHAIN_NETWORK_TYPE == BlockchainNetworkType.REG_TEST){
-            if (blockChainFile.exists())
-                blockChainFile.delete();
-        }
-
-        /**
          * I create the blockstore.
          */
         try {
-            blockStore = new SPVBlockStore(networkParameters, blockChainFile);
+            blockStore = new SPVBlockStore(wallet.getContext().getParams(), blockChainFile);
         } catch (Exception e) {
             /**
              * If there is an error saving it to file, I will save it to memory
              */
-            blockStore = new MemoryBlockStore(this.networkParameters);
+            blockStore = new MemoryBlockStore(wallet.getContext().getParams());
             System.out.println("*** Crypto Network Warning, error creating file to store blockchain, will save it to memory.");
             System.out.println("*** Crypto Network: " + e.toString());
 
@@ -147,17 +144,12 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
         /**
          * I initialize the blockchain object
          */
-        try{
-            blockChain = new BlockChain(this.networkParameters, wallet, blockStore);
-        } catch (Exception e){
-            if (withError)
-                throw new BlockStoreException(e);
-            /**
-             * In case we have an issue like a corrupted blockstore, will delete the blockchain file
-             */
-            blockChainFile.delete();
-            initialize(true);
-        }
+        blockChain = new BlockChain(wallet.getContext(), wallet, blockStore);
+    }
+
+    private void initializeInMemory() throws BlockStoreException {
+        blockStore = new MemoryBlockStore(wallet.getContext().getParams());
+        blockChain = new BlockChain(wallet.getContext().getParams(), wallet, blockStore);
     }
 
     /**
