@@ -96,9 +96,10 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back));
             whattodo();
-            //     Chat chat=chatSession.getSelectedChat();
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
+            {
                 setHasOptionsMenu(true);
+            }else{ setHasOptionsMenu(false); }
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
