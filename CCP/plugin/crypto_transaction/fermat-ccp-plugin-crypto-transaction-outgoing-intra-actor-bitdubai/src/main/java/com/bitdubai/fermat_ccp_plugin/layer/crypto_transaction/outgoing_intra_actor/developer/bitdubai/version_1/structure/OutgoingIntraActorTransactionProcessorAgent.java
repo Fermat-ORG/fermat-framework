@@ -457,7 +457,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                        if(credit)
                             bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
                         else
-                           bitcoinWalletWallet.getBalance(BalanceType.BOOK).credit(transaction);
+                           bitcoinWalletWallet.getBalance(BalanceType.BOOK).debit(transaction);
 
 
                         bitcoinWalletWallet.deleteTransaction(transaction.getTransactionId());
