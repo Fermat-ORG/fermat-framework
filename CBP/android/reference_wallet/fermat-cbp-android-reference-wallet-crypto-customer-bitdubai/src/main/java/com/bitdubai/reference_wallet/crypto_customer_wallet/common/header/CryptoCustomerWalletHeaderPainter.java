@@ -2,10 +2,13 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.header;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -26,6 +29,7 @@ import com.viewpagerindicator.LinePageIndicator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
+
 
 /**
  * Created by nelson on 17/12/15.
@@ -57,6 +61,16 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
     @Override
     public void addExpandableHeader(ViewGroup viewGroup) {
         View container = activity.getLayoutInflater().inflate(R.layout.ccw_header_layout, viewGroup, true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            FrameLayout headerContainer = (FrameLayout) container.findViewById(R.id.ccw_header_layout_container);
+            ViewGroup.MarginLayoutParams marginParams = new  ViewGroup.MarginLayoutParams(headerContainer.getLayoutParams());
+            marginParams.topMargin = 100;
+
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(marginParams);
+            layoutParams.gravity = Gravity.NO_GRAVITY;
+            headerContainer.setLayoutParams(layoutParams);
+        }
+
         ProgressBar progressBar = (ProgressBar) container.findViewById(R.id.ccw_header_progress_bar);
         progressBar.setVisibility(View.VISIBLE);
 
