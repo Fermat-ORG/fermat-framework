@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmi
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -150,9 +151,15 @@ public class NegotiationTransmissionManagerImpl implements NegotiationTransmissi
                 @Override
                 public void run() {
 
+
+
                     try {
-                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
-                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
+//                        networkServiceNegotiationTransmissionNew.sendNewMessage(networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyCustomer()),
+//                                networkServiceNegotiationTransmissionNew.getProfileSenderToRequestConnection(negotiationTransaction.getPublicKeyBroker()),
+//                                negotiationTransmission.toJson()
+                        networkServiceNegotiationTransmissionNew.sendNewMessage(
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyCustomer(), Actors.CBP_CRYPTO_CUSTOMER),
+                                networkServiceNegotiationTransmissionNew.constructBasicPlatformComponentProfile(negotiationTransaction.getPublicKeyBroker(), Actors.CBP_CRYPTO_BROKER),
                                 negotiationTransmission.toJson()
                         );
                     } catch (CantSendMessageException e) {
