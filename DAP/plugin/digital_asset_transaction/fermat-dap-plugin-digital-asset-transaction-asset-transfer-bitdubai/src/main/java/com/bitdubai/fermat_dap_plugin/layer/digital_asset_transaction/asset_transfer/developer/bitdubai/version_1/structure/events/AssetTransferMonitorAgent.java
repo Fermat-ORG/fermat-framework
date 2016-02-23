@@ -493,7 +493,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
             AssetTransferContentMessage content = new AssetTransferContentMessage(newUser, digitalAssetMetadata.getMetadataId(), networkType);
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
             ActorAssetIssuer actorReceiver = (ActorAssetIssuer) ActorUtils.constructActorFromIdentity(digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer());
-            DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver);
+            DAPMessage dapMessage = new DAPMessage(UUID.randomUUID(), content, actorSender, actorReceiver);
             assetIssuerActorNetworkServiceManager.sendMessage(dapMessage);
         }
 

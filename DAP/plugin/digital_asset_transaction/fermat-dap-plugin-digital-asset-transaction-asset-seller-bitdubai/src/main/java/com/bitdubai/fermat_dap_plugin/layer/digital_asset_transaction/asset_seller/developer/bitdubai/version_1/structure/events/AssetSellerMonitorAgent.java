@@ -44,6 +44,9 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_sell
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
  */
@@ -182,7 +185,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                         ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                         DraftTransaction draftTransaction = assetVaultManager.createDraftTransaction(record.getMetadata().getLastTransactionHash(), record.getBuyer().getCryptoAddress());
                         AssetSellContentMessage contentMessage = new AssetSellContentMessage(record.getRecordId(), draftTransaction.serialize(), AssetSellStatus.WAITING_FIRST_SIGNATURE, record.getMetadata(), record.getNegotiationId());
-                        DAPMessage dapMessage = new DAPMessage(contentMessage, mySelf, record.getBuyer());
+                        DAPMessage dapMessage = new DAPMessage(UUID.randomUUID(),contentMessage, mySelf, record.getBuyer());
                         assetTransmission.sendMessage(dapMessage);
                         dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.WAITING_FIRST_SIGNATURE);
                         break;
@@ -191,7 +194,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                         if (!Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
                             AssetSellContentMessage content = new AssetSellContentMessage(record.getRecordId(), null, AssetSellStatus.SIGNATURE_REJECTED, null, record.getNegotiationId());
                             ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
-                            DAPMessage message = new DAPMessage(content, mySelf, record.getBuyer());
+                            DAPMessage message = new DAPMessage(UUID.randomUUID(),content, mySelf, record.getBuyer());
                             //WE NOTIFY TO THE BUYER THAT THE SIGNATURE HAS BEEN REJECTED.
                             assetTransmission.sendMessage(message);
                             dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SIGNATURE_REJECTED);
