@@ -25,5 +25,7 @@
 
     <!-- dap asset redeem point wallet colors -->
     <color name="dap_redeem_point_wallet_principal">#015581</color>
+    <color name="dap_redeem_point_wallet_blue_text">#00aeef</color>
+    <color name="dap_redeem_point_wallet_black_text">#37474f</color>
     <!-- -->
 </resources>

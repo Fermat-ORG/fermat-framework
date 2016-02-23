@@ -137,48 +137,24 @@ public class AssetNegotiation implements Serializable {
         return negotiationId;
     }
 
-    public void setNegotiationId(UUID negotiationId) {
-        this.negotiationId = negotiationId;
-    }
-
     public long getAmountPerUnity() {
         return amountPerUnity;
-    }
-
-    public void setAmountPerUnity(long amountPerUnity) {
-        this.amountPerUnity = amountPerUnity;
     }
 
     public int getQuantityToBuy() {
         return quantityToBuy;
     }
 
-    public void setQuantityToBuy(int quantityToBuy) {
-        this.quantityToBuy = quantityToBuy;
-    }
-
     public DigitalAsset getAssetToOffer() {
         return assetToOffer;
-    }
-
-    public void setAssetToOffer(DigitalAsset assetToOffer) {
-        this.assetToOffer = assetToOffer;
     }
 
     public BlockchainNetworkType getNetworkType() {
         return networkType;
     }
 
-    public void setNetworkType(BlockchainNetworkType networkType) {
-        this.networkType = networkType;
-    }
-
     public long getTotalAmount() {
         return totalAmount;
-    }
-
-    public void setTotalAmount(long totalAmount) {
-        this.totalAmount = totalAmount;
     }
 
     //INNER CLASSES
