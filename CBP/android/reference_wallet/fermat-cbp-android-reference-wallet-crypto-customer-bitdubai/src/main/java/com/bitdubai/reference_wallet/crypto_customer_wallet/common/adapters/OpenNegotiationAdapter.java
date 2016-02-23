@@ -320,13 +320,13 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         ClauseInformation clause = null;
 
         if(currencyType != null) {
-            if (currencyType.equals(MoneyType.CRYPTO.getFriendlyName()))
+            if (currencyType.equals(MoneyType.CRYPTO.getCode()))
                 clause = clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
 
-            else if (currencyType.equals(MoneyType.BANK.getFriendlyName()))
+            else if (currencyType.equals(MoneyType.BANK.getCode()))
                 clause = clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
 
-            else if (currencyType.equals(MoneyType.CASH_DELIVERY.getFriendlyName()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getFriendlyName())))
+            else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode())))
                 clause = clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
         }
 
@@ -339,13 +339,13 @@ public class OpenNegotiationAdapter extends FermatAdapter<ClauseInformation, Fer
         ClauseInformation clause = null;
 
         if(currencyType != null) {
-            if (currencyType.equals(MoneyType.CRYPTO.getFriendlyName()))
+            if (currencyType.equals(MoneyType.CRYPTO.getCode()))
                 clause = clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
 
-            else if (currencyType.equals(MoneyType.BANK.getFriendlyName()))
+            else if (currencyType.equals(MoneyType.BANK.getCode()))
                 clause = clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
 
-            else if (currencyType.equals(MoneyType.CASH_DELIVERY.getFriendlyName()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getFriendlyName())))
+            else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode())))
                 clause = clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
         }
 
