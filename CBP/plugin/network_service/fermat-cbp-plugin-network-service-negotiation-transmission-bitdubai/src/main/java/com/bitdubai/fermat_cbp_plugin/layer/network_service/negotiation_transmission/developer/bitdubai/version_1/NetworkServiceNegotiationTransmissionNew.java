@@ -424,6 +424,12 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
                             "- ActorSend = " + negotiationTransmission.getPublicKeyActorSend()
             );
 
+            if (negotiationTransmission.getNegotiationType().getCode().equals(NegotiationType.PURCHASE.getCode())) {
+                negotiationTransmission.setNegotiationType(NegotiationType.SALE);
+            }else {
+                negotiationTransmission.setNegotiationType(NegotiationType.PURCHASE);
+            }
+
             incomingNotificationDao.createNotification(negotiationTransmission, NegotiationTransmissionState.PENDING_ACTION);
 
             switch (negotiationTransmission.getNegotiationTransactionType()) {
