@@ -60,6 +60,15 @@ public class AssetRedeemPointIdentityDatabaseFactory implements DealsWithErrors,
             table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, true);
             table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
             table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_CONTACT_INFORMATION_COLUMN_NAME    , DatabaseDataType.STRING, 150, false);
+
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_COUNTRY_NAME_COLUMN_NAME    , DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_PROVINCE_NAME_COLUMN_NAME    , DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_CITY_NAME_COLUMN_NAME    , DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_POSTAL_CODE_COLUMN_NAME    , DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME    , DatabaseDataType.STRING, 100, false);
+            table.addColumn(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME    , DatabaseDataType.STRING, 100, false);
+
 
             table.addIndex(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_FIRST_KEY_COLUMN);
 
