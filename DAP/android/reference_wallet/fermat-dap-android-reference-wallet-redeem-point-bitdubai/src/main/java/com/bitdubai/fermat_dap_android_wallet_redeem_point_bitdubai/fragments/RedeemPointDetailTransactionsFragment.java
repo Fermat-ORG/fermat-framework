@@ -29,22 +29,22 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.UserRedeemedPointListAdapter;
+import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.AssetDetailTransactionAdapter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.DigitalAsset;
-import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.UserRedeemed;
+import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.Transaction;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.RedeemPointSession;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.SessionConstantsRedeemPoint;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -57,19 +57,17 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Created by jinmy on 01/12/16.
+ * Created by frank on 12/15/15.
  */
-public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<UserRedeemed> {
+public class RedeemPointDetailTransactionsFragment extends FermatWalletListFragment<Transaction>
+        implements FermatListItemListeners<Transaction> {
 
     private RedeemPointSession redeemPointSession;
     private AssetRedeemPointWalletSubAppModule moduleManager;
-    private Resources res;
 
-    private List<UserRedeemed> users;
     private View rootView;
     private Toolbar toolbar;
-    private View noUsersView;
-    private ErrorManager errorManager;
+    private Resources res;
 
     private ImageView assetImageDetail;
     private FermatTextView assetDetailNameText;
@@ -77,17 +75,22 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
     private FermatTextView availableText;
     private FermatTextView pendingText;
     private FermatTextView assetDetailBtcText;
+//    private FermatTextView assetDetailRedeemText;
 
     private DigitalAsset digitalAsset;
+    private ErrorManager errorManager;
 
     SettingsManager<RedeemPointSettings> settingsManager;
 
-    public RedeemPointDetailActivityFragment() {
+    private View noTransactionsView;
+    private List<Transaction> transactions;
+
+    public RedeemPointDetailTransactionsFragment() {
 
     }
 
-    public static RedeemPointDetailActivityFragment newInstance() {
-        return new RedeemPointDetailActivityFragment();
+    public static RedeemPointDetailTransactionsFragment newInstance() {
+        return new RedeemPointDetailTransactionsFragment();
     }
 
     @Override
@@ -95,19 +98,12 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        try {
-            redeemPointSession = (RedeemPointSession) appSession;
-            moduleManager = redeemPointSession.getModuleManager();
-            errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
+        redeemPointSession = (RedeemPointSession) appSession;
+        moduleManager = redeemPointSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
+        settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.DAP_REDEEM_POINT_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
-        }
+        transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
 
     @Override
@@ -134,25 +130,9 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
                 }
             });
         }
-
-        noUsersView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_users);
-        showOrHideNoUsersView(users.isEmpty());
-    }
-
-    private View configureActivityHeader(LayoutInflater layoutInflater) {
-        RelativeLayout header = getToolbarHeader();
-        try {
-            header.removeAllViews();
-        } catch (Exception exception) {
-            CommonLogger.exception(TAG, "Error removing all views from header ", exception);
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
-        }
-        header.setVisibility(View.VISIBLE);
-        View container = layoutInflater.inflate(R.layout.dap_wallet_asset_redeem_point_detail, header, true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            container.getLayoutParams().height = SizeUtils.convertDpToPixels(428, getActivity());
-        }
-        return container;
+        
+        noTransactionsView = layout.findViewById(R.id.dap_wallet_asset_redeem_point_no_transactions);
+        showOrHideNoTransactionsView(transactions.isEmpty());
     }
 
     private void setupRecyclerView() {
@@ -174,30 +154,68 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         });
     }
 
-    private void setUpHelpAssetRedeemDetail(boolean checkButton) {
+    private View configureActivityHeader(LayoutInflater layoutInflater) {
+        RelativeLayout header = getToolbarHeader();
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setBannerRes(R.drawable.banner_redeem_point_wallet)
-                    .setIconRes(R.drawable.redeem_point)
-                    .setVIewColor(R.color.dap_redeem_point_view_color)
-                    .setTitleTextColor(R.color.dap_redeem_point_view_color)
-                    .setSubTitle(R.string.dap_redeem_wallet_detail_subTitle)
-                    .setBody(R.string.dap_redeem_wallet_detail_body)
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                    .setIsCheckEnabled(checkButton)
-                    .build();
+            header.removeAllViews();
+        } catch (Exception exception) {
+            CommonLogger.exception(TAG, "Error removing all views from header ", exception);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
+        }
+        header.setVisibility(View.VISIBLE);
+        View container = layoutInflater.inflate(R.layout.dap_wallet_asset_redeem_point_detail, header, true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            container.getLayoutParams().height = SizeUtils.convertDpToPixels(428, getActivity());
+        }
+        return container;
+    }
 
-            presentationDialog.show();
-        } catch (Exception e) {
-            e.printStackTrace();
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    private void showOrHideNoTransactionsView(boolean show) {
+        if (show) {
+            recyclerView.setVisibility(View.GONE);
+            noTransactionsView.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            noTransactionsView.setVisibility(View.GONE);
         }
     }
 
     @Override
+    protected boolean hasMenu() {
+        return true;
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.dap_wallet_asset_redeem_point_detail_transaction;
+    }
+
+    @Override
+    protected int getSwipeRefreshLayoutId() {
+        return R.id.swipe_refresh;
+    }
+
+    @Override
+    protected int getRecyclerLayoutId() {
+        return R.id.dap_wallet_asset_redeem_point_asset_detail_transaction_sent_recycler_view;
+    }
+
+    @Override
+    protected boolean recyclerHasFixedSize() {
+        return true;
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_DETAIL, 0, "Help").setIcon(R.drawable.dap_asset_redeem_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -218,29 +236,23 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected boolean hasMenu() {
-        return true;
-    }
+    private void setUpHelpAssetRedeemDetail(boolean checkButton) {
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBannerRes(R.drawable.banner_redeem_point_wallet)
+                    .setIconRes(R.drawable.redeem_point)
+                    .setVIewColor(R.color.dap_redeem_point_view_color)
+                    .setTitleTextColor(R.color.dap_redeem_point_view_color)
+                    .setSubTitle(R.string.dap_redeem_wallet_detail_subTitle)
+                    .setBody(R.string.dap_redeem_wallet_detail_body)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
 
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.dap_wallet_asset_redeem_point_detail_users;
-    }
-
-    @Override
-    protected int getSwipeRefreshLayoutId() {
-        return R.id.swipe_refresh;
-    }
-
-    @Override
-    protected int getRecyclerLayoutId() {
-        return R.id.dap_wallet_asset_redeem_point_activity_recycler_view;
-    }
-
-    @Override
-    protected boolean recyclerHasFixedSize() {
-        return true;
+            presentationDialog.show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupUI() {
@@ -252,7 +264,6 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         availableText = (FermatTextView) rootView.findViewById(R.id.assetAvailable1);
         pendingText = (FermatTextView) rootView.findViewById(R.id.assetAvailable2);
         assetDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetDetailBtcText);
-
     }
 
     private void setupBackgroundBitmap() {
@@ -262,7 +273,7 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -273,8 +284,8 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_image_redeem_point,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_image_redeem_point, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -282,11 +293,11 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -328,13 +339,12 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
     }
 
     private void configureToolbar() {
-
         toolbar = getToolbar();
         if (toolbar != null) {
-
             toolbar.setBackgroundColor(getResources().getColor(R.color.dap_redeem_point_wallet_principal));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
+            toolbar.setTitle(digitalAsset.getName());
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
                 window.setStatusBarColor(getResources().getColor(R.color.dap_redeem_point_wallet_principal));
@@ -342,6 +352,15 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         }
     }
 
+    @Override
+    public void onItemClickListener(Transaction data, int position) {
+
+    }
+
+    @Override
+    public void onLongItemClickListener(Transaction data, int position) {
+
+    }
 
     @Override
     public void onPostExecute(Object... result) {
@@ -349,11 +368,11 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                users = (ArrayList) result[0];
-                if (getAdapter() != null)
-                    adapter.changeDataSet(users);
+                transactions = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(transactions);
 
-                showOrHideNoUsersView(users.isEmpty());
+                showOrHideNoTransactionsView(transactions.isEmpty());
             }
         }
     }
@@ -370,7 +389,8 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new UserRedeemedPointListAdapter(getActivity(), users, moduleManager);
+            adapter = new AssetDetailTransactionAdapter(getActivity(), transactions, moduleManager);
+            adapter.setFermatListEventListener(this);
         }
         return adapter;
     }
@@ -383,39 +403,29 @@ public class RedeemPointDetailActivityFragment extends FermatWalletListFragment<
         return layoutManager;
     }
 
-    private void showOrHideNoUsersView(boolean show) {
-        if (show) {
-            recyclerView.setVisibility(View.GONE);
-            noUsersView.setVisibility(View.VISIBLE);
-        } else {
-            recyclerView.setVisibility(View.VISIBLE);
-            noUsersView.setVisibility(View.GONE);
-        }
-    }
     @Override
-    public List<UserRedeemed> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<UserRedeemed> users = new ArrayList<>();
+    public List<Transaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<Transaction> transactions = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                if (digitalAsset == null) digitalAsset = (DigitalAsset) appSession.getData("asset_data");
+                transactions = Data.getTransactions(moduleManager, digitalAsset);
 
-                users = Data.getUserRedeemedPointList(WalletUtilities.WALLET_PUBLIC_KEY, digitalAsset, moduleManager);
+                appSession.setData("transactions_sent", transactions);
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(
-                            Wallets.DAP_REDEEM_POINT_WALLET,
+                            Wallets.DAP_ASSET_USER_WALLET,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                             ex);
             }
         } else {
             Toast.makeText(getActivity(),
-                    R.string.dap_redeem_point_wallet_system_error,
+                    getResources().getString(R.string.dap_redeem_point_wallet_system_error),
                     Toast.LENGTH_SHORT).
                     show();
         }
-        return users;
+        return transactions;
     }
-
 }
