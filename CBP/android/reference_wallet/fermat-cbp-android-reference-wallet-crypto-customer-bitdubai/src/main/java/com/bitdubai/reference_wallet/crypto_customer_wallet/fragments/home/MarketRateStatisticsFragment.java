@@ -16,7 +16,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
  * A simple {@link Fragment} subclass.
  */
 public class MarketRateStatisticsFragment extends AbstractFermatFragment {
-    private String buy, sell, currencyPair;
+    private String buy, sell, currencyPair, providerName;
 
     public static MarketRateStatisticsFragment newInstance() {
         return new MarketRateStatisticsFragment();
@@ -30,12 +30,12 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         FermatTextView buyPrice = (FermatTextView) rootView.findViewById(R.id.ccw_buy_price);
         FermatTextView sellPrice = (FermatTextView) rootView.findViewById(R.id.ccw_sell_price);
         FermatTextView currencies = (FermatTextView) rootView.findViewById(R.id.ccw_currencies);
+        FermatTextView providerName = (FermatTextView) rootView.findViewById(R.id.ccw_provider_name);
 
+        providerName.setText(this.providerName);
         currencies.setText(currencyPair);
-        String buyText = rootView.getResources().getString(R.string.buy_text_and_price, buy);
-        buyPrice.setText(buyText);
-        String sellText = rootView.getResources().getString(R.string.sell_text_and_price, sell);
-        sellPrice.setText(sellText);
+        buyPrice.setText(buy);
+        sellPrice.setText(sell);
 
         return rootView;
     }
@@ -44,5 +44,6 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
         sell = indexInfo.getSalePriceAndCurrency();
         currencyPair = indexInfo.getCurrencyAndReferenceCurrency();
         buy = indexInfo.getPurchasePriceAndCurrency();
+        providerName = indexInfo.getProviderName();
     }
 }
