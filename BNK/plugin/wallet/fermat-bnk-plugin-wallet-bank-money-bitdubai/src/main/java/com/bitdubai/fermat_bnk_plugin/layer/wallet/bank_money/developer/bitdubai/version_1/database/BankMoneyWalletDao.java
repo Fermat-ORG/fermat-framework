@@ -111,6 +111,7 @@ public class BankMoneyWalletDao {
             table.insertRecord(record);
             database.closeDatabase();
         } catch (CantInsertRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAddBankMoneyException(CantAddBankMoneyException.DEFAULT_MESSAGE, e, "Cant Add Bank Money Exception", "Cant Insert Record Exception");
         }
     }
@@ -139,7 +140,7 @@ public class BankMoneyWalletDao {
             record.setFloatValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME, availableBalance);
             table.updateRecord(record);
         } catch (Exception e) {
-
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
@@ -165,6 +166,7 @@ public class BankMoneyWalletDao {
                 updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount() * (-1), BalanceType.BOOK);
             }
         } catch (CantAddBankMoneyException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE, e, "Cant Add Debit Exception", "Cant Add Bank Money Exception");
         }
     }
@@ -191,6 +193,7 @@ public class BankMoneyWalletDao {
                 updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount(), BalanceType.BOOK);
             }
         } catch (CantAddBankMoneyException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE, e, "Cant Add Credit Exception", "Cant Add Bank Money Exception");
         }
     }
@@ -212,6 +215,7 @@ public class BankMoneyWalletDao {
                 throw new CantMakeHoldException(CantMakeHoldException.DEFAULT_MESSAGE, new Exception(), "Can't make hold exception", null);
             }
         } catch (CantAddBankMoneyException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantMakeHoldException(CantMakeHoldException.DEFAULT_MESSAGE, e, "Can't make hold exception", null);
         }
     }
@@ -233,6 +237,7 @@ public class BankMoneyWalletDao {
                 throw new CantMakeUnholdException(CantMakeUnholdException.DEFAULT_MESSAGE, new Exception(), "Can't make hold exception", null);
             }
         } catch (CantAddBankMoneyException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantMakeUnholdException(CantMakeUnholdException.DEFAULT_MESSAGE, e, "Can't make unhold exception", null);
         }
     }
@@ -273,7 +278,7 @@ public class BankMoneyWalletDao {
                 heldFunds += heldFunds;
             }
         } catch (CantGetTransactionsException e) {
-
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return heldFunds;
     }
@@ -288,7 +293,7 @@ public class BankMoneyWalletDao {
             totalBalancesTable.loadToMemory();
 
         } catch (CantLoadTableToMemoryException e) {
-
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return totalBalancesTable.getRecords();
     }
@@ -329,6 +334,7 @@ public class BankMoneyWalletDao {
             balancesTable.loadToMemory();
             return balancesTable.getRecords().get(0);
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetBankMoneyTotalBalanceException(CantGetBankMoneyTotalBalanceException.DEFAULT_MESSAGE, e, "Cant Get Bank Money Total Balance Exception ", "Cant Load Table To Memory Exception");
         }
     }
@@ -340,6 +346,7 @@ public class BankMoneyWalletDao {
         try {
             table.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAccountsException(CantGetAccountsException.DEFAULT_MESSAGE, e, "Cant Get Transactions Exception", "Cant Load Table To Memory Exception");
         }
         return constructBankAccountNumberList(table.getRecords());
@@ -357,6 +364,7 @@ public class BankMoneyWalletDao {
             table.loadToMemory();
             return createTransactionList(table.getRecords());
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Cant Get Transactions Exception", "Cant Load Table To Memory Exception");
         }
     }
@@ -376,6 +384,7 @@ public class BankMoneyWalletDao {
             table.loadToMemory();
             return createTransactionList(table.getRecords());
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, e, "Cant Get Transactions Exception", "Cant Load Table To Memory Exception");
         }
     }
@@ -409,7 +418,7 @@ public class BankMoneyWalletDao {
         String status = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_STATUS_COLUMN_NAME);
 
 
-        return new BankMoneyTransactionRecordImpl(
+        return new BankMoneyTransactionRecordImpl(errorManager,
                 bankTransactionId,
                 balanceType,
                 transactionType,
@@ -452,6 +461,7 @@ public class BankMoneyWalletDao {
             bankAccountNumber = new BankAccountNumberImpl(alias, account, currency, bankAccountType);
 
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             System.out.println("error seteando fiatcurrency " + e.getMessage());
         }
         return bankAccountNumber;
@@ -472,6 +482,7 @@ public class BankMoneyWalletDao {
         try {
             return table.getRecords().get(0).getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN);
         }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return null;
         }
     }

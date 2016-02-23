@@ -58,22 +58,40 @@ public class CustomerOfflinePaymentTransactionManager implements CustomerOffline
             this.customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractPurchase);
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "Cannot get the CustomerBrokerContractPurchase");
         } catch (CantInsertRecordException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "Cannot insert a database record.");
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSendPaymentException(
                     e,
                     "Sending online payment",
                     "The contract hash/Id is null.");
-        }catch (Exception exception){
-            throw new CantSendPaymentException(exception,"Sending online payment","Unexpected error");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantSendPaymentException(e,
+                    "Sending online payment",
+                    "Unexpected error");
         }
 
     }
@@ -94,6 +112,10 @@ public class CustomerOfflinePaymentTransactionManager implements CustomerOffline
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
         }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,"","Unexpected result");
         }
 

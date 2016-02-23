@@ -8,17 +8,22 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
  
 public enum BankAccountType {
-    CURRENT("CUR"),
-    SAVING("SAV");
+    CURRENT("CUR", "Current"),
+    SAVING("SAV", "Saving");
 
-    private String code;
+    private String code, friendlyName;
 
-    BankAccountType(String code) {
+    BankAccountType(String code, String friendlyName) {
         this.code = code;
+        this.friendlyName = friendlyName;
     }
 
     public String getCode() {
         return this.code;
+    }
+
+    public String getFriendlyName() {
+        return friendlyName;
     }
 
     public static BankAccountType getByCode(String code) throws InvalidParameterException {
