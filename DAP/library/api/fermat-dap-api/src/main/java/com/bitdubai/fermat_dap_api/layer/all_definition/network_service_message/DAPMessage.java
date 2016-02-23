@@ -20,6 +20,11 @@ public class DAPMessage implements Serializable {
      * The id of this message
      */
     private UUID idMessage;
+
+    {
+        idMessage = UUID.randomUUID();
+    }
+
     /**
      * The content of this message, this one should wrap all
      * the needed information to process and answer this message
@@ -51,14 +56,22 @@ public class DAPMessage implements Serializable {
     public DAPMessage() {
     }
 
-    public DAPMessage(UUID idMessage,
-                      DAPContentMessage messageContent,
+    public DAPMessage(DAPContentMessage messageContent,
                       DAPActor actorSender,
                       DAPActor actorReceiver) throws CantSetObjectException {
         setMessageContent(messageContent);
         setActorSender(actorSender);
         setActorReceiver(actorReceiver);
-        setIdMessage(idMessage);
+    }
+
+    public DAPMessage(DAPContentMessage messageContent,
+                      DAPActor actorSender,
+                      DAPActor actorReceiver,
+                      DAPMessageSubject subject) throws CantSetObjectException {
+        setMessageContent(messageContent);
+        setActorSender(actorSender);
+        setActorReceiver(actorReceiver);
+        setSubject(subject);
     }
 
     public DAPMessage(UUID idMessage,
@@ -89,16 +102,12 @@ public class DAPMessage implements Serializable {
                 '}';
     }
 
-    public String toJson(){
-
+    public String toJson() {
         return DAPMessageGson.getGson().toJson(this);
-
     }
 
-    public static DAPMessage fromJson(String json){
-
+    public static DAPMessage fromJson(String json) {
         return DAPMessageGson.getGson().fromJson(json, DAPMessage.class);
-
     }
 
     //PRIVATE METHODS
