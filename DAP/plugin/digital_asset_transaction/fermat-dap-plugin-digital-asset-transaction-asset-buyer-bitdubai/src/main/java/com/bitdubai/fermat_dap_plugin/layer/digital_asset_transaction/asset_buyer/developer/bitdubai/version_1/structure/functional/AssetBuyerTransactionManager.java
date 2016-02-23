@@ -48,13 +48,13 @@ public class AssetBuyerTransactionManager {
     public DAPMessage constructNegotiationMessage(NegotiationRecord negotiationRecord) throws CantGetAssetUserActorsException, CantSetObjectException {
         AssetNegotiationContentMessage content = new AssetNegotiationContentMessage(negotiationRecord.getNegotiationStatus(), negotiationRecord.getNegotiation());
         ActorAssetUser mySelf = userManager.getActorAssetUser();
-        return new DAPMessage(UUID.randomUUID(), content, mySelf, negotiationRecord.getSeller(), DAPMessageSubject.DEFAULT);
+        return new DAPMessage(content, mySelf, negotiationRecord.getSeller(), DAPMessageSubject.DEFAULT);
     }
 
     public DAPMessage constructSellingMessage(BuyingRecord buyingRecord) throws CantSetObjectException, CantGetAssetUserActorsException {
         AssetSellContentMessage content = new AssetSellContentMessage(buyingRecord.getRecordId(), buyingRecord.getBuyerTransaction().serialize(), buyingRecord.getStatus(), buyingRecord.getMetadata(), buyingRecord.getNegotiationId());
         ActorAssetUser mySelf = userManager.getActorAssetUser();
-        return new DAPMessage(UUID.randomUUID(), content, mySelf, buyingRecord.getSeller(), DAPMessageSubject.TRANSACTION_SIGNED);
+        return new DAPMessage(content, mySelf, buyingRecord.getSeller(), DAPMessageSubject.TRANSACTION_SIGNED);
     }
 
     public void acceptAsset(UUID negotiationId) throws DAPException {
