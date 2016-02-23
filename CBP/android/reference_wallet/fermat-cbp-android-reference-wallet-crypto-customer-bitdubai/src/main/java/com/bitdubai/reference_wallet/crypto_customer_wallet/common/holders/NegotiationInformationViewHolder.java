@@ -65,7 +65,7 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
 
         CharSequence dateExp = "";
         if(itemInfo.getNegotiationExpirationDate() != 0)
-            dateExp = DateFormat.format("dd MMM yyyy", itemInfo.getNegotiationExpirationDate());
+            dateExp = "Exp: "+DateFormat.format("dd MMM yyyy", itemInfo.getNegotiationExpirationDate());
         expirationDate.setText(dateExp);
 
         ActorIdentity broker = itemInfo.getBroker();
