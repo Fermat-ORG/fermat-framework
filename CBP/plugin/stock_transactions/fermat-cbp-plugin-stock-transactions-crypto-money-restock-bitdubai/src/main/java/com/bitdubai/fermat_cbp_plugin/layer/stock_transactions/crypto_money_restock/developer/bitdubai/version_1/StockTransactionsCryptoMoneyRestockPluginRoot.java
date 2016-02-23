@@ -142,8 +142,8 @@ public class StockTransactionsCryptoMoneyRestockPluginRoot extends AbstractPlugi
             stockTransactionsCryptoMoneyRestockDeveloperFactory.initializeDatabase();
             developerDatabaseTableRecordList = stockTransactionsCryptoMoneyRestockDeveloperFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Bank Money Restock ******");
-        }
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+              }
         return developerDatabaseTableRecordList;
     }
 

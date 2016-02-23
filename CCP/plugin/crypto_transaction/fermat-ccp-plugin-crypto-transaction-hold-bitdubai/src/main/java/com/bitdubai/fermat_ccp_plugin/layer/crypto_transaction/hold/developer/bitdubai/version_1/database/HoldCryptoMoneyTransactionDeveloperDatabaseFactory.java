@@ -129,6 +129,7 @@ public class HoldCryptoMoneyTransactionDeveloperDatabaseFactory implements Deals
         holdColumns.add(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME);
         holdColumns.add(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME);
         holdColumns.add(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME);
+        holdColumns.add(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME);
         /**
          * Table Hold addition.
          */

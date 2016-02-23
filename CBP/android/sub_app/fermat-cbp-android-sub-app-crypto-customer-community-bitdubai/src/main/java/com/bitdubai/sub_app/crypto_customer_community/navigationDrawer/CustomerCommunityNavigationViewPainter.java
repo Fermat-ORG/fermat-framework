@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.crypto_customer_community.navigationDrawer;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,14 +11,18 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer.interfaces.CryptoCustomerModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.sub_app.crypto_customer_community.R;
+import com.bitdubai.sub_app.crypto_customer_community.common.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_customer_community.common.utils.FragmentsCommons;
+import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 
 /**
  * Created by mati on 2015.11.24..
@@ -26,12 +31,15 @@ public class CustomerCommunityNavigationViewPainter implements NavigationViewPai
 
     private Activity activity;
     private ActiveActorIdentityInformation actorIdentity;
+    private CryptoCustomerCommunitySubAppSession subAppSession;
     private CryptoCustomerCommunitySubAppModuleManager moduleManager;
 
-    public CustomerCommunityNavigationViewPainter(Activity activity, ActiveActorIdentityInformation actorIdentity, CryptoCustomerCommunitySubAppModuleManager moduleManager) {
+
+    public CustomerCommunityNavigationViewPainter(Activity activity, ActiveActorIdentityInformation actorIdentity, CryptoCustomerCommunitySubAppSession subAppSession) {
         this.activity = activity;
         this.actorIdentity = actorIdentity;
-        this.moduleManager = moduleManager;
+        this.subAppSession = subAppSession;
+        this.moduleManager = subAppSession.getModuleManager();
     }
 
     @Override
@@ -43,13 +51,18 @@ public class CustomerCommunityNavigationViewPainter implements NavigationViewPai
             headerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(activity.getApplicationContext(), "TODO! Change identity widget thing!", Toast.LENGTH_SHORT).show();
-
                     try{
-                        CryptoCustomerCommunitySelectableIdentity identity =  moduleManager.getSelectedActorIdentity();
-                    }catch(Exception e){
-
-                    }
+                        ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(activity, subAppSession, null);
+                        listIdentitiesDialog.setTitle("Connection Request");
+                        listIdentitiesDialog.show();
+                        listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                activity.recreate();
+                            }
+                        });
+                        listIdentitiesDialog.show();
+                    }catch(Exception e){ }
                 }
             });
         } catch (CantGetActiveLoginIdentityException e) {
