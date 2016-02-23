@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions;
 
-import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * Created by franklin on 24/09/15.
  */
-public class CantCreateWalletException extends FermatException{
+public class CantCreateWalletException extends DAPException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -16,5 +16,9 @@ public class CantCreateWalletException extends FermatException{
      */
     public CantCreateWalletException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
+    }
+
+    public CantCreateWalletException(Exception exception) {
+        super(exception);
     }
 }

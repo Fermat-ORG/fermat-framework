@@ -163,7 +163,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         final NetworkParameters NETWORK_PARAMETERS;
         final BlockchainNetworkType BLOCKCHAIN_NETWORKTYPE;
         final String TRANSACTION_DIRECTORY = "CryptoNetworkTransactions";
-
         final Context context;
 
 
@@ -235,7 +234,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * creates the peerGroup object
                  */
-                peerGroup = new PeerGroup(NETWORK_PARAMETERS, blockChain);
+                peerGroup = new PeerGroup(context, blockChain);
                 peerGroup.addWallet(this.wallet);
 
                 /**

@@ -195,6 +195,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractPlugin i
 
     }
 
+
     @Override
     public void setAppPublicKey(String publicKey) {
 
