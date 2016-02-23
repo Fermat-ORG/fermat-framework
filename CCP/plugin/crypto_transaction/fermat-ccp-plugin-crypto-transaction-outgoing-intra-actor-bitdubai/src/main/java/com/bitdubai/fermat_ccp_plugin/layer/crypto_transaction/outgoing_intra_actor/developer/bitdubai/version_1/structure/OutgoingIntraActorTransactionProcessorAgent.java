@@ -465,6 +465,9 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
                        if(credit)
                             bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
+                        else
+                           bitcoinWalletWallet.getBalance(BalanceType.BOOK).credit(transaction);
+
 
                         bitcoinWalletWallet.deleteTransaction(transaction.getTransactionId());
                         //if the transaction is a payment request, rollback it state too

@@ -10,7 +10,10 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
@@ -29,6 +32,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -784,14 +788,40 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @throws CantGetCryptoTransactionException
      */
     public CryptoTransaction getCryptoTransaction(String txHash) throws CantGetCryptoTransactionException {
+        CryptoTransaction cryptoTransaction = null;
         try {
-            return getDao().getCryptoTransaction(txHash);
+            cryptoTransaction = getDao().getCryptoTransaction(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
         }
-    }
 
+        /**
+         * This might happen if the transaction we are searching for is not yet broadcasted
+         */
+        if (cryptoTransaction == null){
+            /**
+             * I will get the transaction from all running agents
+             */
+            for (Map.Entry<BlockchainNetworkType, BitcoinCryptoNetworkMonitor> entry : this.runningAgents.entrySet()){
+                try {
+                    Transaction transaction = entry.getValue().loadTransactionFromDisk(txHash);
+
+                    // If I find it on a running agent, then I will form the CryptoTransaction and return it.
+                    if (transaction != null){
+                        cryptoTransaction = CryptoTransaction.getCryptoTransaction(entry.getKey(), transaction);
+                        return cryptoTransaction;
+                    }
+                } catch (CantLoadTransactionFromFileException e) {
+                    CantGetCryptoTransactionException exception = new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was an error getting the CryptoTransaction from disk", "IO Error");
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                    throw exception;
+                }
+            }
+        }
+
+        return cryptoTransaction;
+    }
 
     /**
      * Based on the passed transaction chain of Transactions hashes and Blocks hashes, determines the entire path

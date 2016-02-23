@@ -12,4 +12,5 @@ public interface BitcoinWalletManager extends FermatManager {
     public BitcoinWalletWallet loadWallet (String walletPublicKey) throws CantLoadWalletException;
 
     public void createWallet (String walletPublicKey) throws CantCreateWalletException;
+
 }

@@ -7,6 +7,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
@@ -47,6 +48,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     private ClauseViewHolder.Listener clauseListener;
     private ExpirationTimeViewHolder.Listener expirationDatetimeListener;
     private List<IndexInfoSummary> marketRateList;
+    private Quote quote;
 
     private boolean haveNote;
 
@@ -90,6 +92,10 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
         this.marketRateList = marketRateList;
     }
 
+    public void setQuote(Quote quote) {
+        this.quote = quote;
+    }
+
     @Override
     protected FermatViewHolder createHolder(View itemView, int type) {
         switch (type) {
@@ -106,6 +112,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             case TYPE_EXCHANGE_RATE:
                 final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView, TYPE_SINGLE_CHOICE);
                 exchangeRateViewHolder.setMarketRateList(marketRateList);
+                exchangeRateViewHolder.setSuggestedRate(quote);
                 return exchangeRateViewHolder;
             case TYPE_AMOUNT_TO_SELL:
                 return new AmountViewHolder(itemView, TYPE_AMOUNT_TO_SELL);

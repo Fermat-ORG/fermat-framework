@@ -5,9 +5,8 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -27,7 +26,7 @@ import java.util.Map;
 public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
     private final FermatTextView markerRateReferenceText;
-    private final FermatTextView exchangeRateReference;
+    private final FermatTextView exchangeRateReferenceValue;
     private final FermatTextView exchangeRateReferenceText;
     private final FermatTextView markerRateReference;
     private final FermatTextView yourExchangeRateValueLeftSide;
@@ -35,13 +34,14 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private final FermatTextView yourExchangeRateText;
     private final FermatButton yourExchangeRateValue;
     private List<IndexInfoSummary> marketRateList;
+    private Quote suggestedRate;
 
 
     public ExchangeRateViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
 
         exchangeRateReferenceText = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_text);
-        exchangeRateReference = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_value);
+        exchangeRateReferenceValue = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_value);
         markerRateReferenceText = (FermatTextView) itemView.findViewById(R.id.cbw_market_exchange_rate_reference_text);
         markerRateReference = (FermatTextView) itemView.findViewById(R.id.cbw_market_exchange_rate_reference_value);
         yourExchangeRateText = (FermatTextView) itemView.findViewById(R.id.cbw_your_exchange_rate_text);
@@ -59,19 +59,24 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
-        final BigDecimal marketRate = new BigDecimal(getMarketRate(clauses).replace(",", ""));
-        String formattedMarketRate = DecimalFormat.getInstance().format(marketRate.doubleValue());
-
-        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), formattedMarketRate, currencyToPay.getValue()));
+        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), getMarketRate(clauses), currencyToPay.getValue()));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
         yourExchangeRateValue.setText(clause.getValue());
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
+        if(suggestedRate != null){
+            exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$s %3$s", suggestedRate.getMerchandise(),
+                    suggestedRate.getQuantity(), suggestedRate.getFiatCurrency()));
+        }
     }
 
     @Override
     public void onClick(View view) {
         if (listener != null)
             listener.onClauseClicked(yourExchangeRateValue, clause, clausePosition);
+    }
+
+    public void setSuggestedRate(Quote suggestedRate) {
+        this.suggestedRate = suggestedRate;
     }
 
     @Override
@@ -98,7 +103,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected void onAcceptedStatus() {
         exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
-        exchangeRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
+        exchangeRateReferenceValue.setTextColor(getColor(R.color.text_value_status_accepted));
         markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
         markerRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_accepted));
@@ -109,7 +114,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected void setChangedStatus() {
         exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));
-        exchangeRateReference.setTextColor(getColor(R.color.text_value_status_changed));
+        exchangeRateReferenceValue.setTextColor(getColor(R.color.text_value_status_changed));
         markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));
         markerRateReference.setTextColor(getColor(R.color.text_value_status_changed));
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_changed));
@@ -120,7 +125,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected void onToConfirmStatus() {
         exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_confirm));
-        exchangeRateReference.setTextColor(getColor(R.color.text_value_status_confirm));
+        exchangeRateReferenceValue.setTextColor(getColor(R.color.text_value_status_confirm));
         markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_confirm));
         markerRateReference.setTextColor(getColor(R.color.text_value_status_confirm));
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_confirm));

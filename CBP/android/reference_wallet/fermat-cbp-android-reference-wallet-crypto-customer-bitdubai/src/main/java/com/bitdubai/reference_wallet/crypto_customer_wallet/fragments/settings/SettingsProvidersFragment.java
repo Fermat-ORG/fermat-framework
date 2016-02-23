@@ -131,7 +131,25 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<CryptoCust
                 walletSettings.setIsPresentationHelpEnabled(true);
                 moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
             }
-
+            if (selectedProviders.size()==0){
+                /*Map<String, CurrencyExchangeRateProviderManager> providersMap = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
+                if (providersMap != null) {
+                    Collection<CurrencyExchangeRateProviderManager> providerManagers = providersMap.values();
+                    for (CurrencyExchangeRateProviderManager providerManager : providerManagers)
+                        providers.add(new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager));
+                }*/
+                List<CryptoCustomerWalletProviderSetting> list  = walletManager.getAssociatedProviders(appSession.getAppPublicKey());
+                for (CryptoCustomerWalletProviderSetting aux: list){
+                    Map<String, CurrencyExchangeRateProviderManager> providersMap = walletManager.getProviderReferencesFromCurrencyPair(aux.getCurrencyFrom(), aux.getCurrencyTo());
+                    if (providersMap != null) {
+                        Collection<CurrencyExchangeRateProviderManager> providerManagers = providersMap.values();
+                        for (CurrencyExchangeRateProviderManager providerManager: providerManagers){
+                            CurrencyPairAndProvider provider = new CurrencyPairAndProvider(aux.getCurrencyFrom(),aux.getCurrencyTo(),providerManager);
+                            selectedProviders.add(provider);
+                        }
+                    }
+                }
+            }
         } catch (Exception ex) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
@@ -192,7 +210,8 @@ public class SettingsProvidersFragment extends AbstractFermatFragment<CryptoCust
         });
 
         //showHelpDialog();
-
+        if(selectedProviders.size()!=0)
+            this.adapter.changeDataSet(selectedProviders);
         return layout;
     }
 

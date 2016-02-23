@@ -36,7 +36,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemPoint;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
@@ -163,7 +162,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
     private void setupUI() {
         setupBackgroundBitmap();
 
-        assetTransferImage= (ImageView) rootView.findViewById(R.id.assetTransferImage);
+        assetTransferImage = (ImageView) rootView.findViewById(R.id.assetTransferImage);
         assetTransferNameText = (FermatTextView) rootView.findViewById(R.id.assetTransferNameText);
         assetTransferRemainingText = (FermatTextView) rootView.findViewById(R.id.assetTransferRemainingText);
         assetsToTransferEditText = (FermatEditText) rootView.findViewById(R.id.assetsToTransferEditText);
@@ -180,15 +179,15 @@ public class AssetTransferFragment extends AbstractFermatFragment {
                         if (users.size() > 0) {
                             new ConfirmDialog.Builder(getActivity(), appSession)
                                     .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
-                                                    .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
-                                                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                                                @Override
-                                                                public void onClick() {
-                                                                    int assetsAmount = Integer.parseInt(assetsToTransferEditText.getText().toString());
-                                                                    doTransfer(digitalAsset.getAssetPublicKey(), users, assetsAmount);
-                                                                }
-                                                            }).build().show();
+                                    .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
+                                    .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
+                                    .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                        @Override
+                                        public void onClick() {
+                                            int assetsAmount = Integer.parseInt(assetsToTransferEditText.getText().toString());
+                                            doTransfer(digitalAsset.getAssetPublicKey(), users, assetsAmount);
+                                        }
+                                    }).build().show();
                         }
                     }
                 } else {
@@ -216,7 +215,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPreExecute() {
-                view = new WeakReference(rootView) ;
+                view = new WeakReference(rootView);
             }
 
             @Override
@@ -227,8 +226,8 @@ public class AssetTransferFragment extends AbstractFermatFragment {
                     options.inScaled = true;
                     options.inSampleSize = 5;
                     drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image_user,options);
-                }catch (OutOfMemoryError error){
+                            getResources(), R.drawable.bg_app_image_user, options);
+                } catch (OutOfMemoryError error) {
                     error.printStackTrace();
                 }
                 return drawable;
@@ -236,11 +235,11 @@ public class AssetTransferFragment extends AbstractFermatFragment {
 
             @Override
             protected void onPostExecute(Bitmap drawable) {
-                if (drawable!= null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(),drawable));
+                if (drawable != null) {
+                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
                 }
             }
-        } ;
+        };
         asyncTask.execute();
     }
 
@@ -269,9 +268,12 @@ public class AssetTransferFragment extends AbstractFermatFragment {
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                //TODO transfer for implements
-
-                //moduleManager.redeemAssetToUser(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, Data.getConnectedUsers(users), assetAmount);
+                for (User user : users) {
+                    if (user.isSelected()) {
+                        moduleManager.addUserToDeliver(user.getActorAssetUser());
+                    }
+                }
+                moduleManager.transferAssets(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
                 return true;
             }
         };
@@ -331,7 +333,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
 
         assetTransferNameText.setText(digitalAsset.getName());
 
-        assetsToTransferEditText.setText(selectedUserCount+"");
+        assetsToTransferEditText.setText(selectedUserCount + "");
         long quantity = digitalAsset.getAvailableBalanceQuantity();
         assetTransferRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
     }

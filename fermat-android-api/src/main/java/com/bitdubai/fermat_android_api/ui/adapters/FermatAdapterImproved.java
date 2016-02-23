@@ -138,4 +138,7 @@ public abstract class FermatAdapterImproved<M, H extends FermatViewHolder> exten
     protected abstract void bindHolder(H holder, M data, int position);
 
 
+    public Context getContext() {
+        return context;
+    }
 }

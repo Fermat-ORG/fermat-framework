@@ -249,7 +249,8 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             ClauseType clauseType;
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
-                if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                if (clauseType.getCode().equals(
+                        ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())) {
                     return MoneyType.getByCode(clause.getValue());
                 }
             }

@@ -70,6 +70,7 @@ public class IncomingCryptoDeveloperDatabaseFactory {
 
             incomingCryptoRegistryColumns.add(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName);
             incomingCryptoRegistryColumns.add(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName);
+            incomingCryptoRegistryColumns.add(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NETWORK_TYPE_COLUMN.columnName);
             incomingCryptoRegistryColumns.add(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName);
             incomingCryptoRegistryColumns.add(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName);
             incomingCryptoRegistryColumns.add(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName);

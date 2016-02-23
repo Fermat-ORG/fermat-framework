@@ -114,6 +114,8 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         appSession.setData("users_to_transfer", null);
 
         transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
+        appSession.setData("sell_info", null);
     }
 
     @Override
@@ -132,8 +134,16 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
         configureToolbar();
 
-        if (adapter != null) adapter.changeDataSet(transactions);
-        noTransactionsView = layout.findViewById(R.id.dap_wallet_asset_issuer_no_transactions_sent);
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+                }
+            });
+        }
+        
+        noTransactionsView = layout.findViewById(R.id.dap_wallet_asset_user_no_transactions);
         showOrHideNoTransactionsView(transactions.isEmpty());
     }
 
@@ -355,11 +365,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
         byte[] img = (digitalAsset.getImage() == null) ? new byte[0] : digitalAsset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(assetImageDetail, res, R.drawable.img_asset_without_image, false);
-        bitmapWorkerTask.execute(img); //todo comment to compile, please review.
-
-//        assetDetailRedeemLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
-//        assetDetailAppropriateLayout.setVisibility((digitalAsset.getAvailableBalanceQuantity() > 0) ? View.VISIBLE : View.GONE);
-        //TODO set visibility of menu options
+        bitmapWorkerTask.execute(img);
 
         assetDetailNameText.setText(digitalAsset.getName());
         assetDetailExpDateText.setText(digitalAsset.getFormattedExpDate());

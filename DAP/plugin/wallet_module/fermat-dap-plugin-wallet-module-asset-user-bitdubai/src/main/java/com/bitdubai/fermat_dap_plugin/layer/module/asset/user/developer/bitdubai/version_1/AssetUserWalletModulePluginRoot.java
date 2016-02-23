@@ -324,14 +324,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public void transferAssets(String assetPublicKey, String walletPublicKey, int assetsAmount) throws CantTransferDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
-        try {
-            //TODO HARDCODE FOR TESTING.
-            selectedUsersToDeliver = getAllAssetUserActorConnected().subList(0, 1);
-            assetsAmount = 1;
-            assetUserWalletModule.transferAsset(assetPublicKey, walletPublicKey, selectedUsersToDeliver, assetsAmount, selectedNetwork);
-        } catch (CantGetAssetUserActorsException e) {
-            e.printStackTrace();
-        }
+        assetUserWalletModule.transferAsset(assetPublicKey, walletPublicKey, selectedUsersToDeliver, assetsAmount, selectedNetwork);
     }
 
     @Override

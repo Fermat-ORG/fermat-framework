@@ -43,9 +43,11 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.Bitco
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.SellInfo;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
@@ -90,8 +92,6 @@ public class AssetSellFragment extends AbstractFermatFragment {
     private View sellAssetsButton;
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
-
-    int selectedUserCount;
 
     SettingsManager<AssetUserSettings> settingsManager;
 
@@ -281,12 +281,30 @@ public class AssetSellFragment extends AbstractFermatFragment {
         selectUserButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 //                appSession.setData("asset_data", data);
-//                appSession.setData("sell_info")
+                appSession.setData("sell_info", getSellInfo());
                 changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY, appSession.getAppPublicKey());
                 //TODO: aqui va la actividad de seleccion de users, users conectados a users la cual no existe
             }
         });
         selectedUserText.setText(getResources().getString(R.string.dap_user_wallet_sell_select_user));
+    }
+
+    private SellInfo getSellInfo() {
+        SellInfo sellInfo = new SellInfo();
+        sellInfo.setAssetsToSell(assetsToSellEditText.getText().toString());
+        sellInfo.setAssetValue(bitcoins.getText().toString());
+        sellInfo.setTotalValue(bitcoinsTotal.getText().toString());
+        sellInfo.setAssetValueCurrencyIndex(bitcoinsSpinner.getSelectedItemPosition());
+        sellInfo.setTotalValueCurrencyIndex(bitcoinsTotalSpinner.getSelectedItemPosition());
+        return sellInfo;
+    }
+
+    private void setSellInfo(SellInfo sellInfo) {
+        assetsToSellEditText.setText(sellInfo.getAssetsToSell());
+        bitcoins.setText(sellInfo.getAssetValue());
+        bitcoinsTotal.setText(sellInfo.getTotalValue());
+        bitcoinsSpinner.setSelection(sellInfo.getAssetValueCurrencyIndex());
+        bitcoinsTotalSpinner.setSelection(sellInfo.getTotalValueCurrencyIndex());
     }
 
     private boolean isValidSell() {
@@ -318,7 +336,7 @@ public class AssetSellFragment extends AbstractFermatFragment {
                     Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (user == null) {
+        if (appSession.getData("user_selected") == null) {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_user),
                     Toast.LENGTH_SHORT).show();
             return false;
@@ -337,13 +355,13 @@ public class AssetSellFragment extends AbstractFermatFragment {
             int quantity = Integer.parseInt(assetsToSellStr);
             bitcoinsTextView.setText(String.format("%.6f BTC", amountBTC));
             bitcoinsTotalSpinner.setSelection(bitcoinsSpinner.getSelectedItemPosition());
-            bitcoinsTotal.setText(Double.toString(amount * quantity));
+            bitcoinsTotal.setText(DAPStandardFormats.EDIT_NUMBER_FORMAT.format((amount * quantity)));
         } else if (bitcoinStr.length() == 0) {
             bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
-            bitcoinsTotal.setText(Double.toString(0));
+            bitcoinsTotal.setText("");
         } else if (assetsToSellStr.length() == 0) {
             bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
-            bitcoinsTotal.setText(Double.toString(0));
+            bitcoinsTotal.setText("");
         }
         updateBitcoinsTotal();
     }
@@ -452,7 +470,6 @@ public class AssetSellFragment extends AbstractFermatFragment {
 
         assetSellNameText.setText(digitalAsset.getName());
         //assetsToDeliverEditText.setText(digitalAsset.getAvailableBalanceQuantity()+"");
-        assetsToSellEditText.setText(selectedUserCount + "");
         assetSellRemainingText.setText(digitalAsset.getAvailableBalanceQuantity() + " " + getResources().getString(R.string.dap_user_wallet_remaining_assets));
 
         if (digitalAsset.getAvailableBalanceQuantity() == 0) {
@@ -482,7 +499,6 @@ public class AssetSellFragment extends AbstractFermatFragment {
 
         assetSellNameText.setText(digitalAsset.getName());
 //        assetsToSellEditText.setText(digitalAsset.getAvailableBalanceQuantity() + "");
-        assetsToSellEditText.setText(selectedUserCount+"");
         long quantity = digitalAsset.getAvailableBalanceQuantity();
         assetSellRemainingText.setText(quantity + ((quantity == 1) ? " Asset" : " Assets") + " Remaining");
 
@@ -492,8 +508,13 @@ public class AssetSellFragment extends AbstractFermatFragment {
             selectedUserText.setText(user.getName());
         }
 
-        assetsToSellEditText.setText(Long.toString(quantity));
-        bitcoins.setText(digitalAsset.getAmount());
+        if (appSession.getData("sell_info") != null) {
+            SellInfo sellInfo = (SellInfo) appSession.getData("sell_info");
+            setSellInfo(sellInfo);
+        } else {
+            assetsToSellEditText.setText(Long.toString(quantity));
+            bitcoins.setText(digitalAsset.getAmount());
+        }
         updateBitcoins();
     }
 

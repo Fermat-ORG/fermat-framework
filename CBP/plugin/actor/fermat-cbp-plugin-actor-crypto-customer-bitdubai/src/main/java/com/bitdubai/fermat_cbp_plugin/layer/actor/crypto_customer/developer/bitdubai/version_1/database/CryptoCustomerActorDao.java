@@ -91,7 +91,7 @@ public class CryptoCustomerActorDao {
                 }
             }
 
-            new pruebaExtraData(this);
+            //new pruebaExtraData(this);
         }
 
         public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {

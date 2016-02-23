@@ -320,6 +320,43 @@ public class CryptoTransmissionNetworkServicePluginRootNew extends AbstractNetwo
 
                                 case SEEN_BY_DESTINATION_NETWORK_SERVICE:
                                     //el otro no recibio mi mensaje de Credit in destination wallet
+                                    //busco si lo tengo en estado final y se lo mando de nuevo
+
+                                    CryptoTransmissionMetadataRecord metadataRecord = outgoingNotificationDao.getMetadata(cryptoTransmissionMetadata.getTransactionId());
+
+                                    if(metadataRecord.getCryptoTransmissionMetadataStates().equals(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET) && metadataRecord.getCryptoTransmissionProtocolState().equals(CryptoTransmissionProtocolState.DONE))
+                                    {
+                                        // send inform to other ns
+                                        metadataRecord.changeCryptoTransmissionProtocolState(CryptoTransmissionProtocolState.PRE_PROCESSING_SEND);
+                                        metadataRecord.changeMetadataState(CryptoTransmissionMetadataState.CREDITED_IN_DESTINATION_WALLET);
+                                        metadataRecord.setPendingToRead(false);
+                                        pkAux = metadataRecord.getDestinationPublicKey();
+                                        metadataRecord.setDestinationPublickKey(cryptoTransmissionMetadataRecord.getSenderPublicKey());
+                                        metadataRecord.setSenderPublicKey(pkAux);
+
+                                        sendMessageToActor(metadataRecord);
+                                    }
+                                    else
+                                    {
+                                        //sino disparo el evento
+                                        outgoingNotificationDao.changeCryptoTransmissionProtocolStateAndNotificationState(
+                                                metadataRecord.getTransactionId(),
+                                                metadataRecord.getCryptoTransmissionProtocolState(),
+                                                metadataRecord.getCryptoTransmissionMetadataState()
+                                        );
+
+
+                                        //guardo estado
+                                        incomingNotificationsDao.changeCryptoTransmissionProtocolState(
+                                                metadataRecord.getTransactionId(),
+                                                CryptoTransmissionProtocolState.RECEIVED);
+
+                                        //fire event to incoming transacction plug in
+                                        lauchNotification();
+
+                                        System.out.println("CryptoTransmission SEEN_BY_DESTINATION_NETWORK_SERVICE event");
+                                    }
+
 
 
                                     System.out.println("-----------------------\n" +
