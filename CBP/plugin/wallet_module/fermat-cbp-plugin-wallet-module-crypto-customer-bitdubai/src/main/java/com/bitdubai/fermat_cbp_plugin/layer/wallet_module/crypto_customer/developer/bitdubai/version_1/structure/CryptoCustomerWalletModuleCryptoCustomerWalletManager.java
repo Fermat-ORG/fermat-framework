@@ -1393,8 +1393,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             ActorIdentity customerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl(customerPublickey, "Not Alias", new byte[0]);
             String brokerPublickey = customerBrokerSaleNegotiation.getBrokerPublicKey();
             ActorIdentity brokerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl(brokerPublickey, "Not Alias", new byte[0]);
-//            long expirationDate = customerBrokerSaleNegotiation.getNegotiationExpirationDate();
-            long expirationDate = new Date().getTime();
+            long expirationDate = customerBrokerSaleNegotiation.getNegotiationExpirationDate();
+//            long expirationDate = new Date().getTime();
             String note = "";
 
             if (cryptoCustomerIdentityManager.getCryptoCustomerIdentity(customerPublickey) != null)
@@ -1459,10 +1459,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             @Override
             public ClauseStatus getStatus() { return (status != null) ? status : ClauseStatus.DRAFT; }
-//            @Override
-//            public ClauseStatus getStatus() {
-//                return ClauseStatus.DRAFT;
-//            }
         };
     }
 }
