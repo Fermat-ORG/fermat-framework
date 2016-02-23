@@ -148,7 +148,7 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
             outgoingNotificationDao = new OutgoingNotificationDao(dataBase, pluginFileSystem, pluginId);
 
             //Initialize Manager
-            negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(outgoingNotificationDao, this);
+            negotiationTransmissionManagerImpl = new NegotiationTransmissionManagerImpl(outgoingNotificationDao,incomingNotificationDao, this);
         } catch (CantInitializeNetworkServiceDatabaseException e) {
 
             StringBuffer contextBuffer = new StringBuffer();
@@ -429,18 +429,21 @@ public class NetworkServiceNegotiationTransmissionNew extends AbstractNetworkSer
             switch (negotiationTransmission.getNegotiationTransactionType()) {
                 case CUSTOMER_BROKER_NEW: {
                     IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_NEW);
+                    event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                     event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
                     getEventManager().raiseEvent(event);
                 }
                 break;
                 case CUSTOMER_BROKER_UPDATE: {
                     IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_UPDATE);
+                    event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                     event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
                     getEventManager().raiseEvent(event);
                 }
                 break;
                 case CUSTOMER_BROKER_CLOSE: {
                     IncomingNegotiationTransactionEvent event = (IncomingNegotiationTransactionEvent) getEventManager().getNewEvent(EventType.INCOMING_NEGOTIATION_TRANSMISSION_TRANSACTION_CLOSE);
+                    event.setSource(EventSource.NETWORK_SERVICE_NEGOTIATION_TRANSMISSION);
                     event.setDestinationPlatformComponentType(negotiationTransmission.getActorReceiveType());
                     getEventManager().raiseEvent(event);
                 }
