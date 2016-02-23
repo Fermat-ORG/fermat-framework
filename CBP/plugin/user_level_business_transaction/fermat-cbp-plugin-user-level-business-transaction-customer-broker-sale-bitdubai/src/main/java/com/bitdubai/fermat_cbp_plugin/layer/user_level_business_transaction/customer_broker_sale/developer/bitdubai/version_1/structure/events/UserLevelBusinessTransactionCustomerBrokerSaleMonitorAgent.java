@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cus
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -333,7 +334,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         "RESTOCK AUTOMATIC",
                                         priceReference,
                                         OriginTransaction.RESTOCK_AUTOMATIC,
-                                        customerBrokerContractSale.getContractId());
+                                        customerBrokerContractSale.getContractId(),
+                                        BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Revisar de donde saco esto
                             }
                             //
                             else if (sw == 2) {
