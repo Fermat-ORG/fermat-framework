@@ -17,11 +17,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
@@ -234,21 +236,16 @@ public class OutgoingMessageDao {
             /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord entityRecord = constructFrom(entity);
-            DatabaseTableFilter filter = getDatabaseTable().getEmptyTableFilter();
-            filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(entity.getId().toString());
-            filter.setColumn(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FIRST_KEY_COLUMN);
-            getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+            DatabaseTable metadataTable = getDatabaseTable();
+            metadataTable.addStringFilter(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, entity.getId().toString(), DatabaseFilterType.EQUAL);
+            metadataTable.loadToMemory();
+            if (metadataTable.getRecords().isEmpty()) throw new RecordsNotFoundException();
+            DatabaseTableRecord record = metadataTable.getRecords().get(0);
+            setValuesToRecord(record, entity);
+            metadataTable.updateRecord(record);
 
-            /*
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
 
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+        } catch (RecordsNotFoundException | CantUpdateRecordException | CantLoadTableToMemoryException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + CommunicationChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
@@ -262,7 +259,27 @@ public class OutgoingMessageDao {
         }
 
     }
+    private void setValuesToRecord(DatabaseTableRecord entityRecord, FermatMessage outGoingTemplateNetworkServiceMessage) {
+        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getId().toString());
+        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getSender().toString());
+        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getReceiver().toString());
+        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getContent());
+        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
 
+        if (outGoingTemplateNetworkServiceMessage.getShippingTimestamp() != null){
+            entityRecord.setLongValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
+        }else {
+            entityRecord.setLongValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, (long) 0);
+        }
+
+        if (outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp() != null){
+            entityRecord.setLongValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
+        }else {
+            entityRecord.setLongValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, (long) 0);
+        }
+
+        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
+    }
     /**
      * Method that delete a entity in the data base.
      *
@@ -345,32 +362,7 @@ public class OutgoingMessageDao {
          */
         DatabaseTableRecord entityRecord = getDatabaseTable().getEmptyRecord();
 
-        /*
-         * Set the entity values
-         */
-        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getId().toString());
-        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getSender().toString());
-        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getReceiver().toString());
-        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getContent());
-        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
-
-        if (outGoingTemplateNetworkServiceMessage.getShippingTimestamp() != null){
-            entityRecord.setLongValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getShippingTimestamp().getTime());
-        }else {
-            entityRecord.setLongValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, (long) 0);
-        }
-
-        if (outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp() != null){
-            entityRecord.setLongValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getDeliveryTimestamp().getTime());
-        }else {
-            entityRecord.setLongValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME, (long) 0);
-        }
-
-        entityRecord.setStringValue(CommunicationChatNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
-
-        /*
-         * return the new table record
-         */
+        setValuesToRecord(entityRecord,outGoingTemplateNetworkServiceMessage);
         return entityRecord;
 
     }

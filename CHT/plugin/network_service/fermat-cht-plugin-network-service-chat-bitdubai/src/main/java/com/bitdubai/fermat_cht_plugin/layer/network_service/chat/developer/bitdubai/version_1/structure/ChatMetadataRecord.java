@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
@@ -101,6 +102,12 @@ public class ChatMetadataRecord implements ChatMetadata{
         this.responseToNotificationId = responseToNotificationId;
     }
 
+    @Override
+    public String toString() {
+        ChatMetadata chatMetadata = this;
+        return XMLParser.parseObject(chatMetadata);
+    }
+
     /**
      * This method checks if the ChatMetadataRecord if completed filled before sending.
      * @return
@@ -136,14 +143,14 @@ public class ChatMetadataRecord implements ChatMetadata{
             return false;
         if(this.distributionStatus == null)
             return false;
-        if(this.processed == null || processed.isEmpty())
-            return false;
-        if(this.chatProtocolState == null)
-            return false;
-        if(this.sentDate == null)
-            return false;
-        if(this.responseToNotificationId == null)
-            return false;
+//        if(this.processed == null || processed.isEmpty())
+//            return false;
+//        if(this.chatProtocolState == null)
+//            return false;
+//        if(this.sentDate == null)
+//            return false;
+//        if(this.responseToNotificationId == null)
+//            return false;
         return true;
     }
 
@@ -296,23 +303,6 @@ public class ChatMetadataRecord implements ChatMetadata{
      */
     public void setDistributionStatus(DistributionStatus distributionStatus) {
         this.distributionStatus = distributionStatus;
-    }
-
-    @Override
-    public String toString() {
-        return "ChatMetadataRecord{" +
-                "chatId=" + chatId +
-                ", objectId=" + objectId +
-                ", localActorType='" + localActorType + '\'' +
-                ", localActorPublicKey='" + localActorPublicKey + '\'' +
-                ", remoteActorType='" + remoteActorType + '\'' +
-                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
-                ", chatName='" + chatName + '\'' +
-                ", chatMessageStatus=" + chatMessageStatus +
-                ", date=" + date +
-                ", messageId=" + messageId +
-                ", message='" + message + '\'' +
-                '}';
     }
 
     /**

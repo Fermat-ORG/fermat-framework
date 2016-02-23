@@ -50,7 +50,7 @@ public final class CommunicationChatNetworkServiceDatabaseConstants {
     /**
      * incomingchatmetadata database table definition.
      */
-    public static final String CHAT_TABLE_NAME = "incomingchatmetadata";
+    public static final String CHAT_TABLE_NAME = "chatmetadata";
 
     public static final String CHAT_TRANSACTION_ID_COLUMN_NAME = "incoming_transaction_id";
     public static final String CHAT_TRANSACTION_HASH_COLUMN_NAME = "incoming_transaction_hash";

@@ -897,7 +897,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             /*
              * Construct the message content in json format
              */
-            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadata, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
+
            // System.out.println("ChatNetworkServicePluginRoot - Message encoded:\n" + msjContent);
 
             String msgHash = CryptoHasher.performSha256(chatMetadata.getChatId().toString() + chatMetadata.getMessageId().toString());
@@ -921,7 +921,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
             if(!chatMetadataRecord.isFilled()){
                 throw new CantSendChatMessageMetadataException("Some value of ChatMetadata Is passed NULL");
             }
-
+            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadataRecord, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
 
            // System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadataRecord);
 

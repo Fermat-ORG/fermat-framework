@@ -89,7 +89,7 @@ public class ChatMetadataTransmitMessageReceiverProcessor extends FermatMessageP
              * Mark the message as read
              */
             ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
-            ((CommunicationNetworkServiceConnectionManager) getChatNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().update(fermatMessage);
+            ((CommunicationNetworkServiceConnectionManager) getChatNetworkServicePluginRoot().getNetworkServiceConnectionManager()).getIncomingMessageDao().create(fermatMessage);
 
             /*
              * Notify to the interested

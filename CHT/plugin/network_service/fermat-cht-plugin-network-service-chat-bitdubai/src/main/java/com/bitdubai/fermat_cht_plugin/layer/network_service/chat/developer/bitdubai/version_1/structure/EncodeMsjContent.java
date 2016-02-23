@@ -32,10 +32,10 @@ public class EncodeMsjContent {
     /**
      *  Construct the content of the message fot the type <code>ChatMessageTransactionType.CHAT_METADATA_TRASMIT</code>
      *
-     * @param chatMetadata
+     * @param chatMetadataRecord
      * @return String message content
      */
-    public static String encodeMSjContentChatMetadataTransmit(ChatMetadata chatMetadata, PlatformComponentType senderType, PlatformComponentType receiverType){
+    public static String encodeMSjContentChatMetadataTransmit(ChatMetadataRecord chatMetadataRecord, PlatformComponentType senderType, PlatformComponentType receiverType){
 
         String contemnt = "";
 
@@ -44,14 +44,14 @@ public class EncodeMsjContent {
          */
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT,chatMetadata.getChatId().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatMetadataRecord.getChatId().toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.CHAT_METADATA_TRASMIT.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_METADATA, chatMetadata.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_METADATA, chatMetadataRecord.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, chatMetadata.getDistributionStatus().toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_STATUS, chatMetadata.getChatMessageStatus().toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, chatMetadata.getMessageStatus().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, chatMetadataRecord.getDistributionStatus().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_STATUS, chatMetadataRecord.getChatMessageStatus().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, chatMetadataRecord.getMessageStatus().toString());
 
         return gson.toJson(jsonObjectContent);
     }
