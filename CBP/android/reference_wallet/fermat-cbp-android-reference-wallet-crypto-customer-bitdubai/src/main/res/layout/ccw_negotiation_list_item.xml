@@ -119,7 +119,7 @@
         android:textSize="@dimen/ccw_regular_text_size"
         tools:text="03 Feb 2015"/>
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+    <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/ccw_update_date_exp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
         android:paddingTop="0dp"
         android:textColor="@color/negotiation_date_text"
         android:textSize="@dimen/ccw_regular_text_size"
-        tools:text="Exp 03 Feb 2015"/>
+        tools:text="Exp 03 Feb 2015"/>-->
 
     <LinearLayout
         android:id="@+id/linearLayout2"
