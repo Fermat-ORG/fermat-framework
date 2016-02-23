@@ -371,6 +371,15 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+    @Override
+    public void updateRedeemPointDAPConnectionStateActorNetworService(String actorPublicKey, DAPConnectionState state) throws com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException{
+        try {
+            this.redeemPointActorDao.updateRedeemPointRegisteredDAPConnectionState(actorPublicKey,state);
+        } catch (CantUpdateRedeemPointException e) {
+            throw new com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException("CAN'T UPDATE REDEEM POINT", e, "", "");
+        }
+    }
+
     public void handleCompleteActorAssetRedeemPointRegistrationNotificationEvent(ActorAssetRedeemPoint actorAssetRedeemPoint) {
         System.out.println("***************************************************************");
         System.out.println("Actor Asset Redeem Point se Registro " + actorAssetRedeemPoint.getName());
