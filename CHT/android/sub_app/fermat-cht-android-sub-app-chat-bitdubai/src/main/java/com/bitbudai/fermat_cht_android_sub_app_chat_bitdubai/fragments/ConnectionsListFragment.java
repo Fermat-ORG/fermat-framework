@@ -3,6 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -79,6 +80,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    private Toolbar toolbar;
     ListView list;
     String TAG="CHT_ConnectionsListFragment";
     ArrayList<String> contactname=new ArrayList<String>();
@@ -102,6 +104,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
+            toolbar = getToolbar();
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back));
         }catch (Exception e)
         {
             if(errorManager!=null)
@@ -151,7 +155,14 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
 
-        ConnectionListAdapter adapter=new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+            }
+        });
+
+        ConnectionListAdapter adapter=new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
 
@@ -253,6 +264,9 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                         try {
                             List <Contact> con=  chatManager.getContacts();
                             if (con.size() > 0) {
+                                contactname.clear();
+                                contactid.clear();
+                                contacticon.clear();
                                 for (int i=0;i<con.size();i++){
                                     if(!con.get(i).getRemoteName().equals("Not registered contact") && !contactname.contains(con.get(i).getRemoteName())) {
                                         contactname.add(con.get(i).getAlias());
@@ -261,9 +275,10 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                                     }
                                 }
                                 final ConnectionListAdapter adaptador =
-                                        new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid);
+                                        new ConnectionListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
                                 adaptador.refreshEvents(contactname, contacticon, contactid);
-                                adaptador.notifyDataSetChanged();
+                                //adaptador.notifyDataSetChanged();
+
                                 list.invalidateViews();
                                 list.requestLayout();
                             }else{

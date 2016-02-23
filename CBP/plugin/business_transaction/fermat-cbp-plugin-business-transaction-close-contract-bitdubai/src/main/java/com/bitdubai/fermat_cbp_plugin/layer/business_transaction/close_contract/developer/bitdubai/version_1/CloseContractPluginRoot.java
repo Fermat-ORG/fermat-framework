@@ -104,12 +104,16 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
     public CloseContractPluginRoot() {
+
+
         super(new PluginVersionReference(new Version()));
+
+
     }
 
     @Override
     public void start() throws CantStartPluginException {
-        try{
+        try {
             /**
              * Initialize database
              */
@@ -126,15 +130,15 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
             /**
              * Initialize Dao
              */
-            CloseContractBusinessTransactionDao closeContractBusinessTransactionDao=
+            CloseContractBusinessTransactionDao closeContractBusinessTransactionDao =
                     new CloseContractBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,errorManager);
 
             /**
              * Init event recorder service.
              */
-            CloseContractRecorderService closeContractRecorderService=new CloseContractRecorderService(
+            CloseContractRecorderService closeContractRecorderService = new CloseContractRecorderService(
                     closeContractBusinessTransactionDao,
                     eventManager);
             closeContractRecorderService.start();
@@ -142,7 +146,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
             /**
              * Init monitor Agent
              */
-            CloseContractMonitorAgent openContractMonitorAgent=new CloseContractMonitorAgent(
+            CloseContractMonitorAgent openContractMonitorAgent = new CloseContractMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -155,7 +159,7 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
             /**
              * Init plugin Manager
              */
-            closeContractTransactionManager=new CloseContractTransactionManager(
+            closeContractTransactionManager = new CloseContractTransactionManager(
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
                     transactionTransmissionManager,
@@ -166,36 +170,81 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
             //raiseNewContractClosedEvent();
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantInitializeDatabaseException exception) {
+
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+
+
             throw new CantStartPluginException(
+
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
                     "Starting close contract plugin",
                     "Cannot initialize plugin database");
+
+
         } catch (CantInitializeCloseContractBusinessTransactionDatabaseException exception) {
+
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting close contract plugin",
                     "Unexpected Exception");
         } catch (CantStartServiceException exception) {
+
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+
             throw new CantStartPluginException(
+
+
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting close contract plugin",
                     "Cannot start recorder service");
         } catch (CantSetObjectException exception) {
+
+            errorManager.reportUnexpectedPluginException(
+
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     exception,
                     "Starting close contract plugin",
                     "Cannot set an object");
         } catch (CantStartAgentException exception) {
+
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+
+
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
                     "Starting open contract plugin",
                     "Cannot start the monitor agent");
         } catch (Exception exception) {
+
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+
+
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
                     FermatException.wrapException(exception),
@@ -238,11 +287,13 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
+
             errorManager.reportUnexpectedPluginException(
                     Plugins.CLOSE_CONTRACT,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+
 
         } catch (DatabaseNotFoundException e) {
 
@@ -306,45 +357,58 @@ public class CloseContractPluginRoot extends AbstractPlugin implements
     }
 
     public static LogLevel getLogLevelByClass(String className) {
-        try{
+        try {
             /**
              * sometimes the classname may be passed dynamically with an $moretext
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return CloseContractPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
+        } catch (Exception e) {
             /**
              * If I couldn't get the correct logging level, then I will set it to minimal.
              */
+
             return DEFAULT_LOG_LEVEL;
         }
     }
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {/*
+
          * I will check the current values and update the LogLevel in those which is different
          */
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+        try {
+
+            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             /*
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (CloseContractPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                CloseContractPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                CloseContractPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                CloseContractPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (CloseContractPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    CloseContractPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    CloseContractPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                } else {
+                    CloseContractPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                }
             }
+        }catch (Exception exception){
+
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+
+
         }
     }
 
     /**
      * Test raise event method
      */
-    private void raiseNewContractClosedEvent(){
+    private void raiseNewContractClosedEvent() {
         FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_CLOSED);
         NewContractClosed newContractClosed = (NewContractClosed) fermatEvent;
-        System.out.println("Close contract test: "+fermatEvent);
+        System.out.println("Close contract test: " + fermatEvent);
         newContractClosed.setSource(EventSource.BUSINESS_TRANSACTION_CLOSE_CONTRACT);
         eventManager.raiseEvent(newContractClosed);
     }

@@ -17,11 +17,11 @@ import java.util.UUID;
 public interface WalletRuntimeManager extends RuntimeManager {
 
 
-    public void recordNavigationStructure(String xmlText,String linkToRepo,String name,UUID skinId,String walletPublicKey) throws CantRecordInstalledWalletNavigationStructureException, CantCheckResourcesException;
+    void recordNavigationStructure(String xmlText, String linkToRepo, String name, UUID skinId, String walletPublicKey) throws CantRecordInstalledWalletNavigationStructureException, CantCheckResourcesException;
 
-    public boolean removeNavigationStructure(String publicKey) throws CantRemoveWalletNavigationStructureException;
+    boolean removeNavigationStructure(String publicKey) throws CantRemoveWalletNavigationStructureException;
 
-    public WalletNavigationStructure getNavigationStructureFromWallet(String publicKey) throws WalletRuntimeExceptions;
+    WalletNavigationStructure getNavigationStructureFromWallet(String publicKey) throws WalletRuntimeExceptions;
 
 
 
@@ -31,7 +31,7 @@ public interface WalletRuntimeManager extends RuntimeManager {
      *
      * @return Wallet in use
      */
-    public WalletNavigationStructure getLastWallet ();
+    WalletNavigationStructure getLastWallet();
 
 
     /**
@@ -39,7 +39,7 @@ public interface WalletRuntimeManager extends RuntimeManager {
      *
      * @return  The installed Wallet
      */
-    public WalletNavigationStructure getWallet(String publicKey) throws WalletRuntimeExceptions;
+    WalletNavigationStructure getWallet(String publicKey) throws WalletRuntimeExceptions;
 
 
     void recordNAvigationStructure(FermatStructure fermatStructure);

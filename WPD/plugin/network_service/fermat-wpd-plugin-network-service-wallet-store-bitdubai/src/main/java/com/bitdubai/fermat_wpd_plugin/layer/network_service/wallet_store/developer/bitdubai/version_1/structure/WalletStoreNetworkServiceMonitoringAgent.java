@@ -185,10 +185,7 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
         }
 
         private boolean areMissingIds(CatalogItems catalogItems) throws CantExecuteDatabaseOperationException, InvalidParameterException {
-            if (getDatabaseDao().getCatalogIdsForNetworkService(catalogItems).size() != 0)
-                return true;
-            else
-                return false;
+            return getDatabaseDao().getCatalogIdsForNetworkService(catalogItems).size() != 0;
         }
 
         private List<UUID> getIdsFromMyCatalog(CatalogItems catalogItems) throws CantExecuteDatabaseOperationException, InvalidParameterException {

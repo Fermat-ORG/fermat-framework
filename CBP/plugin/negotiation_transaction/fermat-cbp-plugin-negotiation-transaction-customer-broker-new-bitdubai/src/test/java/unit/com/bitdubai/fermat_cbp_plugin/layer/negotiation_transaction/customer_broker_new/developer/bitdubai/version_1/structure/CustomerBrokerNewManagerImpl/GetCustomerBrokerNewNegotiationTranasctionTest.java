@@ -28,8 +28,8 @@ public class GetCustomerBrokerNewNegotiationTranasctionTest {
         CustomerBrokerNew customerBrokerNew = null;
 
         CustomerBrokerNewManagerImpl customerBrokerNewManagerImpl = mock(CustomerBrokerNewManagerImpl.class, Mockito.RETURNS_DEEP_STUBS);
-        when(customerBrokerNewManagerImpl.getCustomerBrokerNewNegotiationTranasction(transactionId)).thenReturn(customerBrokerNew).thenCallRealMethod();
-        assertThat(customerBrokerNewManagerImpl.getCustomerBrokerNewNegotiationTranasction(transactionId)).isNotNull();
+        when(customerBrokerNewManagerImpl.getCustomerBrokerNewNegotiationTransaction(transactionId)).thenReturn(customerBrokerNew).thenCallRealMethod();
+        assertThat(customerBrokerNewManagerImpl.getCustomerBrokerNewNegotiationTransaction(transactionId)).isNotNull();
 
     }
 }

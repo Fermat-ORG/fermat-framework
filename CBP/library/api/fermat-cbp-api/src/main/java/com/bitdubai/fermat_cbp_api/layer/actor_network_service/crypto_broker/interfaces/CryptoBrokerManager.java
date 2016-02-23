@@ -185,6 +185,16 @@ public interface CryptoBrokerManager extends FermatManager {
                              List<CryptoBrokerQuote> quotes    ) throws CantAnswerQuotesRequestException, QuotesRequestNotFoundException;
 
     /**
+     * Through the method <code>confirmQuotesRequest</code> we can mark as done and confirmed a pending quotes request.
+     *
+     * @param requestId  id of the quotes request to confirm.
+     *
+     * @throws CantConfirmException                if something goes wrong.
+     * @throws QuotesRequestNotFoundException      if the quotes request cannot be found.
+     */
+    void confirmQuotesRequest(final UUID requestId) throws CantConfirmException, QuotesRequestNotFoundException;
+
+    /**
      * Through the method <code>confirm</code> we can mark as done and confirmed a pending connection new or update.
      *
      * @param requestId  id of the connection request to confirm.

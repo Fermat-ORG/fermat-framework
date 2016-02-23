@@ -407,9 +407,9 @@ public class IncomingIntraUserDao {
 
         boolean flag                            = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_REQUEST_FLAG_COLUMN_NAME).equals(TRUE);
         UUID    requestId                       = flag ? databaseTableRecord.getUUIDValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_REQUEST_ID_COLUMN_NAME) : null;
-        String  senderPublicKey                 = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME);;
+        String  senderPublicKey                 = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_SENDER_PUBLIC_KEY_COLUMN_NAME);
         String  destinationPublicKey            = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_DESTINATION_PUBLIC_KEY_COLUMN_NAME);
-        String  associatedCryptoTransactionHash = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME);;
+        String  associatedCryptoTransactionHash = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_ASSOCIATED_CRYPTO_TRANSACTION_HASH_COLUMN_NAME);
         String  paymentDescription              = databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_CRYPTO_METADATA_PAYMENT_DESCRIPTION_COLUMN_NAME);
 
         FermatCryptoTransaction fermatCryptoTransaction = new FermatCryptoTransaction(flag,requestId,senderPublicKey,destinationPublicKey,associatedCryptoTransactionHash,paymentDescription);

@@ -1,6 +1,11 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Path;
+import android.graphics.Rect;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -45,8 +52,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-//import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.MessageType;
-
 /**
  * Created by miguel on 22/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 09/01/16.
@@ -64,6 +69,7 @@ public class ChatAdapterView extends LinearLayout {
     private ErrorManager errorManager;
     private ChatSession chatSession;
     private FermatSession appSession;
+    private Toolbar toolbar;
     private EditText messageET;
     private ViewGroup rootView;
     private String leftName;
@@ -78,7 +84,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
-                           ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, int background) {
+                           ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, int background, Toolbar toolbar) {
         super(context);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         addView(inflater.inflate(R.layout.chat, (rootView != null) ? rootView : null));
@@ -88,6 +94,7 @@ public class ChatAdapterView extends LinearLayout {
         this.errorManager=errorManager;
         this.chatSession=chatSession;
         this.appSession=appSession;
+        this.toolbar=toolbar;
         //this.background=background;
         initControls();
     }
@@ -132,11 +139,8 @@ public class ChatAdapterView extends LinearLayout {
                 chatwascreate = true;
             } else if (chatSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
                 findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
-                if (chatid != null) {//Here it is define if we need to create a new chat or just add the message to chat created previously
-                    chatwascreate = true;
-                } else {
-                    chatwascreate = false;
-                }
+                //Here it is define if we need to create a new chat or just add the message to chat created previously
+                chatwascreate = chatid != null;
             }
         }catch(Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -173,6 +177,7 @@ public class ChatAdapterView extends LinearLayout {
                     msg.setId(chatManager.getMessageByChatId(chatid).get(i).getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else msg.setMe(false);
+                    msg.setStatus(chatManager.getMessageByChatId(chatid).get(i).getStatus().toString());
                     msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatid).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString()
                     msg.setUserId(chatManager.getMessageByChatId(chatid).get(i).getContactId());
                     msg.setMessage(message);
@@ -196,119 +201,128 @@ public class ChatAdapterView extends LinearLayout {
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-
-        TextView meLabel = (TextView) findViewById(R.id.meLbl);
-        TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
+        //messageET.setText("Type message");
+        //TextView meLabel = (TextView) findViewById(R.id.meLbl);
+        //TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
         RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 
         if(chatSession!= null){
             whattodo();
             findmessage();
         }
-        if (rightName != null) {
-            meLabel.setText(rightName);
-        } else {
-            meLabel.setText("Yo");
-        }
+//        if (rightName != null) {
+//            meLabel.setText(rightName);
+//        } else {
+//            meLabel.setText("");
+//        }
 
         if (leftName != null ) {
-            companionLabel.setText(leftName);
-        } else {
-            companionLabel.setText("Contacto");
+            toolbar.setTitle(leftName);
+            toolbar.setLogo(R.drawable.ic_contact_picture_holo_light);
         }
+            //companionLabel.setText(leftName);
+//        } else {
+//            companionLabel.setText("Contacto");
+//        }
 
         if (background != -1) {
             container.setBackgroundColor(background);
         }
 
+        messageET.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //messageET.setText("");
+            }
+        });
+
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String messageText = messageET.getText().toString();
-                if (TextUtils.isEmpty(messageText)) {
-                    return;
+            String messageText = messageET.getText().toString();
+            if (TextUtils.isEmpty(messageText)) {
+                return;
+            }
+
+            try {
+                ChatImpl chat = new ChatImpl();
+                MessageImpl message = new MessageImpl();
+                Long dv = System.currentTimeMillis();
+
+                if (chatwascreate) {
+                    chat=(ChatImpl)chatManager.getChatByChatId(chatid);
+                    chatManager.saveChat(chat);
+
+                    message.setChatId(chatid);
+                    message.setMessageId(UUID.randomUUID());
+                    message.setMessage(messageText);
+                    message.setMessageDate(new Timestamp(dv));
+                    message.setStatus(MessageStatus.CREATED);
+                    message.setType(TypeMessage.OUTGOING);
+                    message.setContactId(contactid);
+                    chatManager.saveMessage(message);
+                } else {
+                    UUID newchatid = UUID.randomUUID();
+                    chat.setChatId(newchatid);
+                    chat.setObjectId(UUID.randomUUID());
+                    chat.setStatus(ChatStatus.VISSIBLE);
+                    chat.setChatName("DeathNote");
+                    chat.setDate(new Timestamp(dv));
+                    chat.setLastMessageDate(new Timestamp(dv));
+                    chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
+                    chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                    chat.setRemoteActorPublicKey(remotepk);
+                    chat.setRemoteActorType(remotepct);
+                    chatManager.saveChat(chat);
+
+                    message.setChatId(newchatid);
+                    message.setMessageId(UUID.randomUUID());
+                    message.setMessage(messageText);
+                    message.setMessageDate(new Timestamp(dv));
+                    message.setStatus(MessageStatus.CREATED);
+                    message.setType(TypeMessage.OUTGOING);
+                    message.setContactId(contactid);
+                    chatManager.saveMessage(message);
                 }
 
-                try {
-                    ChatImpl chat = new ChatImpl();
-                    MessageImpl message = new MessageImpl();
-                    Long dv = System.currentTimeMillis();
-
-                    if (chatwascreate) {
-                        chat=(ChatImpl)chatManager.getChatByChatId(chatid);
-                        chatManager.saveChat(chat);
-
-                        message.setChatId(chatid);
-                        message.setMessageId(UUID.randomUUID());
-                        message.setMessage(messageText);
-                        message.setMessageDate(new Timestamp(dv));
-                        message.setStatus(MessageStatus.CREATED);
-                        message.setType(TypeMessage.OUTGOING);
-                        message.setContactId(contactid);
-                        chatManager.saveMessage(message);
-                    } else {
-                        UUID newchatid = UUID.randomUUID();
-                        chat.setChatId(newchatid);
-                        chat.setObjectId(UUID.randomUUID());
-                        chat.setStatus(ChatStatus.VISSIBLE);
-                        chat.setChatName("DeathNote");
-                        chat.setDate(new Timestamp(dv));
-                        chat.setLastMessageDate(new Timestamp(dv));
-                        chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                        chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        chat.setRemoteActorPublicKey(remotepk);
-                        chat.setRemoteActorType(remotepct);
-                        chatManager.saveChat(chat);
-
-                        message.setChatId(newchatid);
-                        message.setMessageId(UUID.randomUUID());
-                        message.setMessage(messageText);
-                        message.setMessageDate(new Timestamp(dv));
-                        message.setStatus(MessageStatus.CREATED);
-                        message.setType(TypeMessage.OUTGOING);
-                        message.setContactId(contactid);
-                        chatManager.saveMessage(message);
-                    }
-
-                    ChatMessage chatMessage = new ChatMessage();
-                    chatMessage.setId(UUID.randomUUID());//dummy
-                    chatMessage.setMessage(messageText);
-                    chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-                    chatMessage.setMe(true);
-                    messageET.setText("");
-                    adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
-                    messagesContainer.setAdapter(adapter);
-                    displayMessage(chatMessage);
+                ChatMessage chatMessage = new ChatMessage();
+                chatMessage.setId(UUID.randomUUID());//dummy
+                chatMessage.setMessage(messageText);
+                chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                chatMessage.setMe(true);
+                messageET.setText("");
+                adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+                messagesContainer.setAdapter(adapter);
+                displayMessage(chatMessage);
 
 
-                } catch (CantSaveMessageException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                } catch (CantSaveChatException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                } catch (CantGetNetworkServicePublicKeyException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
+            } catch (CantSaveMessageException e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            } catch (CantSaveChatException e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            } catch (CantGetNetworkServicePublicKeyException e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            } catch (Exception e) {
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
             }
         });
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
-                        try {
-                            findmessage();
-                        } catch (Exception e) {
-                            //TODO: fix this
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
-                        mSwipeRefreshLayout.setRefreshing(false);
-                    }
-                }, 2500);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
+                try {
+                    findmessage();
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+                mSwipeRefreshLayout.setRefreshing(false);
+                }
+            }, 2500);
             }
         });
     }
@@ -403,6 +417,10 @@ public class ChatAdapterView extends LinearLayout {
         this.appSession = appSession;
     }
 
+    private void setToolbar(Toolbar toolbar) {
+        this.toolbar = toolbar;
+    }
+
     private void loadDummyHistory(boolean loadDummyData) {
         this.loadDummyData = loadDummyData;
     }
@@ -417,6 +435,7 @@ public class ChatAdapterView extends LinearLayout {
         private ErrorManager errorManager;
         private ChatSession chatSession;
         private FermatSession appSession;
+        private Toolbar toolbar;
         private boolean loadDummyData = false;
         private int background = -1;
         private float chatTextSize;
@@ -485,6 +504,11 @@ public class ChatAdapterView extends LinearLayout {
             return this;
         }
 
+        public Builder addToolbar(Toolbar toolbar) {
+            this.toolbar = toolbar;
+            return this;
+        }
+
         public Builder addAppSession(FermatSession appSession) {
             this.appSession = appSession;
             return this;
@@ -496,7 +520,7 @@ public class ChatAdapterView extends LinearLayout {
 
         public ChatAdapterView build() {
             ChatAdapterView chatView = new ChatAdapterView(context, chatHistory,
-                    chatManager, moduleManager, errorManager, chatSession, appSession, background);
+                    chatManager, moduleManager, errorManager, chatSession, appSession, background, toolbar);
             if (rootView != null) {
                 chatView.setRootView(rootView);
             }
@@ -523,6 +547,9 @@ public class ChatAdapterView extends LinearLayout {
             }
             if (rightName != null) {
                 chatView.addRightName(rightName);
+            }
+            if (toolbar != null) {
+                chatView.setToolbar(toolbar);
             }
             if (background != -1) {
                 chatView.setBackground(background);

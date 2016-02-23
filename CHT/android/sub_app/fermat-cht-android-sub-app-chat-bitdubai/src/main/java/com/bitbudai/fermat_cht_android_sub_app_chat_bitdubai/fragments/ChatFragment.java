@@ -3,6 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -58,6 +59,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatSession chatSession;
+    private Toolbar toolbar;
 
     // Defines a tag for identifying log entries
     String TAG="CHT_ChatFragment";
@@ -85,11 +87,13 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             moduleManager = chatSession.getModuleManager();
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
+            toolbar = getToolbar();
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back));
             whattodo();
-      //      System.out.println("appSession.getAppPublicKey():"+appSession.getAppPublicKey());
-            //     Chat chat=chatSession.getSelectedChat();
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
+            {
                 setHasOptionsMenu(true);
+            }else{ setHasOptionsMenu(false); }
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -108,7 +112,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     }
                 }
             }
-
         }catch(Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -121,11 +124,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 chatwascreate = true;
             } else if (appSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
                 findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
-                if (chatid != null) {//Here it is define if we need to create a new chat or just add the message to chat created previously
-                    chatwascreate = true;
-                } else {
-                    chatwascreate = false;
-                }
+                //Here it is define if we need to create a new chat or just add the message to chat created previously
+                chatwascreate = chatid != null;
             }
         }catch(Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -170,16 +170,20 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {//private void initControls() {}
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+            }
+        });
         adapter=new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
-                        //.addLeftName("Probando")
-                        //.setBackground(R.color.holo_blue)
-                        //.addChatHistory(chatHistory)
                 .addModuleManager(moduleManager)
                 .addErrorManager(errorManager)
                 .addChatSession(chatSession)
                 .addAppSession(appSession)
                 .addChatManager(chatManager)
+                .addToolbar(toolbar)
                 .build();
         return adapter;
 

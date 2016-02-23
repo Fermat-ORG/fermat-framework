@@ -22,7 +22,7 @@ public class BankAccountNumberImpl implements BankAccountNumber {
         this.currencyType    = currencyType;
     }
 
-    public BankAccountNumberImpl(){};
+    public BankAccountNumberImpl(){}
 
     @Override
     public String getBankName() {

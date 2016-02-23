@@ -43,6 +43,22 @@ public class NegotiationRecord {
         return timeStamp;
     }
 
+    public void setNegotiation(AssetNegotiation negotiation) {
+        this.negotiation = negotiation;
+    }
+
+    public void setNegotiationStatus(AssetSellStatus negotiationStatus) {
+        this.negotiationStatus = negotiationStatus;
+    }
+
+    public void setSeller(ActorAssetUser seller) {
+        this.seller = seller;
+    }
+
+    public void setTimeStamp(Date timeStamp) {
+        this.timeStamp = timeStamp;
+    }
+
     //PRIVATE METHODS
 
     //GETTER AND SETTERS
