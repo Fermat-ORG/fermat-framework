@@ -121,7 +121,7 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
 
     private void saveToFile(String report){
         try {
-            File file = new File("/org.fermat/errorReport.txt");
+            File file = new File("/data/data/org.fermat/errorReport.txt");
 
             // if file doesnt exists, then create it
             if (!file.exists()) {
