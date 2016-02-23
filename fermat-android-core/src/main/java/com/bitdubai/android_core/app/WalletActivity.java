@@ -608,7 +608,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
             }else
                 changeActivity(activityCode,appLickPublicKey);
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 

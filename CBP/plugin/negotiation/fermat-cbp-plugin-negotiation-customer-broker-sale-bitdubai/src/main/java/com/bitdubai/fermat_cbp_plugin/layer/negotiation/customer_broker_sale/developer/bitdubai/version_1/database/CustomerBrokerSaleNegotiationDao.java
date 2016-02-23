@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -25,6 +26,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAcc
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationClauseManager;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationPaymentCurrency;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
@@ -90,6 +93,8 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                     throw new CantInitializeCustomerBrokerSaleNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
                 }
             }
+
+            new NegotiationSaleTestData(this);
         }
 
         public void createCustomerBrokerSaleNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantCreateCustomerBrokerSaleNegotiationException {
@@ -169,8 +174,12 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             try {
                 DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate = SaleNegotiationTable.getEmptyRecord();
+
                 SaleNegotiationTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
+
                 recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, NegotiationStatus.CANCELLED.getCode());
+                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CANCEL_REASON_COLUMN_NAME, negotiation.getCancelReason());
+
                 SaleNegotiationTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
                 throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
@@ -309,31 +318,56 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             }
         }
 
-        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListSaleNegotiationsException {
+        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsBySendAndWaiting(ActorType actorType) throws CantGetListSaleNegotiationsException {
             try {
                 DatabaseTable table = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
-    
-                String Query = "SELECT * FROM " +
-                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME +
-                        " WHERE " +
-                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
-                        " = '" +
-                        NegotiationStatus.SENT_TO_BROKER.getCode() +
-                        "' OR " +
-                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
-                        " = '" +
-                        NegotiationStatus.WAITING_FOR_BROKER.getCode() +
-                        "' ORDER BY " +
-                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME +
-                        " DESC";
-    
-                Collection<DatabaseTableRecord> res = table.customQuery(Query, true);
-                Collection<CustomerBrokerSaleNegotiation> negs = new ArrayList<>();
-                for (DatabaseTableRecord record : res) {
-                    negs.add(constructCustomerBrokerSaleFromRecordByQuery(record));
+
+                String Query = null;
+
+                if(actorType == ActorType.BROKER){
+                    Query = "SELECT * FROM " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME +
+                            " WHERE " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                            " = '" +
+                            NegotiationStatus.SENT_TO_BROKER.getCode() +
+                            "' OR " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                            " = '" +
+                            NegotiationStatus.WAITING_FOR_BROKER.getCode() +
+                            "' ORDER BY " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME +
+                            " DESC";
                 }
-    
-                return negs;
+
+                if(actorType == ActorType.CUSTOMER){
+                    Query = "SELECT * FROM " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME +
+                            " WHERE " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                            " = '" +
+                            NegotiationStatus.SENT_TO_CUSTOMER.getCode() +
+                            "' OR " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                            " = '" +
+                            NegotiationStatus.WAITING_FOR_CUSTOMER.getCode() +
+                            "' ORDER BY " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME +
+                            " DESC";
+                }
+
+                if(Query != null){
+                    Collection<DatabaseTableRecord> res = table.customQuery(Query, true);
+                    Collection<CustomerBrokerSaleNegotiation> negs = new ArrayList<>();
+                    for (DatabaseTableRecord record : res) {
+                        negs.add(constructCustomerBrokerSaleFromRecordByQuery(record));
+                    }
+
+                    return negs;
+                }else{
+                    throw new CantGetListSaleNegotiationsException("INVALID PARAMETER");
+                }
+
             } catch (CantLoadTableToMemoryException e) {
                 throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {

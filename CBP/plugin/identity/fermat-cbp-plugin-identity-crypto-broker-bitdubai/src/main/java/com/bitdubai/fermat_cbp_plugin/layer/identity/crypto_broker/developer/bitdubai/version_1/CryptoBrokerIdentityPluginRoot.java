@@ -129,6 +129,7 @@ public class CryptoBrokerIdentityPluginRoot extends AbstractPlugin implements Cr
         this.cryptoBrokerIdentityDatabaseDao.updateCryptoBrokerIdentity(alias, publicKey, imageProfile);
     }
 
+    @Override
     public CryptoBrokerIdentity getCryptoBrokerIdentity(final String publicKey) throws CantGetCryptoBrokerIdentityException, IdentityNotFoundException{
         try {
             return cryptoBrokerIdentityDatabaseDao.getIdentity(publicKey);

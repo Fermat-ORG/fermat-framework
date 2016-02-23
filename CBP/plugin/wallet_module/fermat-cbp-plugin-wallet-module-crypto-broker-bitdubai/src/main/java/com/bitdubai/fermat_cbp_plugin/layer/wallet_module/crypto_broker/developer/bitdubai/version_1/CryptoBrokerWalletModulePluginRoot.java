@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.CryptoBrokerActorManager;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.interfaces.CryptoCustomerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_offline_payment.interfaces.BrokerAckOfflinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_ack_online_payment.interfaces.BrokerAckOnlinePaymentManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_offline_merchandise.interfaces.BrokerSubmitOfflineMerchandiseManager;
@@ -144,6 +145,9 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION_TRANSACTION, plugin = Plugins.CUSTOMER_BROKER_CLOSE)
     CustomerBrokerCloseManager customerBrokerCloseManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_CUSTOMER     )
+    private CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
+
 
     public CryptoBrokerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -183,7 +187,8 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
                         brokerSubmitOfflineMerchandiseManager,
                         brokerSubmitOnlineMerchandiseManager,
                         matchingEngineManager,
-                        customerBrokerCloseManager);
+                        customerBrokerCloseManager,
+                        cryptoCustomerActorConnectionManager);
 
             return walletManager;
         } catch (Exception e) {
