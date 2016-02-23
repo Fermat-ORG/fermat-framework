@@ -36,6 +36,8 @@ public class CommunityUserFragmentFactory extends FermatFragmentFactory<AssetUse
                 return UserCommunityConnectionsListFragment.newInstance();
             case DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT:
                 return UserCommunityNotificationsFragment.newInstance();
+            case DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT:
+                return UsersCommunityConnectionOtherProfileFragment.newInstance();
             default:
                 throw new FragmentNotFoundException(String.format("Fragment: %s not found", fragments.getKey()),
                         new Exception(), "fermat-dap-android-sub-app-asset-user-community", "fragment not found");

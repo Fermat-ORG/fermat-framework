@@ -375,7 +375,7 @@ public class WalletActivity extends FermatActivity implements FermatScreenSwappe
         } catch (ResourcesManagerNotFoundException |
                 CantGetResourcesManagerException e) {
 
-            getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);;
+            getErrorManager().reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             return null;
         } catch (Exception e) {

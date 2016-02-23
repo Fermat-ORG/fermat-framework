@@ -15,12 +15,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantInitializeCryptoAddressesNetworkServiceDatabaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 /**
  * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDeveloperDatabaseFactory</code>
  * contains the methods that the Developer Database Tools uses to show the information.
@@ -183,11 +182,12 @@ public final class CryptoAddressesNetworkServiceDeveloperDatabaseFactory {
     }
 
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabase developerDatabase,
                                                                       final DeveloperDatabaseTable developerDatabaseTable) {
 
         try {
 
-             if(!developerDatabaseTable.getName().equals(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME) )
+             if(!developerDatabase.getName().equals(CryptoAddressesNetworkServiceDatabaseConstants.ADDRESS_EXCHANGE_REQUEST_TABLE_NAME) )
                 initializeDatabaseCommunication();
             else
                 initializeDatabase();

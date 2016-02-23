@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+
 /**
  * Created by Nerio on 10/09/15.
  */
@@ -24,7 +26,7 @@ public interface DAPActor {
      *
      * @return Enum Actors
      */
-//    Actors getType();
+    Actors getType();
 
     /**
      * The method <coda>getProfileImage</coda> gives us the profile image of the represented a Actor

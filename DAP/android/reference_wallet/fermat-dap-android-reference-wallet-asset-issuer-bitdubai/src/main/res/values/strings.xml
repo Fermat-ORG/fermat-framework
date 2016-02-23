@@ -20,6 +20,7 @@
     <string name="no_assets_redeem_point_message">Don\'t worry, as a redeem point you need to connect your device to other Assets Issuers using the Asset Issuer Community application. Once you are connected, you will be eligible to redeem assets from any user!</string>
     <string name="no_users">No Users</string>
     <string name="no_groups">No Groups</string>
+    <string name="no_transactions">No Transactions</string>
     <!-- -->
 
     <!-- error messages -->
@@ -50,6 +51,18 @@
     <string name="dap_issuer_wallet_no_assets_delivered">No assets delivered</string>
     <string name="dap_issuer_wallet_no_assets_appropriated">No assets appropriated</string>
     <string name="dap_issuer_wallet_no_assets_redeemed">No assets redeemed</string>
+    <!-- -->
+
+    <!-- app strings -->
+    <string name="dap_issuer_wallet_confirmed">CONFIRMED</string>
+    <string name="dap_issuer_wallet_pending">PENDING</string>
+    <!-- -->
+
+    <!-- menu items -->
+    <string name="dap_issuer_wallet_action_deliver">Deliver Asset</string>
+    <string name="dap_issuer_wallet_action_appropriate">Appropriate Asset</string>
+    <string name="dap_issuer_wallet_action_show_statistics">Show Statistics</string>
+    <string name="dap_issuer_wallet_action_show_transactions">Show Transactions</string>
     <!-- -->
 
     <!--Dialog Help - Init-->

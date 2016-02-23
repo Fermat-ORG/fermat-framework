@@ -28,9 +28,9 @@ public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSetti
      * @return the wallet store catalogue
      * @throws CantGetRefinedCatalogException
      */
-    public WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException;
+    WalletStoreCatalogue getCatalogue() throws CantGetRefinedCatalogException;
 
-    public DetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException;
+    DetailedCatalogItem getCatalogItemDetails(UUID walletCatalogId) throws CantGetWalletsCatalogException;
 
     /**
      * This method initialize the installation presses of a skin by giving the control to the
@@ -40,7 +40,7 @@ public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSetti
      * @param languageId the language identifier
      * @throws CantStartLanguageInstallationException
      */
-    public void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartLanguageInstallationException;
+    void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartLanguageInstallationException;
 
     /**
      * This method initialize the installation presses of a skin by giving the control to the
@@ -50,7 +50,7 @@ public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSetti
      * @param skinId the skin identifier
      * @throws CantStartSkinInstallationException
      */
-    public void installSkin(UUID walletCatalogueId, UUID skinId) throws CantStartSkinInstallationException;
+    void installSkin(UUID walletCatalogueId, UUID skinId) throws CantStartSkinInstallationException;
 
     /**
      * This method initialize the installation presses of the wallet by giving the control to the
@@ -63,11 +63,11 @@ public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSetti
      * @param version the version of the wallet to install
      * @throws CantStartInstallationException
      */
-    public void installWallet(WalletCategory walletCategory,
-                              UUID skinId,
-                              UUID languageId,
-                              UUID walletCatalogueId,
-                              Version version) throws CantStartInstallationException;
+    void installWallet(WalletCategory walletCategory,
+                       UUID skinId,
+                       UUID languageId,
+                       UUID walletCatalogueId,
+                       Version version) throws CantStartInstallationException;
 
     /**
      * This method initialize the uninstall presses of a skin by giving the control to the
@@ -77,7 +77,7 @@ public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSetti
      * @param languageId the language identifier
      * @throws CantStartLanguageInstallationException
      */
-    public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartUninstallLanguageException;
+    void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartUninstallLanguageException;
 
     /**
      * This method initialize the uninstall presses of a skin by giving the control to the
@@ -87,7 +87,7 @@ public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSetti
      * @param skinId the skin identifier
      * @throws CantStartSkinInstallationException
      */
-    public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantStartUninstallSkinException;
+    void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws CantStartUninstallSkinException;
 
     /**
      * This method initialize the uninstall presses of the wallet by giving the control to the
@@ -96,6 +96,6 @@ public interface WalletStoreModuleManager extends ModuleManager<BasicWalletSetti
      * @param walletCatalogueId the wallet id in the catalogue
      * @throws CantStartInstallationException
      */
-    public void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException;
+    void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException;
 
 }

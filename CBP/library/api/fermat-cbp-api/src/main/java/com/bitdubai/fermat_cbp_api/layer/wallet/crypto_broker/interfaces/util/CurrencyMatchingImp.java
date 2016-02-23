@@ -16,7 +16,7 @@ public class CurrencyMatchingImp implements CurrencyMatching {
     private float    amountGiving;
     private float    amountReceiving;
 
-    public CurrencyMatchingImp(){};
+    public CurrencyMatchingImp(){}
 
     public CurrencyMatchingImp(UUID     currencyGivingId,
                                UUID     currencyReceivingId,

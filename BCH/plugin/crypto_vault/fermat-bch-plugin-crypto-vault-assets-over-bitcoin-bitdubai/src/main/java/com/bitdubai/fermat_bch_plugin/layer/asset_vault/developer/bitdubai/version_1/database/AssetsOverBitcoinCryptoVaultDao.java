@@ -571,8 +571,9 @@ public class AssetsOverBitcoinCryptoVaultDao {
      * @param hierarchyAccountId
      * @param ecKey
      * @param cryptoAddress
+     * @param blockchainNetworkType
      */
-    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
+    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
         /**
          * If we are not allowed to save detailed information then we will exit
          */
@@ -601,6 +602,7 @@ public class AssetsOverBitcoinCryptoVaultDao {
 
         DatabaseTableRecord record = databaseTable.getRecords().get(0);
         record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+        record.setStringValue(AssetsOverBitcoinCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
         try {
             databaseTable.updateRecord(record);
         } catch (CantUpdateRecordException e) {

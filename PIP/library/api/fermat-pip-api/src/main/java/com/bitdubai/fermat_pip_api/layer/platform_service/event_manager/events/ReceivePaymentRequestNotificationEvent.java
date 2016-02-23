@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
 /**

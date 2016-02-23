@@ -132,8 +132,6 @@ public class IncomingMessageDao {
         return incomingTemplateNetworkServiceMessage;
     }
 
-    ;
-
     /**
      * Method that list the all entities on the data base.
      *
@@ -187,8 +185,6 @@ public class IncomingMessageDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -266,8 +262,6 @@ public class IncomingMessageDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -360,8 +354,6 @@ public class IncomingMessageDao {
          */
         return list;
     }
-
-    ;
 
     /**
      * Method that create a new entity in the data base.

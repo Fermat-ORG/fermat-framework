@@ -8,6 +8,7 @@ import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.versi
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantLoadHierarchyAccountsException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.DeterministicKey;
@@ -67,17 +68,19 @@ class VaultKeyHierarchyGenerator implements Runnable{
     private PluginDatabaseSystem pluginDatabaseSystem;
     private BitcoinNetworkManager bitcoinNetworkManager;
     UUID pluginId;
+    ErrorManager errorManager;
 
     /**
      * Constructor
      * @param seed
      * @param pluginDatabaseSystem
      */
-    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId) {
+    public VaultKeyHierarchyGenerator(DeterministicSeed seed, PluginDatabaseSystem pluginDatabaseSystem, BitcoinNetworkManager bitcoinNetworkManager, UUID pluginId, ErrorManager errorManager) {
         this.seed = seed;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.pluginId = pluginId;
+        this.errorManager = errorManager;
 
     }
 
@@ -105,7 +108,7 @@ class VaultKeyHierarchyGenerator implements Runnable{
         /**
          * I create the VaultKeyHierarchy from the master key
          */
-        vaultKeyHierarchy = new VaultKeyHierarchy(rootKey, pluginDatabaseSystem, pluginId);
+        vaultKeyHierarchy = new VaultKeyHierarchy(rootKey, pluginDatabaseSystem, pluginId, errorManager);
 
         /**
          * I will get from the database the list of accounts to create

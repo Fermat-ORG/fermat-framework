@@ -55,7 +55,7 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
     /**
      * Through the method <code>setSelectedActorIdentity</code> we can set the selected actor identity.
      */
-     public void setSelectedActorIdentity(CryptoBrokerCommunitySelectableIdentity identity);
+    void setSelectedActorIdentity(CryptoBrokerCommunitySelectableIdentity identity);
 
 
     /**

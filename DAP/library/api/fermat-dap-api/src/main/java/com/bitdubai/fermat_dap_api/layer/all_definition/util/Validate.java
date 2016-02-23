@@ -158,10 +158,7 @@ public final class Validate {
                 return false;
             }
         }
-        if (signedTransaction.getValue() != generatedTransaction.getValue()) {
-            return false;
-        }
-        return true;
+        return signedTransaction.getValue() == generatedTransaction.getValue();
     }
 
     private static Date today() {

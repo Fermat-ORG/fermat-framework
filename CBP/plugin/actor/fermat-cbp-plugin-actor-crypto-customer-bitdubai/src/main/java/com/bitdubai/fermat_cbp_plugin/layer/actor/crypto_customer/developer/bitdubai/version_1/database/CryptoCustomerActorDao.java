@@ -106,11 +106,11 @@ public class CryptoCustomerActorDao {
                 RelationshipTable.insertRecord(recordToInsert);
                 return constructCryptoCustomerActorRelationshipFromRecord(recordToInsert);
             } catch (CantInsertRecordException e) {
-                throw new CantCreateNewCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreateNewCustomerIdentityWalletRelationshipException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantCreateNewCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreateNewCustomerIdentityWalletRelationshipException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantCreateNewCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreateNewCustomerIdentityWalletRelationshipException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -126,11 +126,11 @@ public class CryptoCustomerActorDao {
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerIdentityWalletRelationshipException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerIdentityWalletRelationshipException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerIdentityWalletRelationshipException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -146,11 +146,11 @@ public class CryptoCustomerActorDao {
                 }
                 return null;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerIdentityWalletRelationshipException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerIdentityWalletRelationshipException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerIdentityWalletRelationshipException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -166,11 +166,11 @@ public class CryptoCustomerActorDao {
                 }
                 return null;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerIdentityWalletRelationshipException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerIdentityWalletRelationshipException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListCustomerIdentityWalletRelationshipException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -225,11 +225,11 @@ public class CryptoCustomerActorDao {
                     try {
                         persistNewCryptoCustomerIdentityProfileImage(actorExtraData.getBrokerIdentity().getPublicKey(), actorExtraData.getBrokerIdentity().getProfileImage());
                     } catch (CantPersistProfileImageExtraDataException e) {
-                        throw new CantCreateNewActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                        throw new CantCreateNewActorExtraDataException(FermatException.DEFAULT_MESSAGE, e, "", "");
                     }
                 }
             } catch (CantInsertRecordException e) {
-                throw new CantCreateNewActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreateNewActorExtraDataException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -248,7 +248,7 @@ public class CryptoCustomerActorDao {
                     table.insertRecord(record);
                 }
             } catch (CantInsertRecordException e) {
-                throw new CantCreateNewActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreateNewActorExtraDataException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -265,11 +265,11 @@ public class CryptoCustomerActorDao {
                     try {
                         updateCryptoBrokerIdentityProfileImage(actorExtraData.getBrokerIdentity().getPublicKey(), actorExtraData.getBrokerIdentity().getProfileImage());
                     } catch (CantPersistProfileImageExtraDataException e) {
-                        throw new CantUpdateActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                        throw new CantUpdateActorExtraDataException(FermatException.DEFAULT_MESSAGE, e, "", "");
                     }
                 }
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateActorExtraDataException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -284,9 +284,9 @@ public class CryptoCustomerActorDao {
 
                 this.createActorQoutes(actorExtraData);
             } catch (CantDeleteRecordException e) {
-                throw new CantUpdateActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateActorExtraDataException(CantDeleteRecordException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantCreateNewActorExtraDataException e) {
-                throw new CantUpdateActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateActorExtraDataException(CantCreateNewActorExtraDataException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -305,7 +305,7 @@ public class CryptoCustomerActorDao {
                     try {
                         image = getCryptoCustomerIdentityProfileImagePrivateKey(brokerPublicKey);
                     } catch (CantGetCryptoCustomerActorProfileImageException e) {
-                        throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                        throw new CantGetListActorExtraDataException(FermatException.DEFAULT_MESSAGE, e, "", "");
                     }
                     ActorIdentity identity = new ActorExtraDataIdentity(alias, brokerPublicKey, image);
                     Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(brokerPublicKey, customerPublicKey);
@@ -320,7 +320,7 @@ public class CryptoCustomerActorDao {
                 }
                 return actoresExtraDatas;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListActorExtraDataException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -341,7 +341,7 @@ public class CryptoCustomerActorDao {
                         try {
                             image = getCryptoCustomerIdentityProfileImagePrivateKey(brokerPublicKey);
                         } catch (CantGetCryptoCustomerActorProfileImageException e) {
-                            throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                            throw new CantGetListActorExtraDataException(FermatException.DEFAULT_MESSAGE, e, "", "");
                         }
                         ActorIdentity identity = new ActorExtraDataIdentity(alias, brokerPublicKey, image);
                         Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(brokerPublicKey, customerPublicKey);
@@ -357,7 +357,7 @@ public class CryptoCustomerActorDao {
                     return null;
                 }
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListActorExtraDataException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -378,14 +378,14 @@ public class CryptoCustomerActorDao {
                         try {
                             image = getCryptoCustomerIdentityProfileImagePrivateKey(publicKey);
                         } catch (CantGetCryptoCustomerActorProfileImageException e) {
-                            throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                            throw new CantGetListActorExtraDataException(FermatException.DEFAULT_MESSAGE, e, "", "");
                         }
                         return new ActorExtraDataIdentity(alias, publicKey, image);
                     }
                     return null;
                 }
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListActorExtraDataException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -396,7 +396,7 @@ public class CryptoCustomerActorDao {
             try {
                 table.loadToMemory();
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListActorExtraDataException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             }
             List<DatabaseTableRecord> records = table.getRecords();
             table.clearAllFilters();
@@ -410,7 +410,7 @@ public class CryptoCustomerActorDao {
                     try {
                         mer = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME));
                     } catch (InvalidParameterException e1) {
-                        throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
+                        throw new CantGetListActorExtraDataException(InvalidParameterException.DEFAULT_MESSAGE, e1, "", "");
                     }
                 }
                 try {
@@ -419,7 +419,7 @@ public class CryptoCustomerActorDao {
                     try {
                         pay = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME));
                     } catch (InvalidParameterException e1) {
-                        throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
+                        throw new CantGetListActorExtraDataException(InvalidParameterException.DEFAULT_MESSAGE, e1, "", "");
                     }
                 }
                 Float pri = record.getFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);
@@ -437,11 +437,7 @@ public class CryptoCustomerActorDao {
                 table.loadToMemory();
                 List<DatabaseTableRecord> records = table.getRecords();
                 table.clearAllFilters();
-                if (records.isEmpty() ){
-                    return false;
-                }else {
-                    return true;
-                }
+                return !records.isEmpty();
             } catch (CantLoadTableToMemoryException e) {
                 return false;
             }
@@ -455,11 +451,7 @@ public class CryptoCustomerActorDao {
                 table.loadToMemory();
                 List<DatabaseTableRecord> records = table.getRecords();
                 table.clearAllFilters();
-                if (records.isEmpty() ){
-                    return false;
-                }else {
-                    return true;
-                }
+                return !records.isEmpty();
             } catch (CantLoadTableToMemoryException e) {
                 return false;
             }
@@ -475,7 +467,7 @@ public class CryptoCustomerActorDao {
             try {
                 PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                         DeviceDirectory.LOCAL_USERS.getName(),
-                        this.CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                        CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                         FilePrivacy.PRIVATE,
                         FileLifeSpan.PERMANENT
                 );
@@ -495,7 +487,7 @@ public class CryptoCustomerActorDao {
             try {
                 PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                         DeviceDirectory.LOCAL_USERS.getName(),
-                        this.CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                        CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                         FilePrivacy.PRIVATE,
                         FileLifeSpan.PERMANENT
                 );
@@ -515,12 +507,12 @@ public class CryptoCustomerActorDao {
             try {
                 this.pluginFileSystem.deleteBinaryFile(pluginId,
                         DeviceDirectory.LOCAL_USERS.getName(),
-                        this.CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                        CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                         FilePrivacy.PRIVATE,
                         FileLifeSpan.PERMANENT);
                 PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                         DeviceDirectory.LOCAL_USERS.getName(),
-                        this.CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                        CRYPTO_CUSTOMER_ACTOR_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                         FilePrivacy.PRIVATE,
                         FileLifeSpan.PERMANENT
                 );

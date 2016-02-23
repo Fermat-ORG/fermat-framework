@@ -41,6 +41,7 @@
     <string name="dap_user_wallet_validate_assets_to_redeem_greater">Value can\'t be greater than </string>
     <string name="dap_user_wallet_validate_no_available_assets">There is not assets to redeem</string>
     <string name="dap_user_wallet_validate_no_redeem_points">No redeem points selected</string>
+    <string name="dap_user_wallet_validate_no_users">No users selected</string>
     <string name="dap_user_wallet_validate_not_enought_assets">There is not enought assets to redeem</string>
     <string name="dap_user_wallet_identity">Identity must be created</string>
     <string name="dap_user_wallet_validate_sell_quantity_zero">Must be enter number of assets to sell</string>
@@ -57,6 +58,7 @@
 
     <!-- app messages -->
     <string name="dap_user_wallet_redeem_ok">Redemption of the asset has successfully started.\n\nThe process will take some minutes and if not accepted at the destination, it will be rollback.</string>
+    <string name="dap_user_wallet_transfer_ok">Transfer of the asset has successfully started.\n\nThe process will take some minutes and if not accepted at the destination, it will be rollback.</string>
     <string name="dap_user_wallet_wait">Please wait...</string>
     <string name="dap_user_wallet_remaining_assets">Assets Remaining</string>
     <string name="dap_user_wallet_appropriation_ok">Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.</string>
@@ -92,8 +94,18 @@
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_transfer_subTitle">Asset Transfer.</string>
+    <string name="dap_user_wallet_transfer_body">You can decide how many assets to transfer at your connected Users. In order to connect to Users, search them at the User Community application.\n\nThe selected User will receive and confirm your asset so you can exchange it for what the asset represents.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
     <string name="dap_user_wallet_redeem_select_subTitle">Redeem Point Selection.</string>
     <string name="dap_user_wallet_redeem_select_body">In order to redeem an asset, you must be connected to at least a redeem point. You can connect to Redeem Points at the Redeem Point Community application.\n\nYour assets may not be redeemable at any redeem point.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_user_select_subTitle">User Selection.</string>
+    <string name="dap_user_wallet_user_select_body">In order to transfer an asset, you must be connected to at least a user. You can connect to Users at the User Community application.\n\n</string>
     <!--Dialog Help - End-->
 
     <!--Dialog Help - Init-->

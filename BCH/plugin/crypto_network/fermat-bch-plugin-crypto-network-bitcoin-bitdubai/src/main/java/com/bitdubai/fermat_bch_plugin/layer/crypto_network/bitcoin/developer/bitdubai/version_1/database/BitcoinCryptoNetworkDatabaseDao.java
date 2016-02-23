@@ -408,10 +408,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
             throwLoadToMemoryException(e, databaseTable.getTableName());
         }
 
-        if (databaseTable.getRecords().size() > 0)
-            return true;
-        else
-            return false;
+        return databaseTable.getRecords().size() > 0;
     }
 
     /**
@@ -696,7 +693,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * I will set the ProtocolStatus filter, If I received something.
          */
         if (protocolStatus != null)
-            databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
+            databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
 
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
         transactionIdColumnName = BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME;
@@ -922,10 +919,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
         /**
          * If there are no records, then return true.
          */
-        if (databaseTable.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+        return databaseTable.getRecords().isEmpty();
     }
 
     /**
@@ -1382,7 +1376,8 @@ public class BitcoinCryptoNetworkDatabaseDao {
                 return cryptoTransaction;
         }
 
-        //this should never happen
+
+        //this might happen if the transaction has not been broadcasted yet.
         return null;
     }
 

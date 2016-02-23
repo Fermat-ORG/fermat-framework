@@ -905,13 +905,13 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             databaseTable.insertRecord(databaseTableRecord);
         } catch (CantGetCryptoAmountException e) {
             throw new CantInsertRecordException(
-                    e.DEFAULT_MESSAGE,
+                    CantGetCryptoAmountException.DEFAULT_MESSAGE,
                     e,
                     "Persisting a Record in Database",
                     "Cannot get the crypto amount from Negotiation");
         } catch (CantGetListClauseException e) {
             throw new CantInsertRecordException(
-                    e.DEFAULT_MESSAGE,
+                    CantGetListClauseException.DEFAULT_MESSAGE,
                     e,
                     "Persisting a Record in Database",
                     "Cannot get the Clauses List from Negotiation");

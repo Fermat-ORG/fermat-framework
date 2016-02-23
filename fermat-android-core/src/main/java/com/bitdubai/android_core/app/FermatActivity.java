@@ -68,7 +68,6 @@ import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionMana
 import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusListener;
-import com.bitdubai.android_core.app.common.version_1.top_settings.TopSettings;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.FermatSystemUtils;
 import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
@@ -553,22 +552,21 @@ public abstract class FermatActivity extends AppCompatActivity
                     btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
                     break;
             }
-        } catch (CantGetSettingsException e) {
+        } catch (CantGetSettingsException | SettingsNotFoundException e) {
             btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            btn_fermat_apps_status.setBackgroundResource(R.drawable.icon_relese);
-            e.printStackTrace();
+           // e.printStackTrace();
         }
         btn_fermat_apps_status.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AppStatusDialog(view.getContext(),androidCoreModule , appStatusListener).show();
+                new AppStatusDialog(view.getContext(), androidCoreModule, appStatusListener).show();
             }
         });
 
-        TopSettings.buildSettingsTop(mRevealView);
 
+
+//        TopSettings topSettings = new TopSettings((ViewGroup) mRevealView.findViewById(R.id.horizontal_container));
+//        topSettings.init();
     }
 
 
@@ -898,9 +896,9 @@ public abstract class FermatActivity extends AppCompatActivity
             } else {
                 setContentView(R.layout.base_layout_without_collapse);
                 if(activityType.equals(ActivityType.ACTIVITY_TYPE_DESKTOP)){
-                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.VISIBLE);
+                    findViewById(R.id.bottom_navigation_container).setVisibility(View.VISIBLE);
                 }else{
-                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.GONE);
+                    findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
                     findViewById(R.id.reveal).setVisibility(View.GONE);
                 }
             }
@@ -1645,7 +1643,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     builder = new Notification.Builder(this)
                             .setTicker(notificationPainter.getNotificationTitle())
                             .setSmallIcon((notificationPainter.getIcon() <= 0) ? R.drawable.fermat_logo_310_x_310 : notificationPainter.getIcon())
-                            .setContentTitle(notificationPainter.getNotificationImageText())
+                            .setContentTitle(notificationPainter.getNotificationTitle())
                             .setContentText(notificationPainter.getNotificationTextBody())
                             .setContentIntent(pi)
                             .setAutoCancel(true)
@@ -1796,7 +1794,9 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void onItemClickListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
-        getWalletRuntimeManager().getLastWallet().clear();
+        if(getWalletRuntimeManager().getLastWallet() != null)
+            getWalletRuntimeManager().getLastWallet().clear();
+
         onNavigationMenuItemTouchListener(data, position);
     }
 

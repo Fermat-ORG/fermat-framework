@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -88,6 +89,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         List<Transaction<CryptoTransaction>> transactionList = new ArrayList<>();
         CryptoTransaction c = new CryptoTransaction("random",
+                BlockchainNetworkType.getDefaultBlockchainNetworkType(),
                 new CryptoAddress("addFrom", CryptoCurrency.BITCOIN),
                 new CryptoAddress("addTo", CryptoCurrency.BITCOIN),
                 CryptoCurrency.BITCOIN, 1, CryptoStatus.IRREVERSIBLE
@@ -668,6 +670,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         databaseTableRecord.setUUIDValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID());
         databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName, transaction.getInformation().getTransactionHash());
+        databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NETWORK_TYPE_COLUMN.columnName, transaction.getInformation().getBlockchainNetworkType().getCode());
         databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName, transaction.getInformation().getAddressFrom().getAddress());
         databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName, transaction.getInformation().getAddressTo().getAddress());
         databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName, String.valueOf(transaction.getInformation().getCryptoCurrency().getCode()));
@@ -694,15 +697,18 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         CryptoStatus cryptoStatus = CryptoStatus.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName));
 
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NETWORK_TYPE_COLUMN.columnName));
 
         CryptoTransaction cryptoTransaction = new CryptoTransaction(
                   databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName),
+                blockchainNetworkType,
                   cryptoAddressFrom,
                   cryptoAddressTo,
                   CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)),
                   databaseTableRecord.getLongValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName),
                   cryptoStatus
                                                                      );
+
         Action action  = Action.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ACTION_COLUMN.columnName));
 
         return new Transaction<>(

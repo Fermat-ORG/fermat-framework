@@ -83,11 +83,7 @@ public class UnholdBankMoneyTransactionManager implements UnholdManager {
         BankTransactionStatus status= null;
         try {
             status = unholdBankMoneyTransactionDao.getUnholdTransaction(transactionId).getBankTransactionStatus();
-            if (status!=null){
-                return true;
-            } else {
-                return false;
-            }
+            return status != null;
         }catch (FermatException e){
             return false;
         }

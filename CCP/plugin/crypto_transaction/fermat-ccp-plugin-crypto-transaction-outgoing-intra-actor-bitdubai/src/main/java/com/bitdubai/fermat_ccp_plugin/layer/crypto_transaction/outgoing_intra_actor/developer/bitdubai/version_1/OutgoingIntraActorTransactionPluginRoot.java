@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -67,6 +68,9 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM        , layer = Layers.NETWORK_SERVICE   , plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
     public OutgoingIntraActorTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -129,7 +133,8 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
                                                                                             this.outgoingIntraActorDao,
                                                                                             this.transactionHandlerFactory,
                                                                                             this.cryptoTransmissionNetworkServiceManager,
-                                                                                            this.eventManager);
+                                                                                            this.eventManager,
+                                                                                            this.broadcaster);
             this.transactionProcessorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;

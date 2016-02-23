@@ -25,6 +25,7 @@ public class DeveloperPluginFilter extends Filter {
     @Override
     protected FilterResults performFiltering(CharSequence constraint) {
         String filterString = constraint.toString().toLowerCase();
+        adapter.setFilterString(filterString);
 
         FilterResults results = new FilterResults();
 

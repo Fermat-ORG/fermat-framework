@@ -117,7 +117,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
             content = androidPluginTextFile.getContent();
 
         } catch (CantHashFileNameException | CantLoadFileException e) {
-            throw new Exception(e);
+            return false;
         }
 
 

@@ -114,7 +114,7 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_asset_user)
+                .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
                 .setTitleTextColor(R.color.dap_community_user_view_color)
@@ -282,7 +282,7 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
     @Override
     public void onItemClickListener(Actor data, int position) {
         appSession.setData(USER_SELECTED, data);
-        changeActivity(Activities.DAP_SUB_APP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

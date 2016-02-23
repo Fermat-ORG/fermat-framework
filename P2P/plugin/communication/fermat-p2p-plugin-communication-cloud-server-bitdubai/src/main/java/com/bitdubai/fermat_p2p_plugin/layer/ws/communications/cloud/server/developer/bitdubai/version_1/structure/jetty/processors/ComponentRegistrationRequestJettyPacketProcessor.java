@@ -428,7 +428,7 @@ public class ComponentRegistrationRequestJettyPacketProcessor extends FermatJett
 
         LOG.info(" Moving "+profilesInStandBy.size()+" references from StandBy cache To Registers Caches");
 
-        Iterator<PlatformComponentProfile> iterable = (Iterator<PlatformComponentProfile>) profilesInStandBy.iterator();
+        Iterator<PlatformComponentProfile> iterable = profilesInStandBy.iterator();
 
         while (iterable.hasNext()){
 

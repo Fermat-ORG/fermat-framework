@@ -142,7 +142,7 @@ public class SettingsFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS, 0, "help").setIcon(R.drawable.dap_asset_redeem_help_icon)
+        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS, 0, "Help").setIcon(R.drawable.dap_asset_redeem_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -167,7 +167,7 @@ public class SettingsFragment extends AbstractFermatFragment {
     private void setUpSettingsNetwork(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setBannerRes(R.drawable.banner_redeem_point)
+                    .setBannerRes(R.drawable.banner_redeem_point_wallet)
                     .setIconRes(R.drawable.redeem_point)
                     .setVIewColor(R.color.dap_redeem_point_view_color)
                     .setTitleTextColor(R.color.dap_redeem_point_view_color)

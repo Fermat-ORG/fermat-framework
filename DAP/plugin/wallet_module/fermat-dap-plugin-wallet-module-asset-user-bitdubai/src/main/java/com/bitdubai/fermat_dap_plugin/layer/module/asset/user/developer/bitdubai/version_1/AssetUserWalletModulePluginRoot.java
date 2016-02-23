@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -324,14 +325,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
 
     @Override
     public void transferAssets(String assetPublicKey, String walletPublicKey, int assetsAmount) throws CantTransferDigitalAssetsException, CantGetTransactionsException, CantCreateFileException, FileNotFoundException, CantLoadWalletException {
-        try {
-            //TODO HARDCODE FOR TESTING.
-            selectedUsersToDeliver = getAllAssetUserActorConnected().subList(0, 1);
-            assetsAmount = 1;
-            assetUserWalletModule.transferAsset(assetPublicKey, walletPublicKey, selectedUsersToDeliver, assetsAmount, selectedNetwork);
-        } catch (CantGetAssetUserActorsException e) {
-            e.printStackTrace();
-        }
+        assetUserWalletModule.transferAsset(assetPublicKey, walletPublicKey, selectedUsersToDeliver, assetsAmount, selectedNetwork);
     }
 
     @Override
@@ -412,5 +406,12 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+
+    @Override
+    public List<AssetNegotiation> getPendingAssetNegotiations(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetNegotiationsException {
+        //todo implement
+        return null;
     }
 }

@@ -34,6 +34,20 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
         }
     }
 
+    @Override
+    public void publish(final BroadcasterType broadcasterType,final String appCode, final String code) {
+        try {
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    context.publish(broadcasterType,appCode,code);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public BroadcasterInterface getContext() {
         return context;
     }

@@ -152,14 +152,14 @@ public class BankMoneyWalletDao {
 
             if (balanceType == BalanceType.AVAILABLE) {
                 availableAmount = bankMoneyTransactionRecord.getAmount();
-                runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
+                runningBookBalance = getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber());
                 runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + (-availableAmount));
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
                 updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount() * (-1), BalanceType.AVAILABLE);
             }
             if (balanceType == BalanceType.BOOK) {
                 bookAmount = bankMoneyTransactionRecord.getAmount();
-                runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
+                runningAvailableBalance = getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber());
                 runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + (-bookAmount));
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
                 updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount() * (-1), BalanceType.BOOK);
@@ -178,14 +178,14 @@ public class BankMoneyWalletDao {
 
             if (balanceType == BalanceType.AVAILABLE) {
                 availableAmount = bankMoneyTransactionRecord.getAmount();
-                runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
+                runningBookBalance = getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber());
                 runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + availableAmount);
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
                 updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount(), BalanceType.AVAILABLE);
             }
             if (balanceType == BalanceType.BOOK) {
                 bookAmount = bankMoneyTransactionRecord.getAmount();
-                runningAvailableBalance = (long) (getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber()));
+                runningAvailableBalance = getAvailableBalance(bankMoneyTransactionRecord.getBankAccountNumber());
                 runningBookBalance = (long) (getBookBalance(bankMoneyTransactionRecord.getBankAccountNumber()) + bookAmount);
                 addBankMoneyTransaction(bankMoneyTransactionRecord, balanceType, runningBookBalance, runningAvailableBalance);
                 updateBalance(bankMoneyTransactionRecord.getBankAccountNumber(), bankMoneyTransactionRecord.getAmount(), BalanceType.BOOK);
@@ -300,7 +300,7 @@ public class BankMoneyWalletDao {
      * @throws CantGetBankMoneyTotalBalanceException
      */
     public double getCurrentBalance(BalanceType balanceType) throws CantGetCurrentBalanceException, CantGetBankMoneyTotalBalanceException {
-        if (balanceType == balanceType.AVAILABLE)
+        if (balanceType == BalanceType.AVAILABLE)
             return Double.valueOf(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME));
         else
             return Double.valueOf(getBankMoneyTotalBalance().getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME));

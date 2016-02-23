@@ -18,8 +18,6 @@ public class CryptoBrokerWalletSettingSpreadImpl implements CryptoBrokerWalletSe
     public CryptoBrokerWalletSettingSpreadImpl() {
     }
 
-    ;
-
     /**
      * {@inheritDoc}
      */

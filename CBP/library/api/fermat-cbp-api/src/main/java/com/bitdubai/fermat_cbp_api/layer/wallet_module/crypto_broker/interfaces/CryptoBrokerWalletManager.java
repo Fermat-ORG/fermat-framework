@@ -518,7 +518,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      *
      * @return A BigDecimal, containing the balance.
      */
-    public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException, CantLoadWalletException;
+    long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException, CantLoadWalletException;
 
     /**
      * This method returns the CustomerBrokerContractSale associated to a negotiationId

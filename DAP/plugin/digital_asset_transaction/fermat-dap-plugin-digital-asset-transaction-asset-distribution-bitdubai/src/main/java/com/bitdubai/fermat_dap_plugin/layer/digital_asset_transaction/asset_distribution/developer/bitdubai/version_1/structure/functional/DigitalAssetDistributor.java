@@ -166,9 +166,9 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                 throw new CantDeliverDigitalAssetException("The DigitalAsset hash is not valid");
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransaction);
-            cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
             String newTx = assetVaultManager.createBitcoinTransaction(digitalAssetMetadata.getLastTransactionHash(), actorAssetUser.getCryptoAddress());
-            digitalAssetMetadata = digitalAssetDistributionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null, cryptoTransaction.getBlockchainNetworkType());
+            digitalAssetMetadata = digitalAssetDistributionVault.updateMetadataTransactionChain(genesisTransaction, newTx, null, digitalAssetMetadata.getNetworkType());
+            cryptoTransaction = foundCryptoTransaction(digitalAssetMetadata);
             System.out.println("ASSET DISTRIBUTION set debit in asset issuer wallet:" + genesisTransaction);
             digitalAssetDistributionVault.updateWalletBalance(digitalAssetMetadata, cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, actorAssetUser.getActorPublicKey(), Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
             System.out.println("ASSET DISTRIBUTION Begins the deliver to an remote actor");

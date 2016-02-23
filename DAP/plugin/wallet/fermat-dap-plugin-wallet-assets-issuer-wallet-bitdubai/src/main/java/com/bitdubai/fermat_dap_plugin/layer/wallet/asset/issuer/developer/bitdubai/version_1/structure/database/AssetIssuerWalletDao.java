@@ -73,12 +73,6 @@ public class AssetIssuerWalletDao {
 
     private Database database;
 
-    public AssetIssuerWalletDao(Database database, PluginFileSystem pluginFileSystem, UUID pluginId) {
-        this.database = database;
-        this.pluginFileSystem = pluginFileSystem;
-        this.plugin = pluginId;
-    }
-
     public AssetIssuerWalletDao(Database database, PluginFileSystem pluginFileSystem, UUID pluginId, ActorAssetUserManager actorAssetUserManager, ActorAssetIssuerManager actorAssetIssuerManager, ActorAssetRedeemPointManager actorAssetRedeemPointManager) {
         this.database = database;
         this.pluginFileSystem = pluginFileSystem;
@@ -944,6 +938,11 @@ public class AssetIssuerWalletDao {
             @Override
             public String getName() {
                 return Validate.DEFAULT_STRING + " " + type.getCode();
+            }
+
+            @Override
+            public Actors getType() {
+                return Actors.DAP_ASSET_ISSUER;
             }
 
             @Override

@@ -140,7 +140,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_REDEEMED, 0, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_REDEEMED, 0, "Help").setIcon(R.drawable.dap_asset_issuer_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 

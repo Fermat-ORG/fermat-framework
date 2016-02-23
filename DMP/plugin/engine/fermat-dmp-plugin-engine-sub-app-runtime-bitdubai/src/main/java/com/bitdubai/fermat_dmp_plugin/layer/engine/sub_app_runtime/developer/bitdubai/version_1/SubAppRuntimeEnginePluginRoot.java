@@ -1442,7 +1442,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Profile");
+        runtimeTitleBar.setLabel("Issuer Profile");
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -1545,7 +1545,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Profile");
+        runtimeTitleBar.setLabel("User Profile");
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -1561,6 +1561,37 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+
+        dapAssetUserCommunity.addActivity(runtimeActivity);
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE);
+        runtimeActivity.setActivityType(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE.getCode());
+        runtimeActivity.setBackActivity(Activities.DAP_ASSET_USER_COMMUNITY_CONNECTIONS_LIST);
+        runtimeActivity.setBackPublicKey(communityUserPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("User Profile");
+        runtimeTitleBar.setIconName("Back");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.DAP_ASSET_USER_COMMUNITY_CONNECTION_LIST_OTHER_PROFILE_FRAGMENT.getKey());
 
         dapAssetUserCommunity.addActivity(runtimeActivity);
 
@@ -1945,7 +1976,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Profile");
+        runtimeTitleBar.setLabel("Redeem Point Profile");
         runtimeTitleBar.setIconName("Back");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);

@@ -37,6 +37,7 @@ public class BitcoinWatchOnlyCryptoVaultDatabaseConstants {
     static final String KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME = "depth";
     static final String KEY_MAINTENANCE_DETAIL_PUBLIC_KEY_COLUMN_NAME = "public_key";
     static final String KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME = "address";
+    static final String KEY_MAINTENANCE_DETAIL_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME = "network_type";
 
     static final String KEY_MAINTENANCE_DETAIL_FIRST_KEY_COLUMN = "account_id";
 

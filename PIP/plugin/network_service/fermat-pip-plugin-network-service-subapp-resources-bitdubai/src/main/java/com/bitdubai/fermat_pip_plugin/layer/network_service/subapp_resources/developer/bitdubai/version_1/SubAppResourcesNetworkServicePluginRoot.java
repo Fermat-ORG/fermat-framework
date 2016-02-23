@@ -133,7 +133,6 @@ public class SubAppResourcesNetworkServicePluginRoot extends AbstractPlugin impl
      * Wallet installation progress
      */
     private InstalationProgress instalationProgress;
-    ;
 
     /**
      * Github connection until the main repository be open source
