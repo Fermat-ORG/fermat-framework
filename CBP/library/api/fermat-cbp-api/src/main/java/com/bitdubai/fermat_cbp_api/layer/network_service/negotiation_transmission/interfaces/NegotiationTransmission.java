@@ -82,6 +82,8 @@ public interface NegotiationTransmission {
      * @return an NegotiationType the negotiation type of negotiation
      */
     NegotiationType getNegotiationType();
+
+    void setNegotiationType(NegotiationType negotiationType);
     /**
      * The method <code>getNegotiationXML</code> returns the xml of the negotiation relationship with negotiation transmission
      * @return an String the xml of negotiation
