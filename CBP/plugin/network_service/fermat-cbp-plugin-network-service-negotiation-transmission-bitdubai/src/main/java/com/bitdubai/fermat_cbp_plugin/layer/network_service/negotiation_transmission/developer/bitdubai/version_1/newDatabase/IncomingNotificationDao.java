@@ -23,11 +23,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.enums.ActorProtocolState;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.interfaces.NegotiationTransmission;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.exceptions.CantRegisterSendNegotiationTransmissionException;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.structure.NegotiationTransmissionImpl;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.exceptions.CantConfirmNotificationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -278,6 +280,11 @@ public class IncomingNotificationDao {
             int sentCount = 0;
             UUID responseToNotificationId = record.getUUIDValue(com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.newDatabase.NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
 
+            ActorProtocolState actorProtocolState = null;
+            if (protocolState!=null){
+                actorProtocolState = ActorProtocolState.getByCode(protocolState);
+            }
+
             return new NegotiationTransmissionImpl(
                     transmissionId,
                     transactionId,
@@ -294,7 +301,7 @@ public class IncomingNotificationDao {
                     timestamp,
                     Boolean.valueOf(pendingFlag),
                     Boolean.valueOf(flagRead),
-                    ActorProtocolState.getByCode(protocolState),
+                    actorProtocolState,
                     sentCount,
                     responseToNotificationId
             );
@@ -302,6 +309,41 @@ public class IncomingNotificationDao {
         catch(Exception e)
         {
             throw  new InvalidParameterException();
+        }
+    }
+
+    public List<NegotiationTransmission> findAllByTransmissionState(NegotiationTransmissionState negotiationTransmissionState) throws CantReadRecordDataBaseException {
+
+        try {
+
+            if (negotiationTransmissionState == null)
+                throw new IllegalArgumentException("The filters are required, can not be null or empty");
+
+            List<NegotiationTransmission> list = new ArrayList<>();
+
+            List<DatabaseTableRecord> records;
+            DatabaseTable table =  this.database.getTable(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TABLE_NAME);
+            if (table == null)
+                throw new CantReadRecordDataBaseException("Cant check if negotiation_transmission_network_service exists", "Network Service - Negotiation Transmission", "");
+
+            table.addStringFilter(NegotiationTransmissionNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TRANSMISSION_STATE_COLUMN_NAME, negotiationTransmissionState.getCode(), DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            records = table.getRecords();
+            if(records.isEmpty())
+                return list;
+
+            for (DatabaseTableRecord record : records) {
+                list.add(buildNegotiationTransmission(record));
+            }
+
+            return list;
+
+        } catch (CantLoadTableToMemoryException e) {
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Table Name: " + com.bitdubai.fermat_cbp_plugin.layer.network_service.negotiation_transmission.developer.bitdubai.version_1.database.NegotiationTransmissionNetworkServiceDatabaseConstants.NEGOTIATION_TRANSMISSION_NETWORK_SERVICE_TABLE_NAME);
+            throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, contextBuffer.toString(), "The data no exist");
+        } catch (InvalidParameterException e) {
+            throw new CantReadRecordDataBaseException (CantRegisterSendNegotiationTransmissionException.DEFAULT_MESSAGE, e, "", "Invalid parameter");
         }
     }
 }
