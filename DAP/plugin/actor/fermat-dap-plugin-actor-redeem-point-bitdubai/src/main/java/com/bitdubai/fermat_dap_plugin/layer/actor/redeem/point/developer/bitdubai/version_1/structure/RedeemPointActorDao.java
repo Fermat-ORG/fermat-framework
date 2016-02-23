@@ -169,7 +169,7 @@ public class RedeemPointActorDao implements Serializable {
              * change status
              */
             if (redeemPointExists(redeemPoint.getActorPublicKey())) {
-                updateRedeemPointRegisteredDAPConnectionState(redeemPoint.getActorPublicKey(), DAPConnectionState.REGISTERED_ONLINE);
+                updateRedeemPointRegisteredDAPConnectionState(redeemPoint.getActorPublicKey(), null);
             } else {
 
                 DatabaseTable table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
@@ -373,6 +373,21 @@ public class RedeemPointActorDao implements Serializable {
             for (DatabaseTableRecord record : table.getRecords()) {
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
+
+                if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
+
+                    if (Objects.equals(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME), DAPConnectionState.REGISTERED_OFFLINE.getCode())) {
+                        connectionState = DAPConnectionState.REGISTERED_ONLINE;
+                    }
+                } else {
+                    if (Objects.equals(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME), DAPConnectionState.CONNECTED_OFFLINE.getCode())) {
+                        connectionState = DAPConnectionState.CONNECTED_ONLINE;
+                    }
+                }
+
+                if (connectionState != null)
+                    record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
+
                 table.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException e) {

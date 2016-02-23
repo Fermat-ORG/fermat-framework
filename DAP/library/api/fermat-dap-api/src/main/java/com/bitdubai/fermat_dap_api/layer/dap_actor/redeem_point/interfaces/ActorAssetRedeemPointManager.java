@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
@@ -92,5 +93,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
     void sendMessage(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetUserException;
 
     void disconnectToActorAssetRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws RedeemPointNotFoundException, CantUpdateRedeemPointException;
+
+    void updateRedeemPointDAPConnectionStateActorNetworService(String actorPublicKey, DAPConnectionState state) throws CantUpdateRedeemPointException, RedeemPointNotFoundException;
 
 }
