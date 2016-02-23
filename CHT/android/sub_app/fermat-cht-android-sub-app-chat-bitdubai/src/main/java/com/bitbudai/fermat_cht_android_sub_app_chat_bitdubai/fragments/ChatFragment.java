@@ -94,6 +94,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             errorManager = appSession.getErrorManager();
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+
             whattodo();
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
             {

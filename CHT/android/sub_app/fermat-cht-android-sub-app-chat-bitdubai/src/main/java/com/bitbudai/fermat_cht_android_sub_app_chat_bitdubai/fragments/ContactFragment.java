@@ -523,27 +523,27 @@ public class ContactFragment extends AbstractFermatFragment {
                     "Yes",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        try {
-                            Contact con = chatSession.getSelectedContact();
-                            chatManager.deleteContact(con);
-                            List <Contact> cont=  chatManager.getContacts();
-                            if (cont.size() > 0) {
-                                for (int i=0;i<cont.size();i++){
-                                    contactname.add(cont.get(i).getAlias());
-                                    contactid.add(cont.get(i).getContactId());
-                                    contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                            dialog.cancel();
+                            try {
+                                Contact con = chatSession.getSelectedContact();
+                                chatManager.deleteContact(con);
+                                List <Contact> cont=  chatManager.getContacts();
+                                if (cont.size() > 0) {
+                                    for (int i=0;i<cont.size();i++){
+                                        contactname.add(cont.get(i).getAlias());
+                                        contactid.add(cont.get(i).getContactId());
+                                        contacticon.add(R.drawable.ic_contact_picture_holo_light);
+                                    }
+                                    final ContactListAdapter adaptador =
+                                            new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
+                                    adaptador.refreshEvents(contactname, contacticon, contactid);
                                 }
-                                final ContactListAdapter adaptador =
-                                        new ContactListAdapter(getActivity(), contactname, contacticon, contactid,errorManager);
-                                adaptador.refreshEvents(contactname, contacticon, contactid);
+                            }catch(CantGetContactException e) {
+                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                            }catch (Exception e){
+                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                             }
-                        }catch(CantGetContactException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }catch (Exception e){
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
-                        changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
+                            changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                         }
                     });
 

@@ -239,72 +239,72 @@ public class ChatAdapterView extends LinearLayout {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            String messageText = messageET.getText().toString();
-            if (TextUtils.isEmpty(messageText)) {
-                return;
-            }
-
-            try {
-                ChatImpl chat = new ChatImpl();
-                MessageImpl message = new MessageImpl();
-                Long dv = System.currentTimeMillis();
-
-                if (chatwascreate) {
-                    chat=(ChatImpl)chatManager.getChatByChatId(chatid);
-                    chatManager.saveChat(chat);
-
-                    message.setChatId(chatid);
-                    message.setMessageId(UUID.randomUUID());
-                    message.setMessage(messageText);
-                    message.setMessageDate(new Timestamp(dv));
-                    message.setStatus(MessageStatus.CREATED);
-                    message.setType(TypeMessage.OUTGOING);
-                    message.setContactId(contactid);
-                    chatManager.saveMessage(message);
-                } else {
-                    UUID newchatid = UUID.randomUUID();
-                    chat.setChatId(newchatid);
-                    chat.setObjectId(UUID.randomUUID());
-                    chat.setStatus(ChatStatus.VISSIBLE);
-                    chat.setChatName("DeathNote");
-                    chat.setDate(new Timestamp(dv));
-                    chat.setLastMessageDate(new Timestamp(dv));
-                    chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                    chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                    chat.setRemoteActorPublicKey(remotepk);
-                    chat.setRemoteActorType(remotepct);
-                    chatManager.saveChat(chat);
-
-                    message.setChatId(newchatid);
-                    message.setMessageId(UUID.randomUUID());
-                    message.setMessage(messageText);
-                    message.setMessageDate(new Timestamp(dv));
-                    message.setStatus(MessageStatus.CREATED);
-                    message.setType(TypeMessage.OUTGOING);
-                    message.setContactId(contactid);
-                    chatManager.saveMessage(message);
+                String messageText = messageET.getText().toString();
+                if (TextUtils.isEmpty(messageText)) {
+                    return;
                 }
 
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage.setId(UUID.randomUUID());//dummy
-                chatMessage.setMessage(messageText);
-                chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-                chatMessage.setMe(true);
-                messageET.setText("");
-                adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
-                messagesContainer.setAdapter(adapter);
-                displayMessage(chatMessage);
+                try {
+                    ChatImpl chat = new ChatImpl();
+                    MessageImpl message = new MessageImpl();
+                    Long dv = System.currentTimeMillis();
+
+                    if (chatwascreate) {
+                        chat=(ChatImpl)chatManager.getChatByChatId(chatid);
+                        chatManager.saveChat(chat);
+
+                        message.setChatId(chatid);
+                        message.setMessageId(UUID.randomUUID());
+                        message.setMessage(messageText);
+                        message.setMessageDate(new Timestamp(dv));
+                        message.setStatus(MessageStatus.CREATED);
+                        message.setType(TypeMessage.OUTGOING);
+                        message.setContactId(contactid);
+                        chatManager.saveMessage(message);
+                    } else {
+                        UUID newchatid = UUID.randomUUID();
+                        chat.setChatId(newchatid);
+                        chat.setObjectId(UUID.randomUUID());
+                        chat.setStatus(ChatStatus.VISSIBLE);
+                        chat.setChatName("DeathNote");
+                        chat.setDate(new Timestamp(dv));
+                        chat.setLastMessageDate(new Timestamp(dv));
+                        chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
+                        chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                        chat.setRemoteActorPublicKey(remotepk);
+                        chat.setRemoteActorType(remotepct);
+                        chatManager.saveChat(chat);
+
+                        message.setChatId(newchatid);
+                        message.setMessageId(UUID.randomUUID());
+                        message.setMessage(messageText);
+                        message.setMessageDate(new Timestamp(dv));
+                        message.setStatus(MessageStatus.CREATED);
+                        message.setType(TypeMessage.OUTGOING);
+                        message.setContactId(contactid);
+                        chatManager.saveMessage(message);
+                    }
+
+                    ChatMessage chatMessage = new ChatMessage();
+                    chatMessage.setId(UUID.randomUUID());//dummy
+                    chatMessage.setMessage(messageText);
+                    chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                    chatMessage.setMe(true);
+                    messageET.setText("");
+                    adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+                    messagesContainer.setAdapter(adapter);
+                    displayMessage(chatMessage);
 
 
-            } catch (CantSaveMessageException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            } catch (CantSaveChatException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            } catch (CantGetNetworkServicePublicKeyException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            } catch (Exception e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
+                } catch (CantSaveMessageException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (CantSaveChatException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (CantGetNetworkServicePublicKeyException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
             }
         });
 
@@ -314,13 +314,13 @@ public class ChatAdapterView extends LinearLayout {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
-                try {
-                    findmessage();
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-                mSwipeRefreshLayout.setRefreshing(false);
+                    Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
+                    try {
+                        findmessage();
+                    } catch (Exception e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }, 2500);
             }
