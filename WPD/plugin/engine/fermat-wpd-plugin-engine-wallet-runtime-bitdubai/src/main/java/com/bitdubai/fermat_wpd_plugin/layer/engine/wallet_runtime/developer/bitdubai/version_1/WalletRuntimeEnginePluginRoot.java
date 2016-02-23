@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
@@ -1181,7 +1182,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         Header runtimeHeader;
         Fragment runtimeFragment;
 
-        final String publicKey = "asset_issuer";
+        final String publicKey = DAPPublicKeys.DAP_WALLET_ISSUER.getCode();
 
         final String statusBarColor = "#5C6E81";
         final String titleBarLabelColor = "#ffffff";
@@ -1593,7 +1594,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 
-        final String publicKey = "asset_user";
+        final String publicKey = DAPPublicKeys.DAP_WALLET_USER.getCode();
 
         final String statusBarColor = "#381a5e";
         final String titleBarLabelColor = "#ffffff";
@@ -1964,7 +1965,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
 
-        final String publicKey = "redeem_point";
+        final String publicKey = DAPPublicKeys.DAP_WALLET_REDEEM.getCode();
 
         final String statusBarColor = "#005580";
         final String titleBarLabelColor = "#ffffff";
