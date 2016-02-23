@@ -1,20 +1,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+
     <LinearLayout
         android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/txtInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="30sp"
-            android:layout_gravity="right"
-            android:textColor="@color/black"
-            android:textSize="12sp" />
 
         <LinearLayout
             android:id="@+id/contentWithBackground"
@@ -33,7 +26,25 @@
                 android:maxWidth="240dp"
                 android:textColor="@color/black" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/txtInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="10sp"
+                android:textColor="@color/black"
+                android:textSize="5sp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right" />
 
+            <ImageView
+                android:id="@+id/tick_status_image"
+                android:layout_width="wrap_content"
+                android:layout_height="10sp"
+                android:layout_toLeftOf="@+id/txtInfo"
+                android:layout_gravity="left"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true" />
+
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
