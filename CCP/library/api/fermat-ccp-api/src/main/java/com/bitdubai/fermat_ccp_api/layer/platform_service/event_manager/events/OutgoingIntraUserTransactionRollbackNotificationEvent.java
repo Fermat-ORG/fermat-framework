@@ -1,4 +1,6 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
+package com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events;
+
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType;
 
 import java.util.UUID;
 
@@ -10,13 +12,13 @@ public class OutgoingIntraUserTransactionRollbackNotificationEvent extends Abstr
 
     private UUID requestId;
 
-    public OutgoingIntraUserTransactionRollbackNotificationEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType, UUID requestId) {
+    public OutgoingIntraUserTransactionRollbackNotificationEvent(EventType eventType, UUID requestId) {
         super(eventType);
         this.requestId = requestId;
 
     }
 
-    public OutgoingIntraUserTransactionRollbackNotificationEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType) {
+    public OutgoingIntraUserTransactionRollbackNotificationEvent(EventType eventType) {
         super(eventType);
     }
 

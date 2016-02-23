@@ -1,8 +1,9 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events;
+package com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType;
 
 /**
  * Created by Matias Furszyfer on 2015.12.22..
@@ -17,7 +18,7 @@ public class OutgoingIntraRollbackNotificationEvent extends AbstractFermatEvent 
         private String intraUserIdentityPublicKey;
 
 
-        public OutgoingIntraRollbackNotificationEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType, String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoStatus cryptoCurrency, String actorId, Actors actorType) {
+        public OutgoingIntraRollbackNotificationEvent(EventType eventType, String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoStatus cryptoCurrency, String actorId, Actors actorType) {
             super(eventType);
             this.walletPublicKey = walletPublicKey;
             this.amount = amount;
@@ -27,7 +28,7 @@ public class OutgoingIntraRollbackNotificationEvent extends AbstractFermatEvent 
             this.intraUserIdentityPublicKey = intraUserIdentityPublicKey;
         }
 
-        public OutgoingIntraRollbackNotificationEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType eventType) {
+        public OutgoingIntraRollbackNotificationEvent(EventType eventType) {
             super(eventType);
         }
 
