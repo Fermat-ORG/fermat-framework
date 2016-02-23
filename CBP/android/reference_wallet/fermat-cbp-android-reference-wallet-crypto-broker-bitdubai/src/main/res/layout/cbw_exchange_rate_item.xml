@@ -21,7 +21,6 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="bottom|start"
-            android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:scaleType="fitXY"
             android:src="@drawable/bg_detail_number_01"
@@ -52,44 +51,43 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp">
 
-                <TextView
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/cbw_exchange_rate_reference_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
                     android:text="@string/suggested_exchange_rate"
-                    android:textColor="@color/description_text_status_confirm"/>
+                    android:textColor="@color/description_text_status_confirm"
+                    android:textSize="14sp"/>
 
-                <TextView
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/cbw_exchange_rate_reference_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_toEndOf="@+id/cbw_exchange_rate_reference_text"
-                    android:layout_toRightOf="@+id/cbw_exchange_rate_reference_text"
+                    android:layout_below="@+id/cbw_exchange_rate_reference_text"
+                    android:layout_marginBottom="8dp"
                     android:textColor="@color/text_value_status_confirm"
+                    android:textSize="16sp"
                     tools:text="1 BTC / 210 USD"/>
 
-                <TextView
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/cbw_market_exchange_rate_reference_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/cbw_exchange_rate_reference_text"
+                    android:layout_below="@+id/cbw_exchange_rate_reference_value"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
-                    android:text="@string/market_exchange_rate"
-                    android:textColor="@color/description_text_status_confirm"/>
+                    android:text="@string/market_exchange_rate_text"
+                    android:textColor="@color/description_text_status_confirm"
+                    android:textSize="14sp"/>
 
-                <TextView
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/cbw_market_exchange_rate_reference_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/cbw_market_exchange_rate_reference_text"
-                    android:layout_toEndOf="@+id/cbw_market_exchange_rate_reference_text"
-                    android:layout_toRightOf="@+id/cbw_market_exchange_rate_reference_text"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/cbw_market_exchange_rate_reference_text"
                     android:textColor="@color/text_value_status_confirm"
+                    android:textSize="16sp"
                     tools:text="1 BTC / 210 USD"/>
             </RelativeLayout>
 
@@ -103,53 +101,53 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp">
 
-                <TextView
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/cbw_your_exchange_rate_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
                     android:text="@string/yours"
                     android:textColor="@color/description_text_status_confirm"/>
 
-                <TextView
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/cbw_your_exchange_rate_value_left_side"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/cbw_your_exchange_rate_text"
                     android:layout_centerVertical="true"
                     android:layout_toEndOf="@+id/cbw_your_exchange_rate_text"
-                    android:layout_toRightOf="@+id/cbw_your_exchange_rate_text"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="1 USD / "/>
 
-                <EditText
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/cbw_your_exchange_rate_value"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_toEndOf="@+id/cbw_your_exchange_rate_value_left_side"
-                    android:layout_toRightOf="@+id/cbw_your_exchange_rate_value_left_side"
+                    android:background="@color/option_button_background"
                     android:inputType="numberDecimal"
-                    android:minEms="3"
-                    android:textColor="@color/text_value_status_confirm"
+                    android:maxWidth="150dp"
+                    android:minWidth="50dp"
+                    android:paddingEnd="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingStart="8dp"
+                    android:textAllCaps="false"
+                    android:textColor="#fff"
                     android:textSize="14sp"
-                    tools:text="212.05"/>
+                    tools:text="556.4"/>
 
-                <TextView
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/cbw_your_exchange_rate_value_right_side"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_toEndOf="@+id/cbw_your_exchange_rate_value"
-                    android:layout_toRightOf="@+id/cbw_your_exchange_rate_value"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="BTC"/>
             </RelativeLayout>

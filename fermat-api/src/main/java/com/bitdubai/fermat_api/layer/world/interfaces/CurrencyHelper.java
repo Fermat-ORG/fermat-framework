@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public class CurrencyHelper {
 
     public static Currency getCurrency(final CurrencyTypes type,
-                                       final String        code) throws InvalidParameterException {
+                                       final String code) throws InvalidParameterException {
 
         Currency currency;
 
@@ -30,7 +30,7 @@ public class CurrencyHelper {
 
             default:
                 throw new InvalidParameterException(
-                        "Currency Type: "+type+" - Code: "+code,
+                        "Currency Type: " + type + " - Code: " + code,
                         "We couldn't find a currency associated with the given information."
                 );
         }
@@ -39,7 +39,7 @@ public class CurrencyHelper {
     }
 
     public static Currency getCurrency(final String typeCode,
-                                       final String code    ) throws InvalidParameterException {
+                                       final String code) throws InvalidParameterException {
 
         CurrencyTypes type = CurrencyTypes.getByCode(typeCode);
 
@@ -57,11 +57,25 @@ public class CurrencyHelper {
 
             default:
                 throw new InvalidParameterException(
-                        "Currency Type: "+type+" - Code: "+code,
+                        "Currency Type: " + type + " - Code: " + code,
                         "We couldn't find a currency associated with the given information."
                 );
         }
 
         return currency;
+    }
+
+    public static Currency getCurrency(final String code) throws InvalidParameterException {
+
+        if (FiatCurrency.codeExists(code)) {
+            return FiatCurrency.getByCode(code);
+        }
+
+        if (CryptoCurrency.codeExists(code)) {
+            return CryptoCurrency.getByCode(code);
+        }
+
+        throw new InvalidParameterException("Currency Code: " + code,
+                "We couldn't find a currency associated with the given information.");
     }
 }

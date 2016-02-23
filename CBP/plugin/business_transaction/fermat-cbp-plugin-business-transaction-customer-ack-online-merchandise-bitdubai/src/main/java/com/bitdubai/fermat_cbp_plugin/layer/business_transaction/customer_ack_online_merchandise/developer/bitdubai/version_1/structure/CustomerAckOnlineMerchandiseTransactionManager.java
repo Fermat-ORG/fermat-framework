@@ -46,6 +46,14 @@ public class CustomerAckOnlineMerchandiseTransactionManager implements CustomerA
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     "Cannot check a null contractHash/Id");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected Result",
+                    "Check the cause");
         }
 
     }

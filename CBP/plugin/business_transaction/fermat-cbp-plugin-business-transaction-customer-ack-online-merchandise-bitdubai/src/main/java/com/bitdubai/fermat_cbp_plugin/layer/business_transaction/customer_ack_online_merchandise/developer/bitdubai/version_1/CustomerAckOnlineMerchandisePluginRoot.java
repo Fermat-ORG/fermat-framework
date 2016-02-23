@@ -37,7 +37,6 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.Brok
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractPurchaseManagerMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleManagerMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.PurchaseNegotiationManagerMock;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
@@ -227,7 +226,8 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao=
                     new CustomerAckOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
 
             /**
              * Init event recorder service.
@@ -235,7 +235,8 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             CustomerAckOnlineMerchandiseRecorderService customerAckOnlineMerchandiseRecorderService=
                     new CustomerAckOnlineMerchandiseRecorderService(
                             customerAckOnlineMerchandiseBusinessTransactionDao,
-                            eventManager);
+                            eventManager,
+                            errorManager);
 
             customerAckOnlineMerchandiseRecorderService.start();
 
@@ -270,41 +271,79 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             //raiseNewContractEventTest();
             //testAck();
         } catch (CantInitializeCustomerAckOnlineMerchandiseBusinessTransactionDatabaseException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Online Merchandise Plugin",
                     "Cannot initialize the plugin database factory");
         } catch (CantInitializeDatabaseException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Online Merchandise Plugin",
                     "Cannot initialize the database plugin");
         } catch (CantStartAgentException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Online Merchandise Plugin",
                     "Cannot initialize the plugin monitor agent");
         } catch (CantStartServiceException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Ack Online Merchandise Plugin",
                     "Cannot initialize the plugin recorder service");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(FermatException.wrapException(exception),
+                    "Starting Customer Ack Online Merchandise Plugin",
+                    "Unexpected error");
         }
     }
 
     @Override
     public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
+
+        try{
+            this.serviceStatus = ServiceStatus.PAUSED;
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
     }
 
     @Override
     public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
+
+        try{
+            this.serviceStatus = ServiceStatus.STARTED;
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
     }
 
     @Override
     public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
+        try{
+            this.serviceStatus = ServiceStatus.STOPPED;
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
     }
 
     @Override

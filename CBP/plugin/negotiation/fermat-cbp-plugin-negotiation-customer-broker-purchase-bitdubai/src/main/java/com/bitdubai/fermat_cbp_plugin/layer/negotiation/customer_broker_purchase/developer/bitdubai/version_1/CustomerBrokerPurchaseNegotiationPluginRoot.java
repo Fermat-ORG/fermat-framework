@@ -71,7 +71,11 @@ public class CustomerBrokerPurchaseNegotiationPluginRoot extends AbstractPlugin 
 
         @Override
         public FermatManager getManager() {
-            return new CustomerBrokerPurchaseManager(this.customerBrokerPurchaseNegotiationDao);
+            return new CustomerBrokerPurchaseManager(
+                this.customerBrokerPurchaseNegotiationDao,
+                this.errorManager,
+                this.getPluginVersionReference()
+            );
         }
 
     /*

@@ -40,10 +40,10 @@ public class xmlTests {
         String publicKey;
 
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
-        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
-        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+       runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+       runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         publicKey="reference_wallet";
-        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+       runtimeWalletNavigationStructure.setPublicKey(publicKey);
 
         //listWallets.put(publicKey, runtimeWalletNavigationStructure);
 
@@ -304,8 +304,8 @@ public class xmlTests {
          */
 
 
-        String xml =XMLParser.parseObject(runtimeWalletNavigationStructure);
-        System.out.println(xml);
+       String xml =XMLParser.parseObject(runtimeWalletNavigationStructure);
+      System.out.println(xml);
     }
 
 }

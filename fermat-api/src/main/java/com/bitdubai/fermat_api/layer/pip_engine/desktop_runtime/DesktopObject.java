@@ -3,13 +3,14 @@ package com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 
 import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.09.16..
  */
-public interface DesktopObject{
+public interface DesktopObject extends FermatStructure{
 
 
     /**
@@ -17,7 +18,7 @@ public interface DesktopObject{
      *
      * @return
      */
-    String getType();
+    public String getType();
 
     /**
      *  screens for desktop
@@ -25,7 +26,7 @@ public interface DesktopObject{
      * @return
      */
 
-    Map<Activities, Activity> getActivities();
+    public Map<Activities, Activity> getActivities();
 
     /**
      *  get specific screen
@@ -34,7 +35,7 @@ public interface DesktopObject{
      * @return
      */
 
-    Activity getActivity(Activities activities);
+    public Activity getActivity(Activities activities);
 
     /**
      * get last used screen
@@ -42,7 +43,7 @@ public interface DesktopObject{
      * @return
      */
 
-    Activity getLastActivity();
+    public Activity getLastActivity();
 
 
     /**
@@ -51,5 +52,6 @@ public interface DesktopObject{
      * @return
      */
 
-    Map<String,LanguagePackage> getLanguagePackages();
+    public Map<String,LanguagePackage> getLanguagePackages();
+
 }

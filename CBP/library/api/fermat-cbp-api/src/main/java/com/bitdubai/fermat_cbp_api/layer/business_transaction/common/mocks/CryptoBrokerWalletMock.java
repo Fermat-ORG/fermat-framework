@@ -53,19 +53,13 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
     }
 
     /**
-     * This method load the list CryptoBrokerStockTransaction
+     * Through this method you can mark a transaction as seen by the matching engine plug-in.
      *
-     * @param transactionId
-     * @return void
-     * @throws CantGetTransactionCryptoBrokerWalletMatchingException
+     * @param transactionIds a list with all the ids of the transaction that we want to mark as seen.
+     * @throws CantMarkAsSeenException if something goes wrong.
      */
     @Override
-    public void markAsSeen(UUID transactionId) throws CantMarkAsSeenException {
-
-    }
-
-    @Override
-    public void markAsSeen(List<UUID> transactionId) throws CantMarkAsSeenException {
+    public void markAsSeen(List<UUID> transactionIds) throws CantMarkAsSeenException {
 
     }
 
@@ -79,4 +73,6 @@ public class CryptoBrokerWalletMock implements CryptoBrokerWallet {
     public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyInputs() throws CantGetTransactionCryptoBrokerWalletMatchingException {
         return null;
     }
+
+
 }

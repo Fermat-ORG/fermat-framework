@@ -4,8 +4,9 @@ package com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantCreateCryptoCustomerIdentityException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantGetCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantHideIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantListCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.exceptions.IdentityNotFoundException;
 
@@ -35,19 +36,29 @@ public interface CryptoCustomerIdentityManager extends FermatManager {
     List<CryptoCustomerIdentity> listAllCryptoCustomerFromCurrentDeviceUser() throws CantListCryptoCustomerIdentityException;
 
     /**
-     * The method <code>listAllCryptoCustomerFromCurrentDeviceUser</code> is used to list all the Customer Identity
-     *
-     * @throws CantListCryptoCustomerIdentityException if something goes wrong.
-     */
-    CryptoCustomerIdentity getCryptoCustomerIdentity(String publickey) throws CantListCryptoCustomerIdentityException;
-
-    /**
      *
      * @param alias
      * @param publicKey
      * @param imageProfile
      */
     void updateCryptoCustomerIdentity(String alias, String publicKey, byte[] imageProfile) throws CantUpdateCustomerIdentityException;
+
+    /**
+     * The method <code>getCryptoCustomerIdentity</code> is used to get an specific customer Identity
+     *
+     * @param publicKey of the crypto customer identity.
+     *
+     * @return an instance of the crypto customer identity requested.
+     *
+     * @throws CantGetCryptoCustomerIdentityException   if something goes wrong.
+     * @throws IdentityNotFoundException                if we can't find an identity with the given public key.
+     */
+    CryptoCustomerIdentity getCryptoCustomerIdentity(
+
+            String publicKey
+
+    ) throws CantGetCryptoCustomerIdentityException,
+             IdentityNotFoundException             ;
 
     /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity
@@ -57,7 +68,12 @@ public interface CryptoCustomerIdentityManager extends FermatManager {
      * @throws CantPublishIdentityException if something goes wrong.
      * @throws IdentityNotFoundException    if we can't find an identity with the given public key.
      */
-    void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException;
+    void publishIdentity(
+
+            String publicKey
+
+    ) throws CantPublishIdentityException,
+             IdentityNotFoundException   ;
 
     /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity
@@ -67,6 +83,11 @@ public interface CryptoCustomerIdentityManager extends FermatManager {
      * @throws CantHideIdentityException if something goes wrong.
      * @throws IdentityNotFoundException    if we can't find an identity with the given public key.
      */
-    void hideIdentity(String publicKey) throws CantHideIdentityException, IdentityNotFoundException;
+    void hideIdentity(
+
+            String publicKey
+
+    ) throws CantHideIdentityException,
+             IdentityNotFoundException;
 
 }

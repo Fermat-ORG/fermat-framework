@@ -147,6 +147,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          * For each network that is active to be monitored I will...
          */
         for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes) {
+            System.out.println("***CryptoNetwork*** Monitor Request from " + cryptoVault.getCode() + " vault on " + blockchainNetworkType.getCode() + " for " + keyList.size() + " keys...");
 
             /**
              * load (if any) existing wallet.
@@ -209,6 +210,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * and the wallet was reseted because new keys were added
                  */
                 if (isWalletReset) {
+                    System.out.println("***CryptoNetwork*** new keys added from " + cryptoVault.getCode() + " vault in " + blockchainNetworkType.getCode() + " network...");
+
                     BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = runningAgents.get(blockchainNetworkType);
                     bitcoinCryptoNetworkMonitor.stop();
                     runningAgents.remove(blockchainNetworkType);
@@ -218,7 +221,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                      * once the agent is stopped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager);
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager, wallet.getContext());
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     bitcoinCryptoNetworkMonitor.start();
@@ -228,8 +231,10 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager, wallet.getContext());
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
+
+                System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");
 
                 bitcoinCryptoNetworkMonitor.start();
             }

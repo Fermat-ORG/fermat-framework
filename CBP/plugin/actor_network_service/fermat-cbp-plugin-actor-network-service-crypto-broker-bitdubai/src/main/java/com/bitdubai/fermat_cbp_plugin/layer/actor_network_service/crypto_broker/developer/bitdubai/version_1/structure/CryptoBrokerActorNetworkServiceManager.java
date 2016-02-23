@@ -26,19 +26,19 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exc
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.QuotesRequestNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
-import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionInformation;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerConnectionRequest;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorNetworkServiceDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.exceptions.CantConfirmQuotesRequestException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -206,7 +206,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void disconnect(final UUID requestId) throws CantDisconnectException            ,
-                                                              ConnectionRequestNotFoundException {
+            ConnectionRequestNotFoundException {
 
         try {
 
@@ -235,7 +235,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void denyConnection(final UUID requestId) throws CantDenyConnectionRequestException ,
-                                                                  ConnectionRequestNotFoundException {
+            ConnectionRequestNotFoundException {
 
         try {
 
@@ -266,7 +266,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException,
-                                                                    ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException  {
 
     }
 
@@ -277,7 +277,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
      */
     @Override
     public final void acceptConnection(final UUID requestId) throws CantAcceptConnectionRequestException,
-                                                                    ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException  {
 
         try {
 
@@ -402,7 +402,7 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
     public void answerQuotesRequest(final UUID                    requestId ,
                                     final long                    updateTime,
                                     final List<CryptoBrokerQuote> quotes    ) throws CantAnswerQuotesRequestException,
-                                                                                     QuotesRequestNotFoundException  {
+            QuotesRequestNotFoundException  {
 
         try {
 
@@ -421,6 +421,28 @@ public final class CryptoBrokerActorNetworkServiceManager implements CryptoBroke
 
             errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAnswerQuotesRequestException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void confirmQuotesRequest(UUID requestId) throws CantConfirmException, QuotesRequestNotFoundException {
+
+        try {
+
+            cryptoBrokerActorNetworkServiceDao.confirmQuotesRequest(requestId);
+
+        } catch (final QuotesRequestNotFoundException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final CantConfirmQuotesRequestException e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantConfirmException(e, "", "Error in DAO, trying to confirm the quotes request.");
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantConfirmException(e, null, "Unhandled Exception.");
         }
     }
 
