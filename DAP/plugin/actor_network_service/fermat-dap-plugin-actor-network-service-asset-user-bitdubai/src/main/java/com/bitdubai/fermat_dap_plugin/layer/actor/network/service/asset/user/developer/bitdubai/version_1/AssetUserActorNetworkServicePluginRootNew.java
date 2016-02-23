@@ -37,6 +37,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserCompleteRegistrationNotificationEvent;
@@ -224,6 +225,7 @@ public class AssetUserActorNetworkServicePluginRootNew extends AbstractNetworkSe
                     //NOTIFICATION LAUNCH
                     launchNotificationActorAsset();
                     broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + assetUserNetworkServiceRecord.getActorSenderPublicKey());
+//                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, DAPPublicKeys.DAP_COMMUNITY_USER.getCode(),"CONNECTIONREQUEST_" + assetUserNetworkServiceRecord.getActorSenderPublicKey());
 
                     respondReceiveAndDoneCommunication(assetUserNetworkServiceRecord);
                     break;

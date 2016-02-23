@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.event_handlers.WalletResourcesInstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -851,7 +852,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_ISSUER);
-            runtimeSubApp.setPublicKey("public_key_dap_asset_issuer_identity");
+            runtimeSubApp.setPublicKey(DAPPublicKeys.DAP_IDENTITY_ISSUER.getCode());
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -913,7 +914,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_ASSETS_IDENTITY_USER);
-            runtimeSubApp.setPublicKey("public_key_dap_asset_user_identity");
+            runtimeSubApp.setPublicKey(DAPPublicKeys.DAP_IDENTITY_USER.getCode());
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -974,7 +975,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.DAP_REDEEM_POINT_IDENTITY);
-            runtimeSubApp.setPublicKey("public_key_dap_redeem_point_identity");
+            runtimeSubApp.setPublicKey(DAPPublicKeys.DAP_IDENTITY_REDEEM.getCode());
 
             // Activity: List of identities
             runtimeActivity = new Activity();
@@ -1141,7 +1142,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
-        String dapFactoryPublicKey = "public_key_dap_factory";
+        String dapFactoryPublicKey = DAPPublicKeys.DAP_FACTORY.getCode();
 
         dapFactory = new RuntimeSubApp();
         dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
@@ -1327,7 +1328,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
-        String communityIssuerPublicKey = "public_key_dap_issuer_community";
+        String communityIssuerPublicKey = DAPPublicKeys.DAP_COMMUNITY_ISSUER.getCode();
 
         dapAssetIssuerCommunity = new RuntimeSubApp();
         dapAssetIssuerCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_ISSUER);
@@ -1473,7 +1474,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
-        String communityUserPublicKey = "public_key_dap_user_community";
+        String communityUserPublicKey = DAPPublicKeys.DAP_COMMUNITY_USER.getCode();
 
         dapAssetUserCommunity = new RuntimeSubApp();
         dapAssetUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
@@ -1907,7 +1908,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
 
-        String communityRedeemPointPublicKey = "public_key_dap_redeem_point_community";
+        String communityRedeemPointPublicKey = DAPPublicKeys.DAP_COMMUNITY_REDEEM.getCode();
 
         dapAssetRedeemPointCommunity = new RuntimeSubApp();
         dapAssetRedeemPointCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT);
