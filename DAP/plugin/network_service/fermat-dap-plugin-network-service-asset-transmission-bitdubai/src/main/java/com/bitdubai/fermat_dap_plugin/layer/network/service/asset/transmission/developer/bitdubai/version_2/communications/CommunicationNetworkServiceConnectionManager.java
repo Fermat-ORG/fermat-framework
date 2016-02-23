@@ -12,15 +12,14 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.*;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.DAPMessageDAO;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.IncomingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
@@ -28,7 +27,7 @@ import java.util.Map;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communication.CommunicationNetworkServiceConnectionManager</code>
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.communication.CommunicationNetworkServiceConnectionManager</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/10/15.
  *
@@ -60,7 +59,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
     /**
      * Holds all references to the communication network service locals
      */
-    private Map<String, com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
+    private Map<String, com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.communications.CommunicationNetworkServiceLocal> communicationNetworkServiceLocalsCache;
 
     /**
      * Holds all references to the communication network service remote agents
@@ -89,15 +88,15 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
      * @param communicationsClientConnection a communicationLayerManager instance
      * @param errorManager              a errorManager instance
      */
-    public CommunicationNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public CommunicationNetworkServiceConnectionManager(PlatformComponentProfile platformComponentProfile, ECCKeyPair identity, CommunicationsClientConnection communicationsClientConnection, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDao outgoingMessageDao, IncomingMessageDao incomingMessageDao) {
         super();
         this.platformComponentProfile = platformComponentProfile;
         this.identity = identity;
         this.communicationsClientConnection = communicationsClientConnection;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
-        this.incomingMessageDao = new IncomingMessageDao(dataBase);
-        this.outgoingMessageDao = new OutgoingMessageDao(dataBase);
+        this.outgoingMessageDao = outgoingMessageDao;
+        this.incomingMessageDao = incomingMessageDao;
         this.communicationNetworkServiceLocalsCache = new HashMap<>();
         this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
     }
@@ -193,7 +192,7 @@ public class CommunicationNetworkServiceConnectionManager implements NetworkServ
                  /*
                  * Instantiate the local reference
                  */
-                com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communications.CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType());
+                CommunicationNetworkServiceLocal communicationNetworkServiceLocal = new CommunicationNetworkServiceLocal(remoteComponentProfile, errorManager, eventManager, outgoingMessageDao,platformComponentProfile.getNetworkServiceType());
 
                 /*
                  * Instantiate the remote reference

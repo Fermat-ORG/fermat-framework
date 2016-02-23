@@ -14,15 +14,18 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -48,15 +51,17 @@ public class OutgoingMessageDao {
      * Represent the dataBase
      */
     private Database dataBase;
+    private DAPMessageDAO dapMessageDAO;
 
     /**
      * Constructor with parameters
      *
      * @param dataBase
      */
-    public OutgoingMessageDao(Database dataBase) {
+    public OutgoingMessageDao(Database dataBase, DAPMessageDAO dapMessageDAO) {
         super();
         this.dataBase = dataBase;
+        this.dapMessageDAO = dapMessageDAO;
     }
 
     /**
@@ -377,31 +382,18 @@ public class OutgoingMessageDao {
      * @throws CantInsertRecordDataBaseException
      */
     public void create(FermatMessage entity, String idDAPMessage) throws CantInsertRecordDataBaseException {
-
-        if (entity == null) {
-            throw new IllegalArgumentException("The entity is required, can not be null");
-        }
         try {
-
             if (findById(entity.getId().toString()) != null) {
                 return;
             }
-
             /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord entityRecord = constructFrom(entity, idDAPMessage);
-
-            /*
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
-
-        } catch (DatabaseTransactionFailedException | CantReadRecordDataBaseException databaseTransactionFailedException) {
-
-
+            DatabaseTable table = getDatabaseTable();
+            DatabaseTableRecord entityRecord = table.getEmptyRecord();
+            setValuesToRecord(entityRecord, entity, idDAPMessage);
+            table.insertRecord(entityRecord);
+        } catch (CantInsertRecordException | CantReadRecordDataBaseException databaseTransactionFailedException) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
@@ -421,11 +413,6 @@ public class OutgoingMessageDao {
      * @throws CantUpdateRecordDataBaseException
      */
     public void update(FermatMessage entity) throws CantUpdateRecordDataBaseException {
-
-        if (entity == null) {
-            throw new IllegalArgumentException("The entity is required, can not be null");
-        }
-
         try {
 
             DatabaseTable outgoingMessageTable = getDatabaseTable();
@@ -436,7 +423,6 @@ public class OutgoingMessageDao {
             DatabaseTableRecord record = outgoingMessageTable.getRecords().get(0);
             setValuesToRecord(record, entity, record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME));
             outgoingMessageTable.updateRecord(record);
-
         } catch (RecordsNotFoundException | CantUpdateRecordException | CantLoadTableToMemoryException databaseTransactionFailedException) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
@@ -446,44 +432,6 @@ public class OutgoingMessageDao {
             throw cantUpdateRecordDataBaseException;
         }
     }
-
-    /**
-     * Method that delete a entity in the data base.
-     *
-     * @param id Long id.
-     * @throws CantDeleteRecordDataBaseException
-     */
-    public void delete(Long id) throws CantDeleteRecordDataBaseException {
-
-        if (id == null) {
-            throw new IllegalArgumentException("The id is required can not be null");
-        }
-
-        try {
-
-            /*
-             * Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-
-            //falta configurar la llamada para borrar la entidad
-
-            getDataBase().executeTransaction(transaction);
-
-        } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "The record do not exist";
-            CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
-            throw cantDeleteRecordDataBaseException;
-
-        }
-
-    }
-
 
     /**
      * @param record with values from the table
@@ -503,9 +451,10 @@ public class OutgoingMessageDao {
             outgoingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
             outgoingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_DELIVERY_TIMESTAMP_COLUMN_NAME)));
             outgoingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_STATUS_COLUMN_NAME)));
-            outgoingTemplateNetworkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME)));
+            DAPMessage message = dapMessageDAO.findById(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME));
+            outgoingTemplateNetworkServiceMessage.setContent(message.toJson());
 
-        } catch (InvalidParameterException e) {
+        } catch (InvalidParameterException | CantReadRecordDataBaseException e) {
             //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
             //this should not happen, but if it happens return null
             e.printStackTrace();
@@ -534,9 +483,9 @@ public class OutgoingMessageDao {
 
     private void setValuesToRecord(DatabaseTableRecord entityRecord, FermatMessage outGoingTemplateNetworkServiceMessage, String idDAPMessage) {
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getId().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_SENDER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getSender().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_RECEIVER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getReceiver().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_TEXT_CONTENT_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getContent());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_SENDER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getSender());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_RECEIVER_ID_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getReceiver());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_STATUS_COLUMN_NAME, MessageStatus.PENDING_TO_SEND.getCode());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGE_TYPE_COLUMN_NAME, outGoingTemplateNetworkServiceMessage.getFermatMessageContentType().getCode());
 
         if (outGoingTemplateNetworkServiceMessage.getShippingTimestamp() != null) {

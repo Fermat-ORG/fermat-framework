@@ -58,13 +58,13 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory {
      *
      * @throws CantInitializeDAPMessageNetworkServiceDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeDAPMessageNetworkServiceDatabaseException {
+    public Database initializeDatabase() throws CantInitializeDAPMessageNetworkServiceDatabaseException {
         try {
 
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            return database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -80,13 +80,13 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory {
               * We need to create the new database
               */
 
-            CommunicationNetworkServiceDatabaseFactory dapMessageNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem,pluginId);
+            CommunicationNetworkServiceDatabaseFactory dapMessageNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem, pluginId);
 
             try {
                   /*
                    * We create the new database
                    */
-                database = dapMessageNetworkServiceDatabaseFactory.createDatabase();
+                return database = dapMessageNetworkServiceDatabaseFactory.createDatabase();
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -185,12 +185,12 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory {
         try {
             selectedTable.loadToMemory();
             List<DatabaseTableRecord> records = selectedTable.getRecords();
-            for (DatabaseTableRecord row: records){
+            for (DatabaseTableRecord row : records) {
                 List<String> developerRow = new ArrayList<String>();
                 /**
                  * for each row in the table list
                  */
-                for (DatabaseRecord field : row.getValues()){
+                for (DatabaseRecord field : row.getValues()) {
                     /**
                      * I get each row and save them into a List<String>
                      */
@@ -210,7 +210,7 @@ public class CommunicationNetworkServiceDeveloperDatabaseFactory {
              */
 
             return returnedRecords;
-        } catch (Exception e){
+        } catch (Exception e) {
 
             return returnedRecords;
         }

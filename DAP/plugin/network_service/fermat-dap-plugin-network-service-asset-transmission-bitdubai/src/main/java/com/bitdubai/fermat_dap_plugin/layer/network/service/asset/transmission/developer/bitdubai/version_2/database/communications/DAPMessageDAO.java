@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.d
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -37,11 +39,9 @@ public class DAPMessageDAO {
     //VARIABLE DECLARATION
 
     private final Database database;
-    private final OutgoingMessageDao outgoingMessageDao;
 
-    public DAPMessageDAO(Database database, OutgoingMessageDao outgoingMessageDao) {
+    public DAPMessageDAO(Database database) {
         this.database = database;
-        this.outgoingMessageDao = outgoingMessageDao;
     }
 
 
@@ -55,28 +55,18 @@ public class DAPMessageDAO {
      * @param entity DAPMessage to create.
      * @throws CantInsertRecordDataBaseException
      */
-    public void create(DAPMessage entity) throws CantInsertRecordDataBaseException {
+    public void create(DAPMessage entity, MessageStatus status) throws CantInsertRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
         }
 
         try {
-
-            /*
-             * 1- Create the record to the entity
-             */
-            DatabaseTableRecord entityRecord = constructFrom(entity);
-
-            /*
-             * 2.- Create a new transaction and execute
-             */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToInsert(getDAPMessagesTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
-
-            } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-
+            DatabaseTable table = getDAPMessagesTable();
+            DatabaseTableRecord entityRecord = table.getEmptyRecord();
+            setValuesToRecord(entityRecord, entity, status);
+            table.insertRecord(entityRecord);
+        } catch (CantInsertRecordException databaseTransactionFailedException) {
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
@@ -94,7 +84,7 @@ public class DAPMessageDAO {
      * @param entity DAPMessage to update.
      * @throws CantUpdateRecordDataBaseException
      */
-    public void update(DAPMessage entity, String state) throws CantUpdateRecordDataBaseException {
+    public void update(DAPMessage entity, MessageStatus status) throws CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -107,14 +97,7 @@ public class DAPMessageDAO {
 
             if (metadataTable.getRecords().isEmpty()) throw new RecordsNotFoundException();
             DatabaseTableRecord record = metadataTable.getRecords().get(0);
-
-            if (!metadataTable.getRecords().get(0).getStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME).equals("READ") && state==null){
-                state="UNREAD";
-            }else if (metadataTable.getRecords().get(0).getStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME).equals("READ") && state==null){
-                state="READ";
-            }
-
-            setValuesToRecord(record, entity, state);
+            setValuesToRecord(record, entity, status);
             metadataTable.updateRecord(record);
         } catch (CantUpdateRecordException | CantLoadTableToMemoryException | RecordsNotFoundException databaseTransactionFailedException) {
             StringBuffer contextBuffer = new StringBuffer();
@@ -227,8 +210,7 @@ public class DAPMessageDAO {
      * @param code String.
      * @return A list of DAPMessage found.
      * @throws CantReadRecordDataBaseException
-     *
-     * */
+     */
     public List<DAPMessage> findUnreadByType(String code) throws CantReadRecordDataBaseException {
 
         if (code == null) {
@@ -244,7 +226,7 @@ public class DAPMessageDAO {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable dapMessagesTable = getDAPMessagesTable();
-            dapMessagesTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME, "UNREAD", DatabaseFilterType.EQUAL);
+            dapMessagesTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME, MessageStatus.NEW_RECEIVED.getCode(), DatabaseFilterType.EQUAL);
             dapMessagesTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_TYPE_COLUMN_NAME, code, DatabaseFilterType.EQUAL);
             dapMessagesTable.loadToMemory();
 
@@ -302,7 +284,7 @@ public class DAPMessageDAO {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable dapMessagesTable = getDAPMessagesTable();
-            dapMessagesTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME, "UNREAD", DatabaseFilterType.EQUAL);
+            dapMessagesTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME, MessageStatus.NEW_RECEIVED.getCode(), DatabaseFilterType.EQUAL);
             dapMessagesTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_SUBJECT_COLUMN_NAME, code, DatabaseFilterType.EQUAL);
             dapMessagesTable.loadToMemory();
 
@@ -355,7 +337,7 @@ public class DAPMessageDAO {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable dapMessagesTable = getDAPMessagesTable();
-            dapMessagesTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME, "UNREAD", DatabaseFilterType.EQUAL);
+            dapMessagesTable.addStringFilter(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME, MessageStatus.NEW_RECEIVED.getCode(), DatabaseFilterType.EQUAL);
             dapMessagesTable.loadToMemory();
 
             /*
@@ -396,97 +378,7 @@ public class DAPMessageDAO {
     * */
 
     public void confirmDAPMessageReception(DAPMessage dapMessage) throws CantUpdateRecordDataBaseException {
-        update(dapMessage,"READ");
-    }
-
-    /**
-     * Method that create a new entity of DAPMessage and FermatMessage that will be sent.
-     *
-     * @param entity DAPMessage to be send.
-     *
-     */
-    public void sendMessage(DAPMessage entity) throws CantInsertRecordDataBaseException {
-
-        if (entity == null) {
-            throw new IllegalArgumentException("The entity is required, can not be null");
-        }
-
-        try {
-            //We persist DAPMessage entity
-            create(entity);
-
-            /*
-                 * Created the FermatMessage
-                 */
-            FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(entity.getActorSender().toString(),//Sender
-                    entity.getActorReceiver().toString(), //Receiver
-                    entity.toJson().toString(), //Message Content
-                    FermatMessageContentType.TEXT);//Type
-                /*
-                 * Configure the correct status
-                 */
-            ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
-            //We persist FermatMessage entity
-            outgoingMessageDao.create(fermatMessage, entity.getIdMessage().toString());
-
-        } catch (FMPException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /*public void saveDAPMessage(DAPMessage dapMessage) throws CantSaveDAPMessageException {
-
-        if (dapMessage == null) {
-            throw new IllegalArgumentException("The entity is required, can not be null");
-        }
-
-        String dapMessageJson = DAPMessageGson.getGson().toJson(dapMessage);
-        String context = "Message Type : "+ dapMessage.getMessageContent().messageType() +" Message Subject : "+ dapMessage.getSubject();
-        try {
-            DatabaseTable databaseTable = this.database.getTable(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_TABLE_NAME);
-            DatabaseTableRecord dapMessageRecord = databaseTable.getEmptyRecord();
-            UUID dapMessageRecordID = UUID.randomUUID();
-
-            dapMessageRecord.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_ID_COLUMN_NAME, dapMessageRecordID);
-            dapMessageRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME, dapMessageJson);
-
-            databaseTable.insertRecord(dapMessageRecord);
-        } catch (CantInsertRecordException exception) {
-            throw new CantSaveDAPMessageException(exception, context, "Cannot insert a record in DAP MESSAGE Table");
-        } catch (Exception exception) {
-            throw new CantSaveDAPMessageException(FermatException.wrapException(exception), context, "Unexpected exception");
-        }
-    }*/
-
-
-
-    //PRIVATE METHODS
-
-    /*private Database openDatabase() throws CantExecuteDatabaseOperationException {
-        try {
-            return pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException exception) {
-            throw new CantExecuteDatabaseOperationException(exception, "Opening the Asset Reception Transaction Database", "Error in database plugin.");
-        }
-    }*/
-
-    /**
-     * Construct a DatabaseTableRecord whit the values of the a DAPMessage pass
-     * by parameter
-     *
-     * @param dapMessage the contains the values
-     * @return DatabaseTableRecord whit the values
-     */
-    private DatabaseTableRecord constructFrom(DAPMessage dapMessage) {
-
-        /*
-         * Create the record to the entity
-         */
-        DatabaseTableRecord entityRecord = getDAPMessagesTable().getEmptyRecord();
-        setValuesToRecord(entityRecord, dapMessage);
-        return entityRecord;
+        update(dapMessage, MessageStatus.READ);
     }
 
     /**
@@ -496,36 +388,22 @@ public class DAPMessageDAO {
      * @return DAPMessage setters the values from table
      */
     private DAPMessage constructFrom(DatabaseTableRecord record) {
-
         DAPMessage dapMessage = null;
         dapMessage = DAPMessageGson.getGson().fromJson(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME), DAPMessage.class);
 
         return dapMessage;
     }
 
-    private void setValuesToRecord(DatabaseTableRecord entityRecord, DAPMessage dapMessage) {
-
+    private void setValuesToRecord(DatabaseTableRecord entityRecord, DAPMessage dapMessage, MessageStatus state) {
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_ID_COLUMN_NAME, dapMessage.getIdMessage().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_TYPE_COLUMN_NAME, dapMessage.getMessageContent().messageType().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_SUBJECT_COLUMN_NAME, dapMessage.getSubject().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME, "UNREAD");
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_TYPE_COLUMN_NAME, dapMessage.getMessageContent().messageType().getCode());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_SUBJECT_COLUMN_NAME, dapMessage.getSubject().getCode());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME, state.getCode());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME, DAPMessageGson.getGson().toJson(dapMessage));
-
-    }
-
-    private void setValuesToRecord(DatabaseTableRecord entityRecord, DAPMessage dapMessage, String state) {
-
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_ID_COLUMN_NAME, dapMessage.getIdMessage().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_TYPE_COLUMN_NAME, dapMessage.getMessageContent().messageType().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_SUBJECT_COLUMN_NAME, dapMessage.getSubject().toString());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME, state);
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME, DAPMessageGson.getGson().toJson(dapMessage));
-
     }
 
     private DAPMessage constructDAPMessageByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantLoadDAPMessageException {
-        DAPMessage toReturn = DAPMessageGson.getGson().fromJson(record.toString(), DAPMessage.class);
-        return toReturn;
+        return DAPMessageGson.getGson().fromJson(record.toString(), DAPMessage.class);
     }
 
     private List<DAPMessage> constructDAPMessageListFromRecord(List<DatabaseTableRecord> records) throws CantLoadDAPMessageException, InvalidParameterException {

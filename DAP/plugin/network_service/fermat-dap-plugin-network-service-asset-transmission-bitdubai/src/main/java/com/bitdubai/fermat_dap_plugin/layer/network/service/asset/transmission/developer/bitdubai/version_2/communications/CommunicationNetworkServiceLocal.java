@@ -11,8 +11,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.AssetTransmissionNetworkServicePluginRoot;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.AssetTransmissionNetworkServicePluginRoot;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.OutgoingMessageDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -28,7 +29,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.communication.CommunicationNetworkServiceLocal</code> represent
+ * The Class <code>com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.communication.CommunicationNetworkServiceLocal</code> represent
  * the remote network services locally
  * <p/>
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
@@ -77,8 +78,8 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
      * Constructor with parameters
      *
      * @param remoteNetworkServiceProfile
-     * @param errorManager                  instance
-     * @param outgoingMessageDao            instance
+     * @param errorManager                instance
+     * @param outgoingMessageDao          instance
      */
     public CommunicationNetworkServiceLocal(PlatformComponentProfile remoteNetworkServiceProfile,
                                             ErrorManager errorManager, EventManager eventManager,
@@ -95,23 +96,25 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
     /**
      * (non-javadoc)
      */
-    public void sendMessage(final String senderIdentityPublicKey,final String pk, final String messageContent) {
+    public void sendMessage(final String senderIdentityPublicKey, final String pk, final String messageContent) {
 
         try {
 
-            FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
+            FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
                     pk,   //Receiver
                     messageContent,                //Message Content
                     FermatMessageContentType.TEXT);//Type
+
+            DAPMessage message = DAPMessage.fromJson(messageContent);
             /*
              * Configure the correct status
              */
-            ((FermatMessageCommunication)fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
+            ((FermatMessageCommunication) fermatMessage).setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
 
             /*
              * Save to the data base table
              */
-            outgoingMessageDao.create(fermatMessage);
+            outgoingMessageDao.create(fermatMessage, message.getIdMessage().toString());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,6 +169,7 @@ public class CommunicationNetworkServiceLocal implements Observer, NetworkServic
 
     /**
      * (non-javadoc)
+     *
      * @see NetworkServiceLocal#
      */
     public FermatMessage getLastMessageReceived() {
