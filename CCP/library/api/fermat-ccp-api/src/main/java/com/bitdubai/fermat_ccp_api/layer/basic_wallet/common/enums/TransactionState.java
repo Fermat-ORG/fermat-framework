@@ -13,6 +13,8 @@ public enum TransactionState {
     PERSISTED_IN_WALLET ("PIW"),
     SENT_TO_CRYPTO_VAULT("STCV"),
     SUCCESSFUL_SENT("SS"),
+    REVERSED ("REV"),
+    COMPLETE ("REV"),
     RECEIVED ("RCV");
 
     private final String code;

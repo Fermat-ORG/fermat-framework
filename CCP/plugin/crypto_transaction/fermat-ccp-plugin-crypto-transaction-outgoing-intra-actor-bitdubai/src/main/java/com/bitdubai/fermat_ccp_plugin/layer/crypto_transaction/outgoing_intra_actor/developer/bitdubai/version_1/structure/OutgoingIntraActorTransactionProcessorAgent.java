@@ -454,13 +454,16 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                     case BASIC_WALLET_BITCOIN_WALLET:
                         //TODO: hay que disparar un evento para que la wallet avise que la transaccion no se completo y eliminarla
                         BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletPublicKey());
+
+                        //change transaction state to reversed and update balance to revert
+
                        if(credit)
-                            bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(transaction);
+                            bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(transaction);
                         else
                            bitcoinWalletWallet.getBalance(BalanceType.BOOK).debit(transaction);
 
-
                         bitcoinWalletWallet.deleteTransaction(transaction.getTransactionId());
+
                         //if the transaction is a payment request, rollback it state too
                         notificateRollbackToGUI(transaction);
                         if (transaction.getRequestId() != null)
@@ -473,8 +476,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                 e.printStackTrace();
             } catch (OutgoingIntraActorWalletNotSupportedException e) {
                 e.printStackTrace();
-            } catch (CantRegisterCreditException e) {
-                e.printStackTrace();
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
