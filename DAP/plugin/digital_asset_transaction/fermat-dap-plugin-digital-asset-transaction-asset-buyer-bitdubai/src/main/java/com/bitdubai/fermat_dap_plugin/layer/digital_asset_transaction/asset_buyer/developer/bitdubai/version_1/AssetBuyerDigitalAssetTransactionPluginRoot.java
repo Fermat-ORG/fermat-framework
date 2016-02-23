@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -39,6 +40,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.developer_utils.AssetBuyerDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.database.AssetBuyerDAO;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.database.AssetBuyerDatabaseConstants;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.database.AssetBuyerDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.events.AssetBuyerMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.events.AssetBuyerRecorderService;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional.AssetBuyerTransactionManager;
@@ -104,6 +106,8 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
     @Override
     public void start() throws CantStartPluginException {
         try {
+            createDatabase();
+
             assetBuyingVault = new AssetBuyingVault(pluginId, pluginFileSystem);
             dao = new AssetBuyerDAO(pluginId, pluginDatabaseSystem, actorAssetUserManager, assetUserWalletManager, assetBuyingVault);
             transactionManager = new AssetBuyerTransactionManager(dao, actorAssetUserManager, assetTransmission);
@@ -129,6 +133,13 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
     }
 
     //PRIVATE METHODS
+    private void createDatabase() throws CantCreateDatabaseException {
+        AssetBuyerDatabaseFactory databaseFactory = new AssetBuyerDatabaseFactory(pluginDatabaseSystem, pluginId);
+        if (!databaseFactory.databaseExists()) {
+            databaseFactory.createDatabase();
+        }
+    }
+
     private void initializeMonitorAgent() throws CantStartAgentException {
         agent = new AssetBuyerMonitorAgent(errorManager, dao, transactionManager, assetUserWalletManager, actorAssetUserManager, assetTransmission, cryptoVaultManager, bitcoinNetworkManager);
         agent.start();
