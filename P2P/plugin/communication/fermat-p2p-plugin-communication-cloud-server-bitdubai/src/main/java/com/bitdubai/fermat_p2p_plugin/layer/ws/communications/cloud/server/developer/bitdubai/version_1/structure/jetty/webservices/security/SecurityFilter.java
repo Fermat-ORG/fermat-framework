@@ -61,7 +61,7 @@ public class SecurityFilter implements Filter {
         try {
 
             LOG.info("authHeader = " + authHeader);
-            final Claims claims = Jwts.parser().setSigningKey(TextCodec.BASE64.encode("secretKey")).parseClaimsJws(authHeader).getBody();
+            final Claims claims = Jwts.parser().setSigningKey(TextCodec.BASE64.encode(JWTManager.getKey().getPrivateKey())).parseClaimsJws(authHeader).getBody();
             LOG.info("user = " + claims.getSubject());
         }
         catch (final SignatureException e) {

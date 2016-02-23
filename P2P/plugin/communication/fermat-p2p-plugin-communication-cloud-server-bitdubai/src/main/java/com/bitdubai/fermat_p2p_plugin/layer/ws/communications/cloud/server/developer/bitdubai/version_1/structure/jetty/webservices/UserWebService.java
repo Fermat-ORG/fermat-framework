@@ -87,7 +87,7 @@ public class UserWebService {
         long cur_secs = new Date().getTime();
         Date expdt = new Date(cur_secs+ 60*10000);
         System.out.println("BASE64 encoded key :" + TextCodec.BASE64.encode("secretKey"));
-        String authToken = Jwts.builder().setSubject(credential.getUser()).setIssuedAt(new Date()).setExpiration(expdt).signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode("secretKey")).compact();
+        String authToken = Jwts.builder().setSubject(credential.getUser()).setIssuedAt(new Date()).setExpiration(expdt).signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(JWTManager.getKey().getPrivateKey())).compact();
         System.out.println("authToken = "+authToken);
         loginResponse = new LoginResponse(Boolean.TRUE, "Login process success", authToken);
 
