@@ -11,9 +11,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.customviews.clelia.pickerunitselector.custom.CaviarEditText;
-import com.customviews.clelia.pickerunitselector.custom.CaviarSpinner;
-import com.customviews.clelia.pickerunitselector.custom.CaviarTextView;
+import com.customviews.fermat.pickerunitselector.R;
+
+import picker_unit_selector.CaviarEditText;
+import picker_unit_selector.CaviarTextView;
+import picker_unit_selector.CaviarSpinner;
+
 
 /**
  * Created by Clelia López on 2/13/16

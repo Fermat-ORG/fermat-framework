@@ -17,7 +17,6 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 
-import com.customviews.fermat.currency_selector.R;
 import com.customviews.fermat.currency_selector.custom.CaviarEditText;
 import com.customviews.fermat.currency_selector.custom.CaviarRadioButton;
 import com.customviews.fermat.currency_selector.custom.CaviarTextView;
