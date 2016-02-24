@@ -1064,6 +1064,7 @@ public abstract class FermatActivity extends AppCompatActivity
         super.onResume();
         try {
             if(broadcastManager!=null)broadcastManager.resume(this);
+            else broadcastManager = new BroadcastManager(this);
             AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
 
             //getNotificationManager().addObserver(this);
