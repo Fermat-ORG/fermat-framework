@@ -177,7 +177,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private void setUpPresentation(boolean checkButton) {
 //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_asset_user)
+                .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
                 .setTitleTextColor(R.color.dap_community_user_view_color)
@@ -216,62 +216,62 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 //        }
     }
 
-    protected void initViews(View layout) {
-
-        // fab action button create
-        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//            if (item.getItemId() == R.id.action_connect) {
-                final ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setMessage("Connecting please wait...");
-                dialog.setCancelable(false);
-                dialog.show();
-                FermatWorker worker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
-                        List<ActorAssetUser> toConnect = new ArrayList<>();
-                        for (Actor actor : actors) {
-                            if (actor.selected)
-                                toConnect.add(actor);
-                        }
-                        //// TODO: 28/10/15 get Actor asset User
-                        manager.connectToActorAssetUser(null, toConnect);
-                        return true;
-                    }
-                };
-                worker.setContext(getActivity());
-                worker.setCallBack(new FermatWorkerCallBack() {
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        dialog.dismiss();
-                        if (swipeRefreshLayout != null)
-                            swipeRefreshLayout.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onRefresh();
-                                }
-                            });
-                    }
-
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset Issuer or Asset User identities using the corresponding Identity application."), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    }
-                });
-                worker.execute();
-//                return true;
-                /* create new asset factory project */
-//                selectedAsset = null;
-//                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
-            }
-        });
-        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
-        create.setVisibility(View.VISIBLE);
-    }
+//    protected void initViews(View layout) {
+//
+//        // fab action button create
+//        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
+//        create.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////            if (item.getItemId() == R.id.action_connect) {
+//                final ProgressDialog dialog = new ProgressDialog(getActivity());
+//                dialog.setMessage("Connecting please wait...");
+//                dialog.setCancelable(false);
+//                dialog.show();
+//                FermatWorker worker = new FermatWorker() {
+//                    @Override
+//                    protected Object doInBackground() throws Exception {
+//                        List<ActorAssetUser> toConnect = new ArrayList<>();
+//                        for (Actor actor : actors) {
+//                            if (actor.selected)
+//                                toConnect.add(actor);
+//                        }
+//                        //// TODO: 28/10/15 get Actor asset User
+//                        manager.connectToActorAssetUser(null, toConnect);
+//                        return true;
+//                    }
+//                };
+//                worker.setContext(getActivity());
+//                worker.setCallBack(new FermatWorkerCallBack() {
+//                    @Override
+//                    public void onPostExecute(Object... result) {
+//                        dialog.dismiss();
+//                        if (swipeRefreshLayout != null)
+//                            swipeRefreshLayout.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    onRefresh();
+//                                }
+//                            });
+//                    }
+//
+//                    @Override
+//                    public void onErrorOccurred(Exception ex) {
+//                        dialog.dismiss();
+//                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset Issuer or Asset User identities using the corresponding Identity application."), Toast.LENGTH_LONG).show();
+//                        ex.printStackTrace();
+//                    }
+//                });
+//                worker.execute();
+////                return true;
+//                /* create new asset factory project */
+////                selectedAsset = null;
+////                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
+//            }
+//        });
+//        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
+//        create.setVisibility(View.VISIBLE);
+//    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -360,15 +360,14 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                         if (actor.selected)
                                             toConnect.add(actor);
                                     }
-                                    //// TODO: 28/10/15 get Actor asset Redeem Point
-//                                    manager.askActorAssetUserForConnection(toConnect);
-//
-//                                    Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
-//                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
-//                                    sendLocalBroadcast(broadcast);
-//                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                    // TODO: 28/10/15 get Actor asset Redeem Point
+                                    manager.askActorAssetUserForConnection(toConnect);
 
-                                    manager.connectToActorAssetUser(null, toConnect);
+                                    Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
+                                    broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                    sendLocalBroadcast(broadcast);
+
+//                                    manager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
                             };
@@ -519,7 +518,7 @@ Sample AsyncTask to fetch the notifications count
         }
     }
     @Override
-    public void onRefresh() {
+    public synchronized void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
             if (swipeRefreshLayout != null)

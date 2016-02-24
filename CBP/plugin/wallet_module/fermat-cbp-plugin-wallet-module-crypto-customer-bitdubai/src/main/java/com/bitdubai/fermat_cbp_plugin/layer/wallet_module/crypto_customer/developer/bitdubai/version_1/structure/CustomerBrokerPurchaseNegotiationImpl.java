@@ -24,7 +24,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     private String            cancelReason;
     private String            memo;
 
-    public CustomerBrokerPurchaseNegotiationImpl(){};
+    public CustomerBrokerPurchaseNegotiationImpl(){}
 
     /**
      * @return the broker public key

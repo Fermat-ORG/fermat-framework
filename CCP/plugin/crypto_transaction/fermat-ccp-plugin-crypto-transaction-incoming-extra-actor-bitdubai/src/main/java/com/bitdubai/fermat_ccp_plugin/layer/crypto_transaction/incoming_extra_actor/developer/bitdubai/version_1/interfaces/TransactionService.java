@@ -8,9 +8,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_ac
  */
 public interface TransactionService {
 
-    public void start () throws CantStartServiceException;
+    void start() throws CantStartServiceException;
 
-    public void stop();
+    void stop();
     
-    public ServiceStatus getStatus ();
+    ServiceStatus getStatus();
 }

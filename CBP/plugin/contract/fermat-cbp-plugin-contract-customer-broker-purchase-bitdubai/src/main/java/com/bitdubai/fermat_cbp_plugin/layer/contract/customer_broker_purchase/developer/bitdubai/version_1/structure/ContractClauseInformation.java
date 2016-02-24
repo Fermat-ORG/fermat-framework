@@ -65,10 +65,8 @@ public class ContractClauseInformation implements ContractClause {
             return false;
         if(!this.executionOrder.equals(compare.getExecutionOrder()))
             return false;
-        if(this.status != compare.getStatus())
-            return false;
+        return this.status == compare.getStatus();
 
-        return true;
     }
 
     @Override

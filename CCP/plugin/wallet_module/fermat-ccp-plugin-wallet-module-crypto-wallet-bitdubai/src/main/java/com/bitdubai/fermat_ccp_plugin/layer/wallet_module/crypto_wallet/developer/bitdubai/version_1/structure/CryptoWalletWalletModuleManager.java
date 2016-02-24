@@ -324,7 +324,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet {
 
             List<IntraWalletUserActor> intraUserList = intraUserManager.getAllIntraWalletUsers(intraUserIdentityPublicKey, max, offset);
 
-            List<CryptoWalletWalletContact> lstContacts = listWalletContacts(walletPublicKey, intraUserIdentityPublicKey);;
+            List<CryptoWalletWalletContact> lstContacts = listWalletContacts(walletPublicKey, intraUserIdentityPublicKey);
             for(final IntraWalletUserActor intraUser : intraUserList) {
                 boolean isContact = CollectionUtils.exists(lstContacts,
                         new org.apache.commons.collections.Predicate() {

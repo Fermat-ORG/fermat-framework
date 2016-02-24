@@ -41,6 +41,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Digital
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -61,6 +62,10 @@ import static android.widget.Toast.makeText;
 public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAsset>
         implements FermatListItemListeners<DigitalAsset> {
 
+
+    private List<AssetNegotiation> assetNegotiations;
+    private AssetNegotiation assetNegotiation;
+
     // Constants
     private static final String TAG = "UserMainActivityFragment";
 
@@ -75,7 +80,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     //UI
     private View noAssetsView;
     private SearchView searchView;
-    private boolean showNoBalance;
+    private boolean showNoBalance = true;
 
     public static UserMainActivityFragment newInstance() {
         return new UserMainActivityFragment();
@@ -145,6 +150,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             }
         }, 500);
 
+        ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter("");
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -212,7 +218,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                 return false;
             }
         });
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_asset_user_help_icon)
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION, 2, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
@@ -376,7 +382,11 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
         appSession.setData("asset_data", data);
-        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
+        if(data.getUserAssetNegotiation() != null){
+            changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY,appSession.getAppPublicKey());
+        }else {
+            changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
+        }
     }
 
     @Override
@@ -389,6 +399,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         if (moduleManager != null) {
             try {
                 digitalAssets = Data.getAllDigitalAssets(moduleManager);
+                digitalAssets.addAll(Data.getAllPendingNegotiations(moduleManager));
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

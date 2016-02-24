@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
@@ -117,9 +118,9 @@ public interface CryptoVaultManager extends FermatManager, PlatformCryptoVault {
     DraftTransaction getDraftTransaction(BlockchainNetworkType blockchainNetworkType, String txHash) throws CantGetDraftTransactionException;
 
     /**
-     *  TODO: Completame XXOO
-     *
-     * @param draftTransaction
+     * Persists a draft transaction in the vault.
+     * @param draftTransaction the draft Transaction to store
+     * @throws CantStoreBitcoinTransactionException
      */
-    void saveTransaction(DraftTransaction draftTransaction);
+    void saveTransaction(DraftTransaction draftTransaction) throws CantStoreBitcoinTransactionException;
 }

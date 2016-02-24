@@ -60,7 +60,7 @@ public interface SubAppSettings extends FermatSettings {
      * @throws CantSetDefaultSkinException
      */
     @Deprecated // todo this is done through the module manager
-    public void setPreferenceSettings(String walletPreferenceSettings,String walletPublicKey) throws CantSaveSubAppSettings;
+    void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveSubAppSettings;
 
     /**
      * This method let us get the preference settings for a wallet
@@ -69,5 +69,5 @@ public interface SubAppSettings extends FermatSettings {
      * @throws CantGetDefaultSkinException
      */
     @Deprecated // todo this is done through the module manager
-    public String getPreferenceSettings(String walletPublicKey) throws CantLoadSubAppSettings;
+    String getPreferenceSettings(String walletPublicKey) throws CantLoadSubAppSettings;
 }
