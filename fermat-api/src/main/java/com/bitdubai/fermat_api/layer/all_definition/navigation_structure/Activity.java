@@ -1,10 +1,8 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.FermatFragments;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatBottomNavigation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWizard;
@@ -69,6 +67,7 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     Header header;
     private boolean fullScreen;
     private String backgroundColor;
+    private FermatBottomNavigation bottomNavigationMenu;
 
     public Activity() {
     }
@@ -183,6 +182,11 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
     }
 
     @Override
+    public FermatBottomNavigation getBottomNavigationMenu() {
+        return bottomNavigationMenu;
+    }
+
+    @Override
     public String getBackAppPublicKey() {
         return backPublicKey;
     }
@@ -274,6 +278,10 @@ public class Activity implements com.bitdubai.fermat_api.layer.all_definition.na
 
     public String getBackgroundColor() {
         return backgroundColor;
+    }
+
+    public void setBottomNavigationMenu(FermatBottomNavigation bottomNavigationMenu) {
+        this.bottomNavigationMenu = bottomNavigationMenu;
     }
 }
 
