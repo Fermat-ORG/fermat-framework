@@ -4,6 +4,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -23,6 +24,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     private Collection<Clause>clauses;
     private String            cancelReason;
     private String            memo;
+    private boolean           dataHasChanged;
 
     public CustomerBrokerPurchaseNegotiationImpl(){};
 
@@ -151,5 +153,28 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     @Override
     public String getMemo() {
         return memo;
+    }
+
+
+    public boolean dataHasChanged() {
+        return dataHasChanged;
+    }
+
+    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status){}
+
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this).
+                add("startDate", startDate).
+                add("lastNegotiationUpdateDate",lastNegotiationUpdateDate).
+                add("nearExpirationDatetime", nearExpirationDatetime).
+                add("cancelReason", cancelReason).
+                add("memo", memo).
+                add("customerPublicKey", customerPublicKey).
+                add("brokerPublicKey", brokerPublicKey).
+                add("negotiationId", negotiationId).
+                add("status", status).
+                add("clauses", clauses).
+                toString();
     }
 }
