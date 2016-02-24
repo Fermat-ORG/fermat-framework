@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -78,6 +80,7 @@ public class ChatAdapterView extends LinearLayout {
     private UUID contactid;
     private int background = -1;
     private String remotepk;
+    private Drawable contacticon;
     private PlatformComponentType remotepct;
     private boolean loadDummyData = false;
     private boolean chatwascreate=false;
@@ -195,6 +198,54 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
+    public static Bitmap decodeFile(Context context,int resId) {
+// decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(context.getResources(), resId, o);
+// Find the correct scale value. It should be the power of 2.
+        final int REQUIRED_SIZE = 50;
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true)
+        {
+            if (width_tmp / 2 < REQUIRED_SIZE
+                    || height_tmp / 2 < REQUIRED_SIZE)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale++;
+        }
+// decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeResource(context.getResources(), resId, o2);
+    }
+
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
+        // TODO Auto-generated method stub
+        int targetWidth = width;
+        int targetHeight = width;
+        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
+                targetHeight,Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(targetBitmap);
+        Path path = new Path();
+        path.addCircle(((float) targetWidth - 1) / 2,
+                ((float) targetHeight - 1) / 2,
+                (Math.min(((float) targetWidth),
+                        ((float) targetHeight)) / 2),
+                Path.Direction.CCW);
+        canvas.clipPath(path);
+        Bitmap sourceBitmap = scaleBitmapImage;
+        canvas.drawBitmap(sourceBitmap,
+                new Rect(0, 0, sourceBitmap.getWidth(),
+                        sourceBitmap.getHeight()),
+                new Rect(0, 0, targetWidth,
+                        targetHeight), null);
+        return targetBitmap;
+    }
+
     public void initControls() {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
@@ -206,19 +257,20 @@ public class ChatAdapterView extends LinearLayout {
         //TextView companionLabel = (TextView) findViewById(R.id.friendLabel);
         RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 
-        if(chatSession!= null){
+        if (chatSession != null) {
             whattodo();
             findmessage();
-        }
-//        if (rightName != null) {
-//            meLabel.setText(rightName);
-//        } else {
-//            meLabel.setText("");
-//        }
+    //        if (rightName != null) {
+    //            meLabel.setText(rightName);
+    //        } else {
+    //            meLabel.setText("");
+    //        }
 
-        if (leftName != null ) {
-            toolbar.setTitle(leftName);
-            toolbar.setLogo(R.drawable.ic_contact_picture_holo_light);
+            if (leftName != null) {
+                toolbar.setTitle(leftName);
+                contacticon = new BitmapDrawable(getResources(), getRoundedShape(decodeFile(getContext(), R.drawable.ic_contact_picture_holo_light), 50));//in the future, this image should come from chatmanager
+                toolbar.setLogo(contacticon);
+            }
         }
             //companionLabel.setText(leftName);
 //        } else {

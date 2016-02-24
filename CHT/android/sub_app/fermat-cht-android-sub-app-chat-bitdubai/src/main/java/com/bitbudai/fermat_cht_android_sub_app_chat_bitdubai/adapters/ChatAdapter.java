@@ -82,11 +82,11 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
         holder.txtMessage.setText(data.getMessage());
         holder.txtInfo.setText(data.getDate());
         if(data.getStatus().toString()== MessageStatus.SEND.toString())
-            holder.tickstatusimage.setImageResource(R.drawable.ticksent);
+            holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
         if(data.getStatus().toString()== MessageStatus.DELIVERED.toString())
-            holder.tickstatusimage.setImageResource(R.drawable.tickdelivered);
+            holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
         if(data.getStatus().toString()== MessageStatus.READ.toString())
-            holder.tickstatusimage.setImageResource(R.drawable.tickread);
+            holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
 
 //        lblTitulo = (FermatTextView) convertView.findViewById(R.id.txtInfo);
 //        lblTitulo.setText(data.getMessage());
