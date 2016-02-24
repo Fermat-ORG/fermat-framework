@@ -53,8 +53,8 @@ public class ChatNetworkServiceDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_TABLE);
 
-            table.addColumn(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_HASH_COLUMN_NAME, DatabaseDataType.STRING,100 , Boolean.FALSE);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, Boolean.TRUE);
+            table.addColumn(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_RESPONSE_TO_COLUMN_NAME, DatabaseDataType.STRING,150 , Boolean.FALSE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDCHAT_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDOBJECTO_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_LOCALACTORTYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
