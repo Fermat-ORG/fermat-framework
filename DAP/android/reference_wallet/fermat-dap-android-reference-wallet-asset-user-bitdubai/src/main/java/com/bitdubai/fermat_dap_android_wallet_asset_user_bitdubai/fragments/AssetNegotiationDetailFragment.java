@@ -189,7 +189,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
         assetNegotiationUnitPrice = (FermatTextView) rootView.findViewById(R.id.assetNegotiationUnitPrice);
         assetNegotiationAssetsToBuy = (FermatEditText) rootView.findViewById(R.id.assetNegotiationAssetsToBuy);
         assetNegotiationDetailBtcText = (FermatTextView) rootView.findViewById(R.id.assetNegotiationDetailBtcText);
-        acceptNegotiationButton = rootView.findViewById(R.id.assetNegotiationDetailBtcText);
+        acceptNegotiationButton = rootView.findViewById(R.id.acceptNegotiationButton);
         rejectNegotiationButton = rootView.findViewById(R.id.rejectNegotiationButton);
 
         assetNegotiationDetailBtcText.setText(String.format("%.6f BTC", 0.0));
@@ -303,7 +303,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
     }
 
     private boolean isValidBuy() {
-        String assetsToBuyStr = assetNegotiationAssetsToBuy.getText().toString();
+        /*String assetsToBuyStr = assetNegotiationAssetsToBuy.getText().toString();
         if (assetsToBuyStr.length() == 0) {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_buy_quantity_zero),
                     Toast.LENGTH_SHORT).show();
@@ -320,7 +320,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_buy_quantity),
                     Toast.LENGTH_SHORT).show();
             return false;
-        }
+        }*/
 
         return true;
     }
