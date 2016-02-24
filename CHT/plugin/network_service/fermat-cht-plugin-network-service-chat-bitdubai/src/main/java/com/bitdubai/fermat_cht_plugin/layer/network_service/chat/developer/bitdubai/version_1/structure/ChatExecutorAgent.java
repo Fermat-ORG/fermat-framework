@@ -12,6 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetNoti
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatMetadataRecordDAO;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -34,7 +35,7 @@ import java.util.UUID;
 public final class ChatExecutorAgent extends FermatAgent {
 
     // Represent the sleep time for the cycles of receive and send in this agent, with both cycles send and receive 1500 millis.
-    private static final long SLEEP_TIME = 2000;
+    private static final long SLEEP_TIME = 4000;
 
     // Represent the receive and send cycles for this agent.
     private Thread agentThread;
@@ -139,8 +140,9 @@ public final class ChatExecutorAgent extends FermatAgent {
 
         try {
 
-            List<ChatMetadataRecord> chatMetadataRecords = chatMetadataRecordDAO.listRequestsByChatProtocolState(
-                    ChatProtocolState.PROCESSING_SEND
+            List<ChatMetadataRecord> chatMetadataRecords = chatMetadataRecordDAO.listRequestsByChatProtocolStateAndDistributionStatus(
+                    ChatProtocolState.PROCESSING_SEND,
+                    DistributionStatus.SENT
             );
 
             for(ChatMetadataRecord chatMetadataRecord : chatMetadataRecords) {
@@ -152,11 +154,28 @@ public final class ChatExecutorAgent extends FermatAgent {
                         chatMetadataRecord.getRemoteActorPublicKey(),
                         chatMetadataRecord.getRemoteActorType()
                 )) {
-                    changeDoneState(chatMetadataRecord.getTransactionId(), ChatProtocolState.SENT);
+                    changeDoneState(chatMetadataRecord.getTransactionId(), ChatProtocolState.WAITING_RESPONSE);
                 }
 
             }
+            chatMetadataRecords = chatMetadataRecordDAO.listRequestsByChatProtocolStateAndDistributionStatus(
+                    ChatProtocolState.PROCESSING_RECEIVE,
+                    DistributionStatus.DELIVERED
+            );
 
+            for(ChatMetadataRecord chatMetadataRecord : chatMetadataRecords) {
+
+                if (sendMessageToRemote(
+                        chatMetadataRecord.getMsgXML(),
+                        chatMetadataRecord.getLocalActorPublicKey(),
+                        chatMetadataRecord.getLocalActorType(),
+                        chatMetadataRecord.getRemoteActorPublicKey(),
+                        chatMetadataRecord.getRemoteActorType()
+                )) {
+                    changeDoneState(chatMetadataRecord.getTransactionId(), ChatProtocolState.DONE);
+                }
+
+            }
         } catch(CantReadRecordDataBaseException |
                 CantLoadTableToMemoryException
                 e) {
@@ -255,5 +274,7 @@ public final class ChatExecutorAgent extends FermatAgent {
     private void reportUnexpectedError(final Exception e) {
         errorManager.reportUnexpectedPluginException(chatNetworkServicePluginRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
-
+    public void connectionFailure(final String identityPublicKey){
+        this.poolConnectionsWaitingForResponse.remove(identityPublicKey);
+    }
 }
