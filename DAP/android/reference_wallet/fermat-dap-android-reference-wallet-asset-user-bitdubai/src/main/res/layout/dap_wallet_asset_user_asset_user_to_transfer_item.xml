@@ -6,7 +6,8 @@
     android:orientation="vertical"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
-    android:paddingTop="4dp">>
+    android:paddingTop="4dp">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,7 +22,7 @@
             android:layout_alignParentRight="true">
 
             <ImageView
-                android:id="@+id/imageView_user_sell_avatar"
+                android:id="@+id/imageView_user_tranfer_avatar"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerInParent="true"
@@ -31,19 +32,28 @@
         </RelativeLayout>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/userName"
+            android:id="@+id/userNameTransfer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:layout_centerVertical="true"
-            android:text="Jinmy Bohorquez"
+            android:text="Penelope Quintero"
             android:textSize="16sp"
             android:textColor="#2d3e50"
             tools:ignore="HardcodedText,RtlSymmetry" />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/selectUserTransferButton"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_deliver_user_add"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="6dp" />
 
     <View
         android:layout_width="fill_parent"
