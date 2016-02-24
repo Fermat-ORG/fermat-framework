@@ -13,7 +13,6 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserCom
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
-import com.bitdubai.fermat_dap_api.layer.all_definition.events.ReceivedNewTransactionStatusNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetIssuerCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetNetworkServicePendingsNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetRedeemPointCompleteRegistrationNotificationEventListener;
@@ -21,30 +20,19 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetUser
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetUserRequestListRegisteredNetworksNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.NewReceiveMessageActorNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ReceivedNewDigitalAssetMetadataNotificationEventListener;
-import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ReceivedNewTransactionStatusNotificationEventListener;
 
 /**
  * Created by Nerio on 27/10/15.
  */
 public enum EventType implements FermatEventEnum {
 
-    RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
+    RECEIVE_NEW_DAP_MESSAGE("RNDAMN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new ReceivedNewDigitalAssetMetadataNotificationEventListener(this, eventMonitor);
         }
 
         public FermatEvent getNewEvent() {
             return new ReceivedNewDigitalAssetMetadataNotificationEvent(this);
-        }
-    },
-
-    RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION("RNTSN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new ReceivedNewTransactionStatusNotificationEventListener(this, eventMonitor);
-        }
-
-        public FermatEvent getNewEvent() {
-            return new ReceivedNewTransactionStatusNotificationEvent(this);
         }
     },
 
