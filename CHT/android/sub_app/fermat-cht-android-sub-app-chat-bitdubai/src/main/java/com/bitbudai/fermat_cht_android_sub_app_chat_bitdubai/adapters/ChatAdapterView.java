@@ -67,11 +67,11 @@ public class ChatAdapterView extends LinearLayout {
     private ViewGroup rootView;
     private String leftName;
     private String rightName;
-    private UUID chatid;
-    private UUID contactid;
+    private UUID chatId;
+    private UUID contactId;
     private int background = -1;
-    private String remotepk;
-    private PlatformComponentType remotepct;
+    private String remotePk;
+    private PlatformComponentType remotePCT;
     private boolean loadDummyData = false;
     private boolean chatWasCreate =false;
 
@@ -104,16 +104,16 @@ public class ChatAdapterView extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
+    void findValues(Contact contact){ //With contact Id find chatId,pkremote,actortype
         try {
             if (contact != null){
-                remotepk = contact.getRemoteActorPublicKey();
-                remotepct = contact.getRemoteActorType();
-                contactid=contact.getContactId();
+                remotePk = contact.getRemoteActorPublicKey();
+                remotePCT = contact.getRemoteActorType();
+                contactId =contact.getContactId();
                 leftName=contact.getAlias();
                 for (int i = 0; i < chatManager.getMessages().size(); i++) {
-                    if (contactid.equals(chatManager.getMessages().get(i).getContactId())) {
-                        chatid = chatManager.getMessages().get(i).getChatId();
+                    if (contactId.equals(chatManager.getMessages().get(i).getContactId())) {
+                        chatId = chatManager.getMessages().get(i).getChatId();
                     }
                 }
             }
@@ -124,55 +124,55 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    public void whattodo(){
+    public void whatToDo(){
         try {
             System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
             if (chatSession.getData("whocallme").equals("chatlist")) {
-                findvalues((Contact)chatSession.getData("contactid"));//if I choose a chat, this will retrieve the chatid
+                findValues((Contact) chatSession.getData("contactId"));//if I choose a chat, this will retrieve the chatId
                 chatWasCreate = true;
             } else if (chatSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
-                findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
+                findValues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
                 //Here it is define if we need to create a new chat or just add the message to chat created previously
-                chatWasCreate = chatid != null;
+                chatWasCreate = chatId != null;
             }
         }catch(Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
-    public void findmessage(){
+    public void findMessage(){
         String message;
         String inorout;
         ChatMessage msg;
         Chat chat;
-        int messsize;
+        int messSize;
         try {
             setChatHistory(null);
-            if(chatid!=null){
-                chat=chatManager.getChatByChatId(chatid);
+            if(chatId !=null){
+                chat=chatManager.getChatByChatId(chatId);
             }else{
                 chat=chatSession.getSelectedChat();
             }
 
             if(chat!=null)
-                chatid=chat.getChatId();
+                chatId =chat.getChatId();
             if (chatHistory == null) {
                 chatHistory = new ArrayList<ChatMessage>();
             }
 
-            if(chatid!=null){
-                messsize=chatManager.getMessageByChatId(chatid).size();
+            if(chatId !=null){
+                messSize=chatManager.getMessageByChatId(chatId).size();
 
-                for (int i = 0; i < messsize; i++) {
+                for (int i = 0; i < messSize; i++) {
                     msg = new ChatMessage();
-                    message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
-                    inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
-                    msg.setId(chatManager.getMessageByChatId(chatid).get(i).getMessageId());
+                    message=chatManager.getMessageByChatId(chatId).get(i).getMessage();
+                    inorout=chatManager.getMessageByChatId(chatId).get(i).getType().toString();
+                    msg.setId(chatManager.getMessageByChatId(chatId).get(i).getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else msg.setMe(false);
-                    msg.setStatus(chatManager.getMessageByChatId(chatid).get(i).getStatus().toString());
-                    msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatid).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString()
-                    msg.setUserId(chatManager.getMessageByChatId(chatid).get(i).getContactId());
+                    msg.setStatus(chatManager.getMessageByChatId(chatId).get(i).getStatus().toString());
+                    msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatId).get(i).getMessageDate().toString()
+                    msg.setUserId(chatManager.getMessageByChatId(chatId).get(i).getContactId());
                     msg.setMessage(message);
                     chatHistory.add(msg);
                 }
@@ -200,8 +200,8 @@ public class ChatAdapterView extends LinearLayout {
         RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 
         if(chatSession!= null){
-            whattodo();
-            findmessage();
+            whatToDo();
+            findMessage();
         }
 //        if (rightName != null) {
 //            meLabel.setText(rightName);
@@ -243,16 +243,16 @@ public class ChatAdapterView extends LinearLayout {
                     Long dv = System.currentTimeMillis();
 
                     if (chatWasCreate) {
-                        chat=(ChatImpl)chatManager.getChatByChatId(chatid);
+                        chat=(ChatImpl)chatManager.getChatByChatId(chatId);
                         chatManager.saveChat(chat);
 
-                        message.setChatId(chatid);
+                        message.setChatId(chatId);
                         message.setMessageId(UUID.randomUUID());
                         message.setMessage(messageText);
                         message.setMessageDate(new Timestamp(dv));
                         message.setStatus(MessageStatus.CREATED);
                         message.setType(TypeMessage.OUTGOING);
-                        message.setContactId(contactid);
+                        message.setContactId(contactId);
                         chatManager.saveMessage(message);
                     } else {
                         UUID newChatId = UUID.randomUUID();
@@ -260,13 +260,13 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setObjectId(UUID.randomUUID());
                         chat.setStatus(ChatStatus.VISSIBLE);
                         //Todo: find another chat name
-                        chat.setChatName("Chat_" + remotepk);
+                        chat.setChatName("Chat_" + remotePk);
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
                         chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
                         chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        chat.setRemoteActorPublicKey(remotepk);
-                        chat.setRemoteActorType(remotepct);
+                        chat.setRemoteActorPublicKey(remotePk);
+                        chat.setRemoteActorType(remotePCT);
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
@@ -275,18 +275,18 @@ public class ChatAdapterView extends LinearLayout {
                         message.setMessageDate(new Timestamp(dv));
                         message.setStatus(MessageStatus.CREATED);
                         message.setType(TypeMessage.OUTGOING);
-                        message.setContactId(contactid);
+                        message.setContactId(contactId);
                         chatManager.saveMessage(message);
                         //If everything goes OK, we save the chat in the fragment session.
                         chatSession.setData("whocallme","chatlist");
-                        chatSession.setData("contactid",contactid);
+                        chatSession.setData("contactId", contactId);
                         /**
                          * This chat was created, so, I will put chatWasCreate as true to avoid
                          * the multiple chats from this contact. Also I will put the chatId as
                          * newChatId
                          */
                         chatWasCreate=true;
-                        chatid=newChatId;
+                        chatId =newChatId;
                     }
 
                     ChatMessage chatMessage = new ChatMessage();
@@ -320,7 +320,7 @@ public class ChatAdapterView extends LinearLayout {
                 public void run() {
                     Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
                     try {
-                        findmessage();
+                        findMessage();
                     } catch (Exception e) {
                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     }
@@ -372,8 +372,8 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void refreshEvents() {
-        whattodo();
-        findmessage();
+        whatToDo();
+        findMessage();
         scroll();
     }
 
