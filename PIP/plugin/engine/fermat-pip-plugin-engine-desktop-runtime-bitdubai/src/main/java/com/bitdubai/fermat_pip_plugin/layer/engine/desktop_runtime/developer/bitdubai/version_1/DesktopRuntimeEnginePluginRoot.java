@@ -193,6 +193,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             activity = new Activity();
             activity.setFullScreen(true);
             activity.setActivityType(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode());
+            activity.setType(Activities.DESKTOP_SETTING_FERMAT_NETWORK);
             activity.setStartFragment(Fragments.DESKTOP_SETTINGS.getKey());
             activity.setBackActivity(Activities.CCP_DESKTOP);
             runtimeFragment = new Fragment();

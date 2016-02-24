@@ -17,6 +17,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
@@ -42,7 +43,7 @@ import java.util.List;
  * @version 1.0
  * @since 20/10/2015
  */
-public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
+public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragment<GrouperItem,CryptoBrokerWalletSession,ResourceProviderManager>
         implements FermatListItemListeners<CustomerBrokerNegotiationInformation> {
 
     // Fermat Managers
