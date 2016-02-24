@@ -13,6 +13,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
@@ -28,7 +29,7 @@ import java.util.UUID;
 public interface DAO {
 
 
-    ChatMetadataRecord createNotification(ChatMetadataRecord chatMetadataRecord) throws CantCreateNotificationException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException;
+    void createNotification(ChatMetadataRecord chatMetadataRecord) throws CantCreateNotificationException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException;
 
     ChatMetadataRecord getNotificationById(final UUID transactionID) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException;
 
@@ -41,10 +42,10 @@ public interface DAO {
                                 final MessageStatus messageStatus) throws CantUpdateRecordDataBaseException, CantUpdateRecordException, RequestNotFoundException, CantReadRecordDataBaseException;
 
     void changeChatProtocolState(final UUID requestId,
-                                    final ChatProtocolState protocolState) throws CHTException, CantGetNotificationException, NotificationNotFoundException;
+                                 final ChatProtocolState protocolState) throws CHTException, CantGetNotificationException, NotificationNotFoundException;
 
 
-  List<ChatMetadataRecord> listRequestsByChatProtocolState(final ChatProtocolState chatProtocolState) throws CantReadRecordDataBaseException, CantLoadTableToMemoryException;
+  List<ChatMetadataRecord> listRequestsByChatProtocolStateAndDistributionStatus(final ChatProtocolState chatProtocolState, final DistributionStatus distributionStatus) throws CantReadRecordDataBaseException, CantLoadTableToMemoryException;
 
 
     List<ChatMetadata> listUnreadNotifications() throws CHTException;
