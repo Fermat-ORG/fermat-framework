@@ -23,4 +23,8 @@ public class PreferenceSettingsTextPlusRadioItem implements PreferenceSettingsIt
     public boolean isRadioTouched() {
         return isRadioTouched;
     }
+
+    public void setIsRadioTouched(boolean isRadioTouched) {
+        this.isRadioTouched = isRadioTouched;
+    }
 }

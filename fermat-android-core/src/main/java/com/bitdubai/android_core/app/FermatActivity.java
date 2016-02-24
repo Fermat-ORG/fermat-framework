@@ -106,7 +106,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
@@ -566,7 +565,7 @@ public abstract class FermatActivity extends AppCompatActivity
         btn_fermat_network.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(),ApplicationConstants.SETTINGS_FERMAT_NETWORK);
+                //changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(),ApplicationConstants.SETTINGS_FERMAT_NETWORK);
             }
         });
 
@@ -1063,11 +1062,15 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        broadcastManager.resume(this);
-        AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
         try {
+            if(broadcastManager!=null)broadcastManager.resume(this);
+            else broadcastManager = new BroadcastManager(this);
+            AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
+
             //getNotificationManager().addObserver(this);
             //getNotificationManager().addCallback(this);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -1111,7 +1114,7 @@ public abstract class FermatActivity extends AppCompatActivity
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        broadcastManager.stop();
+        if(broadcastManager!=null)broadcastManager.stop();
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
@@ -1424,8 +1427,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
 
     protected void bottomNavigationEnabled(boolean enabled){
-        if(enabled) {
-            bottomNavigation = new BottomNavigation(this, ProvisoryData.getBottomNavigationProvisoryData(),null);
+        try {
+            if (enabled) {
+                bottomNavigation = new BottomNavigation(this, ProvisoryData.getBottomNavigationProvisoryData(), null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -1557,13 +1564,13 @@ public abstract class FermatActivity extends AppCompatActivity
      */
     public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference){
         try {
-            return getApplicationSession().getFermatSystem().getModuleManager2(pluginVersionReference);
+            return getApplicationSession().getFermatSystem().getModuleManager(pluginVersionReference);
         } catch (ModuleManagerNotFoundException | CantGetModuleManagerException e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
             return null;
         } catch (Exception e) {
-            System.out.println(e.toString());
+            System.err.println(e.toString());
             return null;
         }
     }
@@ -1659,7 +1666,7 @@ public abstract class FermatActivity extends AppCompatActivity
             NotificationPainter notificationPainter = fermatAppConnection.getNotificationPainter(code);
             if (notificationPainter != null) {
                 RemoteViews remoteViews = notificationPainter.getNotificationView(code);
-                Intent intent = new Intent(this, WalletActivity.class);
+                Intent intent = new Intent(this,(fermatStructure.getFermatAppType() == FermatAppType.WALLET)? WalletActivity.class:SubAppActivity.class);
                 intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
@@ -1805,8 +1812,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        try {
+            super.onConfigurationChanged(newConfig);
+            if(mDrawerToggle!=null) mDrawerToggle.onConfigurationChanged(newConfig);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void navigate(final int itemId) {
@@ -1823,9 +1834,13 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
+        if(mDrawerLayout!=null) {
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+        }else{
             super.onBackPressed();
         }
     }
