@@ -106,7 +106,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatFooter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
@@ -566,7 +565,7 @@ public abstract class FermatActivity extends AppCompatActivity
         btn_fermat_network.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(),ApplicationConstants.SETTINGS_FERMAT_NETWORK);
+                //changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(),ApplicationConstants.SETTINGS_FERMAT_NETWORK);
             }
         });
 
@@ -1065,10 +1064,13 @@ public abstract class FermatActivity extends AppCompatActivity
         super.onResume();
         try {
             if(broadcastManager!=null)broadcastManager.resume(this);
+            else broadcastManager = new BroadcastManager(this);
             AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
 
             //getNotificationManager().addObserver(this);
             //getNotificationManager().addCallback(this);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();

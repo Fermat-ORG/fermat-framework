@@ -39,6 +39,7 @@ public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlus
     @Override
     protected void bindHolder(SettingsTextPlusRadio holder, PreferenceSettingsTextPlusRadioItem data, final int position) {
         holder.getRadio().setText(data.getText());
+        holder.getRadio().setChecked(data.isRadioTouched());
         holder.getRadio().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
