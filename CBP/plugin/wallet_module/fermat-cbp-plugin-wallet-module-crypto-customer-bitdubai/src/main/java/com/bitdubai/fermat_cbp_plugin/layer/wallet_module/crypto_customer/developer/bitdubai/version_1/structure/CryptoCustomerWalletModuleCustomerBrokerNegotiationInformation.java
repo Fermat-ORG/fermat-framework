@@ -79,7 +79,8 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
             NegotiationStatus status,
             Map<ClauseType, ClauseInformation> clauses,
             String note,
-            long lastUpdateDate
+            long lastUpdateDate,
+            long expirationDatetime
     ) {
         this.customerIdentity   = customerIdentity;
         this.brokerIdentity     = brokerIdentity;
@@ -112,6 +113,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         this.note           = note;
         this.lastUpdateDate = lastUpdateDate;
         this.cancelReason   = "";
+        this.expirationDatetime = expirationDatetime;
 
     }
 
@@ -153,6 +155,7 @@ public class CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation impl
         this.note           = negotiationInformation.getMemo();
         this.lastUpdateDate = negotiationInformation.getLastNegotiationUpdateDate();
         this.cancelReason   = cancelReason;
+        this.expirationDatetime = negotiationInformation.getNegotiationExpirationDate();
     }
 
     @Override

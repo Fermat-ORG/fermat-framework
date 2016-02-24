@@ -50,7 +50,7 @@ public class StockTransactionCryptoMoneyRestockManager implements
     }
 
     @Override
-    public void createTransactionRestock(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey,  BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId) throws CantCreateCryptoMoneyRestockException {
+    public void createTransactionRestock(String publicKeyActor, CryptoCurrency cryptoCurrency, String cbpWalletPublicKey, String cryWalletPublicKey,  BigDecimal amount, String memo, BigDecimal priceReference, OriginTransaction originTransaction, String originTransactionId, BlockchainNetworkType blockchainNetworkType) throws CantCreateCryptoMoneyRestockException {
         java.util.Date date = new java.util.Date();
         Timestamp timestamp = new Timestamp(date.getTime());
         CryptoMoneyRestockTransactionImpl cryptoMoneyRestockTransaction = new CryptoMoneyRestockTransactionImpl(
@@ -67,7 +67,7 @@ public class StockTransactionCryptoMoneyRestockManager implements
                 priceReference,
                 originTransaction,
                 originTransactionId,
-                BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar esto porque esto viene en el refactor de richard
+                blockchainNetworkType);
 
         try {
             StockTransactionCryptoMoneyRestockFactory stockTransactionCryptoMoneyRestockFactory = new StockTransactionCryptoMoneyRestockFactory(pluginDatabaseSystem, pluginId);
