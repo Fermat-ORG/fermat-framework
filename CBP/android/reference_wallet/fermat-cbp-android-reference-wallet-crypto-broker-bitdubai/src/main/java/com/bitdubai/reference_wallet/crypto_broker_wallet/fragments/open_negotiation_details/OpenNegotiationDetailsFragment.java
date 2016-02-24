@@ -296,10 +296,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             public void onClick(String newValue) {
                 final BigDecimal exchangeRate = MathUtils.getBigDecimal(clause);
                 final BigDecimal amountToSell = MathUtils.getBigDecimal(clauses.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
-
                 final double amountToReceiveValue = exchangeRate.multiply(amountToSell).doubleValue();
                 final ClauseInformation amountToReceiveClause = clauses.get(ClauseType.BROKER_CURRENCY_QUANTITY);
-
                 negotiationWrapper.changeClauseValue(clause, newValue);
                 negotiationWrapper.changeClauseValue(amountToReceiveClause, numberFormat.format(amountToReceiveValue));
 
