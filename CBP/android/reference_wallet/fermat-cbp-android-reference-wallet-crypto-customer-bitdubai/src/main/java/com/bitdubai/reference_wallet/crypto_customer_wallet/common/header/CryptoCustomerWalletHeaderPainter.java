@@ -5,13 +5,14 @@ import android.app.FragmentManager;
 import android.os.Build;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.SizeUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -64,10 +65,10 @@ public class CryptoCustomerWalletHeaderPainter implements HeaderViewPainter {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             FrameLayout headerContainer = (FrameLayout) container.findViewById(R.id.ccw_header_layout_container);
             ViewGroup.MarginLayoutParams marginParams = new  ViewGroup.MarginLayoutParams(headerContainer.getLayoutParams());
-            marginParams.topMargin = 100;
+            marginParams.topMargin = SizeUtils.convertDpToPixels(55, activity);
+            marginParams.height = SizeUtils.convertDpToPixels(90, activity);
 
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(marginParams);
-            layoutParams.gravity = Gravity.NO_GRAVITY;
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
             headerContainer.setLayoutParams(layoutParams);
         }
 
