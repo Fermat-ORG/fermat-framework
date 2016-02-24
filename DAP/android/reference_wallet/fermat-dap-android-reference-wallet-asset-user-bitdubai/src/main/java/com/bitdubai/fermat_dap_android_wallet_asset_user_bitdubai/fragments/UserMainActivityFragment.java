@@ -399,7 +399,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         if (moduleManager != null) {
             try {
                 digitalAssets = Data.getAllDigitalAssets(moduleManager);
-                digitalAssets.addAll(Data.getAllPendingNegotiations(moduleManager));
+//                digitalAssets.addAll(Data.getAllPendingNegotiations(moduleManager));
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

@@ -236,7 +236,7 @@ public class AssetNegotiationDetailFragment extends AbstractFermatFragment {
                 if (isValidBuy()) {
                     new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_buy))
                             .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                 @Override

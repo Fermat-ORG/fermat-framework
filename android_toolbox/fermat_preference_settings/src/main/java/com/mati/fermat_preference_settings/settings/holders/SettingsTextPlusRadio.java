@@ -20,7 +20,7 @@ public class SettingsTextPlusRadio extends FermatViewHolder {
 
     }
 
-    public RadioButton getFermatTextView() {
+    public RadioButton getRadio() {
         return radio_context;
     }
 }
