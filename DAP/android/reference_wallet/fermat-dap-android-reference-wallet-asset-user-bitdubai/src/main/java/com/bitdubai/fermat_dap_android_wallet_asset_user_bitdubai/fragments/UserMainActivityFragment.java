@@ -80,7 +80,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     //UI
     private View noAssetsView;
     private SearchView searchView;
-    private boolean showNoBalance;
+    private boolean showNoBalance = true;
 
     public static UserMainActivityFragment newInstance() {
         return new UserMainActivityFragment();
@@ -150,6 +150,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             }
         }, 500);
 
+        ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter("");
     }
 
     private void setUpPresentation(boolean checkButton) {
