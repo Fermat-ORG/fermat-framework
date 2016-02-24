@@ -131,8 +131,8 @@ public class Data {
         }
         return transactions;
     }
-    /*Hardcodeo para TEST de Negotiation Detail Fragmet*/
-    /*public static List<DigitalAsset> getAllPendingNegotiations(AssetUserWalletSubAppModuleManager moduleManager) throws Exception {
+
+    public static List<DigitalAsset> getAllPendingNegotiations(AssetUserWalletSubAppModuleManager moduleManager) throws Exception {
         List<AssetNegotiation> assetNegotiations = moduleManager.getPendingAssetNegotiations();
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
@@ -160,7 +160,7 @@ public class Data {
         }
 
         return digitalAssets;
-    }*/
+    }
     /*public static List<DigitalAsset> getAllPendingNegotiations(AssetUserWalletSubAppModuleManager moduleManager) throws Exception {
         List<AssetUserWalletList> assets = moduleManager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         List<DigitalAsset> digitalAssets = new ArrayList<>();
