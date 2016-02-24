@@ -188,7 +188,7 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
 
     private void test() {
         //RAISE EVENT
-        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION);
+        FermatEvent eventToRaise = eventManager.getNewEvent(EventType.RECEIVE_NEW_DAP_MESSAGE);
         eventToRaise.setSource(EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION);
         eventManager.raiseEvent(eventToRaise);
     }

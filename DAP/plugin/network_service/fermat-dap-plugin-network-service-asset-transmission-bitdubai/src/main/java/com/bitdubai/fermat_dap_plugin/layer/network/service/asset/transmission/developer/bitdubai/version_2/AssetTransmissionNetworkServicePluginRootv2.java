@@ -1,5 +1,7 @@
-package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -11,29 +13,29 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPNetworkService;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantGetDAPMessagesException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.IncomingMessageDao;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_1.database.communications.OutgoingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.DAPMessageDAO;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.IncomingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.OutgoingMessageDao;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -41,16 +43,13 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
- * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 10/02/16.
+ * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 10/02/16. - Jose Briceño josebricenor@gmail.com (22/02/16)
  */
-public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetworkServiceBase
-        implements AssetTransmissionNetworkServiceManager {
+public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetworkServiceBase implements DAPNetworkService {
 
     //VARIABLE DECLARATION
 
@@ -88,6 +87,7 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
      */
     private IncomingMessageDao incomingMessageDao;
     private OutgoingMessageDao outgoingMessageDao;
+    private DAPMessageDAO dapMessageDAO;
     /**
      * Represent the communicationNetworkServiceDeveloperDatabaseFactory
      */
@@ -104,9 +104,9 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
      */
     public AssetTransmissionNetworkServicePluginRootv2() {
         super(new PluginVersionReference(new Version()),
-                EventSource.NETWORK_SERVICE_INTRA_ACTOR,
+                EventSource.NETWORK_SERVICE_ASSET_TRANSMISSION,
                 PlatformComponentType.NETWORK_SERVICE,
-                NetworkServiceType.INTRA_USER,
+                NetworkServiceType.ASSET_TRANSMISSION,
                 "Asset Transmission Network Service",
                 null);
         this.actorsToRegisterCache = new ArrayList<>();
@@ -119,8 +119,14 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
      * AbstractPlugin#start() is called
      */
     @Override
-    protected void onStart() {
+    protected void onStart() throws CantStartPluginException {
+        createDatabase();
 
+        try {
+            super.start();
+        } catch (CantStartPluginException e) {
+            throw new CantStartPluginException(FermatException.wrapException(e));
+        }
     }
 
     /**
@@ -230,6 +236,11 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
     @Override
     public void sendMessage(DAPMessage dapMessage) throws CantSendMessageException {
 
+        try {
+            dapMessageDAO.create(dapMessage, MessageStatus.PENDING_TO_SEND);
+        } catch (CantInsertRecordDataBaseException e) {
+            throw new CantSendMessageException();
+        }
     }
 
     /**
@@ -241,46 +252,46 @@ public class AssetTransmissionNetworkServicePluginRootv2 extends AbstractNetwork
      */
     @Override
     public List<DAPMessage> getUnreadDAPMessagesByType(DAPMessageType type) throws CantGetDAPMessagesException {
-        return Collections.EMPTY_LIST;
+
+        try {
+            return dapMessageDAO.findUnreadByType(type.getCode());
+        } catch (CantReadRecordDataBaseException e) {
+            throw new CantGetDAPMessagesException();
+        }
     }
 
     @Override
     public List<DAPMessage> getUnreadDAPMessageBySubject(DAPMessageSubject subject) throws CantGetDAPMessagesException {
-        return Collections.EMPTY_LIST;
+
+        try {
+            return dapMessageDAO.findUnreadBySubject(subject.getCode());
+        } catch (CantReadRecordDataBaseException e) {
+            throw new CantGetDAPMessagesException();
+        }
     }
 
     @Override
     public void confirmReception(DAPMessage message) throws CantUpdateMessageStatusException {
 
-    }
+        try {
+            dapMessageDAO.confirmDAPMessageReception(message);
+        } catch (CantUpdateRecordDataBaseException e) {
+            throw new CantUpdateMessageStatusException();
+        }
 
-    /**
-     * Method that send the Transaction New Status Notification
-     *
-     * @param actorSenderPublicKey   {@link String} that represents the public key from the actor that sends the message.
-     * @param senderType             {@link PlatformComponentType} that represents the type of actor that sends the message
-     * @param actorReceiverPublicKey {@link String} that represents the public key from the actor that receives the message.
-     * @param receiverType           {@link PlatformComponentType} that represents the type of actor that receives the message
-     * @param genesisTransaction     {@link String} the genesisTransaction related with the status notification
-     * @param newDistributionStatus  {@link DistributionStatus} with the new status for the transaction.
-     * @throws CantSendTransactionNewStatusNotificationException in case something goes wrong while trying to send the message.
-     */
-    @Override
-    public void sendTransactionNewStatusNotification(String actorSenderPublicKey, PlatformComponentType senderType, String actorReceiverPublicKey, PlatformComponentType receiverType, String genesisTransaction, DistributionStatus newDistributionStatus) throws CantSendTransactionNewStatusNotificationException {
-
-    }
-
-    @Override
-    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
-
-    }
-
-    @Override
-    public List<Transaction<DigitalAssetMetadataTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
-        return null;
     }
 
     //PRIVATE METHODS
+
+    private void createDatabase() {
+        CommunicationNetworkServiceDatabaseFactory databaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem,pluginId);
+
+        try {
+            dataBase = databaseFactory.createDatabase();
+        } catch (CantCreateDatabaseException e) {
+            e.printStackTrace();
+        }
+    }
 
     //GETTER AND SETTERS
 
