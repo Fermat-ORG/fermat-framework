@@ -480,7 +480,7 @@ public class ChatMiddlewareMonitorAgent implements
                         saveMessage(incomingChatMetadata);
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
-      //                  broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
                         contact=getContactFromChatMetadata(incomingChatMetadata);
                         code=contact.getRemoteName()+"@#@#"+incomingChatMetadata.getMessage();
                         broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_NEWMESSAGE.getCode(),code);
