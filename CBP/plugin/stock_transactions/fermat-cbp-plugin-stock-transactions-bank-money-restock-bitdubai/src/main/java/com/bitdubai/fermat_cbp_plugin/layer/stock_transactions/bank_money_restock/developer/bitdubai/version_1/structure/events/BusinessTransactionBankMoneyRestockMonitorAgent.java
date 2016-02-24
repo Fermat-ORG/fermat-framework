@@ -32,6 +32,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -204,11 +205,11 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                         break;
                     case IN_EJECUTION:
                         //Luego cambiar el status al registro de la transaccion leido
-                        if (holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode() == BankTransactionStatus.CONFIRMED.getCode()) {
+                        if (Objects.equals(holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode(), BankTransactionStatus.CONFIRMED.getCode())) {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
                             stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
                         }
-                        if (holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode() == BankTransactionStatus.REJECTED.getCode()) {
+                        if (Objects.equals(holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode(), BankTransactionStatus.REJECTED.getCode())) {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
                         }
@@ -219,7 +220,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de Bank Hold y si lo consigue entonces le cambia el status de IN_WALLET y hace el credito
                         BankTransactionStatus bankTransactionStatus = holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId());
-                        if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode()) {
+                        if (Objects.equals(BankTransactionStatus.CONFIRMED.getCode(), bankTransactionStatus.getCode())) {
 
                             WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
                                     bankMoneyTransaction.getTransactionId(),
