@@ -2,12 +2,8 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Switch;
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -22,7 +18,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.mati.fermat_preference_settings.settings.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsDialogItem;
+import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsSwithItem;
 
@@ -49,7 +45,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (ReferenceWalletSession) appSession;
+        referenceWalletSession = appSession;
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -68,48 +64,18 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
         List<PreferenceSettingsItem> list = new ArrayList<>();
-        list.add(new PreferenceSettingsSwithItem() {
-            @Override
-            public boolean getSwitchChecked() {
-                return true;
-            }
+        list.add(new PreferenceSettingsSwithItem("Enabled Notifications",false));
 
-            @Override
-            public String getText() {
-                return "Enabled Notifications";
-            }
-        });
-        list.add(new PreferenceSettingsOpenDialogText() {
-            @Override
-            public String getText() {
-                return "Select Network";
-            }
 
-            @Override
-            public List<PreferenceSettingsDialogItem> getOptionList() {
-               List<PreferenceSettingsDialogItem> strings = new ArrayList<PreferenceSettingsDialogItem>();
-                strings.add(new PreferenceSettingsDialogItem(){
-                    @Override
-                    public String getText() {
-                        return "MainNet";
-                    }
-                } );
-                strings.add(new PreferenceSettingsDialogItem(){
-                    @Override
-                    public String getText() {
-                        return "TestNet";
-                    }
-                } );
-                strings.add(new PreferenceSettingsDialogItem(){
-                    @Override
-                    public String getText() {
-                        return "RegTest";
-                    }
-                } );
-                return strings;
 
-            }
-        });
+
+        List<PreferenceSettingsTextPlusRadioItem> strings = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
+        strings.add(new PreferenceSettingsTextPlusRadioItem("MainNet",false));
+        strings.add(new PreferenceSettingsTextPlusRadioItem("TestNet",false));
+        strings.add(new PreferenceSettingsTextPlusRadioItem("RegTest",false));
+
+        list.add(new PreferenceSettingsOpenDialogText("Select Network",strings));
+
         return list;
     }
 
@@ -121,12 +87,12 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
      */
     @Override
     public void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position) {
-        PreferenceSettingsDialogItem preferenceSettingsDialogItem =   (PreferenceSettingsDialogItem)preferenceSettingsItem;
+        PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem =   (PreferenceSettingsTextPlusRadioItem)preferenceSettingsItem;
         BlockchainNetworkType blockchainNetworkType = null;
 
 
 
-        switch (preferenceSettingsDialogItem.getText()){
+        switch (preferenceSettingsTextPlusRadioItem.getText()){
 
             case "MainNet":
                 blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
@@ -145,7 +111,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
         }
 
-        System.out.println("SETTING SELECTED IS "+preferenceSettingsDialogItem.getText());
+        System.out.println("SETTING SELECTED IS "+ preferenceSettingsTextPlusRadioItem.getText());
         System.out.println("NETWORK TYPE TO BE SAVED IS  "+blockchainNetworkType.getCode());
 
         BitcoinWalletSettings bitcoinWalletSettings = null;

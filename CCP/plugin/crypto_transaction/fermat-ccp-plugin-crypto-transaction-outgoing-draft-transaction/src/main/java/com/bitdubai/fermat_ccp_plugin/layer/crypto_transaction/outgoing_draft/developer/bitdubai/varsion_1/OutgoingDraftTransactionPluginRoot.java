@@ -144,7 +144,6 @@ public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implement
                     null,//network not used now
                     bitcoinWalletManager,
                     outgoingDraftTransactionDao,
-                    null,
                     null, // transmission not used now
                     eventManager,
                     broadcaster
