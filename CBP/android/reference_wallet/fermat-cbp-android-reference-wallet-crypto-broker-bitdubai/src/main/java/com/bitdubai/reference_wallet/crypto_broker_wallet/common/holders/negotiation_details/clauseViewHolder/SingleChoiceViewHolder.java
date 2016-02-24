@@ -101,11 +101,11 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
             } else if (type == ClauseType.CUSTOMER_PAYMENT_METHOD || type == ClauseType.BROKER_PAYMENT_METHOD) {
                 friendlyValue = MoneyType.getByCode(clauseValue).getFriendlyName();
 
-            } else if (type == ClauseType.BROKER_BANK_ACCOUNT || type == ClauseType.CUSTOMER_BANK_ACCOUNT && clauseValue == null) {
-                friendlyValue = "No Bank Account";
+            } else if (type == ClauseType.BROKER_BANK_ACCOUNT || type == ClauseType.CUSTOMER_BANK_ACCOUNT) {
+                friendlyValue = clauseValue.isEmpty() ? "No Bank Account" : clauseValue;
 
-            } else if (type == ClauseType.BROKER_PLACE_TO_DELIVER || type == ClauseType.CUSTOMER_PLACE_TO_DELIVER && clauseValue == null) {
-                friendlyValue = "No Locations";
+            } else if (type == ClauseType.BROKER_PLACE_TO_DELIVER || type == ClauseType.CUSTOMER_PLACE_TO_DELIVER) {
+                friendlyValue = clauseValue.isEmpty() ? "No Locations": clauseValue;
             }
 
         } catch (FermatException ignore) {

@@ -404,8 +404,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     private void paymentMethodEventAction(final ClauseInformation clause, final Map<ClauseType, ClauseInformation> clauses) {
         try {
-
-            SimpleListDialogFragment dialogFragment;
+            SimpleListDialogFragment<MoneyType> dialogFragment;
             ClauseInformation brokerCurrency = clauses.get(ClauseType.BROKER_CURRENCY);
             List<MoneyType> paymentMethods = walletManager.getPaymentMethods(brokerCurrency.getValue(), appSession.getAppPublicKey());
 
@@ -416,29 +415,30 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 public void onItemSelected(MoneyType newValue) {
                     negotiationWrapper.changeClauseValue(clause, newValue.getCode());
 
-                    if (newValue == MoneyType.BANK && clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null) {
-
-                        final String currencyToReceive = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
-                        List<String> bankAccounts;
-                        try {
-                            bankAccounts = walletManager.getAccounts(currencyToReceive, appSession.getAppPublicKey());
-                        } catch (FermatException e) {
-                            bankAccounts = new ArrayList<>();
+                    if (newValue == MoneyType.BANK) {
+                        if (clauses.get(ClauseType.BROKER_BANK_ACCOUNT) == null) {
+                            List<String> bankAccounts;
+                            try {
+                                final String currencyToReceive = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+                                bankAccounts = walletManager.getAccounts(currencyToReceive, appSession.getAppPublicKey());
+                            } catch (FermatException e) {
+                                bankAccounts = new ArrayList<>();
+                            }
+                            final String bankAccount = bankAccounts.isEmpty() ? "" : bankAccounts.get(0);
+                            negotiationWrapper.addClause(ClauseType.BROKER_BANK_ACCOUNT, bankAccount);
                         }
-                        String bankAccount = bankAccounts.isEmpty() ? "No Bank Accounts" : bankAccounts.get(0);
-                        negotiationWrapper.addClause(ClauseType.BROKER_BANK_ACCOUNT, bankAccount);
 
-                    } else if (newValue == MoneyType.CASH_ON_HAND || newValue == MoneyType.CASH_DELIVERY &&
-                            clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null) {
-
-                        List<NegotiationLocations> locations;
-                        try {
-                            locations = Lists.newArrayList(walletManager.getAllLocations(NegotiationType.SALE));
-                        } catch (FermatException e) {
-                            locations = new ArrayList<>();
+                    } else if (newValue == MoneyType.CASH_ON_HAND || newValue == MoneyType.CASH_DELIVERY) {
+                        if (clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER) == null) {
+                            List<NegotiationLocations> locations;
+                            try {
+                                locations = Lists.newArrayList(walletManager.getAllLocations(NegotiationType.SALE));
+                            } catch (FermatException e) {
+                                locations = new ArrayList<>();
+                            }
+                            final String location = locations.isEmpty() ? "" : locations.get(0).getLocation();
+                            negotiationWrapper.addClause(ClauseType.BROKER_PLACE_TO_DELIVER, location);
                         }
-                        String location = locations.isEmpty() ? "No Locations" : locations.get(0).getLocation();
-                        negotiationWrapper.addClause(ClauseType.BROKER_PLACE_TO_DELIVER, location);
                     }
 
                     adapter.changeDataSet(negotiationWrapper);
@@ -464,7 +464,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         if (locations.isEmpty())
             Toast.makeText(getActivity(), "You don't have Locations. Add one in the Wallet Settings.", Toast.LENGTH_LONG).show();
         else {
-            final SimpleListDialogFragment dialogFragment = new SimpleListDialogFragment<>();
+            final SimpleListDialogFragment<NegotiationLocations> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("placeToDelivery", locations);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<NegotiationLocations>() {
                 @Override
@@ -490,7 +490,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         if (bankAccounts.isEmpty())
             Toast.makeText(getActivity(), "You don't have Bank Accounts. Add one in the Wallet Settings.", Toast.LENGTH_LONG).show();
         else {
-            final SimpleListDialogFragment dialogFragment = new SimpleListDialogFragment<>();
+            final SimpleListDialogFragment<String> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("bankAccount", bankAccounts);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<String>() {
                 @Override
