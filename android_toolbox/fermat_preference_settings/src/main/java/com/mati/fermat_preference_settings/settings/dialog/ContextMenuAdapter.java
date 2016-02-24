@@ -2,6 +2,7 @@ package com.mati.fermat_preference_settings.settings.dialog;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.CompoundButton;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.mati.fermat_preference_settings.R;
@@ -36,7 +37,22 @@ public class ContextMenuAdapter extends FermatAdapter<PreferenceSettingsTextPlus
     }
 
     @Override
-    protected void bindHolder(SettingsTextPlusRadio holder, PreferenceSettingsTextPlusRadioItem data, int position) {
-        holder.getFermatTextView().setText(data.getText());
+    protected void bindHolder(SettingsTextPlusRadio holder, PreferenceSettingsTextPlusRadioItem data, final int position) {
+        holder.getRadio().setText(data.getText());
+        holder.getRadio().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    clearNotSelectedRadioButton(position);
+                }
+            }
+        });
     }
+
+    private void clearNotSelectedRadioButton(int positionSelected){
+        for (int i = 0; i < getItemCount(); i++) {
+            if(i!=positionSelected) getItem(i).setIsRadioTouched(false);
+        }
+    }
+
 }
