@@ -95,7 +95,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     public FermatSystem getFermatSystem() {
         if(fermatSystem==null){
             fermatSystem = FermatSystem.getInstance();
-            fermatSessionManager = new FermatSessionManager();
         }
         return fermatSystem;
     }
@@ -106,6 +105,9 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      */
 
     public FermatSessionManager getFermatSessionManager() {
+        if(fermatSessionManager==null){
+            fermatSessionManager = new FermatSessionManager();
+        }
         return fermatSessionManager;
     }
 
