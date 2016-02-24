@@ -14,6 +14,7 @@ public class ChatMessage {
     private String message;
     private UUID userId;
     private String dateTime;
+    private String status;
 
     public ChatMessage(/*String idm, boolean isMem, String messagem, String userIdm, String dateTimem*/) {
        /* id = idm;
@@ -23,6 +24,13 @@ public class ChatMessage {
         dateTime = dateTimem;*/
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
     public UUID getId() {
         return id;
     }

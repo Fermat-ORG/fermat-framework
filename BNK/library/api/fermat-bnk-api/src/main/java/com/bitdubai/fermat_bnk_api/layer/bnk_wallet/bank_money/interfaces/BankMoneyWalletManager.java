@@ -10,7 +10,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLo
 public interface BankMoneyWalletManager extends FermatManager {
 
 
-    public BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyWalletException;
+    BankMoneyWallet loadBankMoneyWallet(String walletPublicKey) throws CantLoadBankMoneyWalletException;
 
     /*public void createBankMoneyWallet (String walletPublicKey) throws CantCreateBankMoneyWalletException;*/
 }

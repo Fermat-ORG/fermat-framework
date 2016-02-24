@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -28,6 +30,8 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.Network
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -56,16 +60,23 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      */
     NetworkServiceChatManager networkServiceChatManager;
 
+    /**
+     * Represents the ErrorManager
+     */
+    ErrorManager errorManager;
+
     public ChatMiddlewareManager(
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
             ChatMiddlewareContactFactory chatMiddlewareContactFactory,
             ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
-            NetworkServiceChatManager networkServiceChatManager
+            NetworkServiceChatManager networkServiceChatManager,
+            ErrorManager errorManager
     ) {
         this.chatMiddlewareDatabaseDao = chatMiddlewareDatabaseDao;
         this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
         this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
         this.networkServiceChatManager = networkServiceChatManager;
+        this.errorManager = errorManager;
     }
 
     /**
@@ -78,10 +89,23 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         try{
             return this.chatMiddlewareDatabaseDao.getChatList();
         } catch (DatabaseOperationException exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantGetChatException(
                     exception,
                     "Getting the chat list from database",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetChatException(
+                    FermatException.wrapException(exception),
+                    "Getting the chat list from database",
+                    "Unexpected exception");
         }
     }
 
@@ -97,15 +121,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             ObjectChecker.checkArgument(chatId, "The chat Id argument is null");
             return this.chatMiddlewareDatabaseDao.getChatByChatId(chatId);
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetChatException(
                     e,
                     "Getting a chat by UUID",
                     "The chat Id probably is null");
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetChatException(
                     e,
                     "Getting a chat by UUID",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetChatException(
+                    FermatException.wrapException(exception),
+                    "Getting a chat by UUID",
+                    "Unexpected exception");
         }
     }
 
@@ -116,7 +157,19 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      */
     @Override
     public Chat newEmptyInstanceChat() throws CantNewEmptyChatException {
-        return this.chatMiddlewareDatabaseDao.newEmptyInstanceChat();
+        try{
+            return this.chatMiddlewareDatabaseDao.newEmptyInstanceChat();
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantNewEmptyChatException(
+                    FermatException.wrapException(exception),
+                    "Getting a new empty instance chat",
+                    "Unexpected exception");
+        }
+
     }
 
     /**
@@ -130,15 +183,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             ObjectChecker.checkArgument(chat, "The chat argument is null");
             this.chatMiddlewareDatabaseDao.saveChat(chat);
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSaveChatException(
                     e,
                     "Saving a chat in database",
                     "The chat probably is null");
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSaveChatException(
                     e,
                     "Saving a chat in database",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveChatException(
+                    FermatException.wrapException(exception),
+                    "Saving a chat in database",
+                    "Unexpected exception");
         }
     }
 
@@ -153,15 +223,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             ObjectChecker.checkArgument(chat, "The chat argument is null");
             this.chatMiddlewareDatabaseDao.deleteChat(chat);
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantDeleteChatException(
                     e,
                     "Deleting a chat from database",
                     "The chat probably is null");
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantDeleteChatException(
                     e,
                     "Deleting a chat from database",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteChatException(
+                    FermatException.wrapException(exception),
+                    "Deleting a chat from database",
+                    "Unexpected exception");
         }
     }
 
@@ -175,10 +262,23 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         try {
             return this.chatMiddlewareDatabaseDao.getMessages();
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetMessageException(
                     e,
                     "Getting the full messages list",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetMessageException(
+                    FermatException.wrapException(exception),
+                    "Getting the full messages list",
+                    "Unexpected exception");
         }
     }
 
@@ -194,15 +294,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             ObjectChecker.checkArgument(chatId, "The chat id argument is null");
             return this.chatMiddlewareDatabaseDao.getMessageByChatId(chatId);
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetMessageException(
                     e,
                     "Getting a message from database",
                     "The chat id is probably null");
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetMessageException(
                     e,
                     "Getting a message from database",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetMessageException(
+                    FermatException.wrapException(exception),
+                    "Getting a message from database",
+                    "Unexpected exception");
         }
     }
 
@@ -218,15 +335,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             ObjectChecker.checkArgument(messageId, "The message Id is null");
             return this.chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetMessageException(
                     e,
                     "Getting a message from database",
                     "The chat id is probably null");
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetMessageException(
                     e,
                     "Getting a message from database",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetMessageException(
+                    FermatException.wrapException(exception),
+                    "Getting a message from database",
+                    "Unexpected exception");
         }
     }
 
@@ -237,7 +371,18 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      */
     @Override
     public Message newEmptyInstanceMessage() throws CantNewEmptyMessageException {
-        return this.chatMiddlewareDatabaseDao.newEmptyInstanceMessage();
+        try{
+            return this.chatMiddlewareDatabaseDao.newEmptyInstanceMessage();
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantNewEmptyMessageException(
+                    FermatException.wrapException(exception),
+                    "Getting a new empty instance message",
+                    "Unexpected exception");
+        }
     }
 
     /**
@@ -251,15 +396,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             ObjectChecker.checkArgument(message, "The message argument is null");
             this.chatMiddlewareDatabaseDao.saveMessage(message);
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSaveMessageException(
                     e,
                     "Saving a message in database",
                     "The message is probably null");
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSaveMessageException(
                     e,
                     "Saving a message in database",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveMessageException(
+                    FermatException.wrapException(exception),
+                    "Getting a message from database",
+                    "Unexpected exception");
         }
     }
 
@@ -274,15 +436,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             ObjectChecker.checkArgument(message, "The message argument is null");
             this.chatMiddlewareDatabaseDao.deleteMessage(message);
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantDeleteMessageException(
                     e,
                     "Deleting a message from database",
                     "The message is probably null");
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantDeleteMessageException(
                     e,
                     "Deleting a message from database",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteMessageException(
+                    FermatException.wrapException(exception),
+                    "Deleting a message from database",
+                    "Unexpected exception");
         }
     }
 
@@ -292,10 +471,23 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         try {
             return this.chatMiddlewareDatabaseDao.getContacts(filter);
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetContactException(
                     e,
-                    "Getting the full contac list",
+                    "Getting the full contact list",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetContactException(
+                    FermatException.wrapException(exception),
+                    "Getting the full contact list",
+                    "Unexpected exception");
         }
     }
 
@@ -305,21 +497,49 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             ObjectChecker.checkArgument(contactId, "The contact id argument is null");
             return this.chatMiddlewareDatabaseDao.getContactByContactId(contactId);
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetContactException(
                     e,
                     "Getting a message from database",
                     "The contact id is probably null");
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantGetContactException(
                     e,
                     "Getting a message from database",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetContactException(
+                    FermatException.wrapException(exception),
+                    "Getting a message from database",
+                    "Unexpected exception");
         }
     }
 
     @Override
     public Contact newEmptyInstanceContact() throws CantNewEmptyContactException {
-        return this.chatMiddlewareDatabaseDao.newEmptyInstanceContact();
+        try{
+            return this.chatMiddlewareDatabaseDao.newEmptyInstanceContact();
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantNewEmptyContactException(
+                    FermatException.wrapException(exception),
+                    "Getting a new empty instance contact",
+                    "Unexpected exception");
+        }
     }
 
     @Override
@@ -328,15 +548,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             ObjectChecker.checkArgument(contact, "The contact argument is null");
             this.chatMiddlewareDatabaseDao.saveContact(contact);
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSaveContactException(
                     e,
                     "Saving a contact in database",
                     "The message is probably null");
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantSaveContactException(
                     e,
                     "Saving a contact in database",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveContactException(
+                    FermatException.wrapException(exception),
+                    "Getting a new empty instance contact",
+                    "Unexpected exception");
         }
     }
 
@@ -346,15 +583,32 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             ObjectChecker.checkArgument(contact, "The contact argument is null");
             this.chatMiddlewareDatabaseDao.deleteContact(contact);
         } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantDeleteContactException(
                     e,
                     "Deleting a message from database",
                     "The message is probably null");
         } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
             throw new CantDeleteContactException(
                     e,
                     "Deleting a message from database",
                     "An unexpected error happened in a database operation");
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteContactException(
+                    FermatException.wrapException(exception),
+                    "Deleting a message from database",
+                    "Unexpected exception");
         }
     }
 
@@ -365,7 +619,19 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      */
     @Override
     public List<Contact> discoverActorsRegistered() throws CantGetContactException {
-        return this.chatMiddlewareContactFactory.discoverDeviceActors();
+        try{
+            return this.chatMiddlewareContactFactory.discoverDeviceActors();
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetContactException(
+                    FermatException.wrapException(exception),
+                    "Getting the actors registered",
+                    "Unexpected exception");
+        }
+
     }
 
     /**
@@ -376,17 +642,36 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      * @throws CantSendNotificationNewIncomingMessageException
      */
     @Override
-    public void notificationNewIncomingMessage(String publicKey, String tittle, String body) throws CantSendNotificationNewIncomingMessageException {
-        //TODO MATIAS PLEASE CHECK THIS
-        IncomingChatMessageNotificationEvent event = (IncomingChatMessageNotificationEvent) this.chatMiddlewarePluginRoot.getEventManager().getNewEvent(com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType.INCOMING_CHAT_MESSAGE_NOTIFICATION);
-        event.setLocalPublicKey(publicKey);
-        event.setAlertTitle(getSourceString(ChatMiddlewarePluginRoot.EVENT_SOURCE));
-        event.setTextTitle(tittle);
-        event.setTextBody(body);
-        //event.setNotificationType(NotificationType.INCOMING_CHAT_MESSAGE.getCode());
-        event.setSource(ChatMiddlewarePluginRoot.EVENT_SOURCE);
-        this.chatMiddlewarePluginRoot.getEventManager().raiseEvent(event);
-        System.out.println("MiddleWareChatPluginRoot - IncomingChatMessageNotificationEvent fired!: "+event.toString());
+    public void notificationNewIncomingMessage(
+            String publicKey,
+            String tittle,
+            String body) throws CantSendNotificationNewIncomingMessageException {
+        try{
+            //TODO MATIAS PLEASE CHECK THIS
+            IncomingChatMessageNotificationEvent event =
+                    (IncomingChatMessageNotificationEvent) this.chatMiddlewarePluginRoot.
+                            getEventManager().
+                            getNewEvent(
+                                    com.bitdubai.fermat_cht_api.all_definition.events.enums.
+                                            EventType.INCOMING_CHAT_MESSAGE_NOTIFICATION);
+            event.setLocalPublicKey(publicKey);
+            event.setAlertTitle(getSourceString(ChatMiddlewarePluginRoot.EVENT_SOURCE));
+            event.setTextTitle(tittle);
+            event.setTextBody(body);
+            //event.setNotificationType(NotificationType.INCOMING_CHAT_MESSAGE.getCode());
+            event.setSource(ChatMiddlewarePluginRoot.EVENT_SOURCE);
+            this.chatMiddlewarePluginRoot.getEventManager().raiseEvent(event);
+            System.out.println("MiddleWareChatPluginRoot - IncomingChatMessageNotificationEvent fired!: "+event.toString());
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSendNotificationNewIncomingMessageException(
+                    FermatException.wrapException(exception),
+                    "Notification new incoming message",
+                    "Unexpected exception");
+        }
 
     }
 
@@ -397,26 +682,36 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      */
     @Override
     public String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException {
-        if(this.networkServiceChatManager==null){
-            throw new CantGetNetworkServicePublicKeyException("The Network Service is not starting");
+        try{
+            if(this.networkServiceChatManager==null){
+                throw new CantGetNetworkServicePublicKeyException("The Network Service is not starting");
+            }
+            String networkServicePublicKey=this.networkServiceChatManager.getNetWorkServicePublicKey();
+            if(networkServicePublicKey==null){
+                throw new CantGetNetworkServicePublicKeyException("The Network Service public key is null");
+            }
+            return networkServicePublicKey;
+        } catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetNetworkServicePublicKeyException(
+                    FermatException.wrapException(exception),
+                    "Getting Network Service public key.",
+                    "Unexpected exception");
         }
-        String networkServicePublicKey=this.networkServiceChatManager.getNetWorkServicePublicKey();
-        if(networkServicePublicKey==null){
-            throw new CantGetNetworkServicePublicKeyException("The Network Service public key is null");
-        }
-        return networkServicePublicKey;
+
     }
 
     private String getSourceString(EventSource eventSource){
         switch (eventSource){
-
             case MIDDLEWARE_CHAT_MANAGER:
                 return INCOMING_CHAT_MESSAGE_NOTIFICATION;
             default:
-                return "Method: getSourceString - NO TIENE valor ASIGNADO para RETURN";
+                return "Method: getSourceString - Invalid value in Source String";
 
         }
-
     }
 
 }

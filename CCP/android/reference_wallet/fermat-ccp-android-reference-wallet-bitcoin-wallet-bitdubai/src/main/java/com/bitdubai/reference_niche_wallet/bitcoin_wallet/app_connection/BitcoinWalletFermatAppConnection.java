@@ -110,22 +110,33 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
                 case "PAYMENTREQUEST":
                     if(moduleManager != null){
                         paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                        notification = new BitcoinWalletNotificationPainter("","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","");
+                        notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","");
                     }
                     else
                     {
-                        notification = new BitcoinWalletNotificationPainter("","You have received a new Payment Request.","","");
+                        notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a new Payment Request.","","");
                     }
                     break;
 
                 case "PAYMENTDENIED":
                     if(moduleManager != null){
                         paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                        notification = new BitcoinWalletNotificationPainter("","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","");
+                        notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","");
                     }
                     else
                     {
-                        notification = new BitcoinWalletNotificationPainter("","Your Payment Request was deny.","","");
+                        notification = new BitcoinWalletNotificationPainter("Payment Request deny","Your Payment Request was deny.","","");
+                    }
+                    break;
+
+                case "PAYMENTERROR":
+                    if(moduleManager != null){
+                        paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
+                        notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was reverted.","","");
+                    }
+                    else
+                    {
+                        notification = new BitcoinWalletNotificationPainter("Payment Request reverted","Your Last Payment Request was reverted.","","");
                     }
                     break;
 

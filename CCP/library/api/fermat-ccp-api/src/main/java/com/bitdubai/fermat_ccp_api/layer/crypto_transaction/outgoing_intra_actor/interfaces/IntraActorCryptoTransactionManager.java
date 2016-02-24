@@ -33,17 +33,17 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException
      */
-    public void payCryptoRequest(UUID requestId,
-                                 String walletPublicKey,
-                                 CryptoAddress destinationAddress,
-                                 long cryptoAmount,
-                                 String description,
-                                 String senderPublicKey,
-                                 String receptorPublicKey,
-                                 Actors senderActorType,
-                                 Actors receptorActorType,
-                                 ReferenceWallet referenceWallet,
-                                 BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
+    void payCryptoRequest(UUID requestId,
+                          String walletPublicKey,
+                          CryptoAddress destinationAddress,
+                          long cryptoAmount,
+                          String description,
+                          String senderPublicKey,
+                          String receptorPublicKey,
+                          Actors senderActorType,
+                          Actors receptorActorType,
+                          ReferenceWallet referenceWallet,
+                          BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
             com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 
     /**
@@ -61,16 +61,16 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException
      */
-    public UUID sendCrypto(String walletPublicKey,
-                           CryptoAddress destinationAddress,
-                           long cryptoAmount,
-                           String description,
-                           String senderPublicKey,
-                           String receptorPublicKey,
-                           Actors senderActorType,
-                           Actors receptorActorType,
-                           ReferenceWallet referenceWallet,
-                           BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
+    UUID sendCrypto(String walletPublicKey,
+                    CryptoAddress destinationAddress,
+                    long cryptoAmount,
+                    String description,
+                    String senderPublicKey,
+                    String receptorPublicKey,
+                    Actors senderActorType,
+                    Actors receptorActorType,
+                    ReferenceWallet referenceWallet,
+                    BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
             com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 
     /**
@@ -99,7 +99,7 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
      * @return
      * @throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions
      */
-    public String getSendCryptoTransactionHash(UUID transactionId) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
+    String getSendCryptoTransactionHash(UUID transactionId) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantGetSendCryptoTransactionHashException;
 
     /**
      * TODO: THIS METHOD WILL BE MOVED TO A NEW TRANSACTIONAL PLUGIN SPECIALIZED IN FIAT TRANSACTIONS

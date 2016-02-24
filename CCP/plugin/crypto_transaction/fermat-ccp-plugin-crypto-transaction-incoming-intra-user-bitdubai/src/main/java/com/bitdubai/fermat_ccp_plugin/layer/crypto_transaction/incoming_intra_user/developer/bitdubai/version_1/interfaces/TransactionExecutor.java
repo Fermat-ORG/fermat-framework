@@ -7,5 +7,5 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_us
  * Created by eze on 2015.09.11..
  */
 public interface TransactionExecutor {
-    public void executeTransaction(TransactionCompleteInformation transactionCompleteInformation) throws IncomingIntraUserCantExecuteTransactionException;
+    void executeTransaction(TransactionCompleteInformation transactionCompleteInformation) throws IncomingIntraUserCantExecuteTransactionException;
 }

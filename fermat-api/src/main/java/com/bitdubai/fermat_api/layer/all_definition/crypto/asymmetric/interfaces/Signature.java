@@ -3,9 +3,9 @@ package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interface
 import java.math.BigInteger;
 
 public interface Signature {
-	public static String SIGNATURE_SEPARATOR = " ";
-	public static int SIGNATURE_SEPARATOR_PARTS = 2;
-	public BigInteger getR();
-	public BigInteger getS();
-	public boolean verifyMessageSignature(final BigInteger messageHash, final PublicKey publicKey);
+	String SIGNATURE_SEPARATOR = " ";
+	int SIGNATURE_SEPARATOR_PARTS = 2;
+	BigInteger getR();
+	BigInteger getS();
+	boolean verifyMessageSignature(final BigInteger messageHash, final PublicKey publicKey);
 } 

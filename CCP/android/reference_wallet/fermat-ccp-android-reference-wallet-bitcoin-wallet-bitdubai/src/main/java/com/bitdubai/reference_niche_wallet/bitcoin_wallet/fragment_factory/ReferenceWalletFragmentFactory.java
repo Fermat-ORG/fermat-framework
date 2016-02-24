@@ -84,7 +84,7 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                     currentFragment = RequestFormFragment.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT:
-                    currentFragment = SettingsFragment2.newInstance();
+                    currentFragment = ReferenceWalletSettings.newInstance();
                     break;
                 case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS:
                     currentFragment = SettingsNotificationsFragment.newInstance();

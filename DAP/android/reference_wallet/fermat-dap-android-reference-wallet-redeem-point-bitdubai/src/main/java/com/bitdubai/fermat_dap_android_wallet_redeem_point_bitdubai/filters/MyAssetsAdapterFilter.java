@@ -41,7 +41,7 @@ public class MyAssetsAdapterFilter extends Filter {
             filterableString = digitalAsset.getName();
             if (filterableString.toLowerCase().contains(filterString)) {
                 if (!showNoBalance) nlist.add(list.get(i));
-                else if (digitalAsset.getAvailableBalance() == 0) {
+                else if (digitalAsset.getAvailableBalance() > 0) {
                     nlist.add(list.get(i));
                 }
             }
