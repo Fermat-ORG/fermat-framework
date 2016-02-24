@@ -124,7 +124,7 @@ public class ChatNetworkServiceDeveloperDatabaseFactory implements DealsWithPlug
         List<String> incomingChatColumns = new ArrayList<String>();
 
         incomingChatColumns.add(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_ID_COLUMN_NAME);
-        incomingChatColumns.add(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_HASH_COLUMN_NAME);
+        incomingChatColumns.add(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_RESPONSE_TO_COLUMN_NAME);
         incomingChatColumns.add(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDCHAT_COLUMN_NAME);
         incomingChatColumns.add(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDOBJECTO_COLUMN_NAME);
         incomingChatColumns.add(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_LOCALACTORTYPE_COLUMN_NAME);
