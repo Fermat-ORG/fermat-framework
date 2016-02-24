@@ -76,18 +76,20 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 //        } else {
 //            holder = (ChatHolder) convertView.getTag();
 //        }
-
-        boolean myMsg = data.getIsme() ;
-        setAlignment(holder, myMsg);
-        holder.txtMessage.setText(data.getMessage());
-        holder.txtInfo.setText(data.getDate());
-        if(data.getStatus().toString()== MessageStatus.SEND.toString())
-            holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
-        if(data.getStatus().toString()== MessageStatus.DELIVERED.toString())
-            holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
-        if(data.getStatus().toString()== MessageStatus.READ.toString())
-            holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
-
+        if (data != null) {
+            boolean myMsg = data.getIsme();
+            setAlignment(holder, myMsg);
+            holder.txtMessage.setText(data.getMessage());
+            holder.txtInfo.setText(data.getDate());
+            if (data.getStatus() != null) {
+                if (data.getStatus() == MessageStatus.SEND.toString())
+                    holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
+                if (data.getStatus() == MessageStatus.DELIVERED.toString())
+                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
+                if (data.getStatus() == MessageStatus.READ.toString())
+                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
+            }
+        }
 //        lblTitulo = (FermatTextView) convertView.findViewById(R.id.txtInfo);
 //        lblTitulo.setText(data.getMessage());
 //
