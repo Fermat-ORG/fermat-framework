@@ -372,7 +372,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public SettingsManager getSettingsManager() {
+    public SettingsManager<AssetUserSettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
 

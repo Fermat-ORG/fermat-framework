@@ -631,8 +631,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     //TODO apply for user (issuer)
     @Override
     public void disconnectActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
-        try {
-            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey, DAPConnectionState.DISCONNECTED_REMOTELY);
+        try {//TODO VALIDAR EL USO DE DISCONNECTED_REMOTELY o REGISTERED_ONLINE para volver al estado normal del Actor
+            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey, DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateAssetUserConnectionException e) {
             throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -647,10 +647,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                                                          String actorAssetUserToAddPublicKey,
                                                          byte[] profileImage) throws CantCreateActorAssetReceiveException {
         try {
-            /**
-             * if intra user exist on table
-             * return error
-             */
             if (assetUserActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.PENDING_REMOTELY)) {
 
                 this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToAddPublicKey, DAPConnectionState.REGISTERED_REMOTELY);
