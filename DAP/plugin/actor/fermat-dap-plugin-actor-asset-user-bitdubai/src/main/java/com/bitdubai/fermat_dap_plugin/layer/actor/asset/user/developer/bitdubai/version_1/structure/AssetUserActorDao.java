@@ -327,7 +327,7 @@ public class AssetUserActorDao implements Serializable {
              * if Asset User exist on table
              * change status
              */
-            if (actorAssetRegisteredRequestExists(actorAssetUserPublicKey, dapConnectionState)) {
+            if (assetUserRegisteredExists(actorAssetUserPublicKey)) {
                 this.updateRegisteredConnectionState(actorAssetUserLogged, actorAssetUserPublicKey, dapConnectionState);
             } else {
 
