@@ -65,7 +65,7 @@ public class AssetTransferRecorderService implements DealsWithEvents, AssetTrans
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler = new AssetTransferEventHandler(this);
 
-            fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
+            fermatEventListener = eventManager.getNewListener(EventType.RECEIVE_NEW_DAP_MESSAGE);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);

@@ -15,6 +15,7 @@ import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSetting
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsEditText;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsSwithItem;
+import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -26,9 +27,11 @@ import java.util.List;
 public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSettingsItem, FermatViewHolder> implements DialogCallback {
 
 
+
     final int SWITH_TYPE = 1;
     final int OPEN_DIALOG_TEXT_TYPE = 2;
     final int EDIT_TEXT_TYPE = 3;
+    static final int TEXT_PLUS_RADIO_TYPE = 4;
 
     WeakReference<FermatPreferenceFragment> fragmentWeakReference;
 
@@ -46,13 +49,16 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
         FermatViewHolder fermatViewHolder = null;
         switch (type){
             case SWITH_TYPE:
-                fermatViewHolder = new SettingSwitchViewHolder(itemView,SWITH_TYPE);
+                fermatViewHolder = new SettingSwitchViewHolder(itemView,type);
                 break;
             case OPEN_DIALOG_TEXT_TYPE:
-                fermatViewHolder = new SettingTextOpenDialogViewHolder(itemView,OPEN_DIALOG_TEXT_TYPE);
+                fermatViewHolder = new SettingTextOpenDialogViewHolder(itemView,type);
                 break;
             case EDIT_TEXT_TYPE:
-                fermatViewHolder = new SettingEditTextViewHolder(itemView,EDIT_TEXT_TYPE);
+                fermatViewHolder = new SettingEditTextViewHolder(itemView,type);
+                break;
+            case TEXT_PLUS_RADIO_TYPE:
+                fermatViewHolder = new SettingEditTextViewHolder(itemView,type);
                 break;
         }
         return fermatViewHolder;
@@ -119,6 +125,8 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
             return OPEN_DIALOG_TEXT_TYPE;
         } else if(item instanceof PreferenceSettingsEditText){
             return EDIT_TEXT_TYPE;
+        } else if (item instanceof PreferenceSettingsTextPlusRadioItem){
+            return TEXT_PLUS_RADIO_TYPE;
         }
         return -1;
     }

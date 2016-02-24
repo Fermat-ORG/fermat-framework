@@ -116,8 +116,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     @Override
     public FermatStructure getAppInUse() {
-        //TODO por ahora en null va esto
-        return null;
+        return getDesktopRuntimeManager().getLastDesktopObject();
     }
 
 
@@ -382,18 +381,18 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
             loadBasicUI(activity,fermatAppConnection);
 
-//            if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
+            if (activity.getType() == Activities.CCP_DESKTOP) {
                 initialisePaging();
-//            }else {
-//
-//                hideBottonIcons();
-//
-//                paintScreen(activity);
-//
-//                if (activity.getFragments().size() == 1) {
-//                    setOneFragmentInScreen(fermatAppConnection.getFragmentFactory());
-//                }
-            //}
+            }else {
+
+                hideBottonIcons();
+
+                paintScreen(activity);
+
+                if (activity.getFragments().size() == 1) {
+                    setOneFragmentInScreen(fermatAppConnection.getFragmentFactory());
+                }
+            }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
