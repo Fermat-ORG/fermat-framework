@@ -292,7 +292,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                 }else {
                     try {
-                        //resetThisActivity();
+                        resetThisActivity();
 
                         getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.getValueFromString(activityName));
 
@@ -371,11 +371,13 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     protected void loadUI() {
 
+        /**
+         * Get current activity to paint
+         */
+        Activity activity = getActivityUsedType();
+
         try {
-            /**
-             * Get current activity to paint
-             */
-            Activity activity = getActivityUsedType();
+
 
             AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection("main_desktop", this);
             //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
@@ -400,7 +402,9 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }
 
         try {
-            bottomNavigationEnabled(true);
+            if(activity.getBottomNavigationMenu()!=null){
+                bottomNavigationEnabled(true);
+            }
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
