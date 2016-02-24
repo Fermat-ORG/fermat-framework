@@ -56,6 +56,7 @@
     <!-- confirm messages -->
     <string name="dap_user_wallet_confirm_title">Confirm</string>
     <string name="dap_user_wallet_confirm_entered_info">Are you sure that the entered information is correct? This action is irreversible</string>
+    <string name="dap_user_wallet_confirm_asset_buy">Are you sure that you want to buy this asset?</string>
     <string name="dap_user_wallet_confirm_sure">Are you sure you want to do this? This action is irreversible</string>
     <!-- -->
 
