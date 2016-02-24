@@ -1,0 +1,466 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="428dp"
+    android:orientation="vertical"
+    android:layout_marginTop="?attr/actionBarSize">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        android:id="@+id/asset_image_negotiation_detail"
+        android:src="@drawable/img_asset_without_image"
+        android:scaleType="centerCrop"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetToBuyText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Asset to Buy"
+            android:fontFamily="regular"
+            android:textSize="19sp"
+            android:textColor="#ffffff"
+            android:paddingTop="15dp"
+            android:paddingLeft="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetNegotiationDetailNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Asset Name"
+            android:fontFamily="regular"
+            android:textSize="19sp"
+            android:textColor="#ffffff"
+
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/assetDetailExpDateText"
+            />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetBalanceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Quantity:"
+            android:textColor="#ffffff"
+            android:fontFamily="regular"
+            android:layout_below="@+id/assetNegotiationDetailNameText"
+            android:paddingTop="5dp"
+            android:visibility="gone"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetNegotiationQuantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:fontFamily="light"
+            android:textColor="#b3ffffff"
+            android:text="3 Assets"
+            android:layout_toRightOf="@+id/assetBalanceText"
+            android:layout_alignTop="@+id/assetBalanceText"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:visibility="gone"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetNegotiationQuantity2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:fontFamily="light"
+            android:textColor="#b3ffffff"
+            android:text="(2 pending confirmation)"
+            android:layout_below="@+id/assetNegotiationQuantity"
+            android:paddingLeft="15dp"
+            android:paddingTop="0dp"
+            android:visibility="gone"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetNegotiationUnitPriceTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Unit Price:"
+            android:textColor="#ffffff"
+            android:fontFamily="regular"
+            android:layout_below="@+id/assetNegotiationDetailNameText"
+            android:paddingTop="5dp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetNegotiationUnitPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:fontFamily="light"
+            android:textColor="#b3ffffff"
+            android:text="60000 Satoshis"
+            android:layout_toRightOf="@+id/assetNegotiationUnitPriceTitle"
+            android:layout_alignTop="@+id/assetNegotiationUnitPriceTitle"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="EXP"
+            android:gravity="right"
+            android:fontFamily="normal"
+            android:textSize="12sp"
+            android:textColor="#99000000"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:paddingRight="15dp"
+            android:paddingTop="5dp"/>
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+
+            android:id="@+id/assetNegotiationAssetsToBuyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Assets to Buy"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:fontFamily="regular"
+            android:paddingTop="5dp"
+            android:layout_below="@+id/assetNegotiationUnitPrice"
+            android:visibility="gone"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+            android:id="@+id/assetNegotiationAssetsToBuy"
+            android:layout_width="175dp"
+            android:layout_height="25dp"
+            android:inputType="number"
+            android:ems="10"
+            android:text="0"
+            android:textSize="15sp"
+            android:textColor="#ffffff"
+            android:fontFamily="regular"
+            android:background="@drawable/bg_delivery_input"
+            android:layout_below="@+id/assetNegotiationAssetsToBuyTitle"
+            android:visibility="gone"/>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetNegotiationDetailTotalTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:fontFamily="light"
+            android:textColor="#b3ffffff"
+            android:text="Total: "
+            android:layout_toRightOf="@+id/assetNegotiationAssetsToBuy"
+            android:layout_alignTop="@+id/assetNegotiationAssetsToBuy"
+            android:paddingLeft="10dp"
+            android:paddingTop="4dp"
+            android:visibility="gone"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/assetNegotiationDetailBtcText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.000002 BTC"
+            android:fontFamily="light"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:gravity="right"
+            android:layout_toRightOf="@+id/assetNegotiationDetailTotalTitle"
+            android:layout_alignTop="@+id/assetNegotiationDetailTotalTitle"
+            android:paddingTop="4dp"
+            android:paddingLeft="10dp"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/assetNegotiationAcceptImage"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:src="@drawable/bg_delivery_button_redeem"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Buy"
+            android:textSize="19sp"
+            android:fontFamily="regular"
+            android:textColor="#00aeef"/>
+
+        <ImageView
+            android:id="@+id/assetNegotiationRejectImage"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:src="@drawable/bg_delivery_button_redeem"
+            />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Reject"
+
+            android:textSize="19sp"
+            android:fontFamily="regular"
+            android:textColor="#00aeef" />
+
+
+    </RelativeLayout>
+
+</LinearLayout>-->
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginTop="?attr/actionBarSize">
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="210dp"
+            android:id="@+id/asset_image_negotiation_detail"
+            android:src="@drawable/img_asset_without_image"
+            android:scaleType="centerCrop"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetToBuyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Asset to Buy"
+                android:fontFamily="regular"
+                android:textSize="19sp"
+                android:textColor="#ffffff"
+                android:paddingTop="15dp"
+                android:paddingLeft="15dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/assetNegotiationLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp">
+
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetNegotiationDetailNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Asset Name"
+                android:fontFamily="regular"
+                android:textSize="19sp"
+                android:textColor="#ffffff"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_toLeftOf="@+id/assetDetailExpDateText"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetBalanceText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="Quantity:"
+                android:textColor="#ffffff"
+                android:fontFamily="regular"
+                android:layout_below="@+id/assetNegotiationDetailNameText"
+                android:paddingTop="5dp"
+                android:visibility="gone"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetNegotiationQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="light"
+                android:textColor="#b3ffffff"
+                android:text="3 Assets"
+                android:layout_toRightOf="@+id/assetBalanceText"
+                android:layout_alignTop="@+id/assetBalanceText"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:visibility="gone"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetNegotiationQuantity2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="light"
+                android:textColor="#b3ffffff"
+                android:text="(2 pending confirmation)"
+                android:layout_below="@+id/assetNegotiationQuantity"
+                android:paddingLeft="15dp"
+                android:paddingTop="0dp"
+                android:visibility="gone"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetNegotiationUnitPriceTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:text="Unit Price:"
+                android:textColor="#ffffff"
+                android:fontFamily="regular"
+                android:layout_below="@+id/assetNegotiationDetailNameText"
+                android:paddingTop="5dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetNegotiationUnitPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="light"
+                android:textColor="#b3ffffff"
+                android:text="60000 Satoshis"
+                android:layout_toRightOf="@+id/assetNegotiationUnitPriceTitle"
+                android:layout_alignTop="@+id/assetNegotiationUnitPriceTitle"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/textView7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EXP"
+                android:gravity="right"
+                android:fontFamily="normal"
+                android:textSize="12sp"
+                android:textColor="#99000000"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:paddingRight="15dp"
+                android:paddingTop="5dp"
+                android:visibility="gone"/>
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+
+                android:id="@+id/assetNegotiationAssetsToBuyTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Assets to Buy"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:fontFamily="regular"
+                android:paddingTop="5dp"
+                android:layout_below="@+id/assetNegotiationUnitPrice"
+                android:visibility="gone"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/assetNegotiationAssetsToBuy"
+                android:layout_width="175dp"
+                android:layout_height="25dp"
+                android:inputType="number"
+                android:ems="10"
+                android:text="0"
+                android:textSize="15sp"
+                android:textColor="#ffffff"
+                android:fontFamily="regular"
+                android:background="@drawable/bg_delivery_input"
+                android:layout_below="@+id/assetNegotiationAssetsToBuyTitle"
+                android:visibility="gone"/>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetNegotiationDetailTotalTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:fontFamily="light"
+                android:textColor="#b3ffffff"
+                android:text="Total: "
+                android:layout_toRightOf="@+id/assetNegotiationAssetsToBuy"
+                android:layout_alignTop="@+id/assetNegotiationAssetsToBuy"
+                android:paddingLeft="10dp"
+                android:paddingTop="4dp"
+                android:visibility="gone"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetNegotiationDetailBtcText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.000002 BTC"
+                android:fontFamily="light"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:gravity="right"
+                android:layout_toRightOf="@+id/assetNegotiationDetailTotalTitle"
+                android:layout_alignTop="@+id/assetNegotiationDetailTotalTitle"
+                android:paddingTop="4dp"
+                android:paddingLeft="10dp"
+                android:visibility="gone"/>
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/acceptNegotiationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/assetNegotiationAcceptImage"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:src="@drawable/bg_delivery_button_redeem"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Buy"
+                android:textSize="19sp"
+                android:fontFamily="regular"
+                android:textColor="#00aeef"/>
+        </RelativeLayout>
+
+    <RelativeLayout
+            android:id="@+id/rejectNegotiationButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/acceptNegotiationButton"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/assetNegotiationRejectImage"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:src="@drawable/bg_delivery_button_redeem"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="Reject"
+
+                android:textSize="19sp"
+                android:fontFamily="regular"
+                android:textColor="#00aeef" />
+        </RelativeLayout>
+
+
+</LinearLayout>
