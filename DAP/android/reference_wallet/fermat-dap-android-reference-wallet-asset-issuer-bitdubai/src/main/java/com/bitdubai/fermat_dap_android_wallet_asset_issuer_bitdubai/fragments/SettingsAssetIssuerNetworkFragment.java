@@ -104,8 +104,8 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_SETTINGS_NETWORK, 0, "Help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_SETTINGS_NETWORK, 0, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override

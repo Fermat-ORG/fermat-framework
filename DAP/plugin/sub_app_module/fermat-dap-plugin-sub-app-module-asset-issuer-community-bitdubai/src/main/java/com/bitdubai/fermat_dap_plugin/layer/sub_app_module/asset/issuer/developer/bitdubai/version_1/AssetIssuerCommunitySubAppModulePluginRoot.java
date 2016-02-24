@@ -50,7 +50,6 @@ import java.util.List;
 @NeededIndirectPluginReferences(indirectReferences = {
         @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_EXTRA_USER),
         @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_INTRA_USER)
-//        @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.MIDDLEWARE, plugin = Plugins.CRYPTO_ADDRESSES)
 })
 public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin implements
         AssetIssuerCommunitySubAppModuleManager {
@@ -152,7 +151,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractPlugin i
     }
 
     @Override
-    public SettingsManager getSettingsManager() {
+    public SettingsManager<AssetIssuerSettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
 
