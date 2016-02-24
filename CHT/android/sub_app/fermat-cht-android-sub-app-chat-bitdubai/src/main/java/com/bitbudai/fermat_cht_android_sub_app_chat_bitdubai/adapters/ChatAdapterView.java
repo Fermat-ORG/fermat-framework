@@ -128,7 +128,7 @@ public class ChatAdapterView extends LinearLayout {
         try {
             System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
             if (chatSession.getData("whocallme").equals("chatlist")) {
-                findValues((Contact) chatSession.getData("contactId"));//if I choose a chat, this will retrieve the chatId
+                findValues((Contact) chatSession.getData("contactid"));//if I choose a chat, this will retrieve the chatId
                 chatWasCreate = true;
             } else if (chatSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
                 findValues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
@@ -279,7 +279,10 @@ public class ChatAdapterView extends LinearLayout {
                         chatManager.saveMessage(message);
                         //If everything goes OK, we save the chat in the fragment session.
                         chatSession.setData("whocallme","chatlist");
-                        chatSession.setData("contactId", contactId);
+                        chatSession.setData(
+                                "contactid",
+                                chatManager.getContactByContactId(
+                                        contactId));
                         /**
                          * This chat was created, so, I will put chatWasCreate as true to avoid
                          * the multiple chats from this contact. Also I will put the chatId as
