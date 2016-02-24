@@ -8,7 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 import com.mati.fermat_preference_settings.R;
 import com.mati.fermat_preference_settings.settings.interfaces.DialogCallback;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
@@ -53,7 +53,7 @@ public class SettingsDialog extends Dialog implements FermatListItemListeners<Pr
         contextMenuAdapter.setFermatListEventListener(this);
         recyclerView.setAdapter(contextMenuAdapter);
         recyclerView.getLayoutParams().height = getDps(options.size());
-        recyclerView.addItemDecoration(new FermatDividerItemDecoration(getContext()));
+        //recyclerView.addItemDecoration(new FermatDividerItemDecoration(getContext()));
     }
 
 
@@ -76,9 +76,7 @@ public class SettingsDialog extends Dialog implements FermatListItemListeners<Pr
 
 
     private int getDps(int optionsSize){
-        int pixels = 0;
         float dps = dps_large;
-        final float scale = getContext().getResources().getDisplayMetrics().density;
         if(optionsSize>0 && optionsSize<2){
             dps = dps_min;
         }else if(optionsSize>2 && optionsSize<4){
@@ -86,7 +84,7 @@ public class SettingsDialog extends Dialog implements FermatListItemListeners<Pr
         } else if(optionsSize>4){
             dps = dps_large;
         }
-        return  (int) (dps * scale + 0.5f);
+        return  FermatScreenCalculator.getPx(getContext(),dps);
 
     }
 

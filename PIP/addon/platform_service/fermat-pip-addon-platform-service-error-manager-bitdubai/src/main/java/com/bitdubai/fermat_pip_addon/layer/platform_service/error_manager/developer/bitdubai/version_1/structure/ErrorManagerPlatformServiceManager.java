@@ -115,7 +115,7 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
     private void printErrorReport(final String source, final String severity, final FermatException exception){
         String report =  new ErrorReport(source, severity, exception).generateReport();
         System.err.println(report);
-        saveToFile(report);
+        //saveToFile(report);
 
     }
 

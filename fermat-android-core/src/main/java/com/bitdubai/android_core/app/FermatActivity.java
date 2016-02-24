@@ -1063,9 +1063,10 @@ public abstract class FermatActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        broadcastManager.resume(this);
-        AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
         try {
+            if(broadcastManager!=null)broadcastManager.resume(this);
+            AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
+
             //getNotificationManager().addObserver(this);
             //getNotificationManager().addCallback(this);
 
@@ -1111,7 +1112,7 @@ public abstract class FermatActivity extends AppCompatActivity
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        broadcastManager.stop();
+        if(broadcastManager!=null)broadcastManager.stop();
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.cancelAll();
@@ -1424,8 +1425,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
 
     protected void bottomNavigationEnabled(boolean enabled){
-        if(enabled) {
-            bottomNavigation = new BottomNavigation(this, ProvisoryData.getBottomNavigationProvisoryData(),null);
+        try {
+            if (enabled) {
+                bottomNavigation = new BottomNavigation(this, ProvisoryData.getBottomNavigationProvisoryData(), null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -1805,8 +1810,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
+        try {
+            super.onConfigurationChanged(newConfig);
+            if(mDrawerToggle!=null) mDrawerToggle.onConfigurationChanged(newConfig);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void navigate(final int itemId) {
@@ -1823,9 +1832,13 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
+        if(mDrawerLayout!=null) {
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+        }else{
             super.onBackPressed();
         }
     }
