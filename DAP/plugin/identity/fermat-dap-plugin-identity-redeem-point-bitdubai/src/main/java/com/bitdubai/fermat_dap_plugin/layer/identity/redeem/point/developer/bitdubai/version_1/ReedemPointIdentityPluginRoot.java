@@ -190,8 +190,19 @@ public class ReedemPointIdentityPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityRedeemPointException {
-        identityAssetRedeemPointManager.updateIdentityRedeemPoint(identityPublicKey, identityAlias, profileImage);
+    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,
+                                                    String contactInformation, String countryName, String provinceName, String cityName,
+                                                    String postalCode, String streetName, String houseNumber) throws CantCreateNewRedeemPointException {
+        return identityAssetRedeemPointManager.createNewIdentityAssetRedeemPoint(alias, profileImage,  contactInformation,
+                countryName, provinceName, cityName, postalCode, streetName, houseNumber);
+    }
+
+    @Override
+    public void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage,
+                                          String contactInformation, String countryName, String provinceName, String cityName,
+                                          String postalCode, String streetName, String houseNumber) throws CantUpdateIdentityRedeemPointException {
+        identityAssetRedeemPointManager.updateIdentityRedeemPoint(identityPublicKey, identityAlias, profileImage,  contactInformation,
+                countryName, provinceName, cityName, postalCode, streetName, houseNumber);
     }
 
     @Override
@@ -227,10 +238,18 @@ public class ReedemPointIdentityPluginRoot extends AbstractPlugin implements
         }
     }
 
-
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetRedeemPointManager.createNewIdentityAssetRedeemPoint(name, profile_img);
+
+    }
+
+
+    @Override
+    public void createIdentity(String name, byte[] profile_img,
+                               String contactInformation, String countryName, String provinceName, String cityName,
+                               String postalCode, String streetName, String houseNumber) throws Exception {
+        identityAssetRedeemPointManager.createNewIdentityAssetRedeemPoint(name, profile_img,contactInformation,
+                countryName, provinceName, cityName, postalCode, streetName, houseNumber);
     }
 
     @Override

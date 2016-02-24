@@ -25,7 +25,7 @@ public class UnHoldCryptoMoneyTransactionImpl implements CryptoUnholdTransaction
 
     public UnHoldCryptoMoneyTransactionImpl(){
 
-    };
+    }
 
     @Override
     public CryptoTransactionStatus getStatus() {

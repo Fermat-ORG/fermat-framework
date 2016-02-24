@@ -86,7 +86,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * @param connectionId      The id of the connection
      * @throws CantAcceptRequestException
      */
-    public void acceptCryptoCustomer(UUID connectionId) throws CantAcceptRequestException;
+    void acceptCryptoCustomer(UUID connectionId) throws CantAcceptRequestException;
 
 
     /**
@@ -95,7 +95,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * @param connectionId the connection id of the user to deny its connection request
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerConnectionRejectionFailedException
      */
-    public void denyConnection(UUID connectionId) throws CantDenyActorConnectionRequestException;
+    void denyConnection(UUID connectionId) throws CantDenyActorConnectionRequestException;
 
 
 
@@ -113,7 +113,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * @return a list with information of crypto customer
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException
      */
-    public List<CryptoCustomerCommunityInformation> getSuggestionsToContact(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
+    List<CryptoCustomerCommunityInformation> getSuggestionsToContact(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 
     /**
      * The method <code>searchCryptoCustomer</code> gives us an interface to manage a search for a particular
@@ -121,7 +121,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      *
      * @return a searching interface
      */
-    public CryptoCustomerCommunitySearch getCryptoCustomerSearch();
+    CryptoCustomerCommunitySearch getCryptoCustomerSearch();
 
     /**
      * The method <code>requestConnectionToCryptoBroker</code> initialize the request of contact between
@@ -132,7 +132,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * @param profileImage            The profile image that the crypto customer has
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantStartRequestException
      */
-    public void askCryptoCustomerForAcceptance(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantStartRequestException;
+    void askCryptoCustomerForAcceptance(String cryptoCustomerToAddName, String cryptoCustomerToAddPublicKey, byte[] profileImage) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantStartRequestException;
 
 
 
@@ -143,7 +143,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      *
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException
      */
-    public void disconnectCryptoCustomer(final UUID requestId) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException;
+    void disconnectCryptoCustomer(final UUID requestId) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerDisconnectingFailedException;
 
     /**
      * The method <code>cancelCryptoCustomer</code> cancels an crypto Customer from the list managed by this
@@ -159,7 +159,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * @return the list of crypto Customer connected to the logged in broker
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException
      */
-    public List<CryptoCustomerCommunityInformation> getAllCryptoCustomers(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
+    List<CryptoCustomerCommunityInformation> getAllCryptoCustomers(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 
     /**
      * The method <code>getCryptoCustomersWaitingYourAcceptance</code> returns the list of crypto Customer waiting to be accepted
@@ -168,7 +168,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * @return the list of crypto Customer waiting to be accepted or rejected by the  logged in Customer
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException
      */
-    public List<CryptoCustomerCommunityInformation> getCryptoCustomersWaitingYourAcceptance(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
+    List<CryptoCustomerCommunityInformation> getCryptoCustomersWaitingYourAcceptance(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 
     /**
      * The method <code>listCryptoBrokersPendingRemoteAction</code> list the crypto Customer that haven't
@@ -178,7 +178,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      * logged in Customer.
      * @throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException
      */
-    public List<CryptoCustomerCommunityInformation> getCryptoCustomersWaitingTheirAcceptance(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
+    List<CryptoCustomerCommunityInformation> getCryptoCustomersWaitingTheirAcceptance(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
 
 
     /**
@@ -186,7 +186,7 @@ public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManage
      *
      * @param customerPublicKey the public key of the crypto Customer to log in
      */
-    public void login(String customerPublicKey) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantLoginCustomerException;
+    void login(String customerPublicKey) throws com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantLoginCustomerException;
 
 
     @Override

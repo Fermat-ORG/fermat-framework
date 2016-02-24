@@ -18,8 +18,10 @@ import java.util.UUID;
  */
 public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNegotiation {
     long startDate;
-    long negotiationUpdateDatetime;
-    long expirationDatetime;
+//    long negotiationUpdateDatetime;
+//    long expirationDatetime;
+    Long lastNegotiationUpdateDate;
+    Long negotiationExpirationDate;
     boolean nearExpirationDatetime;
     String cancelReason;
     String memo;
@@ -43,8 +45,10 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
         dataHasChanged = false;
 
         startDate = negotiationInfo.getStartDate();
-        negotiationUpdateDatetime = negotiationInfo.getLastNegotiationUpdateDate();
-        expirationDatetime = negotiationInfo.getNegotiationExpirationDate();
+//        negotiationUpdateDatetime = negotiationInfo.getLastNegotiationUpdateDate();
+//        expirationDatetime = negotiationInfo.getNegotiationExpirationDate();
+        lastNegotiationUpdateDate = negotiationInfo.getLastNegotiationUpdateDate();
+        negotiationExpirationDate = negotiationInfo.getNegotiationExpirationDate();
         nearExpirationDatetime = negotiationInfo.getNearExpirationDatetime();
         cancelReason = negotiationInfo.getCancelReason();
         memo = negotiationInfo.getMemo();
@@ -96,7 +100,8 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
      */
     @Override
     public Long getLastNegotiationUpdateDate() {
-        return negotiationUpdateDatetime;
+//        return negotiationUpdateDatetime;
+        return lastNegotiationUpdateDate;
     }
 
     /**
@@ -104,7 +109,8 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
      */
     @Override
     public void setLastNegotiationUpdateDate(Long lastNegotiationUpdateDate) {
-        negotiationUpdateDatetime = lastNegotiationUpdateDate;
+//        negotiationUpdateDatetime = lastNegotiationUpdateDate;
+        this.lastNegotiationUpdateDate = lastNegotiationUpdateDate;
     }
 
     /**
@@ -112,7 +118,8 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
      */
     @Override
     public Long getNegotiationExpirationDate() {
-        return expirationDatetime;
+//        return expirationDatetime;
+        return negotiationExpirationDate;
     }
 
     /**
@@ -179,8 +186,10 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     }
 
     public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status) {
-        dataHasChanged = expirationDatetime != negotiationInfo.getNegotiationExpirationDate();
-        expirationDatetime = negotiationInfo.getNegotiationExpirationDate();
+//        dataHasChanged = expirationDatetime != negotiationInfo.getNegotiationExpirationDate();
+//        expirationDatetime = negotiationInfo.getNegotiationExpirationDate();
+        dataHasChanged = negotiationExpirationDate != negotiationInfo.getNegotiationExpirationDate();
+        negotiationExpirationDate = negotiationInfo.getNegotiationExpirationDate();
 
         dataHasChanged = dataHasChanged || Objects.equals(cancelReason, negotiationInfo.getCancelReason());
         cancelReason = negotiationInfo.getCancelReason();
@@ -206,7 +215,8 @@ public class CustomerBrokerSaleNegotiationImpl implements CustomerBrokerSaleNego
     public String toString() {
         return com.google.common.base.Objects.toStringHelper(this).
                 add("startDate", startDate).
-                add("negotiationUpdateDatetime", negotiationUpdateDatetime).
+//                add("negotiationUpdateDatetime", negotiationUpdateDatetime).
+                add("lastNegotiationUpdateDate",lastNegotiationUpdateDate).
                 add("nearExpirationDatetime", nearExpirationDatetime).
                 add("cancelReason", cancelReason).
                 add("memo", memo).

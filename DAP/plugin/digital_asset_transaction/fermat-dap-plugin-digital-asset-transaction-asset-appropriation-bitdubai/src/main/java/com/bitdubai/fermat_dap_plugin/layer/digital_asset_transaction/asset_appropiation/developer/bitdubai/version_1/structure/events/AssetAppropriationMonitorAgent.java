@@ -292,12 +292,14 @@ public class AssetAppropriationMonitorAgent implements Agent {
                         if (cryptoTransaction == null) continue;
                         AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey(), cryptoTransaction.getBlockchainNetworkType());
                         AssetUserWalletBalance balance = userWallet.getBalance();
+                        ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                         AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
                                 cryptoTransaction,
-                                record.digitalAsset().getPublicKey(),
+                                mySelf.getActorPublicKey(),
                                 Actors.DAP_ASSET_USER,
-                                record.addressTo().getAddress(),
-                                Actors.INTRA_USER);
+                                mySelf.getActorPublicKey(),
+                                Actors.DAP_ASSET_USER,
+                                WalletUtilities.DEFAULT_MEMO_APPROPRIATION);
                         balance.debit(walletRecord, BalanceType.AVAILABLE);
                         dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
                         break;
@@ -308,14 +310,16 @@ public class AssetAppropriationMonitorAgent implements Agent {
                             case IRREVERSIBLE:
                                 CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, record.assetMetadata(), CryptoStatus.ON_BLOCKCHAIN);
                                 if (cryptoTransaction == null) continue;
+                                ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
                                 AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey(), cryptoTransaction.getBlockchainNetworkType());
                                 AssetUserWalletBalance balance = userWallet.getBalance();
                                 AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
                                         cryptoTransaction,
-                                        record.digitalAsset().getPublicKey(),
+                                        mySelf.getActorPublicKey(),
                                         Actors.DAP_ASSET_USER,
-                                        record.addressTo().getAddress(),
-                                        Actors.INTRA_USER);
+                                        mySelf.getActorPublicKey(),
+                                        Actors.DAP_ASSET_USER,
+                                        WalletUtilities.DEFAULT_MEMO_APPROPRIATION);
                                 balance.debit(walletRecord, BalanceType.BOOK);
                                 dao.updateStatusSendingMessage(record.transactionRecordId());
                                 break;

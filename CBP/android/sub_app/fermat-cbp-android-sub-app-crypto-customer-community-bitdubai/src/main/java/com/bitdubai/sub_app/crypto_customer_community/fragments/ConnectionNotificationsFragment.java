@@ -76,7 +76,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Cryp
         super.onCreate(savedInstanceState);
 
         // setting up  module
-        cryptoCustomerCommunitySubAppSession = ((CryptoCustomerCommunitySubAppSession) appSession);
+        cryptoCustomerCommunitySubAppSession = appSession;
         cryptoCustomerInformation = (CryptoCustomerCommunityInformation) appSession.getData(ACTOR_SELECTED);
         moduleManager = cryptoCustomerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();

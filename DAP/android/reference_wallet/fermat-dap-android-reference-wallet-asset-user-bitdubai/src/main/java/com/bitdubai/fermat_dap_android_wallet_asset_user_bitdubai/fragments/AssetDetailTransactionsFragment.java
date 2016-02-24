@@ -245,19 +245,18 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL, 0, "Help").setIcon(R.drawable.dap_asset_user_help_icon)
-
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         if (digitalAsset != null && digitalAsset.getAvailableBalanceQuantity() > 0) {
-            menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 1, getResources().getString(R.string.dap_user_wallet_action_redeem))
+            menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 0, getResources().getString(R.string.dap_user_wallet_action_redeem))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-            menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE, 2, getResources().getString(R.string.dap_user_wallet_action_appropriate))
+            menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE, 1, getResources().getString(R.string.dap_user_wallet_action_appropriate))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-            menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER, 3, getResources().getString(R.string.dap_user_wallet_action_transfer))
+            menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER, 2, getResources().getString(R.string.dap_user_wallet_action_transfer))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-            menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 4, getResources().getString(R.string.dap_user_wallet_action_sell))
+            menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 3, getResources().getString(R.string.dap_user_wallet_action_sell))
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         }
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL, 4, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override

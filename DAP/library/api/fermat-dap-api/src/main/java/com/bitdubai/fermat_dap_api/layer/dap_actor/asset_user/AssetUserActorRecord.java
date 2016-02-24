@@ -2,10 +2,12 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.google.gson.Gson;
@@ -32,6 +34,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
     private long                    lastConnectionDate      ;
     private CryptoAddress           cryptoAddress           ;
     private BlockchainNetworkType   blockchainNetworkType   ;
+    private Actors                  actorsType              = Actors.DAP_ASSET_USER;
     private byte[]                  profileImage            ;
 
 
@@ -80,6 +83,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
                                 final Long registrationDate,
                                 final Long lastConnectionDate,
                                 final BlockchainNetworkType blockchainNetworkType,
+                                final Actors actorsType,
                                 final byte[] profileImage) {
 
         this.actorPublicKey         =       actorPublicKey          ;
@@ -104,6 +108,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.registrationDate       =       registrationDate        ;
         this.lastConnectionDate     =       lastConnectionDate      ;
 
+        this.actorsType             =       actorsType              ;
         if(profileImage != null)
             this.profileImage           =       profileImage.clone()    ;
 
@@ -123,6 +128,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         this.locationLongitude = Double.valueOf(jsonObject.get("locationLongitude").getAsString());
         this.cryptoAddress = gson.fromJson(jsonObject.get("cryptoAddress").getAsString(), CryptoAddress.class);
         this.blockchainNetworkType = gson.fromJson(jsonObject.get("blockchainNetworkType").getAsString(), BlockchainNetworkType.class);
+        this.actorsType = gson.fromJson(jsonObject.get("actorsType").getAsString(), Actors.class);
         this.profileImage = Base64.decode(jsonObject.get("profileImage").getAsString(), Base64.DEFAULT);
     }
 
@@ -180,6 +186,16 @@ public class AssetUserActorRecord implements ActorAssetUser {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * The method <code>getType</code> gives us the Enum of the represented a Actor
+     *
+     * @return Enum Actors
+     */
+    @Override
+    public Actors getType() {
+        return actorsType;
     }
 
     public void setName(String name) {
@@ -382,6 +398,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
         jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
         jsonObject.addProperty("blockchainNetworkType", blockchainNetworkType.toString());
+        jsonObject.addProperty("actorsType",            actorsType.toString());
         jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
         return gson.toJson(jsonObject);
     }
@@ -405,6 +422,7 @@ public class AssetUserActorRecord implements ActorAssetUser {
                 ", lastConnectionDate="     + lastConnectionDate +
                 ", cryptoAddress="          + cryptoAddress +
                 ", blockchainNetworkType="  + blockchainNetworkType +
+                ", actorsType="             + actorsType +
                 ", profileImage="           + profileImageUser +
                 '}';
     }

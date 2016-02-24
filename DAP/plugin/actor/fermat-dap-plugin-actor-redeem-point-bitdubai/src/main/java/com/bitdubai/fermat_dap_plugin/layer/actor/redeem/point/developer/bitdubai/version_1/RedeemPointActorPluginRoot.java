@@ -62,6 +62,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitduba
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressesNewsEventException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeRedeemPointActorDatabaseException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantUpdateRedeemPointException;
+import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.RedeemPointNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.structure.RedeemPointActorDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -359,6 +360,26 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+    @Override
+    public void disconnectToActorAssetRedeemPoint(ActorAssetRedeemPoint redeemPoint) throws com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException, com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException {
+        try {
+            this.redeemPointActorDao.deleteCryptoCurrencyFromRedeemPointRegistered(redeemPoint);
+        } catch (CantUpdateRedeemPointException e) {
+            throw new com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException("CAN'T UPDATE REDEEM POINT", e, "", "");
+        } catch (RedeemPointNotFoundException e) {
+            throw new com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException("REDEEM POINT NOT FOUND", e, "", "");
+        }
+    }
+
+    @Override
+    public void updateRedeemPointDAPConnectionStateActorNetworService(String actorPublicKey, DAPConnectionState state) throws com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException{
+        try {
+            this.redeemPointActorDao.updateRedeemPointRegisteredDAPConnectionState(actorPublicKey,state);
+        } catch (CantUpdateRedeemPointException e) {
+            throw new com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException("CAN'T UPDATE REDEEM POINT", e, "", "");
+        }
+    }
+
     public void handleCompleteActorAssetRedeemPointRegistrationNotificationEvent(ActorAssetRedeemPoint actorAssetRedeemPoint) {
         System.out.println("***************************************************************");
         System.out.println("Actor Asset Redeem Point se Registro " + actorAssetRedeemPoint.getName());
@@ -476,6 +497,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 redeemPointActorDao.newExtendedPublicKeyRegistered(getActorAssetRedeemPoint().getActorPublicKey(), dapActorSender.getActorPublicKey());
                 assetRedeemPointActorNetworkServiceManager.updateActorAssetRedeemPoint(redeemPointActorDao.getActorAssetRedeemPoint());
                 actorAssetIssuerManager.updateExtendedPublicKey(dapActorSender.getActorPublicKey(), extendedPublicKey.toString());
+                actorAssetIssuerManager.updateIssuerRegisteredDAPConnectionState(dapActorSender.getActorPublicKey(), DAPConnectionState.CONNECTED_ONLINE);
             } catch (CantInitializeWatchOnlyVaultException | CantInsertRecordException | CantGetAssetRedeemPointActorsException | CantUpdateActorAssetIssuerException | CantRegisterActorAssetRedeemPointException e) {
                 //handle this.
                 e.printStackTrace();

@@ -12,8 +12,8 @@ public interface FermatCallback {
      *
      * @param v View object
      */
-    public void onTouchView(Object v);
+    void onTouchView(Object v);
 
-    public int getCallBackId();
+    int getCallBackId();
 
 }

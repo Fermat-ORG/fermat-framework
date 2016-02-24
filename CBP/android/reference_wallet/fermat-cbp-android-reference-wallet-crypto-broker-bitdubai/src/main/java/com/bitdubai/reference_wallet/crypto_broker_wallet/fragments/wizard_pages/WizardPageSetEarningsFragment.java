@@ -29,6 +29,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interface
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsWizardAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleCheckableItemAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningTestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsWizardData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
@@ -67,13 +68,28 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            earningDataList = createEarningDataList();
+            List<String> temp = new ArrayList<>();
+            String tempS = "";
+
+            List<EarningsWizardData> _earningDataList = createEarningDataList();
+            earningDataList = new ArrayList<>();
+
+            for(EarningsWizardData EP : _earningDataList){
+                tempS = EP.getEarningCurrency().getCode()+" - "+EP.getLinkedCurrency().getCode();
+                if (!temp.contains(tempS)) {
+                    temp.add(tempS);
+                    earningDataList.add(EP);
+                }
+            }
 
         } catch (Exception ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                    Wallets.CBP_CRYPTO_BROKER_WALLET,
+                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                    ex
+                );
+            }
         }
 
     }

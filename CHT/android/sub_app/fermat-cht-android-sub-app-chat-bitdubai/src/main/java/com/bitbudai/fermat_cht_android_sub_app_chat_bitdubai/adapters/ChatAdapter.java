@@ -11,6 +11,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,10 +77,16 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 //            holder = (ChatHolder) convertView.getTag();
 //        }
 
-        boolean myMsg = data.getIsme() ;//test to simulate whether it me or other sender
+        boolean myMsg = data.getIsme() ;
         setAlignment(holder, myMsg);
         holder.txtMessage.setText(data.getMessage());
         holder.txtInfo.setText(data.getDate());
+        if(data.getStatus().toString()== MessageStatus.SEND.toString())
+            holder.tickstatusimage.setImageResource(R.drawable.ticksent);
+        if(data.getStatus().toString()== MessageStatus.DELIVERED.toString())
+            holder.tickstatusimage.setImageResource(R.drawable.tickdelivered);
+        if(data.getStatus().toString()== MessageStatus.READ.toString())
+            holder.tickstatusimage.setImageResource(R.drawable.tickread);
 
 //        lblTitulo = (FermatTextView) convertView.findViewById(R.id.txtInfo);
 //        lblTitulo.setText(data.getMessage());

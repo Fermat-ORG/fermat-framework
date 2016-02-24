@@ -13,24 +13,24 @@ public interface CryptoIndexInterface {
      * The method <code>getCryptyCurrency</code> gives us the name of the represented Crypty Currency
      * @return public CryptoCurrency
      */
-    public String getCryptyCurrency();
+    String getCryptyCurrency();
 
     /**
      *The method <code>getFiatCurrency</code> gives us the name of the represented Fiat Currency
      * @return public FiatCurrency
      */
-    public String getFiatCurrency();
+    String getFiatCurrency();
 
     /**
      *The method <code>GetTime</code> gives us the name of the represented Date
      * @return  public String GetTime
      */
-    public String getTime();
+    String getTime();
 
     /**
      *The method <code>priceMarket</code> gives us the name of the represented double
      * @return public double priceMarket
      */
-    public double getRateExchange();
+    double getRateExchange();
 
 }
