@@ -12,6 +12,7 @@ import com.mati.fermat_preference_settings.settings.holders.SettingSwitchViewHol
 import com.mati.fermat_preference_settings.settings.holders.SettingTextOpenDialogViewHolder;
 import com.mati.fermat_preference_settings.settings.interfaces.DialogCallback;
 import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.settings.listeners.OnClickListenerSettings;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsEditText;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsSwithItem;
@@ -34,6 +35,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     static final int TEXT_PLUS_RADIO_TYPE = 4;
 
     WeakReference<FermatPreferenceFragment> fragmentWeakReference;
+
 
     protected FermatSettingsAdapter(Activity context) {
         super(context);
@@ -84,12 +86,15 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     @Override
     protected void bindHolder(FermatViewHolder holder, PreferenceSettingsItem data, int position) {
 
+
+
         switch (holder.getHolderType()){
             case SWITH_TYPE:
                 SettingSwitchViewHolder settingSwitchViewHolder = (SettingSwitchViewHolder) holder;
                 PreferenceSettingsSwithItem preferenceSettingsSwithItem = (PreferenceSettingsSwithItem) data;
                 settingSwitchViewHolder.getSettings_switch().setChecked(preferenceSettingsSwithItem.getSwitchChecked());
                 settingSwitchViewHolder.getTextView().setText(preferenceSettingsSwithItem.getText());
+                settingSwitchViewHolder.getSettings_switch().setOnClickListener(new OnClickListenerSettings(this,preferenceSettingsSwithItem,position));
                 break;
             case OPEN_DIALOG_TEXT_TYPE:
                 SettingTextOpenDialogViewHolder settingTextOpenDialogViewHolder = (SettingTextOpenDialogViewHolder) holder;
@@ -110,6 +115,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 settingEditTextViewHolder.getTextView().setText(preferenceSettingsEditText.getTitleText());
                 settingEditTextViewHolder.getSettingsEditText().setHint(preferenceSettingsEditText.getEditHint());
                 settingEditTextViewHolder.getSettingsEditText().setText(preferenceSettingsEditText.getEditText());
+                settingEditTextViewHolder.getSettingsEditText().setOnClickListener(new OnClickListenerSettings(this,preferenceSettingsEditText,position));
                 break;
         }
 

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Window;
 
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.mati.fermat_preference_settings.R;
 import com.mati.fermat_preference_settings.settings.interfaces.DialogCallback;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
@@ -52,6 +53,7 @@ public class SettingsDialog extends Dialog implements FermatListItemListeners<Pr
         contextMenuAdapter.setFermatListEventListener(this);
         recyclerView.setAdapter(contextMenuAdapter);
         recyclerView.getLayoutParams().height = getDps(options.size());
+        recyclerView.addItemDecoration(new FermatDividerItemDecoration(getContext()));
     }
 
 
