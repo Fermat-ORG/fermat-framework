@@ -251,8 +251,8 @@ public class BrokerAckOfflinePaymentPluginRoot extends AbstractPlugin implements
              * Init Monitor Agent
              */
             //TODO: mock manager only for testing, please, comment the following line when finish the test.
-            customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
-            customerBrokerSaleNegotiationManager=new SaleNegotiationManagerMock();
+            //customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
+            //customerBrokerSaleNegotiationManager=new SaleNegotiationManagerMock();
             BrokerAckOfflinePaymentMonitorAgent brokerAckOfflinePaymentMonitorAgent=new BrokerAckOfflinePaymentMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
