@@ -2,9 +2,12 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.holders;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
@@ -21,6 +24,7 @@ public class AssetRedeemSelectRedeemPointHolder extends FermatViewHolder {
 
     private FermatTextView nameText;
     private ImageView selectRedeemPointButton;
+    private ImageView imageViewRedeemPoint;
 
     /**
      * Constructor
@@ -33,8 +37,9 @@ public class AssetRedeemSelectRedeemPointHolder extends FermatViewHolder {
         this.context = context;
         res = itemView.getResources();
 
-        nameText = (FermatTextView) itemView.findViewById(R.id.userName);
-        selectRedeemPointButton = (ImageView) itemView.findViewById(R.id.selectUserButton);
+        nameText = (FermatTextView) itemView.findViewById(R.id.redeemPointName);
+        selectRedeemPointButton = (ImageView) itemView.findViewById(R.id.selectRedeemPointsButton);
+        imageViewRedeemPoint = (ImageView) itemView.findViewById(R.id.imageView_redeempoint_avatar);
     }
 
     public void bind(final RedeemPoint redeemPoint) {
@@ -56,5 +61,11 @@ public class AssetRedeemSelectRedeemPointHolder extends FermatViewHolder {
                 }
             }
         });
+
+        if (redeemPoint.getActorAssetRedeemPoint().getProfileImage() != null && redeemPoint.getActorAssetRedeemPoint().getProfileImage().length > 0) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(redeemPoint.getActorAssetRedeemPoint().getProfileImage(), 0, redeemPoint.getActorAssetRedeemPoint().getProfileImage().length);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+            imageViewRedeemPoint.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+        }
     }
 }
