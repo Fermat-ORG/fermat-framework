@@ -67,10 +67,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao {
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+        return table.getRecords().isEmpty();
     }
 
     public void saveCustomerBrokerSaleEventRecord(CustomerBrokerPurchaseEventRecord customerBrokerPurchaseEventRecord) throws DatabaseOperationException, MissingCustomerBrokerSaleDataException {

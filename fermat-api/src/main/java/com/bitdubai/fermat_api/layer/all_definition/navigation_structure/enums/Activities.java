@@ -123,6 +123,7 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY("DWAUASSUA"),
     DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY("DWAUATA"),
     DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY("DWAUATSUA"),
+    DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY("DWAUANDA"),
 
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
     DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
@@ -755,7 +756,8 @@ public enum Activities implements FermatEnum {
 
             case "DSFN":
                 return DESKTOP_SETTING_FERMAT_NETWORK;
-
+            case "DWAUANDA":
+                return DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

@@ -11,28 +11,20 @@
 
         <ImageView
             android:id="@+id/contact_image"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="@integer/contact_detail_photo_percent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_contact_picture_180_holo_light"
-            android:contentDescription="@string/imageview_description"/>
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="80dp"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:scaleType="fitXY" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="@integer/contact_detail_info_percent"
-            android:orientation="vertical">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/contact_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/padding"
-                android:paddingRight="@dimen/padding"
-                android:paddingTop="@dimen/padding"
-                android:textColor="@color/black"
-                style="@style/contactNameTitle"/>
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:gravity="center">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/uuid"
@@ -41,11 +33,26 @@
                 android:layout_weight="1"
                 android:paddingRight="@dimen/padding"
                 android:layout_gravity="center"
+                android:gravity="center_vertical"
                 android:textColor="@color/color_white"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/contact_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/padding"
+                android:paddingRight="@dimen/padding"
+                android:paddingTop="@dimen/padding"
+                android:orientation="vertical"
+                android:textColor="@color/black"
+                style="@style/contactNameTitle"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp" />
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
 
                 <LinearLayout
                     android:id="@+id/contact_details_layout"
@@ -53,6 +60,8 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/padding"
                     android:textColor="@color/black"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_vertical"
                     android:orientation="vertical">
                 </LinearLayout>
 

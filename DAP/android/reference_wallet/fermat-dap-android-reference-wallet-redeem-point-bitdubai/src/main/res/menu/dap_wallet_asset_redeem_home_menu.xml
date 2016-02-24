@@ -10,7 +10,7 @@
         app:actionViewClass="android.support.v7.widget.SearchView" />
 
     <item android:id="@+id/action_wallet_redeem_point_show_no_balance"
-        android:title="@string/dap_redeem_point_wallet_show_no_balance"
+        android:title="@string/dap_redeem_point_wallet_show_all"
         app:showAsAction="never|withText"
         app:actionViewClass="android.widget.TextView"/>
 

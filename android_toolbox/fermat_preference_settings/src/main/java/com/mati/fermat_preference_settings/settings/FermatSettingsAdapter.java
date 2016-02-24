@@ -12,9 +12,11 @@ import com.mati.fermat_preference_settings.settings.holders.SettingSwitchViewHol
 import com.mati.fermat_preference_settings.settings.holders.SettingTextOpenDialogViewHolder;
 import com.mati.fermat_preference_settings.settings.interfaces.DialogCallback;
 import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSettingsItem;
+import com.mati.fermat_preference_settings.settings.listeners.OnClickListenerSettings;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsEditText;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsSwithItem;
+import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -26,11 +28,14 @@ import java.util.List;
 public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSettingsItem, FermatViewHolder> implements DialogCallback {
 
 
+
     final int SWITH_TYPE = 1;
     final int OPEN_DIALOG_TEXT_TYPE = 2;
     final int EDIT_TEXT_TYPE = 3;
+    static final int TEXT_PLUS_RADIO_TYPE = 4;
 
     WeakReference<FermatPreferenceFragment> fragmentWeakReference;
+
 
     protected FermatSettingsAdapter(Activity context) {
         super(context);
@@ -46,13 +51,16 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
         FermatViewHolder fermatViewHolder = null;
         switch (type){
             case SWITH_TYPE:
-                fermatViewHolder = new SettingSwitchViewHolder(itemView,SWITH_TYPE);
+                fermatViewHolder = new SettingSwitchViewHolder(itemView,type);
                 break;
             case OPEN_DIALOG_TEXT_TYPE:
-                fermatViewHolder = new SettingTextOpenDialogViewHolder(itemView,OPEN_DIALOG_TEXT_TYPE);
+                fermatViewHolder = new SettingTextOpenDialogViewHolder(itemView,type);
                 break;
             case EDIT_TEXT_TYPE:
-                fermatViewHolder = new SettingEditTextViewHolder(itemView,EDIT_TEXT_TYPE);
+                fermatViewHolder = new SettingEditTextViewHolder(itemView,type);
+                break;
+            case TEXT_PLUS_RADIO_TYPE:
+                fermatViewHolder = new SettingEditTextViewHolder(itemView,type);
                 break;
         }
         return fermatViewHolder;
@@ -78,12 +86,15 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     @Override
     protected void bindHolder(FermatViewHolder holder, PreferenceSettingsItem data, int position) {
 
+
+
         switch (holder.getHolderType()){
             case SWITH_TYPE:
                 SettingSwitchViewHolder settingSwitchViewHolder = (SettingSwitchViewHolder) holder;
                 PreferenceSettingsSwithItem preferenceSettingsSwithItem = (PreferenceSettingsSwithItem) data;
                 settingSwitchViewHolder.getSettings_switch().setChecked(preferenceSettingsSwithItem.getSwitchChecked());
                 settingSwitchViewHolder.getTextView().setText(preferenceSettingsSwithItem.getText());
+                settingSwitchViewHolder.getSettings_switch().setOnClickListener(new OnClickListenerSettings(this,preferenceSettingsSwithItem,position));
                 break;
             case OPEN_DIALOG_TEXT_TYPE:
                 SettingTextOpenDialogViewHolder settingTextOpenDialogViewHolder = (SettingTextOpenDialogViewHolder) holder;
@@ -104,6 +115,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 settingEditTextViewHolder.getTextView().setText(preferenceSettingsEditText.getTitleText());
                 settingEditTextViewHolder.getSettingsEditText().setHint(preferenceSettingsEditText.getEditHint());
                 settingEditTextViewHolder.getSettingsEditText().setText(preferenceSettingsEditText.getEditText());
+                settingEditTextViewHolder.getSettingsEditText().setOnClickListener(new OnClickListenerSettings(this,preferenceSettingsEditText,position));
                 break;
         }
 
@@ -119,6 +131,8 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
             return OPEN_DIALOG_TEXT_TYPE;
         } else if(item instanceof PreferenceSettingsEditText){
             return EDIT_TEXT_TYPE;
+        } else if (item instanceof PreferenceSettingsTextPlusRadioItem){
+            return TEXT_PLUS_RADIO_TYPE;
         }
         return -1;
     }

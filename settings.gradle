@@ -18,7 +18,7 @@ apply from: 'WPD/settings.gradle'
 apply from: 'android_toolbox/settings.gradle'
 
 
-include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':horizontalscrollview'
+include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':expandable_recycler_view'
 include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'

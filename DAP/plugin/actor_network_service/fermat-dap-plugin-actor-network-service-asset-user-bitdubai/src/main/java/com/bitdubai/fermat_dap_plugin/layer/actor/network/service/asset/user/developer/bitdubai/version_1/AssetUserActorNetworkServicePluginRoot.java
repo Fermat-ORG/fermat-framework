@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -867,7 +868,8 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                                         String actorAssetToAddPublicKey,
                                         String actorAssetToAddName,
                                         Actors destinationType,
-                                        byte[] profileImage) throws CantAskConnectionActorAssetException {
+                                        byte[] profileImage,
+                                        BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException {
 
         try {
             UUID newNotificationID = UUID.randomUUID();
@@ -887,7 +889,9 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                     assetNotificationDescriptor,
                     currentTime,
                     actorAssetProtocolState,
-                    false, 1,
+                    false,
+                    1,
+                    blockchainNetworkType,
                     null
             );
 
@@ -948,6 +952,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                     assetUserNetworkServiceRecord.getActorAssetProtocolState(),
                     false,
                     1,
+                    assetUserNetworkServiceRecord.getBlockchainNetworkType(),
                     assetUserNetworkServiceRecord.getResponseToNotificationId()
             );
 
@@ -1027,7 +1032,6 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                     Actors.DAP_ASSET_ISSUER,
                     actorAssetToDisconnectPublicKey,
                     "",
-//                    "",
                     new byte[0],
                     Actors.DAP_ASSET_USER,
                     assetNotificationDescriptor,
@@ -1035,6 +1039,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                     actorAssetProtocolState,
                     false,
                     1,
+                    BlockchainNetworkType.getDefaultBlockchainNetworkType(),
                     null
             );
 
@@ -2184,7 +2189,6 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                     assetUserNetworkServiceRecord.getActorSenderType(),
                     assetUserNetworkServiceRecord.getActorDestinationPublicKey(),
                     assetUserNetworkServiceRecord.getActorSenderAlias(),
-//                    assetUserNetworkServiceRecord.getActorSenderPhrase(),
                     assetUserNetworkServiceRecord.getActorSenderProfileImage(),
                     assetUserNetworkServiceRecord.getActorDestinationType(),
                     assetUserNetworkServiceRecord.getAssetNotificationDescriptor(),
@@ -2192,6 +2196,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                     actorAssetProtocolState,
                     false,
                     1,
+                    assetUserNetworkServiceRecord.getBlockchainNetworkType(),
                     assetUserNetworkServiceRecord.getId()
             );
         } catch (CantCreateActorAssetNotificationException e) {

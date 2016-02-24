@@ -10,7 +10,7 @@ import java.util.Map;
  */
 public interface App {
 
-    public Apps getType();
+    Apps getType();
 
-    public Map<SubApps, SubApp> getSubApps();
+    Map<SubApps, SubApp> getSubApps();
 }

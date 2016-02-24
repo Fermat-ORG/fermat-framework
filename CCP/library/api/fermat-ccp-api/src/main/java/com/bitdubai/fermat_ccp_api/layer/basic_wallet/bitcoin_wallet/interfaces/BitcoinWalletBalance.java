@@ -15,14 +15,14 @@ public interface BitcoinWalletBalance {
     * amount of satoshis the user has.
    */
 
-    public long getBalance() throws CantCalculateBalanceException;
+    long getBalance() throws CantCalculateBalanceException;
 
-    public long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException;
+    long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException;
 
 
-    public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException;
+    void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException;
 
-    public void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
+    void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
 
 
 }

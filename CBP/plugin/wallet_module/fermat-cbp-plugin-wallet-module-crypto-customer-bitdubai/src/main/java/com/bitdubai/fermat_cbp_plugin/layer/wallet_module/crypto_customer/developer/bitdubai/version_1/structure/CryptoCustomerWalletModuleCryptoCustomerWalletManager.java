@@ -525,7 +525,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             ExchangeRate currentExchangeRate = providerReference.getCurrentExchangeRate(new CurrencyPairImpl(from, to));
 
-            summaryList.add(new CryptoCustomerWalletModuleIndexInfoSummary(currentExchangeRate, providerId));
+            summaryList.add(new CryptoCustomerWalletModuleIndexInfoSummary(currentExchangeRate, providerReference));
         }
 
         return summaryList;
@@ -647,28 +647,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                     "\n-BROKER: " + negotiation.getBroker().getPublicKey()+"" +
                     "\n-Memo: "+negotiation.getMemo());
 
-
-            Map<ClauseType, ClauseInformation> mapClauses = negotiation.getClauses();
-
             //VALIDATE STATUS CLAUSE
             ClauseStatus validateStatusClause = validateStatusClause(negotiation.getClauses());
 
             if((validateStatusClause != ClauseStatus.CONFIRM)) {
 
-                Date time = new Date();
-
-                Collection<Clause> clauseNegotiation = getClause(getClauseInformation(mapClauses));
-                CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = new CustomerBrokerPurchaseNegotiationImpl();
-                customerBrokerPurchaseNegotiation.setBrokerPublicKey(negotiation.getBroker().getPublicKey());
-                customerBrokerPurchaseNegotiation.setCustomerPublicKey(negotiation.getCustomer().getPublicKey());
-                customerBrokerPurchaseNegotiation.setNegotiationId(negotiation.getNegotiationId());
-                customerBrokerPurchaseNegotiation.setStartDate(time.getTime());
-                customerBrokerPurchaseNegotiation.setStatus(NegotiationStatus.SENT_TO_BROKER);
-                customerBrokerPurchaseNegotiation.setClauses(clauseNegotiation);
-                customerBrokerPurchaseNegotiation.setNearExpirationDatetime(false);
-                customerBrokerPurchaseNegotiation.setNegotiationExpirationDate(time.getTime());
-                customerBrokerPurchaseNegotiation.setLastNegotiationUpdateDate(negotiation.getNegotiationExpirationDate());
-                customerBrokerPurchaseNegotiation.setMemo(negotiation.getMemo());
+                CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = purchaseNegotiation(negotiation);
 
                 System.out.print("\n**** 1.1) MOCK MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES INFORMATION****\n");
 
@@ -687,6 +671,27 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         } catch (Exception exception) {
             return false;
         }
+    }
+
+    private CustomerBrokerPurchaseNegotiationImpl purchaseNegotiation(CustomerBrokerNegotiationInformation negotiation){
+
+        Date time = new Date();
+        Map<ClauseType, ClauseInformation> mapClauses = negotiation.getClauses();
+
+        Collection<Clause> clauseNegotiation = getClause(getClauseInformation(mapClauses));
+        CustomerBrokerPurchaseNegotiationImpl customerBrokerPurchaseNegotiation = new CustomerBrokerPurchaseNegotiationImpl();
+        customerBrokerPurchaseNegotiation.setBrokerPublicKey(negotiation.getBroker().getPublicKey());
+        customerBrokerPurchaseNegotiation.setCustomerPublicKey(negotiation.getCustomer().getPublicKey());
+        customerBrokerPurchaseNegotiation.setNegotiationId(negotiation.getNegotiationId());
+        customerBrokerPurchaseNegotiation.setStartDate(time.getTime());
+        customerBrokerPurchaseNegotiation.setStatus(NegotiationStatus.SENT_TO_BROKER);
+        customerBrokerPurchaseNegotiation.setClauses(clauseNegotiation);
+        customerBrokerPurchaseNegotiation.setNearExpirationDatetime(false);
+        customerBrokerPurchaseNegotiation.setNegotiationExpirationDate(time.getTime());
+        customerBrokerPurchaseNegotiation.setLastNegotiationUpdateDate(negotiation.getNegotiationExpirationDate());
+        customerBrokerPurchaseNegotiation.setMemo(negotiation.getMemo());
+
+        return customerBrokerPurchaseNegotiation;
     }
 
     private ClauseStatus validateStatusClause(Map<ClauseType, ClauseInformation> clause){

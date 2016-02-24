@@ -11,10 +11,10 @@ import java.util.UUID;
  */
 public interface CatalogItemInformation {
 
-    public void setCatalogItemId (CatalogItems catalogItem, UUID itemId);
-    public UUID getCatalogItemId (CatalogItems catalogItem);
+    void setCatalogItemId(CatalogItems catalogItem, UUID itemId);
+    UUID getCatalogItemId(CatalogItems catalogItem);
 
-    public void setInstallationStatus (UUID itemId, InstallationStatus installationStatus);
-    public InstallationStatus getInstallationStatus (UUID itemId);
+    void setInstallationStatus(UUID itemId, InstallationStatus installationStatus);
+    InstallationStatus getInstallationStatus(UUID itemId);
 
 }

@@ -30,7 +30,7 @@ public class BankMoneyRestockTransactionImpl implements BankMoneyTransaction {
 
     public BankMoneyRestockTransactionImpl(){
 
-    };
+    }
 
     public BankMoneyRestockTransactionImpl(UUID transactionId,
                                            String actorPublicKey,
@@ -201,7 +201,7 @@ public class BankMoneyRestockTransactionImpl implements BankMoneyTransaction {
      */
     @Override
     public String getOriginTransactionId() {
-        return this.getOriginTransactionId();
+        return originTransactionId;
     }
 
     @Override

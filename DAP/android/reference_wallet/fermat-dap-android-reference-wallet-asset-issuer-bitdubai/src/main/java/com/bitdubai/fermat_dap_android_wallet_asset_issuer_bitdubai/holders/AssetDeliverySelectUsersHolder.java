@@ -2,10 +2,12 @@ package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.holders;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -26,6 +28,9 @@ public class AssetDeliverySelectUsersHolder extends FermatViewHolder {
 
     private FermatTextView nameText;
     private ImageView selectUserButton;
+    private ImageView imageViewUser;
+
+
 
     /**
      * Constructor
@@ -40,6 +45,7 @@ public class AssetDeliverySelectUsersHolder extends FermatViewHolder {
 
         nameText = (FermatTextView) itemView.findViewById(R.id.userName);
         selectUserButton = (ImageView) itemView.findViewById(R.id.selectUserButton);
+        imageViewUser = (ImageView) itemView.findViewById(R.id.imageView_user_avatar);
     }
 
     public void bind(final User user) {
@@ -61,5 +67,11 @@ public class AssetDeliverySelectUsersHolder extends FermatViewHolder {
                 }
             }
         });
+
+        if (user.getActorAssetUser().getProfileImage() != null && user.getActorAssetUser().getProfileImage().length > 0) {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(user.getActorAssetUser().getProfileImage(), 0, user.getActorAssetUser().getProfileImage().length);
+            bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+            imageViewUser.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+        }
     }
 }

@@ -21,7 +21,7 @@ public interface DesktopSettings extends FermatSettings {
      * @return the identifier of the default language of the wallet
      * @throws CantGetDefaultLanguageException
      */
-    public UUID getDefaultLanguage() throws CantGetDefaultLanguageException;
+    UUID getDefaultLanguage() throws CantGetDefaultLanguageException;
 
     /**
      * This method let us know the default skin of a wallet
@@ -29,7 +29,7 @@ public interface DesktopSettings extends FermatSettings {
      * @return the identifier of the default skin of the wallet
      * @throws CantGetDefaultSkinException
      */
-    public UUID getDefaultSkin() throws CantGetDefaultSkinException;
+    UUID getDefaultSkin() throws CantGetDefaultSkinException;
 
     /**
      * This method let us set the default language for a wallet
@@ -37,7 +37,7 @@ public interface DesktopSettings extends FermatSettings {
      * @param languageId the identifier of the language to set as default
      * @throws CantSetDefaultLanguageException
      */
-    public void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException;
+    void setDefaultLanguage(UUID languageId) throws CantSetDefaultLanguageException;
 
     /**
      * This method let us set the default skin for a wallet
@@ -45,7 +45,7 @@ public interface DesktopSettings extends FermatSettings {
      * @param skinId the identifier of the skin to set as default
      * @throws CantSetDefaultSkinException
      */
-    public void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException;
+    void setDefaultSkin(UUID skinId) throws CantSetDefaultSkinException;
 
     /**
      * This method let us set the preference settings for a wallet
@@ -53,7 +53,7 @@ public interface DesktopSettings extends FermatSettings {
      * @param walletPreferenceSettings
      * @throws CantSetDefaultSkinException
      */
-    public void setPreferenceSettings(String walletPreferenceSettings,String walletPublicKey) throws CantSaveWalletSettings;
+    void setPreferenceSettings(String walletPreferenceSettings, String walletPublicKey) throws CantSaveWalletSettings;
 
     /**
      * This method let us get the preference settings for a wallet
@@ -61,5 +61,5 @@ public interface DesktopSettings extends FermatSettings {
      * @return preference settings of a wallet
      * @throws CantGetDefaultSkinException
      */
-    public String getPreferenceSettings(String walletPublicKey) throws CantLoadWalletSettings;
+    String getPreferenceSettings(String walletPublicKey) throws CantLoadWalletSettings;
 }

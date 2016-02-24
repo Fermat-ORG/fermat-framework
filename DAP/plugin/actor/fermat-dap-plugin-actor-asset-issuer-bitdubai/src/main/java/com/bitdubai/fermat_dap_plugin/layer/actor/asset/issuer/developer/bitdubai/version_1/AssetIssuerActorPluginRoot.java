@@ -341,6 +341,16 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+    @Override
+    public void updateIssuerRegisteredDAPConnectionState(String issuerPublicKey, DAPConnectionState connectionState) throws CantUpdateActorAssetIssuerException {
+        String context = "Issuer PK: " + issuerPublicKey + " - Connection State: " + connectionState.getCode();
+        try {
+            assetIssuerActorDao.updateAssetIssuerDAPConnectionStateActorNetworkService(assetIssuerActorDao.getActorByPublicKey(issuerPublicKey), connectionState);
+        } catch (CantUpdateAssetIssuerException | CantGetAssetIssuerActorsException e) {
+            throw new CantUpdateActorAssetIssuerException(e, context, "Cant update Connection State of Issuer");
+        }
+    }
+
     public void registerActorInActorNetworkService() throws CantRegisterActorAssetIssuerException {
         try {
             /*

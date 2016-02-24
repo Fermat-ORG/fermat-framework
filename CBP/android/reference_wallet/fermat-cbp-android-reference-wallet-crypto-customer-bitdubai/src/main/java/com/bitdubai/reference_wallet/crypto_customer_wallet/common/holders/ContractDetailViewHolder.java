@@ -33,19 +33,24 @@ import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 21/01/16.
+ * Modified by Alejandro Bicelis on 22/02/2016
  */
 public class ContractDetailViewHolder extends FermatViewHolder {
 
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
+
+    //Managers
+    ErrorManager errorManager;
+    protected CryptoCustomerWalletManager walletManager;
+
+    //Data
+    protected UUID contractId;
+    protected int itemPosition;
+
+    //UI
     private Resources res;
     private View itemView;
-    /**
-     * Contract item
-     */
-    protected UUID contractId;
-    protected CryptoCustomerWalletManager walletManager;
     private ContractDetailActivityFragment parentFragment;
-
     public ImageView customerImage;
     public ImageView stepNumber;
     public FermatTextView customerName;
@@ -56,26 +61,29 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     public FermatTextView textDescription;
     public FermatButton textButton;
     public FermatButton confirmButton;
-    protected int itemPosition;
 
-    ErrorManager errorManager;
-    /**
-     * Constructor
-     *
-     * @param itemView
-     */
+
     public ContractDetailViewHolder(View itemView) {
         super(itemView);
 
         this.itemView = itemView;
         res = itemView.getResources();
 
+
+
         stepNumber = (ImageView) itemView.findViewById(R.id.ccw_contract_detail_step);
         stepTitle = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_card_view_title);
         textDescription = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_text);
         textButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_text_button);
         confirmButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_confirm_button);
-        configButton();
+        confirmButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String buttonTest = confirmButton.getText().toString();
+                executeContractAction(buttonTest);
+            }
+        });
+
         /*customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_sold_quantity_and_currency);
@@ -84,15 +92,6 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
     }
 
-    private void configButton(){
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String buttonTest = confirmButton.getText().toString();
-                executeContractAction(buttonTest);
-            }
-        });
-    }
 
     protected void executeContractAction(String buttonText){
         try{
