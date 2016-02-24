@@ -9,10 +9,14 @@ public class CantTransferDigitalAssetsException extends DAPException {
     static final String DEFAULT_MESSAGE = "There was an error Distributing Digital Assets.";
 
     public CantTransferDigitalAssetsException(Exception cause, String context, String possibleReason) {
-        super(DEFAULT_MESSAGE , cause, context, possibleReason);
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
     public CantTransferDigitalAssetsException(final String message) {
         this(null, DEFAULT_MESSAGE, message);
+    }
+
+    public CantTransferDigitalAssetsException(Exception exception) {
+        super(exception);
     }
 }

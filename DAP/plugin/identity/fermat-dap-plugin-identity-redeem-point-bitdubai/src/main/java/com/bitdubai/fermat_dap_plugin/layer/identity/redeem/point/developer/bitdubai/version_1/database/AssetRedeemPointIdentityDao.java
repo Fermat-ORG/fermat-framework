@@ -179,7 +179,67 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         }
     }
 
-    public void updateIdentityAssetUser(String publicKey, String alias, byte[] profileImage) throws CantUpdateIdentityRedeemPointException {
+    /**
+     * first i persist private key on a file
+     * second i insert the record in database
+     * third i save the profile image file
+     *
+     * @param alias
+     * @param publicKey
+     * @param privateKey
+     * @param deviceUser
+     * @param profileImage
+     * @throws CantCreateNewDeveloperException
+     */
+    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage,
+                              String contactInformation, String countryName, String provinceName, String cityName,
+                              String postalCode, String streetName, String houseNumber) throws CantCreateNewDeveloperException {
+
+        try {
+            if (aliasExists(alias)) {
+                throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.", "Redeem Point Identity", "Cant create new Redeem Point, alias exists.");
+            }
+
+            persistNewUserPrivateKeysFile(publicKey, privateKey);
+
+            DatabaseTable table = this.database.getTable(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME);
+            DatabaseTableRecord record = table.getEmptyRecord();
+
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME, alias);
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_CONTACT_INFORMATION_COLUMN_NAME, contactInformation);
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_COUNTRY_NAME_COLUMN_NAME, countryName);
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_PROVINCE_NAME_COLUMN_NAME, provinceName);
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_CITY_NAME_COLUMN_NAME, cityName);
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_POSTAL_CODE_COLUMN_NAME, postalCode);
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME, streetName);
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME, houseNumber);
+
+            record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
+
+            table.insertRecord(record);
+
+            if (profileImage != null)
+                persistNewUserProfileImage(publicKey, profileImage);
+
+        } catch (CantInsertRecordException e) {
+            // Cant insert record.
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
+
+        } catch (CantPersistPrivateKeyException e) {
+            // Cant insert record.
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
+
+        } catch (Exception e) {
+            // Failure unknown.
+
+            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
+        }
+    }
+
+    public void updateIdentityAssetUser(String publicKey, String alias, byte[] profileImage,
+                                        String contactInformation, String countryName, String provinceName, String cityName,
+                                        String postalCode, String streetName, String houseNumber) throws CantUpdateIdentityRedeemPointException {
         try {
             /**
              * 1) Get the table.
@@ -202,6 +262,14 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             for (DatabaseTableRecord record : table.getRecords()) {
                 //set new values
                 record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME, alias);
+                record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_CONTACT_INFORMATION_COLUMN_NAME, contactInformation);
+                record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_COUNTRY_NAME_COLUMN_NAME, countryName);
+                record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_PROVINCE_NAME_COLUMN_NAME, provinceName);
+                record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_CITY_NAME_COLUMN_NAME, cityName);
+                record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_POSTAL_CODE_COLUMN_NAME, postalCode);
+                record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME, streetName);
+                record.setStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME, houseNumber);
+
                 table.updateRecord(record);
             }
 
@@ -249,12 +317,25 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             for (DatabaseTableRecord record : table.getRecords()) {
 
                 // Add records to list.
+                /*list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        getAssetRedeemPointIdentityPrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        pluginFileSystem,
+                        pluginId), );*/
                 list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetRedeemPointIdentityPrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
-                        pluginId));
+                        pluginId,
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_CONTACT_INFORMATION_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_COUNTRY_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_PROVINCE_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_CITY_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_POSTAL_CODE_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME) ));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListAssetRedeemPointIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME + " table in memory.");
@@ -302,10 +383,22 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             for (DatabaseTableRecord record : table.getRecords()) {
 
                 // Add records to list.
+                /*redeemPointIdentityRecord = new IdentityAssetRedeemPointImpl(
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));*/
                 redeemPointIdentityRecord = new IdentityAssetRedeemPointImpl(
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));
+                        getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_CONTACT_INFORMATION_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_COUNTRY_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_PROVINCE_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_CITY_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_POSTAL_CODE_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME),
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME));
+
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetRedeemPointIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME + " table in memory.");

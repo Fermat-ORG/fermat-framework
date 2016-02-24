@@ -56,7 +56,10 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorNetworkServiceAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.RedeemPointNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
@@ -119,6 +122,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
     private AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
+
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
+    ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     private AssetUserActorDao assetUserActorDao;
 
@@ -428,12 +434,18 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         CryptoAddressDealers.DAP_WATCH_ONLY,
                         BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
+
+                actorAssetRedeemPointManager.updateRedeemPointDAPConnectionStateActorNetworService(actorAssetRedeemPoint.getActorPublicKey(), DAPConnectionState.CONNECTING);
 //                    this.assetUserActorDao.updateAssetUserDAPConnectionStateActorNetworService(actorAssetUser.getActorPublicKey(), DAPConnectionState.CONNECTING, actorAssetUser.getCryptoAddress());
 //                } catch (CantUpdateAssetUserConnectionException e) {
 //                    e.printStackTrace();
 //                }
             }
         } catch (CantSendAddressExchangeRequestException e) {
+            e.printStackTrace();
+        } catch (CantUpdateRedeemPointException e) {
+            e.printStackTrace();
+        } catch (RedeemPointNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -619,8 +631,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     //TODO apply for user (issuer)
     @Override
     public void disconnectActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
-        try {
-            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey, DAPConnectionState.DISCONNECTED_REMOTELY);
+        try {//TODO VALIDAR EL USO DE DISCONNECTED_REMOTELY o REGISTERED_ONLINE para volver al estado normal del Actor
+            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToDisconnectPublicKey, DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateAssetUserConnectionException e) {
             throw new CantDisconnectAssetUserActorException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");
         } catch (Exception e) {
@@ -635,10 +647,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                                                          String actorAssetUserToAddPublicKey,
                                                          byte[] profileImage) throws CantCreateActorAssetReceiveException {
         try {
-            /**
-             * if intra user exist on table
-             * return error
-             */
             if (assetUserActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.PENDING_REMOTELY)) {
 
                 this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToAddPublicKey, DAPConnectionState.REGISTERED_REMOTELY);

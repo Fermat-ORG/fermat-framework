@@ -86,7 +86,7 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new CommunityAssetIssuerFermatAppConnection(activity);
                 break;
             case "public_key_dap_user_community":
-                fermatAppConnection = new CommunityAssetUserFermatAppConnection(activity, fermatSession);
+                fermatAppConnection = new CommunityAssetUserFermatAppConnection(activity);
                 break;
             case "public_key_dap_redeem_point_community":
                 fermatAppConnection = new CommunityRedeemPointFermatAppConnection(activity);

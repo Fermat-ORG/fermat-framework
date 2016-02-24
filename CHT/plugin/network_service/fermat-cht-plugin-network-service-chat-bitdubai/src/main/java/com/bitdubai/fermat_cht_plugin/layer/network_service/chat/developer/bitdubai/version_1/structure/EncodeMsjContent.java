@@ -11,8 +11,10 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.UUID;
 
@@ -30,10 +32,10 @@ public class EncodeMsjContent {
     /**
      *  Construct the content of the message fot the type <code>ChatMessageTransactionType.CHAT_METADATA_TRASMIT</code>
      *
-     * @param chatMetadata
+     * @param chatMetadataRecord
      * @return String message content
      */
-    public static String encodeMSjContentChatMetadataTransmit(ChatMetadata chatMetadata, PlatformComponentType senderType, PlatformComponentType receiverType){
+    public static String encodeMSjContentChatMetadataTransmit(ChatMetadataRecord chatMetadataRecord, PlatformComponentType senderType, PlatformComponentType receiverType){
 
         String contemnt = "";
 
@@ -42,14 +44,14 @@ public class EncodeMsjContent {
          */
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT,chatMetadata.getChatId().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatMetadataRecord.getChatId().toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.CHAT_METADATA_TRASMIT.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_METADATA, chatMetadata.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_METADATA, chatMetadataRecord.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, chatMetadata.getDistributionStatus().toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_STATUS, chatMetadata.getChatMessageStatus().toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, chatMetadata.getMessageStatus().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, chatMetadataRecord.getDistributionStatus().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_STATUS, chatMetadataRecord.getChatMessageStatus().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, chatMetadataRecord.getMessageStatus().toString());
 
         return gson.toJson(jsonObjectContent);
     }
@@ -98,5 +100,15 @@ public class EncodeMsjContent {
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
 
         return gson.toJson(jsonObjectContent);
+    }
+
+    /**
+     * Decode a FermatMessage
+     * @param fermatMessage
+     * @return
+     */
+    public static JsonObject decodeMsjContent(FermatMessage fermatMessage){
+        JsonParser parser = new JsonParser();
+        return parser.parse(fermatMessage.getContent()).getAsJsonObject();
     }
 }
