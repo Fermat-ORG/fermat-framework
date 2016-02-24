@@ -26,7 +26,8 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
                                               String publicActorKey,
                                               BigDecimal amount,
                                               String memo,
-                                              String publicKeyPlugin
+                                              String publicKeyPlugin,
+                                              BlockchainNetworkType blockchainNetworkType
     ){
         this.transactionId   = transactionId;
         this.cryptoCurrency  = cryptoCurrency;

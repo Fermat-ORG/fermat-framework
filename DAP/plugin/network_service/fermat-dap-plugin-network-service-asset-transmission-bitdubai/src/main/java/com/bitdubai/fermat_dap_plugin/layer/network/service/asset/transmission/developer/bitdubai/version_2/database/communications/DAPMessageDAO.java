@@ -5,28 +5,19 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
-import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessageGson;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantLoadDAPMessageException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -388,10 +379,7 @@ public class DAPMessageDAO {
      * @return DAPMessage setters the values from table
      */
     private DAPMessage constructFrom(DatabaseTableRecord record) {
-        DAPMessage dapMessage = null;
-        dapMessage = DAPMessageGson.getGson().fromJson(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME), DAPMessage.class);
-
-        return dapMessage;
+        return DAPMessage.fromXML(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME));
     }
 
     private void setValuesToRecord(DatabaseTableRecord entityRecord, DAPMessage dapMessage, MessageStatus state) {
@@ -399,11 +387,11 @@ public class DAPMessageDAO {
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_TYPE_COLUMN_NAME, dapMessage.getMessageContent().messageType().getCode());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_SUBJECT_COLUMN_NAME, dapMessage.getSubject().getCode());
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_STATUS_COLUMN_NAME, state.getCode());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME, DAPMessageGson.getGson().toJson(dapMessage));
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME, dapMessage.toXML());
     }
 
     private DAPMessage constructDAPMessageByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantLoadDAPMessageException {
-        return DAPMessageGson.getGson().fromJson(record.toString(), DAPMessage.class);
+        return DAPMessage.fromXML(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME));
     }
 
     private List<DAPMessage> constructDAPMessageListFromRecord(List<DatabaseTableRecord> records) throws CantLoadDAPMessageException, InvalidParameterException {

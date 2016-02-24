@@ -59,7 +59,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
     private ErrorManager errorManager;
 
     // Data
-    private List<User> redeemPoints;
+    private List<User> users;
 
     SettingsManager<AssetUserSettings> settingsManager;
 
@@ -81,7 +81,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
 
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -98,7 +98,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
 
         noRPView = layout.findViewById(R.id.dap_wallet_asset_sell_no_users);
 
-        showOrHideNoUsersView(redeemPoints.isEmpty());
+        showOrHideNoUsersView(users.isEmpty());
     }
 
     private void setUpHelpAssetRedeem(boolean checkButton) {
@@ -202,11 +202,11 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                redeemPoints = (ArrayList) result[0];
+                users = (ArrayList) result[0];
                 if (adapter != null)
-                    adapter.changeDataSet(redeemPoints);
+                    adapter.changeDataSet(users);
 
-                showOrHideNoUsersView(redeemPoints.isEmpty());
+                showOrHideNoUsersView(users.isEmpty());
             }
         }
     }
@@ -223,7 +223,7 @@ public class AssetSellSelectUserFragment extends FermatWalletListFragment<User>
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new AssetSellSelectUsersAdapter(getActivity(), redeemPoints, moduleManager);
+            adapter = new AssetSellSelectUsersAdapter(getActivity(), users, moduleManager);
             adapter.setFermatListEventListener(this);
         }
         return adapter;

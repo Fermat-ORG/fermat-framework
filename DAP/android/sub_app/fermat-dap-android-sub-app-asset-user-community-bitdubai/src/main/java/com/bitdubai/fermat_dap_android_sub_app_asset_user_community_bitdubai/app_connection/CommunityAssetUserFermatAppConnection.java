@@ -81,15 +81,24 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections<AssetU
             String senderActorPublicKey = params[1];
 
             switch (notificationType) {
-                case "CONNECTIONREQUEST":
+                case "CONNECTION-REQUEST":
                     if (manager != null) {
                         //find last notification by sender actor public key
                         ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
                         notification = new UserAssetCommunityNotificationPainter("New Connection Request", "Was Received From: " + senderActor.getName(), "", "");
-                        break;
                     } else {
                         notification = new UserAssetCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "");
                     }
+                    break;
+                case "CRYPTO-REQUEST":
+                    if (manager != null) {
+                        //find last notification by sender actor public key
+//                        ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
+                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "A New CryptoAddress was Received From: " + senderActorPublicKey, "", "");
+                    } else {
+                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "Was Received for: "+ senderActorPublicKey, "", "");
+                    }
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();
