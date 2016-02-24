@@ -73,7 +73,6 @@ import java.util.Objects;
 @NeededIndirectPluginReferences(indirectReferences = {
         @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_EXTRA_USER),
         @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_INTRA_USER)
-//        @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.MIDDLEWARE, plugin = Plugins.CRYPTO_ADDRESSES),
 })
 public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin implements
         AssetUserCommunitySubAppModuleManager {
@@ -132,7 +131,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
             try {
                 BlockchainNetworkType blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
                 for (ActorAssetUser actorAssetUser : actorAssetUserManager.getAllAssetUserActorInTableRegistered(blockchainNetworkType)) {
-                    if(Objects.equals(actorAssetUser.getType().getCode(), Actors.DAP_ASSET_USER.getCode())) {
+                    if (Objects.equals(actorAssetUser.getType().getCode(), Actors.DAP_ASSET_USER.getCode())) {
                         AssetUserActorRecord assetUserActorRecord = (AssetUserActorRecord) actorAssetUser;
                         assetUserActorRecords.add(assetUserActorRecord);
                     }
@@ -174,11 +173,9 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
         List<AssetUserActorRecord> allUserRegistered = this.getAllActorAssetUserRegistered();
         List<ActorAssetUser> allUserRegisteredInGroup = this.getListActorAssetUserByGroups(groupId);
         List<AssetUserActorRecord> allUserRegisteredFiltered = new ArrayList<>();
-        for (AssetUserActorRecord record : allUserRegistered)
-        {
+        for (AssetUserActorRecord record : allUserRegistered) {
             // Obtain all user connected and not in the current group
-            if (record.getCryptoAddress() != null && (!userInGroup(record.getActorPublicKey(), allUserRegisteredInGroup)))
-            {
+            if (record.getCryptoAddress() != null && (!userInGroup(record.getActorPublicKey(), allUserRegisteredInGroup))) {
                 allUserRegisteredFiltered.add(record);
             }
         }
@@ -188,8 +185,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
     private boolean userInGroup(String actorPublicKey, List<ActorAssetUser> usersInGroup) {
         for (ActorAssetUser record : usersInGroup) {
-            if (record.getActorPublicKey().equals(actorPublicKey))
-            {
+            if (record.getActorPublicKey().equals(actorPublicKey)) {
                 return true;
             }
         }
@@ -223,7 +219,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetUserActorException {
         try {
-            actorAssetUserManager.disconnectToActorAssetUser(user,assetIssuerWalletSupAppModuleManager.getSelectedNetwork());
+            actorAssetUserManager.disconnectToActorAssetUser(user, assetIssuerWalletSupAppModuleManager.getSelectedNetwork());
         } catch (CantDisconnectAssetUserActorException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
@@ -335,44 +331,69 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     @Override
     public void askActorAssetUserForConnection(List<ActorAssetUser> actorAssetUsers) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException {
         try {
-        ActorAssetIssuer actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
-        if (actorAssetIssuer != null) {
-            blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+            ActorAssetIssuer actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
+            if (actorAssetIssuer != null) {
+                blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
 
-            /**
-             *Call Actor Intra User to add request connection
-             */
-            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
-                this.actorAssetUserManager.askActorAssetUserForConnection(
-                        actorAssetIssuer.getActorPublicKey(),
-                        actorAssetUser.getName(),
-                        actorAssetUser.getActorPublicKey(),
-                        actorAssetUser.getProfileImage(),
-                        blockchainNetworkType);
-
-                /**
-                 *Call Network Service Intra User to add request connection
-                 */
-                if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey()) != DAPConnectionState.REGISTERED_REMOTELY) {
-                    System.out.println("The User you are trying to connect with is not connected" +
-                            "so we send the message to the assetUserActorNetworkService");
-                    this.assetUserActorNetworkServiceManager.askConnectionActorAsset(
+                for (ActorAssetUser actorAssetUser : actorAssetUsers) {
+                    this.actorAssetUserManager.askActorAssetUserForConnection(
                             actorAssetIssuer.getActorPublicKey(),
-                            actorAssetIssuer.getName(),
-                            Actors.DAP_ASSET_ISSUER,
-                            actorAssetUser.getActorPublicKey(),
                             actorAssetUser.getName(),
-                            Actors.DAP_ASSET_USER,
-                            actorAssetIssuer.getProfileImage(),
+                            actorAssetUser.getActorPublicKey(),
+                            actorAssetUser.getProfileImage(),
                             blockchainNetworkType);
+
+                    if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey()) != DAPConnectionState.REGISTERED_REMOTELY) {
+                        System.out.println("The User you are trying to connect with is not connected" +
+                                "so we send the message to the assetUserActorNetworkService");
+                        this.assetUserActorNetworkServiceManager.askConnectionActorAsset(
+                                actorAssetIssuer.getActorPublicKey(),
+                                actorAssetIssuer.getName(),
+                                Actors.DAP_ASSET_ISSUER,
+                                actorAssetUser.getActorPublicKey(),
+                                actorAssetUser.getName(),
+                                Actors.DAP_ASSET_USER,
+                                actorAssetIssuer.getProfileImage(),
+                                blockchainNetworkType);
+                    } else {
+                        this.assetUserActorNetworkServiceManager.acceptConnectionActorAsset(actorAssetIssuer.getActorPublicKey(), actorAssetUser.getActorPublicKey());
+                        System.out.println("The actor asset user is connected");
+                    }
+                }
+            } else {
+                ActorAssetUser actorAssetUserLogging = actorAssetUserManager.getActorAssetUser();
+                if (actorAssetUserLogging != null) {
+                    blockchainNetworkType = assetUserWalletSubAppModuleManager.getSelectedNetwork();
+
+                    for (ActorAssetUser actorAssetUser : actorAssetUsers) {
+                        this.actorAssetUserManager.askActorAssetUserForConnection(
+                                actorAssetUserLogging.getActorPublicKey(),
+                                actorAssetUser.getName(),
+                                actorAssetUser.getActorPublicKey(),
+                                actorAssetUser.getProfileImage(),
+                                blockchainNetworkType);
+
+                        if (this.actorAssetUserManager.getActorAssetUserRegisteredDAPConnectionState(actorAssetUser.getActorPublicKey()) != DAPConnectionState.REGISTERED_REMOTELY) {
+                            System.out.println("The User you are trying to connect with is not connected" +
+                                    "so we send the message to the assetUserActorNetworkService");
+                            this.assetUserActorNetworkServiceManager.askConnectionActorAsset(
+                                    actorAssetUserLogging.getActorPublicKey(),
+                                    actorAssetUserLogging.getName(),
+                                    Actors.DAP_ASSET_USER,
+                                    actorAssetUser.getActorPublicKey(),
+                                    actorAssetUser.getName(),
+                                    Actors.DAP_ASSET_USER,
+                                    actorAssetUserLogging.getProfileImage(),
+                                    blockchainNetworkType);
+                        } else {
+                            this.assetUserActorNetworkServiceManager.acceptConnectionActorAsset(actorAssetUserLogging.getActorPublicKey(), actorAssetUser.getActorPublicKey());
+                            System.out.println("The actor asset user is connected");
+                        }
+                    }
                 } else {
-                    this.assetUserActorNetworkServiceManager.acceptConnectionActorAsset(actorAssetIssuer.getActorPublicKey(), actorAssetUser.getActorPublicKey());
-                    System.out.println("The actor asset user is connected");
+                    throw new CantConnectToActorAssetUserException(CantConnectToActorAssetUserException.DEFAULT_MESSAGE, null, "There was an error connecting to users.", null);
                 }
             }
-        } else {
-            throw new CantConnectToActorAssetUserException(CantConnectToActorAssetUserException.DEFAULT_MESSAGE, null, "There was an error connecting to users.", null);
-        }
         } catch (CantAskConnectionActorAssetException e) {
             throw new CantAskConnectionActorAssetException("", e, "", "");
         } catch (CantRequestAlreadySendActorAssetException e) {
@@ -424,8 +445,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
 
     @Override
     public void disconnectActorAssetUser(String intraUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException {
-        try
-        {
+        try {
             /**
              *Call Actor User to disconnect request connection
              */
@@ -501,7 +521,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
         try {
             return this.actorAssetUserManager.getLastNotificationActorAssetUser(actorAssetUserInPublicKey);
         } catch (CantGetActorAssetNotificationException e) {
-            throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET USER LAST NOTIFICATION",e,"","Error on ACTOR ASSET Manager");
+            throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET USER LAST NOTIFICATION", e, "", "Error on ACTOR ASSET Manager");
 
         }
     }
@@ -511,7 +531,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
         //TODO: falta que este metodo que devuelva la cantidad de request de conexion que tenes
         try {
 
-            if (getActiveAssetUserIdentity() != null){
+            if (getActiveAssetUserIdentity() != null) {
                 return getWaitingYourConnectionActorAssetUser(getActiveAssetUserIdentity().getPublicKey(), 100, 0).size();
             }
 
@@ -557,8 +577,8 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractPlugin imp
     public int[] getMenuNotifications() {
         int[] notifications = new int[4];
         try {
-            if(getSelectedActorIdentity() != null)
-                notifications[2] = actorAssetUserManager.getWaitingYourConnectionActorAssetUser(getSelectedActorIdentity().getPublicKey(),99,0).size();
+            if (getSelectedActorIdentity() != null)
+                notifications[2] = actorAssetUserManager.getWaitingYourConnectionActorAssetUser(getSelectedActorIdentity().getPublicKey(), 99, 0).size();
             else
                 notifications[2] = 0;
         } catch (CantGetActorAssetWaitingException | CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {

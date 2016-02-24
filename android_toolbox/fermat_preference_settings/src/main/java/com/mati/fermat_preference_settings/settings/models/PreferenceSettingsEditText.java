@@ -15,7 +15,7 @@ public class PreferenceSettingsEditText implements PreferenceSettingsItem {
 
     public PreferenceSettingsEditText(String textViewtitle,String editTextHint) {
         this.editTextHint = editTextHint;
-        TextViewtitle = textViewtitle;
+        this.TextViewtitle = textViewtitle;
     }
 
     public String getTitleText(){

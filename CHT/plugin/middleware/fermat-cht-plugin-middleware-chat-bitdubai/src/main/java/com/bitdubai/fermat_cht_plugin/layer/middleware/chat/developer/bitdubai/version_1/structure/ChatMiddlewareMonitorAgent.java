@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -858,7 +859,8 @@ public class ChatMiddlewareMonitorAgent implements
                     UUID.randomUUID(),
                     "Not registered contact",
                     "Not registered contact",
-                    chatMetadata.getLocalActorType(),
+                    //chatMetadata.getLocalActorType(),
+                    PlatformComponentType.NETWORK_SERVICE,
                     chatMetadata.getLocalActorPublicKey(),
                     date.getTime()
             );

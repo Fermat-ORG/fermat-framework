@@ -88,7 +88,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
             toolbar = getToolbar();
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back));
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+
             whattodo();
             if(chatManager.getContactByContactId(contactid).getRemoteName().equals("Not registered contact"))
             {
@@ -144,7 +145,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
 
     //
-//    void findmessage(){
+//    void findMessage(){
 //        String message;
 //        String inorout;
 //        int messsize;
@@ -202,7 +203,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //        ListView lstOpciones;
 //
 //
-//        findmessage();
+//        findMessage();
 //        adaptador = new ChatAdapterView(getActivity(), historialmensaje);
 //        lstOpciones = (ListView) layout.findViewById(R.id.messagesContainer);
 //        lstOpciones.setAdapter(adaptador);
@@ -215,7 +216,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //                if (TextUtils.isEmpty(messageText)) {
 //                    return;
 //                }
-//                //whattodo();
+//                //whatToDo();
 //                try {
 //                    ChatImpl chat=new ChatImpl();
 //                    MessageImpl message=new MessageImpl();
@@ -235,7 +236,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //                        message.setContactId(contactid);
 //                        chatManager.saveMessage(message);
 //
-//                        findmessage();
+//                        findMessage();
 //                        adaptador.refreshEvents(historialmensaje);
 //                        Toast.makeText(getActivity(),"Message Created", Toast.LENGTH_SHORT).show();
 //
@@ -267,7 +268,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //
 //                        chatManager.saveMessage(message);
 //
-//                        findmessage();
+//                        findMessage();
 //
 //                        adaptador.refreshEvents(historialmensaje);
 //                        Toast.makeText(getActivity(),"Sending message", Toast.LENGTH_SHORT).show();
@@ -299,7 +300,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 //                        try {
 //                            //System.out.println("Threar UI corriendo");
 //                            //TODO: fix this
-//                            findmessage();
+//                            findMessage();
 //                            adaptador.refreshEvents(historialmensaje);
 //                        } catch (Exception e) {
 //

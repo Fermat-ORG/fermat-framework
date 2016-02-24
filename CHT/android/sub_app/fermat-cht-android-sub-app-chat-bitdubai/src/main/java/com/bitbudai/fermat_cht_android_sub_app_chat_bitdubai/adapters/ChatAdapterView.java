@@ -1,11 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Path;
-import android.graphics.Rect;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,10 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
@@ -74,13 +67,13 @@ public class ChatAdapterView extends LinearLayout {
     private ViewGroup rootView;
     private String leftName;
     private String rightName;
-    private UUID chatid;
-    private UUID contactid;
+    private UUID chatId;
+    private UUID contactId;
     private int background = -1;
-    private String remotepk;
-    private PlatformComponentType remotepct;
+    private String remotePk;
+    private PlatformComponentType remotePCT;
     private boolean loadDummyData = false;
-    private boolean chatwascreate=false;
+    private boolean chatWasCreate =false;
 
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
@@ -111,16 +104,16 @@ public class ChatAdapterView extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    void findvalues(Contact contact){ //With contact Id find chatid,pkremote,actortype
+    void findValues(Contact contact){ //With contact Id find chatId,pkremote,actortype
         try {
             if (contact != null){
-                remotepk = contact.getRemoteActorPublicKey();
-                remotepct = contact.getRemoteActorType();
-                contactid=contact.getContactId();
+                remotePk = contact.getRemoteActorPublicKey();
+                remotePCT = contact.getRemoteActorType();
+                contactId =contact.getContactId();
                 leftName=contact.getAlias();
                 for (int i = 0; i < chatManager.getMessages().size(); i++) {
-                    if (contactid.equals(chatManager.getMessages().get(i).getContactId())) {
-                        chatid = chatManager.getMessages().get(i).getChatId();
+                    if (contactId.equals(chatManager.getMessages().get(i).getContactId())) {
+                        chatId = chatManager.getMessages().get(i).getChatId();
                     }
                 }
             }
@@ -131,55 +124,55 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
-    public void whattodo(){
+    public void whatToDo(){
         try {
             System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
             if (chatSession.getData("whocallme").equals("chatlist")) {
-                findvalues((Contact)chatSession.getData("contactid"));//if I choose a chat, this will retrieve the chatid
-                chatwascreate = true;
+                findValues((Contact) chatSession.getData("contactid"));//if I choose a chat, this will retrieve the chatId
+                chatWasCreate = true;
             } else if (chatSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
-                findvalues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
+                findValues(chatSession.getSelectedContact());//if I choose a contact, this will search the chat previously created with this contact
                 //Here it is define if we need to create a new chat or just add the message to chat created previously
-                chatwascreate = chatid != null;
+                chatWasCreate = chatId != null;
             }
         }catch(Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
     }
 
-    public void findmessage(){
+    public void findMessage(){
         String message;
         String inorout;
         ChatMessage msg;
         Chat chat;
-        int messsize;
+        int messSize;
         try {
             setChatHistory(null);
-            if(chatid!=null){
-                chat=chatManager.getChatByChatId(chatid);
+            if(chatId !=null){
+                chat=chatManager.getChatByChatId(chatId);
             }else{
                 chat=chatSession.getSelectedChat();
             }
 
             if(chat!=null)
-                chatid=chat.getChatId();
+                chatId =chat.getChatId();
             if (chatHistory == null) {
                 chatHistory = new ArrayList<ChatMessage>();
             }
 
-            if(chatid!=null){
-                messsize=chatManager.getMessageByChatId(chatid).size();
+            if(chatId !=null){
+                messSize=chatManager.getMessageByChatId(chatId).size();
 
-                for (int i = 0; i < messsize; i++) {
+                for (int i = 0; i < messSize; i++) {
                     msg = new ChatMessage();
-                    message=chatManager.getMessageByChatId(chatid).get(i).getMessage();
-                    inorout=chatManager.getMessageByChatId(chatid).get(i).getType().toString();
-                    msg.setId(chatManager.getMessageByChatId(chatid).get(i).getMessageId());
+                    message=chatManager.getMessageByChatId(chatId).get(i).getMessage();
+                    inorout=chatManager.getMessageByChatId(chatId).get(i).getType().toString();
+                    msg.setId(chatManager.getMessageByChatId(chatId).get(i).getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else msg.setMe(false);
-                    msg.setStatus(chatManager.getMessageByChatId(chatid).get(i).getStatus().toString());
-                    msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatid).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatid).get(i).getMessageDate().toString()
-                    msg.setUserId(chatManager.getMessageByChatId(chatid).get(i).getContactId());
+                    msg.setStatus(chatManager.getMessageByChatId(chatId).get(i).getStatus().toString());
+                    msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatId).get(i).getMessageDate().toString()
+                    msg.setUserId(chatManager.getMessageByChatId(chatId).get(i).getContactId());
                     msg.setMessage(message);
                     chatHistory.add(msg);
                 }
@@ -207,8 +200,8 @@ public class ChatAdapterView extends LinearLayout {
         RelativeLayout container = (RelativeLayout) findViewById(R.id.container);
 
         if(chatSession!= null){
-            whattodo();
-            findmessage();
+            whatToDo();
+            findMessage();
         }
 //        if (rightName != null) {
 //            meLabel.setText(rightName);
@@ -239,72 +232,86 @@ public class ChatAdapterView extends LinearLayout {
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            String messageText = messageET.getText().toString();
-            if (TextUtils.isEmpty(messageText)) {
-                return;
-            }
-
-            try {
-                ChatImpl chat = new ChatImpl();
-                MessageImpl message = new MessageImpl();
-                Long dv = System.currentTimeMillis();
-
-                if (chatwascreate) {
-                    chat=(ChatImpl)chatManager.getChatByChatId(chatid);
-                    chatManager.saveChat(chat);
-
-                    message.setChatId(chatid);
-                    message.setMessageId(UUID.randomUUID());
-                    message.setMessage(messageText);
-                    message.setMessageDate(new Timestamp(dv));
-                    message.setStatus(MessageStatus.CREATED);
-                    message.setType(TypeMessage.OUTGOING);
-                    message.setContactId(contactid);
-                    chatManager.saveMessage(message);
-                } else {
-                    UUID newchatid = UUID.randomUUID();
-                    chat.setChatId(newchatid);
-                    chat.setObjectId(UUID.randomUUID());
-                    chat.setStatus(ChatStatus.VISSIBLE);
-                    chat.setChatName("DeathNote");
-                    chat.setDate(new Timestamp(dv));
-                    chat.setLastMessageDate(new Timestamp(dv));
-                    chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                    chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                    chat.setRemoteActorPublicKey(remotepk);
-                    chat.setRemoteActorType(remotepct);
-                    chatManager.saveChat(chat);
-
-                    message.setChatId(newchatid);
-                    message.setMessageId(UUID.randomUUID());
-                    message.setMessage(messageText);
-                    message.setMessageDate(new Timestamp(dv));
-                    message.setStatus(MessageStatus.CREATED);
-                    message.setType(TypeMessage.OUTGOING);
-                    message.setContactId(contactid);
-                    chatManager.saveMessage(message);
+                String messageText = messageET.getText().toString();
+                if (TextUtils.isEmpty(messageText)) {
+                    return;
                 }
 
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage.setId(UUID.randomUUID());//dummy
-                chatMessage.setMessage(messageText);
-                chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
-                chatMessage.setMe(true);
-                messageET.setText("");
-                adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
-                messagesContainer.setAdapter(adapter);
-                displayMessage(chatMessage);
+                try {
+                    ChatImpl chat = new ChatImpl();
+                    MessageImpl message = new MessageImpl();
+                    Long dv = System.currentTimeMillis();
+
+                    if (chatWasCreate) {
+                        chat=(ChatImpl)chatManager.getChatByChatId(chatId);
+                        chatManager.saveChat(chat);
+
+                        message.setChatId(chatId);
+                        message.setMessageId(UUID.randomUUID());
+                        message.setMessage(messageText);
+                        message.setMessageDate(new Timestamp(dv));
+                        message.setStatus(MessageStatus.CREATED);
+                        message.setType(TypeMessage.OUTGOING);
+                        message.setContactId(contactId);
+                        chatManager.saveMessage(message);
+                    } else {
+                        UUID newChatId = UUID.randomUUID();
+                        chat.setChatId(newChatId);
+                        chat.setObjectId(UUID.randomUUID());
+                        chat.setStatus(ChatStatus.VISSIBLE);
+                        //Todo: find another chat name
+                        chat.setChatName("Chat_" + remotePk);
+                        chat.setDate(new Timestamp(dv));
+                        chat.setLastMessageDate(new Timestamp(dv));
+                        chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
+                        chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                        chat.setRemoteActorPublicKey(remotePk);
+                        chat.setRemoteActorType(remotePCT);
+                        chatManager.saveChat(chat);
+
+                        message.setChatId(newChatId);
+                        message.setMessageId(UUID.randomUUID());
+                        message.setMessage(messageText);
+                        message.setMessageDate(new Timestamp(dv));
+                        message.setStatus(MessageStatus.CREATED);
+                        message.setType(TypeMessage.OUTGOING);
+                        message.setContactId(contactId);
+                        chatManager.saveMessage(message);
+                        //If everything goes OK, we save the chat in the fragment session.
+                        chatSession.setData("whocallme","chatlist");
+                        chatSession.setData(
+                                "contactid",
+                                chatManager.getContactByContactId(
+                                        contactId));
+                        /**
+                         * This chat was created, so, I will put chatWasCreate as true to avoid
+                         * the multiple chats from this contact. Also I will put the chatId as
+                         * newChatId
+                         */
+                        chatWasCreate=true;
+                        chatId =newChatId;
+                    }
+
+                    ChatMessage chatMessage = new ChatMessage();
+                    chatMessage.setId(UUID.randomUUID());//dummy
+                    chatMessage.setMessage(messageText);
+                    chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                    chatMessage.setMe(true);
+                    messageET.setText("");
+                    adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
+                    messagesContainer.setAdapter(adapter);
+                    displayMessage(chatMessage);
 
 
-            } catch (CantSaveMessageException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            } catch (CantSaveChatException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            } catch (CantGetNetworkServicePublicKeyException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            } catch (Exception e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
+                } catch (CantSaveMessageException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (CantSaveChatException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (CantGetNetworkServicePublicKeyException e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
             }
         });
 
@@ -314,13 +321,13 @@ public class ChatAdapterView extends LinearLayout {
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
-                try {
-                    findmessage();
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-                mSwipeRefreshLayout.setRefreshing(false);
+                    Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
+                    try {
+                        findMessage();
+                    } catch (Exception e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
             }, 2500);
             }
@@ -368,8 +375,8 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void refreshEvents() {
-        whattodo();
-        findmessage();
+        whatToDo();
+        findMessage();
         scroll();
     }
 

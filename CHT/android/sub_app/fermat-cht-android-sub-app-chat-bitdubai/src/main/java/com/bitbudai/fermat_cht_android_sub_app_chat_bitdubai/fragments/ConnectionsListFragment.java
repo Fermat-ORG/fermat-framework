@@ -105,7 +105,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
             toolbar = getToolbar();
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back));
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         }catch (Exception e)
         {
             if(errorManager!=null)

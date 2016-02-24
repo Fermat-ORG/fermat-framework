@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message
 import com.bitdubai.fermat_api.layer.all_definition.util.GenericGsonAdapter;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -20,7 +21,8 @@ public class DAPMessageGson {
     public static Gson getGson() {
         GsonBuilder builder = new GsonBuilder()
                 .registerTypeAdapter(DAPContentMessage.class, new GenericGsonAdapter<DAPContentMessage>())
-                .registerTypeAdapter(DAPActor.class, new GenericGsonAdapter<DAPActor>());
+                .registerTypeAdapter(DAPActor.class, new GenericGsonAdapter<DAPActor>())
+                .registerTypeAdapter(IdentityAssetIssuer.class, new GenericGsonAdapter<IdentityAssetIssuer>());
         return builder.create();
     }
 

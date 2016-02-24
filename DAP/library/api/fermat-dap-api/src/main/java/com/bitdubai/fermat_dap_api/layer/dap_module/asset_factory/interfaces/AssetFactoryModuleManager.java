@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.settings.BasicSubAppSettings;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
@@ -20,6 +19,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantPublishAssetFactoy;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Created by franklin on 11/09/15.
  */
-public interface AssetFactoryModuleManager extends ModuleManager<BasicSubAppSettings, ActiveActorIdentityInformation> {
+public interface AssetFactoryModuleManager extends ModuleManager<AssetFactorySettings, ActiveActorIdentityInformation> {
     //Implementa solo los metodos que utiliza la sup app
     IdentityAssetIssuer getLoggedIdentityAssetIssuer();
 

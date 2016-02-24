@@ -128,7 +128,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
             toolbar = getToolbar();
-            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back));
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
         } catch (Exception e) {
            // CommonLogger.exception(TAG + "oncreate", e.getMessage(), e);
             if(errorManager != null)

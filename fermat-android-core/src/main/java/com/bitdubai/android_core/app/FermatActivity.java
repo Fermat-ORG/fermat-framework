@@ -1880,7 +1880,11 @@ public abstract class FermatActivity extends AppCompatActivity
         try {
             if (activity.isFullScreen()) {
                 // finally change the color
-                requestWindowFeature(Window.FEATURE_NO_TITLE);
+                try {
+                    requestWindowFeature(Window.FEATURE_NO_TITLE);
+                }catch (Exception e){
+
+                }
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
             }
@@ -1888,7 +1892,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     coordinatorLayout.setBackgroundColor(Color.parseColor(activity.getBackgroundColor()));
             }
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 
