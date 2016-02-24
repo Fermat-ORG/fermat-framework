@@ -68,11 +68,11 @@ final public class NegotiationWrapper {
 
                 if (paymentMethod == MoneyType.BANK) {
                     List<String> bankAccounts = walletManager.getAccounts(currencyToReceive, appSession.getAppPublicKey());
-                    addClause(ClauseType.BROKER_BANK_ACCOUNT, bankAccounts.isEmpty() ? "No Bank Accounts" : bankAccounts.get(0));
+                    addClause(ClauseType.BROKER_BANK_ACCOUNT, bankAccounts.isEmpty() ? null : bankAccounts.get(0));
 
                 } else if (paymentMethod == MoneyType.CASH_ON_HAND || paymentMethod == MoneyType.CASH_DELIVERY) {
                     ArrayList<NegotiationLocations> locations = Lists.newArrayList(walletManager.getAllLocations(NegotiationType.SALE));
-                    addClause(ClauseType.BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "No Locations" : locations.get(0).getLocation());
+                    addClause(ClauseType.BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? null: locations.get(0).getLocation());
                 }
             }
 

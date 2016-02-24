@@ -25,21 +25,15 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_api.layer.world.interfaces.CurrencyHelper;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -65,8 +59,10 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -247,8 +243,59 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onConfirmClauseButtonClicked(ClauseInformation clause) {
-        negotiationWrapper.setClauseAsConfirmed(clause);
-        adapter.changeDataSet(negotiationWrapper);
+        final Map<ClauseType, ClauseInformation> clauses = negotiationWrapper.getNegotiationInfo().getClauses();
+        final ClauseType type = clause.getType();
+
+        if (type == ClauseType.EXCHANGE_RATE || type == ClauseType.CUSTOMER_CURRENCY_QUANTITY || type == ClauseType.BROKER_CURRENCY_QUANTITY) {
+            if (Double.parseDouble(clause.getValue()) < 0)
+                Toast.makeText(getActivity(), "The value must be higher than 0", Toast.LENGTH_SHORT).show();
+            else {
+                negotiationWrapper.setClauseAsConfirmed(clause);
+                adapter.changeDataSet(negotiationWrapper);
+            }
+
+        } else if (type == ClauseType.BROKER_BANK_ACCOUNT || type == ClauseType.BROKER_PLACE_TO_DELIVER) {
+            if (clause.getValue() != null && !clause.getValue().isEmpty()) {
+                negotiationWrapper.setClauseAsConfirmed(clause);
+                adapter.changeDataSet(negotiationWrapper);
+            } else {
+                String msg = type == ClauseType.BROKER_BANK_ACCOUNT ? "Need to select a bank account" : "Need to select a location";
+                Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT).show();
+            }
+
+        } else if (type == ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER) {
+            final ClauseInformation deliveryDatetime = clauses.get(ClauseType.BROKER_DATE_TIME_TO_DELIVER);
+            final long deliveryDatetimeValue = Long.parseLong(deliveryDatetime.getValue());
+            final long paymentDatetimeValue = Long.parseLong(clause.getValue());
+            final Calendar calendar = Calendar.getInstance();
+
+            if (paymentDatetimeValue < calendar.getTimeInMillis()) {
+                Toast.makeText(getActivity(), "Need to select a date time from today up", Toast.LENGTH_SHORT).show();
+            } else if (paymentDatetimeValue > deliveryDatetimeValue) {
+                Toast.makeText(getActivity(), "The Payment Date need to be lower than the Delivery Date", Toast.LENGTH_SHORT).show();
+            } else {
+                negotiationWrapper.setClauseAsConfirmed(clause);
+                adapter.changeDataSet(negotiationWrapper);
+            }
+
+        } else if (type == ClauseType.BROKER_DATE_TIME_TO_DELIVER) {
+            final ClauseInformation paymentDatetime = clauses.get(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+            final long paymentDatetimeValue = Long.parseLong(paymentDatetime.getValue());
+            final long deliverDatetimeValue = Long.parseLong(clause.getValue());
+            final Calendar calendar = Calendar.getInstance();
+
+            if (deliverDatetimeValue < calendar.getTimeInMillis()) {
+                Toast.makeText(getActivity(), "Need to select a date time from today up", Toast.LENGTH_SHORT).show();
+            } else if (deliverDatetimeValue < paymentDatetimeValue) {
+                Toast.makeText(getActivity(), "The Delivery Date need to be higher than the Payment Date", Toast.LENGTH_SHORT).show();
+            } else {
+                negotiationWrapper.setClauseAsConfirmed(clause);
+                adapter.changeDataSet(negotiationWrapper);
+            }
+        } else {
+            negotiationWrapper.setClauseAsConfirmed(clause);
+            adapter.changeDataSet(negotiationWrapper);
+        }
     }
 
     @Override
