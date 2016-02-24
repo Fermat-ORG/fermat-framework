@@ -4,6 +4,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -28,6 +29,7 @@ public class NegotiationSaleRecord implements CustomerBrokerSaleNegotiation {
     Long                lastNegotiationUpdateDate;
     String              cancelReason;
     String              memo;
+    boolean             dataHasChanged;
 
     public UUID getNegotiationId(){ return this.negotiationId; }
 
@@ -72,6 +74,16 @@ public class NegotiationSaleRecord implements CustomerBrokerSaleNegotiation {
     public String getMemo(){
         return this.memo;
     }
+
+
+
+    public boolean dataHasChanged() {
+        return dataHasChanged;
+    }
+
+    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status){}
+
+    public String toString(){ return "";}
 
 /*    UUID                negotiationId;
     String              publicKeyCustomer;
