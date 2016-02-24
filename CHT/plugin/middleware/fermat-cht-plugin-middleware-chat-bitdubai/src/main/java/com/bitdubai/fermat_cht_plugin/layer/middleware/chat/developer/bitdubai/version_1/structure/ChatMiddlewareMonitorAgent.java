@@ -480,17 +480,16 @@ public class ChatMiddlewareMonitorAgent implements
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
                         broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-                      //This happen when recive a message check first the message sent from here and then the recive message
-                       //when response some wrong with this code down here
-//                        chatNetworkServiceManager.sendChatMessageNewStatusNotification(
-//                                chatNetworkServiceManager.getNetWorkServicePublicKey(),
-//                                PlatformComponentType.NETWORK_SERVICE,
-//                                incomingChatMetadata.getLocalActorPublicKey(),
-//                                PlatformComponentType.NETWORK_SERVICE,
-//                                DistributionStatus.DELIVERED,
-//                                incomingChatMetadata.getChatId(),
-//                                incomingChatMetadata.getMessageId()
-//                        );
+                        if(incomingChatMetadata.getDistributionStatus() != DistributionStatus.DELIVERED){
+                            chatNetworkServiceManager.sendChatMessageNewStatusNotification(
+                                    incomingChatMetadata.getRemoteActorPublicKey(),
+                                    PlatformComponentType.NETWORK_SERVICE,
+                                    incomingChatMetadata.getLocalActorPublicKey(),
+                                    PlatformComponentType.NETWORK_SERVICE,
+                                    DistributionStatus.DELIVERED,
+                                    pendingTransaction.getTransactionID().toString()
+                            );
+                        }
              //           break;
                     }
                 }
@@ -520,13 +519,13 @@ public class ChatMiddlewareMonitorAgent implements
                         "Checking the incoming chat pending transactions",
                         "Cannot get the message from database"
                 );
-//            }
-//            catch (CantSendChatMessageNewStatusNotificationException e) {
-//                throw new CantGetPendingTransactionException(
-//                        e,
-//                        "Checking the incoming chat pending transactions",
-//                        "Cannot send the message to TX"
-//                );
+            }
+            catch (CantSendChatMessageNewStatusNotificationException e) {
+                throw new CantGetPendingTransactionException(
+                        e,
+                        "Checking the incoming chat pending transactions",
+                        "Cannot send the message to TX"
+                );
             } catch (CantConfirmTransactionException e) {
                 throw new CantGetPendingTransactionException(
                         e,
