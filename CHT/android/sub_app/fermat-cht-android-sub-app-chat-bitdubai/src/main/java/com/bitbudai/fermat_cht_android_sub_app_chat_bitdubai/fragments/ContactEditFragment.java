@@ -193,7 +193,7 @@ public class ContactEditFragment extends AbstractFermatFragment {
             contactname.add(con.getRemoteName());
             contactid.add(con.getContactId());
             contactalias.add(con.getAlias());
-            contacticon.add(R.drawable.ic_contact_picture_holo_light);
+            contacticon.add(R.drawable.ic_contact_picture_180_holo_light);
             ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "edit",errorManager);
             //FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
             //name.setText(contactname.get(0));
