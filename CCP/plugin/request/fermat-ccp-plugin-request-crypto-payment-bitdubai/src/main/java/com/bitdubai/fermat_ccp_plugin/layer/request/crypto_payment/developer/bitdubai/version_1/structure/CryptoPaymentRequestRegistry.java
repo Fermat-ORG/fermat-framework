@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformApprovalException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformRefusalException;
@@ -52,6 +54,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     private final OutgoingIntraActorManager   outgoingIntraActorManager  ;
     private final PluginDatabaseSystem        pluginDatabaseSystem       ;
     private final UUID                        pluginId                   ;
+    private Broadcaster                       broadcaster;
 
     private CryptoPaymentRequestDao cryptoPaymentRequestDao;
 
@@ -59,13 +62,15 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                         final ErrorManager                errorManager               ,
                                         final OutgoingIntraActorManager   outgoingIntraActorManager  ,
                                         final PluginDatabaseSystem        pluginDatabaseSystem       ,
-                                        final UUID                        pluginId                   ) {
+                                        final UUID                        pluginId                   ,
+                                        final Broadcaster                 broadcaster) {
 
         this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
         this.errorManager                = errorManager               ;
         this.outgoingIntraActorManager   = outgoingIntraActorManager  ;
         this.pluginDatabaseSystem        = pluginDatabaseSystem       ;
         this.pluginId                    = pluginId                   ;
+        this.broadcaster                 = broadcaster                ;
     }
 
     public void initialize() throws CantInitializeCryptoPaymentRequestRegistryException {
@@ -661,6 +666,9 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
         try
         {
             cryptoPaymentRequestDao.changeState(requestId, CryptoPaymentState.ERROR);
+
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "PAYMENTERROR|" + requestId.toString());
+
         }
         catch(CantChangeCryptoPaymentRequestStateException e)
         {

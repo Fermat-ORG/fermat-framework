@@ -1,15 +1,11 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure;
 
-import android.text.format.DateUtils;
-
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -17,8 +13,8 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.Distribution
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.ChatMetaDataDao;
-import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.NetworkServiceChatNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.ChatMetaDataDao;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.communications.CommunicationChatNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatNetworkServiceDatabaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -29,11 +25,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.google.gson.Gson;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -203,7 +195,7 @@ public class ChatNetworkServiceAgent {
         } catch (Exception e) {
             e.printStackTrace();
             FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE,FermatException.wrapException(e), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+            reportUnexpectedException(ex);
         }
 
     }
@@ -219,10 +211,7 @@ public class ChatNetworkServiceAgent {
             try {
                 chatMetaDataDao.initialize();
             } catch (CantInitializeChatNetworkServiceDatabaseException e) {
-                this.errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_NETWORK_SERVICE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                        e);
+                reportUnexpectedException(e);
             }
             //Start the Thread
             toSend.start();
@@ -230,10 +219,7 @@ public class ChatNetworkServiceAgent {
             System.out.println("TransactionTransmissionAgent - started ");
         } catch (Exception exception){
             FermatException ex = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE,FermatException.wrapException(exception), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_NETWORK_SERVICE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    ex);
+            reportUnexpectedException(ex);
         }
 
     }
@@ -284,14 +270,13 @@ public class ChatNetworkServiceAgent {
             }
 
             //Sleep for a time
-            toSend.sleep(SLEEP_TIME);
+            Thread.sleep(SLEEP_TIME);
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            reportUnexpectedException(FermatException.wrapException(e));
         } catch (Exception e) {
-            e.printStackTrace();
             FermatException ex = new FermatException(FermatException.DEFAULT_MESSAGE,FermatException.wrapException(e), "EXCEPTION THAT THE PLUGIN CAN NOT HANDLE BY ITSELF","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+            reportUnexpectedException(ex);
 
         }
 
@@ -301,17 +286,18 @@ public class ChatNetworkServiceAgent {
 
         try {
             Map<String, Object> filters = new HashMap<>();
-            filters.put(NetworkServiceChatNetworkServiceDatabaseConstants.CHAT_TRANSACTION_HASH_COLUMN_NAME, DistributionStatus.DELIVERING.getCode());
+            filters.put(CommunicationChatNetworkServiceDatabaseConstants.CHAT_DISTRIBUTIONSTATUS_COLUMN_NAME, DistributionStatus.DELIVERING.getCode());
 
          /*
          * Read all pending BusinessTransactionMetadata from database
          */
-            List<ChatMetadataTransactionRecord> chatMetadataTransactionRecordList = chatMetaDataDao.findAllToSend();
+
+            List<ChatMetadataRecord> chatMetadataRecordList = chatMetaDataDao.findAllToSend();
 
 
-            for (ChatMetadataTransactionRecord chatMetadataTransactionRecord : chatMetadataTransactionRecordList) {
+            for (ChatMetadataRecord chatMetadataRecord : chatMetadataRecordList) {
 
-                String receiverPublicKey= chatMetadataTransactionRecord.getRemoteActorPublicKey();
+                String receiverPublicKey= chatMetadataRecord.getRemoteActorPublicKey();
 
                 if(!poolConnectionsWaitingForResponse.containsKey(receiverPublicKey)) {
 
@@ -323,12 +309,12 @@ public class ChatNetworkServiceAgent {
 
                             if (platformComponentProfile != null) {
 
-                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadataTransactionRecord.getLocalActorPublicKey(), NetworkServiceType.CHAT, PlatformComponentType.NETWORK_SERVICE);
-                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadataTransactionRecord.getRemoteActorPublicKey(), NetworkServiceType.CHAT, PlatformComponentType.NETWORK_SERVICE);
+                                PlatformComponentProfile applicantParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadataRecord.getLocalActorPublicKey(), NetworkServiceType.CHAT, PlatformComponentType.NETWORK_SERVICE);
+                                PlatformComponentProfile remoteParticipant = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructBasicPlatformComponentProfileFactory(chatMetadataRecord.getRemoteActorPublicKey(), NetworkServiceType.CHAT, PlatformComponentType.NETWORK_SERVICE);
                                 communicationNetworkServiceConnectionManager.connectTo(applicantParticipant, platformComponentProfile, remoteParticipant);
 
-                                // pass the chatMetadataTransactionRecord to a pool waiting for the response of the other peer or server failure
-                                poolConnectionsWaitingForResponse.put(receiverPublicKey, chatMetadataTransactionRecord);
+                                // pass the chatMetadataRecord to a pool waiting for the response of the other peer or server failure
+                                poolConnectionsWaitingForResponse.put(receiverPublicKey, chatMetadataRecord);
                             }
 
                         }
@@ -340,7 +326,7 @@ public class ChatNetworkServiceAgent {
                     if (communicationNetworkServiceLocal != null) {
 
                         try {
-                            chatMetadataTransactionRecord.setDistributionStatus(DistributionStatus.SENT);
+                            chatMetadataRecord.setDistributionStatus(DistributionStatus.SENT);
 
                             System.out.print("-----------------------\n" +
                                     "CHAT METADATA RECORD -----------------------\n" +
@@ -348,33 +334,30 @@ public class ChatNetworkServiceAgent {
 
                             // Si se encuentra conectado paso la metadata al dao de la capa de comunicacion para que lo envie
 
-                            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadataTransactionRecord, chatMetadataTransactionRecord.getLocalActorType(), chatMetadataTransactionRecord.getRemoteActorType());
+                            String msjContent = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadataRecord, chatMetadataRecord.getLocalActorType(), chatMetadataRecord.getRemoteActorType());
 
                             // Envio el mensaje a la capa de comunicacion
 
                             communicationNetworkServiceLocal.sendMessage(identity.getPublicKey(),receiverPublicKey,msjContent);
 
-                            chatMetaDataDao.update(chatMetadataTransactionRecord);
+
+                            chatMetaDataDao.update(chatMetadataRecord);
 
                             System.out.print("-----------------------\n" +
                                     "CHAT METADATA -----------------------\n" +
-                                    "-----------------------\n STATE: " + chatMetadataTransactionRecord.getDistributionStatus());
+                                    "-----------------------\n STATE: " + chatMetadataRecord.getDistributionStatus());
 
                         } catch (CantUpdateRecordDataBaseException e) {
-                            e.printStackTrace();
+                            reportUnexpectedException(e);
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            reportUnexpectedException(FermatException.wrapException(e));
                         }
                     }
                 }
             }
 
-        } catch (CantReadRecordDataBaseException e) {
-            e.printStackTrace();
-        } catch (CantEstablishConnectionException e) {
-            e.printStackTrace();
-        }  catch (CantLoadTableToMemoryException e) {
-            e.printStackTrace();
+        } catch (CantReadRecordDataBaseException | CantEstablishConnectionException | CantLoadTableToMemoryException e) {
+            reportUnexpectedException(e);
         }
     }
 
@@ -399,10 +382,10 @@ public class ChatNetworkServiceAgent {
             // function to process metadata received
            // processReceive();
             //Sleep for a time
-            toSend.sleep(RECEIVE_SLEEP_TIME);
+            Thread.sleep(RECEIVE_SLEEP_TIME);
 
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_TEMPLATE_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+            reportUnexpectedException(FermatException.wrapException(e));
         }
 
     }
@@ -513,7 +496,7 @@ public class ChatNetworkServiceAgent {
            // throw new ObjectNotSetException(ex, "CAN NOT SET THE OBJECT","");
             ex.printStackTrace();
             FermatException e = new ObjectNotSetException(FermatException.wrapException(ex), "","Check the cause");
-            this.errorManager.reportUnexpectedPluginException(Plugins.TRANSACTION_TRANSMISSION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            reportUnexpectedException(e);
         }
 
     }
@@ -541,6 +524,9 @@ public class ChatNetworkServiceAgent {
 //        incomingNewContractStatusUpdate.setSource(EventSource.NETWORK_SERVICE_TRANSACTION_TRANSMISSION);
 //        eventManager.raiseEvent(incomingNewContractStatusUpdate);
 //    }
+private void reportUnexpectedException(FermatException e){
+    errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+}
 
 
 }

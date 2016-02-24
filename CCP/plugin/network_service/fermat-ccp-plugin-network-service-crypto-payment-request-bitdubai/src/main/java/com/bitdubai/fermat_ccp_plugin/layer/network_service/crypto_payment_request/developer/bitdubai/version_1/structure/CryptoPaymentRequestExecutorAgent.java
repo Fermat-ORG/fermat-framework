@@ -61,7 +61,6 @@ public class CryptoPaymentRequestExecutorAgent extends FermatAgent {
         }
     };
 
-    ;
     private ExecutorService executorService;
     private Future<?> future;
 

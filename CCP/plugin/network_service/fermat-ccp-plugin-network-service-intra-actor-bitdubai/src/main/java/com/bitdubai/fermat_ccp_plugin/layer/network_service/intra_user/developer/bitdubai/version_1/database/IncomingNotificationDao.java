@@ -297,10 +297,7 @@ public class IncomingNotificationDao implements DAO {
             List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
 
 
-            if (!records.isEmpty())
-                return true;
-            else
-                return false;
+            return !records.isEmpty();
 
         } catch (CantLoadTableToMemoryException exception) {
 

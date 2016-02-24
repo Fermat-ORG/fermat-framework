@@ -6,11 +6,11 @@ package com.bitdubai.fermat_api.layer.osa_android.device_power;
  */
 public interface PowerManager {
 
-    public int getLevel();
+    int getLevel();
 
-    public PowerStatus getStatus();
+    PowerStatus getStatus();
 
-    public PlugType getPlugType();
+    PlugType getPlugType();
 
-    public void setContext (Object context);
+    void setContext(Object context);
 }

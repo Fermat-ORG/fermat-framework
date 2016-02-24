@@ -40,7 +40,7 @@ public class FermatCryptoTransaction {
      */
     public boolean isAnswerToAPaymentRequest(){
         return isAnswerToAPaymentRequest;
-    };
+    }
 
     /**
      *
@@ -48,7 +48,7 @@ public class FermatCryptoTransaction {
      */
     public UUID getRequestId() {
         return requestID;
-    };
+    }
 
     /**
      *
@@ -56,7 +56,7 @@ public class FermatCryptoTransaction {
      */
     public String getSenderPublicKey() {
         return senderPublicKey;
-    };
+    }
 
     /**
      *
@@ -64,7 +64,7 @@ public class FermatCryptoTransaction {
      */
     public String getDestinationPublicKey() {
         return destinationPublicKey;
-    };
+    }
 
     /**
      *
@@ -72,7 +72,7 @@ public class FermatCryptoTransaction {
      */
     public String getAssociatedCryptoTransactionHash() {
         return associatedCryptoTransactionHash;
-    };
+    }
 
     /**
      *
@@ -80,5 +80,5 @@ public class FermatCryptoTransaction {
      */
     public String getPaymentDescription() {
         return paymentDescription;
-    };
+    }
 }
