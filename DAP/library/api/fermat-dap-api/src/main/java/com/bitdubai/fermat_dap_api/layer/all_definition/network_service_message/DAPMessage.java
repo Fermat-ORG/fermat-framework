@@ -87,11 +87,6 @@ public class DAPMessage implements Serializable {
     }
 
     //PUBLIC METHODS
-
-    public String messageAsXML() {
-        return XMLParser.parseObject(this);
-    }
-
     @Override
     public String toString() {
         return "DAPMessage{" +
@@ -102,12 +97,12 @@ public class DAPMessage implements Serializable {
                 '}';
     }
 
-    public String toJson() {
-        return DAPMessageGson.getGson().toJson(this);
+    public String toXML() {
+        return XMLParser.parseObject(this);
     }
 
-    public static DAPMessage fromJson(String json) {
-        return DAPMessageGson.getGson().fromJson(json, DAPMessage.class);
+    public static DAPMessage fromXML(String xml) {
+        return (DAPMessage) XMLParser.parseXML(xml, new DAPMessage());
     }
 
     //PRIVATE METHODS
