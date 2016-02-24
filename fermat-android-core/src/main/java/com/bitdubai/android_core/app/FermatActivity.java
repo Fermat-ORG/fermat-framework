@@ -1070,6 +1070,8 @@ public abstract class FermatActivity extends AppCompatActivity
             //getNotificationManager().addObserver(this);
             //getNotificationManager().addCallback(this);
 
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -93,6 +93,10 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      * @return FermatSystem
      */
     public FermatSystem getFermatSystem() {
+        if(fermatSystem==null){
+            fermatSystem = FermatSystem.getInstance();
+            fermatSessionManager = new FermatSessionManager();
+        }
         return fermatSystem;
     }
 
