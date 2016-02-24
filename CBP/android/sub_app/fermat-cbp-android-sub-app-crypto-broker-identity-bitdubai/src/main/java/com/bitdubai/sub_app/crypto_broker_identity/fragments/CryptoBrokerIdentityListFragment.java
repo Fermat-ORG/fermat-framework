@@ -260,7 +260,7 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         if (filter == null) {
             CryptoBrokerIdentityInfoAdapter infoAdapter = (CryptoBrokerIdentityInfoAdapter) this.adapter;
 
-            filter = (CryptoBrokerIdentityListFilter) infoAdapter.getFilter();
+            filter = infoAdapter.getFilter();
             filter.setNoMatchViews(noMatchView, recyclerView);
         }
 

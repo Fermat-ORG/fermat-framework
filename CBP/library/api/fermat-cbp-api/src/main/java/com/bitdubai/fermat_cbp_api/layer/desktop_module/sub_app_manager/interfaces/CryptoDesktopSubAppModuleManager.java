@@ -31,7 +31,7 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * @return the list of crypto SubApp installed
      * @throws com.bitdubai.fermat_cbp_api.layer.desktop_module.sub_app_manager.exceptions.CantGetCryptoSubAppListException
      */
-    public List<CryptoDesktopSubAppInformation> getAllSubAppInstalled(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.desktop_module.sub_app_manager.exceptions.CantGetCryptoSubAppListException;
+    List<CryptoDesktopSubAppInformation> getAllSubAppInstalled(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.desktop_module.sub_app_manager.exceptions.CantGetCryptoSubAppListException;
 
 
     /**
@@ -39,7 +39,7 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      *
      * @return A list with the installed SubApps information
      */
-    public List<com.bitdubai.fermat_cbp_api.layer.desktop_module.sub_app_manager.interfaces.CryptoDesktopInstalledSubApp> getInstalledSubApps() throws CantListSubAppsException;
+    List<com.bitdubai.fermat_cbp_api.layer.desktop_module.sub_app_manager.interfaces.CryptoDesktopInstalledSubApp> getInstalledSubApps() throws CantListSubAppsException;
 
     /**
      * This method initialize the installation presses of the SubApp by giving the control to the
@@ -52,11 +52,11 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * @param version the version of the SubApp to install
      * @throws CantStartSubAppInstallationException
      */
-    public void installSubApp(SubAppCategory subAppCategory,
-                              UUID skinId,
-                              UUID languageId,
-                              UUID SubAppCatalogueId,
-                              Version version) throws CantStartSubAppInstallationException;
+    void installSubApp(SubAppCategory subAppCategory,
+                       UUID skinId,
+                       UUID languageId,
+                       UUID SubAppCatalogueId,
+                       Version version) throws CantStartSubAppInstallationException;
 
 
 
@@ -68,7 +68,7 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * @param languageId the language identifier
      * @throws CantStartSubAppLanguageInstallationException
      */
-    public void installLanguage(UUID subAppCatalogueId, UUID languageId) throws CantStartSubAppLanguageInstallationException;
+    void installLanguage(UUID subAppCatalogueId, UUID languageId) throws CantStartSubAppLanguageInstallationException;
 
     /**
      * This method initialize the installation presses of a skin by giving the control to the
@@ -78,7 +78,7 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * @param skinId the skin identifier
      * @throws CantStartSubAppSkinInstallationException
      */
-    public void installSkin(UUID subAppCatalogueId, UUID skinId) throws CantStartSubAppSkinInstallationException;
+    void installSkin(UUID subAppCatalogueId, UUID skinId) throws CantStartSubAppSkinInstallationException;
 
 
     /**
@@ -89,7 +89,7 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * @param languageId the language identifier
      * @throws CantStartUninstallSubAppLanguageException
      */
-    public void uninstallLanguage(UUID subAppCatalogueId, UUID languageId) throws CantStartUninstallSubAppLanguageException;
+    void uninstallLanguage(UUID subAppCatalogueId, UUID languageId) throws CantStartUninstallSubAppLanguageException;
 
     /**
      * This method initialize the uninstall presses of a skin by giving the control to the
@@ -99,7 +99,7 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * @param skinId the skin identifier
      * @throws CantStartUninstallSubAppSkinException
      */
-    public void uninstallSkin(UUID subAppCatalogueId, UUID skinId) throws CantStartUninstallSubAppSkinException;
+    void uninstallSkin(UUID subAppCatalogueId, UUID skinId) throws CantStartUninstallSubAppSkinException;
 
     /**
      * This method initialize the uninstall presses of the SubApp by giving the control to the
@@ -108,5 +108,5 @@ public interface CryptoDesktopSubAppModuleManager extends ModuleManager {
      * @param subAppCatalogueId the SubApp id in the catalogue
      * @throws CantStartUninstallSubAppException
      */
-    public void uninstallSubApp(UUID subAppCatalogueId) throws CantStartUninstallSubAppException;
+    void uninstallSubApp(UUID subAppCatalogueId) throws CantStartUninstallSubAppException;
 }

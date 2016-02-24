@@ -38,6 +38,13 @@
                 android:layout_alignParentLeft="true"
                 android:paddingLeft="10dp"
                 android:paddingTop="10dp"/>
+            <!--Normal INI-->
+        <RelativeLayout
+            android:id="@+id/normalAssetLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/assetNameText"
+            android:visibility="visible">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetBalanceText"
@@ -47,9 +54,10 @@
                 android:text="Balance:"
                 android:textColor="#ffffff"
                 android:fontFamily="regular"
-                android:layout_below="@+id/assetNameText"
+
                 android:paddingLeft="10dp"
-                android:paddingTop="10dp"/>
+                android:paddingTop="10dp"
+                />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/assetAvailable1"
@@ -121,7 +129,83 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:paddingBottom="10dp"/>
+            </RelativeLayout>
+            <!--Negotiation INI-->
+            <RelativeLayout
+                android:id="@+id/negotiationAssetLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/assetNameText"
+                android:visibility="gone">
 
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/negotiationAssetToBuyText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:text="Asset to Buy"
+                    android:textColor="#ffffff"
+                    android:fontFamily="regular"
+                    android:layout_alignParentRight="true"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="1dp"
+                    />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/negotiationAssetQuantityText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:text="Quantity:"
+                    android:textColor="#ffffff"
+                    android:fontFamily="regular"
+                    android:layout_below="@+id/negotiationAssetToBuyText"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/negotiationAssetQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:fontFamily="light"
+                    android:textColor="#b3ffffff"
+                    android:text="3 Assets"
+                    android:layout_toRightOf="@+id/negotiationAssetQuantityText"
+                    android:layout_alignTop="@+id/negotiationAssetQuantityText"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/negotiationAssetUnitPriceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:text="UnitPrice"
+                    android:textColor="#ffffff"
+                    android:fontFamily="regular"
+                    android:layout_below="@+id/negotiationAssetQuantityText"
+                    android:paddingLeft="10dp"
+                    android:paddingTop="10dp"
+                    />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/negotiationAssetUnitPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:fontFamily="light"
+                    android:textColor="#b3ffffff"
+                    android:text="0.000002 BTC"
+                    android:layout_toRightOf="@+id/negotiationAssetUnitPriceText"
+                    android:layout_alignTop="@+id/negotiationAssetUnitPriceText"
+                    android:paddingLeft="5dp"
+                    android:paddingTop="10dp"/>
+
+
+            </RelativeLayout>
+            <!--Negotiation END-->
         </RelativeLayout>
 
         </LinearLayout>

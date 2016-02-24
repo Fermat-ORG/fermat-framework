@@ -754,7 +754,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
      * Will store on disk this draft transaction
      * @param draftTransaction
      */
-    private void storeDraftTransaction(DraftTransaction draftTransaction) throws CantCreateFileException, CantPersistFileException {
+    public void storeDraftTransaction(DraftTransaction draftTransaction) throws CantCreateFileException, CantPersistFileException {
         byte [] serializedDraftTransaction = draftTransaction.serialize();
 
         PluginBinaryFile pluginBinayFile = pluginFileSystem.createBinaryFile(this.pluginId, DRAFT_TRANSACTION_PATH, draftTransaction.getTxHash(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
