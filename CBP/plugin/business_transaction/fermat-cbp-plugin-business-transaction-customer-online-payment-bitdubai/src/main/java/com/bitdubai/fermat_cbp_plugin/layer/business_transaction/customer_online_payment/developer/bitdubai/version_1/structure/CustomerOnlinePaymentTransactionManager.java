@@ -125,7 +125,7 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
             long cryptoAmount;
             Collection<Clause> negotiationClauses=customerBrokerPurchaseNegotiation.getClauses();
             for(Clause clause : negotiationClauses){
-                if(clause.getType().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)){
+                if(clause.getType().getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())){
                     cryptoAmount=parseToLong(clause.getValue());
                     return cryptoAmount;
                 }
