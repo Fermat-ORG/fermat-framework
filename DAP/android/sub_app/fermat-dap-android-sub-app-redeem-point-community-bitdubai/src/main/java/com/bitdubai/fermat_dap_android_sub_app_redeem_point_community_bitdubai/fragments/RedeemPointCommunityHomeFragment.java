@@ -422,7 +422,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment imp
     }
 
     @Override
-    public void onRefresh() {
+    public synchronized void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
             if (swipeRefreshLayout != null)
