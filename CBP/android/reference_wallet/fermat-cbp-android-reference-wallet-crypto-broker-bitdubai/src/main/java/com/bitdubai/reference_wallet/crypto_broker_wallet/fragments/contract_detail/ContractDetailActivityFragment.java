@@ -154,10 +154,6 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 {
                     System.out.println(e+"");
                 }
-
-
-
-
             }
         });
         String paymentCurrency=data.getPaymentCurrency();
