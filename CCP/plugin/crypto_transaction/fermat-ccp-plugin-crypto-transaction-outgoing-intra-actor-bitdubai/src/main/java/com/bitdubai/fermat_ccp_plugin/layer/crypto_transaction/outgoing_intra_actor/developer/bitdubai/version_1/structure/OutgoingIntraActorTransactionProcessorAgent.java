@@ -28,6 +28,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegi
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.exceptions.CouldNotTransmitCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.database.OutgoingIntraActorDao;
+import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantFindHandlerException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantGetTransactionsException;
@@ -293,7 +294,6 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 //                            hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletPublicKey(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount(), transaction.getOp_Return());
 
 
-
                         System.out.print("-------------- sendBitcoins to cryptoVaultManager");
                         dao.setTransactionHash(transaction, hash);
                         // TODO: The crypto vault should let us obtain the transaction hash before sending the currency. As this was never provided by the vault
@@ -323,6 +323,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                                         transaction.getMemo());
                             }
                         }
+
 
 
                     } catch (InsufficientCryptoFundsException e) {
@@ -458,13 +459,6 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         //change transaction state to reversed and update balance to revert
                         bitcoinWalletWallet.revertTransaction(transaction,credit);
 
-                     /*  if(credit)
-                            bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(transaction);
-                        else
-                           bitcoinWalletWallet.getBalance(BalanceType.BOOK).debit(transaction);*/
-
-                        bitcoinWalletWallet.deleteTransaction(transaction.getTransactionId());
-
                         //if the transaction is a payment request, rollback it state too
                         notificateRollbackToGUI(transaction);
                         if (transaction.getRequestId() != null)
@@ -518,7 +512,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
 
             eventManager.raiseEvent(platformEvent);*/
 
-            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "TRANSACTION_REVERSE|" + transactionWrapper.getTransactionId().toString());
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, transactionWrapper.getWalletPublicKey(),"TRANSACTION_REVERSE|" + transactionWrapper.getTransactionId().toString());
 
         }
 
