@@ -60,10 +60,11 @@ import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
 import com.bitdubai.android_core.app.common.version_1.classes.NetworkStateReceiver;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
+import com.bitdubai.android_core.app.common.version_1.provisory.DesktopManager;
+import com.bitdubai.android_core.app.common.version_1.provisory.FermatDesktopManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
 import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager.RuntimeStructureManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusListener;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
@@ -111,6 +112,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatHeader;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
@@ -129,12 +131,10 @@ import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidC
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.interfaces.WalletManagerModule;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.exceptions.WalletRuntimeExceptions;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
-import com.bitdubai.sub_app.wallet_manager.fragment.DesktopFragment;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -904,9 +904,9 @@ public abstract class FermatActivity extends AppCompatActivity
             } else {
                 setContentView(R.layout.base_layout_without_collapse);
                 if(activityType.equals(ActivityType.ACTIVITY_TYPE_DESKTOP)){
-                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.VISIBLE);
+                    findViewById(R.id.bottom_navigation_container).setVisibility(View.VISIBLE);
                 }else{
-                    ((LinearLayout)findViewById(R.id.bottom_navigation_container)).setVisibility(View.GONE);
+                    findViewById(R.id.bottom_navigation_container).setVisibility(View.GONE);
                     findViewById(R.id.reveal).setVisibility(View.GONE);
                 }
             }
@@ -1312,7 +1312,6 @@ public abstract class FermatActivity extends AppCompatActivity
 
         try {
             List<AbstractFermatFragment> fragments = new Vector<>();
-
             DesktopRuntimeManager desktopRuntimeManager = getDesktopRuntimeManager();
 
             for (DesktopObject desktopObject : desktopRuntimeManager.listDesktops()) {
@@ -1320,10 +1319,21 @@ public abstract class FermatActivity extends AppCompatActivity
                 switch (desktopObject.getType()) {
                     case "DCCP":
                         //por ahora va esto
-                            WalletManager manager = getWalletManager();
+                        AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(desktopObject.getPublicKey(), this);
+                        ModuleManager moduleManager = getModuleManager(appConnections.getPluginVersionReference());
+//                            WalletManager manager = getWalletManager();
                             //WalletDesktopFragment walletDesktopFragment = WalletDesktopFragment.newInstance(0, manager);
-                            DesktopFragment desktopFragment = DesktopFragment.newInstance((WalletManagerModule) manager);
-                            fragments.add(desktopFragment);
+
+//                            DesktopFragment desktopFragment = DesktopFragment.newInstance((WalletManagerModule) manager);
+
+                        String type = desktopObject.getLastActivity().getLastFragment().getType();
+
+                            fragments.add(
+                                    appConnections.getFragmentFactory().getFragment(
+                                            type,
+                                            createOrGetSession(getDesktopManager()),
+                                            null
+                                            ));
 
                         break;
                     case "WPD":
@@ -1419,14 +1429,40 @@ public abstract class FermatActivity extends AppCompatActivity
         }
     }
 
+
+    /**
+     * Method to create or get a session in the session manager
+     *
+     * @param fermatApp
+     * @return
+     */
+    protected FermatSession createOrGetSession(FermatApp fermatApp){
+        FermatSession fermatSession = null;
+        AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(), this);
+        if (getFermatSessionManager().isSessionOpen(fermatApp.getAppPublicKey())) {
+            fermatSession = getFermatSessionManager().getAppsSession(fermatApp.getAppPublicKey());
+        } else {
+            ModuleManager moduleManager = getModuleManager(fermatAppConnection.getPluginVersionReference());
+            fermatSession = getFermatSessionManager().openAppSession(fermatApp,getErrorManager(),moduleManager,fermatAppConnection);
+        }
+        return fermatSession;
+    }
+
     /**
      * Get wallet session manager
      *
      * @return
      */
 
-    public WalletSessionManager getWalletSessionManager() {
-        return ApplicationSession.getInstance().getWalletSessionManager();
+//    public WalletSessionManager getWalletSessionManager() {
+//        return ApplicationSession.getInstance().getWalletSessionManager();
+//    }
+
+    /**
+     *  Get app session manager
+     */
+    public FermatSessionManager getFermatSessionManager() {
+        return ApplicationSession.getInstance().getFermatSessionManager();
     }
 
     /**
@@ -1434,9 +1470,9 @@ public abstract class FermatActivity extends AppCompatActivity
      *
      * @return
      */
-    public SubAppSessionManager getSubAppSessionManager() {
-        return ApplicationSession.getInstance().getSubAppSessionManager();
-    }
+//    public SubAppSessionManager getSubAppSessionManager() {
+//        return ApplicationSession.getInstance().getSubAppSessionManager();
+//    }
 
     /**
      * Get SubAppRuntimeManager from the fermat platform
@@ -1505,8 +1541,13 @@ public abstract class FermatActivity extends AppCompatActivity
     /**
      * Get DesktopRuntimeManager
      */
-    private DesktopRuntimeManager getDesktopRuntimeManager() {
+    protected DesktopRuntimeManager getDesktopRuntimeManager() {
         return FermatSystemUtils.getDesktopRuntimeManager();
+    }
+
+    //TODO: esto es un plugin más para el manejo de los desktops
+    protected DesktopManager getDesktopManager(){
+        return new FermatDesktopManager();
     }
 
     /**
@@ -1734,8 +1775,13 @@ public abstract class FermatActivity extends AppCompatActivity
         return this;
     }
     public abstract FermatStructure getAppInUse();
-    public abstract FermatSession getFermatSessionInUse(String appPublicKey);
     public abstract void changeActivity(String activityName,String appBackPublicKey, Object... objects);
+
+
+
+    private FermatSession getFermatSessionInUse(String appPublicKey){
+        return getFermatSessionManager().getAppsSession(appPublicKey);
+    }
 
 
     @Override
@@ -1834,7 +1880,11 @@ public abstract class FermatActivity extends AppCompatActivity
         try {
             if (activity.isFullScreen()) {
                 // finally change the color
-                requestWindowFeature(Window.FEATURE_NO_TITLE);
+                try {
+                    requestWindowFeature(Window.FEATURE_NO_TITLE);
+                }catch (Exception e){
+
+                }
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                         WindowManager.LayoutParams.FLAG_FULLSCREEN);
             }
@@ -1842,7 +1892,7 @@ public abstract class FermatActivity extends AppCompatActivity
                     coordinatorLayout.setBackgroundColor(Color.parseColor(activity.getBackgroundColor()));
             }
         }catch (Exception e){
-
+            e.printStackTrace();
         }
     }
 
@@ -1956,4 +2006,6 @@ public abstract class FermatActivity extends AppCompatActivity
     public ActivityType getType() {
         return activityType;
     }
+
+
 }

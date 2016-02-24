@@ -590,7 +590,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     contractTransactionStatus.getCode());
         } catch (ObjectNotSetException exception) {
             throw new CantUpdateRecordException(
-                    exception.DEFAULT_MESSAGE,
+                    ObjectNotSetException.DEFAULT_MESSAGE,
                     exception,
                     "Updating the contract transaction status",
                     "The contract hash/Id is null");

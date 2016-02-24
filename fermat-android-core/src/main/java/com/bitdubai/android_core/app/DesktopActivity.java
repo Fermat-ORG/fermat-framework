@@ -3,6 +3,9 @@ package com.bitdubai.android_core.app;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,10 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -112,15 +116,9 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     @Override
     public FermatStructure getAppInUse() {
-        //TODO por ahora en null va esto
-        return null;
+        return getDesktopRuntimeManager().getLastDesktopObject();
     }
 
-    @Override
-    public FermatSession getFermatSessionInUse(String appPublicKey) {
-        //TODO : por ahora va null esto
-        return null;
-    }
 
     private void unbindDrawables(View view) {
         if(view!=null) {
@@ -273,8 +271,12 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             }else{
 
+
                 if(activities.equals(Activities.DESKTOP_SETTING_FERMAT_NETWORK)){
                     Toast.makeText(this, "toca", Toast.LENGTH_SHORT).show();
+
+                    getDesktopRuntimeManager().getLastDesktopObject().getActivity(activities);
+                    loadUI();
 //                    List<AbstractFermatFragment> list = new ArrayList<>();
 //                    list.add(new FermatNetworkSettings());
 //                    getScreenAdapter().removeAllFragments();
@@ -292,7 +294,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     try {
                         //resetThisActivity();
 
-                        Activity a = getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.getValueFromString(activityName));
+                        getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.getValueFromString(activityName));
 
                         loadUI();
 
@@ -375,11 +377,21 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
              */
             Activity activity = getActivityUsedType();
 
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection("main_desktop", this);
             //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
-            loadBasicUI(activity,null);
+            loadBasicUI(activity,fermatAppConnection);
 
-            if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
+            if (activity.getType() == Activities.CCP_DESKTOP) {
                 initialisePaging();
+            }else {
+
+                hideBottonIcons();
+
+                paintScreen(activity);
+
+                if (activity.getFragments().size() == 1) {
+                    setOneFragmentInScreen(fermatAppConnection.getFragmentFactory());
+                }
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -394,6 +406,15 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void paintScreen(Activity activity) {
+        String backgroundColor = activity.getBackgroundColor();
+        if(backgroundColor!=null){
+            Drawable colorDrawable = new ColorDrawable(Color.parseColor(backgroundColor));
+            getWindow().setBackgroundDrawable(colorDrawable);
+        }
+
     }
 
 

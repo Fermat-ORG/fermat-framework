@@ -19,15 +19,15 @@ public class SetContractPropertyTest {
         redeemable.setValue("test name 0");
         ContractProperty expirationDate= new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, null);
         expirationDate.setValue("test date 0");
-        //digitalAssetContract.setContractProperty(redeemable);
-      //  digitalAssetContract.setContractProperty(expirationDate);
+        digitalAssetContract.setContractProperty(redeemable);
+        digitalAssetContract.setContractProperty(expirationDate);
         System.out.println("0 Redeemable Name:" + digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE).getName());
         System.out.println("0 Redeemable Value:"+digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE).getValue());
         redeemable.setValue("test name 1");
         expirationDate= new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, null);
         expirationDate.setValue("test date 1");
-       // digitalAssetContract.setContractProperty(redeemable);
-       // digitalAssetContract.setContractProperty(expirationDate);
+        digitalAssetContract.setContractProperty(redeemable);
+        digitalAssetContract.setContractProperty(expirationDate);
         System.out.println("1 Redeemable Name:" + digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE).getName());
         System.out.println("1 Redeemable Value:"+digitalAssetContract.getContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE).getValue());
     }

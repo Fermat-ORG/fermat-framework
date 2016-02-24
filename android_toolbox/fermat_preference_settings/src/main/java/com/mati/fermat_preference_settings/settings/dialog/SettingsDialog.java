@@ -10,23 +10,23 @@ import android.view.Window;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.mati.fermat_preference_settings.R;
 import com.mati.fermat_preference_settings.settings.interfaces.DialogCallback;
-import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsDialogItem;
+import com.mati.fermat_preference_settings.settings.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.util.List;
 
 /**
  * Created by mati on 2016.02.08..
  */
-public class SettingsDialog extends Dialog implements FermatListItemListeners<PreferenceSettingsDialogItem>{
+public class SettingsDialog extends Dialog implements FermatListItemListeners<PreferenceSettingsTextPlusRadioItem>{
 
 
-    private List<PreferenceSettingsDialogItem> options;
+    private List<PreferenceSettingsTextPlusRadioItem> options;
     RecyclerView recyclerView;
     ContextMenuAdapter contextMenuAdapter;
     private DialogCallback callBack;
 
 
-    public SettingsDialog(Context context,DialogCallback dialogCallback,List<PreferenceSettingsDialogItem> options) {
+    public SettingsDialog(Context context,DialogCallback dialogCallback,List<PreferenceSettingsTextPlusRadioItem> options) {
         super(context);
         this.options = options;
         this.callBack = dialogCallback;
@@ -51,16 +51,41 @@ public class SettingsDialog extends Dialog implements FermatListItemListeners<Pr
         contextMenuAdapter = new ContextMenuAdapter(getContext(),options);
         contextMenuAdapter.setFermatListEventListener(this);
         recyclerView.setAdapter(contextMenuAdapter);
+        recyclerView.getLayoutParams().height = getDps(options.size());
     }
 
 
     @Override
-    public void onItemClickListener(PreferenceSettingsDialogItem data, int position) {
+    public void onItemClickListener(PreferenceSettingsTextPlusRadioItem data, int position) {
         callBack.optionSelected(data,position);
     }
 
     @Override
-    public void onLongItemClickListener(PreferenceSettingsDialogItem data, int position) {
+    public void onLongItemClickListener(PreferenceSettingsTextPlusRadioItem data, int position) {
 
     }
+
+
+    //TODO: esto tiene que ser otra clase
+
+    private final float dps_min = 120;
+    private final float dps_medium = 200;
+    private final float dps_large = 280;
+
+
+    private int getDps(int optionsSize){
+        int pixels = 0;
+        float dps = dps_large;
+        final float scale = getContext().getResources().getDisplayMetrics().density;
+        if(optionsSize>0 && optionsSize<2){
+            dps = dps_min;
+        }else if(optionsSize>2 && optionsSize<4){
+            dps = dps_medium;
+        } else if(optionsSize>4){
+            dps = dps_large;
+        }
+        return  (int) (dps * scale + 0.5f);
+
+    }
+
 }

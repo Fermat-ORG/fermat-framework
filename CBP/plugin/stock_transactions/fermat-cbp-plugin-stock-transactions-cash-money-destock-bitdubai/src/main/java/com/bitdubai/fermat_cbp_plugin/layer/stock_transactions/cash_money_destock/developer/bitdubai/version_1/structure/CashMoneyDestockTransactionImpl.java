@@ -30,7 +30,7 @@ public class CashMoneyDestockTransactionImpl implements CashMoneyTransaction {
 
     public CashMoneyDestockTransactionImpl(){
 
-    };
+    }
 
     public CashMoneyDestockTransactionImpl(UUID transactionId,
                                            String actorPublicKey,

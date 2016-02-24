@@ -16,21 +16,21 @@ import java.util.List;
 
  public interface DatabaseTransaction {
 
-    public void addRecordToUpdate(DatabaseTable fromTable, DatabaseTableRecord fromRecord);
+    void addRecordToUpdate(DatabaseTable fromTable, DatabaseTableRecord fromRecord);
 
-    public void addRecordToInsert(DatabaseTable transfersTable, DatabaseTableRecord transferRecord);
+    void addRecordToInsert(DatabaseTable transfersTable, DatabaseTableRecord transferRecord);
 
-   public void addRecordToSelect(DatabaseTable selectTable, DatabaseTableRecord selectRecord);
+   void addRecordToSelect(DatabaseTable selectTable, DatabaseTableRecord selectRecord);
 
-    public List<DatabaseTableRecord> getRecordsToUpdate();
+    List<DatabaseTableRecord> getRecordsToUpdate();
 
-   public List<DatabaseTableRecord> getRecordsToSelect();
+   List<DatabaseTableRecord> getRecordsToSelect();
 
-    public List<DatabaseTableRecord> getRecordsToInsert();
+    List<DatabaseTableRecord> getRecordsToInsert();
 
-    public List<DatabaseTable> getTablesToUpdate();
+    List<DatabaseTable> getTablesToUpdate();
 
-    public List<DatabaseTable> getTablesToInsert();
+    List<DatabaseTable> getTablesToInsert();
 
-   public List<DatabaseTable> getTablesToSelect();
+   List<DatabaseTable> getTablesToSelect();
 }

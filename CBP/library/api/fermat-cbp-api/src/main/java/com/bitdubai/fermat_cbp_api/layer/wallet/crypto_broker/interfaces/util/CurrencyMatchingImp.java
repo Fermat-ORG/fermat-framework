@@ -9,15 +9,15 @@ import java.util.UUID;
  * Created by franklin on 15/02/16.
  */
 public class CurrencyMatchingImp implements CurrencyMatching {
-    private String   originTransactionId;
+    private UUID   originTransactionId;
     private Currency currencyGiving;
     private Currency currencyReceiving;
     private float    amountGiving;
     private float    amountReceiving;
 
-    public CurrencyMatchingImp(){};
+    public CurrencyMatchingImp(){}
 
-    public CurrencyMatchingImp(String   originTransactionId,
+    public CurrencyMatchingImp(UUID   originTransactionId,
                                Currency currencyGiving,
                                Currency currencyReceiving,
                                float    amountGiving,
@@ -31,7 +31,7 @@ public class CurrencyMatchingImp implements CurrencyMatching {
     }
 
     @Override
-    public String getOriginTransactionId() {
+    public UUID getOriginTransactionId() {
         return originTransactionId;
     }
 

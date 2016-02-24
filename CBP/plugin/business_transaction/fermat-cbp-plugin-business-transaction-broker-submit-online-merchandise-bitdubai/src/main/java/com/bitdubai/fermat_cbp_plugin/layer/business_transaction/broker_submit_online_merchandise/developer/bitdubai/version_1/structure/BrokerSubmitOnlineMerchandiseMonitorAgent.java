@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -143,11 +142,11 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
         //LOG.info("Customer online payment monitor agent starting");
         monitorAgent = new MonitorAgent();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
+            this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
@@ -323,13 +322,13 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             cryptoMoneyDeStockRecord.getPublicKeyActor(),
                             cryptoMoneyDeStockRecord.getCryptoCurrency(),
                             cryptoMoneyDeStockRecord.getCbpWalletPublicKey(),
-                            cryptoMoneyDeStockRecord.getCryWalletPublicKey(),
+                            cryptoMoneyDeStockRecord.getCryptoWalletPublicKey(),
                             cryptoMoneyDeStockRecord.getAmount(),
                             cryptoMoneyDeStockRecord.getMemo(),
                             cryptoMoneyDeStockRecord.getPriceReference(),
                             cryptoMoneyDeStockRecord.getOriginTransaction(),
                             pendingToDeStockTransaction.getContractHash(),
-                            BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Manuel debemos de ver como nos llega esto desde android
+                            cryptoMoneyDeStockRecord.getBlockchainNetworkType()); //TODO: Manuel debemos de ver como nos llega esto desde android
                     pendingToDeStockTransaction.setContractTransactionStatus(
                             ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE);
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(
@@ -354,7 +353,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             Actors.CBP_CRYPTO_BROKER,
                             Actors.CBP_CRYPTO_CUSTOMER,
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                            BlockchainNetworkType.getDefaultBlockchainNetworkType()
+                            businessTransactionRecord.getBlockchainNetworkType()
                     );
                     //Updating the business transaction record
                     businessTransactionRecord.setTransactionId(
@@ -470,8 +469,6 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 for(String eventId : pendingEventsIdList){
                     checkPendingEvent(eventId);
                 }
-
-
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new CannotSendContractHashException(

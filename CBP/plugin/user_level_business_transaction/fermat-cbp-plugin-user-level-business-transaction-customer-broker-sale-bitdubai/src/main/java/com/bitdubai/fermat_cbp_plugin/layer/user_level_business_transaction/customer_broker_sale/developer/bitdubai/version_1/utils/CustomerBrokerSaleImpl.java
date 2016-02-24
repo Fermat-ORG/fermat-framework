@@ -35,7 +35,7 @@ public class CustomerBrokerSaleImpl implements CustomerBrokerSale {
         this.currencyType          = currencyType;
         this.transactionType       = transactionType;
         this.memo                  = memo;
-    };
+    }
 
     public String getTransactionId() {
         return transactionId;

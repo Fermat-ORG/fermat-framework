@@ -39,18 +39,9 @@ import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.Incomin
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEvent;
 import com.bitdubai.fermat_ccp_api.layer.network_service.intra_actor.events.ActorNetworkServicePendingsNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeniedPaymentRequestNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.GenericEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingActorRequestConnectionNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoMetadataEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingIntraUserTransactionDebitNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraActorTransactionSentEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraRollbackNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraUserTransactionRollbackNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivePaymentRequestNotificationEvent;
-
 
 /**
  * The enum <code>EventType</code>
@@ -157,15 +148,15 @@ public enum EventType implements FermatEventEnum {
 //        }
 //    },
 
-    INCOMING_CRYPTO_METADATA("ICMD") {
-//        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-//            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoMetadataEventListener(fermatEventMonitor);
-//        }
+  // INCOMING_CRYPTO_METADATA("ICMD") {
+    //   public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+      //      return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingCryptoMetadataEventListener(fermatEventMonitor);
+      //  }
 
-        public FermatEvent getNewEvent() {
-            return new IncomingCryptoMetadataEvent();
-        }
-    },
+       // public FermatEvent getNewEvent() {
+       //    return new IncomingCryptoMetadataEvent();
+      // }
+   // },
 
     INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER("ICOBWTEU") {
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -584,15 +575,15 @@ public enum EventType implements FermatEventEnum {
 //        }
 //    },
 
-    INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST("INSCR") {
-        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-            return null;
-        }
+   // INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST("INSCR") {
+     //   public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+      ///      return null;
+      //  }
 
-        public FermatEvent getNewEvent() {
-            return null;
-        }
-    },
+     //   public FermatEvent getNewEvent() {
+     //       return null;
+       // }
+   // },
 
     ESTABLISHED_NETWORK_SERVICE_CONNECTION("SNSC") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -716,15 +707,15 @@ public enum EventType implements FermatEventEnum {
 //        }
 //    },
 
-    OUTGOING_INTRA_ACTOR_TRANSACTION_SENT("OMRA") {
+    //OUTGOING_INTRA_ACTOR_TRANSACTION_SENT("OMRA") {
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
 //            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.OutgoingIntraActorTransactionSentEventListener(fermatEventMonitor);
 //        }
 
-        public FermatEvent getNewEvent() {
-            return new OutgoingIntraActorTransactionSentEvent();
-        }
-    },
+       // public FermatEvent getNewEvent() {
+       //     return new OutgoingIntraActorTransactionSentEvent();
+      //  }
+   // },
 
 //    OUTGOING_MONEY_REQUEST_APPROVED("OMRA") {
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -845,35 +836,35 @@ public enum EventType implements FermatEventEnum {
             return new IncomingMoneyNotificationEvent(this);
         }
     },
-    OUTGOING_ROLLBACK_NOTIFICATION("ORN") {
+   // OUTGOING_ROLLBACK_NOTIFICATION("ORN") {
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
 //            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.OutgoingIntraTransactionRollbackEventListener(this, fermatEventMonitor);
 //        }
 
-        public FermatEvent getNewEvent() {
-            return new OutgoingIntraRollbackNotificationEvent(this);
-        }
-    },
+    //    public FermatEvent getNewEvent() {
+      //      return new OutgoingIntraRollbackNotificationEvent(this);
+      //  }
+  //  },
 
-    RECEIVE_PAYMENT_REQUEST_NOTIFICATION("RPRN") {
+   // RECEIVE_PAYMENT_REQUEST_NOTIFICATION("RPRN") {
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
 //            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.ReceivePaymentRequestNotificationEventListener(this, fermatEventMonitor);
 //        }
 
-        public FermatEvent getNewEvent() {
-            return new ReceivePaymentRequestNotificationEvent(this);
-        }
-    },
+     //   public FermatEvent getNewEvent() {
+       //     return new ReceivePaymentRequestNotificationEvent(this);
+       // }
+   // },
 
-    DENIED_PAYMENT_REQUEST_NOTIFICATION("DPRN") {
+   // DENIED_PAYMENT_REQUEST_NOTIFICATION("DPRN") {
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
 //            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.DeniedPaymentRequestNotificationEventListener(this, fermatEventMonitor);
 //        }
 
-        public FermatEvent getNewEvent() {
-            return new DeniedPaymentRequestNotificationEvent(this);
-        }
-    },
+        //public FermatEvent getNewEvent() {
+       //     return new DeniedPaymentRequestNotificationEvent(this);
+       // }
+  //  },
 
 //    RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION("RNDAMN") {
 //        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
@@ -928,17 +919,17 @@ public enum EventType implements FermatEventEnum {
             return new ActorAssetNetworkServicePendingNotificationEvent(this);
         }
     },
-    INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION("IIARCN") {
+   // INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION("IIARCN") {
 //        @Override
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
 //            return new com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.listeners.IncomingActorRequestConnectionNotificationEventListener(this, fermatEventMonitor);
 //        }
 
-        @Override
-        public FermatEvent getNewEvent() {
-            return new IncomingActorRequestConnectionNotificationEvent(this);
-        }
-    },
+      //  @Override
+      //  public FermatEvent getNewEvent() {
+      //      return new IncomingActorRequestConnectionNotificationEvent(this);
+      //  }
+   // },
 //    INCOMING_CHAT_MESSAGE("INCCM"){
 //        @Override
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -973,30 +964,30 @@ public enum EventType implements FermatEventEnum {
 //        }
 //
 //    },
-    INCOMING_INTRA_USER_DEBIT_TRANSACTION("IIUDT") {
+   // INCOMING_INTRA_USER_DEBIT_TRANSACTION("IIUDT") {
 //        @Override
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
 //            return new IncomingIntraUserDebitTransactionNotificationEventListener(this, fermatEventMonitor);
 //        }
 
-        @Override
-        public FermatEvent getNewEvent() {
-            return new IncomingIntraUserTransactionDebitNotificationEvent(this);
-        }
+      //  @Override
+      //  public FermatEvent getNewEvent() {
+      //      return new IncomingIntraUserTransactionDebitNotificationEvent(this);
+      //  }
 
-    },
-    OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION("OIURT") {
+   // },
+   // OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION("OIURT") {
 //        @Override
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
 //            return new OutgoingIntraUserRollbackTransactionNotificationEventListener(this, fermatEventMonitor);
 //        }
 
-        @Override
-        public FermatEvent getNewEvent() {
-            return new OutgoingIntraUserTransactionRollbackNotificationEvent(this);
-        }
+       // @Override
+       // public FermatEvent getNewEvent() {
+      //      return new OutgoingIntraUserTransactionRollbackNotificationEvent(this);
+      //  }
 
-    },
+  //  },
 //    REVIEW_NEGOTIATION("RN"){
 //        @Override
 //        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {

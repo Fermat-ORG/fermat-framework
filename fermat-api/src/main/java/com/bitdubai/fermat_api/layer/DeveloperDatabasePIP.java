@@ -19,18 +19,18 @@ public interface DeveloperDatabasePIP {
      *
      * @throws
      */
-    public void initializeDatabase() throws Exception;
+    void initializeDatabase() throws Exception;
 
 
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) ;
+    List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) ;
 
 
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory);
+    List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory);
 
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable);
+    List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable);
 
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem);
+    void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem);
 
-    public void setPluginId(UUID pluginId);
+    void setPluginId(UUID pluginId);
 }

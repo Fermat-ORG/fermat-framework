@@ -19,16 +19,16 @@ public interface RequestCustomerBrokerPurchaseManager {
 
     List<RequestCustomerBrokerPurchase> getReceivedRequestPurchase(String requestSenderPublicKey) throws CantGetRequestListException;
 
-    public void sendRequestPurchase(
-        String requestSenderPublicKey,
-        String requestDestinationPublicKey,
-        MoneyType merchandiseCurrency,
-        float merchandiseAmount,
-        MoneyType paymentCurrency,
-        RequestStatus requestStatus
+    void sendRequestPurchase(
+            String requestSenderPublicKey,
+            String requestDestinationPublicKey,
+            MoneyType merchandiseCurrency,
+            float merchandiseAmount,
+            MoneyType paymentCurrency,
+            RequestStatus requestStatus
     ) throws RequestUnexpectedErrorException;
 
-    public void rejectRequestPurchase(UUID requestId) throws RequestPurchaseRejectFailedException;
+    void rejectRequestPurchase(UUID requestId) throws RequestPurchaseRejectFailedException;
 
     RequestCustomerBrokerPurchase createRequestCustomerBrokerPurchase(
         String requestSenderPublicKey,

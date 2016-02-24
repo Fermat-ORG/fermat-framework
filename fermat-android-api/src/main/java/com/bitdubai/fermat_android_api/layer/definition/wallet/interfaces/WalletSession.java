@@ -13,7 +13,7 @@ public interface WalletSession extends FermatSession{
     /**
      *
      */
-    public WalletSettings getWalletSettings();
+    WalletSettings getWalletSettings();
 
     /**
      *
