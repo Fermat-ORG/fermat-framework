@@ -216,62 +216,62 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 //        }
     }
 
-    protected void initViews(View layout) {
-
-        // fab action button create
-        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//            if (item.getItemId() == R.id.action_connect) {
-                final ProgressDialog dialog = new ProgressDialog(getActivity());
-                dialog.setMessage("Connecting please wait...");
-                dialog.setCancelable(false);
-                dialog.show();
-                FermatWorker worker = new FermatWorker() {
-                    @Override
-                    protected Object doInBackground() throws Exception {
-                        List<ActorAssetUser> toConnect = new ArrayList<>();
-                        for (Actor actor : actors) {
-                            if (actor.selected)
-                                toConnect.add(actor);
-                        }
-                        //// TODO: 28/10/15 get Actor asset User
-                        manager.connectToActorAssetUser(null, toConnect);
-                        return true;
-                    }
-                };
-                worker.setContext(getActivity());
-                worker.setCallBack(new FermatWorkerCallBack() {
-                    @Override
-                    public void onPostExecute(Object... result) {
-                        dialog.dismiss();
-                        if (swipeRefreshLayout != null)
-                            swipeRefreshLayout.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    onRefresh();
-                                }
-                            });
-                    }
-
-                    @Override
-                    public void onErrorOccurred(Exception ex) {
-                        dialog.dismiss();
-                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset Issuer or Asset User identities using the corresponding Identity application."), Toast.LENGTH_LONG).show();
-                        ex.printStackTrace();
-                    }
-                });
-                worker.execute();
-//                return true;
-                /* create new asset factory project */
-//                selectedAsset = null;
-//                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
-            }
-        });
-        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
-        create.setVisibility(View.VISIBLE);
-    }
+//    protected void initViews(View layout) {
+//
+//        // fab action button create
+//        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
+//        create.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+////            if (item.getItemId() == R.id.action_connect) {
+//                final ProgressDialog dialog = new ProgressDialog(getActivity());
+//                dialog.setMessage("Connecting please wait...");
+//                dialog.setCancelable(false);
+//                dialog.show();
+//                FermatWorker worker = new FermatWorker() {
+//                    @Override
+//                    protected Object doInBackground() throws Exception {
+//                        List<ActorAssetUser> toConnect = new ArrayList<>();
+//                        for (Actor actor : actors) {
+//                            if (actor.selected)
+//                                toConnect.add(actor);
+//                        }
+//                        //// TODO: 28/10/15 get Actor asset User
+//                        manager.connectToActorAssetUser(null, toConnect);
+//                        return true;
+//                    }
+//                };
+//                worker.setContext(getActivity());
+//                worker.setCallBack(new FermatWorkerCallBack() {
+//                    @Override
+//                    public void onPostExecute(Object... result) {
+//                        dialog.dismiss();
+//                        if (swipeRefreshLayout != null)
+//                            swipeRefreshLayout.post(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    onRefresh();
+//                                }
+//                            });
+//                    }
+//
+//                    @Override
+//                    public void onErrorOccurred(Exception ex) {
+//                        dialog.dismiss();
+//                        Toast.makeText(getActivity(), String.format("We have detected an error. Make sure you have created an Asset Issuer or Asset User identities using the corresponding Identity application."), Toast.LENGTH_LONG).show();
+//                        ex.printStackTrace();
+//                    }
+//                });
+//                worker.execute();
+////                return true;
+//                /* create new asset factory project */
+////                selectedAsset = null;
+////                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
+//            }
+//        });
+//        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
+//        create.setVisibility(View.VISIBLE);
+//    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
