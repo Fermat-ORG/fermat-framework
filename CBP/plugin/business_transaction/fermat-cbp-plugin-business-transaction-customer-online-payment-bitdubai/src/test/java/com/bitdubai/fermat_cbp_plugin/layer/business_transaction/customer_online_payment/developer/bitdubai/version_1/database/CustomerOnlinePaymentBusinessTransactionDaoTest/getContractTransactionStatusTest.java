@@ -42,7 +42,7 @@ public class getContractTransactionStatusTest {
 
     @Test(expected = Exception.class)
     public void getContractTransactionStatusTest_Should_Return_Exception() throws Exception{
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,null,null);
-        customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(null);
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,null,null,null);
+        customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(null);
     }
 }
