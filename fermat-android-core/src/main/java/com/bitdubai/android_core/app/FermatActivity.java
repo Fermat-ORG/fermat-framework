@@ -1566,11 +1566,11 @@ public abstract class FermatActivity extends AppCompatActivity
         try {
             return getApplicationSession().getFermatSystem().getModuleManager(pluginVersionReference);
         } catch (ModuleManagerNotFoundException | CantGetModuleManagerException e) {
-            System.out.println(e.getMessage());
-            System.out.println(e.toString());
+            System.err.println(e.getMessage());
+            System.err.println(e.toString());
             return null;
         } catch (Exception e) {
-            System.out.println(e.toString());
+            System.err.println(e.toString());
             return null;
         }
     }
@@ -1666,7 +1666,7 @@ public abstract class FermatActivity extends AppCompatActivity
             NotificationPainter notificationPainter = fermatAppConnection.getNotificationPainter(code);
             if (notificationPainter != null) {
                 RemoteViews remoteViews = notificationPainter.getNotificationView(code);
-                Intent intent = new Intent(this, WalletActivity.class);
+                Intent intent = new Intent(this,(fermatStructure.getFermatAppType() == FermatAppType.WALLET)? WalletActivity.class:SubAppActivity.class);
                 intent.putExtra((fermatStructure.getFermatAppType() == FermatAppType.WALLET) ? WalletActivity.WALLET_PUBLIC_KEY : SubAppActivity.SUB_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
