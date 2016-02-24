@@ -23,6 +23,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.Digit
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
@@ -43,6 +44,7 @@ public class MainFragment extends AbstractFermatFragment
 
     private AssetUserWalletSubAppModuleManager manager;
     private List<AssetUserWalletList> assetUserWalletList;
+
     private List<DigitalAsset> bookAssets;
     private DigitalAsset asset;
     private ImageView assetImageDetail;
