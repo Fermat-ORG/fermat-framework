@@ -35,10 +35,10 @@ public class EncodeMsjContent {
     /**
      *  Construct the content of the message fot the type <code>ChatMessageTransactionType.CHAT_METADATA_TRASMIT</code>
      *
-     * @param chatMetadata
+     * @param chatMetadataRecord
      * @return String message content
      */
-    public static String encodeMSjContentChatMetadataTransmit(ChatMetadataRecord chatMetadata, PlatformComponentType senderType, PlatformComponentType receiverType){
+    public static String encodeMSjContentChatMetadataTransmit(ChatMetadataRecord chatMetadataRecord, PlatformComponentType senderType, PlatformComponentType receiverType){
 
         String contemnt = "";
 
@@ -47,14 +47,16 @@ public class EncodeMsjContent {
          */
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT,chatMetadata.getChatId().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatMetadataRecord.getChatId().toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.CHAT_METADATA_TRASMIT.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_METADATA, chatMetadata.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_METADATA, chatMetadataRecord.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, chatMetadata.getDistributionStatus().toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_STATUS, chatMetadata.getChatMessageStatus().toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, chatMetadata.getMessageStatus().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, chatMetadataRecord.getDistributionStatus().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.CHAT_STATUS, chatMetadataRecord.getChatMessageStatus().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, chatMetadataRecord.getMessageStatus().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.TRANSACTION_ID,chatMetadataRecord.getTransactionId().toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RESPONSE_TO, chatMetadataRecord.getResponseToNotification());
 
         return gson.toJson(jsonObjectContent);
     }
@@ -62,18 +64,19 @@ public class EncodeMsjContent {
     /**
      * Construct the content of the message fot the type <code>ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE</code>
      *
-     * @param chatId
+     * @param responseTo
+     * @param transactionID
      * @param newDistributionStatus
      * @return String message content
      */
-    public static String encodeMSjContentTransactionNewStatusNotification(UUID chatId,UUID messageID, DistributionStatus newDistributionStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
+    public static String encodeMSjContentTransactionNewStatusNotification(String responseTo, String transactionID, DistributionStatus newDistributionStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
 
 
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatId.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_ID, messageID.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.TRANSACTION_ID,transactionID);
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RESPONSE_TO, responseTo);
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS, gson.toJson(newDistributionStatus));
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
@@ -83,22 +86,21 @@ public class EncodeMsjContent {
 
     /**
      * Construct the content of the message fot the type <code>ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE</code>
-     * @param chatId
-     * @param messageID
+     * @param responseTo
      * @param chatProtocolState
      * @param senderType
      * @param receiverType
      * @return
      */
-    public static String encodeMSjContentTransactionNewStatusNotification(UUID chatId,UUID messageID, ChatProtocolState chatProtocolState, PlatformComponentType senderType, PlatformComponentType receiverType) {
+    public static String encodeMSjContentTransactionNewStatusNotification(String responseTo, ChatProtocolState chatProtocolState, PlatformComponentType senderType, PlatformComponentType receiverType) {
 
 
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatId.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_ID, messageID.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RESPONSE_TO, responseTo);
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.PROTOCOL_STATE, gson.toJson(chatProtocolState));
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS,gson.toJson(DistributionStatus.DELIVERED));
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
 
@@ -107,22 +109,21 @@ public class EncodeMsjContent {
 
     /**
      * Construct the content of the message fot the type <code>ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE</code>
-     * @param chatId
-     * @param messageID
+     * @param responseTo
      * @param messageStatus
      * @param senderType
      * @param receiverType
      * @return
      */
-    public static String encodeMSjContentTransactionNewStatusNotification(UUID chatId,UUID messageID, MessageStatus messageStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
+    public static String encodeMSjContentTransactionNewStatusNotification(String responseTo, MessageStatus messageStatus, PlatformComponentType senderType, PlatformComponentType receiverType) {
 
 
         Gson gson = new Gson();
         JsonObject jsonObjectContent = new JsonObject();
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE, ChatMessageTransactionType.TRANSACTION_STATUS_UPDATE.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.ID_CHAT, chatId.toString());
-        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_ID, messageID.toString());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RESPONSE_TO,responseTo);
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, gson.toJson(messageStatus));
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.DISTRIBUTION_STATUS,gson.toJson(DistributionStatus.DELIVERED));
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.SENDER_TYPE, senderType.toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RECEIVER_TYPE, receiverType.toString());
 
@@ -136,13 +137,5 @@ public class EncodeMsjContent {
      */
     public static JsonObject decodeMsjContent(FermatMessage fermatMessage){
         return parser.parse(fermatMessage.getContent()).getAsJsonObject();
-    }
-    /**
-     * Decode a FermatMessage
-     * @param fermatMessage
-     * @return
-     */
-    public static JsonObject decodeMsjContent(String fermatMessage){
-        return parser.parse(fermatMessage).getAsJsonObject();
     }
 }
