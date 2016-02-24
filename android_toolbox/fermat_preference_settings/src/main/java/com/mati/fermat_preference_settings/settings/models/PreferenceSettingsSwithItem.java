@@ -6,10 +6,22 @@ import com.mati.fermat_preference_settings.settings.interfaces.PreferenceSetting
 /**
  * Created by mati on 2016.02.08..
  */
-public interface PreferenceSettingsSwithItem extends PreferenceSettingsItem {
+public class PreferenceSettingsSwithItem implements PreferenceSettingsItem {
 
 
-    boolean getSwitchChecked();
+    private String text;
+    private boolean isSwitchChecked;
 
-    String getText();
+    public PreferenceSettingsSwithItem(String text, boolean isSwitchChecked) {
+        this.text = text;
+        this.isSwitchChecked = isSwitchChecked;
+    }
+
+    public boolean getSwitchChecked(){
+        return this.isSwitchChecked;
+    }
+
+    public String getText(){
+        return text;
+    }
 }
