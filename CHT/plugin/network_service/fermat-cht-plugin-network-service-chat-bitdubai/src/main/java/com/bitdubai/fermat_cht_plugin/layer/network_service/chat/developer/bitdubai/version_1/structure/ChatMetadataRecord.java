@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
@@ -21,7 +20,7 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     private UUID transactionId;
 
-    private String transactionHash;
+    private String responseToNotification;
 
     private UUID chatId;
 
@@ -114,7 +113,7 @@ public class ChatMetadataRecord implements ChatMetadata{
             return false;
         if(this.transactionId == null)
             return false;
-        if(this.transactionHash == null || this.transactionHash.isEmpty())
+        if(this.responseToNotification == null || this.responseToNotification.isEmpty())
             return false;
         if(this.objectId == null)
             return false;
@@ -161,7 +160,7 @@ public class ChatMetadataRecord implements ChatMetadata{
             return false;
         if(this.transactionId != ((ChatMetadataRecord) obj).getTransactionId())
             return false;
-        if(!Objects.equals(this.transactionHash, ((ChatMetadataRecord) obj).getTransactionHash()))
+        if(!Objects.equals(this.responseToNotification, ((ChatMetadataRecord) obj).getResponseToNotification()))
             return false;
         if(this.objectId != ((ChatMetadataRecord) obj).getObjectId())
             return false;
@@ -222,16 +221,16 @@ public class ChatMetadataRecord implements ChatMetadata{
      *
      * @return
      */
-    public String getTransactionHash() {
-        return transactionHash;
+    public String getResponseToNotification() {
+        return responseToNotification;
     }
 
     /**
      *
-     * @param transactionHash
+     * @param responseToNotification
      */
-    public void setTransactionHash(String transactionHash) {
-        this.transactionHash = transactionHash;
+    public void setResponseToNotification(String responseToNotification) {
+        this.responseToNotification = responseToNotification;
     }
 
     /**
