@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -19,7 +21,7 @@ import java.util.List;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/02/16.
  */
-public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailViewHolder> {
+public class ContractDetailAdapter extends FermatAdapterImproved<ContractDetail,ContractDetailViewHolder> {
 
     //Holder Types
     private static final int NO_TYPE = Integer.MIN_VALUE;
@@ -31,7 +33,7 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
     private FermatSession session;
     private CryptoBrokerWalletManager walletManager;
 
-    public ContractDetailAdapter(
+   /* public ContractDetailAdapter(
             Context context,
             List<ContractDetail> dataSet,
             FermatSession session,
@@ -40,28 +42,42 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
         this.dataSet=dataSet;
         this.session=session;
         this.walletManager=walletManager;
-    }
-    protected ContractDetailViewHolder createHolder(View itemView, int type) {
-        return new ContractDetailViewHolder(itemView);
-    }
+    }*/
 
-    protected int getCardViewResource() {
+    @Override
+    protected int getCardViewResource(int type) {
         return R.layout.cbw_contract_detail_item;
     }
-/*
+
+    public ContractDetailAdapter(Context context, List<ContractDetail> dataSet, FermatSession session, CryptoBrokerWalletManager walletManager) {
+        super(context, dataSet);
+        this.context=context;
+        this.dataSet=dataSet;
+        this.session=session;
+        this.walletManager=walletManager;
+    }
+
+    protected ContractDetailViewHolder createHolder(View itemView, int type) {
+        return new ContractDetailViewHolder(itemView,type);
+    }
+
+    /*protected int getCardViewResource() {
+        return R.layout.cbw_contract_detail_item;
+    }*/
+
 
     protected void bindHolder(ContractDetailViewHolder holder, ContractDetail data, int position) {
         holder.bind(data);
     }
 
-*/
 
-    @Override
+
+    /*@Override
     public ContractDetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return createHolder(LayoutInflater.from(context).inflate(getCardViewResource(), parent, false), viewType);
-    }
+    }*/
 
-    @Override
+    /*@Override
     public void onBindViewHolder(ContractDetailViewHolder holder, int position) {
         int holderType = getItemViewType(position);
 
@@ -85,11 +101,11 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
                 holder.bind(customerHolder);
                 break;
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public int getItemCount() {
         return dataSet.size();
-    }
+    }*/
 }
 

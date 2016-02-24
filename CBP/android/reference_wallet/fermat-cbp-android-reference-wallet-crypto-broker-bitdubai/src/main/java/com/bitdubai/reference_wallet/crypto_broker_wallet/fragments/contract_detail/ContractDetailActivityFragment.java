@@ -170,11 +170,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
 
         //Create adapter
-        adapter = new ContractDetailAdapter(
-                getActivity(),
-                contractInformation,
-                appSession,
-                walletManager);
+        adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager);
         //adapter.setFooterListener(this);
         //adapter.setClauseListener(this);
 
