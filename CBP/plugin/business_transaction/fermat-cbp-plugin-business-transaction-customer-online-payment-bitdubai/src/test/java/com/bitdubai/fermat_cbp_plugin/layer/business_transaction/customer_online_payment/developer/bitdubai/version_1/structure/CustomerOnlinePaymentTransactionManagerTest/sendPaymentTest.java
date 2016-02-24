@@ -42,7 +42,7 @@ public class sendPaymentTest {
                 customerBrokerPurchaseNegotiationManager);
         customerOnlinePaymentTransactionManager.sendPayment("","");
     }*/
-
+/*
     @Test(expected = CantSendPaymentException.class)
     public void sendPaymentTest_Should_Throw_CantSendPaymentException() throws Exception{
         customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(null,
@@ -50,7 +50,7 @@ public class sendPaymentTest {
                 transactionTransmissionManager,
                 customerBrokerPurchaseNegotiationManager);
         customerOnlinePaymentTransactionManager.sendPayment("","");
-    }
+    }*/
 
     @Test(expected = Exception.class)
     public void sendPaymentTest_Should_Throw_Exception() throws Exception{
