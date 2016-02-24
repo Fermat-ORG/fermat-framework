@@ -97,7 +97,7 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections<AssetU
                         notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "A New CryptoAddress was Received From: " + senderActorPublicKey, "", "");
                         break;
                     } else {
-                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "A New CryptoAddress was Received for: "+ senderActorPublicKey, "", "");
+                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "Was Received for: "+ senderActorPublicKey, "", "");
                     }
             }
         } catch (Exception e) {
