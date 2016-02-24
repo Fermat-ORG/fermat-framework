@@ -277,7 +277,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         //Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
                         Date date = null;
-                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - date.getTime()) / 60) / 60;
+                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
                             userLevelBusinessTransactionCustomerBrokerSaleManager.notificationReviewNegotiation("crypto_customer_wallet", "Review negotiation", "Review negotiation");
@@ -306,8 +306,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                     sw = 3;
                                 }
                             }
-                            //TODO: Datos de amount, priceReference, CryptoCurrency, FiatCurrency, cbpWalletPublicKey, bnkWalletPublicKey, cshWalletPublicKey, cryWalletPublicKey de donde sale
-                            //
+
                             for (Clause clause : customerBrokerSaleNegotiation.getClauses()) {
                                 if (Objects.equals(clause.getType().getCode(), ClauseType.EXCHANGE_RATE.getCode())) {
                                     priceReference = new BigDecimal(clause.getValue());
@@ -384,7 +383,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         //Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida, se eleva un evento de notificación
                         Date date = null;
-                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - date.getTime()) / 60) / 60;
+                        long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 60) / 60;
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
                             userLevelBusinessTransactionCustomerBrokerSaleManager.notificationReviewNegotiation("crypto_customer_wallet", "Review negotiation", "Review negotiation");
