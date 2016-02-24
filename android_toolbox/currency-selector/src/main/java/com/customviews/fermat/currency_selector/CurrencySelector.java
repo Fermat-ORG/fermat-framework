@@ -1,4 +1,4 @@
-package com.customviews.clelia.currencyselector;
+package com.customviews.fermat.currency_selector;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
