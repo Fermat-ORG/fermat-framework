@@ -234,7 +234,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
         }
 
         private void checkNetworkLayerEvents() throws CantConfirmTransactionException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantCheckAssetUserRedemptionProgressException, CantGetDigitalAssetFromLocalStorageException, CantSendAssetBitcoinsToUserException, CantGetCryptoTransactionException, CantDeliverDigitalAssetToAssetWalletException, CantDistributeDigitalAssetsException, CantDeliverPendingTransactionsException, RecordsNotFoundException, CantBroadcastTransactionException, CantCreateDigitalAssetFileException, CantLoadWalletException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantRegisterCreditException, CantGetDAPMessagesException, CantUpdateMessageStatusException {
-            List<DAPMessage> newStatuses = assetTransmissionManager.getUnreadDAPMessageBySubject(DAPMessageSubject.REDEEM_POINT_REDEMPTION);
+            List<DAPMessage> newStatuses = assetTransmissionManager.getUnreadDAPMessageBySubject(DAPMessageSubject.USER_REDEMPTION);
             if (!userRedemptionDao.getPendingNetworkLayerEvents().isEmpty()) {
                 for (DAPMessage message : newStatuses) {
                     DistributionStatusUpdateContentMessage content = (DistributionStatusUpdateContentMessage) message.getMessageContent();
