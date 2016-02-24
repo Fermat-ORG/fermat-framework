@@ -189,8 +189,12 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     @Override
     public void onBackPressed() {
-        finish();
-        super.onBackPressed();
+        try {
+            finish();
+            super.onBackPressed();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 
@@ -370,45 +374,49 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
      */
 
     protected void loadUI() {
-
-        /**
-         * Get current activity to paint
-         */
-        Activity activity = getActivityUsedType();
-
         try {
 
+            /**
+             * Get current activity to paint
+             */
+            Activity activity = getActivityUsedType();
 
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection("main_desktop", this);
-            //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
-            loadBasicUI(activity,fermatAppConnection);
+            try {
 
-            if (activity.getType() == Activities.CCP_DESKTOP) {
-                initialisePaging();
-            }else {
 
-                hideBottonIcons();
+                AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection("main_desktop", this);
+                //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
+                loadBasicUI(activity, fermatAppConnection);
 
-                paintScreen(activity);
+                if (activity.getType() == Activities.CCP_DESKTOP) {
+                    initialisePaging();
+                } else {
 
-                if (activity.getFragments().size() == 1) {
-                    setOneFragmentInScreen(fermatAppConnection.getFragmentFactory());
+                    hideBottonIcons();
+
+                    paintScreen(activity);
+
+                    if (activity.getFragments().size() == 1) {
+                        setOneFragmentInScreen(fermatAppConnection.getFragmentFactory());
+                    }
                 }
+            } catch (Exception e) {
+                getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                        Toast.LENGTH_LONG).show();
             }
-        } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
-        }
 
-        try {
-            if(activity.getBottomNavigationMenu()!=null){
-                bottomNavigationEnabled(true);
+            try {
+                if (activity.getBottomNavigationMenu() != null) {
+                    bottomNavigationEnabled(true);
+                }
+            } catch (Exception e) {
+                getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
+                        Toast.LENGTH_LONG).show();
             }
         }catch (Exception e){
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 

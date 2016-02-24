@@ -1424,8 +1424,12 @@ public abstract class FermatActivity extends AppCompatActivity
 
 
     protected void bottomNavigationEnabled(boolean enabled){
-        if(enabled) {
-            bottomNavigation = new BottomNavigation(this, ProvisoryData.getBottomNavigationProvisoryData(),null);
+        try {
+            if (enabled) {
+                bottomNavigation = new BottomNavigation(this, ProvisoryData.getBottomNavigationProvisoryData(), null);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -1823,9 +1827,13 @@ public abstract class FermatActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else {
+        if(mDrawerLayout!=null) {
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+        }else{
             super.onBackPressed();
         }
     }
