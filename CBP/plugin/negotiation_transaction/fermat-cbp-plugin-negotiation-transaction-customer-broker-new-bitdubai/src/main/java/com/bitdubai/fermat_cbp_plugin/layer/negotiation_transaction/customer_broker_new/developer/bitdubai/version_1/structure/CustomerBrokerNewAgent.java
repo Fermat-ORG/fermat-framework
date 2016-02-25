@@ -309,7 +309,7 @@ public class CustomerBrokerNewAgent implements
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_BROKER: send negotiation to broker, waiting confirm
-                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+//                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
                                 break;
                         }
 

@@ -307,7 +307,7 @@ public class CustomerBrokerUpdateAgent implements
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_BROKER: send negotiation to broker, waiting confirm
-                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+//                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
                                 break;
 
                             case SALE:
@@ -316,7 +316,7 @@ public class CustomerBrokerUpdateAgent implements
                                 //SEND NEGOTIATION TO CUSTOMER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_UPDATE);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_CUSTOMER: send negotiation to customer, waiting confirm
-                                customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
+//                                customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
                                 break;
                         }
 
