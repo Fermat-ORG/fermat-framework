@@ -2,7 +2,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.view.Window;
 
@@ -13,6 +12,11 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+
+import static android.text.InputType.TYPE_CLASS_NUMBER;
+import static android.text.InputType.TYPE_CLASS_TEXT;
+import static android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL;
+import static android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE;
 
 
 /**
@@ -56,9 +60,9 @@ public class TextValueDialog extends FermatDialog<CryptoBrokerWalletSession, Res
 
         if (editTextView != null)
             if (setTextFree)
-                editTextView.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
+                editTextView.setInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_MULTI_LINE);
             else
-                editTextView.setInputType(InputType.TYPE_CLASS_NUMBER);
+                editTextView.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
     }
 
     public void setEditTextValue(String editTextValue) {
@@ -92,9 +96,9 @@ public class TextValueDialog extends FermatDialog<CryptoBrokerWalletSession, Res
         if (editTextValue != null)
             editTextView.setText(editTextValue);
         if (setTextFree)
-            editTextView.setInputType(InputType.TYPE_TEXT_FLAG_MULTI_LINE | InputType.TYPE_CLASS_TEXT);
+            editTextView.setInputType(TYPE_CLASS_TEXT | TYPE_TEXT_FLAG_MULTI_LINE);
         else
-            editTextView.setInputType(InputType.TYPE_CLASS_NUMBER);
+            editTextView.setInputType(TYPE_CLASS_NUMBER | TYPE_NUMBER_FLAG_DECIMAL);
     }
 
     @Override

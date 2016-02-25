@@ -31,7 +31,6 @@ import com.github.mikephil.charting.data.LineDataSet;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 
 
 /**
@@ -161,7 +160,7 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
             }
         });
 
-        Executors.newSingleThreadExecutor().execute(fermatWorker);
+        fermatWorker.execute();
     }
 
     /**
