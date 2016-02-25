@@ -261,10 +261,10 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
                 clauseViewHolder.setViewResources(R.string.cbw_cash_place_to_receive, clauseNumberImageRes, R.string.selected_location);
                 break;
             case CUSTOMER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.delivery_date_title, clauseNumberImageRes, R.string.payment_date_text);
+                clauseViewHolder.setViewResources(R.string.delivery_date_title, clauseNumberImageRes, R.string.delivery_date_text);
                 break;
             case BROKER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.payment_date_title, clauseNumberImageRes, R.string.delivery_date_text);
+                clauseViewHolder.setViewResources(R.string.payment_date_title, clauseNumberImageRes, R.string.payment_date_text);
                 break;
         }
     }
@@ -300,7 +300,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             String currencyType = paymentMethod.getValue();
             if (currencyType != null) {
                 if (currencyType.equals(MoneyType.CRYPTO.getCode()))
-                    return clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
+                    return null;
                 if (currencyType.equals(MoneyType.BANK.getCode()))
                     return clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
                 return clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
@@ -316,7 +316,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             String currencyType = paymentMethod.getValue();
             if (currencyType != null) {
                 if (currencyType.equals(MoneyType.CRYPTO.getCode()))
-                    return clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
+                    return null;
                 if (currencyType.equals(MoneyType.BANK.getCode()))
                     return clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
                 return clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
