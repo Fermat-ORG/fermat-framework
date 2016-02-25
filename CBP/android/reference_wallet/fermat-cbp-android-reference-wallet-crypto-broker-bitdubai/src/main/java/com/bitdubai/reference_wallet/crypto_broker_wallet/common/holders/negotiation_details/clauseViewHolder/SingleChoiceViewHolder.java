@@ -7,14 +7,12 @@ import android.widget.TextView;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.NegotiationWrapper;
+
 
 /**
  * Created by Yordin Alayn on 22.01.16.
@@ -85,6 +83,7 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
 
     /**
      * @param clause the clause with the value
+     *
      * @return A friendly reading value for the clause or the clause's value itself
      */
     private String getFriendlyValue(ClauseInformation clause) {
@@ -101,7 +100,14 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
 
             } else if (type == ClauseType.CUSTOMER_PAYMENT_METHOD || type == ClauseType.BROKER_PAYMENT_METHOD) {
                 friendlyValue = MoneyType.getByCode(clauseValue).getFriendlyName();
+
+            } else if (type == ClauseType.BROKER_BANK_ACCOUNT || type == ClauseType.CUSTOMER_BANK_ACCOUNT) {
+                friendlyValue = clauseValue.isEmpty() ? "No Bank Account" : clauseValue;
+
+            } else if (type == ClauseType.BROKER_PLACE_TO_DELIVER || type == ClauseType.CUSTOMER_PLACE_TO_DELIVER) {
+                friendlyValue = clauseValue.isEmpty() ? "No Locations": clauseValue;
             }
+
         } catch (FermatException ignore) {
         }
 

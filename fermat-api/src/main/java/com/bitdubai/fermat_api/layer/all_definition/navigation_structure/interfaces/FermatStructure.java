@@ -13,9 +13,9 @@ public interface FermatStructure {
     FermatApps getFermatApp();
     FermatAppType getFermatAppType();
 
-    public String getPublicKey();
-    public Activity getActivity(Activities activities);
-    public Activity getStartActivity();
-    public Activity getLastActivity();
-    public void changeActualStartActivity(int option)throws IllegalArgumentException;
+    String getPublicKey();
+    Activity getActivity(Activities activities);
+    Activity getStartActivity();
+    Activity getLastActivity();
+    void changeActualStartActivity(int option)throws IllegalArgumentException;
 }

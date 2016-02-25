@@ -123,6 +123,7 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_ACTIVITY("DWAUASSUA"),
     DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY("DWAUATA"),
     DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY("DWAUATSUA"),
+    DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY("DWAUANDA"),
 
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
     DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
@@ -181,7 +182,6 @@ public enum Activities implements FermatEnum {
     CBP_CRYPTO_BROKER_WALLET_SETTINGS_STOCK_MERCHANDISES("CBPCBWSSM"),
     CBP_CRYPTO_BROKER_WALLET_OTHER_SETTINGS("CBPCBWOS"),
     CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS("CBPCBWCD"),
-    CBP_CRYPTO_BROKER_WALLET_ADD_NOTE("CBPCBWAN"),
 
     // Crypto Customer Wallet
     CBP_CRYPTO_CUSTOMER_WALLET_HOME("CBPCCWH"),
@@ -491,8 +491,6 @@ public enum Activities implements FermatEnum {
                 return CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS;
             case "CBPCBWSSBA":
                 return CBP_CRYPTO_BROKER_WALLET_SETTINGS_BANK_ACCOUNT;
-            case "CBPCBWAN":
-                return CBP_CRYPTO_BROKER_WALLET_ADD_NOTE;
 
             case "CBPCCWH":
                 return CBP_CRYPTO_CUSTOMER_WALLET_HOME;
@@ -749,7 +747,8 @@ public enum Activities implements FermatEnum {
 
             case "DSFN":
                 return DESKTOP_SETTING_FERMAT_NETWORK;
-
+            case "DWAUANDA":
+                return DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

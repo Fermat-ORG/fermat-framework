@@ -22,11 +22,11 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseManager implement
 
         ReviewNegotiationNotificationEvent event = (ReviewNegotiationNotificationEvent) userLevelBusinessTransactionCustomerBrokerPurchasePluginRoot.getEventManager().getNewEvent(com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType.REVIEW_NEGOTIATION_NOTIFICATION);
         event.setLocalPublicKey(publicKey);
-        event.setAlertTitle(getSourceString(userLevelBusinessTransactionCustomerBrokerPurchasePluginRoot.EVENT_SOURCE));
+        event.setAlertTitle(getSourceString(UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot.EVENT_SOURCE));
         event.setTextTitle(tittle);
         event.setTextBody(body);
         event.setNotificationType(NotificationType.REVIEW_NOTIFICATION.getCode());
-        event.setSource(userLevelBusinessTransactionCustomerBrokerPurchasePluginRoot.EVENT_SOURCE);
+        event.setSource(UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot.EVENT_SOURCE);
         this.userLevelBusinessTransactionCustomerBrokerPurchasePluginRoot.getEventManager().raiseEvent(event);
         System.out.println("UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot - ReviewNegotiationNotificationEvent fired!: " + event.toString());
     }

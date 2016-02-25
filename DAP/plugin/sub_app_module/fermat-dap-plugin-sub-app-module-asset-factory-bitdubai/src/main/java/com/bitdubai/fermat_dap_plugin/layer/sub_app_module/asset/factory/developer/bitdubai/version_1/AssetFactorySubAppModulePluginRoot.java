@@ -188,7 +188,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
     }
 
     @Override
-    public SettingsManager getSettingsManager() {
+    public SettingsManager<AssetFactorySettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
 

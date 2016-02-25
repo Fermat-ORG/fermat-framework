@@ -21,7 +21,7 @@
             android:layout_gravity="center"
             android:background="#33ffffff"
             android:scaleType="centerCrop"
-            android:src="@drawable/profile_image_standard"
+            android:src="@drawable/asset_user_comunity"
             tools:ignore="ContentDescription" />
 
         <RelativeLayout

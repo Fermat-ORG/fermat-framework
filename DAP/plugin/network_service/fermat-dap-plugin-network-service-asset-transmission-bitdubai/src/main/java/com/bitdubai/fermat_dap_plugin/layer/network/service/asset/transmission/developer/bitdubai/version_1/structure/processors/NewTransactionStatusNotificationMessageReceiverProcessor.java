@@ -92,7 +92,7 @@ public class NewTransactionStatusNotificationMessageReceiverProcessor extends Fe
                 /*
                 * Notify to the interested
                 */
-                FermatEvent event =  getAssetTransmissionNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
+                FermatEvent event =  getAssetTransmissionNetworkServicePluginRoot().getEventManager().getNewEvent(EventType.RECEIVE_NEW_DAP_MESSAGE);
                 event.setSource(AssetTransmissionNetworkServicePluginRoot.EVENT_SOURCE);
                 getAssetTransmissionNetworkServicePluginRoot().getEventManager().raiseEvent(event);
             }

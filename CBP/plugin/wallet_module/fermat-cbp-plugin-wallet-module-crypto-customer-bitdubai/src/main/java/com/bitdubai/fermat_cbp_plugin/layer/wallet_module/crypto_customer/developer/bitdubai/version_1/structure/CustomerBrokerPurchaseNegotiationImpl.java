@@ -26,7 +26,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     private String            memo;
     private boolean           dataHasChanged;
 
-    public CustomerBrokerPurchaseNegotiationImpl(){};
+    public CustomerBrokerPurchaseNegotiationImpl(){}
 
     /**
      * @return the broker public key

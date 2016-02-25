@@ -11,6 +11,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
  */
 public class DesktopSession extends AbstractFermatSession<InstalledDesktop,WalletManager,SubAppResourcesProviderManager> {
 
+    public DesktopSession() {
+    }
 
     public DesktopSession(String publicKey, InstalledDesktop fermatApp, ErrorManager errorManager, WalletManager moduleManager, SubAppResourcesProviderManager resourceProviderManager) {
         super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);

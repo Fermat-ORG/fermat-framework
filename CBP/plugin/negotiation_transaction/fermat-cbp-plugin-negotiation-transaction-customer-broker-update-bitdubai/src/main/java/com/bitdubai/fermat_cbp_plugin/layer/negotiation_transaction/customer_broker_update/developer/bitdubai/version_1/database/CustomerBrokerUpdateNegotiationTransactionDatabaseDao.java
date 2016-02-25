@@ -454,7 +454,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             //            System.out.print("\n\n**** 19.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");
 
         }  catch (CantLoadTableToMemoryException e) {
-            throw new CantRegisterCustomerBrokerUpdateEventException(e.DEFAULT_MESSAGE, e, "Customer Broker Update Negotiation Transaction Update Event Status Not Found", "unknown failure");
+            throw new CantRegisterCustomerBrokerUpdateEventException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "Customer Broker Update Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
 
     }

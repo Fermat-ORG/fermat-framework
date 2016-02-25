@@ -17,17 +17,17 @@ public interface WalletStoreCatalogue {
      * @return A list of at most "top" catalogue items (wallets)
      * @throws CantGetWalletsFromCatalogueException
      */
-    public List<WalletStoreCatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsFromCatalogueException;
+    List<WalletStoreCatalogueItem> getWalletCatalogue(int offset, int top) throws CantGetWalletsFromCatalogueException;
 
     /**
      * This method let us set filters to the catalogue
      * @param walletFilter the filter we want to add
      */
-    public void addFilter(WalletCatalogueFilter walletFilter);
+    void addFilter(WalletCatalogueFilter walletFilter);
 
     /**
      * This method applies the filters set by "addFilter" to the catalogue in order to only get items
      * that satisfy the said filters.
      */
-    public void clearFilters();
+    void clearFilters();
 }
