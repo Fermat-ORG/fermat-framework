@@ -72,17 +72,39 @@
                     android:background="@color/option_button_background"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
                     android:textAllCaps="false"
                     android:textColor="#fff"
                     android:textSize="14sp"
                     tools:text="8 BTC"/>
 
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/ccw_contract_detail_description_text_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/ccw_contract_detail_text_button"
+                    android:layout_toRightOf="@+id/ccw_contract_detail_text_button"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/description_text_status_confirm"
+                    tools:text="using Cash Delivery"/>
+
             </RelativeLayout>
+
+
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#2e2e2e2e"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/ccw_contract_detail_description_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/description_text_status_confirm"
+                android:layout_marginLeft="10dp"
+                tools:text="on 15 feb. 2016"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                 android:id="@+id/ccw_contract_detail_confirm_button"

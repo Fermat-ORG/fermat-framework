@@ -25,6 +25,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractPaymentDeliveryDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
 
 import java.text.DecimalFormat;
@@ -51,14 +52,11 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     private Resources res;
     private View itemView;
     private ContractDetailActivityFragment parentFragment;
-    public ImageView customerImage;
     public ImageView stepNumber;
-    public FermatTextView customerName;
-    public FermatTextView soldQuantityAndCurrency;
-    public FermatTextView exchangeRateAmountAndCurrency;
-    public FermatTextView lastUpdateDate;
     public FermatTextView stepTitle;
     public FermatTextView textDescription;
+    public FermatTextView textDescription2;
+    public FermatTextView textDescriptionDate;
     public FermatButton textButton;
     public FermatButton confirmButton;
 
@@ -74,6 +72,8 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         stepNumber = (ImageView) itemView.findViewById(R.id.ccw_contract_detail_step);
         stepTitle = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_card_view_title);
         textDescription = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_text);
+        textDescription2 = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_text_2);
+        textDescriptionDate = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_date);
         textButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_text_button);
         confirmButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_confirm_button);
         confirmButton.setOnClickListener(new View.OnClickListener() {
@@ -175,17 +175,22 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
         switch (itemInfo.getContractStep()){
             case 1:
+                ContractPaymentDeliveryDetail info = (ContractPaymentDeliveryDetail) itemInfo;
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 stepTitle.setText("Payment Delivery");
+                textButton.setText(getFormattedAmount(info.getCurrencyAmount(), info.getCurrencyCode()));
+                textDescription2.setText("using Cash Delivery.");
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
-                        textDescription.setText("Send " + itemInfo.getCurrencyAmount() + itemInfo.getCurrencyCode());
+                        textDescription.setText("Send:");
+                        textDescriptionDate.setVisibility(View.INVISIBLE);
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
                         confirmButton.setText("Confirm");
                         break;
 
                     default:
-                        textDescription.setText("You sent: " + itemInfo.getCurrencyAmount() + itemInfo.getCurrencyCode());
+                        textDescription.setText("You sent:");
+                        textDescriptionDate.setText("on 15/02/2016");
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                         confirmButton.setVisibility(View.INVISIBLE);
                 }
@@ -322,23 +327,29 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         }
     }
 
-    @NonNull
-    private String getSoldQuantityAndCurrencyText(ContractDetail itemInfo, ContractStatus contractStatus) {
-        String sellingOrSoldText = getSellingOrSoldText(contractStatus);
-        String amount = decimalFormat.format(itemInfo.getCurrencyAmount());
-        String merchandise = itemInfo.getCurrencyCode();
+//    @NonNull
+//    private String getSoldQuantityAndCurrencyText(ContractDetail itemInfo, ContractStatus contractStatus) {
+//        String sellingOrSoldText = getSellingOrSoldText(contractStatus);
+//        String amount = decimalFormat.format(itemInfo.getCurrencyAmount());
+//        String merchandise = itemInfo.getCurrencyCode();
+//
+//        return res.getString(R.string.ccw_contract_history_sold_quantity_and_currency, sellingOrSoldText, amount, merchandise);
+//    }
 
-        return res.getString(R.string.ccw_contract_history_sold_quantity_and_currency, sellingOrSoldText, amount, merchandise);
+    @NonNull
+    private String getFormattedAmount(float amount, String currencyCode) {
+        return (decimalFormat.format(amount) + " " + currencyCode);
     }
 
-    @NonNull
-    private String getExchangeRateAmountAndCurrencyText(ContractDetail itemInfo) {
-        String merchandise = itemInfo.getCurrencyCode();
-        String exchangeAmount = decimalFormat.format(itemInfo.getExchangeRateAmount());
-        String paymentCurrency = itemInfo.getCurrencyCode();
 
-        return res.getString(R.string.ccw_contract_history_exchange_rate_amount_and_currency, merchandise, exchangeAmount, paymentCurrency);
-    }
+//    @NonNull
+//    private String getExchangeRateAmountAndCurrencyText(ContractDetail itemInfo) {
+//        String merchandise = itemInfo.getCurrencyCode();
+//        String exchangeAmount = decimalFormat.format(itemInfo.getExchangeRateAmount());
+//        String paymentCurrency = itemInfo.getCurrencyCode();
+//
+//        return res.getString(R.string.ccw_contract_history_exchange_rate_amount_and_currency, merchandise, exchangeAmount, paymentCurrency);
+//    }
 
     private int getStatusBackgroundColor(ContractStatus status) {
 
