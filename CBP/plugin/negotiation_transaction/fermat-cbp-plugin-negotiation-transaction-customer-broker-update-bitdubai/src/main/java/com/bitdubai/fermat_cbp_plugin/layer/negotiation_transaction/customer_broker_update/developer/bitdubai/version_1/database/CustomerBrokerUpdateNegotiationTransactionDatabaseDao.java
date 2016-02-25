@@ -110,13 +110,13 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
                 }
             }
 
-            CustomerBrokerUpdate negotiationTransactionTest = getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiation.getNegotiationId());
-            System.out.print("\n**** 4.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION DATE OF DATEBASE****\n" +
-                    "\n - Customer: " + negotiationTransactionTest.getPublicKeyCustomer() +
-                    "\n - Broker: " + negotiationTransactionTest.getPublicKeyBroker() +
-                    "\n - negotiationId: " + negotiationTransactionTest.getNegotiationId() +
-                    "\n - transactionId: " + negotiationTransactionTest.getTransactionId() +
-                    "\n - Status: " + negotiationTransactionTest.getStatusTransaction());
+//            CustomerBrokerUpdate negotiationTransactionTest = getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiation.getNegotiationId());
+//            System.out.print("\n**** 4.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION DATE OF DATEBASE****\n" +
+//                    "\n - Customer: " + negotiationTransactionTest.getPublicKeyCustomer() +
+//                    "\n - Broker: " + negotiationTransactionTest.getPublicKeyBroker() +
+//                    "\n - negotiationId: " + negotiationTransactionTest.getNegotiationId() +
+//                    "\n - transactionId: " + negotiationTransactionTest.getTransactionId() +
+//                    "\n - Status: " + negotiationTransactionTest.getStatusTransaction());
 
         } catch (CantInsertRecordException e){
             throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException (e.getMessage(), e, "Customer Broker Update Negotiation Transaction", "Cant create new Customer Broker Update Negotiation Transaction, insert database problems.");
