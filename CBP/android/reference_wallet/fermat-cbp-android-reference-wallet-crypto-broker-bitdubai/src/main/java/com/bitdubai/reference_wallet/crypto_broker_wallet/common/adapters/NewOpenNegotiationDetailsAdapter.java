@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+
 /**
  * Created by nelson on 16/02/16.
  */
@@ -49,6 +50,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     private ExpirationTimeViewHolder.Listener expirationDatetimeListener;
     private List<IndexInfoSummary> marketRateList;
     private Quote quote;
+    private boolean quoteLoaded;
 
     private boolean haveNote;
 
@@ -71,6 +73,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
 
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
+        haveNote = negotiationWrapper.haveNote();
 
         final List<ClauseInformation> items = buildListOfItems();
         super.changeDataSet(items);
@@ -94,6 +97,8 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
 
     public void setQuote(Quote quote) {
         this.quote = quote;
+        this.quoteLoaded = true;
+        notifyItemChanged(haveNote ? 1 : 0);
     }
 
     @Override
@@ -112,7 +117,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             case TYPE_EXCHANGE_RATE:
                 final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView, TYPE_SINGLE_CHOICE);
                 exchangeRateViewHolder.setMarketRateList(marketRateList);
-                exchangeRateViewHolder.setSuggestedRate(quote);
+                exchangeRateViewHolder.setSuggestedRate(quote, quoteLoaded);
                 return exchangeRateViewHolder;
             case TYPE_AMOUNT_TO_SELL:
                 return new AmountViewHolder(itemView, TYPE_AMOUNT_TO_SELL);
@@ -261,10 +266,10 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
                 clauseViewHolder.setViewResources(R.string.cbw_cash_place_to_receive, clauseNumberImageRes, R.string.selected_location);
                 break;
             case CUSTOMER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.delivery_date_title, clauseNumberImageRes, R.string.payment_date_text);
+                clauseViewHolder.setViewResources(R.string.delivery_date_title, clauseNumberImageRes, R.string.delivery_date_text);
                 break;
             case BROKER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.payment_date_title, clauseNumberImageRes, R.string.delivery_date_text);
+                clauseViewHolder.setViewResources(R.string.payment_date_title, clauseNumberImageRes, R.string.payment_date_text);
                 break;
         }
     }
@@ -300,7 +305,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             String currencyType = paymentMethod.getValue();
             if (currencyType != null) {
                 if (currencyType.equals(MoneyType.CRYPTO.getCode()))
-                    return clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS);
+                    return null;
                 if (currencyType.equals(MoneyType.BANK.getCode()))
                     return clauses.get(ClauseType.BROKER_BANK_ACCOUNT);
                 return clauses.get(ClauseType.BROKER_PLACE_TO_DELIVER);
@@ -316,7 +321,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             String currencyType = paymentMethod.getValue();
             if (currencyType != null) {
                 if (currencyType.equals(MoneyType.CRYPTO.getCode()))
-                    return clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
+                    return null;
                 if (currencyType.equals(MoneyType.BANK.getCode()))
                     return clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT);
                 return clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
