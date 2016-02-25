@@ -7,7 +7,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.broker_list.BrokerListActivityFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CloseContractDetailsFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CloseNegotiationDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.ClosedNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CreateNewBankAccountFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CreateNewLocationFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.OpenContractDetailsFragment;
@@ -62,7 +62,7 @@ public class CryptoCustomerWalletFragmentFactory extends FermatFragmentFactory<C
             case CBP_CRYPTO_CUSTOMER_WALLET_OPEN_NEGOTIATION_ADD_NOTE:
                 return OpenNegotiationAddNoteFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS:
-                return CloseNegotiationDetailsFragment.newInstance();
+                return ClosedNegotiationDetailsFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_OPEN_CONTRACT_DETAILS:
                 return OpenContractDetailsFragment.newInstance();
             case CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS:
