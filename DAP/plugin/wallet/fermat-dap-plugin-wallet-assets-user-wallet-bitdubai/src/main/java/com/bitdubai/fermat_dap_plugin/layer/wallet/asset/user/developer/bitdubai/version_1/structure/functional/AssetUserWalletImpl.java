@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitduba
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -23,6 +22,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionSummary;
@@ -30,11 +30,11 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantExecuteLockOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
-import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.AssetUserWalletPluginRoot;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.AssetUserWalletDao;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.AssetUserWalletDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantInitializeAssetUserWalletException;
@@ -179,12 +179,18 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     @Override
     public List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException {
+        List<AssetUserWalletTransaction> toReturn = new ArrayList<>();
         List<AssetUserWalletTransaction> allCreditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
         List<AssetUserWalletTransaction> alldebitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
         for (AssetUserWalletTransaction transaction : alldebitAvailable) {
             allCreditAvailable.remove(transaction);
         }
-        return allCreditAvailable;
+        for (AssetUserWalletTransaction tx : allCreditAvailable) {
+            if (!tx.isLocked()) {
+                toReturn.add(tx);
+            }
+        }
+        return toReturn;
     }
 
     @Override
@@ -267,13 +273,13 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     }
 
     @Override
-    public void lockFunds(DigitalAssetMetadata metadata) {
-        //TODO
+    public void lockFunds(DigitalAssetMetadata metadata) throws RecordsNotFoundException, CantExecuteLockOperationException {
+        assetUserWalletDao.lockFunds(metadata);
     }
 
     @Override
-    public void unlockFunds(DigitalAssetMetadata metadata) {
-        //TODO
+    public void unlockFunds(DigitalAssetMetadata metadata) throws RecordsNotFoundException, CantExecuteLockOperationException {
+        assetUserWalletDao.unlockFunds(metadata);
     }
 
     @Override
@@ -296,23 +302,11 @@ public class AssetUserWalletImpl implements AssetUserWallet {
 
     @Override
     public DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException {
-        String context = "Path: " + AssetUserWalletPluginRoot.PATH_DIRECTORY + " - Tx Hash: " + transactionHash;
-        try {
-            String metadataXML = pluginFileSystem.getTextFile(pluginId, AssetUserWalletPluginRoot.PATH_DIRECTORY, transactionHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
-            return (DigitalAssetMetadata) XMLParser.parseXML(metadataXML, new DigitalAssetMetadata());
-        } catch (FileNotFoundException | CantCreateFileException e) {
-            throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
-        }
+        return assetUserWalletDao.getDigitalAssetMetadata(transactionHash);
     }
 
     @Override
     public DigitalAsset getDigitalAsset(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
-        String context = "Path: " + AssetUserWalletPluginRoot.PATH_DIRECTORY + " - Asset PK: " + assetPublicKey;
-        try {
-            String assetXML = pluginFileSystem.getTextFile(pluginId, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
-            return (DigitalAsset) XMLParser.parseXML(assetXML, new DigitalAsset());
-        } catch (FileNotFoundException | CantCreateFileException e) {
-            throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
-        }
+        return assetUserWalletDao.getDigitalAsset(assetPublicKey);
     }
 }

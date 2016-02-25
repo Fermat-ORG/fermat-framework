@@ -13,6 +13,7 @@ public class AssetUserWalletBalance implements AssetUserWalletList {
     long quantityAvailableBalance;
     long availableBalance;
     long bookBalance;
+    int lockedAssets;
 
     public AssetUserWalletBalance(DigitalAsset digitalAsset, long quantityBookBalance, long quantityAvailableBalance, long availableBalance, long bookBalance) {
         this.digitalAsset = digitalAsset;
@@ -33,6 +34,16 @@ public class AssetUserWalletBalance implements AssetUserWalletList {
     @Override
     public void setQuantityAvailableBalance(long quantityAvailableBalance) {
         this.quantityAvailableBalance = quantityAvailableBalance;
+    }
+
+    @Override
+    public int getLockedAssets() {
+        return lockedAssets;
+    }
+
+    @Override
+    public void setLockedAssets(int lockedAssets) {
+        this.lockedAssets = lockedAssets;
     }
 
     @Override
