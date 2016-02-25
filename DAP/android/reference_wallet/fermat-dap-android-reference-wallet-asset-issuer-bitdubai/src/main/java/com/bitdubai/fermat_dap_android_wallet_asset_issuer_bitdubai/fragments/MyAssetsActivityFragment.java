@@ -76,7 +76,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
     //UI
     private View noAssetsView;
     private SearchView searchView;
-    private boolean showNoBalance;
+    private boolean showNoBalance = true;
 
     public static MyAssetsActivityFragment newInstance() {
         return new MyAssetsActivityFragment();
@@ -137,6 +137,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 }
             }
         }, 500);
+
+        ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter("");
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -203,7 +205,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 return false;
             }
         });
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 1, "Help").setIcon(R.drawable.dap_asset_issuer_help_icon)
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 2, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 //        super.onCreateOptionsMenu(menu, inflater);

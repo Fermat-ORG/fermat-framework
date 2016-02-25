@@ -61,6 +61,16 @@ public class SaleNegotiationManagerMock implements CustomerBrokerSaleNegotiation
     }
 
     @Override
+    public void sendToCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+
+    }
+
+    @Override
+    public void waitForCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+
+    }
+
+    @Override
     public void sendToBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
 
     }

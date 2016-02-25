@@ -12,17 +12,17 @@ import java.util.Map;
  */
 public interface FermatWallet extends Serializable,FermatStructure{
 
-    public String getPublicKey();
+    String getPublicKey();
 
-    public Activity getActivity(Activities activities);
+    Activity getActivity(Activities activities);
 
-    public Activity getStartActivity();
+    Activity getStartActivity();
 
-    public void addPosibleStartActivity(Activities activity);
+    void addPosibleStartActivity(Activities activity);
 
-    public Activity getLastActivity();
+    Activity getLastActivity();
 
-    public void setPublicKey(String publicKey);
+    void setPublicKey(String publicKey);
 
 
     void clear();

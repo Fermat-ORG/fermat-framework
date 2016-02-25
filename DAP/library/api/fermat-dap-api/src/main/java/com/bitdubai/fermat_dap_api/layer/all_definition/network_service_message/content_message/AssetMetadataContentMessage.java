@@ -13,6 +13,10 @@ public class AssetMetadataContentMessage implements DAPContentMessage {
     private DigitalAssetMetadata assetMetadata;
 
     //CONSTRUCTORS
+
+    public AssetMetadataContentMessage() {
+    }
+
     public AssetMetadataContentMessage(DigitalAssetMetadata assetMetadata) {
         this.assetMetadata = assetMetadata;
     }

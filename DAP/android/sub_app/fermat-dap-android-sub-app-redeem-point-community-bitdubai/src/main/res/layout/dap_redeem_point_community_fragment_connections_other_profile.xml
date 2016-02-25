@@ -52,7 +52,7 @@
                 android:drawableStart="@drawable/ic_profile_connect"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="Connect"
+                android:text="@string/dap_other_profile_connect"
                 android:textColor="#ffffff"
                 android:visibility="visible"
                 tools:ignore="HardcodedText" />
@@ -64,7 +64,7 @@
                 android:background="@drawable/bg_shape_grey"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="Accept Connection"
+                android:text= "@string/dap_other_profile_accept_button"
                 android:textColor="#ffffff"
                 android:visibility="gone"
                 tools:ignore="HardcodedText" />
@@ -80,7 +80,7 @@
                 android:drawableStart="@drawable/ic_profile_disconnect"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="Disconnect"
+                android:text="@string/dap_other_profile_disconect"
                 android:textColor="#0072bc"
                 android:visibility="gone"
                 tools:ignore="HardcodedText" />
@@ -92,7 +92,7 @@
                 android:background="@drawable/bg_shape_grey"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="Request Sent"
+                android:text="@string/dap_other_profile_request_send"
                 android:textColor="#ffffff"
                 android:visibility="gone"
                 tools:ignore="HardcodedText" />
@@ -104,7 +104,7 @@
                 android:background="@drawable/bg_shape_grey"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="Connection Rejected"
+                android:text="@string/dap_other_profile_connection_rejected"
                 android:textColor="#ffffff"
                 android:visibility="gone"
                 tools:ignore="HardcodedText" />
@@ -125,7 +125,7 @@
                 android:layout_marginTop="32dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:text="Name"
+                android:text="@string/dap_other_profile_name"
                 android:textColor="#0072bc"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText" />
@@ -185,7 +185,7 @@
                 android:layout_marginTop="32dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:text="CryptoAddress"
+                android:text="@string/dap_other_profile_cryptoaddres"
                 android:textColor="#0072bc"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText" />
@@ -214,7 +214,7 @@
                 android:layout_marginTop="32dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:text="CryptoCurrency"
+                android:text="@string/dap_other_profile_crypto_currency"
                 android:textColor="#0072bc"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText" />
@@ -243,7 +243,7 @@
                 android:layout_marginTop="32dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:text="Last Connection Date"
+                android:text="@string/dap_other_profile_last_connection_date"
                 android:textColor="#0072bc"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText" />

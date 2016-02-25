@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.de
 import android.util.Base64;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.ActorAssetProtocolState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.enums.AssetNotificationDescriptor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
@@ -10,6 +11,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -29,8 +31,8 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
     private boolean flagRead;
     private int sentCount;
 
+    private BlockchainNetworkType blockchainNetworkType;
     private UUID responseToNotificationId;
-
 
     public AssetUserNetworkServiceRecord(UUID id,
                                          String actorSenderAlias,
@@ -45,6 +47,7 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
                                          ActorAssetProtocolState actorAssetProtocolState,
                                          boolean flagRead,
                                          int sendCount,
+                                         BlockchainNetworkType blockchainNetworkType,
                                          UUID responseToNotificationId) {
 
         this.id                             = id;
@@ -59,6 +62,7 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
         this.actorAssetProtocolState        = actorAssetProtocolState;
         this.flagRead                       = flagRead;
         this.sentCount                      = sendCount;
+        this.blockchainNetworkType          = blockchainNetworkType;
         this.responseToNotificationId       = responseToNotificationId;
     }
 
@@ -77,6 +81,8 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
         this.actorAssetProtocolState =      gson.fromJson(jsonObject.get("actorAssetProtocolState").getAsString(), ActorAssetProtocolState.class);
         this.flagRead =                  jsonObject.get("flagRead").getAsBoolean();
         this.sentCount =                    jsonObject.get("sentCount").getAsInt();
+        this.blockchainNetworkType       =  gson.fromJson(jsonObject.get("blockchainNetworkType").getAsString(), BlockchainNetworkType.class);
+
         if (jsonObject.get("responseToNotificationId") != null)
             this.responseToNotificationId = UUID.fromString(jsonObject.get("responseToNotificationId").getAsString());
 
@@ -131,6 +137,11 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
         return actorAssetProtocolState;
     }
 
+    @Override
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockchainNetworkType;
+    }
+
     public int getSentCount() {
         return sentCount;
     }
@@ -159,6 +170,14 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
         this.actorDestinationPublicKey = actorDestinationPublicKey;
     }
 
+    public void setActorDestinationType(Actors actorDestinationType) {
+        this.actorDestinationType = actorDestinationType;
+    }
+
+    public void setActorSenderType(Actors actorSenderType) {
+        this.actorSenderType = actorSenderType;
+    }
+
     public void setActorSenderAlias(String actorSenderAlias) {
         this.actorSenderAlias = actorSenderAlias;
     }
@@ -179,6 +198,10 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
         this.responseToNotificationId = responseToNotificationId;
     }
 
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        this.blockchainNetworkType = blockchainNetworkType;
+    }
+
     public String toJson() {
 
         Gson gson = new Gson();
@@ -194,8 +217,9 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
         jsonObject.addProperty("assetNotificationDescriptor",   assetNotificationDescriptor.toString());
         jsonObject.addProperty("sentDate",                      sentDate);
         jsonObject.addProperty("actorAssetProtocolState",       actorAssetProtocolState.toString());
-        jsonObject.addProperty("flagRead", flagRead);
+        jsonObject.addProperty("flagRead",                      flagRead);
         jsonObject.addProperty("sentCount",                     sentCount);
+        jsonObject.addProperty("blockchainNetworkType",         blockchainNetworkType.toString());
         if (responseToNotificationId != null)
             jsonObject.addProperty("responseToNotificationId", responseToNotificationId.toString());
         return gson.toJson(jsonObject);
@@ -217,20 +241,21 @@ public class AssetUserNetworkServiceRecord implements ActorNotification {
         if(actorSenderProfileImage != null)
             profileImageUser = Base64.encodeToString(actorSenderProfileImage, Base64.DEFAULT);
 
-        return "AssetUserNetworkServiceRecord{"  +
-                "id="                            + id +
-                ", actorDestinationType="        + actorDestinationType +
-                ", actorSenderType="             + actorSenderType +
-                ", actorSenderPublicKey='"       + actorSenderPublicKey + '\'' +
-                ", actorDestinationPublicKey='"  + actorDestinationPublicKey + '\'' +
-                ", actorSenderAlias='"           + actorSenderAlias + '\'' +
-                ", actorSenderProfileImage="     + profileImageUser +
+        return "AssetUserNetworkServiceRecord{" +
+                "id=" + id +
+                ", actorDestinationType=" + actorDestinationType +
+                ", actorSenderType=" + actorSenderType +
+                ", actorSenderPublicKey='" + actorSenderPublicKey + '\'' +
+                ", actorDestinationPublicKey='" + actorDestinationPublicKey + '\'' +
+                ", actorSenderAlias='" + actorSenderAlias + '\'' +
+                ", actorSenderProfileImage=" + profileImageUser +
                 ", assetNotificationDescriptor=" + assetNotificationDescriptor +
-                ", sentDate="                    + sentDate +
-                ", actorAssetProtocolState="     + actorAssetProtocolState +
-                ", flagRead="                 + flagRead +
-                ", sentCount="                   + sentCount +
-                ", responseToNotificationId="    + responseToNotificationId +
+                ", sentDate=" + sentDate +
+                ", actorAssetProtocolState=" + actorAssetProtocolState +
+                ", flagRead=" + flagRead +
+                ", sentCount=" + sentCount +
+                ", blockchainNetworkType=" + blockchainNetworkType +
+                ", responseToNotificationId=" + responseToNotificationId +
                 '}';
     }
 }

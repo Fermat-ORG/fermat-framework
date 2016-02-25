@@ -11,19 +11,18 @@
 
         <ImageView
             android:id="@+id/contact_image"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="@integer/contact_detail_photo_percent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_contact_picture_180_holo_light"
-            android:contentDescription="@string/imageview_description"/>
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="80dp"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:scaleType="fitXY" />
 
         <RelativeLayout
             android:id="@+id/containere"
             android:layout_width="match_parent"
             android:padding="20dp"
-            android:layout_height="0dp"
-            android:layout_weight="@integer/contact_detail_info_percent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -51,9 +50,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
-                android:background="@color/background_floating_material_dark"
-                android:text="Send"
-                android:textColor="@color/background_material_light"/>
+                android:background="@color/black"
+                android:text="OK"
+                android:textColor="@color/color_white"/>
 
         </RelativeLayout>
 

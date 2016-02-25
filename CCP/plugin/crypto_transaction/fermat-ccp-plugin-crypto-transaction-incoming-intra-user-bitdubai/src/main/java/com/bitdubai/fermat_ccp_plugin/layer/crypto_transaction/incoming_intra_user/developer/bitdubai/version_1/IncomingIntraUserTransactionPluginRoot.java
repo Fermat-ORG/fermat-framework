@@ -224,7 +224,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         FermatEventListener fermatEventListener;
         FermatEventHandler fermatEventHandler;
 
-        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
+        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
         fermatEventHandler = new IncomingCryptoMetadataEventHandler(eventRecorderService);
 
         fermatEventListener.setEventHandler(fermatEventHandler);

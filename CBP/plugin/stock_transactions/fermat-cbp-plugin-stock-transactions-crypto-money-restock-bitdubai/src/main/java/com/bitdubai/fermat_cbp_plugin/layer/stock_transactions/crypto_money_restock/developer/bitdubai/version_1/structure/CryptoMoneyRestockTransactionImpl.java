@@ -31,7 +31,7 @@ public class CryptoMoneyRestockTransactionImpl implements CryptoMoneyTransaction
 
     public CryptoMoneyRestockTransactionImpl(){
 
-    };
+    }
 
     public CryptoMoneyRestockTransactionImpl(UUID transactionId,
                                              String actorPublicKey,
