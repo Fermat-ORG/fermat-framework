@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common;
+package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail;
 
 import android.app.Fragment;
 import android.content.res.Resources;
