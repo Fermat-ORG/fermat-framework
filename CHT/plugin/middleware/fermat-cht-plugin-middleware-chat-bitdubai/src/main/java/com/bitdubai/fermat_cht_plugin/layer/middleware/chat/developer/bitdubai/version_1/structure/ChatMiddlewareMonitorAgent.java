@@ -807,7 +807,8 @@ public class ChatMiddlewareMonitorAgent implements
                     UUID.randomUUID(),
                     "Not registered contact",
                     "Not registered contact",
-                    chatMetadata.getLocalActorType(),
+                    //chatMetadata.getLocalActorType(),
+                    PlatformComponentType.NETWORK_SERVICE,
                     chatMetadata.getLocalActorPublicKey(),
                     date.getTime()
             );
