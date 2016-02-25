@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentTransactionManagerTest;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.when;
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 18/02/16.
  */
 public class getContractTransactionStatusTest {
+
     CustomerOnlinePaymentTransactionManager customerOnlinePaymentTransactionManager;
     @Mock
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
@@ -43,14 +45,24 @@ public class getContractTransactionStatusTest {
         customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,
                 customerOnlinePaymentBusinessTransactionDao,
                 transactionTransmissionManager,
-                customerBrokerPurchaseNegotiationManager);
-
-        assertNotNull(customerOnlinePaymentTransactionManager.getContractTransactionStatus(""));
+                customerBrokerPurchaseNegotiationManager,
+                errorManager);
+        assertNotNull(customerOnlinePaymentTransactionManager.getContractTransactionStatus("Test"));
     }
 
-    @Test(expected = Exception.class)
-    public void getContractTransactionStatusTest_Should_Throw_Exception() throws Exception{
-        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(null,null,null,null);
+    @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
+    public void getContractTransactionStatusTest_Should_Throw_UnexpectedResultReturnedFromDatabaseException() throws Exception{
+        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(customerBrokerContractPurchaseManager,
+                customerOnlinePaymentBusinessTransactionDao,
+                transactionTransmissionManager,
+                customerBrokerPurchaseNegotiationManager,
+                errorManager);
         customerOnlinePaymentTransactionManager.getContractTransactionStatus(null);
+    }
+
+    @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
+    public void getContractTransactionStatusTest_Should_Throw_Generic_UnexpectedResultReturnedFromDatabaseException() throws Exception{
+        customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(null,null,null,null,errorManager);
+        customerOnlinePaymentTransactionManager.getContractTransactionStatus("Test");
     }
 }

@@ -2,7 +2,11 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_onlin
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
@@ -15,17 +19,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.util.UUID;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 01/02/16.
@@ -85,9 +81,18 @@ public class startTest {
         customerOnlinePaymentMonitorAgent.stop();
 
     }
+
+    //private void setIntraActorCryptoTransactionManager
     @Test(expected = Exception.class)
-    public void testStart_Should_Return_Exception() throws Exception {
+    public void testsetIntraActorCryptoTransactionManager() throws Exception {
         customerOnlinePaymentMonitorAgent = new CustomerOnlinePaymentMonitorAgent(null,null,null,null,null,null,null,null,null);
-        customerOnlinePaymentMonitorAgent.start();
     }
+    //generic exception
+    @Test
+    public void testStart_Should_() throws Exception {
+        customerOnlinePaymentMonitorAgent = new CustomerOnlinePaymentMonitorAgent(null,logManager,errorManager,null,null,null,null,null,outgoingIntraActorManager);
+        customerOnlinePaymentMonitorAgent.start();
+        //verify(errorManager,times(1));
+    }
+
 }
