@@ -34,8 +34,8 @@ android:layout_height="wrap_content">
     android:ellipsize="end"
     android:maxLines="3"
     android:text="desc"
-    android:textColor="@color/black"
-    android:textSize="10dip" />
+    android:textColor="#757575"
+    android:textSize="9dip" />
 
 <TextView
     android:id="@+id/tvdate"
@@ -46,6 +46,6 @@ android:layout_height="wrap_content">
     android:layout_marginTop="25dp"
     android:text="date"
     android:textColor="#757575"
-    android:textSize="8dip" />
+    android:textSize="9dip" />
 
 </RelativeLayout>
