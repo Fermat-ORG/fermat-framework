@@ -8,9 +8,9 @@ import java.io.Serializable;
  * Created by rodrigo on 2015.07.20..
  */
 public interface FermatTab  extends Serializable {
-    public void setLabel(String texto);
-    public String getLabel();
-    public void setFragment(Fragments fragment);
-    public Fragments getFragment();
-    public byte[] getIcon();
+    void setLabel(String texto);
+    String getLabel();
+    void setFragment(Fragments fragment);
+    Fragments getFragment();
+    byte[] getIcon();
 }

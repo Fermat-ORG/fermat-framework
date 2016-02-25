@@ -9,8 +9,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_store.interf
  */
 public interface WalletStoreCatalogueItem extends CatalogItem{
 
-    public InstallationStatus getInstallationStatus();
+    InstallationStatus getInstallationStatus();
 
-    public WalletStoreDetailedCatalogItem getWalletDetailedCatalogItem() throws DatailedInformationNotFoundException;
+    WalletStoreDetailedCatalogItem getWalletDetailedCatalogItem() throws DatailedInformationNotFoundException;
 
 }

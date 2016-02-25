@@ -9,7 +9,6 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -25,14 +24,13 @@ import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class CommunityAssetUserFermatAppConnection extends AppConnections {
+public class CommunityAssetUserFermatAppConnection extends AppConnections<AssetUserCommunitySubAppSession> {
 
     private AssetUserCommunitySubAppModuleManager manager;
     private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
 
-    public CommunityAssetUserFermatAppConnection(Activity activity, FermatSession fullyLoadedSession) {
+    public CommunityAssetUserFermatAppConnection(Activity activity) {
         super(activity);
-        this.assetUserCommunitySubAppSession = (AssetUserCommunitySubAppSession) fullyLoadedSession;
     }
 
     @Override
@@ -75,24 +73,26 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections {
     public NotificationPainter getNotificationPainter(String code) {
         NotificationPainter notification = null;
         try {
-            manager = assetUserCommunitySubAppSession.getModuleManager();
-            String[] params = code.split("|");
+            this.assetUserCommunitySubAppSession = (AssetUserCommunitySubAppSession) this.getSession();
+            if (assetUserCommunitySubAppSession != null)
+                manager = assetUserCommunitySubAppSession.getModuleManager();
+            String[] params = code.split("_");
             String notificationType = params[0];
             String senderActorPublicKey = params[1];
 
             switch (notificationType) {
-                case "CONNECTION_REQUEST":
-                    try {
+                case "CONNECTIONREQUEST":
+                    if (manager != null) {
                         //find last notification by sender actor public key
                         ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
-                        notification = new UserAssetCommunityNotificationPainter("New Request connection", "Receiving request connection by: " + senderActor.getName(), "", "");
+                        notification = new UserAssetCommunityNotificationPainter("New Connection Request", "Was Received From: " + senderActor.getName(), "", "");
                         break;
-                    } catch (Exception e) {
-
+                    } else {
+                        notification = new UserAssetCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "");
                     }
             }
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
         return notification;
     }

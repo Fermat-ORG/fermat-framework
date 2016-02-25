@@ -133,7 +133,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractPlugin imple
     }
 
     @Override
-    public SettingsManager getSettingsManager() {
+    public SettingsManager<RedeemPointSettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
 

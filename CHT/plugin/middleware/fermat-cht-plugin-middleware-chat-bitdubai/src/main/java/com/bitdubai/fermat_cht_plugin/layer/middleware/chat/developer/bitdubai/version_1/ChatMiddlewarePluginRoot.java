@@ -241,7 +241,9 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                 Platforms.CRYPTO_CURRENCY_PLATFORM.getCode(),
                 intraUserModuleManager);
         this.chatMiddlewareContactFactory =
-                new ChatMiddlewareContactFactory(actorNetworkServiceMap);
+                new ChatMiddlewareContactFactory(
+                        actorNetworkServiceMap,
+                        errorManager);
     }
 
     @Override
@@ -257,7 +259,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             /*
              * Initialize Developer Database Factory
              */
-            //System.out.println("OPEN_CONTRACT Facti");
             chatMiddlewareDeveloperDatabaseFactory = new
                     ChatMiddlewareDeveloperDatabaseFactory(pluginDatabaseSystem,
                     pluginId);
@@ -289,7 +290,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     chatMiddlewareDatabaseDao,
                     this.chatMiddlewareContactFactory,
                     this,
-                    this.networkServiceChatManager
+                    this.networkServiceChatManager,
+                    this.errorManager
             );
 
             /**
@@ -297,7 +299,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
              */
             ChatMiddlewareRecorderService chatMiddlewareRecorderService=new ChatMiddlewareRecorderService(
                     chatMiddlewareDatabaseDao,
-                    eventManager);
+                    eventManager,
+                    errorManager);
             chatMiddlewareRecorderService.start();
 
             /**

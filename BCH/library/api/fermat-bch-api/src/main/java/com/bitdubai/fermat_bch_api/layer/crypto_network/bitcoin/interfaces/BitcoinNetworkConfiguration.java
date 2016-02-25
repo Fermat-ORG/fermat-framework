@@ -15,22 +15,22 @@ public interface BitcoinNetworkConfiguration {
     /**
      * The network parameters of the default networt type selected for the platform.
      */
-    public static final NetworkParameters DEFAULT_NETWORK_PARAMETERS = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+    NetworkParameters DEFAULT_NETWORK_PARAMETERS = BitcoinNetworkSelector.getNetworkParameter(BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
     /**
      * Agent name and version
      */
-    public static final String USER_AGENT_NAME = "Fermat Agent";
-    public static final String USER_AGENT_VERSION ="2.1.0";
+    String USER_AGENT_NAME = "Fermat Agent";
+    String USER_AGENT_VERSION ="2.1.0";
 
     /**
      * amount of blocks depth to consider transaction IRReversible
      */
-    public static final int IRREVERSIBLE_BLOCK_DEPTH = 3;
-    public static final int MIN_BROADCAST_CONNECTIONS = 2;
+    int IRREVERSIBLE_BLOCK_DEPTH = 3;
+    int MIN_BROADCAST_CONNECTIONS = 2;
 
     /**
      * Amount of Timeout minutes for broadcasting transactions
      */
-    public static final int TRANSACTION_BROADCAST_TIMEOUT = 5;
+    int TRANSACTION_BROADCAST_TIMEOUT = 5;
 }

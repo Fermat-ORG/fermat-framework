@@ -65,7 +65,7 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
             FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler = new AssetDistributionEventHandler(this);
 
-            fermatEventListener = eventManager.getNewListener(EventType.RECEIVED_NEW_TRANSACTION_STATUS_NOTIFICATION);
+            fermatEventListener = eventManager.getNewListener(EventType.RECEIVE_NEW_DAP_MESSAGE);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);

@@ -215,8 +215,9 @@ public interface ActorAssetUserManager extends FermatManager {
      */
     void askActorAssetUserForConnection(String actorAssetUserIdentityToLinkPublicKey,
                                         String actorAssetUserToAddName              ,
-                                        String actorAssetUserToAddPublicKey        ,
-                                        byte[] profileImage                          ) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
+                                        String actorAssetUserToAddPublicKey         ,
+                                        byte[] profileImage                         ,
+                                        BlockchainNetworkType blockchainNetworkType ) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
 
 
     /**

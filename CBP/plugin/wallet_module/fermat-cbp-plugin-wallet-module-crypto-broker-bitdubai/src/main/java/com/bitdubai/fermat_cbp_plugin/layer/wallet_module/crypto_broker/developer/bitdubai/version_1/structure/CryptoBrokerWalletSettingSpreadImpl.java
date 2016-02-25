@@ -14,7 +14,8 @@ public class CryptoBrokerWalletSettingSpreadImpl implements CryptoBrokerWalletSe
     float       spread;
     boolean     restockAutomatic;
 
-    public CryptoBrokerWalletSettingSpreadImpl(){};
+    public CryptoBrokerWalletSettingSpreadImpl(){}
+
     @Override
     public UUID getId() {
         return id;
