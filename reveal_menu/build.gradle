@@ -18,8 +18,16 @@ android {
     }
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.2.0'
+    compile 'com.github.ozodrukh:CircularReveal:1.1.0'
+    compile project(':horizontalscrollview')
+
+
 }
