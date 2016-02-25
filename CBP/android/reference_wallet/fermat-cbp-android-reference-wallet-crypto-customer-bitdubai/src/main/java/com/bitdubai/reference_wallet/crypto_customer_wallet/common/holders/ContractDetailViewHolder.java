@@ -159,29 +159,96 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     }
 
     public void bind(ContractDetail itemInfo) {
-        this.contractId=itemInfo.getContractId();
-        ContractStatus contractStatus = itemInfo.getContractStatus();
-        ContractDetailType contractDetailType=itemInfo.getContractDetailType();
-        ContractStatus visualContractStatus=getContractStatusByContractDetailType(
-                contractStatus,
-                contractDetailType
-        );
-        itemView.setBackgroundColor(getStatusBackgroundColor(visualContractStatus));
-        switch (contractDetailType){
-            case CUSTOMER_DETAIL:
+
+        //Locally save contract ID
+        this.contractId = itemInfo.getContractId();
+
+        //ContractStatus contractStatus = itemInfo.getContractStatus();
+        //ContractDetailType contractDetailType=itemInfo.getContractDetailType();
+
+
+        //TODO: fk is this for?
+        //ContractStatus visualContractStatus=getContractStatusByContractDetailType(contractStatus, contractDetailType);
+        //itemView.setBackgroundColor(getStatusBackgroundColor(visualContractStatus));
+
+
+
+        switch (itemInfo.getContractStep()){
+            case 1:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
-                textDescription.setText("Customer");
-                confirmButton.setText("SEND");
+                stepTitle.setText("Payment Delivery");
+                switch (itemInfo.getContractStatus()) {
+                    case PENDING_PAYMENT:
+                        textDescription.setText("Send " + itemInfo.getCurrencyAmount() + itemInfo.getCurrencyCode());
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
+                        confirmButton.setText("Confirm");
+                        break;
+
+                    default:
+                        textDescription.setText("You sent: " + itemInfo.getCurrencyAmount() + itemInfo.getCurrencyCode());
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
+                        confirmButton.setVisibility(View.INVISIBLE);
+                }
                 break;
-            case BROKER_DETAIL:
+
+            case 2:
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
-                textDescription.setText("Broker");
-                confirmButton.setText("CONFIRM");
+                stepTitle.setText("Payment Reception");
+                confirmButton.setVisibility(View.INVISIBLE);
+                switch (itemInfo.getContractStatus()) {
+                    case PENDING_PAYMENT:
+                    case PAYMENT_SUBMIT:
+                        textDescription.setText("Broker receives: blabla");
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
+                        break;
+
+                    default:
+                        textDescription.setText("Broker received: blabla");
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
+                }
+                break;
+
+            case 3:
+                stepNumber.setImageResource(R.drawable.bg_detail_number_03);
+                stepTitle.setText("Merchandise Delivery");
+                confirmButton.setVisibility(View.INVISIBLE);
+                switch (itemInfo.getContractStatus()) {
+                    case PENDING_PAYMENT:
+                    case PAYMENT_SUBMIT:
+                    case PENDING_MERCHANDISE:
+                        textDescription.setText("Broker sends: blabla");
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
+                        break;
+
+                    default:
+                        textDescription.setText("Broker sent: blabla");
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
+                }
+                break;
+
+            case 4:
+                stepNumber.setImageResource(R.drawable.bg_detail_number_04);
+                stepTitle.setText("Merchandise reception");
+                switch (itemInfo.getContractStatus()) {
+                    case PENDING_PAYMENT:
+                    case PAYMENT_SUBMIT:
+                    case PENDING_MERCHANDISE:
+                    case MERCHANDISE_SUBMIT:
+                        textDescription.setText("You receive: blabla");
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
+                        confirmButton.setText("Confirm");
+                        break;
+
+                    default:
+                        textDescription.setText("You received: blabla");
+                        itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
+                        confirmButton.setVisibility(View.INVISIBLE);
+                }
                 break;
 
         }
         //TODO: here we can see the contract status
-        textButton.setText(visualContractStatus.getFriendlyName());
+        //textButton.setText(visualContractStatus.getFriendlyName());
         /*customerName.setText(itemInfo.getCryptoCustomerAlias());
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
 
@@ -194,6 +261,15 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
         lastUpdateDate.setText(date);*/
     }
+
+
+
+
+
+    /* HELPER FUNCTIONS */
+
+
+
 
     /**
      * This method returns the friendly name from a contract status by contract detail type.
