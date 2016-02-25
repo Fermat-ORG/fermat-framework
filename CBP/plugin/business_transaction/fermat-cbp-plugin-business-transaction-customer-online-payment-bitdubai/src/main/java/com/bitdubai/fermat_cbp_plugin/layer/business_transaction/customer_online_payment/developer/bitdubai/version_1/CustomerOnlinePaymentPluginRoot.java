@@ -237,7 +237,8 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
                     this.customerBrokerContractPurchaseManager,
                     customerOnlinePaymentBusinessTransactionDao,
                     this.transactionTransmissionManager,
-                    this.customerBrokerPurchaseNegotiationManager);
+                    this.customerBrokerPurchaseNegotiationManager,
+                    this.errorManager);
 
             /**
              * Init event recorder service.
