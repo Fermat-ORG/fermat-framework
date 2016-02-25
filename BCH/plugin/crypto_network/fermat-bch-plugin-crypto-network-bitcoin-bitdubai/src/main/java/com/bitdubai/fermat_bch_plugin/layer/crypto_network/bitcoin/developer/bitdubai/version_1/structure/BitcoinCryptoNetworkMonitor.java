@@ -101,6 +101,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         BLOCKCHAIN_NETWORKTYPE = BitcoinNetworkSelector.getBlockchainNetworkType(NETWORK_PARAMETERS);
     }
 
+    /**
+     * gets the wallet
+     * @return
+     */
+    public Wallet getWallet() {
+        return wallet;
+    }
 
     @Override
     public void start() throws CantStartAgentException {
