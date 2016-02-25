@@ -93,7 +93,6 @@ public class DeveloperDatabaseFactory {
         List<String> metadataLockColumns = new ArrayList<>();
         metadataLockColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_METADATA_ID_COLUMN_NAME);
         metadataLockColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME);
-        metadataLockColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_NETWORK_TYPE_COLUMN_NAME);
         metadataLockColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_STATUS_COLUMN_NAME);
         /**
          * AssetIssuerWalletTotalBalanceColumns table

@@ -112,7 +112,6 @@ public class AssetUserWalletDatabaseFactory {
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_TABLE_NAME);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_METADATA_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
-        table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_NETWORK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 15, false);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, false);
         return table;
     }
