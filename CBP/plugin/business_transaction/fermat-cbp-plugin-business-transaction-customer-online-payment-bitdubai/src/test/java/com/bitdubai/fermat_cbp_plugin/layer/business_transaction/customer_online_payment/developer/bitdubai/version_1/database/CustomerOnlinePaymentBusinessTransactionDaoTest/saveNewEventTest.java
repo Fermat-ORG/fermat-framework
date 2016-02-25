@@ -46,7 +46,7 @@ public class saveNewEventTest {
         when(databaseTable.getEmptyRecord()).thenReturn(databaseTableRecord);
     }
     @Test
-    public void saveNewEventTest_Should()throws Exception{
+    public void saveNewEventTest()throws Exception{
         when(mockDatabase.getTable(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME
         )).thenReturn(databaseTable);

@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.UUID;
 
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 /**
@@ -32,7 +33,6 @@ public class getPendingEventsTest {
     private UUID testId;
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
 
-
     @Before
     public void setup()throws Exception{
         testId = UUID.randomUUID();
@@ -41,9 +41,9 @@ public class getPendingEventsTest {
     }
 
     @Test
-    public void getPendingEventsTest_Should_Return_Empty_List() throws Exception{
+    public void getPendingEventsTest_Should_Should_Return_Not_Null() throws Exception{
         when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME)).thenReturn(databaseTable);
-        customerOnlinePaymentBusinessTransactionDao.getPendingEvents();
+        assertNotNull(customerOnlinePaymentBusinessTransactionDao.getPendingEvents());
     }
     //Generic Exception
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)

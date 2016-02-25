@@ -33,7 +33,6 @@ public class getOnCryptoNetworkCryptoStatusListTest {
     private UUID testId;
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
 
-
     @Before
     public void setup()throws Exception{
         testId = UUID.randomUUID();

@@ -39,11 +39,6 @@ public class sendPaymentTest {
     @Mock
     CustomerBrokerContractPurchase customerBrokerContractPurchase;
     PurchaseNegotiationOnlineMock purchaseNegotiationOnlineMock = new PurchaseNegotiationOnlineMock();
-    //@Mock
-    //Collection<Clause> collection;
-
-    //@Mock
-    //Iterator<Clause> iterator;
 
     @Before
     public void setup() throws Exception{
@@ -69,13 +64,13 @@ public class sendPaymentTest {
         customerOnlinePaymentTransactionManager.sendPayment("walletPublicKey", "contractHash");
     }
 
-    //ObjectNotSetException
+    //This Test Catch ObjectNotSetException
     @Test(expected = CantSendPaymentException.class)
     public void sendPaymentTest_Should_() throws Exception{
 
         customerOnlinePaymentTransactionManager.sendPayment(null, "contractHash");
     }
-    //Generic Exception
+    //This Test Catch Generic Exception
     @Test(expected = CantSendPaymentException.class)
     public void sendPaymentTest_Should_Throw_CantSendPaymentException() throws Exception{
         customerOnlinePaymentTransactionManager = new CustomerOnlinePaymentTransactionManager(null,

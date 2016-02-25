@@ -1,13 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentMonitorAgentTest;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -83,16 +78,9 @@ public class startTest {
     }
 
     //private void setIntraActorCryptoTransactionManager
-    @Test(expected = Exception.class)
-    public void testsetIntraActorCryptoTransactionManager() throws Exception {
-        customerOnlinePaymentMonitorAgent = new CustomerOnlinePaymentMonitorAgent(null,null,null,null,null,null,null,null,null);
-    }
-    //generic exception
-    @Test
-    public void testStart_Should_() throws Exception {
-        customerOnlinePaymentMonitorAgent = new CustomerOnlinePaymentMonitorAgent(null,logManager,errorManager,null,null,null,null,null,outgoingIntraActorManager);
-        customerOnlinePaymentMonitorAgent.start();
-        //verify(errorManager,times(1));
+    @Test(expected = CantSetObjectException.class)
+    public void testSetIntraActorCryptoTransactionManager() throws Exception {
+        customerOnlinePaymentMonitorAgent = new CustomerOnlinePaymentMonitorAgent(null,null,errorManager,null,null,null,null,null,null);
     }
 
 }

@@ -34,22 +34,20 @@ public class getOnBlockchainkCryptoStatusListTest {
     private UUID testId;
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
 
-
     @Before
     public void setup()throws Exception{
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
-
     }
     @Test
-    public void getOnBlockchainkCryptoStatusListTest_Should()throws Exception{
+    public void getOnBlockchainkCryptoStatusListTest_Should_Return_Not_Null()throws Exception{
         when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)).thenReturn(databaseTable);
-        customerOnlinePaymentBusinessTransactionDao.getOnBlockchainkCryptoStatusList();
+        assertNotNull(customerOnlinePaymentBusinessTransactionDao.getOnBlockchainkCryptoStatusList());
     }
     //Generic Exception
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getOnBlockchainkCryptoStatusListTest_()throws Exception{
+    public void getOnBlockchainkCryptoStatusListTest_Should_Throw_Exception()throws Exception{
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId,mockDatabase,errorManager);
         customerOnlinePaymentBusinessTransactionDao.getOnBlockchainkCryptoStatusList();
     }

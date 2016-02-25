@@ -15,9 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -35,7 +33,6 @@ public class getPendingToSubmitCryptoListTest {
     private UUID testId;
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
 
-
     @Before
     public void setup()throws Exception{
         testId = UUID.randomUUID();
@@ -43,15 +40,14 @@ public class getPendingToSubmitCryptoListTest {
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
     }
     @Test
-    public void getPendingToSubmitCryptoListTestTest_Should()throws Exception{
+    public void getPendingToSubmitCryptoListTestTest_Should_Return_Not_Null()throws Exception{
         when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)).thenReturn(databaseTable);
         assertNotNull(customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoList());
     }
     //Generic Exception
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getPendingToSubmitCryptoListTestTest()throws Exception{
+    public void getPendingToSubmitCryptoListTestTest_Should_Throw_Exception()throws Exception{
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,testId,mockDatabase,errorManager);
         customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoList();
     }
-
 }

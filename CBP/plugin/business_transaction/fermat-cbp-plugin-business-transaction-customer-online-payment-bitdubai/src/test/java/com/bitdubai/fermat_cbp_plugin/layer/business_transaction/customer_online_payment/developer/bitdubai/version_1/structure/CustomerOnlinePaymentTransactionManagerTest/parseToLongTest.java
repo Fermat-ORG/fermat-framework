@@ -46,7 +46,7 @@ public class parseToLongTest {
         assertEquals(customerOnlinePaymentTransactionManager.parseToLong("1"),1);
     }
     @Test(expected = InvalidParameterException.class)
-    public void parseToLongTest_Should_() throws  Exception{
+    public void parseToLongTest_Should_Return_Exception() throws  Exception{
         customerOnlinePaymentTransactionManager.parseToLong("Test");
     }
 }
