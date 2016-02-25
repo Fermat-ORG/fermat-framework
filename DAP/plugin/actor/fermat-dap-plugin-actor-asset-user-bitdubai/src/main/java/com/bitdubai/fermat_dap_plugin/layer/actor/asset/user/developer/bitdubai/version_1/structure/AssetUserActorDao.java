@@ -405,6 +405,8 @@ public class AssetUserActorDao implements Serializable {
 //                    locationLongitude = location.getLongitude().toString();
 //                }
 
+
+
                         DatabaseTable table = this.database.getTable(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME);
                         DatabaseTableRecord record = table.getEmptyRecord();
 
@@ -414,6 +416,11 @@ public class AssetUserActorDao implements Serializable {
 
                         if (actorAssetUser.getAge() != null)
                             record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_AGE_COLUMN_NAME, actorAssetUser.getAge());
+
+                        if (actorAssetUser.getGenders() == null)
+                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GENDER_COLUMN_NAME, Genders.INDEFINITE.getCode());
+                        else
+                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_GENDER_COLUMN_NAME, actorAssetUser.getGenders().getCode());
 
                         record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME, actorAssetUser.getGenders().getCode());
 
