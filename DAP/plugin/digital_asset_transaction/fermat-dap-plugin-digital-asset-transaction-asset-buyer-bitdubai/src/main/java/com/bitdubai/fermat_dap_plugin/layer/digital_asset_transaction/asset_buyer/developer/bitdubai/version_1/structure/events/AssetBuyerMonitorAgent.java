@@ -152,7 +152,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
         }
 
         private void checkNegotiationStatus() throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
-            for (NegotiationRecord record : dao.getActionRequiredNegotiations()) {
+            for (NegotiationRecord record : dao.getNegotiationAnswer()) {
                 assetTransmission.sendMessage(transactionManager.constructNegotiationMessage(record));
                 dao.updateNegotiationStatus(record.getNegotiation().getNegotiationId(), AssetSellStatus.NO_ACTION_REQUIRED);
             }
