@@ -63,12 +63,12 @@ public class CustomerBrokerUpdateServiceEventHandler implements CBPService {
             listenersAdded.add(fermatEventListener);
             */
 
-            /*fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_UPATE);
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_UPDATE);
             fermatEventHandler = new IncomingNegotiationTransmissionConfirmEventHandler();
             ((IncomingNegotiationTransmissionConfirmEventHandler) fermatEventHandler).setCustomerBrokerUpdateService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);*/
+            listenersAdded.add(fermatEventListener);
 
             this.serviceStatus = ServiceStatus.STARTED;
 
