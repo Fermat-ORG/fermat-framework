@@ -8,12 +8,14 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ShareMemoryCacheForVpnClientsConnections;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VpnClientConnection;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
@@ -70,6 +72,10 @@ public class ConfigurationWebService {
 
         LOG.info("Executing getConfiguration()");
 
+        Configuration configuration = new Configuration();
+        configuration.setPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
+        configuration.setUser(ConfigurationManager.getValue(ConfigurationManager.USER));
+        configuration.setPassword(ConfigurationManager.getValue(ConfigurationManager.PASSWORD));
 
         return Response.status(200).entity(gson.toJson("")).build();
 
@@ -78,10 +84,27 @@ public class ConfigurationWebService {
     @POST
     @Path("/save")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response saveConfiguration() {
+    public Response saveConfiguration(Configuration configuration) {
 
         LOG.info("Executing saveConfiguration()");
 
+        try {
+
+            if(!configuration.getPort().toString().equals(ConfigurationManager.getValue(ConfigurationManager.PORT))){
+                ConfigurationManager.updateValue(ConfigurationManager.PORT, configuration.getPort().toString());
+            }
+
+            if(!configuration.getUser().equals(ConfigurationManager.getValue(ConfigurationManager.USER))){
+                ConfigurationManager.updateValue(ConfigurationManager.USER, configuration.getUser());
+            }
+
+            if(!configuration.getPassword().equals(ConfigurationManager.getValue(ConfigurationManager.PASSWORD))){
+                ConfigurationManager.updateValue(ConfigurationManager.PASSWORD, configuration.getPassword());
+            }
+
+        } catch (ConfigurationException e) {
+            return Response.status(500).entity(e.getMessage()).build();
+        }
 
         return Response.status(200).entity(gson.toJson("")).build();
 
