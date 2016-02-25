@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
@@ -33,6 +34,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractMerchandiseDeliveryDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractMerchandiseReceptionDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractPaymentDeliveryDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractPaymentReceptionDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
@@ -205,9 +210,9 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 CustomerBrokerContractPurchase customerBrokerContractPurchase = walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
 
                 //Payment Delivery step
-                contractDetail=new ContractDetail(
+                contractDetail=new ContractPaymentDeliveryDetail(
                         1,
-                        customerBrokerContractPurchase.getStatus(),
+                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.CUSTOMER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getPaymentCurrency(),
@@ -220,9 +225,9 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
-                contractDetail=new ContractDetail(
+                contractDetail=new ContractPaymentReceptionDetail(
                         2,
-                        customerBrokerContractPurchase.getStatus(),
+                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.CUSTOMER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getPaymentCurrency(),
@@ -235,9 +240,9 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
-                contractDetail=new ContractDetail(
+                contractDetail=new ContractMerchandiseDeliveryDetail(
                         3,
-                        customerBrokerContractPurchase.getStatus(),
+                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.BROKER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getMerchandise(),
@@ -250,9 +255,9 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
-                contractDetail=new ContractDetail(
+                contractDetail=new ContractMerchandiseReceptionDetail(
                         4,
-                        customerBrokerContractPurchase.getStatus(),
+                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.BROKER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getMerchandise(),
