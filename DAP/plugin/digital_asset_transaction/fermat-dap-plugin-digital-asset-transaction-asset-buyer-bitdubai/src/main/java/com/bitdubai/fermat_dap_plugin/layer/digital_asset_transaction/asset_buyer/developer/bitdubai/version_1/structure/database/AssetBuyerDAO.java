@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.database;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -40,8 +42,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional.AssetBuyingVault;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional.BuyingRecord;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.bitdubai.version_1.structure.functional.NegotiationRecord;
-
-import org.apache.commons.codec.binary.Base64;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -107,7 +107,7 @@ public class AssetBuyerDAO {
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME, assetSellContentMessage.getNegotiationId().toString());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME, assetSellContentMessage.getSellStatus().getCode());
         buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_PUBLICKEY_COLUMN_NAME, senderPublicKey);
-        buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeBase64String(assetSellContentMessage.getSerializedTransaction()));
+        buyingRecord.setStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(assetSellContentMessage.getSerializedTransaction(), Base64.DEFAULT));
         databaseTable.insertRecord(buyingRecord);
     }
 
@@ -138,11 +138,11 @@ public class AssetBuyerDAO {
     }
 
     public void updateSellerTransaction(UUID transactionId, byte[] serializedTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
-        updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeBase64String(serializedTransaction), AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
+        updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(serializedTransaction, Base64.DEFAULT), AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
     }
 
     public void updateBuyerTransaction(UUID transactionId, byte[] serializedTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
-        updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeBase64String(serializedTransaction), AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
+        updateRecordForTableByKey(getBuyerTable(), AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(serializedTransaction, Base64.DEFAULT), AssetBuyerDatabaseConstants.ASSET_BUYER_FIRST_KEY_COLUMN, transactionId.toString());
     }
 
     public void updateTransactionHash(UUID transactionId, String transactionHash) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
@@ -180,7 +180,7 @@ public class AssetBuyerDAO {
     private List<DatabaseTableRecord> getRecordsByFilterBuyerTable(DatabaseTableFilter... filters) throws CantLoadTableToMemoryException {
         DatabaseTable table = getBuyerTable();
         for (DatabaseTableFilter filter : filters) {
-            table.addStringFilter(filter.getColumn(), filter.getValue(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         }
         table.addFilterOrder(AssetBuyerDatabaseConstants.ASSET_BUYER_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
         table.loadToMemory();
@@ -190,22 +190,22 @@ public class AssetBuyerDAO {
     private List<DatabaseTableRecord> getRecordsByFilterNegotiationTable(DatabaseTableFilter... filters) throws CantLoadTableToMemoryException {
         DatabaseTable table = getNegotiationTable();
         for (DatabaseTableFilter filter : filters) {
-            table.addStringFilter(filter.getColumn(), filter.getValue(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         }
         table.addFilterOrder(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
         table.loadToMemory();
         return table.getRecords();
     }
 
-    private BuyingRecord constructSellingByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantGetDigitalAssetFromLocalStorageException, CantLoadWalletException {
+    private BuyingRecord constructBuyingByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantGetDigitalAssetFromLocalStorageException, CantLoadWalletException {
         AssetSellStatus status = AssetSellStatus.getByCode(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELL_STATUS_COLUMN_NAME));
         UUID entryId = UUID.fromString(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_ENTRY_ID_COLUMN_NAME));
         DigitalAssetMetadata metadata = assetBuyingVault.getDigitalAssetMetadataFromLocalStorage(entryId.toString());
         ActorAssetUser user = actorAssetUserManager.getActorByPublicKey(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_SELLER_PUBLICKEY_COLUMN_NAME), metadata.getNetworkType());
         String encodeUnsignedTransaction = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME);
         String encodeSignedTransaction = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_BUYER_TRANSACTION_COLUMN_NAME);
-        DraftTransaction signedTransaction = !Validate.isValidString(encodeSignedTransaction) ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decodeBase64(encodeSignedTransaction));
-        DraftTransaction unsignedTransaction = !Validate.isValidString(encodeUnsignedTransaction) ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decodeBase64(encodeUnsignedTransaction));
+        DraftTransaction signedTransaction = !Validate.isValidString(encodeSignedTransaction) ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeSignedTransaction, Base64.DEFAULT));
+        DraftTransaction unsignedTransaction = !Validate.isValidString(encodeUnsignedTransaction) ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeUnsignedTransaction, Base64.DEFAULT));
         String transactionHash = record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_TX_HASH_COLUMN_NAME);
         UUID negotiationId = UUID.fromString(record.getStringValue(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_REFERENCE_COLUMN_NAME));
         return new BuyingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash, negotiationId);
@@ -268,7 +268,7 @@ public class AssetBuyerDAO {
     private List<BuyingRecord> constructBuyingRecordList(List<DatabaseTableRecord> records) throws CantAssetUserActorNotFoundException, CantLoadWalletException, InvalidParameterException, CantGetAssetUserActorsException, CantGetDigitalAssetFromLocalStorageException {
         List<BuyingRecord> toReturn = new ArrayList<>();
         for (DatabaseTableRecord record : records) {
-            toReturn.add(constructSellingByDatabaseRecord(record));
+            toReturn.add(constructBuyingByDatabaseRecord(record));
         }
         return toReturn;
     }
