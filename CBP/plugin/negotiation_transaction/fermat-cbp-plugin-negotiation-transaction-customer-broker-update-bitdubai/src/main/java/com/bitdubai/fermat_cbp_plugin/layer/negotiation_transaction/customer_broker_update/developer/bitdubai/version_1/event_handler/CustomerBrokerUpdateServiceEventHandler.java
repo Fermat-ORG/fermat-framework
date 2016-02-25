@@ -54,15 +54,6 @@ public class CustomerBrokerUpdateServiceEventHandler implements CBPService {
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            /*
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
-            fermatEventHandler = new IncomingCryptoOnCryptoNetworkEventHandler();
-            ((IncomingCryptoOnCryptoNetworkEventHandler) fermatEventHandler).setIncomingCryptoEventRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
-            */
-
             fermatEventListener = eventManager.getNewListener(EventType.INCOMING_NEGOTIATION_TRANSMISSION_CONFIRM_UPDATE);
             fermatEventHandler = new IncomingNegotiationTransmissionConfirmEventHandler();
             ((IncomingNegotiationTransmissionConfirmEventHandler) fermatEventHandler).setCustomerBrokerUpdateService(this);
@@ -98,7 +89,7 @@ public class CustomerBrokerUpdateServiceEventHandler implements CBPService {
     public void incomingNegotiationTransactionEventHandler(IncomingNegotiationTransactionEvent event) throws CantSaveEventException {
 //        Logger LOG = Logger.getGlobal();
 //        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        System.out.print("\n**** 16) MOCK CUSTOMER BROKER UPDATE - EVENT HANDLER - SAVE NEW EVENT  " +
+        System.out.print("\n**** 16) MOCK CUSTOMER BROKER UPDATE - EVENT HANDLER - SAVE UPDATE EVENT  " +
                 "\n - EventType = "+event.getEventType().getCode()+
                 "\n - Source = "+event.getSource().getCode()+
                 "****\n");
