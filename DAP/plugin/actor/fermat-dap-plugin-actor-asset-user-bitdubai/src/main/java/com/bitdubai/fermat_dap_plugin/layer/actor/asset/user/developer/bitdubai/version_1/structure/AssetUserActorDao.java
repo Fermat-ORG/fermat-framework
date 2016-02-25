@@ -327,7 +327,7 @@ public class AssetUserActorDao implements Serializable {
              * if Asset User exist on table
              * change status
              */
-            if (actorAssetRegisteredRequestExists(actorAssetUserPublicKey, dapConnectionState)) {
+            if (assetUserRegisteredExists(actorAssetUserPublicKey)) {
                 this.updateRegisteredConnectionState(actorAssetUserLogged, actorAssetUserPublicKey, dapConnectionState);
             } else {
 
@@ -724,10 +724,17 @@ public class AssetUserActorDao implements Serializable {
                 }
             }
 
+            this.updateAssetUserDAPConnectionStateActorNetworkService(getActorAssetUserRegisteredByPublicKey(actorAssetPublicKey), DAPConnectionState.REGISTERED_ONLINE,null);
+
         } catch (CantLoadTableToMemoryException em) {
             throw new CantGetAssetUserCryptoAddressTableExcepcion(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table in memory.");
         } catch (CantDeleteRecordException em) {
             throw new CantDeleteRecordException(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant delelete record in " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table.");
+        } catch (CantUpdateAssetUserConnectionException em) {
+            throw new CantDeleteRecordException(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant delelete record in " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table. Connection State couldnt be updated");
+        } catch (CantGetAssetUserActorsException em) {
+            throw new CantDeleteRecordException(em.getMessage(), em, "Asset User Actor Crypto Address", "Cant delelete record in " + AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME + " table. Asset User Not Found");
+
         }
     }
 

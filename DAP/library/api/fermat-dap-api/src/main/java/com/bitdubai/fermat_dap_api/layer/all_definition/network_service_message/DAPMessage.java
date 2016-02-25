@@ -8,6 +8,7 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 25/11/15.
@@ -15,6 +16,15 @@ import java.io.Serializable;
 public class DAPMessage implements Serializable {
 
     //VARIABLE DECLARATION
+    /**
+     * The id of this message
+     */
+    private UUID idMessage;
+
+    {
+        idMessage = UUID.randomUUID();
+    }
+
     /**
      * The content of this message, this one should wrap all
      * the needed information to process and answer this message
@@ -64,19 +74,35 @@ public class DAPMessage implements Serializable {
         setSubject(subject);
     }
 
-    //PUBLIC METHODS
-
-    public String messageAsXML() {
-        return XMLParser.parseObject(this);
+    public DAPMessage(UUID idMessage,
+                      DAPContentMessage messageContent,
+                      DAPActor actorSender,
+                      DAPActor actorReceiver,
+                      DAPMessageSubject subject) throws CantSetObjectException {
+        setMessageContent(messageContent);
+        setActorSender(actorSender);
+        setActorReceiver(actorReceiver);
+        setSubject(subject);
+        setIdMessage(idMessage);
     }
 
+    //PUBLIC METHODS
     @Override
     public String toString() {
         return "DAPMessage{" +
+                ", idMessage=" + idMessage +
                 ", messageContent=" + messageContent +
                 ", actorSender=" + actorSender + " - " + actorSender.getClass().getSimpleName() +
                 ", actorReceiver=" + actorReceiver + " - " + actorReceiver.getClass().getSimpleName() +
                 '}';
+    }
+
+    public String toXML() {
+        return XMLParser.parseObject(this);
+    }
+
+    public static DAPMessage fromXML(String xml) {
+        return (DAPMessage) XMLParser.parseXML(xml, new DAPMessage());
     }
 
     //PRIVATE METHODS
@@ -112,6 +138,14 @@ public class DAPMessage implements Serializable {
 
     public void setSubject(DAPMessageSubject subject) throws CantSetObjectException {
         this.subject = Validate.verifySetter(subject, "subject is null");
+    }
+
+    public UUID getIdMessage() {
+        return idMessage;
+    }
+
+    public void setIdMessage(UUID idMessage) {
+        this.idMessage = idMessage;
     }
     //INNER CLASSES
 }

@@ -846,6 +846,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkService impleme
 
                 this.dataBase = communicationNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationChatNetworkServiceDatabaseConstants.DATA_BASE_NAME);
                 this.chatMetaDataDao = new ChatMetaDataDao(dataBase, pluginDatabaseSystem, pluginId,getErrorManager());
+                this.chatMetaDataDao.initialize();
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 

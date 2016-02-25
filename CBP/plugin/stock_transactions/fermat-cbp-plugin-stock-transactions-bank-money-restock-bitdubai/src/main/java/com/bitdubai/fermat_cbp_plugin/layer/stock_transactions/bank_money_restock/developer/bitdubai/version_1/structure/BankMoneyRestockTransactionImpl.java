@@ -201,7 +201,7 @@ public class BankMoneyRestockTransactionImpl implements BankMoneyTransaction {
      */
     @Override
     public String getOriginTransactionId() {
-        return this.getOriginTransactionId();
+        return originTransactionId;
     }
 
     @Override
