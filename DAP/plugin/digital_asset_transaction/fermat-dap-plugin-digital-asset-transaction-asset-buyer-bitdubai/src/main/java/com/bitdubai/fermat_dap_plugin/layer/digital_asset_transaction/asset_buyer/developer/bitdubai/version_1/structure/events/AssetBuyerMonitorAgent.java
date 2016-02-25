@@ -116,26 +116,24 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             while (agentRunning) {
                 try {
                     doTheMainTask();
-                    Thread.sleep(WAIT_TIME);
-                } catch (InterruptedException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
-                    agentRunning = false;
                 } catch (Exception e) {
                     e.printStackTrace();
                     errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                } finally {
+                    try {
+                        Thread.sleep(WAIT_TIME);
+                    } catch (InterruptedException e) {
+                        errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                        agentRunning = false;
+                    }
                 }
             }
         }
 
-        private void doTheMainTask() {
-            try {
-                checkPendingMessages();
-                checkNegotiationStatus();
-                checkBuyingStatus();
-            } catch (Exception e) {
-                //TODO EXCEPTION HANDLING
-                e.printStackTrace();
-            }
+        private void doTheMainTask() throws DAPException, CantInsertRecordException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException {
+            checkPendingMessages();
+            checkNegotiationStatus();
+            checkBuyingStatus();
         }
 
         private void checkPendingMessages() throws CantInsertRecordException, CantGetDAPMessagesException, CantCreateDigitalAssetFileException, CantUpdateMessageStatusException {
