@@ -367,6 +367,9 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
     }
 
+    private void setSuggestedExchangeRateToAdapter(){
+
+    }
     private void exchangeRateEventAction(final ClauseInformation clause, final Map<ClauseType, ClauseInformation> clauses) {
         TextValueDialog clauseTextDialog;
         clauseTextDialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
