@@ -61,8 +61,7 @@
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/cht_buttom_send"
-                android:layout_alignParentEnd="true"
-                />
+                android:layout_alignParentEnd="true" />
         </RelativeLayout>
     </FrameLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

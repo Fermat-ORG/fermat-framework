@@ -14,9 +14,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:background="@drawable/in_message_bg"
+            android:background="@drawable/burble_green_shadow"
             android:orientation="vertical"
             android:paddingBottom="10dp"
+            android:paddingRight="20dp"
+            android:paddingTop="10dp"
             android:paddingLeft="10dp">
 
             <TextView
@@ -43,7 +45,8 @@
                 android:layout_toLeftOf="@+id/txtInfo"
                 android:layout_gravity="left"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true" />
+                android:layout_alignParentLeft="true"
+                />
 
         </LinearLayout>
     </LinearLayout>
