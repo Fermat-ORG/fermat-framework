@@ -28,11 +28,12 @@ public class CryptoWalletUserCommunityBuildNotification {
                             senderActor = moduleManager.getLastNotification(senderActorPublicKey);
 
                         notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received from " + senderActor.getName(), "", "");
-                        break;
+
                     }else
                     {
                         notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "");
                     }
+                    break;
                 case "CONNECTIONACCEPT":
 
                     if(moduleManager != null) {
@@ -42,11 +43,12 @@ public class CryptoWalletUserCommunityBuildNotification {
                         senderActor = moduleManager.getLastNotification(senderActorPublicKey);
 
                         notification = new UserCommunityNotificationPainter("Connection Request", "Your connection request was accepted to " + senderActor.getName(), "", "");
-                        break;
+
                     }else
                     {
                         notification = new UserCommunityNotificationPainter("Connection Request Accepted", "Your connection request was accepted.", "", "");
                     }
+                    break;
 
             }
         } catch (CantGetIntraUsersListException e) {
