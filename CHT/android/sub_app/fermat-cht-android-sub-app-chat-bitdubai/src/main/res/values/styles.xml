@@ -55,10 +55,6 @@
 
     <style name="listViewActivatedStyle"/>
 
-    <style name="quickContactBadgeStyle">
-        <item name="android:background">@drawable/quickcontact_badge_small</item>
-    </style>
-
     <style name="searchTextHiglight">
         <item name="android:textColor">@color/holo_blue</item>
         <item name="android:textStyle">bold</item>

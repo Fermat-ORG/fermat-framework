@@ -70,7 +70,7 @@ public final class CommunicationChatNetworkServiceDatabaseConstants {
     public static final String CHAT_PROCCES_STATUS_COLUMN_NAME = "incoming_process";
 
 
-    public static final String INCOMING_CHAT_FIRST_KEY_COLUMN = CHAT_TABLE_NAME;
+    public static final String CHAT_FIRST_KEY_COLUMN = CHAT_TRANSACTION_ID_COLUMN_NAME;
 
 
 
