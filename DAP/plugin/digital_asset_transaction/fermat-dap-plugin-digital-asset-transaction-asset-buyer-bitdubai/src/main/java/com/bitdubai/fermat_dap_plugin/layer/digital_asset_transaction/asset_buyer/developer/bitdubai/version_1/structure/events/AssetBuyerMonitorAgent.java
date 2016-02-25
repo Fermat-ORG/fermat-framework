@@ -167,7 +167,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                             DraftTransaction buyerTx = cryptoVaultManager.signTransaction(buyingRecord.getSellerTransaction());
                             dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx.serialize());
                             dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.PARTIALLY_SIGNED);
-                            assetTransmission.sendMessage(transactionManager.constructSellingMessage(buyingRecord));
+                            assetTransmission.sendMessage(transactionManager.constructSellingMessage(buyingRecord, AssetSellStatus.PARTIALLY_SIGNED));
                         }
                         break;
                     }
