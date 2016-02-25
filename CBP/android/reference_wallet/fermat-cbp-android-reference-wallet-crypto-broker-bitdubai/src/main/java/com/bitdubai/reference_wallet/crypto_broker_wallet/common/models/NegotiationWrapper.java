@@ -138,9 +138,12 @@ final public class NegotiationWrapper {
         final Collection<ClauseInformation> clauseList = getClauses().values();
         final List<ClauseType> obviationList = Arrays.asList(obviations);
 
-        for(ClauseInformation clause: clauseList){
-            if(!isClauseConfirmed(clause) && clause.getStatus() == DRAFT){
-                if(!obviationList.contains(clause.getType()))
+        if (!expirationTimeConfirmButtonClicked)
+            return false;
+
+        for (ClauseInformation clause : clauseList) {
+            if (!isClauseConfirmed(clause) && clause.getStatus() == DRAFT) {
+                if (!obviationList.contains(clause.getType()))
                     return false;
             }
         }
