@@ -64,6 +64,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         this.itemView = itemView;
         res = itemView.getResources();
         containerCardView = (CardView) this.itemView;
+        containerCardView.setRadius(16);
         stepNumber = (ImageView) itemView.findViewById(R.id.cbw_contract_detail_step);
         stepTitle = (FermatTextView) itemView.findViewById(R.id.cbw_contract_detail_card_view_title);
         textDescription = (FermatTextView) itemView.findViewById(R.id.cbw_contract_detail_description_text);
@@ -71,14 +72,6 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         confirmButton = (FermatButton) itemView.findViewById(R.id.cbw_contract_detail_confirm_button);
         configButton();
     }
-
-    /**
-     * Constructor
-     *
-     * @param itemView
-     */
-
-
 
 
     /*public ContractDetailViewHolder(View itemView) {

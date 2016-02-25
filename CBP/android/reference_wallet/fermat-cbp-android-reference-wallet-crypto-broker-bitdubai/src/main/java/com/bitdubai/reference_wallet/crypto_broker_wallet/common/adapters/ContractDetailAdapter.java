@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,7 +47,7 @@ public class ContractDetailAdapter extends FermatAdapterImproved<ContractDetail,
 
     @Override
     protected int getCardViewResource(int type) {
-        return R.layout.cbw_contract_detail_item;
+        return R.layout.cbw_contract_details_item;
     }
 
     public ContractDetailAdapter(Context context, List<ContractDetail> dataSet, FermatSession session, CryptoBrokerWalletManager walletManager) {
@@ -58,6 +59,8 @@ public class ContractDetailAdapter extends FermatAdapterImproved<ContractDetail,
     }
 
     protected ContractDetailViewHolder createHolder(View itemView, int type) {
+        CardView cardView = (CardView) itemView;
+        cardView.setRadius(4000);
         return new ContractDetailViewHolder(itemView,type);
     }
 
