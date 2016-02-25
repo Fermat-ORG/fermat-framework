@@ -489,16 +489,17 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             dialogFragment.configure("Payment Methods", paymentMethods);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<MoneyType>() {
                 @Override
-                public void onItemSelected(MoneyType newValue) {
-                    negotiationWrapper.changeClauseValue(clause, newValue.getCode());
+                public void onItemSelected(MoneyType selectedPaymentMethod) {
+                    negotiationWrapper.changeClauseValue(clause, selectedPaymentMethod.getCode());
 
-                    switch (newValue) {
+                    switch (selectedPaymentMethod) {
                         case CRYPTO:
                             clauses.remove(BROKER_BANK_ACCOUNT);
                             clauses.remove(BROKER_PLACE_TO_DELIVER);
                             break;
                         case BANK:
                             clauses.remove(BROKER_PLACE_TO_DELIVER);
+
                             if (clauses.get(BROKER_BANK_ACCOUNT) == null) {
                                 List<String> bankAccounts;
                                 try {
@@ -513,6 +514,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                             break;
                         default:
                             clauses.remove(BROKER_BANK_ACCOUNT);
+
                             if (clauses.get(BROKER_PLACE_TO_DELIVER) == null) {
                                 List<NegotiationLocations> locations;
                                 try {
