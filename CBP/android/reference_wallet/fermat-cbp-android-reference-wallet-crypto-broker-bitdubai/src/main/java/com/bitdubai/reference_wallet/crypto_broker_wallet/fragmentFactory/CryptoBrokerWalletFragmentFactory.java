@@ -53,7 +53,7 @@ public class CryptoBrokerWalletFragmentFactory extends FermatFragmentFactory<Cry
                 return StockStatisticsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS:
                 return OpenNegotiationDetailsFragment.newInstance();
-            case CBP_CRYPTO_BROKER_WALLET_CLOSED_NEGOTIATION_DETAILS:
+            case CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS:
                 return ClosedNegotiationDetailsFragment.newInstance();
             case CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS:
                 return OpenContractDetailsFragment.newInstance();
