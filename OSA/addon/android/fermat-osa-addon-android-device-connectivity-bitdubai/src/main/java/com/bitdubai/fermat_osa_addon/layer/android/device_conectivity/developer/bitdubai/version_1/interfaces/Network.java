@@ -13,11 +13,11 @@ package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer
  * */
 public interface Network {
 
-    public ConnectionType getType();
+    ConnectionType getType();
 
-    public boolean getIsConnected();
+    boolean getIsConnected();
 
-    public void setType(ConnectionType type);
+    void setType(ConnectionType type);
 
-    public void setIsConnected(boolean connected);
+    void setIsConnected(boolean connected);
 }

@@ -22,6 +22,6 @@ public interface LogManagerForDevelopers {
 
     void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel);
 
-    static final LogLevel DEFAULT_LOG_LEVEL = LogLevel.MINIMAL_LOGGING;
+    LogLevel DEFAULT_LOG_LEVEL = LogLevel.MINIMAL_LOGGING;
 
 }

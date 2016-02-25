@@ -27,6 +27,7 @@ public class AssetBuyerDatabaseConstants {
     public static final String ASSET_BUYER_NEGOTIATION_ID_COLUMN_NAME = "entry_id";
     public static final String ASSET_BUYER_NEGOTIATION_OBJECT_XML_COLUMN_NAME = "object";
     public static final String ASSET_BUYER_NEGOTIATION_SELLER_PUBLICKEY_COLUMN_NAME = "sellerPublicKey";
+    public static final String ASSET_BUYER_NEGOTIATION_ASSET_PUBLICKEY_COLUMN_NAME = "assetPublicKey";
     public static final String ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME = "status";
     public static final String ASSET_BUYER_NEGOTIATION_TIMESTAMP_COLUMN_NAME = "timeStamp";
 

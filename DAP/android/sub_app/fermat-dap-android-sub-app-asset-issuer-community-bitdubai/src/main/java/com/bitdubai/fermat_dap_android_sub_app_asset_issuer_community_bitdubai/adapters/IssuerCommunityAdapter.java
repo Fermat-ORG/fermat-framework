@@ -79,8 +79,8 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
                 if (profileImage.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                     holder.thumbnail.setImageBitmap(bitmap);
-                } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
-            } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
+                } else Picasso.with(context).load(R.drawable.asset_issuer_comunity).into(holder.thumbnail);
+            } else Picasso.with(context).load(R.drawable.asset_issuer_comunity).into(holder.thumbnail);
 
         } catch (Exception ex) {
             ex.printStackTrace();

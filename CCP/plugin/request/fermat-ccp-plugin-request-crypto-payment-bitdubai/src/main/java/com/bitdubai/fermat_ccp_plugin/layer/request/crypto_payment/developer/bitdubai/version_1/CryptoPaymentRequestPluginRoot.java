@@ -117,7 +117,8 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
                     errorManager,
                     outgoingIntraActorManager,
                     pluginDatabaseSystem,
-                    pluginId
+                    pluginId,
+                    broadcaster
             );
 
             cryptoPaymentRegistry.initialize();
@@ -162,7 +163,7 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
 
             FermatEventHandler fermatEventHandler;
 
-            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_INTRA_USER_DEBIT_TRANSACTION);
+            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.INCOMING_INTRA_USER_DEBIT_TRANSACTION);
             fermatEventHandler = new IncomingIntraUserTransactionDebitEventHandler(this);
 
             fermatEventListener.setEventHandler(fermatEventHandler);
@@ -173,7 +174,7 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
             /**
              * Listener Outgoing Intra User Rollback transaction notifications event
              */
-            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION);
+            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION);
             fermatEventHandler = new OutgoingIntraUserRollbackTransactionEventHandler(this);
 
             fermatEventListener.setEventHandler(fermatEventHandler);
@@ -200,7 +201,8 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
                     errorManager,
                     outgoingIntraActorManager,
                     pluginDatabaseSystem,
-                    pluginId
+                    pluginId,
+                    broadcaster
             );
 
             cryptoPaymentRegistry.initialize();
