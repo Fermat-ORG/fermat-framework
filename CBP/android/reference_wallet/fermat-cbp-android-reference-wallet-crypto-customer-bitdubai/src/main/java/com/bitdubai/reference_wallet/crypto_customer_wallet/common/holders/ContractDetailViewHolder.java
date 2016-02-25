@@ -26,6 +26,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractPaymentDeliveryDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractPaymentReceptionDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
 
 import java.text.DecimalFormat;
@@ -175,10 +176,10 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
         switch (itemInfo.getContractStep()){
             case 1:
-                ContractPaymentDeliveryDetail info = (ContractPaymentDeliveryDetail) itemInfo;
+                ContractPaymentDeliveryDetail infoPD = (ContractPaymentDeliveryDetail) itemInfo;
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 stepTitle.setText("Payment Delivery");
-                textButton.setText(getFormattedAmount(info.getCurrencyAmount(), info.getCurrencyCode()));
+                textButton.setText(getFormattedAmount(infoPD.getCurrencyAmount(), infoPD.getCurrencyCode()));
                 textDescription2.setText("using Cash Delivery.");
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
@@ -197,18 +198,22 @@ public class ContractDetailViewHolder extends FermatViewHolder {
                 break;
 
             case 2:
+                ContractPaymentReceptionDetail infoPR = (ContractPaymentReceptionDetail) itemInfo;
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 stepTitle.setText("Payment Reception");
+                textButton.setText(getFormattedAmount(infoPR.getCurrencyAmount(), infoPR.getCurrencyCode()));
+                textDescription2.setText("using Cash Delivery.");
                 confirmButton.setVisibility(View.INVISIBLE);
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
                     case PAYMENT_SUBMIT:
-                        textDescription.setText("Broker receives: blabla");
+                        textDescription.setText("Broker receives:");
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
                         break;
 
                     default:
-                        textDescription.setText("Broker received: blabla");
+                        textDescription.setText("Broker received:");
+                        textDescriptionDate.setText("on 17/02/2016");
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                 }
                 break;
