@@ -11,10 +11,10 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseI
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.NoteViewHolder;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.open_negotiation.ExchangeRateViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.AmountToBuyViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.DateTimeViewHolder;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ExchangeRateViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.SingleChoiceViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
@@ -65,7 +65,9 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
             case TYPE_SINGLE_CHOICE:
                 return new SingleChoiceViewHolder(itemView);
             case TYPE_EXCHANGE_RATE:
-                return new ExchangeRateViewHolder(itemView);
+                final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView);
+                exchangeRateViewHolder.getMarkerRateReferenceContainer().setVisibility(View.GONE);
+                return exchangeRateViewHolder;
             case TYPE_AMOUNT_TO_BUY:
                 final AmountToBuyViewHolder amountToBuyViewHolder = new AmountToBuyViewHolder(itemView);
                 amountToBuyViewHolder.setPaymentBuy(true);
@@ -74,7 +76,7 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
                 final AmountToBuyViewHolder amountToPayViewHolder = new AmountToBuyViewHolder(itemView);
                 amountToPayViewHolder.setPaymentBuy(false);
                 return amountToPayViewHolder;
-           
+
             default:
                 throw new IllegalArgumentException("Cant recognise the given value");
         }
@@ -102,7 +104,7 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
     
     @Override
     public int getItemCount() {
-        return haveNote ? super.getItemCount() + 3 : super.getItemCount() + 2;
+        return haveNote ? super.getItemCount() + 1 : super.getItemCount();
     }
     
     @Override
@@ -131,17 +133,12 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
     
     @Override
     public void onBindViewHolder(FermatViewHolder holder, int position) {
-        int holderType = holder.getHolderType();
-        
-        switch (holderType) {
-            case TYPE_HEADER:
-                final NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
-                noteViewHolder.bind(negotiationInfo.getMemo());
-                break;
-            default:
-                position = getItemPosition(position);
-                super.onBindViewHolder(holder, position);
-                break;
+        if (holder instanceof NoteViewHolder) {
+            final NoteViewHolder noteViewHolder = (NoteViewHolder) holder;
+            noteViewHolder.bind(negotiationInfo.getMemo());
+        } else {
+            position = getItemPosition(position);
+            super.onBindViewHolder(holder, position);
         }
     }
     

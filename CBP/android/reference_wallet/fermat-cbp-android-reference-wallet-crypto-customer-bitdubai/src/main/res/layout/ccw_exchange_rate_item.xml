@@ -48,6 +48,7 @@
                 android:background="#2e2e2e2e"/>
 
             <RelativeLayout
+                android:id="@+id/ccw_market_rate_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp">

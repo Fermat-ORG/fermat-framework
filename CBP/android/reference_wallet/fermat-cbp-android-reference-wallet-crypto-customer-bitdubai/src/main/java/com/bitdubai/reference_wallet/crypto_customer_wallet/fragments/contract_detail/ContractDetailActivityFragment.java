@@ -21,6 +21,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
@@ -51,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
@@ -95,7 +97,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             errorManager = appSession.getErrorManager();
 
             //Capture contract data from ContractsTabFragment's onClick event
-            data=(ContractBasicInformation) appSession.getData("contract_data");
+            data = (ContractBasicInformation) appSession.getData("contract_data");
             contractInformation = prepareContractInfo();
 
 
@@ -145,6 +147,14 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //Configure recyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager));
+
+        negotiationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appSession.setNegotiationId(data.getNegotiationId());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT, appSession.getAppPublicKey());
+            }
+        });
     }
 
 
@@ -198,19 +208,18 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     }
 
 
-
     private List<ContractDetail> prepareContractInfo() {
 
-        List<ContractDetail> contractDetails=new ArrayList<>();
+        List<ContractDetail> contractDetails = new ArrayList<>();
         ContractDetail contractDetail;
 
-        if(walletManager!=null) {
+        if (walletManager != null) {
 
-            try{
+            try {
                 CustomerBrokerContractPurchase customerBrokerContractPurchase = walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
 
                 //Payment Delivery step
-                contractDetail=new ContractPaymentDeliveryDetail(
+                contractDetail = new ContractPaymentDeliveryDetail(
                         1,
                         ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.CUSTOMER_DETAIL,
@@ -225,7 +234,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
-                contractDetail=new ContractPaymentReceptionDetail(
+                contractDetail = new ContractPaymentReceptionDetail(
                         2,
                         ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.CUSTOMER_DETAIL,
@@ -240,7 +249,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
-                contractDetail=new ContractMerchandiseDeliveryDetail(
+                contractDetail = new ContractMerchandiseDeliveryDetail(
                         3,
                         ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.BROKER_DETAIL,
@@ -255,7 +264,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
-                contractDetail=new ContractMerchandiseReceptionDetail(
+                contractDetail = new ContractMerchandiseReceptionDetail(
                         4,
                         ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.BROKER_DETAIL,
@@ -284,13 +293,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     }
 
 
-
-
-
     //TODO: What the fk is this
-    private byte[] getByteArrayFromImageView(ImageView image){
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+    private byte[] getByteArrayFromImageView(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
         return stream.toByteArray();
     }
@@ -345,13 +351,12 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     }
 
 
-    private double getFormattedNumber(float number){
-        int decimalPlaces=2;
+    private double getFormattedNumber(float number) {
+        int decimalPlaces = 2;
         BigDecimal bigDecimalNumber = new BigDecimal(number);
-        bigDecimalNumber=bigDecimalNumber.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
+        bigDecimalNumber = bigDecimalNumber.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
         return bigDecimalNumber.doubleValue();
     }
-
 
 
 }

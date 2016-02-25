@@ -20,6 +20,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ClosedNegotiationDetailsAdapter;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.Map;
@@ -47,7 +49,6 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
     
     private static final String TAG = "ClosedNegDetailsFrag";
     
-    private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
     
     private CustomerBrokerNegotiationInformation negotiationInfo;
@@ -62,12 +63,15 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
         
         try {
             final CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            final CryptoCustomerWalletManager walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
             
             negotiationInfo = walletManager.getNegotiationInformation(appSession.getNegotiationId());
             
         } catch (Exception ex) {
+            // TODO: Just for test purposes
+            negotiationInfo = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);
+
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(CBP_CRYPTO_CUSTOMER_WALLET, DISABLES_THIS_FRAGMENT, ex);
             else
@@ -76,14 +80,15 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
     }
     
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         configureToolbar();
     
         final View rootView = inflater.inflate(R.layout.ccw_fragment_open_negotiation_details_activity, container, false);
-    
-        final ImageView customerImage = (ImageView) rootView.findViewById(R.id.ccw_customer_image);
-        final FermatTextView customerName = (FermatTextView) rootView.findViewById(R.id.ccw_customer_name);
+
+        rootView.findViewById(R.id.ccw_expiration_date).setVisibility(View.GONE);
+
+        final ImageView brokerImage = (ImageView) rootView.findViewById(R.id.ccw_customer_image);
+        final FermatTextView brokerName = (FermatTextView) rootView.findViewById(R.id.ccw_broker_name);
         final FermatTextView sellingDetails = (FermatTextView) rootView.findViewById(R.id.ccw_selling_summary);
         final FermatTextView exchangeRateSummary = (FermatTextView) rootView.findViewById(R.id.ccw_buying_exchange_rate);
         final FermatTextView lastUpdateDate = (FermatTextView) rootView.findViewById(R.id.ccw_last_update_date);
@@ -91,7 +96,7 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     
     
-        final ActorIdentity customer = negotiationInfo.getCustomer();
+        final ActorIdentity broker = negotiationInfo.getBroker();
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
     
         final String merchandise = clauses.get(CUSTOMER_CURRENCY).getValue();
@@ -100,8 +105,8 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
         final String amount = clauses.get(CUSTOMER_CURRENCY_QUANTITY).getValue();
     
         //Negotiation Summary
-        customerImage.setImageDrawable(getImgDrawable(customer.getProfileImage()));
-        customerName.setText(customer.getAlias());
+        brokerImage.setImageDrawable(getImgDrawable(broker.getProfileImage()));
+        brokerName.setText(broker.getAlias());
         lastUpdateDate.setText(DateFormat.format("dd MMM yyyy", negotiationInfo.getLastNegotiationUpdateDate()));
         exchangeRateSummary.setText(getResources().getString(R.string.ccw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency));
         sellingDetails.setText(getResources().getString(R.string.ccw_selling_details, amount, merchandise));

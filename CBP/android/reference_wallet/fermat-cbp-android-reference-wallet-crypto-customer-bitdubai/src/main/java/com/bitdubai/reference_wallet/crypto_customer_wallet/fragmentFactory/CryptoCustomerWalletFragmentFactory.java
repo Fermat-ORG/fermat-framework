@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.broker_list.BrokerListActivityFragment;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CloseContractDetailsFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.CloseContractDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.ClosedNegotiationDetailsFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CreateNewBankAccountFragment;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.CreateNewLocationFragment;
