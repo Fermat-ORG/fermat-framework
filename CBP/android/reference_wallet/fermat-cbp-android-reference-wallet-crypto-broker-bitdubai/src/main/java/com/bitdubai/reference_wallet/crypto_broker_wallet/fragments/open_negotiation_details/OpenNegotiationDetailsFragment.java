@@ -282,7 +282,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             }
 
         } else if (type == CUSTOMER_DATE_TIME_TO_DELIVER) {
-            final ClauseInformation paymentDatetime= clauses.get(BROKER_DATE_TIME_TO_DELIVER);
+            final ClauseInformation paymentDatetime = clauses.get(BROKER_DATE_TIME_TO_DELIVER);
             final long paymentDatetimeValue = Long.parseLong(paymentDatetime.getValue());
             final long deliveryDatetimeValue = Long.parseLong(clause.getValue());
             final Calendar calendar = Calendar.getInstance();
@@ -318,7 +318,20 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     @Override
     public void onAddNoteButtonClicked() {
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_ADD_NOTE, appSession.getAppPublicKey());
+        final CustomerBrokerNegotiationInformation negotiationInfo = negotiationWrapper.getNegotiationInfo();
+
+        TextValueDialog dialog = new TextValueDialog(getActivity(), appSession, appResourcesProviderManager);
+        dialog.configure(R.string.notes, R.string.cbw_insert_note);
+        dialog.setTextFreeInputType(true);
+        dialog.setEditTextValue(negotiationInfo.getMemo());
+        dialog.setAcceptBtnListener(new TextValueDialog.OnClickAcceptListener() {
+            @Override
+            public void onClick(String editTextValue) {
+                negotiationInfo.setMemo(editTextValue);
+                adapter.changeDataSet(negotiationWrapper);
+            }
+        });
+        dialog.show();
     }
 
     @Override
