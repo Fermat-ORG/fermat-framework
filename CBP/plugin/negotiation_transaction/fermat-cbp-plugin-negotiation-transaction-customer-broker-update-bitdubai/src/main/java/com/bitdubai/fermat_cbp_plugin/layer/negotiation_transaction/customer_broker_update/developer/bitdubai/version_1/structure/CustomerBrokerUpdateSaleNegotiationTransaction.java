@@ -48,7 +48,7 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
             );
 
             //UPDATE NEGOTIATION
-//            this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+            this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
 
             //CREATE NEGOTIATION TRANSATION
             this.customerBrokerUpdateNegotiationTransactionDatabaseDao.createCustomerBrokerUpdateNegotiationTransaction(
@@ -58,8 +58,8 @@ public class CustomerBrokerUpdateSaleNegotiationTransaction {
                 NegotiationTransactionStatus.PENDING_SUBMIT
             );
 
-        //} catch (CantUpdateCustomerBrokerSaleException e) {
-        //    throw new CantUpdateSaleNegotiationTransactionException(e.getMessage(),e, CantUpdateSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
+        } catch (CantUpdateCustomerBrokerSaleException e) {
+            throw new CantUpdateSaleNegotiationTransactionException(e.getMessage(),e, CantUpdateSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e) {
             throw new CantUpdateSaleNegotiationTransactionException(e.getMessage(),e, CantUpdateSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
