@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
@@ -33,6 +34,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractMerchandiseDeliveryDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractMerchandiseReceptionDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractPaymentDeliveryDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractPaymentReceptionDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
@@ -199,51 +204,19 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         List<ContractDetail> contractDetails=new ArrayList<>();
         ContractDetail contractDetail;
 
-        /**
-         * TODO: this contract details is only for testing, please, implement this date from database.
-         */
-//        //Customer Broker
-//        contractDetail=new ContractDetail(
-//                ContractDetailType.CUSTOMER_DETAIL,
-//                MoneyType.BANK.getCode(),
-//                FiatCurrency.CHINESE_YUAN.getFriendlyName(),
-//                12,
-//                ContractStatus.PAYMENT_SUBMIT,
-//                "BTC Customer",
-//                getByteArrayFromImageView(brokerImage),
-//                1961,
-//                2016,
-//                UUID.randomUUID());
-//        //contractDetails.add(contractDetail);
-//        //Testing Broker
-//        contractDetail=new ContractDetail(
-//                ContractDetailType.BROKER_DETAIL,
-//                MoneyType.CRYPTO.getCode(),
-//                CryptoCurrency.BITCOIN.getFriendlyName(),
-//                12,
-//                ContractStatus.PENDING_MERCHANDISE,
-//                "BTC Broker",
-//                getByteArrayFromImageView(brokerImage),
-//                1961,
-//                2016,
-//                UUID.randomUUID());
-        //contractDetails.add(contractDetail);
-
-
-        if(walletManager!=null){
+        if(walletManager!=null) {
 
             try{
-                //ContractDetail contractDetail;
-                CustomerBrokerContractPurchase customerBrokerContractPurchase =
-                        walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
+                CustomerBrokerContractPurchase customerBrokerContractPurchase = walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
 
-                //Customer data
-                contractDetail=new ContractDetail(
+                //Payment Delivery step
+                contractDetail=new ContractPaymentDeliveryDetail(
+                        1,
+                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.CUSTOMER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getPaymentCurrency(),
                         data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
                         data.getCryptoCustomerAlias(),
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
@@ -251,13 +224,44 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getContractId());
                 contractDetails.add(contractDetail);
 
-                //Broker data
-                contractDetail=new ContractDetail(
+                //Payment Reception step
+                contractDetail=new ContractPaymentReceptionDetail(
+                        2,
+                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
+                        ContractDetailType.CUSTOMER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getPaymentCurrency(),
+                        data.getAmount(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
+                contractDetails.add(contractDetail);
+
+                //Merchandise Delivery step
+                contractDetail=new ContractMerchandiseDeliveryDetail(
+                        3,
+                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.BROKER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getMerchandise(),
                         data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
+                contractDetails.add(contractDetail);
+
+                //Merchandise Reception step
+                contractDetail=new ContractMerchandiseReceptionDetail(
+                        4,
+                        ContractStatus.PAYMENT_SUBMIT, //customerBrokerContractPurchase.getStatus(),
+                        ContractDetailType.BROKER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getMerchandise(),
+                        data.getAmount(),
                         data.getCryptoCustomerAlias(),
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
