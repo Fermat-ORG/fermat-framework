@@ -1,7 +1,7 @@
 angular.module("serverApp").controller("MonitoringCtrl", ['$scope', '$http', '$interval', '$filter', '$window', function($scope, $http, $interval, $filter, $window) {
 
     if(window.localStorage['jwtAuthToke'] !== null){
-          $http.defaults.headers.common['Auth-Token'] = $window.localStorage['jwtAuthToke'];
+          $http.defaults.headers.common['Authorization'] = "Bearer "+ $window.localStorage['jwtAuthToke'];
     }
 
       $scope.labels = [];
@@ -12,26 +12,32 @@ angular.module("serverApp").controller("MonitoringCtrl", ['$scope', '$http', '$i
 
             $http({
                     method: 'GET',
-                    url: '/fermat/api/monitoring/current/data'
-                  }).
-                  success(function(data){
+                    url: '/fermat/api/admin/monitoring/current/data'
+              }).then(function successCallback(response) {
 
-                     $scope.monitoringData = data;
-                     $scope.registeredNetworkServiceDetail = angular.fromJson(data.registeredNetworkServiceDetail);
-                     $scope.registerOtherComponentDetail   = angular.fromJson(data.registerOtherComponentDetail);
-                     $scope.vpnByNetworkServiceDetails     = angular.fromJson(data.vpnByNetworkServiceDetails);
-                     $scope.labels.push($filter('date')(new Date(), 'HH:mm:ss'));
-                     $scope.charData[0].push(data.registeredClientConnection);
-                     $scope.charData[1].push(data.vpnTotal);
+                      var data = response.data;
+                      $scope.monitoringData = data;
+                      $scope.registeredNetworkServiceDetail = angular.fromJson(data.registeredNetworkServiceDetail);
+                      $scope.registerOtherComponentDetail   = angular.fromJson(data.registerOtherComponentDetail);
+                      $scope.vpnByNetworkServiceDetails     = angular.fromJson(data.vpnByNetworkServiceDetails);
+                      $scope.labels.push($filter('date')(new Date(), 'HH:mm:ss'));
 
-                  }).
-                  error(function(data, status, headers, config){
-                      console.log('data: ' + data);
-                      console.log('status: ' + status);
-                      console.log('headers: ' + headers);
-                      console.log('config: ' + config);
-                      alert(status+" - Service error");
-                  });
+                      if($scope.charData[0].length > 20){
+                        $scope.charData[0].splice(0, 18);
+                        $scope.charData[1].splice(0, 18);
+                        $scope.labels.splice(0, 18);
+                      }
+
+                      $scope.charData[0].push(data.registeredClientConnection);
+                      $scope.charData[1].push(data.vpnTotal);
+
+           }, function errorCallback(response) {
+                var message = "";
+                if(response.status === -1){message = "Server no available";}
+                if(response.status === 401){message = "You must authenticate again";}
+                alert(response.status+" - Service error: "+response.statusText+message);
+                $window.location.href = '../index.html';
+           });
 
       };
 

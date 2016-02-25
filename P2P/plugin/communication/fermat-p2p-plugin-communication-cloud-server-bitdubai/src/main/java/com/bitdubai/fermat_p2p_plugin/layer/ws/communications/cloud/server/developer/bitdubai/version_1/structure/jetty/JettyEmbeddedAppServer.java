@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty;
 
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices.security.SecurityFilter;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VpnWebSocketServlet;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.WebSocketVpnServerChannel;
@@ -117,7 +118,11 @@ public class JettyEmbeddedAppServer {
          */
         this.server = new Server();
         this.serverConnector = new ServerConnector(server);
-        this.serverConnector.setPort(JettyEmbeddedAppServer.DEFAULT_PORT);
+        String port = ConfigurationManager.getValue(ConfigurationManager.PORT);
+
+        LOG.info("Server configure port = "+port);
+
+        this.serverConnector.setPort(new Integer(port.trim()));
         this.server.addConnector(serverConnector);
 
         /*
@@ -145,7 +150,7 @@ public class JettyEmbeddedAppServer {
         webAppContext.setResourceBase(resourceBase);
         webAppContext.addBean(new ServletContainerInitializersStarter(webAppContext), true);
         webAppContext.setWelcomeFiles(new String[]{"index.html"});
-        webAppContext.addFilter(SecurityFilter.class, "/api/monitoring/*", EnumSet.of(DispatcherType.REQUEST));
+        webAppContext.addFilter(SecurityFilter.class, "/api/admin/*", EnumSet.of(DispatcherType.REQUEST));
         server.setHandler(webAppContext);
 
         /*

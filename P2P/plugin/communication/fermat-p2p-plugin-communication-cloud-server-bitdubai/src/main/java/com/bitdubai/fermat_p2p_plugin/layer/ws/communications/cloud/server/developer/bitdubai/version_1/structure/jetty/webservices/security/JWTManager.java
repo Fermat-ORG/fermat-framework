@@ -8,6 +8,8 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 
+import java.util.Date;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices.security.JWTManager</code> implements
  * <p/>
@@ -19,11 +21,29 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
  */
 public class JWTManager {
 
+    /**
+     * Represent the key
+     */
     private static final ECCKeyPair key = new ECCKeyPair();
 
-    private static final Long expiration = new Long(604800);
+    /**
+     * Represent the expirationTime time
+     */
+    private static final Long expirationTime = new Long(600000);
 
-    public static ECCKeyPair getKey() {
-        return key;
+    /**
+     * Get the key value
+     * @return String
+     */
+    public static String getKey() {
+        return key.getPrivateKey();
+    }
+
+    /**
+     * Get the expiration time value
+     * @return Long
+     */
+    public static Long getExpirationTime() {
+        return new Date().getTime() + expirationTime;
     }
 }

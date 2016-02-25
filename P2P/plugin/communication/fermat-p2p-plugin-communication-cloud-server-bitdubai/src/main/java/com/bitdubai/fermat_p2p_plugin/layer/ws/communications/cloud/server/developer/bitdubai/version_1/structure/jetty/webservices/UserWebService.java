@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices;
 
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices.security.Credential;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices.security.JWTManager;
 import com.google.gson.Gson;
@@ -14,11 +15,8 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
 
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
+import java.util.Date;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,7 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
-import io.jsonwebtoken.impl.crypto.MacProvider;
+
 
 /**
  * The class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices.UserWebService</code>
@@ -74,22 +72,13 @@ public class UserWebService {
     public Response login(Credential credential) {
 
         LOG.info("Executing login()");
-
-        LOG.info("name = "+credential.getUser());
-        LOG.info("password = "+credential.getPassword());
-
         LoginResponse loginResponse;
 
-       if (credential.getUser().equals("test") && credential.getPassword().equals("test")){
+       if (credential.getUser().equals(ConfigurationManager.getValue(ConfigurationManager.USER)) && credential.getPassword().equals(ConfigurationManager.getValue(ConfigurationManager.PASSWORD))){
 
-        LOG.info("getPrivateKey = " + JWTManager.getKey().getPrivateKey());
-
-        long cur_secs = new Date().getTime();
-        Date expdt = new Date(cur_secs+ 60*10000);
-        System.out.println("BASE64 encoded key :" + TextCodec.BASE64.encode("secretKey"));
-        String authToken = Jwts.builder().setSubject(credential.getUser()).setIssuedAt(new Date()).setExpiration(expdt).signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(JWTManager.getKey().getPrivateKey())).compact();
-        System.out.println("authToken = "+authToken);
-        loginResponse = new LoginResponse(Boolean.TRUE, "Login process success", authToken);
+           Date expirationDate = new Date(JWTManager.getExpirationTime());
+           String authToken = Jwts.builder().setSubject(credential.getUser()).setIssuedAt(new Date()).setExpiration(expirationDate).setIssuer("/fermat/api/monitoring/").signWith(SignatureAlgorithm.HS256, TextCodec.BASE64.encode(JWTManager.getKey())).compact();
+           loginResponse = new LoginResponse(Boolean.TRUE, "Login process success", authToken);
 
         }else {
             loginResponse = new LoginResponse(Boolean.FALSE, "Login process fail", "");

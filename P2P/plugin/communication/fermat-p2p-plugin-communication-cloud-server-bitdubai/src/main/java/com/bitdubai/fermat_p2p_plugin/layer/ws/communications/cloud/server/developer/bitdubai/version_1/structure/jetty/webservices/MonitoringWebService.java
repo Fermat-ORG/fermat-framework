@@ -35,7 +35,7 @@ import javax.ws.rs.core.Response;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@Path("/api/monitoring")
+@Path("/api/admin/monitoring")
 public class MonitoringWebService {
 
     /**

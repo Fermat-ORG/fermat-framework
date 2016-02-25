@@ -11,13 +11,22 @@ angular.module("serverApp").controller('UserCtrl', ['$scope', '$http', '$window'
       authToken : ''
   };
 
-  self.login = function () {
+  $scope.login = function () {
     $http.post('/fermat/api/user/login', angular.toJson($scope.credentials))
-      .success(function (data, status, headers, config) {
-        $scope.loginResponse = data;
-        saveToken($scope.loginResponse.authToken);
-        alert(angular.toJson(parseJwtToken($scope.loginResponse.authToken)));
-      })
+        .then(function successCallback(response) {
+            $scope.loginResponse = response.data;
+
+            if($scope.loginResponse.success === true){
+              saveToken($scope.loginResponse.authToken);
+              $window.location.href = './private/monitoring.html';
+            }
+         }, function errorCallback(response) {
+            var message = "";
+            if(response.status === -1){message = "Server no available";}
+            if(response.status === 401){message = "You must authenticate again";}
+            $scope.loginResponse.message = (response.status+" - Service error: "+response.statusText+message);
+         });
+
   };
 
   self.parseJwtToken = function(token) {

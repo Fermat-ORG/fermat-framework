@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices.security;
 
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager;
+
 import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
@@ -18,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -40,37 +43,55 @@ public class SecurityFilter implements Filter {
      */
     private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(SecurityFilter.class));
 
-
+    /**
+     * (non-javadoc)
+     * @see Filter#init(FilterConfig)
+     */
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         LOG.info("init");
     }
 
+    /**
+     * (non-javadoc)
+     * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
+     */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         LOG.info("doFilter");
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        LOG.info("Auth-Token = " + httpRequest.getHeader("Auth-Token"));
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        final String authHeader = httpRequest.getHeader("Auth-Token");
-        if (authHeader == null) {
-            throw new ServletException("Missing or invalid Authorization header.");
+        LOG.info("Authorization = " + httpRequest.getHeader("Authorization"));
+
+        final String authHeader = httpRequest.getHeader("Authorization");
+        if (authHeader == null || !authHeader.contains("Bearer ")) {
+            LOG.error("Missing or invalid Authorization header.");
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid Authorization header.");
         }
 
         try {
 
-            LOG.info("authHeader = " + authHeader);
-            final Claims claims = Jwts.parser().setSigningKey(TextCodec.BASE64.encode(JWTManager.getKey().getPrivateKey())).parseClaimsJws(authHeader).getBody();
-            LOG.info("user = " + claims.getSubject());
+            String token = authHeader.substring("Bearer ".length(), authHeader.length());
+            LOG.info("token = " + token);
+
+            final Claims claims = Jwts.parser().setSigningKey(TextCodec.BASE64.encode(JWTManager.getKey())).parseClaimsJws(token).getBody();
+            if (claims.getSubject().equals(ConfigurationManager.getValue(ConfigurationManager.USER))){
+                chain.doFilter(request, response);
+            }
+
         }
         catch (final SignatureException e) {
-            throw new ServletException("Invalid token.");
+            LOG.error( "Invalid token: "+e.getMessage());
+            httpResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token: "+e.getMessage());
         }
-
-        chain.doFilter(request, response);
     }
 
+    /**
+     * (non-javadoc)
+     * @see Filter#destroy()
+     */
     @Override
     public void destroy() {
         LOG.info("destroy");
