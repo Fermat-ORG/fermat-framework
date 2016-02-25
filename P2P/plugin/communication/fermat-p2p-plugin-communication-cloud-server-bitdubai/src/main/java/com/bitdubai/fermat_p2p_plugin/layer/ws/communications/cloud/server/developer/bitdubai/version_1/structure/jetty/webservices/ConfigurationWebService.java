@@ -75,15 +75,14 @@ public class ConfigurationWebService {
         Configuration configuration = new Configuration();
         configuration.setPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
         configuration.setUser(ConfigurationManager.getValue(ConfigurationManager.USER));
-        configuration.setPassword(ConfigurationManager.getValue(ConfigurationManager.PASSWORD));
 
-        return Response.status(200).entity(gson.toJson("")).build();
+        return Response.status(200).entity(gson.toJson(configuration)).build();
 
     }
 
     @POST
     @Path("/save")
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
     public Response saveConfiguration(Configuration configuration) {
 
         LOG.info("Executing saveConfiguration()");
@@ -106,7 +105,7 @@ public class ConfigurationWebService {
             return Response.status(500).entity(e.getMessage()).build();
         }
 
-        return Response.status(200).entity(gson.toJson("")).build();
+        return Response.status(200).entity("Configuration save success").build();
 
     }
 

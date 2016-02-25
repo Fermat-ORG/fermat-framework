@@ -35,7 +35,7 @@ angular.module("serverApp").controller("MonitoringCtrl", ['$scope', '$http', '$i
                 var message = "";
                 if(response.status === -1){message = "Server no available";}
                 if(response.status === 401){message = "You must authenticate again";}
-                alert(response.status+" - Service error: "+response.statusText+message);
+                alert(response.status+" - Service error: "+response.statusText+" "+message);
                 $window.location.href = '../index.html';
            });
 
