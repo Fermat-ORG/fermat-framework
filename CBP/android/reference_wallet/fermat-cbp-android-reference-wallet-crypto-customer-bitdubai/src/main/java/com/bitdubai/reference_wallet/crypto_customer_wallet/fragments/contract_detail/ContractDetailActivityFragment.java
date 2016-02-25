@@ -199,51 +199,19 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         List<ContractDetail> contractDetails=new ArrayList<>();
         ContractDetail contractDetail;
 
-        /**
-         * TODO: this contract details is only for testing, please, implement this date from database.
-         */
-//        //Customer Broker
-//        contractDetail=new ContractDetail(
-//                ContractDetailType.CUSTOMER_DETAIL,
-//                MoneyType.BANK.getCode(),
-//                FiatCurrency.CHINESE_YUAN.getFriendlyName(),
-//                12,
-//                ContractStatus.PAYMENT_SUBMIT,
-//                "BTC Customer",
-//                getByteArrayFromImageView(brokerImage),
-//                1961,
-//                2016,
-//                UUID.randomUUID());
-//        //contractDetails.add(contractDetail);
-//        //Testing Broker
-//        contractDetail=new ContractDetail(
-//                ContractDetailType.BROKER_DETAIL,
-//                MoneyType.CRYPTO.getCode(),
-//                CryptoCurrency.BITCOIN.getFriendlyName(),
-//                12,
-//                ContractStatus.PENDING_MERCHANDISE,
-//                "BTC Broker",
-//                getByteArrayFromImageView(brokerImage),
-//                1961,
-//                2016,
-//                UUID.randomUUID());
-        //contractDetails.add(contractDetail);
-
-
-        if(walletManager!=null){
+        if(walletManager!=null) {
 
             try{
-                //ContractDetail contractDetail;
-                CustomerBrokerContractPurchase customerBrokerContractPurchase =
-                        walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
+                CustomerBrokerContractPurchase customerBrokerContractPurchase = walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
 
-                //Customer data
+                //Payment Delivery step
                 contractDetail=new ContractDetail(
+                        1,
+                        customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.CUSTOMER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getPaymentCurrency(),
                         data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
                         data.getCryptoCustomerAlias(),
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
@@ -251,13 +219,44 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         data.getContractId());
                 contractDetails.add(contractDetail);
 
-                //Broker data
+                //Payment Reception step
                 contractDetail=new ContractDetail(
+                        2,
+                        customerBrokerContractPurchase.getStatus(),
+                        ContractDetailType.CUSTOMER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getPaymentCurrency(),
+                        data.getAmount(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
+                contractDetails.add(contractDetail);
+
+                //Merchandise Delivery step
+                contractDetail=new ContractDetail(
+                        3,
+                        customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.BROKER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getMerchandise(),
                         data.getAmount(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount(),
+                        data.getContractId());
+                contractDetails.add(contractDetail);
+
+                //Merchandise Reception step
+                contractDetail=new ContractDetail(
+                        4,
                         customerBrokerContractPurchase.getStatus(),
+                        ContractDetailType.BROKER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getMerchandise(),
+                        data.getAmount(),
                         data.getCryptoCustomerAlias(),
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
