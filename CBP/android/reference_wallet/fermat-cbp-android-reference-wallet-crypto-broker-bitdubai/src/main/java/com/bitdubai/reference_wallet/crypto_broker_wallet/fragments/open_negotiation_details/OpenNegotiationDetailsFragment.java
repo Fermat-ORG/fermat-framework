@@ -44,7 +44,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.NewOpenNegotiationDetailsAdapter;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.ClauseDateTimeDialog;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.TextValueDialog;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.negotiation_details.clauseViewHolder.ClauseViewHolder;
@@ -98,7 +98,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     // Fermat Managers
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
-    private NewOpenNegotiationDetailsAdapter adapter;
+    private OpenNegotiationDetailsAdapter adapter;
 
     public static OpenNegotiationDetailsFragment newInstance() {
         return new OpenNegotiationDetailsFragment();
@@ -157,7 +157,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         exchangeRateSummary.setText(getResources().getString(R.string.cbw_exchange_rate_summary, merchandise, exchangeAmount, paymentCurrency));
         buyingDetails.setText(getResources().getString(R.string.cbw_buying_details, amount, merchandise));
 
-        adapter = new NewOpenNegotiationDetailsAdapter(getActivity(), negotiationWrapper);
+        adapter = new OpenNegotiationDetailsAdapter(getActivity(), negotiationWrapper);
         adapter.setMarketRateList(appSession.getActualExchangeRates());
         adapter.setFooterListener(this);
         adapter.setClauseListener(this);
@@ -372,7 +372,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
     }
 
-    private void setSuggestedExchangeRateInAdapter(final NewOpenNegotiationDetailsAdapter adapter) {
+    private void setSuggestedExchangeRateInAdapter(final OpenNegotiationDetailsAdapter adapter) {
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
             protected Object doInBackground() throws Exception {

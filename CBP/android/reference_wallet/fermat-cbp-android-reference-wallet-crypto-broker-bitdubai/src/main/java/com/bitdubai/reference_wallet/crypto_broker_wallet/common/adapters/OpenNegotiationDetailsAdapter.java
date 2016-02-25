@@ -32,7 +32,7 @@ import java.util.NoSuchElementException;
 /**
  * Created by nelson on 16/02/16.
  */
-public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseInformation, FermatViewHolder> {
+public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseInformation, FermatViewHolder> {
 
     public static final int TYPE_DATE_EXPIRATION_TIME = 6;
     public static final int TYPE_AMOUNT_TO_SELL = 4;
@@ -55,7 +55,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     private boolean haveNote;
 
 
-    public NewOpenNegotiationDetailsAdapter(Context context, NegotiationWrapper negotiationInformation) {
+    public OpenNegotiationDetailsAdapter(Context context, NegotiationWrapper negotiationInformation) {
 
         super(context);
 
