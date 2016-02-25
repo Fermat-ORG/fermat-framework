@@ -60,6 +60,8 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantUpdateAssetUserGroupException;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1926,8 +1928,8 @@ public class AssetUserActorDao implements Serializable {
             }
 
             Genders genders = Genders.INDEFINITE;
-            if (!record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME).isEmpty())
-                genders = Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME));
+            if (!StringUtils.isBlank(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME)))
+                    genders = Genders.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME));
 
 
             actorAssetUser = new AssetUserActorRecord(
