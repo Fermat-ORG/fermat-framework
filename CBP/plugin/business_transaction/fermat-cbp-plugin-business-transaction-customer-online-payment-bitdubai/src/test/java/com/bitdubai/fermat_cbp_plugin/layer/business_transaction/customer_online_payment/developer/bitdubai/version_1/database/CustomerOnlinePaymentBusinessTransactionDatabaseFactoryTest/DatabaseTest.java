@@ -68,9 +68,4 @@ public class DatabaseTest {
         Database checkDatabase = customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(testId, testDataBaseName);
         assertNotNull(checkDatabase);
     }
-    @Test(expected = Exception.class)
-    public void TestCreateDatabase_Should_Return_Exception() throws Exception{
-        customerOnlinePaymentBusinessTransactionDatabaseFactory = new CustomerOnlinePaymentBusinessTransactionDatabaseFactory(null);
-        customerOnlinePaymentBusinessTransactionDatabaseFactory.createDatabase(null, null);
-    }
 }
