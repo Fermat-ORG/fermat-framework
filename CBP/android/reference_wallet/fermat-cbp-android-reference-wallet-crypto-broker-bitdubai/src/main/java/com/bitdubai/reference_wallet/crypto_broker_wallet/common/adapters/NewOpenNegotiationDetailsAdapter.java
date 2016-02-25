@@ -71,6 +71,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
 
         dataSet = new ArrayList<>();
         dataSet.addAll(buildListOfItems());
+        haveNote = negotiationWrapper.haveNote();
 
         final List<ClauseInformation> items = buildListOfItems();
         super.changeDataSet(items);
