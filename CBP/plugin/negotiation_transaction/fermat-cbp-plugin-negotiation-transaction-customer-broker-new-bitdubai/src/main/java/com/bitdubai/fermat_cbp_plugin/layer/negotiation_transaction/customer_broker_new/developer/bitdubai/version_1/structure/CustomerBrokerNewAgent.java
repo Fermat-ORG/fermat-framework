@@ -309,7 +309,7 @@ public class CustomerBrokerNewAgent implements
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
                                 //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_BROKER: send negotiation to broker, waiting confirm
-                                customerBrokerPurchaseNegotiationManager.sendToBroker(purchaseNegotiation);
+                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
                                 break;
                         }
 
@@ -324,19 +324,17 @@ public class CustomerBrokerNewAgent implements
                 if(!negotiationPendingToSubmitList.isEmpty()){
                     for (CustomerBrokerNew negotiationTransaction : negotiationPendingToSubmitList) {
 
-//                        System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: " + negotiationToSubmit.getTransactionId() + " ****\n");
-
                         negotiationXML = negotiationTransaction.getNegotiationXML();
                         negotiationType = negotiationTransaction.getNegotiationType();
                         transactionId = negotiationTransaction.getTransactionId();
 
+                        System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION FOR SEND transactionId: " + transactionId + " ****\n");
+
                         switch (negotiationType){
                             case SALE:
                                 saleNegotiation = (CustomerBrokerSaleNegotiation)XMLParser.parseXML(negotiationXML,saleNegotiation);
-//                                System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): " + negotiationToSubmit.getTransactionId() + " ****\n");
+                                System.out.print("\n\n**** 23) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CONFIRMATION SEND negotiationId(XML): " + transactionId + " ****\n");
                                 negotiationTransmissionManager.sendConfirmNegotiatioToCryptoCustomer(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
-                                //CHANGE STATUS PURCHASE NEGOTIATION. WAITING_TO_BROKER: send confirm of creation of the negotiation in the broker, Waiting response of part of the broker
-                                customerBrokerSaleNegotiationManager.waitForBroker(saleNegotiation);
                                 break;
                         }
 
