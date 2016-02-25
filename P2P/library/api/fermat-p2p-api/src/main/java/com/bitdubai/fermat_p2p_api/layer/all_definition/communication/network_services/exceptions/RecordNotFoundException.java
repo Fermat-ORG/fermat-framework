@@ -12,6 +12,9 @@ public class RecordNotFoundException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T RECORD NOT FOUND IN DATABASE EXCEPTION";
 
+    public RecordNotFoundException(){
+        super(DEFAULT_MESSAGE, null, null, null);
+    }
     public RecordNotFoundException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
