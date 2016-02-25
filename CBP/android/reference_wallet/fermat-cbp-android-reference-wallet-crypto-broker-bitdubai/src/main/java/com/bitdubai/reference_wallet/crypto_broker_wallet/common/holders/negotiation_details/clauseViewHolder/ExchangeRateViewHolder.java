@@ -35,6 +35,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private final FermatButton yourExchangeRateValue;
     private List<IndexInfoSummary> marketRateList;
     private Quote suggestedRate;
+    private boolean suggestedRateLoaded;
 
 
     public ExchangeRateViewHolder(View itemView, int holderType) {
@@ -59,14 +60,24 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
-        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), getMarketRate(clauses), currencyToPay.getValue()));
+
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
         yourExchangeRateValue.setText(clause.getValue());
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
-        if(suggestedRate != null){
-            exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$s %3$s", suggestedRate.getMerchandise(),
-                    suggestedRate.getQuantity(), suggestedRate.getFiatCurrency()));
-        }
+
+        if (marketRateList != null)
+            markerRateReference.setText(String.format("1 %1$s / %2$s %3$s",
+                    currencyToBuy.getValue(), getMarketRateValue(clauses), currencyToPay.getValue()));
+        else
+            markerRateReference.setText("Can't get Market Exchange Rate");
+
+        if (suggestedRate != null)
+            exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$s %3$s",
+                    suggestedRate.getMerchandise(), suggestedRate.getQuantity(), suggestedRate.getFiatCurrency()));
+        else if (suggestedRateLoaded)
+            exchangeRateReferenceValue.setText("Can't get suggested Exchange Rate");
+        else
+            exchangeRateReferenceValue.setText("Loading...");
     }
 
     @Override
@@ -75,8 +86,9 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
             listener.onClauseClicked(yourExchangeRateValue, clause, clausePosition);
     }
 
-    public void setSuggestedRate(Quote suggestedRate) {
+    public void setSuggestedRate(Quote suggestedRate, boolean loaded) {
         this.suggestedRate = suggestedRate;
+        this.suggestedRateLoaded = loaded;
     }
 
     @Override
@@ -137,16 +149,16 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         this.marketRateList = marketRateList;
     }
 
-    private String getMarketRate(Map<ClauseType, ClauseInformation> clauses) {
+    private String getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
 
         String currencyOver = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String currencyUnder = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
-        ExchangeRate currencyQuotation = getQuotation(currencyOver, currencyUnder);
+        ExchangeRate currencyQuotation = getExchangeRate(currencyOver, currencyUnder);
         String exchangeRateStr = "0.0";
 
         if (currencyQuotation == null) {
-            currencyQuotation = getQuotation(currencyUnder, currencyOver);
+            currencyQuotation = getExchangeRate(currencyUnder, currencyOver);
             if (currencyQuotation != null) {
                 BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
                 exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
@@ -160,7 +172,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         return exchangeRateStr;
     }
 
-    private ExchangeRate getQuotation(String currencyAlfa, String currencyBeta) {
+    private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
 
         if (marketRateList != null)
             for (IndexInfoSummary item : marketRateList) {

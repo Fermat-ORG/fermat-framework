@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+
 /**
  * Created by nelson on 16/02/16.
  */
@@ -49,6 +50,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
     private ExpirationTimeViewHolder.Listener expirationDatetimeListener;
     private List<IndexInfoSummary> marketRateList;
     private Quote quote;
+    private boolean quoteLoaded;
 
     private boolean haveNote;
 
@@ -95,6 +97,8 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
 
     public void setQuote(Quote quote) {
         this.quote = quote;
+        this.quoteLoaded = true;
+        notifyItemChanged(haveNote ? 1 : 0);
     }
 
     @Override
@@ -113,7 +117,7 @@ public class NewOpenNegotiationDetailsAdapter extends FermatAdapterImproved<Clau
             case TYPE_EXCHANGE_RATE:
                 final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView, TYPE_SINGLE_CHOICE);
                 exchangeRateViewHolder.setMarketRateList(marketRateList);
-                exchangeRateViewHolder.setSuggestedRate(quote);
+                exchangeRateViewHolder.setSuggestedRate(quote, quoteLoaded);
                 return exchangeRateViewHolder;
             case TYPE_AMOUNT_TO_SELL:
                 return new AmountViewHolder(itemView, TYPE_AMOUNT_TO_SELL);
