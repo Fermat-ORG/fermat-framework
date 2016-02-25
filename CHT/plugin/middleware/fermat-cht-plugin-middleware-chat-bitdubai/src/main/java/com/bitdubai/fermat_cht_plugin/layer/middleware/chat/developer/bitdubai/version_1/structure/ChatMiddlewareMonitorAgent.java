@@ -483,9 +483,9 @@ public class ChatMiddlewareMonitorAgent implements
                         if(incomingChatMetadata.getDistributionStatus() != DistributionStatus.DELIVERED){
                             chatNetworkServiceManager.sendChatMessageNewStatusNotification(
                                     incomingChatMetadata.getRemoteActorPublicKey(),
-                                    PlatformComponentType.NETWORK_SERVICE,
+                                    incomingChatMetadata.getRemoteActorType(),
                                     incomingChatMetadata.getLocalActorPublicKey(),
-                                    PlatformComponentType.NETWORK_SERVICE,
+                                    incomingChatMetadata.getLocalActorType(),
                                     DistributionStatus.DELIVERED,
                                     pendingTransaction.getTransactionID().toString()
                             );

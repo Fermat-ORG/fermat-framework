@@ -728,7 +728,9 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             ChatMetadataRecord chatMetadataRecord = getChatMetadataRecordDAO().getNotificationById(UUID.fromString(transactionID));
             chatMetadataRecord.setDistributionStatus(newDistributionStatus);
             chatMetadataRecord.setRemoteActorPublicKey(remoteActorPubKey);
+            chatMetadataRecord.setRemoteActorType(receiverType);
             chatMetadataRecord.setLocalActorPublicKey(localActorPubKey);
+            chatMetadataRecord.setLocalActorType(senderType);
             chatMetadataRecord.changeState(ChatProtocolState.PROCESSING_RECEIVE);
             chatMetadataRecord.setResponseToNotification(getChatMetadataRecordDAO().getNotificationResponseToByID(UUID.fromString(transactionID)));
             chatMetadataRecord.setProcessed(ChatMetadataRecord.PROCESSED);
