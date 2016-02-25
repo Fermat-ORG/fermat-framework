@@ -58,6 +58,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -259,11 +260,16 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         final ClauseType type = clause.getType();
 
         if (type == EXCHANGE_RATE || type == CUSTOMER_CURRENCY_QUANTITY || type == BROKER_CURRENCY_QUANTITY) {
-            if (Double.parseDouble(clause.getValue()) < 0)
-                Toast.makeText(getActivity(), "The value must be higher than 0", Toast.LENGTH_SHORT).show();
-            else {
-                negotiationWrapper.setClauseAsConfirmed(clause);
-                adapter.changeDataSet(negotiationWrapper);
+            try {
+                if (numberFormat.parse(clause.getValue()).doubleValue() < 0)
+                    Toast.makeText(getActivity(), "The value must be higher than 0", Toast.LENGTH_SHORT).show();
+                else {
+                    negotiationWrapper.setClauseAsConfirmed(clause);
+                    adapter.changeDataSet(negotiationWrapper);
+                }
+            } catch (ParseException e) {
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
 
         } else if (type == BROKER_BANK_ACCOUNT || type == BROKER_PLACE_TO_DELIVER) {
