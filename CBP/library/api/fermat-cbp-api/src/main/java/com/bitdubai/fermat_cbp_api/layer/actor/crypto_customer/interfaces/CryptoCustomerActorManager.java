@@ -3,15 +3,14 @@ package com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.RelationshipNotFoundException;
 
 import java.util.Collection;
-import java.util.UUID;
 
 /**
  * Created by Angel 17-11-15
  */
-
 public interface CryptoCustomerActorManager extends FermatManager {
 
     /**
@@ -26,24 +25,33 @@ public interface CryptoCustomerActorManager extends FermatManager {
     /**
      *
      * @return
-     * @throws CantGetListCustomerIdentityWalletRelationshipException
+     * @throws CantGetCustomerIdentityWalletRelationshipException
      */
-    Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetListCustomerIdentityWalletRelationshipException;
+    Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetCustomerIdentityWalletRelationshipException;
 
     /**
      *
      * @param publicKey
      * @return
-     * @throws CantGetListCustomerIdentityWalletRelationshipException
+     * @throws CantGetCustomerIdentityWalletRelationshipException
      */
-    CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListCustomerIdentityWalletRelationshipException;
+    CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetCustomerIdentityWalletRelationshipException;
 
     /**
+     * Through this method you can get the relationship between a crypto customer wallet and a crypto customer identity having in coung the crypto customer wallet public key.
      *
-     * @param wallet
-     * @return
-     * @throws CantGetListCustomerIdentityWalletRelationshipException
+     * @param walletPublicKey of the wallet in where we're looking the relationship.
+     *
+     * @return an instance of CustomerIdentityWalletRelationship object with the information of the relationship.
+     *
+     * @throws CantGetCustomerIdentityWalletRelationshipException   if something goes wrong.
+     * @throws RelationshipNotFoundException                            if we can't find a relationship for this wallet.
      */
-    CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(String wallet) throws CantGetListCustomerIdentityWalletRelationshipException;
+    CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(
+
+            String walletPublicKey
+
+    ) throws CantGetCustomerIdentityWalletRelationshipException,
+             RelationshipNotFoundException                         ;
 
 }

@@ -815,7 +815,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                 throw new CantSendChatMessageMetadataException("Some value of ChatMetadata Is passed NULL");
             }
 
-
             // System.out.println("ChatPLuginRoot - Chat transaction: " + chatMetadataRecord);
 
             /*

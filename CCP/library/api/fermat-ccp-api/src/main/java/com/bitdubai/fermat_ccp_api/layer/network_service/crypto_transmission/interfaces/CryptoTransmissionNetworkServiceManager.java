@@ -29,7 +29,7 @@ public interface CryptoTransmissionNetworkServiceManager extends TransactionSend
      * @param transaction_id an identifier of the transaction
      * @throws CantSetToCreditedInWalletException
      */
-    public void informTransactionCreditedInWallet(UUID transaction_id) throws CantSetToCreditedInWalletException;
+    void informTransactionCreditedInWallet(UUID transaction_id) throws CantSetToCreditedInWalletException;
 
     /**
      * The method <code>informTransactionSeenByVault</code> informs the peer network service that sent
@@ -39,7 +39,7 @@ public interface CryptoTransmissionNetworkServiceManager extends TransactionSend
      * @param transaction_id an identifier of the transaction
      * @throws CantSetToSeenByCryptoVaultException
      */
-    public void informTransactionSeenByVault(UUID transaction_id) throws CantSetToSeenByCryptoVaultException;
+    void informTransactionSeenByVault(UUID transaction_id) throws CantSetToSeenByCryptoVaultException;
 
     /**
      * The method <code>getState</code> returns the status of the transmission sent.
@@ -48,7 +48,7 @@ public interface CryptoTransmissionNetworkServiceManager extends TransactionSend
      * @return the status of the transmission
      * @throws CantGetTransactionStateException
      */
-    public TransactionMetadataState getState(UUID identifier) throws CantGetTransactionStateException;
+    TransactionMetadataState getState(UUID identifier) throws CantGetTransactionStateException;
 
     /**
      * The method <code>acceptCryptoRequest</code> sends the meta information associated to a crypto
@@ -64,14 +64,14 @@ public interface CryptoTransmissionNetworkServiceManager extends TransactionSend
      * @param paymentDescription              The description of the payment
      * @throws CantAcceptCryptoRequestException
      */
-    public void acceptCryptoRequest(UUID transmissionId,
-                                    UUID requestId,
-                                    CryptoCurrency cryptoCurrency,
-                                    long cryptoAmount,
-                                    String senderPublicKey,
-                                    String destinationPublicKey,
-                                    String associatedCryptoTransactionHash,
-                                    String paymentDescription) throws CantAcceptCryptoRequestException;
+    void acceptCryptoRequest(UUID transmissionId,
+                             UUID requestId,
+                             CryptoCurrency cryptoCurrency,
+                             long cryptoAmount,
+                             String senderPublicKey,
+                             String destinationPublicKey,
+                             String associatedCryptoTransactionHash,
+                             String paymentDescription) throws CantAcceptCryptoRequestException;
 
 
     /**
@@ -87,13 +87,13 @@ public interface CryptoTransmissionNetworkServiceManager extends TransactionSend
      * @param paymentDescription              The description of the payment
      * @throws CouldNotTransmitCryptoException
      */
-    public void sendCrypto(UUID transmissionId,
-                           CryptoCurrency cryptoCurrency,
-                           long cryptoAmount,
-                           String senderPublicKey,
-                           String destinationPublicKey,
-                           String associatedCryptoTransactionHash,
-                           String paymentDescription
+    void sendCrypto(UUID transmissionId,
+                    CryptoCurrency cryptoCurrency,
+                    long cryptoAmount,
+                    String senderPublicKey,
+                    String destinationPublicKey,
+                    String associatedCryptoTransactionHash,
+                    String paymentDescription
     ) throws CouldNotTransmitCryptoException;
 
     /**

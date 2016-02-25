@@ -4,8 +4,9 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 
 /**
- * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 26/10/15.
+ * Created by Gabriel Araujo (gabe_512@hotmail.com) on 22/02/16.
  */
+
 public class RecordsNotFoundException extends CHTException {
 
     //VARIABLE DECLARATION

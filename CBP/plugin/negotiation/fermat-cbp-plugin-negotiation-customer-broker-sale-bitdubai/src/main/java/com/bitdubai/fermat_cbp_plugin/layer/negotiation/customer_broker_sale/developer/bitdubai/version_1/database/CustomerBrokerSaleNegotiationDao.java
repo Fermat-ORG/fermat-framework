@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
@@ -25,6 +26,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAcc
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationClauseManager;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationPaymentCurrency;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateBankAccountSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateCustomerBrokerSaleNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
@@ -90,6 +93,8 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                     throw new CantInitializeCustomerBrokerSaleNegotiationDatabaseException(cantCreateDatabaseException.getMessage());
                 }
             }
+
+            new NegotiationSaleTestData(this);
         }
 
         public void createCustomerBrokerSaleNegotiation(CustomerBrokerSaleNegotiation negotiation) throws CantCreateCustomerBrokerSaleNegotiationException {
@@ -120,11 +125,11 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
                 
             } catch (CantInsertRecordException e) {
-                throw new CantCreateCustomerBrokerSaleNegotiationException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreateCustomerBrokerSaleNegotiationException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantAddNewClausesException e) {
-                throw new CantCreateCustomerBrokerSaleNegotiationException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreateCustomerBrokerSaleNegotiationException(CantAddNewClausesException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantCreateCustomerBrokerSaleNegotiationException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreateCustomerBrokerSaleNegotiationException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -141,11 +146,11 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
 
             } catch (CantGetListClauseException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantAddNewClausesException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantAddNewClausesException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantDeleteRecordException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantDeleteRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -161,7 +166,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 recordsToUpdate.setIntegerValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME, NearExpirationDatetime);
                 SaleNegotiationClauseTable.updateRecord(recordsToUpdate);
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -169,11 +174,15 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             try {
                 DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate = SaleNegotiationTable.getEmptyRecord();
+
                 SaleNegotiationTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
+
                 recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, NegotiationStatus.CANCELLED.getCode());
+                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_CANCEL_REASON_COLUMN_NAME, negotiation.getCancelReason());
+
                 SaleNegotiationTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -186,7 +195,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 SaleNegotiationTable.updateRecord(recordToUpdate);
                 return true;
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -199,7 +208,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 SaleNegotiationTable.updateRecord(recordToUpdate);
                 sendToBrokerUpdateStatusClause(negotiation);
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -213,9 +222,9 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                     SaleNegotiationClauseTable.updateRecord(recordToUpdate);
                 }
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -228,7 +237,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 SaleNegotiationTable.updateRecord(recordToUpdate);
                 waitForBrokerUpdateStatusClause(negotiation);
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -242,9 +251,9 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                     SaleNegotiationClauseTable.updateRecord(recordToUpdate);
                 }
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantUpdateCustomerBrokerSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateCustomerBrokerSaleException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -260,11 +269,11 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -280,11 +289,11 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
                 return null;
             } catch (InvalidParameterException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -301,45 +310,70 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
                 return resultados;
             } catch (InvalidParameterException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListSaleNegotiationsException {
+        public Collection<CustomerBrokerSaleNegotiation> getNegotiationsBySendAndWaiting(ActorType actorType) throws CantGetListSaleNegotiationsException {
             try {
                 DatabaseTable table = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
-    
-                String Query = "SELECT * FROM " +
-                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME +
-                        " WHERE " +
-                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
-                        " = '" +
-                        NegotiationStatus.SENT_TO_BROKER.getCode() +
-                        "' OR " +
-                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
-                        " = '" +
-                        NegotiationStatus.WAITING_FOR_BROKER.getCode() +
-                        "' ORDER BY " +
-                        CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME +
-                        " DESC";
-    
-                Collection<DatabaseTableRecord> res = table.customQuery(Query, true);
-                Collection<CustomerBrokerSaleNegotiation> negs = new ArrayList<>();
-                for (DatabaseTableRecord record : res) {
-                    negs.add(constructCustomerBrokerSaleFromRecordByQuery(record));
+
+                String Query = null;
+
+                if(actorType == ActorType.BROKER){
+                    Query = "SELECT * FROM " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME +
+                            " WHERE " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                            " = '" +
+                            NegotiationStatus.SENT_TO_BROKER.getCode() +
+                            "' OR " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                            " = '" +
+                            NegotiationStatus.WAITING_FOR_BROKER.getCode() +
+                            "' ORDER BY " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME +
+                            " DESC";
                 }
-    
-                return negs;
+
+                if(actorType == ActorType.CUSTOMER){
+                    Query = "SELECT * FROM " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME +
+                            " WHERE " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                            " = '" +
+                            NegotiationStatus.SENT_TO_CUSTOMER.getCode() +
+                            "' OR " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME +
+                            " = '" +
+                            NegotiationStatus.WAITING_FOR_CUSTOMER.getCode() +
+                            "' ORDER BY " +
+                            CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_START_DATE_TIME_COLUMN_NAME +
+                            " DESC";
+                }
+
+                if(Query != null){
+                    Collection<DatabaseTableRecord> res = table.customQuery(Query, true);
+                    Collection<CustomerBrokerSaleNegotiation> negs = new ArrayList<>();
+                    for (DatabaseTableRecord record : res) {
+                        negs.add(constructCustomerBrokerSaleFromRecordByQuery(record));
+                    }
+
+                    return negs;
+                }else{
+                    throw new CantGetListSaleNegotiationsException("INVALID PARAMETER");
+                }
+
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListSaleNegotiationsException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListSaleNegotiationsException(CantGetListClauseException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -361,9 +395,9 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListClauseException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListClauseException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListClauseException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListClauseException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -381,7 +415,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 recordToInsert.setIntegerValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_INDEX_ORDER_COLUMN_NAME, (int) clause.getIndexOrder());
                 SaleClauseTable.insertRecord(recordToInsert);
             } catch (CantInsertRecordException e) {
-                throw new CantAddNewClausesException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantAddNewClausesException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -520,7 +554,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
 
                 SaleLocationTable.insertRecord(recordToInsert);
             } catch (CantInsertRecordException e) {
-                throw new CantCreateLocationSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreateLocationSaleException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -536,7 +570,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
 
                 SaleLocationTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateLocationSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateLocationSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -547,7 +581,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 SaleLocationTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_LOCATION_ID_COLUMN_NAME, location.getLocationId(), DatabaseFilterType.EQUAL);
                 SaleLocationTable.deleteRecord(recordToDelete);
             } catch (CantDeleteRecordException e) {
-                throw new CantDeleteLocationSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantDeleteLocationSaleException(CantDeleteRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -564,9 +598,9 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListLocationsSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListLocationsSaleException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListLocationsSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListLocationsSaleException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -590,7 +624,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 recordToInsert.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, bankAccount.getCurrencyType().getCode());
                 SaleBankTable.insertRecord(recordToInsert);
             } catch (CantInsertRecordException e) {
-                throw new CantCreateBankAccountSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreateBankAccountSaleException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -603,7 +637,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME, bankAccount.getCurrencyType().getCode());
                 SaleBankTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecordException e) {
-                throw new CantUpdateBankAccountSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantUpdateBankAccountSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -614,7 +648,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 SaleBankTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_ID_COLUMN_NAME, bankAccount.getBankAccountId(), DatabaseFilterType.EQUAL);
                 SaleBankTable.deleteRecord(recordToDelete);
             } catch (CantDeleteRecordException e) {
-                throw new CantDeleteBankAccountSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantDeleteBankAccountSaleException(CantDeleteRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -634,9 +668,9 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListBankAccountsSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListBankAccountsSaleException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListBankAccountsSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListBankAccountsSaleException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -654,9 +688,9 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListBankAccountsSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListBankAccountsSaleException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListBankAccountsSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListBankAccountsSaleException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -678,9 +712,9 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListBankAccountsSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListBankAccountsSaleException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListBankAccountsSaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListBankAccountsSaleException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -704,7 +738,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
 
                 SalePaymentTable.insertRecord(recordToInsert);
             } catch (CantInsertRecordException e) {
-                throw new CantCreatePaymentCurrencySaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantCreatePaymentCurrencySaleException(CantInsertRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -715,7 +749,7 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 SaleBankTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_ID_COLUMN_NAME, paymentCurrency.getPaymentCurrencyId(), DatabaseFilterType.EQUAL);
                 SaleBankTable.deleteRecord(recordToDelete);
             } catch (CantDeleteRecordException e) {
-                throw new CantDeletePaymentCurrencySaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantDeletePaymentCurrencySaleException(CantDeleteRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
@@ -732,9 +766,9 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListPaymentCurrencySaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListPaymentCurrencySaleException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListPaymentCurrencySaleException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetListPaymentCurrencySaleException(InvalidParameterException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 

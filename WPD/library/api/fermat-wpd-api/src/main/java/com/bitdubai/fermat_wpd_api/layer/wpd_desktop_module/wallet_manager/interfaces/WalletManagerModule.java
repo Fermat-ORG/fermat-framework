@@ -3,10 +3,10 @@ package com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.inte
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.NewWalletCreationFailedException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletRemovalFailedException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletRenameFailedException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.NewWalletCreationFailedException;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +26,7 @@ public interface WalletManagerModule extends FermatManager {
      * @param newName the name to give to the wallet
      * @throws NewWalletCreationFailedException
      */
-    public void createNewWallet(UUID walletIdInTheDevice, String newName) throws NewWalletCreationFailedException;
+    void createNewWallet(UUID walletIdInTheDevice, String newName) throws NewWalletCreationFailedException;
 
     /**
      * This method returns the list of installed wallets in the device
@@ -34,7 +34,7 @@ public interface WalletManagerModule extends FermatManager {
      * @return A list with the installed wallets information
      * @throws WalletsListFailedToLoadException
      */
-    public List<InstalledWallet> getInstalledWallets() throws WalletsListFailedToLoadException;
+    List<InstalledWallet> getInstalledWallets() throws WalletsListFailedToLoadException;
 
     /**
      * This method removes a wallet created by a user. <p>
@@ -44,7 +44,7 @@ public interface WalletManagerModule extends FermatManager {
      * @param walletIdInTheDevice the identifier of the wallet to delete
      * @throws WalletRemovalFailedException
      */
-    public void removeWallet(UUID walletIdInTheDevice) throws WalletRemovalFailedException;
+    void removeWallet(UUID walletIdInTheDevice) throws WalletRemovalFailedException;
 
     /**
      * This method let us change the name (alias) of a given wallet.
@@ -53,7 +53,7 @@ public interface WalletManagerModule extends FermatManager {
      * @param newName the new name for the wallet
      * @throws WalletRenameFailedException
      */
-    public void renameWallet(UUID walletIdInTheDevice, String newName) throws WalletRenameFailedException;
+    void renameWallet(UUID walletIdInTheDevice, String newName) throws WalletRenameFailedException;
 
 
 

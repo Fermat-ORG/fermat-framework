@@ -60,7 +60,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
     //UI
     private View noContractsView;
-    ;
 
 
     public static ContractsHistoryActivityFragment newInstance() {

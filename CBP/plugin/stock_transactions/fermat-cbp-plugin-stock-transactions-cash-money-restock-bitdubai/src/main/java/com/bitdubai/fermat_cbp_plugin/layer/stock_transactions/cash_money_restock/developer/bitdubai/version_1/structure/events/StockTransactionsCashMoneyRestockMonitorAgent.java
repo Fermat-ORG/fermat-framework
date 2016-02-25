@@ -189,11 +189,11 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                     case IN_EJECUTION:
                         CashTransactionStatus castTransactionStatus = cashHoldTransactionManager.getCashHoldTransactionStatus(cashMoneyTransaction.getTransactionId());
 
-                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {
+                        if (CashTransactionStatus.CONFIRMED == castTransactionStatus) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
                             stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
                         }
-                        if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode()) {
+                        if (CashTransactionStatus.REJECTED == castTransactionStatus) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
                         }
@@ -242,6 +242,7 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
                         stockTransactionCashMoneyRestockFactory.saveCashMoneyRestockTransactionData(cashMoneyTransaction);
 
 
+
                         break;
                     case IN_WALLET:
                         cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
@@ -264,6 +265,8 @@ public class StockTransactionsCashMoneyRestockMonitorAgent extends FermatAgent {
         } catch (CantGetHoldTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCreateHoldTransactionException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }

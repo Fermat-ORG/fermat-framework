@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cus
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -57,6 +58,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -262,7 +264,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             for (CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_OPEN_CONTRACT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_OPEN_CONTRACT
             {
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT)) {
-                    if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId()) {
+                    if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_CONTRACT_SUBMIT);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
                     }
@@ -272,7 +274,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             for (CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
             {
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT)) {
-                    if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId()) {
+                    if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         //Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
                         Date date = null;
                         long timeStampToday = ((customerBrokerContractSale.getDateTime() - date.getTime()) / 60) / 60;
@@ -288,7 +290,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             for (CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
             {
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PAYMENT_SUBMIT)) {
-                    if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId()) {
+                    if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         //Si se detecta la realización de un pago se procede actulizar el estatus de la transacción y a monitorear la llegada de la mercadería.
                         //Se verifica si el broker configuró procesar Restock de manera automática
                         int sw = 0;
@@ -296,30 +298,30 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                             //Recorrer las clausulas del contrato
                             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
                             for (ContractClause contractClause : customerBrokerContractSale.getContractClause()) {
-                                if (contractClause.getType().getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
+                                if (Objects.equals(contractClause.getType().getCode(), ContractClauseType.CRYPTO_TRANSFER.getCode())) {
                                     sw = 1;
-                                } else if (contractClause.getType().getCode() == ContractClauseType.BANK_TRANSFER.getCode()) {
+                                } else if (Objects.equals(contractClause.getType().getCode(), ContractClauseType.BANK_TRANSFER.getCode())) {
                                     sw = 2;
-                                } else if (contractClause.getType().getCode() == ContractClauseType.CASH_DELIVERY.getCode() && contractClause.getType().getCode() == ContractClauseType.CASH_ON_HAND.getCode()) {
+                                } else if (Objects.equals(contractClause.getType().getCode(), ContractClauseType.CASH_DELIVERY.getCode()) && Objects.equals(contractClause.getType().getCode(), ContractClauseType.CASH_ON_HAND.getCode())) {
                                     sw = 3;
                                 }
                             }
                             //TODO: Datos de amount, priceReference, CryptoCurrency, FiatCurrency, cbpWalletPublicKey, bnkWalletPublicKey, cshWalletPublicKey, cryWalletPublicKey de donde sale
                             //
                             for (Clause clause : customerBrokerSaleNegotiation.getClauses()) {
-                                if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode()) {
+                                if (Objects.equals(clause.getType().getCode(), ClauseType.EXCHANGE_RATE.getCode())) {
                                     priceReference = new BigDecimal(clause.getValue());
                                 }
-                                if (clause.getType().getCode() == ClauseType.BROKER_CURRENCY_QUANTITY.getCode()) {
+                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_CURRENCY_QUANTITY.getCode())) {
                                     amount = new BigDecimal(clause.getValue());
                                 }
-                                if (clause.getType().getCode() == ClauseType.BROKER_CURRENCY_QUANTITY.getCode()) {
+                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_CURRENCY_QUANTITY.getCode())) {
                                     amount = new BigDecimal(clause.getValue());
                                 }
-                                if (clause.getType().getCode() == ClauseType.BROKER_BANK_ACCOUNT.getCode()) {
+                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_BANK_ACCOUNT.getCode())) {
                                     bankAccount = clause.getValue();
                                 }
-                                if (clause.getType().getCode() == ClauseType.BROKER_CURRENCY.getCode()) {
+                                if (Objects.equals(clause.getType().getCode(), ClauseType.BROKER_CURRENCY.getCode())) {
                                     fiatCurrency = FiatCurrency.valueOf(clause.getValue());
                                 }
                             }
@@ -332,7 +334,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         "RESTOCK AUTOMATIC",
                                         priceReference,
                                         OriginTransaction.RESTOCK_AUTOMATIC,
-                                        customerBrokerContractSale.getContractId());
+                                        customerBrokerContractSale.getContractId(),
+                                        BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Revisar de donde saco esto
                             }
                             //
                             else if (sw == 2) {
@@ -369,7 +372,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             for (CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_PAYMENT_SUBMIT
             {
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE)) {
-                    if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId()) {
+                    if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PENDING_MERCHANDISE);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
                     }
@@ -378,7 +381,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             for (CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_PENDING_MERCHANDISE
             {
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE)) {
-                    if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId()) {
+                    if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         //Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida, se eleva un evento de notificación
                         Date date = null;
                         long timeStampToday = ((customerBrokerContractSale.getDateTime() - date.getTime()) / 60) / 60;
@@ -394,7 +397,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             {
 
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.MERCHANDISE_SUBMIT)) {
-                    if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId()) {
+                    if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_MERCHANDISE_SUBMIT);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
                     }
@@ -405,7 +408,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                 //Comienzo a recorrer todas las transacciones que esten en Transaction_Status IN_MERCHANDISE_SUBMIT
                 //Registra el Close Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Sale este IN_MERCHANDISE_SUBMIT
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.MERCHANDISE_SUBMIT)) {
-                    if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId()) {
+                    if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         closeContractManager.closeSaleContract(customerBrokerContractSale.getContractId());
                     }
                 }
@@ -449,8 +452,10 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantUpdateCustomerBrokerContractSaleException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            ;
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+
     }
 
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {

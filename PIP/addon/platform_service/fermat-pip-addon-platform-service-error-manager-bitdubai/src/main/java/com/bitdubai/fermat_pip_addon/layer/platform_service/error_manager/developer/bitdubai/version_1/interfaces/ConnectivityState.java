@@ -5,6 +5,6 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.devel
  */
 public interface ConnectivityState {
 
-    public boolean wifiConnectionEnabled();
+    boolean wifiConnectionEnabled();
 
 }

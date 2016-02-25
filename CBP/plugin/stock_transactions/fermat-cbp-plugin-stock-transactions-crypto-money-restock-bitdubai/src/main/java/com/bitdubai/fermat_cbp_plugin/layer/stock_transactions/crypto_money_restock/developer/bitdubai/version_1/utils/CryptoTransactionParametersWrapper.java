@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransactionParameters;
 
@@ -17,6 +18,7 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
     private BigDecimal amount;
     private  String          memo;
     private  String          publicKeyPlugin;
+    private BlockchainNetworkType blockchainNetworkType;
 
     public CryptoTransactionParametersWrapper(UUID transactionId,
                                               CryptoCurrency cryptoCurrency,
@@ -24,7 +26,8 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
                                               String publicActorKey,
                                               BigDecimal amount,
                                               String memo,
-                                              String publicKeyPlugin
+                                              String publicKeyPlugin,
+                                              BlockchainNetworkType blockchainNetworkType
     ){
         this.transactionId   = transactionId;
         this.cryptoCurrency  = cryptoCurrency;
@@ -33,9 +36,10 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
         this.amount          = amount;
         this.memo            = memo;
         this.publicKeyPlugin = publicKeyPlugin;
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 
-    public CryptoTransactionParametersWrapper(){};
+    public CryptoTransactionParametersWrapper(){}
 
     @Override
     public UUID getTransactionId() {
@@ -105,6 +109,16 @@ public class CryptoTransactionParametersWrapper implements CryptoUnholdTransacti
     @Override
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    @Override
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockchainNetworkType;
+    }
+
+    @Override
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+    this.blockchainNetworkType = blockchainNetworkType;
     }
 
 }

@@ -48,10 +48,10 @@ public class UserWalletNavigationViewAdapter extends FermatAdapter<MenuItem, Use
 
                 switch (position) {
                     case 0:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_home_normal : R.drawable.ic_nav_home_active).into(holder.getIcon());
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_home_active : R.drawable.ic_nav_home_normal).into(holder.getIcon());
                         break;
                     case 1:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_history_normal : R.drawable.ic_nav_history_active).into(holder.getIcon());
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_settings_normal : R.drawable.ic_nav_settings_normal).into(holder.getIcon());
                         break;
                 }
 

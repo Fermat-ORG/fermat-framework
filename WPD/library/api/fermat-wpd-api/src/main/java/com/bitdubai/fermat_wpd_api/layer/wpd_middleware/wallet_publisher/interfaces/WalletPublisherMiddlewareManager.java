@@ -37,7 +37,7 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedComponents(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
+    List<InformationPublishedComponent> getPublishedComponents(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published wallets
@@ -46,7 +46,7 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedWallets(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
+    List<InformationPublishedComponent> getPublishedWallets(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published skins
@@ -55,7 +55,7 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedSkins(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
+    List<InformationPublishedComponent> getPublishedSkins(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published language
@@ -64,7 +64,7 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent>  getPublishedLanguages(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
+    List<InformationPublishedComponent>  getPublishedLanguages(String publisherIdentityPublicKey) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published component with his details
@@ -74,7 +74,7 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
      * @return InformationPublishedComponentMiddleware whit details
      * @throws CantGetPublishedComponentInformationException
      */
-    public InformationPublishedComponent getInformationPublishedComponentWithDetails(UUID idInformationPublishedComponent) throws CantGetPublishedComponentInformationException;
+    InformationPublishedComponent getInformationPublishedComponentWithDetails(UUID idInformationPublishedComponent) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method publishes the skin factory project <code>SkinDescriptorFactoryProject</code> with the skin information in
@@ -93,7 +93,7 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
      * @param signature
      * @throws CantPublishComponentException
      */
-    public void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
+    void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
     /**
      *
@@ -113,7 +113,7 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
      * @param signature
      * @throws CantPublishComponentException
      */
-    public void publishLanguage(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl,String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
+    void publishLanguage(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
     /**
      * This method publishes the wallet factory project <code>WalletDescriptorFactoryProject</code> with the wallet information in
@@ -131,7 +131,7 @@ public interface WalletPublisherMiddlewareManager extends FermatManager {
      * @param publisherIdentityPublicKey
      * @throws CantPublishComponentException
      */
-    public void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
+    void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialPlatformVersion, Version finalPlatformVersion, URL publisherWebsiteUrl, String publisherIdentityPublicKey, String signature) throws CantPublishComponentException;
 
 
 

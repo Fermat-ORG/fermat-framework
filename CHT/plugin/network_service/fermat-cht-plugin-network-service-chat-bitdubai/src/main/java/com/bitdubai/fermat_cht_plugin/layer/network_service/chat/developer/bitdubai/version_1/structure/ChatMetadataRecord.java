@@ -186,10 +186,11 @@ public class ChatMetadataRecord implements ChatMetadata{
             return false;
         if(this.distributionStatus != ((ChatMetadataRecord) obj).getDistributionStatus())
             return false;
+
         if(!Objects.equals(this.processed, ((ChatMetadataRecord) obj).getProcessed()))
             return false;
         return true;
-    }
+ }
 
     /**
      * Represent the value of PROCESSED
