@@ -322,7 +322,15 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
                         chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                        chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                        /**
+                         * This case is when I got an unregistered contact, I'll set the
+                         * LocalActorType as is defined in database
+                         */
+                        //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                        Contact newContact=chatManager.getContactByContactId(
+                                contactId);
+                        PlatformComponentType localActorType=newContact.getRemoteActorType();
+                        chat.setLocalActorType(localActorType);
                         chat.setRemoteActorPublicKey(remotePk);
                         chat.setRemoteActorType(remotePCT);
                         chatManager.saveChat(chat);
@@ -339,8 +347,8 @@ public class ChatAdapterView extends LinearLayout {
                         chatSession.setData("whocallme","chatlist");
                         chatSession.setData(
                                 "contactid",
-                                chatManager.getContactByContactId(
-                                        contactId));
+                                newContact
+                                );
                         /**
                          * This chat was created, so, I will put chatWasCreate as true to avoid
                          * the multiple chats from this contact. Also I will put the chatId as
