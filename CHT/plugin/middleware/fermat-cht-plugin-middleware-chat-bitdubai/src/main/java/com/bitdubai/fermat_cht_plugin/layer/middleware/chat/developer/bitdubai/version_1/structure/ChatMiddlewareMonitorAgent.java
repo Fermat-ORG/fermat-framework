@@ -322,6 +322,7 @@ public class ChatMiddlewareMonitorAgent implements
                     chatId=eventRecord.getChatId();
                     switch (eventType){
                         case INCOMING_CHAT:
+                            System.out.println("");
                             checkIncomingChat(
                                     chatId,
                                     eventRecord);
@@ -482,10 +483,12 @@ public class ChatMiddlewareMonitorAgent implements
                         chatNetworkServiceManager.confirmReception(pendingTransaction.getTransactionID());
                         //TODO TEST NOTIFICATION TO PIP
                         broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-                        contact=getContactFromChatMetadata(incomingChatMetadata);
-                        code=contact.getRemoteName()+"@#@#"+incomingChatMetadata.getMessage();
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_NEWMESSAGE.getCode(),code);
-                      //  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
+                        if(chatMiddlewareDatabaseDao.getMessageByMessageId(incomingChatMetadata.getMessageId()).getType()==TypeMessage.INCOMMING) {
+                            contact = getContactFromChatMetadata(incomingChatMetadata);
+                            code = contact.getRemoteName() + "@#@#" + incomingChatMetadata.getMessage();
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CHT_NEWMESSAGE.getCode(), code);
+                        }
+                      /// /  chatMiddlewareManager.notificationNewIncomingMessage(chatNetworkServiceManager.getNetWorkServicePublicKey(),"New Message",incomingChatMetadata.getMessage());
                       //This happen when recive a message check first the message sent from here and then the recive message
                        //when response some wrong with this code down here
                       /*  chatNetworkServiceManager.sendChatMessageNewStatusNotification(
