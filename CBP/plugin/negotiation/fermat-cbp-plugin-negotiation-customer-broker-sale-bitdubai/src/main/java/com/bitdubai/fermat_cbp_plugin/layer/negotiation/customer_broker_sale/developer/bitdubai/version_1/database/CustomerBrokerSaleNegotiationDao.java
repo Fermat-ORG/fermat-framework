@@ -199,24 +199,24 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             }
         }
 
-        public void sendToBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        public void sendToCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
             try {
                 DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate = SaleNegotiationTable.getEmptyRecord();
                 SaleNegotiationTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
-                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, NegotiationStatus.SENT_TO_BROKER.getCode());
+                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, NegotiationStatus.SENT_TO_CUSTOMER.getCode());
                 SaleNegotiationTable.updateRecord(recordToUpdate);
-                sendToBrokerUpdateStatusClause(negotiation);
+                sendToCustomerUpdateStatusClause(negotiation);
             } catch (CantUpdateRecordException e) {
                 throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public void sendToBrokerUpdateStatusClause(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        public void sendToCustomerUpdateStatusClause(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
             try {
                 DatabaseTable SaleNegotiationClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate = SaleNegotiationClauseTable.getEmptyRecord();
-                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, ClauseStatus.SENT_TO_BROKER.getCode());
+                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, ClauseStatus.SENT_TO_CUSTOMER.getCode());
                 for(Clause _clause : negotiation.getClauses()) {
                     SaleNegotiationClauseTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, _clause.getClauseId(), DatabaseFilterType.EQUAL);
                     SaleNegotiationClauseTable.updateRecord(recordToUpdate);
@@ -228,24 +228,24 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
             }
         }
 
-        public void waitForBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        public void waitForCustomer(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
             try {
                 DatabaseTable SaleNegotiationTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate = SaleNegotiationTable.getEmptyRecord();
                 SaleNegotiationTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId(), DatabaseFilterType.EQUAL);
-                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, NegotiationStatus.WAITING_FOR_BROKER.getCode());
+                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.NEGOTIATIONS_SALE_STATUS_COLUMN_NAME, NegotiationStatus.WAITING_FOR_CUSTOMER.getCode());
                 SaleNegotiationTable.updateRecord(recordToUpdate);
-                waitForBrokerUpdateStatusClause(negotiation);
+                waitForCustomerUpdateStatusClause(negotiation);
             } catch (CantUpdateRecordException e) {
                 throw new CantUpdateCustomerBrokerSaleException(CantUpdateRecordException.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public void waitForBrokerUpdateStatusClause(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
+        public void waitForCustomerUpdateStatusClause(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException {
             try {
                 DatabaseTable SaleNegotiationClauseTable = this.database.getTable(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_TABLE_NAME);
                 DatabaseTableRecord recordToUpdate = SaleNegotiationClauseTable.getEmptyRecord();
-                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, ClauseStatus.WAITING_FOR_BROKER.getCode());
+                recordToUpdate.setStringValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, ClauseStatus.WAITING_FOR_CUSTOMER.getCode());
                 for(Clause _clause : negotiation.getClauses()) {
                     SaleNegotiationClauseTable.addUUIDFilter(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_STATUS_COLUMN_NAME, _clause.getClauseId(), DatabaseFilterType.EQUAL);
                     SaleNegotiationClauseTable.updateRecord(recordToUpdate);
