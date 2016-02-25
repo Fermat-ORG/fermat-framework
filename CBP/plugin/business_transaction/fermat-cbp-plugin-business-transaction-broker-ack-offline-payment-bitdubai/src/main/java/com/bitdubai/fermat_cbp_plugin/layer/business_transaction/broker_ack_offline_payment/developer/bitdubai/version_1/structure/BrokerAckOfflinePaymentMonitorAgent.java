@@ -319,7 +319,9 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     contractHash=pendingToBankCreditRecord.getContractHash();
                     cryptoWalletPublicKey=pendingToBankCreditRecord.getCBPWalletPublicKey();
                     bankTransactionParametersRecord=getBankTransactionParametersRecordFromContractId(
-                            contractHash, cryptoWalletPublicKey);
+                            contractHash,
+                            cryptoWalletPublicKey,
+                            pendingToBankCreditRecord.getCustomerAlias());
                     bankTransaction=depositManager.makeDeposit(bankTransactionParametersRecord);
                     externalTransactionId=bankTransaction.getTransactionId();
                     pendingToBankCreditRecord.setExternalTransactionId(externalTransactionId);
@@ -343,7 +345,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     cashTransactionParametersRecord=getCashTransactionParametersRecordFromContractId(
                             contractHash,
                             cryptoWalletPublicKey,
-                            pendingToCashCreditRecord.getPaymentType());
+                            pendingToCashCreditRecord.getPaymentType(),
+                            pendingToCashCreditRecord.getCustomerAlias());
                     cashDepositTransaction=cashDepositTransactionManager.createCashDepositTransaction(
                             cashTransactionParametersRecord);
                     externalTransactionId=cashDepositTransaction.getTransactionId();
@@ -583,7 +586,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
         private CashTransactionParametersRecord getCashTransactionParametersRecordFromContractId(
                 String contractHash,
                 String cryptoWalletPublicKey,
-                MoneyType paymentType) throws CantGetCashTransactionParameterException {
+                MoneyType paymentType,
+                String customerAlias) throws CantGetCashTransactionParameterException {
             try{
                 CustomerBrokerContractSale customerBrokerContractSale=
                         customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
@@ -646,7 +650,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                                 pluginId.toString(),
                                 customerAmount,
                                 customerCurrency,
-                                "Payment from Contract "+contractHash,
+                                "Payment from Customer "+customerAlias,
                                 TransactionType.CREDIT
                         );
                 return cashTransactionParametersRecord;
@@ -702,7 +706,8 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
          */
         private BankTransactionParametersRecord getBankTransactionParametersRecordFromContractId(
                 String contractHash,
-                String cryptoWalletPublicKey) throws CantGetBankTransactionParametersRecordException {
+                String cryptoWalletPublicKey,
+                String customerAlias) throws CantGetBankTransactionParametersRecordException {
             try{
                 CustomerBrokerContractSale customerBrokerContractSale=
                         customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
@@ -734,7 +739,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                     if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY.getCode())) {
                         customerAmountString=clause.getValue();
                         customerAmountLong=parseToLong(customerAmountString);
-                        customerAmount=BigDecimal.valueOf(customerAmountLong);
+                        customerAmount = BigDecimal.valueOf(customerAmountLong);
                     }
                     if (clauseType.getCode().equals(ClauseType.BROKER_BANK_ACCOUNT.getCode())) {
                         account=clause.getValue();
@@ -770,7 +775,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                                 customerAmount,
                                 account,
                                 customerCurrency,
-                                "Payment from Contract "+contractHash
+                                "Payment from Customer "+customerAlias
                                 );
                 return bankTransactionParametersRecord;
             } catch (CantGetListCustomerBrokerContractSaleException e) {

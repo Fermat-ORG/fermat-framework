@@ -171,6 +171,7 @@ public class UnHoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  impl
             unHoldCryptoMoneyTransaction.setAmount(holdParameters.getAmount().floatValue());
             unHoldCryptoMoneyTransaction.setCurrency(holdParameters.getCurrency());
             unHoldCryptoMoneyTransaction.setMemo(holdParameters.getMemo());
+            unHoldCryptoMoneyTransaction.setBlockchainNetworkType(holdParameters.getBlockchainNetworkType());
             unHoldCryptoMoneyTransactionManager.saveUnHoldCryptoMoneyTransactionData(unHoldCryptoMoneyTransaction);
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
