@@ -19,11 +19,19 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.DistributionStatusUpdateContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
@@ -178,41 +186,24 @@ public class AssetReceptionMonitorAgent implements Agent {
                 assetReceptionDao = new AssetReceptionDao(pluginDatabaseSystem, pluginId);
                 if (assetReceptionDao.isPendingNetworkLayerEvents()) {
                     System.out.println("ASSET RECEPTION is network layer pending events");
-                    List<Transaction<DigitalAssetMetadataTransaction>> pendingTransactions = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
-                    System.out.println("ASSET RECEPTION is " + pendingTransactions.size() + " events");
-                    for (Transaction<DigitalAssetMetadataTransaction> transaction : pendingTransactions) {
-                        if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_USER && (transaction.getInformation().getSenderType() == PlatformComponentType.ACTOR_ASSET_ISSUER || transaction.getInformation().getSenderType() == PlatformComponentType.ACTOR_ASSET_USER)) {
-                            DigitalAssetMetadataTransaction digitalAssetMetadataTransaction = transaction.getInformation();
-                            System.out.println("ASSET RECEPTION Digital Asset Metadata Transaction: " + digitalAssetMetadataTransaction);
-                            DigitalAssetMetadataTransactionType digitalAssetMetadataTransactionType = digitalAssetMetadataTransaction.getType();
-                            System.out.println("ASSET RECEPTION Digital Asset Metadata Transaction Type: " + digitalAssetMetadataTransactionType);
-                            String senderId = digitalAssetMetadataTransaction.getSenderId();
-                            System.out.println("ASSET RECEPTION Digital Asset Metadata Sender Id: " + senderId);
-                            DigitalAssetMetadata digitalAssetMetadataReceived = digitalAssetMetadataTransaction.getDigitalAssetMetadata();
-                            String genesisTransaction = digitalAssetMetadataReceived.getGenesisTransaction();
-                            switch (digitalAssetMetadataTransactionType) {
-                                case META_DATA_TRANSMIT:
-                                    //We store the previous owner on its respective plugin
-                                    ActorUtils.storeDAPActor(digitalAssetMetadataReceived.getLastOwner(), actorAssetUserManager, redeemPointManager, assetIssuerManager);
-                                    //And now I am the last owner!
-                                    digitalAssetMetadataReceived.setLastOwner(actorAssetUserManager.getActorAssetUser());
-                                    if (assetReceptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
-                                        System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: " + genesisTransaction);
-                                        digitalAssetReceptor.verifyAsset(digitalAssetMetadataReceived);
-                                    } else {
-                                        System.out.println("ASSET RECEPTION Digital Asset Metadata Received: " + digitalAssetMetadataReceived);
-                                        digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, senderId, transaction.getInformation().getSenderType());
-                                    }
-                                    break;
-                                case TRANSACTION_STATUS_UPDATE:
-                                    assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CANCELLED, genesisTransaction);
-                                    break;
-                                default:
-                                    //wut?
-                                    break;
-                            }
-                            assetTransmissionManager.confirmReception(transaction.getTransactionID());
+                    //In this plugin we listen both from Asset Transfer and Asset Distribution
+                    List<DAPMessage> newMetadata = assetTransmissionManager.getUnreadDAPMessageBySubject(DAPMessageSubject.ASSET_RECEPTION);
+                    for (DAPMessage message : newMetadata) {
+                        AssetMetadataContentMessage content = (AssetMetadataContentMessage) message.getMessageContent();
+                        DigitalAssetMetadata digitalAssetMetadataReceived = content.getAssetMetadata();
+                        String genesisTransaction = digitalAssetMetadataReceived.getGenesisTransaction();
+                        //We store the sender of this message on its respective plugin
+                        ActorUtils.storeDAPActor(message.getActorSender(), actorAssetUserManager, redeemPointManager, assetIssuerManager);
+                        //And now I am the last owner!
+                        digitalAssetMetadataReceived.setLastOwner(actorAssetUserManager.getActorAssetUser());
+                        if (assetReceptionDao.isGenesisTransactionRegistered(genesisTransaction)) {
+                            System.out.println("ASSET RECEPTION This genesisTransaction is already registered in database: " + genesisTransaction);
+                            digitalAssetReceptor.verifyAsset(digitalAssetMetadataReceived);
+                        } else {
+                            System.out.println("ASSET RECEPTION Digital Asset Metadata Received: " + digitalAssetMetadataReceived);
+                            digitalAssetReceptor.receiveDigitalAssetMetadata(digitalAssetMetadataReceived, message.getActorSender().getActorPublicKey(), ActorUtils.getActorType(message.getActorSender()));
                         }
+                        assetTransmissionManager.confirmReception(message);
                     }
                     assetReceptionDao.updateEventStatus(assetReceptionDao.getPendingNetworkLayerEvents().get(0));
                 }
@@ -242,8 +233,6 @@ public class AssetReceptionMonitorAgent implements Agent {
 
             } catch (CantExecuteDatabaseOperationException exception) {
                 throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset distribution monitor agent", "Cannot execute database operation");
-            } catch (CantDeliverPendingTransactionsException exception) {
-                throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot deliver pending transactions from network layer");
             } catch (CantReceiveDigitalAssetException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot receive digital asset");
             } catch (CantAssetUserActorNotFoundException exception) {
@@ -256,8 +245,6 @@ public class AssetReceptionMonitorAgent implements Agent {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Unexpected results in database query");
             } catch (CantGetAssetIssuerActorsException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot get asset actor issuer");
-            } catch (CantConfirmTransactionException exception) {
-                throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot confirm network layer transaction");
             } catch (CantDeliverDigitalAssetToAssetWalletException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot deliver the digital asset metadata to asset user wallet");
             } catch (CantGetCryptoTransactionException exception) {
@@ -337,7 +324,7 @@ public class AssetReceptionMonitorAgent implements Agent {
             }
         }
 
-        private void checkTransactionsByReceptionStatus(ReceptionStatus receptionStatus) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantExecuteQueryException {
+        private void checkTransactionsByReceptionStatus(ReceptionStatus receptionStatus) throws CantAssetUserActorNotFoundException, CantGetAssetUserActorsException, CantCheckAssetReceptionProgressException, UnexpectedResultReturnedFromDatabaseException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantExecuteQueryException, CantSetObjectException, CantSendMessageException {
             DistributionStatus distributionStatus = DistributionStatus.ASSET_REJECTED_BY_CONTRACT;
 
             List<String> genesisTransactionList;
@@ -354,17 +341,28 @@ public class AssetReceptionMonitorAgent implements Agent {
             genesisTransactionList = assetReceptionDao.getGenesisTransactionByReceptionStatus(receptionStatus);
             for (String genesisTransaction : genesisTransactionList) {
                 String senderPublicKey = assetReceptionDao.getSenderIdByGenesisTransaction(genesisTransaction);
-                PlatformComponentType senderType = assetReceptionDao.getSenderTypeByGenesisTransaction(genesisTransaction);
+                Actors senderType = assetReceptionDao.getSenderTypeByGenesisTransaction(genesisTransaction);
                 System.out.println("ASSET RECEPTION Genesis transaction " + receptionStatus + ":" + genesisTransaction);
                 System.out.println("ASSET RECEPTION sender id  " + senderPublicKey + " - Type: " + senderType);
 
-                assetTransmissionManager.sendTransactionNewStatusNotification(
-                        actorAssetUser.getActorPublicKey(),
-                        PlatformComponentType.ACTOR_ASSET_USER,
-                        senderPublicKey,
-                        senderType,
-                        genesisTransaction,
-                        distributionStatus);
+                DAPContentMessage content = new DistributionStatusUpdateContentMessage(distributionStatus, genesisTransaction);
+                DAPMessageSubject subject;
+                DAPActor receiver = ActorUtils.getActorFromPublicKey(senderPublicKey, senderType, actorAssetUserManager, redeemPointManager, assetIssuerManager);
+                //There is no human way that this throws NPE!... I'll be debugging this soon, ik
+                switch (ActorUtils.getActorType(receiver)) {
+                    case DAP_ASSET_ISSUER:
+                        subject = DAPMessageSubject.ASSET_DISTRIBUTION;
+                        break;
+                    case DAP_ASSET_USER:
+                        subject = DAPMessageSubject.ASSET_TRANSFER;
+                        break;
+                    default:
+                        subject = DAPMessageSubject.ASSET_TRANSFER;
+                        break;
+                }
+                DAPMessage message = new DAPMessage(content, actorAssetUser, receiver, subject);
+
+                assetTransmissionManager.sendMessage(message);
                 assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.RECEPTION_FINISHED, genesisTransaction);
             }
         }

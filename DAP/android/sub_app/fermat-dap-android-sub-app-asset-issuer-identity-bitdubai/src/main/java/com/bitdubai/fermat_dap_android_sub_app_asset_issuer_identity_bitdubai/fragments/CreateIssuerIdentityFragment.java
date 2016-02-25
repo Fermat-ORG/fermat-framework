@@ -131,7 +131,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
     private void setUpPresentation(boolean checkButton) {
         try {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setBannerRes(R.drawable.banner_asset_issuer)
+                    .setBannerRes(R.drawable.banner_asset_issuer_identity)
                     .setIconRes(R.drawable.asset_issuer)
                     .setVIewColor(R.color.dap_identity_issuer_view_color)
                     .setTitleTextColor(R.color.dap_identity_issuer_view_color)

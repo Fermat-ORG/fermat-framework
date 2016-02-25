@@ -167,7 +167,7 @@ public class WizardActivity extends FermatActivity
         if (wizarType != null) {
             try {
                 WalletNavigationStructure wallet = getWalletRuntimeManager().getLastWallet();
-                FermatSession fermatSession = getWalletSessionManager().getWalletSession(wallet.getPublicKey());
+                FermatSession fermatSession = getFermatSessionManager().getAppsSession(wallet.getPublicKey());
 
 //                FermatAppConnection fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(wallet.getPublicKey(),this,getIntraUserModuleManager().getActiveIntraUserIdentity(), this.getAssetIssuerWalletModuleManager().getActiveAssetIssuerIdentity(), this.getAssetUserWalletModuleManager().getActiveAssetUserIdentity(), this.getAssetRedeemPointWalletModuleManager().getActiveAssetRedeemPointIdentity());
 
@@ -293,11 +293,6 @@ public class WizardActivity extends FermatActivity
         return null;
     }
 
-    @Override
-    public FermatSession getFermatSessionInUse(String appPublicKey) {
-        //TODO: obtener la session de forma indistinta
-        return null;
-    }
 
     @Override
     protected List<MenuItem> getNavigationMenu() {

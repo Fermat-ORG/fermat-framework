@@ -170,7 +170,7 @@ public final class MatchingEngineMiddlewareTransactionMonitorAgent extends Ferma
 
         MatchingEngineMiddlewareCurrencyPair currencyPair;
 
-        List<UUID> transactionsToMarkAsSeen = new ArrayList<>();
+        List<String > transactionsToMarkAsSeen = new ArrayList<>();
 
         for (CurrencyMatching currencyMatching : currencyMatchingList) {
 

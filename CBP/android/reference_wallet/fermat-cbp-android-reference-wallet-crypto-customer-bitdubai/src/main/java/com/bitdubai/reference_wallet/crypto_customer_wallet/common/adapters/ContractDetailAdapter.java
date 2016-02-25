@@ -24,6 +24,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.Contra
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyContractInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_detail.ContractDetailActivityFragment;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
 
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -36,29 +37,26 @@ import java.util.NoSuchElementException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
+ * Modified by Alejandro Bicelis on 22/02/2016
  */
 public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailViewHolder> {
 
     //Holder Types
-    private static final int NO_TYPE = Integer.MIN_VALUE;
     private static final int TYPE_CUSTOMER = 0;
     private static final int TYPE_BROKER = 1;
 
     private Context context;
     private List<ContractDetail> dataSet;
-    private FermatSession session;
+    private CryptoCustomerWalletSession walletSession;
     private CryptoCustomerWalletManager walletManager;
 
-    public ContractDetailAdapter(
-            Context context,
-            List<ContractDetail> dataSet,
-            FermatSession session,
-            CryptoCustomerWalletManager walletManager) {
-        this.context=context;
-        this.dataSet=dataSet;
-        this.session=session;
-        this.walletManager=walletManager;
+    public ContractDetailAdapter(Context context, List<ContractDetail> dataSet, CryptoCustomerWalletSession walletSession, CryptoCustomerWalletManager walletManager) {
+        this.context = context;
+        this.dataSet = dataSet;
+        this.walletSession = walletSession;
+        this.walletManager = walletManager;
     }
+
     protected ContractDetailViewHolder createHolder(View itemView, int type) {
         return new ContractDetailViewHolder(itemView);
     }
@@ -88,18 +86,18 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
                 ContractDetail brokerViewHolder= dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
                 holder.setParentFragment(
-                        (ContractDetailActivityFragment) this.session.getData(
+                        (ContractDetailActivityFragment) this.walletSession.getData(
                                 "ContractDetailFragment"));
-                holder.setErrorManager(this.session.getErrorManager());
+                holder.setErrorManager(this.walletSession.getErrorManager());
                 holder.bind(brokerViewHolder);
                 break;
             case TYPE_CUSTOMER:
                 ContractDetail customerHolder= dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
                 holder.setParentFragment(
-                        (ContractDetailActivityFragment) this.session.getData(
+                        (ContractDetailActivityFragment) this.walletSession.getData(
                                 "ContractDetailFragment"));
-                holder.setErrorManager(this.session.getErrorManager());
+                holder.setErrorManager(this.walletSession.getErrorManager());
                 holder.bind(customerHolder);
                 break;
         }

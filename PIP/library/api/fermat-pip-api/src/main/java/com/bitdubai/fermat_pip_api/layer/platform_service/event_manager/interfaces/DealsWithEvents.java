@@ -5,5 +5,5 @@ package com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfa
  */
  public interface DealsWithEvents {
 
-    public void setEventManager (EventManager eventManager);
+    void setEventManager(EventManager eventManager);
 }

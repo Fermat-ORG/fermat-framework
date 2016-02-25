@@ -22,6 +22,8 @@ project(':toolbar_widgets').projectDir = new File('android_toolbox/toolbar_widge
 include ':currency-selector'
 project(':currency-selector').projectDir = new File('android_toolbox/currency-selector')
 
+include ':horizontalscrollview'
+project(':horizontalscrollview').projectDir = new File('android_toolbox/horizontalscrollview')
 
 
 

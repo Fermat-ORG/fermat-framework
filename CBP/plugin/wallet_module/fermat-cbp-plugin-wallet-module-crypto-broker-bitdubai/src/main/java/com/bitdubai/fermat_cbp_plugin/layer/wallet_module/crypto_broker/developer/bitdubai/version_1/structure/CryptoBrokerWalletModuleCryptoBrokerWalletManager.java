@@ -1285,40 +1285,40 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         if (!cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().isEmpty()) {
             if (cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().size() == 2) {
                 currencyPair1 = new CurrencyPairImpl(
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise(),
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise());
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise(),
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise());
 
                 currencyPair2 = new CurrencyPairImpl(
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise(),
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise());
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise(),
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise());
 
                 map.put("par1", currencyPair1);
                 map.put("par2", currencyPair2);
             }
             if (cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().size() == 3) {
                 currencyPair1 = new CurrencyPairImpl(
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise(),
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise());
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise(),
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise());
 
                 currencyPair2 = new CurrencyPairImpl(
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise(),
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(2).getMerchandise());
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise(),
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(2).getMerchandise());
 
                 currencyPair3 = new CurrencyPairImpl(
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise(),
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise());
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise(),
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise());
 
                 currencyPair4 = new CurrencyPairImpl(
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise(),
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(2).getMerchandise());
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise(),
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(2).getMerchandise());
 
                 currencyPair5 = new CurrencyPairImpl(
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(2).getMerchandise(),
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise());
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(2).getMerchandise(),
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0).getMerchandise());
 
                 currencyPair6 = new CurrencyPairImpl(
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(2).getMerchandise(),
-                        (Currency) cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise());
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(2).getMerchandise(),
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(1).getMerchandise());
 
                 map.put("par1", currencyPair1);
                 map.put("par2", currencyPair2);
@@ -1665,7 +1665,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             ClauseType clauseType;
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
-                if (clauseType.equals(ClauseType.BROKER_PAYMENT_METHOD)) {
+                if (clauseType.getCode().equals(ClauseType.BROKER_PAYMENT_METHOD.getCode())) {
                     return ContractClauseType.getByCode(clause.getValue());
                 }
             }
@@ -1820,10 +1820,23 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     contractClauseType.getCode() == ContractClauseType.CASH_ON_HAND.getCode()) {
                 //TODO: this is a hardcoded public key
                 String cryptoBrokerPublicKey = "walletPublicKeyTest";
+                //Get the customer alias to show in contract execution
+                ActorIdentity actorIdentity=getCustomerInfoByPublicKey(
+                        customerBrokerContractSale.
+                                getPublicKeyBroker(),
+                        customerBrokerContractSale.
+                                getPublicKeyCustomer());
+                String customerAlias;
+                if(actorIdentity==null){
+                    customerAlias="Unregistered customer";
+                } else {
+                    customerAlias=actorIdentity.getAlias();
+                }
                 this.brokerAckOfflinePaymentManager.ackPayment(
                         cryptoBrokerPublicKey,
                         contractHash,
-                        customerBrokerContractSale.getPublicKeyBroker()
+                        customerBrokerContractSale.getPublicKeyBroker(),
+                        customerAlias
                 );
                 return customerBrokerContractSale.getStatus();
             }
@@ -1845,6 +1858,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     e,
                     "Cannot ack the merchandise",
                     "Cannot get the negotiation list");
+        } catch (CantListActorConnectionsException e) {
+            throw new CantAckPaymentException(
+                    e,
+                    "Cannot ack the merchandise",
+                    "Cannot get the customer alias");
         }
     }
 
