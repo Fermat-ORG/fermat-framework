@@ -28,18 +28,18 @@ public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBro
     private Long   lastNegotiationUpdateDate;
 
     public CustomerBrokerPurchaseNegotiationInformation(
-            UUID   negotiationId,
-            String publicKeyCustomer,
-            String publicKeyBroker,
-            Long startDataTime,
-            Long negotiationExpirationDate,
-            NegotiationStatus statusNegotiation,
-            Collection<Clause> clauses,
-            Boolean nearExpirationDatetime,
+            UUID                negotiationId,
+            String              publicKeyCustomer,
+            String              publicKeyBroker,
+            Long                startDataTime,
+            Long                negotiationExpirationDate,
+            NegotiationStatus   statusNegotiation,
+            Collection<Clause>  clauses,
+            Boolean             nearExpirationDatetime,
 
-            String memo,
-            String cancelReason,
-            Long   lastNegotiationUpdateDate
+            String              memo,
+            String              cancelReason,
+            Long                lastNegotiationUpdateDate
     ){
         this.negotiationId = negotiationId;
         this.publicKeyCustomer = publicKeyCustomer;

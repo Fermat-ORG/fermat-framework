@@ -54,4 +54,6 @@ public interface FermatActivity extends Serializable{
 
     String getBackgroundColor();
 
+    FermatBottomNavigation getBottomNavigationMenu();
+
 }

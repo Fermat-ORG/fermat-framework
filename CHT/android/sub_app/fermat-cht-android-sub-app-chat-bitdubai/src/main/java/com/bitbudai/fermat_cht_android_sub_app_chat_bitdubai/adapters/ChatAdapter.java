@@ -76,18 +76,20 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 //        } else {
 //            holder = (ChatHolder) convertView.getTag();
 //        }
-
-        boolean myMsg = data.getIsme() ;
-        setAlignment(holder, myMsg);
-        holder.txtMessage.setText(data.getMessage());
-        holder.txtInfo.setText(data.getDate());
-        if(data.getStatus().toString()== MessageStatus.SEND.toString())
-            holder.tickstatusimage.setImageResource(R.drawable.ticksent);
-        if(data.getStatus().toString()== MessageStatus.DELIVERED.toString())
-            holder.tickstatusimage.setImageResource(R.drawable.tickdelivered);
-        if(data.getStatus().toString()== MessageStatus.READ.toString())
-            holder.tickstatusimage.setImageResource(R.drawable.tickread);
-
+        if (data != null) {
+            boolean myMsg = data.getIsme();
+            setAlignment(holder, myMsg);
+            holder.txtMessage.setText(data.getMessage());
+            holder.txtInfo.setText(data.getDate());
+            if (data.getStatus() != null && myMsg) {
+                if (data.getStatus() == MessageStatus.SEND.toString() || data.getStatus() == MessageStatus.CREATED.toString())
+                    holder.tickstatusimage.setImageResource(R.drawable.cht_ticksent);
+                if (data.getStatus() == MessageStatus.DELIVERED.toString())
+                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickdelivered);
+                if (data.getStatus() == MessageStatus.READ.toString())
+                    holder.tickstatusimage.setImageResource(R.drawable.cht_tickread);
+            }
+        }
 //        lblTitulo = (FermatTextView) convertView.findViewById(R.id.txtInfo);
 //        lblTitulo.setText(data.getMessage());
 //
@@ -171,7 +173,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
 
     private void setAlignment(ChatHolder holder, boolean isMe) {
         if (isMe) {
-            holder.contentWithBG.setBackgroundResource(R.drawable.in_message_bg);
+            holder.contentWithBG.setBackgroundResource(R.drawable.burble_green_shadow);
 
             LinearLayout.LayoutParams layoutParams =
                     (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
@@ -191,7 +193,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> {//ChatF
             layoutParams.gravity = Gravity.RIGHT;
             holder.txtInfo.setLayoutParams(layoutParams);
         } else {
-            holder.contentWithBG.setBackgroundResource(R.drawable.out_message_bg);
+            holder.contentWithBG.setBackgroundResource(R.drawable.burble_white_shadow);
 
             LinearLayout.LayoutParams layoutParams =
                     (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
