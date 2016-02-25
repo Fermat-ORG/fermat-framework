@@ -4,10 +4,20 @@ import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
 import java.util.UUID;
 
+
 /**
  * Summarized information about a index
  */
 public interface IndexInfoSummary {
+
+    /**
+     * @return the provider's name or "Unknown Provider"
+     */
+    String getProviderName();
+
+    /**
+     * @return the exchange rate data: sell and buy values, dates, etc
+     */
     ExchangeRate getExchangeRateData();
 
     /**

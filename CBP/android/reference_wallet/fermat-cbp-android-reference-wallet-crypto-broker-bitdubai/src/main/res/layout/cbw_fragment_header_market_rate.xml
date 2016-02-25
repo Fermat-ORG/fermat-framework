@@ -6,9 +6,10 @@
     android:layout_height="250dp"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/cbw_market_exchange_rate_layout_height"
+        android:baselineAligned="false"
         android:orientation="horizontal"
         android:paddingEnd="16dp"
         android:paddingLeft="16dp"
@@ -18,56 +19,91 @@
         android:visibility="visible"
         tools:background="@drawable/cbw_header_gradient_background">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_sell_price"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/market_rate_container"
-            android:layout_toStartOf="@+id/market_rate_container"
-            android:textColor="@color/white"
-            tools:text="Buy: Bs 800,00"/>
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:text="Buy"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_sell_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                tools:text="345,800.00 VEF"/>
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/market_rate_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:orientation="vertical">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_currencies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
+                android:layout_gravity="center"
                 android:textColor="@color/white"
                 tools:text="BTC / USD"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:layout_gravity="center"
                 android:text="@string/market_exchange_rate"
                 android:textColor="@color/market_rate_text"
                 android:textSize="@dimen/cbw_market_exchange_rate_text_size"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_provider_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAllCaps="true"
+                android:textColor="@color/market_rate_text"
+                android:textSize="@dimen/cbw_market_exchange_rate_text_size"
+                tools:text="Bitcoin Venezuela"/>
         </LinearLayout>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_buy_price"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/market_rate_container"
-            android:layout_toRightOf="@+id/market_rate_container"
-            android:gravity="end"
-            android:textColor="@color/white"
-            tools:text="Buy: Bs 840,25"/>
-    </RelativeLayout>
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/white"
+                android:text="Sell"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_buy_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:ellipsize="end"
+                android:gravity="end"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                tools:text="350,840.25 VEF"/>
+        </LinearLayout>
+
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"

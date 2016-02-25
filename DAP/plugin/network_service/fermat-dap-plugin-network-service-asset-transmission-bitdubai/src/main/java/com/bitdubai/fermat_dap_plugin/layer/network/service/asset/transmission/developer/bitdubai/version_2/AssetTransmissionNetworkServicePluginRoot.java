@@ -54,7 +54,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.communications.CommunicationNetworkServiceConnectionManager;
-import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.communications.CommunicationNetworkServiceLocal;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.communications.CommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications.CommunicationNetworkServiceDeveloperDatabaseFactory;
@@ -536,7 +535,7 @@ public class AssetTransmissionNetworkServicePluginRoot extends AbstractPlugin im
 
             FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(actorSender.getActorPublicKey(),  //Sender NetworkService
                     actorReceiver.getActorPublicKey(),   //Receiver
-                    message.toJson(),                //Message Content
+                    message.toXML(),                //Message Content
                     FermatMessageContentType.TEXT);//Type
 
             /*

@@ -388,7 +388,7 @@ public class IncomingMessageDao {
             setValuesToRecord(entityRecord, entity);
             table.insertRecord(entityRecord);
             //This is the incoming DAPMessage, here we're saving its state
-            dapMessageDAO.create(DAPMessage.fromJson(entity.getContent()), MessageStatus.NEW_RECEIVED);
+            dapMessageDAO.create(DAPMessage.fromXML(entity.getContent()), MessageStatus.NEW_RECEIVED);
         } catch (CantInsertRecordException | CantReadRecordDataBaseException databaseTransactionFailedException) {
 
             // Register the failure.
@@ -421,7 +421,7 @@ public class IncomingMessageDao {
             incomingMessagesTable.updateRecord(record);
 
             //This is the incoming DAPMessage, here we're updating its state
-            dapMessageDAO.update(DAPMessage.fromJson(entity.getContent()), MessageStatus.READ);
+            dapMessageDAO.update(DAPMessage.fromXML(entity.getContent()), MessageStatus.READ);
 
         } catch (RecordsNotFoundException | CantLoadTableToMemoryException | CantUpdateRecordException databaseTransactionFailedException) {
             // Register the failure.
@@ -487,7 +487,7 @@ public class IncomingMessageDao {
             incomingTemplateNetworkServiceMessage.setSender(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_SENDER_ID_COLUMN_NAME));
             incomingTemplateNetworkServiceMessage.setReceiver(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_RECEIVER_ID_COLUMN_NAME));
             DAPMessage message = dapMessageDAO.findById(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME));
-            incomingTemplateNetworkServiceMessage.setContent(message.toJson());
+            incomingTemplateNetworkServiceMessage.setContent(message.toXML());
             incomingTemplateNetworkServiceMessage.setFermatMessageContentType((FermatMessageContentType.getByCode(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_TYPE_COLUMN_NAME))));
             incomingTemplateNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
             incomingTemplateNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_DELIVERY_TIMESTAMP_COLUMN_NAME)));
@@ -528,7 +528,7 @@ public class IncomingMessageDao {
         }
 
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_STATUS_COLUMN_NAME, incomingTemplateNetworkServiceMessage.getFermatMessagesStatus().getCode());
-        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME, DAPMessage.fromJson(incomingTemplateNetworkServiceMessage.getContent()).getIdMessage().toString());
+        entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGE_ID_DAP_MESSAGE_COLUMN_NAME, DAPMessage.fromXML(incomingTemplateNetworkServiceMessage.getContent()).getIdMessage().toString());
 
     }
 }
