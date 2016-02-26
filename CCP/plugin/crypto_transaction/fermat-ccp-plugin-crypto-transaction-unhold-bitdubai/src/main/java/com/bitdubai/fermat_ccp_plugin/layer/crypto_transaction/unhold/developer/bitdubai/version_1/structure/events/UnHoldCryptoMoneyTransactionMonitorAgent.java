@@ -202,7 +202,7 @@ public class UnHoldCryptoMoneyTransactionMonitorAgent extends FermatAgent {
                             (long)cryptoUnholdTransaction.getAmount(),
                             new Date().getTime() / 1000,
                             "UNHOLD",
-                            BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Esto debe venir en la transaccion que a su vez se le debe pasar desde la Crypto Broker Wallet
+                            cryptoUnholdTransaction.getBlockchainNetworkType());
 
                     bitcoinWalletManager.loadWallet(cryptoUnholdTransaction.getPublicKeyWallet()).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionRecord);
                     cryptoUnholdTransaction.setStatus(CryptoTransactionStatus.CONFIRMED);
