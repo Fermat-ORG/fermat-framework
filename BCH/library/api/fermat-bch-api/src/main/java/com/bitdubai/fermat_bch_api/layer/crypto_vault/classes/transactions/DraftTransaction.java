@@ -121,7 +121,7 @@ public class DraftTransaction {
         output.append(this.getBitcoinTransaction().toString());
         output.append(System.lineSeparator());
         for (Map.Entry<CryptoAddress, Long> entry : this.getFundsDistribution().entrySet()){
-            output.append(entry.getValue() + " for "+ entry.getKey().toString());
+            output.append(entry.getValue() + " for "+ entry.getKey().getAddress().toString());
             output.append(System.lineSeparator());
         }
         return output.toString();
