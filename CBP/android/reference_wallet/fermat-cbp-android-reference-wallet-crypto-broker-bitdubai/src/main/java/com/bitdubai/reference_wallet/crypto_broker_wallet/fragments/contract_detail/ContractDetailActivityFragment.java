@@ -147,9 +147,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             public void onClick(View v) {
                 appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, data);
                 String a = appSession.getAppPublicKey();
-
                 try {
-                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, a);
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS, a);
                 }catch (Exception e)
                 {
                     System.out.println(e+"");
