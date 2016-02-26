@@ -43,12 +43,15 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
 
@@ -82,6 +85,7 @@ public class ChatAdapterView extends LinearLayout {
     private Drawable contactIcon;
     private boolean loadDummyData = false;
     private boolean chatWasCreate =false;
+    private Calendar today;
 
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
@@ -173,13 +177,25 @@ public class ChatAdapterView extends LinearLayout {
 
                 for (int i = 0; i < messSize; i++) {
                     msg = new ChatMessage();
-                    message=chatManager.getMessageByChatId(chatId).get(i).getMessage();
-                    inorout=chatManager.getMessageByChatId(chatId).get(i).getType().toString();
+                    message = chatManager.getMessageByChatId(chatId).get(i).getMessage();
+                    inorout = chatManager.getMessageByChatId(chatId).get(i).getType().toString();
                     msg.setId(chatManager.getMessageByChatId(chatId).get(i).getMessageId());
                     if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
                     else msg.setMe(false);
                     msg.setStatus(chatManager.getMessageByChatId(chatId).get(i).getStatus().toString());
-                    msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatId).get(i).getMessageDate().toString()
+                    if (Validate.isDateToday(new Date(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()))))
+                    {
+                        String S = new SimpleDateFormat("hh:mm").format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate());
+                        msg.setDate(S);
+                    }else
+                    {
+                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
+                    }
+//                    if (ts_now.before(chatManager.getMessageByChatId(chatId).get(i).getMessageDate())) {
+//                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));//chatManager.getMessageByChatId(chatId).get(i).getMessageDate().toString()
+//                    }else {
+//                        msg.setDate(DateFormat.getDateTimeInstance().format(chatManager.getMessageByChatId(chatId).get(i).getMessageDate()));
+//                    }
                     msg.setUserId(chatManager.getMessageByChatId(chatId).get(i).getContactId());
                     msg.setMessage(message);
                     chatHistory.add(msg);
@@ -267,7 +283,7 @@ public class ChatAdapterView extends LinearLayout {
 
             if (leftName != null) {
                 toolbar.setTitle(leftName);
-                contactIcon = new BitmapDrawable(getResources(), getRoundedShape(decodeFile(getContext(), R.drawable.ic_contact_picture_holo_light), 50));//in the future, this image should come from chatmanager
+                contactIcon = new BitmapDrawable(getResources(), getRoundedShape(decodeFile(getContext(), R.drawable.ic_contact_picture_holo_light), 80));//in the future, this image should come from chatmanager
                 toolbar.setLogo(contactIcon);
             }
         }
@@ -364,7 +380,9 @@ public class ChatAdapterView extends LinearLayout {
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.setId(UUID.randomUUID());//dummy
                     chatMessage.setMessage(messageText);
-                    chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                    //chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                    String S = new SimpleDateFormat("hh:mm").format(new Date());
+                    chatMessage.setDate(S);
                     chatMessage.setMe(true);
                     messageET.setText("");
                     adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
