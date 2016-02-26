@@ -13,6 +13,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatExceptio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
@@ -714,9 +715,37 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      * @return
      */
     @Override
-    public HashMap<PlatformComponentType, String> getSelfIdentities() {
-        //TODO to implement from ChatMiddlewareContactFactory
-        return null;
+    public HashMap<PlatformComponentType, String> getSelfIdentities()
+            throws CantGetOwnIdentitiesException {
+        try {
+            HashMap<PlatformComponentType, String> selfIdentitiesMap=
+                    this.chatMiddlewareContactFactory.getSelfIdentities();
+            selfIdentitiesMap=checkSelfIdentitiesMap(selfIdentitiesMap);
+            return selfIdentitiesMap;
+        } catch (CantGetNetworkServicePublicKeyException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantGetOwnIdentitiesException(
+                    FermatException.wrapException(exception),
+                    "Checking own identities",
+                    "Unexpected Exception getting network service public key");
+        }
+    }
+
+
+    private HashMap<PlatformComponentType, String> checkSelfIdentitiesMap(
+            HashMap<PlatformComponentType, String> selfIdentitiesMap) throws
+            CantGetNetworkServicePublicKeyException {
+        if(selfIdentitiesMap.isEmpty()) {
+            String chatNetworkServicePublicKey = getNetworkServicePublicKey();
+            selfIdentitiesMap.put(
+                    PlatformComponentType.NETWORK_SERVICE,
+                    chatNetworkServicePublicKey);
+            return selfIdentitiesMap;
+        }
+        return selfIdentitiesMap;
     }
 
     private String getSourceString(EventSource eventSource){
