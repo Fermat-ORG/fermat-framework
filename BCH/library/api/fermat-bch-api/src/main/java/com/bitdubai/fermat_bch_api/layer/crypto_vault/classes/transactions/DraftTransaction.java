@@ -20,6 +20,7 @@ public class DraftTransaction {
     private Transaction bitcoinTransaction;
     private CryptoAddress sellerCryptoAddress;
     private CryptoAddress buyerCryptoAddress;
+    private long value;
 
     /**
      * constructor
@@ -38,14 +39,12 @@ public class DraftTransaction {
      * @return
      */
     public long getValue(){
-        long totalValue = 0;
-        for (TransactionInput transactionInput : bitcoinTransaction.getInputs()){
-            totalValue = totalValue + transactionInput.getValue().getValue();
-        }
-
-        return totalValue;
+        return value;
     }
 
+    public void addValue(long value) {
+        this.value = this.value + value;
+    }
 
     /**
      * returns the funds that are distributed for each CryptoAddress specified in the transaction
@@ -113,5 +112,17 @@ public class DraftTransaction {
         return bitcoinTransaction.bitcoinSerialize();
     }
 
-
+    @Override
+    public String toString() {
+        StringBuilder output = new StringBuilder(this.getTxHash());
+        output.append(" on " + this.getNetworkType().getCode() + " network.");
+        output.append(System.lineSeparator());
+        output.append(this.getBitcoinTransaction().toString());
+        output.append(System.lineSeparator());
+        for (Map.Entry<CryptoAddress, Long> entry : this.getFundsDistribution().entrySet()){
+            output.append(entry.getValue() + " for "+ entry.getKey().getAddress().toString());
+            output.append(System.lineSeparator());
+        }
+        return output.toString();
+    }
 }

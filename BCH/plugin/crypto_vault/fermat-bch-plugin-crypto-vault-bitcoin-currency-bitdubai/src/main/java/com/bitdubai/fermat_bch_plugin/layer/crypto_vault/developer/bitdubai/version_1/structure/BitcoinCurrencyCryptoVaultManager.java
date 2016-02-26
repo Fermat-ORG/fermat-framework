@@ -674,6 +674,7 @@ public class BitcoinCurrencyCryptoVaultManager  {
             }
         }
 
+
         /**
          * sets the fee and value to send
          */
@@ -746,6 +747,9 @@ public class BitcoinCurrencyCryptoVaultManager  {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
+
+        System.out.println("***BitcoinVault*** Draft Transaction completed.");
+        System.out.println(draftTransaction.toString());
 
         return draftTransaction;
     }

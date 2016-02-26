@@ -52,7 +52,7 @@
             android:layout_height="25dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_home_friend"
+            android:src="@drawable/issuer_community_ic_home_friend"
             android:visibility="gone"
             tools:ignore="ContentDescription,RtlHardcoded" />
     </RelativeLayout>

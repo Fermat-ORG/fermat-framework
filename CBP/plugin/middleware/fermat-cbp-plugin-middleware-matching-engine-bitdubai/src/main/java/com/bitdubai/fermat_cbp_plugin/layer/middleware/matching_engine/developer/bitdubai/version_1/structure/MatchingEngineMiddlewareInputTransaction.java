@@ -17,14 +17,14 @@ import java.util.UUID;
  */
 public final class MatchingEngineMiddlewareInputTransaction implements InputTransaction {
 
-    private final UUID                  id               ;
+    private final String                id               ;
     private final Currency              currencyGiving   ;
     private final float                 amountGiving     ;
     private final Currency              currencyReceiving;
     private final float                 amountReceiving  ;
     private final InputTransactionState state            ;
 
-    public MatchingEngineMiddlewareInputTransaction(final UUID                   id               ,
+    public MatchingEngineMiddlewareInputTransaction(final String                 id               ,
                                                     final Currency               currencyGiving   ,
                                                     final float                  amountGiving     ,
                                                     final Currency               currencyReceiving,
@@ -39,7 +39,7 @@ public final class MatchingEngineMiddlewareInputTransaction implements InputTran
         this.state             = state            ;
     }
 
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
