@@ -21,10 +21,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
@@ -33,6 +35,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractMerchandiseDeliveryDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractMerchandiseReceptionDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractPaymentDeliveryDetail;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractPaymentReceptionDetail;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
@@ -46,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 18/01/16.
@@ -90,7 +97,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
             errorManager = appSession.getErrorManager();
 
             //Capture contract data from ContractsTabFragment's onClick event
-            data=(ContractBasicInformation) appSession.getData("contract_data");
+            data = (ContractBasicInformation) appSession.getData("contract_data");
             contractInformation = prepareContractInfo();
 
 
@@ -140,6 +147,14 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         //Configure recyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager));
+
+        negotiationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appSession.setNegotiationId(data.getNegotiationId());
+                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_NEGOTIATION_DETAILS_OPEN_CONTRACT, appSession.getAppPublicKey());
+            }
+        });
     }
 
 
@@ -193,75 +208,67 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     }
 
 
-
     private List<ContractDetail> prepareContractInfo() {
 
-        List<ContractDetail> contractDetails=new ArrayList<>();
+        List<ContractDetail> contractDetails = new ArrayList<>();
         ContractDetail contractDetail;
 
-        /**
-         * TODO: this contract details is only for testing, please, implement this date from database.
-         */
-//        //Customer Broker
-//        contractDetail=new ContractDetail(
-//                ContractDetailType.CUSTOMER_DETAIL,
-//                MoneyType.BANK.getCode(),
-//                FiatCurrency.CHINESE_YUAN.getFriendlyName(),
-//                12,
-//                ContractStatus.PAYMENT_SUBMIT,
-//                "BTC Customer",
-//                getByteArrayFromImageView(brokerImage),
-//                1961,
-//                2016,
-//                UUID.randomUUID());
-//        //contractDetails.add(contractDetail);
-//        //Testing Broker
-//        contractDetail=new ContractDetail(
-//                ContractDetailType.BROKER_DETAIL,
-//                MoneyType.CRYPTO.getCode(),
-//                CryptoCurrency.BITCOIN.getFriendlyName(),
-//                12,
-//                ContractStatus.PENDING_MERCHANDISE,
-//                "BTC Broker",
-//                getByteArrayFromImageView(brokerImage),
-//                1961,
-//                2016,
-//                UUID.randomUUID());
-        //contractDetails.add(contractDetail);
+        if (walletManager != null) {
 
+            try {
+                CustomerBrokerContractPurchase customerBrokerContractPurchase = walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
 
-        if(walletManager!=null){
-
-            try{
-                //ContractDetail contractDetail;
-                CustomerBrokerContractPurchase customerBrokerContractPurchase =
-                        walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
-
-                //Customer data
-                contractDetail=new ContractDetail(
-                        ContractDetailType.CUSTOMER_DETAIL,
-                        data.getTypeOfPayment(),
-                        data.getPaymentCurrency(),
+                //Payment Delivery step
+                contractDetail = new ContractPaymentDeliveryDetail(
+                        1,
+                        ContractStatus.MERCHANDISE_SUBMIT, //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
                         data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
-                        data.getCryptoCustomerAlias(),
-                        data.getCryptoCustomerImage(),
-                        data.getLastUpdate(),
-                        data.getExchangeRateAmount(),
-                        data.getContractId());
+                        data.getPaymentCurrency(),
+                        data.getLastUpdate());         //TODO: Este es el date del contractPayment, change this
                 contractDetails.add(contractDetail);
 
-                //Broker data
-                contractDetail=new ContractDetail(
+                //Payment Reception step
+                contractDetail = new ContractPaymentReceptionDetail(
+                        2,
+                        ContractStatus.MERCHANDISE_SUBMIT, //customerBrokerContractPurchase.getStatus(),
+                        data.getContractId(),
+                        data.getNegotiationId(),
+                        data.getAmount(),
+                        data.getPaymentCurrency(),
+                        data.getLastUpdate());         //TODO: Este es el date del contractPayment, change this
+                contractDetails.add(contractDetail);
+
+                //Merchandise Delivery step
+                contractDetail = new ContractMerchandiseDeliveryDetail(
+                        3,
+                        ContractStatus.MERCHANDISE_SUBMIT, //customerBrokerContractPurchase.getStatus(),
                         ContractDetailType.BROKER_DETAIL,
                         data.getTypeOfPayment(),
                         data.getMerchandise(),
                         data.getAmount(),
-                        customerBrokerContractPurchase.getStatus(),
                         data.getCryptoCustomerAlias(),
                         data.getCryptoCustomerImage(),
                         data.getLastUpdate(),
                         data.getExchangeRateAmount(),
+                        data.getContractId(),
+                        data.getContractId());
+                contractDetails.add(contractDetail);
+
+                //Merchandise Reception step
+                contractDetail = new ContractMerchandiseReceptionDetail(
+                        4,
+                        ContractStatus.MERCHANDISE_SUBMIT, //customerBrokerContractPurchase.getStatus(),
+                        ContractDetailType.BROKER_DETAIL,
+                        data.getTypeOfPayment(),
+                        data.getMerchandise(),
+                        data.getAmount(),
+                        data.getCryptoCustomerAlias(),
+                        data.getCryptoCustomerImage(),
+                        data.getLastUpdate(),
+                        data.getExchangeRateAmount(),
+                        data.getContractId(),
                         data.getContractId());
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
@@ -280,13 +287,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     }
 
 
-
-
-
     //TODO: What the fk is this
-    private byte[] getByteArrayFromImageView(ImageView image){
-        Bitmap bitmap = ((BitmapDrawable)image.getDrawable()).getBitmap();
-        ByteArrayOutputStream stream=new ByteArrayOutputStream();
+    private byte[] getByteArrayFromImageView(ImageView image) {
+        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 90, stream);
         return stream.toByteArray();
     }
@@ -341,13 +345,12 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     }
 
 
-    private double getFormattedNumber(float number){
-        int decimalPlaces=2;
+    private double getFormattedNumber(float number) {
+        int decimalPlaces = 2;
         BigDecimal bigDecimalNumber = new BigDecimal(number);
-        bigDecimalNumber=bigDecimalNumber.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
+        bigDecimalNumber = bigDecimalNumber.setScale(decimalPlaces, BigDecimal.ROUND_HALF_UP);
         return bigDecimalNumber.doubleValue();
     }
-
 
 
 }
