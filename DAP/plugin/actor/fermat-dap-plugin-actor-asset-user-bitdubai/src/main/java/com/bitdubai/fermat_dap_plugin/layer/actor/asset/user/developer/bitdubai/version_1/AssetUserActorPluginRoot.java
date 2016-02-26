@@ -29,7 +29,6 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCancelIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
@@ -67,7 +66,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantAskConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantCancelConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDenyConnectionActorAssetException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantDisconnectConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
@@ -79,12 +77,12 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.interfaces.Ac
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.Agent.AssetUserActorMonitorAgent;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.AssetUserActorDeveloperDatabaseFactory;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.developerUtils.GroupTest;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.ActorAssetUserNewNotificationsEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.AssetUserActorCompleteRegistrationNotificationEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
-import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantAddPendingAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAddPendingActorAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserCryptoAddressTableExcepcion;
+import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUsersListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressesNewsEventException;
@@ -169,7 +167,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
     @Override
     public void stop() {
-        this.assetUserActorMonitorAgent.stop();
+//        this.assetUserActorMonitorAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -275,7 +273,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 System.out.println("Actor Asset Name: " + actorAssetUser.getName());
                 System.out.println("**********************************************************");
             }
-        } catch (CantAddPendingAssetUserException e) {
+        } catch (CantAddPendingActorAssetException e) {
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
         } catch (CantGetAssetUserActorsException e) {
             throw new CantCreateAssetUserActorException("CAN'T GET ACTOR ASSET USER", e, "", "");
@@ -288,7 +286,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     public void createActorAssetUserRegisterInNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantCreateAssetUserActorException {
         try {
             assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(actorAssetUsers);
-        } catch (CantAddPendingAssetUserException e) {
+        } catch (CantAddPendingActorAssetException e) {
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ACTOR ASSET USER REGISTERED", e, "", "");
         }
     }
@@ -299,7 +297,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             List<ActorAssetUser> assetUsers = new ArrayList<>();
             assetUsers.add(actorAssetUsers);
             assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(assetUsers);
-        } catch (CantAddPendingAssetUserException e) {
+        } catch (CantAddPendingActorAssetException e) {
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ACTOR ASSET USER REGISTERED", e, "", "");
         }
     }
@@ -536,28 +534,27 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     public ActorAssetUserGroup getAssetUserGroup(String groupId) throws CantGetAssetUserGroupException {
         try {
             return this.assetUserActorDao.getAssetUserGroup(groupId);
-        } catch (com.bitdubai.fermat_dap_plugin.layer.actor.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserGroupExcepcion ex) {
+        } catch (CantGetAssetUserGroupExcepcion ex) {
             throw new CantGetAssetUserGroupException("You can not get the group", ex, "Error", "");
         }
     }
 
     @Override
-    public DAPConnectionState getActorAssetUserRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetUserActorsException {
+    public DAPConnectionState getActorAssetUserRegisteredDAPConnectionState(String actorAssetPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException {
 
         try {
-
             ActorAssetUser actorAssetUser;
-
-            actorAssetUser = assetUserActorDao.getActorAssetUserRegisteredConnectionState(actorAssetPublicKey);
-
+//
+            actorAssetUser = this.assetUserActorDao.getActorAssetUserRegisteredByPublicKey(actorAssetPublicKey, blockchainNetworkType);
+//
             if(actorAssetUser != null)
                 return actorAssetUser.getDapConnectionState();
             else
                 return DAPConnectionState.ERROR_UNKNOWN;
         } catch (CantGetAssetUserActorsException e) {
-            throw new CantGetAssetUserActorsException("CAN'T GET INTRA USER CONNECTED STATUS", e, "Error get database info", "");
+            throw new CantGetAssetUserActorsException("CAN'T GET ACTOR ASSET USER STATE", e, "Error get database info", "");
         } catch (Exception e) {
-            throw new CantGetAssetUserActorsException("CAN'T GET INTRA USER CONNECTED STATUS", FermatException.wrapException(e), "", "");
+            throw new CantGetAssetUserActorsException("CAN'T GET ACTOR ASSET USER STATE", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -614,8 +611,8 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     //TODO apply for user local (issuer)
     @Override
     public void acceptActorAssetUser(String actorAssetUserInPublicKey, String actorAssetUserToAddPublicKey) throws CantAcceptActorAssetUserException {
-        try {
-            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserInPublicKey, actorAssetUserToAddPublicKey, DAPConnectionState.REGISTERED_LOCALLY);
+        try {//TODO Probar el estado REGISTERED_LOCALLY
+            this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserInPublicKey, actorAssetUserToAddPublicKey, DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateAssetUserConnectionException e) {
             throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION", e, "", "");
         } catch (Exception e) {
