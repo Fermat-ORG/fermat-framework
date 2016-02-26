@@ -12,13 +12,17 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -32,7 +36,9 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPPublicKeys;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
@@ -98,6 +104,9 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_ISSUER)
     private AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
@@ -184,6 +193,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         null,
                         System.currentTimeMillis(),
                         System.currentTimeMillis(),
+                        Actors.DAP_ASSET_REDEEM_POINT,
+                        null,
                         assetRedeemPointActorprofileImage);
 
                 RedeemPointActorAddress address = new RedeemPointActorAddress();
@@ -213,6 +224,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         actorAssetRedeemPoint.getCryptoAddress(),
                         actorAssetRedeemPoint.getRegistrationDate(),
                         System.currentTimeMillis(),
+                        actorAssetRedeemPoint.getType(),
+                        null,
                         assetRedeemPointActorprofileImage,
                         actorAssetRedeemPoint.getRegisteredIssuers());
 
@@ -292,6 +305,24 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         }
 
         return actorAssetRedeemPoint;
+    }
+
+    @Override
+    public DAPConnectionState getActorRedeemPointRegisteredDAPConnectionState(String actorAssetPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException {
+        try {
+            ActorAssetRedeemPoint actorAssetRedeemPoint;
+//
+            actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetUserRegisteredByPublicKey(actorAssetPublicKey, blockchainNetworkType);
+//
+            if(actorAssetRedeemPoint != null)
+                return actorAssetRedeemPoint.getDapConnectionState();
+            else
+                return DAPConnectionState.ERROR_UNKNOWN;
+        } catch (CantGetAssetRedeemPointActorsException e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET ACTOR REDEEM POINT STATE", e, "Error get database info", "");
+        } catch (Exception e) {
+            throw new CantGetAssetRedeemPointActorsException("CAN'T GET ACTOR REDEEM POINT STATE", FermatException.wrapException(e), "", "");
+        }
     }
 
     @Override
@@ -509,9 +540,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 //handle this.
                 e.printStackTrace();
             }
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, DAPPublicKeys.DAP_COMMUNITY_ISSUER.getCode(), "EXTENDED-RECEIVE_" + dapActorSender.getName());
+
         }
-
-
     }
 
     @Override

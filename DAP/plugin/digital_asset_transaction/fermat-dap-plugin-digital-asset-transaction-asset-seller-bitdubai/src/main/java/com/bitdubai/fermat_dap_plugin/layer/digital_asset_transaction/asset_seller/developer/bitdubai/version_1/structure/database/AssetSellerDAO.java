@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -38,8 +40,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional.NegotiationRecord;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional.SellingRecord;
-
-import org.apache.commons.codec.binary.Base64;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -127,11 +127,11 @@ public class AssetSellerDAO {
     }
 
     public void updateBuyerTransaction(UUID transactionId, byte[] serializedTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
-        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeBase64String(serializedTransaction), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
+        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(serializedTransaction, Base64.DEFAULT), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
     }
 
     public void updateSellerTransaction(UUID transactionId, byte[] serializedTransaction) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
-        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME, Base64.encodeBase64String(serializedTransaction), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
+        updateRecordForTableByKey(getSellerTable(), AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME, Base64.encodeToString(serializedTransaction, Base64.DEFAULT), AssetSellerDatabaseConstants.ASSET_SELLER_FIRST_KEY_COLUMN, transactionId.toString());
     }
 
     public void updateTransactionHash(UUID transactionId, String transactionHash) throws RecordsNotFoundException, CantLoadTableToMemoryException, CantUpdateRecordException {
@@ -198,8 +198,8 @@ public class AssetSellerDAO {
         UUID entryId = UUID.fromString(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_ENTRY_ID_COLUMN_NAME));
         String encodeUnsignedTransaction = record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_SELLER_TRANSACTION_COLUMN_NAME);
         String encodeSignedTransaction = record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_BUYER_TRANSACTION_COLUMN_NAME);
-        DraftTransaction signedTransaction = encodeSignedTransaction == null ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decodeBase64(encodeSignedTransaction));
-        DraftTransaction unsignedTransaction = encodeSignedTransaction == null ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decodeBase64(encodeUnsignedTransaction));
+        DraftTransaction signedTransaction = encodeSignedTransaction == null ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeSignedTransaction, Base64.DEFAULT));
+        DraftTransaction unsignedTransaction = encodeSignedTransaction == null ? null : DraftTransaction.deserialize(metadata.getNetworkType(), Base64.decode(encodeUnsignedTransaction, Base64.DEFAULT));
         String transactionHash = record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_TX_HASH_COLUMN_NAME);
         UUID negotiationId = UUID.fromString(record.getStringValue(AssetSellerDatabaseConstants.ASSET_SELLER_NEGOTIATION_REFERENCE_COLUMN_NAME));
         return new SellingRecord(entryId, metadata, user, status, signedTransaction, unsignedTransaction, transactionHash, negotiationId);

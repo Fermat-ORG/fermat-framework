@@ -31,4 +31,6 @@ public interface AssetUserWalletTransaction {
     long getRunningAvailableBalance();
 
     String getMemo();
+
+    boolean isLocked();
 }

@@ -199,7 +199,7 @@ public interface ActorAssetUserManager extends FermatManager {
      */
     ActorAssetUserGroup getAssetUserGroup(String groupId) throws CantGetAssetUserGroupException;
 
-    DAPConnectionState getActorAssetUserRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetUserActorsException;
+    DAPConnectionState getActorAssetUserRegisteredDAPConnectionState(String actorAssetPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
 
     /**
      * The method <code>askActorAssetUserForConnection</code> registers a new actor asset user in the list

@@ -116,26 +116,24 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             while (agentRunning) {
                 try {
                     doTheMainTask();
-                    Thread.sleep(WAIT_TIME);
-                } catch (InterruptedException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
-                    agentRunning = false;
                 } catch (Exception e) {
                     e.printStackTrace();
                     errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                } finally {
+                    try {
+                        Thread.sleep(WAIT_TIME);
+                    } catch (InterruptedException e) {
+                        errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                        agentRunning = false;
+                    }
                 }
             }
         }
 
-        private void doTheMainTask() {
-            try {
-                checkPendingMessages();
-                checkNegotiationStatus();
-                checkBuyingStatus();
-            } catch (Exception e) {
-                //TODO EXCEPTION HANDLING
-                e.printStackTrace();
-            }
+        private void doTheMainTask() throws DAPException, CantInsertRecordException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException {
+            checkPendingMessages();
+            checkNegotiationStatus();
+            checkBuyingStatus();
         }
 
         private void checkPendingMessages() throws CantInsertRecordException, CantGetDAPMessagesException, CantCreateDigitalAssetFileException, CantUpdateMessageStatusException {
@@ -151,9 +149,10 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void checkNegotiationStatus() throws DAPException {
-            for (NegotiationRecord record : dao.getActionRequiredNegotiations()) {
+        private void checkNegotiationStatus() throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
+            for (NegotiationRecord record : dao.getNegotiationAnswer()) {
                 assetTransmission.sendMessage(transactionManager.constructNegotiationMessage(record));
+                dao.updateNegotiationStatus(record.getNegotiation().getNegotiationId(), AssetSellStatus.NO_ACTION_REQUIRED);
             }
         }
 
@@ -166,7 +165,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                             DraftTransaction buyerTx = cryptoVaultManager.signTransaction(buyingRecord.getSellerTransaction());
                             dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx.serialize());
                             dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.PARTIALLY_SIGNED);
-                            assetTransmission.sendMessage(transactionManager.constructSellingMessage(buyingRecord));
+                            assetTransmission.sendMessage(transactionManager.constructSellingMessage(buyingRecord, AssetSellStatus.PARTIALLY_SIGNED));
                         }
                         break;
                     }
