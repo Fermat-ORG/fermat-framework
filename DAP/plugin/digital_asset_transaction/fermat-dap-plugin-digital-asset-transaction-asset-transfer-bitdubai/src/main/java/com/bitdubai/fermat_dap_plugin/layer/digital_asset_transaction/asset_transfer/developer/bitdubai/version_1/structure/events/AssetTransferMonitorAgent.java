@@ -482,7 +482,7 @@ public class AssetTransferMonitorAgent implements Agent, DealsWithLogger, DealsW
         private void sendActorInformation(DigitalAssetMetadata digitalAssetMetadata, ActorAssetUser newUser, BlockchainNetworkType networkType) throws CantSetObjectException, CantGetAssetUserActorsException, CantSendMessageException {
             AssetTransferContentMessage content = new AssetTransferContentMessage(newUser, digitalAssetMetadata.getMetadataId(), networkType);
             ActorAssetUser actorSender = actorAssetUserManager.getActorAssetUser();
-            ActorAssetIssuer actorReceiver = (ActorAssetIssuer) ActorUtils.constructActorFromIdentity(digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer());
+            ActorAssetUser actorReceiver = (ActorAssetUser) ActorUtils.constructActorFromIdentity(digitalAssetMetadata.getDigitalAsset().getIdentityAssetIssuer());
             DAPMessage dapMessage = new DAPMessage(content, actorSender, actorReceiver);
             assetIssuerActorNetworkServiceManager.sendMessage(dapMessage);
         }
