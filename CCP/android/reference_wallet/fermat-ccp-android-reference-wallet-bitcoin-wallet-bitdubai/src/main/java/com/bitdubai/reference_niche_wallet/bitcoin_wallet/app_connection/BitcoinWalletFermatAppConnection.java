@@ -86,7 +86,8 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
                 if(referenceWalletSession.getModuleManager()!=  null)
                     moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
 
-            return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager,code,referenceWalletSession.getAppPublicKey(),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+
+            return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager,code,referenceWalletSession.getAppPublicKey());
 
         }
         catch(Exception e)

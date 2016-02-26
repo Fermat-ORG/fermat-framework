@@ -15,13 +15,14 @@ import java.util.UUID;
  */
 public class BitcoinWalletBuildNotificationPainter {
 
-    public static NotificationPainter getNotification(CryptoWallet moduleManager,String code,String walletPublicKey,String loggedIntraUserPublicKey)
+    public static NotificationPainter getNotification(CryptoWallet moduleManager,String code,String walletPublicKey)
     {
         NotificationPainter notification = null;
         try {
 
                 CryptoWalletTransaction transaction;
                 PaymentRequest paymentRequest;
+            String loggedIntraUserPublicKey;
 
                 String[] params = code.split("_");
                 String notificationType = params[0];
@@ -30,17 +31,18 @@ public class BitcoinWalletBuildNotificationPainter {
                 switch (notificationType){
                     case "TRANSACTIONARRIVE":
                         if(moduleManager != null){
-
+                            loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
                                 transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
 
                             notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","");
 
                         }else{
-                            notification = new BitcoinWalletNotificationPainter("Received money", "","","");
+                            notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","");
                         }
                         break;
                     case "TRANSACTION_REVERSE":
                         if(moduleManager != null) {
+                            loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
                             transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
                             notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "");
                         }else
@@ -52,6 +54,7 @@ public class BitcoinWalletBuildNotificationPainter {
 
                     case "PAYMENTREQUEST":
                         if(moduleManager != null){
+
                             paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
                             notification = new BitcoinWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","");
                         }
