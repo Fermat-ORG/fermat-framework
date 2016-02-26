@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offli
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
@@ -13,41 +14,49 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
 /**
- * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 05/02/16.
+ * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 25/02/16.
  */
-public class getPendingEventsTest {
+public class persistsCryptoTransactionUUIDTest {
+    CustomerOfflinePaymentBusinessTransactionDao customerOfflinePaymentBusinessTransactionDao;
     @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
     @Mock
-    private Database mockDatabase;
+    Database mockDatabase;
     @Mock
     ErrorManager errorManager;
     @Mock
     DatabaseTable databaseTable;
+    @Mock
+    List<DatabaseTableRecord> databaseTableRecordList;
+    @Mock
+    DatabaseTableRecord databaseTableRecord;
     private UUID testId;
-    private CustomerOfflinePaymentBusinessTransactionDao customerOfflinePaymentBusinessTransactionDao;
-
-
     @Before
-    public void setup()throws Exception{
+    public void setup(){
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
+        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem,testId,mockDatabase,errorManager);
+        when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
+        when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
     }
 
     @Test
-    public void getPendingEventsTest_Should_Return_Empty_List() throws Exception{
-        when(mockDatabase.getTable(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME)).thenReturn(databaseTable);
-        customerOfflinePaymentBusinessTransactionDao.getPendingEvents();
+    public void persistsCryptoTransactionUUIDTest()throws Exception{
+        when(mockDatabase.getTable(
+                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TABLE_NAME
+        )).thenReturn(databaseTable);
+        testId = UUID.randomUUID();
+        customerOfflinePaymentBusinessTransactionDao.persistsCryptoTransactionUUID("contractHash",testId);
     }
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getPendingEventsTest_Should_Throw_Exception() throws Exception{
-        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(null,testId,mockDatabase,errorManager);
-        customerOfflinePaymentBusinessTransactionDao.getPendingEvents();
+    public void persistsCryptoTransactionUUIDTest_Should_Throw_Exception()throws Exception{
+        testId = UUID.randomUUID();
+        customerOfflinePaymentBusinessTransactionDao.persistsCryptoTransactionUUID("contractHash",testId);
     }
 }
