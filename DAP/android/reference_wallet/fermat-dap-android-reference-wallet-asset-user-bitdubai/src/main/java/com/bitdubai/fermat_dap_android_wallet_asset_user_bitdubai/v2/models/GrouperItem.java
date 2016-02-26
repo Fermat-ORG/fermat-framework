@@ -9,27 +9,27 @@ import java.util.List;
  */
 public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
 
-    private List<CHILD_TYPE> childItemList;
-    private int childCount;
+    private List<CHILD_TYPE> assets;
+    private int assetsCount;
     private boolean initiallyExpanded;
 
-    private ITEM asset;
+    private ITEM issuer;
 
-    public GrouperItem( List<CHILD_TYPE> childItemList, boolean initiallyExpanded, ITEM asset) {
+    public GrouperItem( List<CHILD_TYPE> assets, boolean initiallyExpanded, ITEM issuer) {
         this.initiallyExpanded = initiallyExpanded;
-        this.childItemList = childItemList;
-        this.asset = asset;
+        this.assets = assets;
+        this.issuer = issuer;
     }
 
     public GrouperItem(String text, boolean initiallyExpanded) {
         this.initiallyExpanded = initiallyExpanded;
     }
 
-    public int getChildCount() {
-        if (childItemList != null)
+    public int getAssetsCount() {
+        if (assets != null)
             // Le resto uno porque el ultimo es el total
-            childCount = this.childItemList.size();
-        return childCount;
+            assetsCount = this.assets.size();
+        return assetsCount;
     }
 
     /**
@@ -39,18 +39,18 @@ public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
      */
     @Override
     public List<CHILD_TYPE> getChildItemList() {
-        return childItemList;
+        return assets;
     }
 
     /**
      * Setter method for the list of children associated with this parent list item
      *
-     * @param childItemList the list of all children associated with this parent list item
+     * @param assets the list of all children associated with this parent list item
      */
-    public void setChildItemList(List<CHILD_TYPE> childItemList) {
-        this.childItemList = childItemList;
-        if (childItemList != null)
-            childCount = this.childItemList.size();
+    public void setAssets(List<CHILD_TYPE> assets) {
+        this.assets = assets;
+        if (assets != null)
+            assetsCount = this.assets.size();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
         this.initiallyExpanded = initiallyExpanded;
     }
 
-    public ITEM getAsset() {
-        return asset;
+    public ITEM getIssuer() {
+        return issuer;
     }
 }

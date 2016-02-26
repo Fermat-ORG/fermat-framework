@@ -123,6 +123,6 @@
     <!--Dialog Help - End-->
 
     <!-- v2 -->
-    <string name="dap_user_wallet_v2_home_issuer_item_num_assets"> assets</string>
+    <string name="dap_user_wallet_v2_home_issuer_item_num_assets">assets</string>
     <!-- -->
 </resources>

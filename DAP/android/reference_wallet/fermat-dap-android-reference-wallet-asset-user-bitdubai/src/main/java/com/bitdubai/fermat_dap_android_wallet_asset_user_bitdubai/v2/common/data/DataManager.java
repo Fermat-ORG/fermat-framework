@@ -40,13 +40,13 @@ public class DataManager {
             long quantityAvailableBalance = assetUserWalletList.getQuantityAvailableBalance();
             assets = new ArrayList<>();
             for(long i = 0; i < quantityAvailableBalance; i++) {
-                assets.add(new Asset(assetUserWalletList.getDigitalAsset(), Asset.Status.CONFIRMED));
+                assets.add(new Asset(assetUserWalletList, Asset.Status.CONFIRMED));
             }
 
             long quantityBookBalance = assetUserWalletList.getQuantityBookBalance() - quantityAvailableBalance;
             assets = new ArrayList<>();
             for(long i = 0; i < quantityBookBalance; i++) {
-                assets.add(new Asset(assetUserWalletList.getDigitalAsset(), Asset.Status.PENDING));
+                assets.add(new Asset(assetUserWalletList, Asset.Status.PENDING));
             }
 
             issuer.setAssets(assets);

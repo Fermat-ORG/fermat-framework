@@ -11,18 +11,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
-import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
+import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.adapters.HomeIssuerItemAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.adapters.HomeIssuerItemExpandableAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data.DataManager;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.GrouperItem;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Issuer;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -33,7 +35,7 @@ import java.util.List;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/24/16.
  */
-public class HomeFragment extends FermatWalletListFragment<Issuer> implements FermatListItemListeners<Issuer> {
+public class HomeFragment extends FermatWalletExpandableListFragment<GrouperItem, AssetUserSession, ResourceProviderManager> implements FermatListItemListeners<Issuer> {
 
     // Fermat Managers
     private ErrorManager errorManager;
@@ -41,7 +43,7 @@ public class HomeFragment extends FermatWalletListFragment<Issuer> implements Fe
 
     // Data
     private DataManager dataManager;
-    private List<Issuer> issuers;
+    private List<GrouperItem> data;
 
     //UI
     private View noIssuersView;
@@ -56,7 +58,7 @@ public class HomeFragment extends FermatWalletListFragment<Issuer> implements Fe
             errorManager = appSession.getErrorManager();
 //            settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            issuers = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            data = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -71,7 +73,7 @@ public class HomeFragment extends FermatWalletListFragment<Issuer> implements Fe
 
         configureToolbar();
         noIssuersView = layout.findViewById(R.id.dap_v2_wallet_asset_user_home_no_assets);
-        showOrHideNoAssetsView(issuers.isEmpty());
+        showOrHideNoAssetsView(data.isEmpty());
     }
 
     private void showOrHideNoAssetsView(boolean show) {
@@ -138,11 +140,11 @@ public class HomeFragment extends FermatWalletListFragment<Issuer> implements Fe
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                issuers = (ArrayList) result[0];
+                data = (ArrayList) result[0];
                 if (adapter != null)
-                    adapter.changeDataSet(issuers);
+                    adapter.changeDataSet(data);
 
-                showOrHideNoAssetsView(issuers.isEmpty());
+                showOrHideNoAssetsView(data.isEmpty());
             }
         }
     }
@@ -157,10 +159,10 @@ public class HomeFragment extends FermatWalletListFragment<Issuer> implements Fe
     }
 
     @Override
-    public FermatAdapter getAdapter() {
+    public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new HomeIssuerItemAdapter(getActivity(), issuers);
-            adapter.setFermatListEventListener(this);
+            adapter = new HomeIssuerItemExpandableAdapter(getActivity(), data, getResources());
+            adapter.setChildItemFermatEventListeners(this);
         }
         return adapter;
     }
@@ -184,10 +186,14 @@ public class HomeFragment extends FermatWalletListFragment<Issuer> implements Fe
     }
 
     @Override
-    public List<Issuer> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+    public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        List<GrouperItem> data = new ArrayList<>();
         try {
-            issuers = dataManager.getIssuers();
-
+            List<Issuer> issuers = dataManager.getIssuers();
+            for (Issuer issuer : issuers) {
+                GrouperItem<Asset, Issuer> item = new GrouperItem<>(issuer.getAssets(), false, issuer);
+                data.add(item);
+            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -196,6 +202,6 @@ public class HomeFragment extends FermatWalletListFragment<Issuer> implements Fe
                         UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                         ex);
         }
-        return issuers;
+        return data;
     }
 }

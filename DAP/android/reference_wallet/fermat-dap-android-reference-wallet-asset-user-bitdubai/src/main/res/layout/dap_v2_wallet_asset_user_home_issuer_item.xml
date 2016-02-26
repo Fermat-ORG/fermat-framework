@@ -41,9 +41,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="2 assets"
-        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="5dp"/>
+        android:layout_marginRight="5dp"
+        android:layout_toLeftOf="@+id/homeIssuerArrow"/>
+
+    <ImageView
+        android:id="@+id/homeIssuerArrow"
+        android:layout_width="24dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_arrow_down_grey"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
 
     <View
         android:layout_width="fill_parent"
