@@ -663,7 +663,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                     customerBrokerUpdateManager.createCustomerBrokerUpdatePurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
                 }else if (validateStatusClause.equals(ClauseStatus.ACCEPTED)) {
                     System.out.print("\n**** 1.3) MOCK MODULE CRYPTO CUSTOMER - CLOSE NEGOTIATION - CLAUSES INFORMATION****\n");
-//                    customerBrokerCloseManager.createCustomerBrokerClosePurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
+                    customerBrokerCloseManager.createCustomerBrokerClosePurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
                 }
             }
 
@@ -1344,8 +1344,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             ActorIdentity customerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl(customerPublickey, "Not Alias", new byte[0]);
             String brokerPublickey = customerBrokerSaleNegotiation.getBrokerPublicKey();
             ActorIdentity brokerIdentity = new CryptoCustomerWalletModuleActorIdentityImpl(brokerPublickey, "Not Alias", new byte[0]);
-//            long expirationDate = customerBrokerSaleNegotiation.getNegotiationExpirationDate();
-            long expirationDate = new Date().getTime();
+            long expirationDate = customerBrokerSaleNegotiation.getNegotiationExpirationDate();
+//            long expirationDate = new Date().getTime();
             String note = "";
 
             if (cryptoCustomerIdentityManager.getCryptoCustomerIdentity(customerPublickey) != null)
