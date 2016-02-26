@@ -322,9 +322,20 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
                         chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                        chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        chat.setRemoteActorPublicKey(remotePk);
-                        chat.setRemoteActorType(remotePCT);
+                        /**
+                         * This case is when I got an unregistered contact, I'll set the
+                         * LocalActorType as is defined in database
+                         */
+                        //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
+                        Contact newContact=chatManager.getContactByContactId(
+                                contactId);
+                        PlatformComponentType remoteActorType=newContact.getRemoteActorType();
+                        String remotePublicKey=newContact.getRemoteActorPublicKey();
+                        chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
+                        //chat.setRemoteActorPublicKey(remotePk);
+                        //chat.setRemoteActorType(remotePCT);
+                        chat.setRemoteActorType(remoteActorType);
+                        chat.setRemoteActorPublicKey(remotePublicKey);
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
@@ -339,8 +350,8 @@ public class ChatAdapterView extends LinearLayout {
                         chatSession.setData("whocallme","chatlist");
                         chatSession.setData(
                                 "contactid",
-                                chatManager.getContactByContactId(
-                                        contactId));
+                                newContact
+                        );
                         /**
                          * This chat was created, so, I will put chatWasCreate as true to avoid
                          * the multiple chats from this contact. Also I will put the chatId as
