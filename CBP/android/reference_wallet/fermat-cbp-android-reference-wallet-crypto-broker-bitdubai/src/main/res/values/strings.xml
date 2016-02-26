@@ -198,5 +198,6 @@
     <string name="cbw_value">value</string>
     <string name="cbw_cancel_negotiation">Cancel Negotiation</string>
     <string name="cbw_reason">Reason</string>
+    <string name="cbw_earnings_title">Earnings</string>
     <!--Dialog Help - End-->
 </resources>

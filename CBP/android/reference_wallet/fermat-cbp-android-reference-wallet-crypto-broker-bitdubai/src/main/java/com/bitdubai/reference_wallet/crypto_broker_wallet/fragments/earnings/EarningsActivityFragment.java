@@ -143,7 +143,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         if (menuItem.getItemId() == R.id.cbw_sort_by_month) {
             int timeField = Calendar.MONTH;
             List<EarningTestData> earnings = TestData.getEarnings(selectedCurrency, timeField);
-            earningsOverviewAdapter.setTimeField(timeField);
+            earningsOverviewAdapter.setTimeFrecuency(timeField);
             earningsOverviewAdapter.changeDataSet(earnings);
             timeFieldTextView.setText("Month");
             return true;
@@ -152,7 +152,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         if (menuItem.getItemId() == R.id.cbw_sort_by_day) {
             int timeField = Calendar.DATE;
             List<EarningTestData> earnings = TestData.getEarnings(selectedCurrency, timeField);
-            earningsOverviewAdapter.setTimeField(timeField);
+            earningsOverviewAdapter.setTimeFrecuency(timeField);
             earningsOverviewAdapter.changeDataSet(earnings);
             timeFieldTextView.setText("Day");
             return true;
