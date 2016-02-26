@@ -380,7 +380,9 @@ public class ChatAdapterView extends LinearLayout {
                     ChatMessage chatMessage = new ChatMessage();
                     chatMessage.setId(UUID.randomUUID());//dummy
                     chatMessage.setMessage(messageText);
-                    chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                    //chatMessage.setDate(DateFormat.getDateTimeInstance().format(new Date()));
+                    String S = new SimpleDateFormat("hh:mm").format(new Date());
+                    chatMessage.setDate(S);
                     chatMessage.setMe(true);
                     messageET.setText("");
                     adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
