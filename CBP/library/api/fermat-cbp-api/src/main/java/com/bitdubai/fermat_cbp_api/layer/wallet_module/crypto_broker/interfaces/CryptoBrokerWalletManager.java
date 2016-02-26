@@ -602,5 +602,5 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      */
     EarningsPair addEarningsPairToEarningSettings(Currency earningCurrency, Currency linkedCurrency, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantAssociatePairException, PairAlreadyAssociatedException;
 
-    List<EarningsPair> getEarnings(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantListEarningsPairsException;
+    List<EarningsPair> getEarningsPairs(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantListEarningsPairsException;
 }

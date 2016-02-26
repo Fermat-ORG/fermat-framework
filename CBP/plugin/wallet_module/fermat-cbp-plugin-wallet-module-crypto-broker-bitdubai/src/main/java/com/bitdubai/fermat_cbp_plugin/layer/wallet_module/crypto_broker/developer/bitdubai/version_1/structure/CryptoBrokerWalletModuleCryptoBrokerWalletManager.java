@@ -1874,7 +1874,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public List<EarningsPair> getEarnings(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantListEarningsPairsException {
+    public List<EarningsPair> getEarningsPairs(String brokerWalletPublicKey) throws CantLoadEarningSettingsException, CantListEarningsPairsException {
         EarningsSettings earningsSettings = matchingEngineManager.loadEarningsSettings(new WalletReference(brokerWalletPublicKey));
         return earningsSettings.listEarningPairs();
     }
