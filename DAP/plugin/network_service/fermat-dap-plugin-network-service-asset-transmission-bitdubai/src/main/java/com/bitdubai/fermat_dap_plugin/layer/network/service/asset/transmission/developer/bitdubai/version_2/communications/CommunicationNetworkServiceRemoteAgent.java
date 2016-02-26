@@ -127,7 +127,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                 while (running)
                     processMessageReceived();
             }
-        });
+        }, this.getClass().getName());
 
         //Create a thread to send the messages
         this.toSend = new Thread(new Runnable() {
@@ -136,7 +136,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
                 while (running)
                     processMessageToSend();
             }
-        });
+        }, this.getClass().getName());
 
 //        ExecutorService executorService =
 

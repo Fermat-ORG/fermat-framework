@@ -309,10 +309,11 @@ public class AssetBuyerDAO {
         }
     }
 
-    public List<NegotiationRecord> getActionRequiredNegotiations() throws DAPException {
-        DatabaseTableFilter filter = constructFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.NO_ACTION_REQUIRED.getCode(), DatabaseFilterType.NOT_EQUALS);
+    public List<NegotiationRecord> getNegotiationAnswer() throws DAPException {
+        DatabaseTableFilter confirmedFilter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.NEGOTIATION_CONFIRMED.getCode());
+        DatabaseTableFilter rejectedFilter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.NEGOTIATION_REJECTED.getCode());
         try {
-            return constructNegotiationList(getRecordsByFilterNegotiationTable(filter));
+            return constructNegotiationList(getRecordsByFilterNegotiationTable(confirmedFilter, rejectedFilter));
         } catch (CantLoadTableToMemoryException | InvalidParameterException e) {
             throw new DAPException(e);
         }
