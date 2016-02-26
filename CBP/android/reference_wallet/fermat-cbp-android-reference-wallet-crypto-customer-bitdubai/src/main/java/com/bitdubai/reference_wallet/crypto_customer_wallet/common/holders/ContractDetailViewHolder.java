@@ -3,11 +3,9 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
@@ -19,7 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -31,6 +28,8 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.contract_d
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -179,7 +178,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
                 ContractPaymentDeliveryDetail infoPD = (ContractPaymentDeliveryDetail) itemInfo;
                 stepNumber.setImageResource(R.drawable.bg_detail_number_01);
                 stepTitle.setText("Payment Delivery");
-                textButton.setText(getFormattedAmount(infoPD.getCurrencyAmount(), infoPD.getCurrencyCode()));
+                textButton.setText(getFormattedAmount(infoPD.getPaymentAmount(), infoPD.getPaymentCurrencyCode()));
                 textDescription2.setText("using Cash Delivery.");
                 switch (itemInfo.getContractStatus()) {
                     case PENDING_PAYMENT:
@@ -191,7 +190,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
                     default:
                         textDescription.setText("You sent:");
-                        textDescriptionDate.setText("on 15/02/2016");
+                        textDescriptionDate.setText("on " + getFormattedDate(infoPD.getPaymentDate()));
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                         confirmButton.setVisibility(View.INVISIBLE);
                 }
@@ -201,7 +200,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
                 ContractPaymentReceptionDetail infoPR = (ContractPaymentReceptionDetail) itemInfo;
                 stepNumber.setImageResource(R.drawable.bg_detail_number_02);
                 stepTitle.setText("Payment Reception");
-                textButton.setText(getFormattedAmount(infoPR.getCurrencyAmount(), infoPR.getCurrencyCode()));
+                textButton.setText(getFormattedAmount(infoPR.getPaymentAmount(), infoPR.getPaymentCurrencyCode()));
                 textDescription2.setText("using Cash Delivery.");
                 confirmButton.setVisibility(View.INVISIBLE);
                 switch (itemInfo.getContractStatus()) {
@@ -213,7 +212,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
                     default:
                         textDescription.setText("Broker received:");
-                        textDescriptionDate.setText("on 17/02/2016");
+                        textDescriptionDate.setText("on " + getFormattedDate(infoPR.getPaymentDate()));
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
                 }
                 break;
@@ -344,6 +343,13 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     @NonNull
     private String getFormattedAmount(float amount, String currencyCode) {
         return (decimalFormat.format(amount) + " " + currencyCode);
+    }
+
+    @NonNull
+    private String getFormattedDate(long timestamp) {
+        Date date = new Date(timestamp);
+        SimpleDateFormat df2 = new SimpleDateFormat("dd-MM-yy");
+        return df2.format(date);
     }
 
 
