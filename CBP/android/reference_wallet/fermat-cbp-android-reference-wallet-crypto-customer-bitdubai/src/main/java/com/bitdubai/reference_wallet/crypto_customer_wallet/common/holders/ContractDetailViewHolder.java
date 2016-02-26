@@ -36,7 +36,7 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 21/01/16.
  * Modified by Alejandro Bicelis on 22/02/2016
  */
-public class ContractDetailViewHolder extends FermatViewHolder {
+public class ContractDetailViewHolder extends FermatViewHolder implements View.OnClickListener {
 
     private static final DecimalFormat decimalFormat = (DecimalFormat) NumberFormat.getInstance();
 
@@ -45,7 +45,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     protected CryptoCustomerWalletManager walletManager;
 
     //Data
-    protected UUID contractId;
+    protected ContractDetail contractDetail;
     protected int itemPosition;
 
     //UI
@@ -76,13 +76,7 @@ public class ContractDetailViewHolder extends FermatViewHolder {
         textDescriptionDate = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_date);
         textButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_text_button);
         confirmButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_confirm_button);
-        confirmButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String buttonTest = confirmButton.getText().toString();
-                executeContractAction(buttonTest);
-            }
-        });
+        confirmButton.setOnClickListener(this);
 
         /*customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
         customerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
@@ -93,26 +87,38 @@ public class ContractDetailViewHolder extends FermatViewHolder {
     }
 
 
-    protected void executeContractAction(String buttonText){
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if(id == R.id.ccw_contract_detail_confirm_button)
+        {
+            executeContractAction();
+        }
+    }
+
+    protected void executeContractAction(){
         try{
-            if(buttonText.equals("SEND")){
-                //TODO: Send Payment
-                //In this case, I will send the payment to Broker
-                this.walletManager.sendPayment(this.contractId.toString());
-                updateBackground(
-                        this.contractId.toString(),
-                        ContractDetailType.CUSTOMER_DETAIL);
+
+            switch (contractDetail.getContractStep()) {
+                case 1:
+                    //Send the payment to the Broker and update CardView background
+                    //TODO: this.walletManager.sendPayment(contractDetail.getContractId().toString());
+                    itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
+                    confirmButton.setVisibility(View.INVISIBLE);
+
+                    //updateBackground(contractDetail.getContractId().toString(), ContractDetailType.CUSTOMER_DETAIL);
+                    break;
+                case 4:
+                    //Confirm the reception of the broker's merchandise
+                    //TODO: this.walletManager.ackMerchandise(contractDetail.getContractId().toString());
+                    itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
+                    confirmButton.setVisibility(View.INVISIBLE);
+
+                    //updateBackground(this.contractId.toString(), ContractDetailType.BROKER_DETAIL);
+                    break;
             }
-            if(buttonText.equals("CONFIRM")){
-                //TODO: Ack Merchandise
-                //In this case, I will ack the broker merchandise
-                this.walletManager.ackMerchandise(this.contractId.toString());
-                updateBackground(
-                        this.contractId.toString(),
-                        ContractDetailType.BROKER_DETAIL);
-            }
-        } catch (FermatException ex) {
-            Toast.makeText(this.parentFragment.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
+        } catch (Exception ex) {
+            Toast.makeText(this.parentFragment.getActivity(), "Please try again, an error occurred.", Toast.LENGTH_SHORT).show();
 
             Log.e(this.parentFragment.getTag(), ex.getMessage(), ex);
             if (errorManager != null) {
@@ -160,8 +166,8 @@ public class ContractDetailViewHolder extends FermatViewHolder {
 
     public void bind(ContractDetail itemInfo) {
 
-        //Locally save contract ID
-        this.contractId = itemInfo.getContractId();
+        //Locally save contractDetail
+        this.contractDetail = itemInfo;
 
         //ContractStatus contractStatus = itemInfo.getContractStatus();
         //ContractDetailType contractDetailType=itemInfo.getContractDetailType();
