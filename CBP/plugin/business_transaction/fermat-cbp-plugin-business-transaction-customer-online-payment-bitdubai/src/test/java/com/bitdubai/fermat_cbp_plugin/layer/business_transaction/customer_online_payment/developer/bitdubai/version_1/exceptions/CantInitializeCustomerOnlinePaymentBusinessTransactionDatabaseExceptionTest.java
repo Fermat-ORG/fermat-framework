@@ -35,7 +35,7 @@ public class CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseExcep
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
     }
     @Test(expected = CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException.class)
-    public void CustomerOnlinePaymentBusinessTransactionDaoInitTest()throws Exception{
+    public void CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseExceptionTest()throws Exception{
         customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,null,mockDatabase,errorManager);
         customerOnlinePaymentBusinessTransactionDao.initialize();
 

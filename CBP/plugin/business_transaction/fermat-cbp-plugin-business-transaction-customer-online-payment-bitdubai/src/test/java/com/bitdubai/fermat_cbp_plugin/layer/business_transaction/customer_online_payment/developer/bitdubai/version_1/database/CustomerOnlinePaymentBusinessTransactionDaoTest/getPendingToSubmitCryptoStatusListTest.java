@@ -19,34 +19,36 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 05/02/16.
+ * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 25/02/16.
  */
-public class getPendingToSubmitNotificationListTest {
+public class getPendingToSubmitCryptoStatusListTest {
+    CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
     @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
     @Mock
-    private Database mockDatabase;
-    @Mock
-    DatabaseTable databaseTable;
+    Database database;
     @Mock
     ErrorManager errorManager;
+    @Mock
+    DatabaseTable databaseTable;
     private UUID testId;
-    private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
 
     @Before
-    public void setup()throws Exception{
+    public void setup(){
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
+                pluginDatabaseSystem,testId,database,errorManager);
     }
     @Test
-    public void getPendingToSubmitNotificationListTest_Should_Return_Not_Null()throws Exception{
-        when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)).thenReturn(databaseTable);
-        assertNotNull(customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList());
+    public void getPendingToSubmitCryptoStatusListTest_Should_Return_Not_Null()throws Exception{
+        when(database.getTable(
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME
+        )).thenReturn(databaseTable);
+        assertNotNull(customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoStatusList());
     }
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getPendingToSubmitNotificationListTest_Should_Throw_Exception()throws Exception{
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(null,testId,mockDatabase,errorManager);
-        customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitNotificationList();
+    public void getPendingToSubmitCryptoStatusListTest_Should_Throw_Exception()throws Exception{
+        customerOnlinePaymentBusinessTransactionDao.getPendingToSubmitCryptoStatusList();
     }
 }

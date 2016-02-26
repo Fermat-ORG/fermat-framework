@@ -8,7 +8,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -36,7 +35,6 @@ public class getPendingCryptoTransactionListTest {
     private UUID testId;
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
 
-
     @Before
     public void setup()throws Exception{
         testId = UUID.randomUUID();
@@ -45,7 +43,7 @@ public class getPendingCryptoTransactionListTest {
     }
 
     @Test
-    public void getPendingCryptoTransactionListTest_Should_()throws Exception{
+    public void getPendingCryptoTransactionListTest_Should_Return_Not_Null()throws Exception{
         when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)).thenReturn(databaseTable);
         assertNotNull(customerOnlinePaymentBusinessTransactionDao.getPendingCryptoTransactionList());
     }

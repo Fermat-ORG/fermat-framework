@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
@@ -18,48 +18,52 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 01/02/16.
+ * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 25/02/16.
  */
-public class getContractTransactionStatusTest {
+public class updateEventStatusTest {
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
     @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
     @Mock
-    private Database mockDatabase;
-    @Mock
-    DatabaseTable databaseTable;
+    Database mockDatabase;
     @Mock
     ErrorManager errorManager;
     @Mock
-    List<DatabaseTableRecord> databaseTableRecordList;
+    DatabaseTable databaseTable;
     @Mock
     DatabaseTableRecord databaseTableRecord;
+    @Mock
+    List<DatabaseTableRecord> databaseTableRecordList;
     private UUID testId;
     @Before
-    public void setup() throws Exception{
+    public void setup(){
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
-        setupGeneralMockitoRules();
-    }
-    public void setupGeneralMockitoRules(){
-        when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)).thenReturn(databaseTable);
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
+                pluginDatabaseSystem,
+                testId,
+                mockDatabase,
+                errorManager);
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
-    }
-    @Test
-    public void getContractTransactionStatusTest_Should_Return_AFM_Code() throws Exception{
         when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
-        when(databaseTableRecord.getStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME)).thenReturn("AFM");
-        assertEquals(customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus("Test"), ContractTransactionStatus.getByCode("AFM"));
+        doNothing().when(databaseTableRecord).setStringValue(
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                EventStatus.PENDING.getCode());
     }
 
+    @Test
+    public void updateEventStatusTest()throws Exception{
+        when(mockDatabase.getTable(
+               CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME
+        )).thenReturn(databaseTable);
+        customerOnlinePaymentBusinessTransactionDao.updateEventStatus("EventID", EventStatus.PENDING);
+    }
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getContractTransactionStatusTest_Should_Throw_Exception() throws Exception{
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId,mockDatabase,errorManager);
-        customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(null);
+    public void updateEventStatusTest_Should_Throw_Exception()throws Exception{
+        customerOnlinePaymentBusinessTransactionDao.updateEventStatus("EventID", EventStatus.PENDING);
     }
 }

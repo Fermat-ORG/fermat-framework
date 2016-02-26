@@ -16,7 +16,6 @@ import org.mockito.MockitoAnnotations;
 import java.util.UUID;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
@@ -33,7 +32,6 @@ public class getPendingToSubmitConfirmListTest {
     ErrorManager errorManager;
     private UUID testId;
     private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
-
 
     @Before
     public void setup()throws Exception{

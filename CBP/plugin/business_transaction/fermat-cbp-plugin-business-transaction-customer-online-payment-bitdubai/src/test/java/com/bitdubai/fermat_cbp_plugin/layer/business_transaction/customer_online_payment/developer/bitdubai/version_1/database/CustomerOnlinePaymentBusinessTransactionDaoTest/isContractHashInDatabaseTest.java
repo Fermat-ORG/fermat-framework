@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -41,9 +42,9 @@ public class isContractHashInDatabaseTest {
     }
 
     @Test
-    public void isContractHashInDatabaseTest_Should_()throws Exception{
+    public void isContractHashInDatabaseTest_Should_Return_False()throws Exception{
         when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)).thenReturn(databaseTable);
-        customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase("65ef1c685c7a5502eef44a5f8552801d9cb4ca87");
+        assertEquals(false,customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase("Test"));
     }
     //Generic exception
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
