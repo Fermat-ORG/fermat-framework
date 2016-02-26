@@ -53,6 +53,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -337,7 +339,20 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setChatName("Chat_" + remotePk);
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
+                        /**
+                         * Now we got the identities registered in the device.
+                         * To avoid nulls, I'll put default data in chat object
+                         */
                         chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
+                        chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
+                        HashMap<PlatformComponentType, String> identitiesMap=chatManager.getSelfIdentities();
+                        Set<PlatformComponentType> keySet=identitiesMap.keySet();
+                        for(PlatformComponentType key : keySet) {
+                            chat.setLocalActorPublicKey(identitiesMap.get(key));
+                            chat.setLocalActorType(key);
+                            break;
+                        }
+                        //chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
                         /**
                          * This case is when I got an unregistered contact, I'll set the
                          * LocalActorType as is defined in database
@@ -347,7 +362,7 @@ public class ChatAdapterView extends LinearLayout {
                                 contactId);
                         PlatformComponentType remoteActorType=newContact.getRemoteActorType();
                         String remotePublicKey=newContact.getRemoteActorPublicKey();
-                        chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
+                        //chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
                         //chat.setRemoteActorPublicKey(remotePk);
                         //chat.setRemoteActorType(remotePCT);
                         chat.setRemoteActorType(remoteActorType);
