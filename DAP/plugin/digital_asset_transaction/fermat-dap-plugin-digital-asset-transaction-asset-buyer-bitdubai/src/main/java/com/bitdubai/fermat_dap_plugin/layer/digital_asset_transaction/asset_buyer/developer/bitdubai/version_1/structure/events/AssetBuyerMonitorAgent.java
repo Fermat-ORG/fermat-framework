@@ -14,6 +14,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
@@ -143,7 +144,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void doTheMainTask() throws DAPException, CantInsertRecordException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantGetTransactionsException, CantLoadWalletException, InvalidParameterException, CantGetCryptoTransactionException, CantRegisterCreditException {
+        private void doTheMainTask() throws DAPException, CantInsertRecordException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantGetTransactionsException, CantLoadWalletException, InvalidParameterException, CantGetCryptoTransactionException, CantRegisterCreditException, CantCreateDraftTransactionException {
             checkPendingMessages();
             checkNegotiationStatus();
             checkBuyingStatus();
@@ -170,18 +171,16 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void checkBuyingStatus() throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantSignTransactionException {
+        private void checkBuyingStatus() throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantSignTransactionException, CantCreateDraftTransactionException {
             for (BuyingRecord buyingRecord : dao.getActionRequiredBuying()) {
                 switch (buyingRecord.getStatus()) {
                     case WAITING_FIRST_SIGNATURE: {
                         NegotiationRecord negotiationRecord = dao.getNegotiationRecord(buyingRecord.getNegotiationId());
-                        if (negotiationRecord.getNegotiation().getTotalAmount() == buyingRecord.getSellerTransaction().getValue()) {
-                            //TODO USE CCP OUTGOING DRAFT PLUGIN
-                            DraftTransaction buyerTx = cryptoVaultManager.signTransaction(buyingRecord.getSellerTransaction());
-                            dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
-                            dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.PARTIALLY_SIGNED);
-                            assetTransmission.sendMessage(transactionManager.constructSellingMessage(buyingRecord, AssetSellStatus.PARTIALLY_SIGNED));
-                        }
+                        //TODO USE CCP OUTGOING DRAFT PLUGIN
+                        DraftTransaction buyerTx = cryptoVaultManager.addInputsToDraftTransaction(buyingRecord.getSellerTransaction(), negotiationRecord.getNegotiation().getTotalAmount(), buyingRecord.getSeller().getCryptoAddress());
+                        buyerTx = cryptoVaultManager.signTransaction(buyerTx);
+                        dao.updateBuyerTransaction(buyingRecord.getRecordId(), buyerTx);
+                        dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.PARTIALLY_SIGNED);
                         break;
                     }
                 }
