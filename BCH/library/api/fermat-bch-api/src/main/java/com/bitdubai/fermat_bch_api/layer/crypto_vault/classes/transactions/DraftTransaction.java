@@ -113,5 +113,17 @@ public class DraftTransaction {
         return bitcoinTransaction.bitcoinSerialize();
     }
 
-
+    @Override
+    public String toString() {
+        StringBuilder output = new StringBuilder(this.getTxHash());
+        output.append(" on " + this.getNetworkType().getCode() + " network.");
+        output.append(System.lineSeparator());
+        output.append(this.getBitcoinTransaction().toString());
+        output.append(System.lineSeparator());
+        for (Map.Entry<CryptoAddress, Long> entry : this.getFundsDistribution().entrySet()){
+            output.append(entry.getValue() + " for "+ entry.getKey().toString());
+            output.append(System.lineSeparator());
+        }
+        return output.toString();
+    }
 }

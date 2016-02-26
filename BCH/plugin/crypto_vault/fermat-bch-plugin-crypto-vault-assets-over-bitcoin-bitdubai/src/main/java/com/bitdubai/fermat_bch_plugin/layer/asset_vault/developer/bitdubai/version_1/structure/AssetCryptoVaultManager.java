@@ -1037,6 +1037,12 @@ public class AssetCryptoVaultManager  {
         transaction.addOutput(coinToSend, address);
 
         DraftTransaction draftTransaction = new DraftTransaction(transaction);
+
+        StringBuilder output = new StringBuilder("***AssetVault*** Draft Transaction created.");
+        output.append(System.lineSeparator());
+        output.append(draftTransaction.toString());
+        System.out.println(output.toString());
+
         return draftTransaction;
     }
 
