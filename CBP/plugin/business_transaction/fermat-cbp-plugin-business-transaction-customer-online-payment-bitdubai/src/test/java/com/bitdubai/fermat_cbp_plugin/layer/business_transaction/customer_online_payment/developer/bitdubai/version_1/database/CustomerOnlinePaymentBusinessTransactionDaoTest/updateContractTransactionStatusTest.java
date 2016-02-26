@@ -18,48 +18,44 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 01/02/16.
+ * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 25/02/16.
  */
-public class getContractTransactionStatusTest {
-    private CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
+public class updateContractTransactionStatusTest {
+    CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao;
     @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
     @Mock
-    private Database mockDatabase;
-    @Mock
-    DatabaseTable databaseTable;
+    Database database;
     @Mock
     ErrorManager errorManager;
     @Mock
-    List<DatabaseTableRecord> databaseTableRecordList;
+    DatabaseTable databaseTable;
+    @Mock
+    List< DatabaseTableRecord> databaseTableRecordList;
     @Mock
     DatabaseTableRecord databaseTableRecord;
     private UUID testId;
     @Before
-    public void setup() throws Exception{
+    public void setup(){
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
-        setupGeneralMockitoRules();
-    }
-    public void setupGeneralMockitoRules(){
-        when(mockDatabase.getTable(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)).thenReturn(databaseTable);
+        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(
+                pluginDatabaseSystem,testId,database,errorManager);
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
+        when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
     }
     @Test
-    public void getContractTransactionStatusTest_Should_Return_AFM_Code() throws Exception{
-        when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
-        when(databaseTableRecord.getStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME)).thenReturn("AFM");
-        assertEquals(customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus("Test"), ContractTransactionStatus.getByCode("AFM"));
+    public void updateContractTransactionStatusTest()throws Exception{
+        when(database.getTable(
+                CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_TABLE_NAME)
+        ).thenReturn(databaseTable);
+        customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus("contractHash", ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
     }
-
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getContractTransactionStatusTest_Should_Throw_Exception() throws Exception{
-        customerOnlinePaymentBusinessTransactionDao = new CustomerOnlinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId,mockDatabase,errorManager);
-        customerOnlinePaymentBusinessTransactionDao.getContractTransactionStatus(null);
+    public void updateContractTransactionStatusTest_Should_Throw_Exception()throws Exception{
+        customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus("contractHash", ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
     }
 }

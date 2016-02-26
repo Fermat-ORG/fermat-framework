@@ -61,7 +61,7 @@ public class BrokerAckOfflinePaymentRecorderService implements CBPService {
     public void incomingNewContractStatusUpdateEventHandler(IncomingNewContractStatusUpdate event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        if(event.getRemoteBusinessTransaction()== Plugins.BROKER_ACK_OFFLINE_PAYMENT) {
+        if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_ACK_OFFLINE_PAYMENT.getCode())) {
             this.brokerAckOfflinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
             //LOG.info("CHECK THE DATABASE");
         }
@@ -70,7 +70,7 @@ public class BrokerAckOfflinePaymentRecorderService implements CBPService {
     public void incomingConfirmBusinessTransactionResponseEventHandler(IncomingConfirmBusinessTransactionResponse event) throws CantSaveEventException {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
-        if(event.getRemoteBusinessTransaction()== Plugins.BROKER_ACK_OFFLINE_PAYMENT) {
+        if(event.getRemoteBusinessTransaction().getCode().equals(Plugins.BROKER_ACK_OFFLINE_PAYMENT.getCode())) {
             this.brokerAckOfflinePaymentBusinessTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
             //LOG.info("CHECK THE DATABASE");
         }

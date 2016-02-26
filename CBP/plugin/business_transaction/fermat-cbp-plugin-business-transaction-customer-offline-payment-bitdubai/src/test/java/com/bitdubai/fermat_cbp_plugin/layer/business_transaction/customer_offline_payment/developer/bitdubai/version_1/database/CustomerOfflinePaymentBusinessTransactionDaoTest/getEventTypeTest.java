@@ -12,54 +12,57 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
-import java.security.InvalidParameterException;
 import java.util.List;
 import java.util.UUID;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
- * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 01/02/16.
+ * Created by alexander jimenez (alex_jimenez76@hotmail.com) on 25/02/16.
  */
-public class getContractTransactionStatusTest {
+public class getEventTypeTest {
+    CustomerOfflinePaymentBusinessTransactionDao customerOfflinePaymentBusinessTransactionDao;
     @Mock
-    private PluginDatabaseSystem mockPluginDatabaseSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
     @Mock
-    private Database mockDatabase;
-    @Mock
-    DatabaseTable databaseTable;
+    Database mockDatabase;
     @Mock
     ErrorManager errorManager;
+    @Mock
+    DatabaseTable databaseTable;
     @Mock
     List<DatabaseTableRecord> databaseTableRecordList;
     @Mock
     DatabaseTableRecord databaseTableRecord;
     private UUID testId;
-    private CustomerOfflinePaymentBusinessTransactionDao customerOfflinePaymentBusinessTransactionDao;
     @Before
-    public void setup() throws Exception{
+    public void setup(){
         testId = UUID.randomUUID();
         MockitoAnnotations.initMocks(this);
-        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(mockPluginDatabaseSystem,testId, mockDatabase,errorManager);
-        when(mockDatabase.getTable(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TABLE_NAME)).thenReturn(databaseTable);
-        when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
+        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(
+                pluginDatabaseSystem,testId,mockDatabase,errorManager);
+        setupGeneralMockitoRules();
     }
-
-    @Test
-    public void getContractTransactionStatusTest_Should_Run_Once() throws Exception{
+    public void setupGeneralMockitoRules(){
+        when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
         when(databaseTableRecordList.get(0)).thenReturn(databaseTableRecord);
-        when(databaseTableRecord.getStringValue(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME)).thenReturn("AFM");
-        customerOfflinePaymentBusinessTransactionDao.getContractTransactionStatus("Test");
+        when(databaseTableRecord.getStringValue(
+                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME
+        )).thenReturn("Test");
+    }
+    @Test
+    public void getEventTypeTest_Should_Equal_Test()throws Exception{
+        when(mockDatabase.getTable(
+                CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME
+        )).thenReturn(databaseTable);
+        assertEquals("Test",customerOfflinePaymentBusinessTransactionDao.getEventType("eventId"));
     }
 
     @Test(expected = UnexpectedResultReturnedFromDatabaseException.class)
-    public void getContractTransactionStatusTest_Should_Return_Exception() throws Exception{
-        customerOfflinePaymentBusinessTransactionDao = new CustomerOfflinePaymentBusinessTransactionDao(null,null,null,errorManager);
-        customerOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(null);
+    public void getEventTypeTest_Should_Throw_Exception()throws Exception{
+        customerOfflinePaymentBusinessTransactionDao.getEventType("eventId");
     }
 }

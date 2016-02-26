@@ -15,8 +15,8 @@ dependencies {
     compile project(':fermat-cbp-api')
     compile project(':fermat-ccp-api')
     testCompile "junit:junit:4.11"
-    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
-    testCompile "org.powermock:powermock-mockito-release-full:1.6.1"
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+
 }
 
 

@@ -85,9 +85,4 @@ public class startTest {
         customerOfflinePaymentMonitorAgent.stop();
 
     }
-    @Test(expected = Exception.class)
-    public void testStart_Should_Return_Exception() throws Exception {
-        customerOfflinePaymentMonitorAgent = new CustomerOfflinePaymentMonitorAgent(null,null,null,null,null,null,null,null);
-        customerOfflinePaymentMonitorAgent.start();
-    }
 }
